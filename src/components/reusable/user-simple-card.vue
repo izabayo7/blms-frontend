@@ -70,6 +70,7 @@ export default {
     outsideClickDetector() {
       const self = this
       let el = document.querySelector('.user-card')
+      console.log(el)
       document.addEventListener("click", function (e) {
         if (e)
           if (!el || !el.contains(e.target)) {
