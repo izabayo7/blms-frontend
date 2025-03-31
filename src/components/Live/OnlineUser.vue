@@ -9,6 +9,8 @@
     <p class="online-user--details--name">{{user.name}}</p>
     <p class="online-user--details--attendance"> Attendance {{user.attendance}}%</p>
   </div>
+
+
 </div>
 </template>
 

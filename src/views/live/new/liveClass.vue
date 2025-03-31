@@ -45,7 +45,9 @@
         </div>
       </div>
       <div class="live-comments">
-        
+        <div class="live-comments--wrapper">
+          <unreal-time-discussion-board />
+        </div>
       </div>
     </div>
     <div class="live-class--attendance">
@@ -92,9 +94,10 @@
   import {WebRtcPeer} from 'kurento-utils'
   import {mapGetters} from 'vuex'
   import OnlineUser from "../../../components/Live/OnlineUser";
+  import UnrealTimeDiscussionBoard from "../../../components/Live/UnrealTimeDiscussionBoard";
 export default {
   name: "liveClass",
-  components: {OnlineUser},
+  components: {UnrealTimeDiscussionBoard, OnlineUser},
   data(){
     return{
       ws:null,
@@ -808,6 +811,11 @@ export default {
     }
   }
 
+  .live-comments{
+    &--wrapper{
+      margin-top:1rem;
+    }
+  }
 
   .video{
     width:100%;
