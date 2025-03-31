@@ -36,9 +36,19 @@ export default {
 <style lang="scss" scoped>
 .online-user{
   display: flex;
+  padding:.1rem;
+
+  &:hover{
+    background-color: transparentize($grayish,.9);
+  }
 
   &--pic{
+    display: grid;
+    place-items: center;
+
     figure{
+      display: grid;
+      place-items: center;
       img{
         width:2.1rem;
         height: 2.1rem;
