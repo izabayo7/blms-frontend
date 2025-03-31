@@ -25,7 +25,7 @@
           <v-list-item
               v-for="(item, i) in chapters"
               :key="i"
-              :disabled="i > maximumIndex || limit ? chapters[i]._id > limit : false"
+              :disabled="limit ? chapters[i]._id > limit : i >  maximumIndex"
               @click="$emit('change-chapter', { index: i, id: item._id })"
               :class="activeIndex === i ? 'active--chapter' : ''"
           >

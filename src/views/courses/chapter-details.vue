@@ -71,7 +71,7 @@
                   </v-btn
                   >
                   <v-btn
-                      v-else-if="Math.round(maximumIndex) === activeIndex"
+                      v-else-if="Math.round(maximumIndex) === activeIndex && course.chapters[activeIndex].status"
                       :color="primary"
                       class="white--text"
                       @click="markAsCompleted"
