@@ -255,7 +255,7 @@ import Apis from "@/services/apis";
 import {mapGetters, mapActions} from "vuex";
 import {assessmentMixins} from "../../services/mixins";
 import {load, SupportedPackages} from "@tensorflow-models/face-landmarks-detection";
-import {drawMesh} from "@/views/quiz/utilities.js";
+import {drawMesh} from "./utilities.js";
 // eslint-disable-next-line
 import * as tf from "@tensorflow/tfjs";
 
