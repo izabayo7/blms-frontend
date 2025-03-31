@@ -166,7 +166,14 @@ export default {
         },
         coverPicture: this.coverPicture,
       }).then(() => {
-        this.type = "chapters";
+        this.$store.dispatch("app_notification/SET_NOTIFICATION", {
+          message: "Course successfully updated",
+          status: "success",
+          uptime: 3000,
+        });
+        setTimeout(() => {
+          this.$router.push(`/courses/edit/${this.course.name}/chapters`)
+        }, 3000);
       });
     },
   },

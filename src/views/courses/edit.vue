@@ -4,7 +4,7 @@
         v-if="course != undefined"
         class="new-class-form ml-md-10 ml-2 mt-md-10 mt-4"
     >
-      <v-col class="col-12">
+      <v-col v-if="$route.params.type == 'details' || $route.params.type == 'chapters'" class="col-12">
         <h1 class="d-block">EDIT COURSE</h1>
         <div class="new-class-btns mb-5">
           <v-btn
@@ -26,6 +26,9 @@
           </v-btn
           >
         </div>
+      </v-col>
+      <v-col v-else class="col-12">
+        Invalid route
       </v-col>
       <v-col v-if="$route.params.type == 'details'" class="col-12">
         <v-form>
@@ -133,7 +136,7 @@
           </v-row>
         </v-form>
       </v-col>
-      <v-col v-else class="col-12 pr-12">
+      <v-col v-else-if="$route.params.type == 'chapters'" class="col-12 pr-12">
         <chapters action="update"/>
       </v-col>
     </v-row>
