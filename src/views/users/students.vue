@@ -132,7 +132,7 @@ import TableUi from "../../components/reusable/table/TableUi";
 import TableHeadRow from "../../components/reusable/table/TableHeadRow";
 import SelectUi from "@/components/reusable/ui/select-ui";
 import TableRow from "../../components/reusable/table/TableRow";
-import {mapActions, mapGetters} from "vuex";
+import {mapActions, mapGetters, mapMutations} from "vuex";
 import Apis from '../../services/apis'
 
 export default {
@@ -160,6 +160,7 @@ export default {
     }
   },
   methods: {
+    ...mapMutations("users", ["SET_SELECTED_USERS"]),
     handleSelect(value) {
       for (const i in this.statistics.students) {
         if (value.has(-1)) {
@@ -187,7 +188,15 @@ export default {
           status: "info",
           uptime: 5000,
         })
+      let users = []
+      if (this.selected_users.has(-1)) {
+        users = this.statistics.students
+      } else
+        for (const item of this.selected_users) {
+          users.push(this.statistics.students[item])
+        }
 
+      this.SET_SELECTED_USERS(users)
       this.$router.push('/announcements/new?target=individual')
     },
     ...mapActions("courses", ["getCourses"]),
