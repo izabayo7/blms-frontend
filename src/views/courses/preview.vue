@@ -303,12 +303,22 @@
       <button @click="$router.go(-1)" class="back">back</button>
       <div class="preview-card row">
         <div class="preview-image col-sm-12 col-md-12 col-lg-4 col-xl-4">
-          <img
+          <v-img
             v-if="course.coverPicture"
             :alt="course.name + ' cover photo'"
             class="preview-media"
             :src="course.coverPicture"
-          />
+            :lazy-src="course.coverPicture"
+          >
+            <template v-slot:placeholder>
+              <v-row class="fill-height ma-0" align="center" justify="center">
+                <v-progress-circular
+                  indeterminate
+                  color="grey lighten-5"
+                ></v-progress-circular>
+              </v-row>
+            </template>
+          </v-img>
           <div
             v-else
             class="bg-color-one vertically--centered text-center preview-image"

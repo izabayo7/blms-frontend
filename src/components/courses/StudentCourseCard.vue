@@ -10,8 +10,18 @@
           <v-img
             v-if="course.coverPicture"
             :src="`${course.coverPicture}`"
+            :lazy-src="`${course.coverPicture}`"
             class="course-image"
-          ></v-img>
+          >
+            <template v-slot:placeholder>
+              <v-row class="fill-height ma-0" align="center" justify="center">
+                <v-progress-circular
+                  indeterminate
+                  color="grey lighten-5"
+                ></v-progress-circular>
+              </v-row>
+            </template>
+          </v-img>
           <v-avatar
             class="course-image white--text bg-color-one text-h2"
             size="125"
@@ -50,9 +60,19 @@
         <v-col class="col-12 pa-0" id="cover-pic">
           <v-img
             v-if="course.coverPicture"
-            :src="'' + course.coverPicture"
+            :src="course.coverPicture"
+            :lazy-src="course.coverPicture"
             class="course-image"
-          ></v-img>
+          >
+            <template v-slot:placeholder>
+              <v-row class="fill-height ma-0" align="center" justify="center">
+                <v-progress-circular
+                  indeterminate
+                  color="grey lighten-5"
+                ></v-progress-circular>
+              </v-row>
+            </template>
+          </v-img>
           <div
             v-else
             class="bg-color-one vertically--centered text-center pt-12"

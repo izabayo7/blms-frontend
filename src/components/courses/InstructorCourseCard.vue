@@ -3,16 +3,32 @@
     <v-card :class="`class-card ${course.published ? '' : 'unpublished-card'}`">
       <v-row class="first-row">
         <v-col class="col-md-7 col-7 content-side">
-          <p class="instructor-course-title">{{course.name | trimString(25)}}</p>
-          <p class="course-chapters mt-0">{{course.chapters.length}} Chapters</p>
+          <p class="instructor-course-title">
+            {{ course.name | trimString(25) }}
+          </p>
+          <p class="course-chapters mt-0">
+            {{ course.chapters.length }} Chapters
+          </p>
           <p
-            :class="`instructor-course-description ${course.published ? 'hidden-md-and-down' : ''}`"
-          >{{course.description | trimString(50)}}</p>
+            :class="`instructor-course-description ${
+              course.published ? 'hidden-md-and-down' : ''
+            }`"
+          >
+            {{ course.description | trimString(50) }}
+          </p>
           <p
-            :class="`published-date ${course.published ? 'hidden-md-and-down' : ''}`"
+            :class="`published-date ${
+              course.published ? 'hidden-md-and-down' : ''
+            }`"
             v-if="course.published"
-          >Published on {{ course.publishedOn | formatDate }}</p>
-          <v-btn v-else class="edit-btn ml-0" :to="`/courses/preview/${course.name}`">
+          >
+            Published on {{ course.publishedOn | formatDate }}
+          </p>
+          <v-btn
+            v-else
+            class="edit-btn ml-0"
+            :to="`/courses/preview/${course.name}`"
+          >
             Preview Course
             <v-icon color="#fff">mdi-arrow-right</v-icon>
           </v-btn>
@@ -20,13 +36,20 @@
         <v-col class="col-md-5 col-5 image-side">
           <v-menu bottom left>
             <template v-slot:activator="{ on, attrs }">
-              <v-btn icon v-bind="attrs" v-on="on" class="hidden-md-and-up menu-btn">
+              <v-btn
+                icon
+                v-bind="attrs"
+                v-on="on"
+                class="hidden-md-and-up menu-btn"
+              >
                 <v-icon>mdi-dots-vertical</v-icon>
               </v-btn>
             </template>
             <v-list class="mt-10">
               <v-list-item
-                v-for="(item, i) in course.published ? publishedList : unPublishedList"
+                v-for="(item, i) in course.published
+                  ? publishedList
+                  : unPublishedList"
                 :key="i"
                 class="menu-list"
               >
@@ -36,31 +59,51 @@
           </v-menu>
           <v-img
             v-if="course.coverPicture"
-            :src="course.coverPicture+'?height=200&width=200'"
+            :src="course.coverPicture + '?height=200&width=200'"
+            :lazy-src="course.coverPicture + '?height=200&width=200'"
             class="course-image hidden-md-and-down"
-          ></v-img>
+          >
+            <template v-slot:placeholder>
+              <v-row class="fill-height ma-0" align="center" justify="center">
+                <v-progress-circular
+                  indeterminate
+                  color="grey lighten-5"
+                ></v-progress-circular>
+              </v-row>
+            </template>
+          </v-img>
           <v-avatar
             class="course-image white--text bg-color-one text-h2"
             size="106"
             v-else
-          >{{course.name | computeText}}</v-avatar>
-          <p
-            class="course-students"
-            v-if="course.published"
-          >{{`${course.attendedStudents} Student${course.attendedStudents > 1 ? 's' : ''}`}}</p>
+            >{{ course.name | computeText }}</v-avatar
+          >
+          <p class="course-students" v-if="course.published">
+            {{
+              `${course.attendedStudents} Student${
+                course.attendedStudents > 1 ? "s" : ""
+              }`
+            }}
+          </p>
         </v-col>
       </v-row>
-      <v-row v-if="course.published" class="second-row hidden-md-and-down text-center">
+      <v-row
+        v-if="course.published"
+        class="second-row hidden-md-and-down text-center"
+      >
         <v-col class="col-md-6">
           <v-btn
             @click="tooglePublishCourse(course._id)"
             text
             color="error"
             class="action-btn"
-          >Unpublish Course</v-btn>
+            >Unpublish Course</v-btn
+          >
         </v-col>
         <v-col class="col-md-6 text-right">
-          <v-btn :to="`/courses/preview/${course.name}`" text class="action-btn">Preview Course</v-btn>
+          <v-btn :to="`/courses/preview/${course.name}`" text class="action-btn"
+            >Preview Course</v-btn
+          >
         </v-col>
       </v-row>
     </v-card>

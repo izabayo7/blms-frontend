@@ -3,12 +3,22 @@
     <v-row>
       <v-col class="col-4 col-md-4 logo-side">
         <back class="ma-6" to="/administration" />
-        <img
+        <v-img
           v-if="college.logo"
           :alt="college.name + ' logo photo'"
           class="d-block preview-media"
           :src="college.logo"
-        />
+          :lazy-src="college.logo"
+        >
+          <template v-slot:placeholder>
+            <v-row class="fill-height ma-0" align="center" justify="center">
+              <v-progress-circular
+                indeterminate
+                color="grey lighten-5"
+              ></v-progress-circular>
+            </v-row>
+          </template>
+        </v-img>
         <div v-else class="school-logo mt-12">
           <p>{{ college.name.toUpperCase()[0] }}</p>
         </div>
@@ -66,7 +76,7 @@
           class="d-none my-6"
           @change="handleFileUpload()"
         />
-        <p class="text-center">{{logo ? logo.name : ''}}</p>
+        <p class="text-center">{{ logo ? logo.name : "" }}</p>
       </v-col>
       <v-col class="col-8 col-md-8 form-side">
         <v-form class="mt-4">
@@ -151,7 +161,7 @@ export default {
         },
         logo: this.logo,
       }).then(() => {
-        this.$router.push(`/administration`)
+        this.$router.push(`/administration`);
       });
     },
   },
@@ -201,6 +211,7 @@ export default {
     }
     .edit-logo {
       font-size: 5px;
+      position: absolute;
       padding: 12px;
       border-radius: 22px;
       margin: -39px 145px 0;

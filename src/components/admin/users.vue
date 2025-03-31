@@ -2,7 +2,10 @@
   <v-app id="admin-dashboard" :class="`pa-${state ? 4 : 12}`">
     <h2>
       Welcome,
-      <strong>{{$store.state.user.user.otherNames}} {{$store.state.user.user.surName}}</strong>
+      <strong
+        >{{ $store.state.user.user.otherNames }}
+        {{ $store.state.user.user.surName }}</strong
+      >
     </h2>
     <v-row>
       <v-col class="col-md-3 col-12">
@@ -235,12 +238,26 @@
         <v-card v-if="college" class="school-card">
           <v-row>
             <v-col class="col-12">
-              <img
+              <v-img
                 v-if="college.logo"
                 :alt="college.name + ' logo photo'"
                 class="preview-media"
                 :src="college.logo"
-              />
+                :lazy-src="college.logo"
+              >
+                <template v-slot:placeholder>
+                  <v-row
+                    class="fill-height ma-0"
+                    align="center"
+                    justify="center"
+                  >
+                    <v-progress-circular
+                      indeterminate
+                      color="grey lighten-5"
+                    ></v-progress-circular>
+                  </v-row>
+                </template>
+              </v-img>
               <h1 v-else>{{ college.name.toUpperCase()[0] }}</h1>
             </v-col>
             <v-col class="col-12">

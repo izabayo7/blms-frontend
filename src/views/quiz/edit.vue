@@ -14,8 +14,7 @@
       ref="editor"
       :mode="mode"
       :defaultContent="
-        selected_quiz.instructions &&
-        selected_quiz.instructions != '<p></p>'
+        selected_quiz.instructions && selected_quiz.instructions != '<p></p>'
           ? selected_quiz.quiz
           : '<ol><li><p>Write your custom instructions</p></li></ol>'
       "
@@ -156,6 +155,18 @@
                                     size="50"
                                     >mdi-check</v-icon
                                   >
+                                  <template v-slot:placeholder>
+                                    <v-row
+                                      class="fill-height ma-0"
+                                      align="center"
+                                      justify="center"
+                                    >
+                                      <v-progress-circular
+                                        indeterminate
+                                        color="grey lighten-5"
+                                      ></v-progress-circular>
+                                    </v-row>
+                                  </template>
                                 </v-img>
                                 <button
                                   @click.prevent="
