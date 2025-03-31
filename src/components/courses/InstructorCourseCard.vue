@@ -76,7 +76,7 @@
             class="course-image white--text bg-color-one text-h2"
             size="106"
             v-else
-            >{{ course.name | computeText }}</v-avatar
+          >{{ course.name | computeText }}</v-avatar
           >
           <p class="course-students" v-if="course.published">
             {{

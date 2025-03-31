@@ -57,7 +57,7 @@
 import { mapState, mapGetters, mapMutations } from "vuex";
 // import {on} from "@/services/event_bus";
 import { chatMixins } from "@/services/mixins";
-import { on } from "@/services/event_bus";
+// import { on } from "@/services/event_bus";
 
 export default {
   name: "Chat-messaging",
@@ -130,10 +130,10 @@ export default {
     });
 
     //when the chatting user send message let us scroll to the bottom
-    on("message-sent", () => {
-      setTimeout(this.scrollChatToBottom, 1);
-      this.CHANGE_MESSAGE_READ_STATUS(this.currentDisplayedUser.id) //read all messages
-    });
+    // on("message-sent", () => {
+    //   setTimeout(this.scrollChatToBottom, 1);
+    //   this.CHANGE_MESSAGE_READ_STATUS(this.currentDisplayedUser.id) //read all messages
+    // });
 
 
     //track scroll so that we can determine if use has read new messages
@@ -145,6 +145,11 @@ export default {
     this.$store.getters['chat/socket'].on('message-sent',sentMessage => {
       this.$store.commit('chat/ADD_ONGOING_MESSAGE',sentMessage)
     })
+    // this.socket.on('message-sent',message => {
+    //   setTimeout(this.scrollChatToBottom, 1);
+    //   this.$store.commit('chat/ADD_ONGOING_MESSAGE',message)
+    // })
+
     /*
     when this component is mounted Immediately scroll to the bottom
     the reason we call this function the end is that we need to wait for the all message to be rendered

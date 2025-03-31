@@ -9,8 +9,8 @@
         <v-col cols="5" class="course-image-side">
           <v-img
             v-if="course.coverPicture"
-            :src="`${course.coverPicture}`"
-            :lazy-src="`${course.coverPicture}`"
+            :src="`${course.coverPicture}?format=png&width=200&height=200`"
+            :lazy-src="`${course.coverPicture}?format=png&width=200&height=200`"
             class="course-image"
           >
             <template v-slot:placeholder>
@@ -60,8 +60,8 @@
         <v-col class="col-12 pa-0" id="cover-pic">
           <v-img
             v-if="course.coverPicture"
-            :src="course.coverPicture"
-            :lazy-src="course.coverPicture"
+            :src="`${course.coverPicture}?format=png&width=300&height=300`"
+            :lazy-src="`${course.coverPicture}?format=png&width=300&height=300`"
             class="course-image"
           >
             <template v-slot:placeholder>

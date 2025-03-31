@@ -11,6 +11,7 @@ import sidebar_navbar from "@/store/modules/sidebar_navbar";
 import notification from '@/store/modules/notification'
 import users from '@/store/modules/users'
 import colleges from '@/store/modules/colleges'
+import years from '@/store/modules/years'
 
 Vue.use(Vuex)
 export default new Vuex.Store({
@@ -31,6 +32,7 @@ export default new Vuex.Store({
         sidebar_navbar,
         notification,
         users,
-        colleges
+        colleges,
+        years
     }
 })

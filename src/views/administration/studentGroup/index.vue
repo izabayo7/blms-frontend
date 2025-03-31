@@ -56,7 +56,7 @@
             <v-col class="col-12 col-md-12">
               <h4>Student Groups</h4>
               <p>
-                <strong>8</strong>
+                <strong>{{ formatedFacultyCollegeYears.length }}</strong>
               </p>
             </v-col>
           </v-row>
@@ -66,9 +66,10 @@
         <v-card class="users-table pa-4 mx-auto mt-12">
           <v-card-title>
             <v-row>
-              <v-col class="col-3"><span class="table--title">Student Group</span></v-col>
-              <v-col
-              class="col-4 offset-2"
+              <v-col class="col-3"
+                ><span class="table--title">Student Group</span></v-col
+              >
+              <v-col class="col-4 offset-2"
                 ><v-text-field
                   v-model="search"
                   append-icon="mdi-magnify"
@@ -78,15 +79,19 @@
                   class="search-field"
                 ></v-text-field
               ></v-col>
-              <v-col
-              class="col-2 offset-1"
-                ><v-btn rounded to="/register/faculty">
+              <v-col class="col-2 offset-1"
+                ><v-btn rounded to="/administration/register/studentGroup">
                   <v-icon color="#fff">mdi-plus</v-icon>Add new Faculty
                 </v-btn></v-col
               >
             </v-row>
           </v-card-title>
-          <v-data-table :headers="headers" :items="faculties" sort-by="name">
+          <v-data-table
+            :headers="headers"
+            :items="formatedFacultyCollegeYears"
+            :search="search"
+            sort-by="name"
+          >
             <template v-slot:item.actions="{ item }">
               <v-icon color="success" @click="editItem(item)"
                 >mdi-eye-outline</v-icon
@@ -100,7 +105,7 @@
 </template>
 
 <script>
-import Apis from "@/services/apis";
+import { mapActions, mapGetters } from "vuex";
 export default {
   components: {
     back: () => import("@/components/shared/back-button"),
@@ -111,40 +116,40 @@ export default {
       {
         text: "Faculty",
         align: "start",
-        sortable: false,
-        value: "name",
+        value: "faculty_name",
+      },
+      {
+        text: "Year",
+        value: "year",
       },
       { text: "Attendants", value: "attendants" },
       { text: "Teacher", value: "teacher" },
       { text: "Action", value: "actions", sortable: false, align: "center" },
     ],
-    faculties: [],
   }),
-  beforeMount() {
-    this.getFaculties();
+  computed: {
+    // get the faculties
+    ...mapGetters("faculties", ["facultyCollegeYears", "loaded"]),
+    formatedFacultyCollegeYears() {
+      let results = [];
+      for (const i in this.facultyCollegeYears) {
+        results.push({
+          faculty_name: this.facultyCollegeYears[i].facultyCollege.faculty.name,
+          year: `year ${this.facultyCollegeYears[i].collegeYear.digit}`,
+          attendants: this.facultyCollegeYears[i].attendants,
+        });
+      }
+      return results;
+    },
   },
   methods: {
-    async getFaculties() {
-      try {
-        const response = await Apis.get(
-          `facility/college/${this.$store.state.user.college}`
-        );
-        for (const faculty of response.data) {
-          this.faculties.push({
-            name: faculty.name,
-            attendants: 250,
-            teacher: "Kankindi Marie",
-          });
-        }
-      } catch (error) {
-        if (error.request && !error.response) {
-          this.status = 503;
-          this.message = "Service Unavailable";
-          this.modal = false;
-          this.show = true;
-        }
-      }
-    },
+    ...mapActions("faculties", ["getFacultyCollegeYears"]),
+  },
+  created() {
+    if (!this.loaded) {
+      // load faculties
+      this.getFacultyCollegeYears(this.$store.state.user.user.college);
+    }
   },
 };
 </script>

@@ -4,6 +4,7 @@ const getDefaultState = () => ({
         data: [],
         loaded: false
     },
+    selected_user: ''
 })
 
 export default {
@@ -65,6 +66,9 @@ export default {
         },
         loaded: state => {
             return state.users.loaded
+        },
+        selected_user: state => {
+            return state.users.data.filter(user => user._id == state.selected_user)[0]
         },
     },
 }
