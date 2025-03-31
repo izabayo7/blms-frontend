@@ -141,7 +141,7 @@
 
 <script>
 import colors from "@/assets/sass/imports/_colors.scss";
-
+import {convertUTCDateToLocalDate} from "@/services/global_functions"
 export default {
   props: {
     course: {
@@ -160,7 +160,7 @@ export default {
         if (this.course.chapters[i].live_sessions.length) {
           // if()
           if ((new Date(this.course.chapters[i].live_sessions[0].date) <= new Date(new Date().toISOString().substring(0, 10)))) {
-            if (new Date(this.nearestLiveSession.date.replace("00:00", this.nearestLiveSession.time)) <= new Date(new Date().toGMTString())) {
+            if (convertUTCDateToLocalDate(new Date(this.nearestLiveSession.date.replace("00:00", this.nearestLiveSession.time))) <= new Date(new Date().toGMTString())) {
               return true;
             }
           }
@@ -183,7 +183,6 @@ export default {
       for (const i in this.course.chapters) {
         if (this.course.chapters[i].live_sessions.length) {
           if (!live_session && (new Date(this.course.chapters[i].live_sessions[0].date) >= new Date(this.currentDate))) {
-            console.log(new Date(this.course.chapters[i].live_sessions[0].date), new Date(this.currentDate))
             live_session = this.course.chapters[i].live_sessions[0]
           } else if (live_session) {
             if (live_session.date < this.course.chapters[i].live_sessions[0].date) {
@@ -194,7 +193,12 @@ export default {
       }
       this.nearestLiveSession = live_session;
       if (live_session && this.rem_time == "") {
-        this.setClock(new Date(this.nearestLiveSession.date.replace("00:00", this.nearestLiveSession.time)) / 1000)
+        console.log("before", this.nearestLiveSession.date, this.nearestLiveSession.time)
+        let date = new Date(this.nearestLiveSession.date.replace("00:00", this.nearestLiveSession.time))
+        console.log("utc",date)
+        date = convertUTCDateToLocalDate(date)
+        console.log("loca",date)
+        this.setClock( date / 1000)
       }
     },
     setClock(endTime) {
