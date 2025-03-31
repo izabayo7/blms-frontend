@@ -1,4 +1,4 @@
-#reports-page {
+#grades-page {
     .normal--text {
         text-decoration: none;
         color: inherit;
@@ -97,7 +97,7 @@
     height: 11px !important;
     width: 87%;
 
-    &.reports {
+    &.grades {
         height: 7px !important;
     }
 }
@@ -124,7 +124,7 @@
 
 /* Portrait phones and smaller */
 @media (max-width: 700px) {
-    #reports-page {
+    #grades-page {
         padding: 10px
     }
 }

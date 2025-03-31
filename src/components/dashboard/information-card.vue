@@ -39,7 +39,7 @@
               <v-progress-linear
                   :active="false"
                   :value="percent(series[0])"
-                  class="mt-6 progressbar reports yellow"
+                  class="mt-6 progressbar grades yellow"
               />
             </div>
           </div>
@@ -52,7 +52,7 @@
               <v-progress-linear
                   :active="false"
                   :value="percent(series[1])"
-                  class="mt-6 progressbar reports blue"
+                  class="mt-6 progressbar grades blue"
               />
             </div>
           </div>
@@ -65,7 +65,7 @@
               <v-progress-linear
                   :active="false"
                   :value="percent(series[2])"
-                  class="mt-6 progressbar reports red"
+                  class="mt-6 progressbar grades red"
               />
             </div>
           </div>

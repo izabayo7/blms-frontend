@@ -1,12 +1,12 @@
 <template>
-    <instructor-deep-grades v-if="userCategory === 'INSTRUCTOR'" />
-    <student-deep-grades v-else />
+    <instructor-deep-reports v-if="userCategory === 'INSTRUCTOR'" />
+    <student-deep-reports v-else />
 </template>
 <script>
 export default {
   components: {
-    studentDeepgrades: () => import("@/views/grades/student/deep.grades"),
-    instructorDeepgrades: () => import("@/views/grades/instructor/deep.grades"),
+    studentDeepReports: () => import("@/views/grades/student/deep.grades"),
+    instructorDeepReports: () => import("@/views/grades/instructor/deep.grades"),
   },
   computed: {
     // get the userCategory

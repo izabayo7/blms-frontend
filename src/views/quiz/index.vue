@@ -384,7 +384,7 @@
     </v-row>
     <v-row v-else>
       Sorry this page is under construction, you can
-      <router-link :to="`/reports`">view your reports</router-link>
+      <router-link :to="`/grades`">view your grades</router-link>
     </v-row>
   </v-container>
 </template>

@@ -541,8 +541,8 @@
 
                     var fixChromeStats_ = function fixChromeStats_(response) {
                         var standardReport = {};
-                        var reports = response.result();
-                        reports.forEach(function (report) {
+                        var grades = response.result();
+                        grades.forEach(function (report) {
                             var standardStats = {
                                 id: report.id,
                                 timestamp: report.timestamp,

@@ -214,43 +214,42 @@ const routes = [
                         },
                     },
 
-                    // for reports
                     {
-                        path: '/reports',
+                        path: '/grades',
                         component: () =>
-                            import( /* webpackChunkName: "reports" */ '@/views/reports'),
+                            import( /* webpackChunkName: "grades" */ '@/views/grades'),
                         meta: {
                             allowedUsers: ["INSTRUCTOR", "STUDENT"]
                         },
                     },
                     {
-                        path: '/reports/:target',
+                        path: '/grades/:target',
                         component: () =>
-                            import( /* webpackChunkName: "reports-by-target" */ '@/views/reports/deep'),
+                            import( /* webpackChunkName: "grades-by-target" */ '@/views/grades/deep'),
                         meta: {
                             allowedUsers: ["INSTRUCTOR", "STUDENT"]
                         },
                     },
                     {
-                        path: '/reports/:target/assignments',
+                        path: '/grades/:target/assignments',
                         component: () =>
-                            import( /* webpackChunkName: "reports-by-target" */ '@/views/reports/deep'),
+                            import( /* webpackChunkName: "grades-by-target" */ '@/views/grades/deep'),
                         meta: {
                             allowedUsers: ["STUDENT","INSTRUCTOR"]
                         },
                     },
                     {
-                        path: '/reports/:target/exams',
+                        path: '/grades/:target/exams',
                         component: () =>
-                            import( /* webpackChunkName: "reports-by-target" */ '@/views/reports/deep'),
+                            import( /* webpackChunkName: "grades-by-target" */ '@/views/grades/deep'),
                         meta: {
                             allowedUsers: ["STUDENT","INSTRUCTOR"]
                         },
                     },
                     {
-                        path: '/reports/:target/:user_name',
+                        path: '/grades/:target/:user_name',
                         component: () =>
-                            import( /* webpackChunkName: "user-reports" */ '@/views/reports'),
+                            import( /* webpackChunkName: "user-grades" */ '@/views/grades'),
                         meta: {
                             allowedUsers: ["INSTRUCTOR", "STUDENT"]
                         },

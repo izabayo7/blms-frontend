@@ -189,9 +189,9 @@
             v-if="!disableFunctionalities&&(userCategory === 'STUDENT' || userCategory === 'INSTRUCTOR')"
             @click="
             closeSidebar();
-            routeTo('/reports');
+            routeTo('/grades');
           "
-            :class="{ active: activeRoute('reports') }"
+            :class="{ active: activeRoute('grades') }"
         >
           <div class="link-icon">
             <svg
@@ -208,7 +208,7 @@
               />
             </svg>
           </div>
-          <div class="link-name" v-show="state">Reports</div>
+          <div class="link-name" v-show="state">grades</div>
         </li>
         <li
             v-if="!disableFunctionalities&&(userCategory === 'STUDENT')"

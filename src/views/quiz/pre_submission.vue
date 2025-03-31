@@ -24,7 +24,7 @@
           All your answers have been saved and submitted successfuly
         </div>
         <div class="mt-8 text_1">
-          You may check your submission status in reports
+          You may check your submission status in grades
           <svg
             id="file-chart-fill"
             xmlns="http://www.w3.org/2000/svg"
@@ -60,9 +60,9 @@
           </button>
           <button
             :class="`start_quiz grey ${!isInstructor ? 'ml-6' : ''}`"
-            @click="$router.push('/reports')"
+            @click="$router.push('/grades')"
           >
-            Open reports
+            Open grades
           </button>
         </div>
       </v-col>
