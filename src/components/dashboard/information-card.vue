@@ -88,6 +88,9 @@ export default {
     total: {
       type: Number,
     },
+    labels:{
+      type: Array
+    },
     headers: {
       type: Array,
       required: true,
@@ -132,6 +135,9 @@ export default {
   components: {
     chart: Apexcharts,
   },
+  beforeMount() {
+    this.chartOptions.labels = this.labels
+  }
 };
 </script>
 
