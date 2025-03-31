@@ -7,6 +7,7 @@
 
 <!--      block of messages -->
       <div class="msgs-block" v-for="(msgs,i) in data" :key="i"  :class="{sending:msgGoing(msgs.from),receiving:!msgGoing(msgs.from)}">
+        <div class="unread-indicator"><hr></div>
 <!--        picture of the message sender-->
         <div class="picture"><img src="@/assets/images/instructor.png" alt="sender profile picture" ></div>
 <!--        list of messages sent or received-->
