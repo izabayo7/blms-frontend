@@ -264,7 +264,6 @@ router.beforeEach((to, from, next) => {
         const token = Vue.prototype.$session.get(
             "jwt"
         )
-        console.log(token)
         // set the token in axios headers
         axios.defaults.headers.common.Authorization = `${token}`;
         // keep the decoded user in vuex store
@@ -294,8 +293,6 @@ router.beforeEach((to, from, next) => {
             path: `/${store.state.user.user.category.name === 'STUDENT' || store.state.user.user.category.name === 'INSTRUCTOR' ? 'courses' : 'administration'}`,
         })
     }
-    console.log(axios.defaults.headers.common.Authorization)
-    console.log(Vue.prototype.$session.exists(), !store.state.user.isLoggedIn || !axios.defaults.headers.common.Authorization, Vue.prototype.$session.exists() && (!store.state.user.isLoggedIn || !axios.defaults.headers.common.Authorization),axios.defaults.headers.common.Authorization)
 
     // go to the requested route
     // else {
