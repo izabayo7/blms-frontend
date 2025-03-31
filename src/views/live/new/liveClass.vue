@@ -853,11 +853,11 @@ export default {
       this.participationInfo.name = `${this.user.other_names} ${this.user.sur_name}`
       this.participationInfo.room = this.$route.params.liveSessionId
 
-      const host = 'stream.kurious.rw'
-      // const host = 'localhost:8081'
+      // const host = 'stream.kurious.rw'
+      const host = 'localhost:8081'
 
-      this.ws = new WebSocket('wss://' + host + '/kurious_stream' + `?token=${this.$session.get("jwt")}`);
-      // this.ws = new WebSocket('ws://' + host + '/kurious_stream' + `?token=${this.$session.get("jwt")}`);
+      // this.ws = new WebSocket('wss://' + host + '/kurious_stream' + `?token=${this.$session.get("jwt")}`);
+      this.ws = new WebSocket('ws://' + host + '/kurious_stream' + `?token=${this.$session.get("jwt")}`);
 
       this.ws.addEventListener('open', () => {
         self.register();
@@ -911,9 +911,6 @@ export default {
             break;
           case 'existingParticipants': {
             this.onExistingParticipants(parsedMessage);
-            this.socket.emit("live_session/joined", {
-              session_id: this.live_session._id
-            });
             break;
           }
           case 'newParticipantArrived':
@@ -951,9 +948,6 @@ export default {
       }
       this.ws.onclose = () => {
         console.trace();
-        this.socket.emit("live_session/left", {
-          session_id: this.live_session._id
-        });
       }
       self.socket.on("live/quizReleased", (quiz) => {
         self.quiz = quiz;

@@ -292,7 +292,7 @@
         </div>
         <div class="tabs-body">
           <div class="tab d-md-flex">
-            <div v-if="course.cover_picture"
+            <div v-if="course ? course.cover_picture : false"
                  class="cover"
                  :style="`background-image: url('`+`${course.cover_picture}?width=300&token=${$session.get('jwt')}');`">
             </div>
@@ -535,7 +535,7 @@
                   fill="#FF4E4E"/>
               <circle cx="96.8711" cy="59.376" r="15.625" fill="#FF4E4E"/>
             </svg>
-            <div class="mb-1">{{ nearestLiveSession.connected_users }} student watching</div>
+            <div class="mb-1">{{ connected_users.length }} user{{connected_users.length > 1 ? 's' : ''}} connected</div>
             <div>Started {{  elapsed_time }}</div>
             <div>
               <button @click="
@@ -631,6 +631,7 @@ import {mapActions, mapGetters} from "vuex";
 import Api from "@/services/apis.js"
 import {calculateNearestLiveSession, elapsedDuration, convertUTCDateToLocalDate} from "@/services/global_functions"
 import userSimpleCard from "../../mixins/user-simple-card.mixin";
+import axios from "axios";
 
 export default {
   name: "preview_course",
@@ -639,6 +640,7 @@ export default {
     student_list: [],
     chapterIndex: -1,
     nearestLiveSession: undefined,
+    connected_users: [],
     elapsed_time: "",
   }),
   components: {
@@ -683,6 +685,16 @@ export default {
     panel1() {
       if (!this.panel1 && !this.student_list.length)
         this.loadStudents();
+    },
+    async nearestLiveSession(){
+      if(this.nearestLiveSession){
+        console.log(
+            "hahiye"
+        )
+        const res = await axios.get(`https://strream.kurious.rw/api/live_sessions/${this.nearestLiveSession._id}/users`)
+        if(res.data)
+          this.connected_users = res.data
+      }
     }
   },
   methods: {
