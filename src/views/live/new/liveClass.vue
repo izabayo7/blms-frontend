@@ -254,110 +254,7 @@ export default {
     return {
       ws: null,
       participants: [],
-      comments: [{
-        "_id": "6034a4ce486da89738c1700c",
-        "sender": {
-          "email": "cedro@gmail.com",
-          "sur_name": "Cedric",
-          "other_names": "Izabayo",
-          "user_name": "user_238760",
-          "gender": "male",
-          "profile": "https://apis.kurious.rw/api/user/user_238760/profile/profile_1620119711766.png",
-          "category": "STUDENT"
-        },
-        "target": {"type": "chapter", "id": "600d9d6574bd7a7b60d7b4cd"},
-        "content": "olala",
-        "updatedAt": "2021-02-23T06:46:38.062Z",
-        "createdAt": "2021-02-23T06:46:38.062Z",
-        "__v": 0,
-        "replies": [{
-          "_id": "6034a4d8486da89738c1700d",
-          "sender": {
-            "email": "cedro@gmail.com",
-            "sur_name": "Cedric",
-            "other_names": "Izabayo",
-            "user_name": "user_238760",
-            "gender": "male",
-            "profile": "https://apis.kurious.rw/api/user/user_238760/profile/profile_1620119711766.png",
-            "category": "STUDENT"
-          },
-          "target": {"type": "chapter", "id": "600d9d6574bd7a7b60d7b4cd"},
-          "content": "ibintu numuti",
-          "reply": "6034a4ce486da89738c1700c",
-          "updatedAt": "2021-02-23T06:46:48.317Z",
-          "createdAt": "2021-02-23T06:46:48.317Z",
-          "__v": 0
-        },
-          {
-            "_id": "6034a4d8486da89738c1700d",
-            "sender": {
-              "email": "cedro@gmail.com",
-              "sur_name": "Cedric",
-              "other_names": "Izabayo",
-              "user_name": "user_238760",
-              "gender": "male",
-              "profile": "https://apis.kurious.rw/api/user/user_238760/profile/profile_1620119711766.png",
-              "category": "STUDENT"
-            },
-            "target": {"type": "chapter", "id": "600d9d6574bd7a7b60d7b4cd"},
-            "content": "ibintu numuti",
-            "reply": "6034a4ce486da89738c1700c",
-            "updatedAt": "2021-02-23T06:46:48.317Z",
-            "createdAt": "2021-02-23T06:46:48.317Z",
-            "__v": 0
-          }]
-      }, {
-        "_id": "601af4846725b4e249144313",
-        "sender": {
-          "email": "cedro@gmail.com",
-          "sur_name": "Cedric",
-          "other_names": "Izabayo",
-          "user_name": "user_238760",
-          "gender": "male",
-          "profile": "https://apis.kurious.rw/api/user/user_238760/profile/profile_1620119711766.png",
-          "category": "STUDENT"
-        },
-        "target": {"type": "chapter", "id": "600d9d6574bd7a7b60d7b4cd"},
-        "content": "hahiye koko",
-        "updatedAt": "2021-02-03T19:07:48.244Z",
-        "createdAt": "2021-02-03T19:07:48.244Z",
-        "__v": 0,
-        "replies": []
-      }, {
-        "_id": "60115efff29a011323d063ff",
-        "sender": {
-          "email": "cedro@gmail.com",
-          "sur_name": "Cedric",
-          "other_names": "Izabayo",
-          "user_name": "user_238760",
-          "gender": "male",
-          "profile": "https://apis.kurious.rw/api/user/user_238760/profile/profile_1620119711766.png",
-          "category": "STUDENT"
-        },
-        "target": {"type": "chapter", "id": "600d9d6574bd7a7b60d7b4cd"},
-        "content": "hello\n",
-        "updatedAt": "2021-01-27T12:39:27.036Z",
-        "createdAt": "2021-01-27T12:39:27.036Z",
-        "__v": 0,
-        "replies": []
-      }, {
-        "_id": "60115ef4f29a011323d063fe",
-        "sender": {
-          "email": "cedro@gmail.com",
-          "sur_name": "Cedric",
-          "other_names": "Izabayo",
-          "user_name": "user_238760",
-          "gender": "male",
-          "profile": "https://apis.kurious.rw/api/user/user_238760/profile/profile_1620119711766.png",
-          "category": "STUDENT"
-        },
-        "target": {"type": "chapter", "id": "600d9d6574bd7a7b60d7b4cd"},
-        "content": "hello\n",
-        "updatedAt": "2021-01-27T12:39:16.548Z",
-        "createdAt": "2021-01-27T12:39:16.548Z",
-        "__v": 0,
-        "replies": []
-      }],
+      comments: [],
       me: null,
       id: "",
       comment: "",
@@ -601,32 +498,6 @@ export default {
       }
     }
   },
-  mounted() {
-    let span = document.querySelector('.message-row span')
-    let actionButtons = document.querySelector('.action-btn');
-    let cancelButton = document.querySelector('.action-btn .cancel button')
-    span.innerText = 'write comment'
-    actionButtons.style.display = 'none';
-    // let focused = false;
-    span.onfocus = () => {
-      if (span.innerText == 'write comment') {
-        span.innerText = ""
-      }
-      actionButtons.style.display = 'flex';
-    }
-    span.onblur = () => {
-      if (span.innerText == "") {
-        actionButtons.style.display = 'none';
-      }
-    }
-    cancelButton.onclick = () => {
-      span.innerText = "write comment"
-      actionButtons.style.display = 'none';
-    }
-    if (!this.participationInfo.isOfferingCourse) {
-      span.className = "stud_span"
-    }
-  },
   created() {
     //know if this user has ability to give live class
     this.participationInfo.isOfferingCourse = this.user.category.name === 'INSTRUCTOR'
@@ -698,15 +569,21 @@ export default {
       console.log("\n\n\n\nclosed\n\n\n\n", new Date())
     }
     self.socket.on("comment/new", (result) => {
-      console.log("\n\n\nyaje weeeeeeeeeeeeeeeeeeeee\n\n\n", result)
       // this.$store.commit(
       //     "courses/SET_TOTAL_COMMENTS_ON_A_CHAPTER",
       //     this.totalComments == "" ? 1 : this.totalComments + 1
       // );
-      if(result.reply){
-        self.replied({_id: result.reply, data: result})
-      }else {
-        self.comments.push(result)
+      if (result.reply) {
+        const comments = self.comments.filter(e => e._id == result.reply)
+        if (comments.length) {
+          const replies = comments.replies.filter(e=>e._id == result._id)
+          if (!replies.length)
+            self.replied({_id: result.reply, data: result});
+        }
+      } else {
+        const comments = self.comments.filter(e => e._id == result._id)
+        if (!comments.length)
+          self.comments.push(result);
       }
     });
   },

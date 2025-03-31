@@ -2,34 +2,34 @@
   <div class="my-student-new-comment-with-photo">
     <div class="my-student-new-comment-container-with-photo">
       <form
-        @submit.prevent="send_comment"
-        action=""
-        class="new-comment-with-photo"
+          @submit.prevent="send_comment"
+          action=""
+          class="new-comment-with-photo"
       >
         <div class="message-row">
           <div class="profile-pic">
             <v-avatar size="30">
               <img
-                v-if="$store.state.user.user.profile"
-                :src="`${$store.state.user.user.profile}?width=100`"
-                alt="profile picture"
+                  v-if="$store.state.user.user.profile"
+                  :src="`${$store.state.user.user.profile}?width=100`"
+                  alt="profile picture"
               />
               <div v-else class="text">{{ user_full_names | computeText }}</div>
             </v-avatar>
           </div>
           <div class="input ml-3 pl-3 py-1">
-            <expandable-input v-model="comment"/>
+            <expandable-input @focused="enableControls" @endfocus="disableControls" v-model="comment"/>
           </div>
         </div>
-        <div class="action-btn" >
+        <div class="action-btn" v-show="showControls">
 
           <div class="cancel">
-            <button-ui  class-list="px-5 py-1">
+            <button-ui @click="cancelCommenting" class-list="px-5 py-1">
               <template #content>CANCEL</template>
             </button-ui>
           </div>
           <div class="send ml-4">
-            <button-ui fill class-list="px-5 py-1"  @click="send_comment">
+            <button-ui fill class-list="px-5 py-1" @click="send_comment">
               <template #content>COMMENT</template>
             </button-ui>
           </div>
@@ -40,16 +40,16 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import {mapGetters} from "vuex";
 import api from "@/services/apis";
-import { empty } from "../../services/global_functions";
+import {empty} from "../../services/global_functions";
 import ExpandableInput from "../reusable/ui/ExpandableInput";
 import ButtonUi from "../reusable/ui/button-ui";
 
 export default {
   name: "StudentNewCommentWithPhoto",
   components: {ButtonUi, ExpandableInput},
-  props:{
+  props: {
     isLive: {
       type: Boolean,
       default: false
@@ -58,6 +58,7 @@ export default {
   data() {
     return {
       comment: "",
+      showControls: false,
     };
   },
   computed: {
@@ -68,7 +69,10 @@ export default {
     comment_object() {
       return {
         sender: this.username,
-        target: { type: this.isLive? "live_session" : "chapter", id: this.isLive? "609ab8838fc73f303874e10e" : this.selectedChapter },
+        target: {
+          type: this.isLive ? "live_session" : "chapter",
+          id: this.isLive ? "609ab8838fc73f303874e10e" : this.selectedChapter
+        },
         content: this.comment,
       };
     },
@@ -76,13 +80,40 @@ export default {
       return empty(this.comment);
     },
   },
+  mounted() {
+    let span = document.querySelector('.message-row span')
+    span.innerText = 'write comment'
+    span.onfocus = () => {
+      if (span.innerText == 'write comment') {
+        span.innerText = ""
+      }
+    }
+    span.onblur = () => {
+      if (span.innerText == "") {
+        span.innerText = 'write comment'
+      }
+    }
+  },
   methods: {
+    cancelCommenting(){
+      let span = document.querySelector('.message-row span')
+      span.innerText = 'write comment'
+      this.showControls = false
+    },
+    enableControls() {
+      if (!this.showControls)
+        this.showControls = true;
+    },
+    disableControls() {
+      let span = document.querySelector('.message-row span')
+      if (this.showControls && span.innerText == "")
+        this.showControls = false;
+    },
     async send_comment() {
-      console.log("ahaaaa",this.comment)
       if (empty(this.comment)) return;
 
       try {
-        if(!this.isLive) {
+        if (!this.isLive) {
           let {data} = await api.create("comment", this.comment_object);
           data.data.replies = [];
           this.$store.commit(
@@ -91,22 +122,26 @@ export default {
           );
           this.$emit("sent", data.data);
           this.comment = "";
-        } else{
+        } else {
           this.socket.emit("comment/new", {
             receivers: this.participants,
             comment: this.comment_object,
           });
-          this.socket.on("res/comment/new", (result)=>{
+          this.socket.on("res/comment/new", (result) => {
             console.log("\n\n\nyagiye weeeeeeeeeeeeeeeeeeeee\n\n\n", result)
             // this.$store.commit(
             //     "courses/SET_TOTAL_COMMENTS_ON_A_CHAPTER",
             //     this.totalComments == "" ? 1 : this.totalComments + 1
             // );
             result.replies = [];
+            console.log(result)
             this.$emit("sent", result);
             this.comment = "";
           });
         }
+        let span = document.querySelector('.message-row span')
+        span.innerText = 'write comment'
+        this.showControls = false;
       } catch (err) {
         console.log(err);
       }
@@ -125,7 +160,8 @@ export default {
       .disabled {
         opacity: 0.5;
       }
-      .message-row{
+
+      .message-row {
         display: flex;
         justify-items: center;
         align-items: center;
@@ -133,13 +169,16 @@ export default {
         .profile-pic {
           .v-avatar {
             background-color: $primary;
+
             .text {
               color: $main;
             }
+
             width: 25px;
             height: 25px;
           }
         }
+
         .input {
           width: 100%;
           display: flex;
@@ -147,26 +186,30 @@ export default {
 
         }
       }
-      .action-btn{
+
+      .action-btn {
         display: flex;
         justify-content: flex-end;
-        margin-top:1rem;
-        button{
+        margin-top: 1rem;
+
+        button {
           font-size: .8rem;
-          margin:.1rem .4rem;
-          padding:.2rem .8rem;
+          margin: .1rem .4rem;
+          padding: .2rem .8rem;
           border-radius: 1px;
         }
+
         .send {
           background-color: $primary;
-          color:$main;
+          color: $main;
+
           &:hover {
             background-color: darken($primary, 5);
           }
 
         }
 
-        .cancel{
+        .cancel {
           background-color: $secondary;
         }
       }

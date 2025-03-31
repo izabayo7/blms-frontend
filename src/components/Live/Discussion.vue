@@ -134,6 +134,7 @@ export default {
   },
   methods: {
     replied(data) {
+      this.commenting = false;
       this.$emit("replied", data);
     },
   },

@@ -1,5 +1,5 @@
 <template>
-  <span ref="editable" @input="input" role="textbox" contenteditable type="text">
+  <span ref="editable" @input="input" role="textbox" contenteditable @focus="$emit('focused')" @blur="$emit('endfocus')" type="text">
   </span>
 </template>
 
