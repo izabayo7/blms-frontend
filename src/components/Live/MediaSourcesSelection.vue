@@ -97,6 +97,7 @@ export default {
     show: Boolean,
     stream: MediaStream,
     peerConnection: RTCPeerConnection,
+    videoEl: Element
   },
   components: {ButtonUi, SelectUi},
   data() {
@@ -147,7 +148,8 @@ export default {
                   return s.track.kind == videoTrack.kind;
                 });
                 sender.replaceTrack(videoTrack);
-              } else if (type.includes('input')) {
+              }
+              else if (type.includes('input')) {
                 let audioTrack = stream.getAudioTracks()[0];
                 let oldAudioTrack = this.stream.getAudioTracks()[0];
 
@@ -164,7 +166,9 @@ export default {
               console.error('Error happens:', err);
             });
       }
-
+      else {
+        this.attachSinkId(this.videoEl,deviceid)
+      }
       console.log(`\n\n\n ${type} Device changed\n\n\n`)
     },
     // handling stream on video element
@@ -178,7 +182,26 @@ export default {
         }
       }, 500)
     },
-
+// Attach audio output device to video element using device/sink ID.
+    attachSinkId(element, sinkId) {
+  if (typeof element.sinkId !== 'undefined') {
+    element.setSinkId(sinkId)
+        .then(() => {
+          console.log(`Success, audio output device attached: ${sinkId}`);
+        })
+        .catch(error => {
+          let errorMessage = error;
+          if (error.name === 'SecurityError') {
+            errorMessage = `You need to use HTTPS for selecting audio output device: ${error}`;
+          }
+          console.error(errorMessage);
+          // Jump back to first output device in the list as it's the default.
+          this.selectedDevices.audioOutput = this.devices.audioOutput[0]
+        });
+  } else {
+    console.warn('Browser does not support output device selection.');
+  }
+},
     // filter devices by name and return device id
     filterDeviceId(name, type) {
       let device;

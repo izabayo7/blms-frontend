@@ -495,7 +495,7 @@ openQuiz">
       <div v-if="!loaded" class="loading">Loading</div>
       <div v-else class="not-found">Sorry {{ error }}</div>
     </div>
-    <media-sources-selection :stream="me ? me.rtcPeer.getLocalStream():undefined"
+    <media-sources-selection :videoEl="me? me.getVideoElement() : undefined" :stream="me ? me.rtcPeer.getLocalStream():undefined"
                              :peerConnection="me ?me.rtcPeer.peerConnection:undefined" :show="displaySettings"
                              @closeSettings="displaySettings = false"/>
   </div>
