@@ -348,9 +348,6 @@ export default {
             if (this.questions[i].type.includes('text')) {
               if (this.questions[i].options.choices[k].text == "")
                 return this.error = `Question ${parseInt(i) + 1}, option ${parseInt(k) + 1} text is required`
-
-              if (this.questions[i].options.choices[k].text.length < 3)
-                return this.error = `Question ${parseInt(i) + 1}, option ${parseInt(k) + 1} text is too short`
             }
           }
           if (!right_choice_found)
