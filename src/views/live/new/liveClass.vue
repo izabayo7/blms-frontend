@@ -457,9 +457,8 @@ export default {
               })
             else {
               self.finishSession();
+              this.onCloseRoom();
             }
-
-            this.onCloseRoom();
             break;
           case 'screenAllowed':
             this.onExistingParticipants({data: []});
@@ -797,9 +796,9 @@ export default {
         this.participants[key].dispose();
       }
 
-      // this.ws.close();
-      // this.handleMediaTracks();
-      // this.$router.push('/')
+      this.ws.close();
+      this.handleMediaTracks();
+      this.$router.push('/')
     },
     async receiveVideo(sender) {
       let participant = sender == this.participationInfo.name ? this.participants[this.participantIndex(sender)] : new Participant(sender, this, false, await this.getUserInfo(sender.split('_')[0]));
