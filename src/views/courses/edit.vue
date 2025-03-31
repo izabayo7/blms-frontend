@@ -37,8 +37,8 @@
               ></v-text-field>
               <h3>Student Group</h3>
               <v-select
-                v-model="course.facilityCollegeYear"
-                :items="facilityCollegeYearNames"
+                v-model="selectedFacultyCollegeYearName"
+                :items="facultyCollegeYearNames"
                 chips
                 :rules="simpleRules"
                 outlined
@@ -55,7 +55,8 @@
             <v-col class="col-12 col-md-4">
               <v-avatar size="245" class="user-profile ml-2 mt-6 d-block">
                 <img
-                  :src="`http://161.35.199.197:7070/kurious/file/courseCoverPicture/${$route.params.id}`"
+                  v-if="displayPicture"
+                  :src="course.coverPicture"
                   alt="avatar"
                 />
               </v-avatar>
@@ -84,7 +85,7 @@
                 rounded
                 color="#3CE970"
                 class="white--text mb-6"
-                @click="updateCourse()"
+                @click="updateCourse({course: { name: course.name, instructor: $store.state.user._id, description: course.description, facultyCollegeYear: selectedFacultyCollegeYearCode }, coverPicture: coverPicture}).then(()=>{course.name != $route.params.name ? $router.push(`/courses/edit/${course.name}`) : coverPicture ? reloadPicture() : undefined})"
               >update Course</v-btn>
             </v-col>
           </v-row>
@@ -323,19 +324,18 @@
 </template>
 
   <script>
-import Apis from "@/services/apis";
-import axios from "axios";
+// import Apis from "@/services/apis";
+import {mapActions, mapGetters} from 'vuex'
 export default {
-  name: "NewClass",
+  name: "editCourse",
 
   data: () => ({
     e6: 1,
-    facilityCollegeYearNames: [],
-    facilityCollegeYearCodes: [],
+    displayPicture: true,
     activeChapter: -1,
     quizNames: ["None"],
     selectedQuizName: "None",
-    coverPicture: undefined,
+    selectedFacultyCollegeYearName: '',
     quizes: [],
     attachments: [],
     modal: true,
@@ -344,8 +344,8 @@ export default {
     show: false,
     message: "",
     status: 200,
-    course: {},
-    chapters: [],
+    course: undefined,
+    coverPicture: undefined,
     activeIndex: 0,
     chapter: {
       _id: "",
@@ -360,6 +360,12 @@ export default {
     ],
     simpleRules: [(v) => !!v || "This field is required"],
   }),
+  computed: {
+    ...mapGetters('faculties', ['facultyCollegeYearNames']),
+    selectedFacultyCollegeYearCode(){
+      return this.$store.getters['faculties/facultyCollegeYear'](this.selectedFacultyCollegeYearName)._id
+    }
+  },
   watch: {
     activeChapter() {
       this.mode = "";
@@ -382,323 +388,41 @@ export default {
       }
     },
   },
-  beforeMount() {
-    this.getFaculties();
-    this.getEsssentials();
-  },
   methods: {
-    trimString(string, length) {
-      if (string.length < length) {
-        return string;
-      } else {
-        let trimedString = string.substring(0, length);
-        trimedString = trimedString.split(" ");
-        trimedString.splice(trimedString.length - 1, 1);
-        trimedString = trimedString.join(" ") + " ...";
-        return trimedString;
-      }
-    },
-    async getChapterDocument() {
-      try {
-        this.content = "";
-        const response = await Apis.get(
-          `file/chapterDocument/${this.chapters[this.activeChapter]._id}`
-        );
-        this.content = response.data;
-        this.mode = "edit";
-      } catch (error) {
-        if (error.response) {
-          this.status = 404;
-          this.message = "Content Was Not Found";
-          this.show = true;
-        } else if (error.request) {
-          this.status = 503;
-          this.message = "Service Unavailable";
-          this.show = true;
-        }
-        this.modal = false;
-      }
-    },
-    async getFaculties() {
-      try {
-        const response = await Apis.get(
-          `facility-college-year/college/${this.$store.state.user.college}`
-        );
-        for (const facultyCollegeYear of response.data) {
-          this.facilityCollegeYearNames.push(facultyCollegeYear.name);
-          this.facilityCollegeYearCodes.push(facultyCollegeYear._id);
-        }
-      } catch (error) {
-        if (error.request && !error.response) {
-          this.status = 503;
-          this.message = "Service Unavailable";
-          this.modal = false;
-          this.show = true;
-        }
-      }
-    },
-    async getEsssentials() {
-      try {
-        const course = await Apis.get(`course/${this.$route.params.id}`);
-        this.course = course.data;
-        this.course.facilityCollegeYear = this.facilityCollegeYearNames[
-          this.facilityCollegeYearCodes.indexOf(this.course.facilityCollegeYear)
-        ];
-        const chapters = await Apis.get(`chapter/course/${this.course._id}`);
-        this.chapters = chapters.data;
-      } catch (error) {
-        console.log(error);
-        if (error.response) {
-          this.status = error.response.status;
-          this.message = "Course No Found";
-          this.show = true;
-        } else if (error.request) {
-          this.status = 503;
-          this.message = "Service Unavailable";
-          this.show = true;
-        }
-      }
-    },
-    async getAttachments() {
-      this.attachments = [];
-      try {
-        const response = await Apis.get(
-          `file/getAttachments/${this.chapters[this.activeChapter]._id}`
-        );
-        this.attachments = response.data;
-      } catch (error) {
-        if (error.response) {
-          this.message = error.response.data;
-        } else if (error.request) {
-          this.message = "Service Unavailable";
-        }
-      }
-    },
-    async getQuizes() {
-      try {
-        const response = await Apis.get("quiz");
-        for (const quiz of response.data) {
-          if (!quiz.target) {
-            const newQuiz = {
-              _id: quiz._id,
-              name: quiz.name,
-              course: "nyuma",
-              usage: 0,
-              containedQuestions: quiz.questions.length,
-              instructor: quiz.instructor,
-              questions: quiz.questions,
-              duration: `${quiz.duration.hh === "" ? "00" : quiz.duration.hh}:${
-                quiz.duration.mm === "" ? "00" : quiz.duration.mm
-              }:${quiz.duration.ss === "" ? "00" : quiz.duration.ss}`,
-              date: quiz.createdAt.split("T")[0].split("-").reverse().join("/"),
-            };
-            this.quizes.push(newQuiz);
-            this.quizNames.push(newQuiz.name);
-          }
-        }
-      } catch (error) {
-        if (error.request && !error.response) {
-          this.status = 503;
-          this.message = "Service Unavailable";
-          this.modal = false;
-          this.show = true;
-        }
-      }
-    },
-    updateAttachment(file) {
-      this.attachments.push(file);
-    },
-    removeAttachment(index) {
-      this.attachments.splice(index, 1);
-    },
-    updateVideo(file) {
-      this.chapter.video = file;
-    },
-    removeVideo() {
-      this.chapter.video = undefined;
-    },
-    switchMode(mode) {
-      this.mode = "";
-      this.content = document.querySelector(".ProseMirror").innerHTML;
-      document
-        .querySelector(".ProseMirror")
-        .setAttribute("contenteditable", mode === "edit");
-      this.mode = mode;
-    },
+    ...mapActions("courses", [
+      "findCourseByName",
+      "getChapterMainContent",
+      "updateCourse"
+    ]),
+    ...mapActions("faculties", [
+      "getFacultyCollegeYears",
+      "getChapterMainContent",
+    ]),
+    // pick coverPicture
     pickfile() {
       document.getElementById("picture").click();
     },
+    // keep the coverPicture
     handleFileUpload() {
       this.coverPicture = this.$refs.file.files[0];
     },
-    async updateCourse() {
-      try {
-        this.message = "";
-        this.course.facilityCollegeYear = this.facilityCollegeYearCodes[
-          this.facilityCollegeYearNames.indexOf(this.course.facilityCollegeYear)
-        ];
-        let response = await Apis.update("course", this.course._id, {
-          name: this.course.name,
-          instructor: this.$store.state.user._id,
-          description: this.course.description,
-          facilityCollegeYear: this.course.facilityCollegeYear,
+    reloadPicture(){
+      this.displayPicture = false
+      this.$nextTick(function () {
+          this.displayPicture = true
         });
-        this.message = "Course was updated successfuly";
-        this.show = true;
-        this.course._id = response.data._id;
-
-        const formData = new FormData();
-
-        if (this.coverPicture) {
-          formData.append("file", this.coverPicture);
-
-          response = await axios.put(
-            `http://161.35.199.197:7070/kurious/file/updateCourseCoverPicture/${this.course._id}`,
-            formData,
-            { headers: { "Content-Type": "multipart/form-data" } }
-          );
-
-          setTimeout(() => {
-            this.message = "Cover Picture was updated successfully";
-          }, 1000);
-        }
-      } catch (error) {
-        if (error.response) {
-          this.status = error.response.status;
-          this.message = error.response.data;
-        } else if (error.request) {
-          this.status = 503;
-          this.message = "Service Unavailable";
-        }
-        this.modal = false;
-        this.show = true;
-      }
-    },
-    async attachQuiz(type, id) {
-      try {
-        const quiz = this.quizes[this.activeIndex];
-        this.message = "";
-        const splitDuration = quiz.duration.split(":");
-        await Apis.update("quiz", this.quizes[this.activeIndex]._id, {
-          name: quiz.name,
-          questions: quiz.questions,
-          duration: {
-            hh: splitDuration[0],
-            mm: splitDuration[1],
-            ss: splitDuration[2],
-          },
-          instructor: quiz.instructor,
-          target: {
-            type: type,
-            id: id,
-          },
-        });
-        this.message = "Quiz was updated attached";
-        this.show = true;
-      } catch (error) {
-        if (error.response) {
-          this.status = error.response.status;
-          this.message = error.response.data;
-        } else if (error.request) {
-          this.status = 503;
-          this.message = "Service Unavailable";
-        }
-        this.modal = false;
-        this.show = true;
-      }
-    },
-    async updateChapter() {
-      try {
-        this.message = "";
-        let response = await Apis.create("chapter", {
-          name: this.chapter.name,
-          course: this.course._id,
-          // course: "5f410bc8f1cd91290c28a696",
-          description: this.chapter.description,
-        });
-        this.message = "Course was updated successfuly";
-        this.show = true;
-        this.chapter._id = response.data._id;
-
-        response = await Apis.create(
-          `file/updateChapterContent/${this.chapter._id}`,
-          {
-            content: this.$refs.editor.getHTML(),
-          }
-        );
-        this.chapters++;
-        setTimeout(() => {
-          this.message = "Chapter content was updated successfuly";
-        }, 1000);
-        if (this.attachments.length > 0) {
-          const formData = new FormData();
-          for (const i in this.attachments) {
-            formData.append("files[" + i + "]", this.attachments[i]);
-          }
-          response = await axios.post(
-            `http://161.35.199.197:7070/kurious/file/UpdateAttachments/${this.chapter._id}`,
-            formData,
-            { headers: { "Content-Type": "multipart/form-data" } }
-          );
-          setTimeout(() => {
-            this.message = "Attachments were updated successfuly";
-          }, 1000);
-        }
-        if (this.chapter.video) {
-          const formData = new FormData();
-          formData.append("file", this.chapter.video);
-          response = await axios.post(
-            `http://161.35.199.197:7070/kurious/file/updateMainVideo/${this.chapter._id}`,
-            formData,
-            { headers: { "Content-Type": "multipart/form-data" } }
-          );
-          setTimeout(() => {
-            this.message = "Video was updated successfuly";
-          }, 1000);
-        }
-        if (this.selectedQuizName !== "None") {
-          this.attachQuiz("Chapter", this.chapter._id);
-        }
-      } catch (error) {
-        if (error.response) {
-          this.status = error.response.status;
-          this.message = error.response.data;
-        } else if (error.request) {
-          this.status = 503;
-          this.message = "Service Unavailable";
-        }
-        this.modal = false;
-        this.show = true;
-      }
-    },
-    reset(type) {
-      if (type === "course") {
-        this.course = {
-          _id: undefined,
-          name: "",
-          facilityCollegeYear: "",
-          description: "",
-          coverPicture: undefined,
-        };
-      } else {
-        this.chapter = {
-          _id: "",
-          name: "",
-          description: "",
-        };
-        this.content = undefined;
-        this.attachments = [];
-        const closeButtons = document.querySelectorAll(".remove--button");
-        this.mode = "";
-        this.e6 = 1;
-        this.$nextTick(function () {
-          this.mode = "edit";
-        });
-        for (const button of closeButtons) {
-          button.click();
-        }
-      }
-    },
+    }
+  },
+  created() {
+    this.getFacultyCollegeYears(this.$store.state.user.college)
+    this.findCourseByName({
+      userCategory: this.$store.state.user.category.toLowerCase(),
+      userId: this.$store.state.user._id,
+      courseName: this.$route.params.name,
+    }).then((course) => {
+      this.course = course;
+      this.selectedFacultyCollegeYearName = `${this.course.facultyCollegeYear.facultyCollege.faculty.name} ${this.course.facultyCollegeYear.collegeYear.digit}`
+    });
   },
 };
 </script>

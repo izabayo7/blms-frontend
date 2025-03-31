@@ -1,5 +1,5 @@
 <template>
-  <v-dialog id="kurious--dialog" v-model="visible" :persistent="modal">
+  <v-dialog id="kurious--dialog" v-model="visible" :persistent="closable">
     <div class="round">
       <v-card class="text-center pa-12">
         <v-avatar
@@ -18,33 +18,16 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 export default {
-  props: {
-    show: {
-      type: Boolean,
-      requierd: true,
-    },
-    message: {
-      type: String,
-      requierd: true,
-    },
-    modal: {
-      type: Boolean,
-      default: true,
-    },
-    status: {
-      type: Number,
-      default: 200,
-    },
-    color: {
-      type: String,
-    },
-  },
-  // compute the variable that determines the visibility of the dialog
   computed: {
-    visible() {
-      return this.show;
-    },
+    ...mapGetters("modal", [
+      "visible",
+      "progress",
+      "message",
+      "closable",
+      "status",
+    ]),
   },
 };
 </script>

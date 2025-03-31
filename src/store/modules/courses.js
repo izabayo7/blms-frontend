@@ -27,7 +27,7 @@ export default {
         },
     },
     actions: {
-        //get courses from backend
+        //get courses from backend (mukanya)
         getCourses({ state }, { userCategory, userId }) {
             apis.get(`course/${userCategory}/${userId}`).then(d => {
                 state.courses.data = d.data
@@ -67,6 +67,32 @@ export default {
             }
             return state.courses.data.filter(course => course.name == courseName)[0]
         },
+        //get a course by name from backend
+        updateCourse({ state, commit }, { course, coverPicture }) {
+            return apis.update('course', state.selectedCourse, course).then(d => {
+                for (const i in state.courses.data) {
+                    if (state.courses.data[i]._id == state.selectedCourse) {
+                        state.courses.data[i].name = d.data.name
+                        state.courses.data[i].description = d.data.description
+                        state.courses.data[i].facultyCollegeYear = d.data.facultyCollegeYear
+                        break
+                    }
+                }
+                if (coverPicture) {
+                    const formData = new FormData()
+                    formData.append("file", coverPicture)
+                    apis.update('file/updateCourseCoverPicture', state.selectedCourse, formData, {
+                        headers: {
+                            'Content-Type': 'multipart/form-data'
+                        },
+                        onUploadProgress: (progressEvent) => {
+                            commit('modal/update_progress', parseInt(Math.round((progressEvent.loaded / progressEvent.total) * 100)), { root: true })
+                        }
+                    })
+                }
+            })
+
+        },
         //publish a course
         tooglePublishCourse({ state }, courseId) {
             apis.update('course/tooglePublishment', courseId || state.selectedCourse).then(d => {
@@ -84,7 +110,7 @@ export default {
             apis.delete('course', state.selectedCourse).then(() => {
                 for (const i in state.courses.data) {
                     if (state.courses.data[i]._id == state.selectedCourse) {
-                        state.courses.data.splice(i,1 )
+                        state.courses.data.splice(i, 1)
                         break
                     }
                 }

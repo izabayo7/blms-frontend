@@ -19,7 +19,7 @@
           </article>
           <article class="owner">
             <h3>{{ `${course.instructor.surName} ${course.instructor.otherNames}`}}</h3>
-            <p class="facility">PHD, web development</p>
+            <p class="faculty">PHD, web development</p>
           </article>
         </div>
 
@@ -271,7 +271,7 @@
                     />
                   </svg>
                 </div>
-                <div class="text">{{course.facilityCollegeYear.facilityCollege.facility.name}}</div>
+                <div class="text">{{course.facultyCollegeYear.facultyCollege.faculty.name}}</div>
               </div>
               <div class="info-col col-sm-6 col-md-~4 col-lg-4 col-xl-4">
                 <div class="icon">
@@ -333,7 +333,7 @@
                     />
                   </svg>
                 </div>
-                <div class="text">year {{course.facilityCollegeYear.collegeYear.digit}}</div>
+                <div class="text">year {{course.facultyCollegeYear.collegeYear.digit}}</div>
               </div>
               <div class="info-col col-sm-6 col-md-~4 col-lg-4 col-xl-4">
                 <div class="icon">
