@@ -133,6 +133,11 @@
                     </td>
                     <td @click="$router.push(`/users/${user.user_name}`)" :title="user.email">{{ user.email | trimString(18) }}</td>
                     <td @click="$router.push(`/users/${user.user_name}`)">{{ user.user_name }}</td>
+                    <td>
+                      <div :class="`payment-status ${user.category === 'STUDENT' ? user.paid ? 'paid' : 'pending' : 'free'}`">
+                        {{ user.category === 'STUDENT' ? user.paid ? "Paid" : "Pending" : "Free"}}
+                      </div>
+                    </td>
                     <td @click="$router.push(`/users/${user.user_name}`)">{{ user.status }}</td>
                     <td @click="$router.push(`/users/${user.user_name}`)">{{ user.gender }}</td>
                   </template>
@@ -186,7 +191,7 @@ export default {
           routeTo: '/users/{id}',
           paramPropertyName: 'user_name'
         },
-        keysToShow: [" ", "names", "email", "user_name", "status", "gender"],
+        keysToShow: [" ", "names", "email", "user_name","Payment status", "status", "gender"],
         showSelect: true
       },
     }

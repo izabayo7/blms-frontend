@@ -155,3 +155,22 @@ div#app{
   visibility: visible;
   opacity: 1;
 }
+
+.payment-status{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 74px;
+  height: 51.28px;
+  &.free {
+    background: #193074;
+    color: #FFFFFF;
+  }
+  &.paid{
+    background: #3CE970;
+  }
+  &.pending{
+    background: #FF7700;
+  }
+  border-radius: 10px;
+}
