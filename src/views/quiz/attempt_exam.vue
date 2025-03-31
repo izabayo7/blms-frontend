@@ -263,7 +263,6 @@ export default {
   data: () => ({
     recorder: undefined,
     videoSaved: false,
-    warned: false,
     exam: undefined,
     alphabets: [
       "A",
@@ -304,6 +303,7 @@ export default {
   computed: {
     ...mapGetters("chat", ["socket"]),
     ...mapGetters("network", ["onLine"]),
+    ...mapGetters("quiz", ["warned"]),
     formated_remaining_time() {
       return new Date(this.remaining_time * 1000).toISOString().substr(11, 8);
     }
@@ -366,9 +366,12 @@ export default {
     ...mapActions("quiz", ["getExam"]),
     endExam() {
       if (!this.warned) {
-        this.warned = true
         this.set_modal({
           template: `exam_constraints`,
+          method: {
+            action: 'quiz/set_exam_warned',
+            parameters: {value: true}
+          }
         })
       } else {
         this.saveAttempt(true)

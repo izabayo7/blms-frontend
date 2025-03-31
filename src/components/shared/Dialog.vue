@@ -297,7 +297,7 @@
         </div>
         <div class="actions">
           <v-btn
-              @click="toogle_visibility"
+              @click="performAction"
               class="mx-2 white--text action-button cancel"
           >{{ link ? 'I decline' : 'Continue' }}
           </v-btn
