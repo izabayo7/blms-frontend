@@ -158,11 +158,14 @@ export default {
         })
 
       if (value === 'announce') {
-        const users = []
+        let users = []
 
-        for (const item of this.selected_users) {
-          users.push(this.users[item])
-        }
+        if (this.selected_users.has(-1)) {
+          users = this.users
+        } else
+          for (const item of this.selected_users) {
+            users.push(this.users[item])
+          }
 
         this.SET_SELECTED_USERS(users)
         this.$router.push('/announcements/new?target=individual')
