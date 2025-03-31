@@ -100,8 +100,11 @@
                         </v-col>
                         <v-col class="col-12">
                           <kurious-file-picker
-                            :boundIndex="activeChapter + Math.random() * 100"
+                            v-if="this.mode != ''"
+                            :ref="`picker${activeChapter}2`"
+                            :boundIndex="activeChapter"
                             :allowedTypes="['video']"
+                            :multiple="false"
                             @addFile="updateVideo"
                             @removeFile="removeVideo"
                           />
@@ -237,8 +240,10 @@
                         </v-col>
                         <v-col class="col-12">
                           <kurious-file-picker
-                            :boundIndex="activeChapter + Math.random() * 100"
-                            multiple
+                            v-if="this.mode != ''"
+                            :ref="`picker${activeChapter}1`"
+                            :boundIndex="activeChapter"
+                            :multiple="true"
                             @addFile="addAttachment"
                             @removeFile="removeAttachment"
                           />
@@ -419,6 +424,9 @@ export default {
       }
       this.video = undefined;
       this.attachments = [];
+      // console.log(this.activeChapter)
+      // this.$refs[`picker${this.activeChapter}1`].files = [];
+      // this.$refs[`picker${this.activeChapter}2`].files = [];
     },
     e6() {
       if (this.e6 === 3) {
@@ -477,6 +485,7 @@ export default {
       });
     },
     saveChapterChanges() {
+      const content = this.$refs.editor.getHTML();
       this.updateChapter({
         chapter: {
           name: this.course.chapters[this.activeChapter].name,
@@ -484,7 +493,10 @@ export default {
           course: this.course._id,
           description: this.course.chapters[this.activeChapter].description,
         },
-        content: this.$refs.editor.getHTML(),
+        content:
+          content === `<p>Type or paste your content here</p>` || content === ""
+            ? undefined
+            : content,
         video: this.chapterVideo,
         attachments: this.attachments,
         quiz: this.selectedQuiz,
@@ -497,6 +509,7 @@ export default {
       });
     },
     saveChapter() {
+      const content = this.$refs.editor.getHTML();
       this.createChapter({
         chapter: {
           name: this.course.chapters[this.activeChapter].name,
@@ -504,7 +517,10 @@ export default {
           course: this.course._id,
           description: this.course.chapters[this.activeChapter].description,
         },
-        content: this.$refs.editor.getHTML(),
+        content:
+          content === `<p>Type or paste your content here</p>` || content === ""
+            ? undefined
+            : content,
         video: this.chapterVideo,
         attachments: this.attachments,
         quiz: this.selectedQuiz,

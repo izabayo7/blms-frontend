@@ -134,11 +134,11 @@ export default {
           course: "under construction",
           usage: 0,
           containedQuestions: quiz.questions.length,
-          duration: new Date(quiz.duration * 100).toISOString().substr(11, 8),
+          duration: new Date(quiz.duration * 1000).toISOString().substr(11, 8),
           date: quiz.createdAt.split("T")[0].split("-").reverse().join("/"),
         });
       }
-      return formated_quiz;
+      return formated_quiz.reverse();
     },
     userCategory() {
       return this.$store.state.user.user.category;

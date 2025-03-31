@@ -86,7 +86,11 @@ export default {
             // if the progress is full reset the modal
             if (value === 100) {
                 console.log('done kbx')
-                dispatch('reset_modal', null)
+                setTimeout(() => {
+                    dispatch('reset_modal', null)
+                }, 1000);
+            } else {
+                console.log(value)
             }
         }
     },

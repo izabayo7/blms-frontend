@@ -40,10 +40,15 @@ export default {
             }
         },
         //create a quiz
-        create_quiz({ state, commit, dispatch }, { quiz, pictures }) {
-            let quizObject = {}
+        create_quiz({ state, dispatch }, { quiz, pictures }) {
+            let quizIndex
+            for (const i in state.quiz.data) {
+                if (state.quiz.data[i]._id === state.selected_quiz) {
+                    quizIndex = i
+                    break
+                }
+            }
             return apis.create('quiz', quiz).then(d => {
-                quizObject = d.data
                 if (pictures.length > 0) {
                     let index = 0
                     let pictureFound = false
@@ -66,23 +71,28 @@ export default {
                                 'Content-Type': 'multipart/form-data'
                             },
                             onUploadProgress: (progressEvent) => {
-                                commit('modal/update_progress', parseInt(Math.round((progressEvent.loaded / progressEvent.total) * 100)), { root: true })
+                                dispatch('modal/set_progress', parseInt(Math.round((progressEvent.loaded / progressEvent.total) * 100)), { root: true })
                             }
                         }).then((response) => {
-                            quizObject = response.data
-                            dispatch('modal/reset_modal', null, { root: true })
+                            state.quiz.data[quizIndex] = response.data
                         })
+                    } else {
+                        state.quiz.data[quizIndex] = d.data
                     }
                 }
-                state.quiz.data.push(quizObject)
             })
 
         },
         //update a quiz
-        update_quiz({ state, commit, dispatch }, { quiz, pictures }) {
-            let quizObject = {}
+        update_quiz({ state, dispatch }, { quiz, pictures }) {
             return apis.update('quiz', state.selected_quiz, quiz).then(d => {
-                quizObject = d.data
+                let quizIndex
+                for (const i in state.quiz.data) {
+                    if (state.quiz.data[i]._id === state.selected_quiz) {
+                        quizIndex = i
+                        break
+                    }
+                }
                 if (pictures.length > 0) {
                     let index = 0
                     let pictureFound = false
@@ -98,25 +108,19 @@ export default {
                     }
                     if (pictureFound) {
                         dispatch('modal/set_modal', { template: 'display_information', title: 'Updating quiz', message: 'uploading pictures' }, { root: true })
-                        commit('modal/update_progress', 0, { root: true })
 
                         apis.create(`file/quizAttachedFiles/${d.data._id}`, formData, {
                             headers: {
                                 'Content-Type': 'multipart/form-data'
                             },
                             onUploadProgress: (progressEvent) => {
-                                commit('modal/update_progress', parseInt(Math.round((progressEvent.loaded / progressEvent.total) * 100)), { root: true })
+                                dispatch('modal/set_progress', parseInt(Math.round((progressEvent.loaded / progressEvent.total) * 100)), { root: true })
                             }
                         }).then((response) => {
-                            quizObject = response.data
-                            dispatch('modal/reset_modal', null, { root: true })
+                            state.quiz.data[quizIndex] = response.data
                         })
-                    }
-                }
-
-                for (const i in state.quiz.data) {
-                    if (state.quiz.data[i]._id === state.selected_quiz) {
-                        state.quiz.data[i] = quizObject
+                    } else {
+                        state.quiz.data[quizIndex] = d.data
                     }
                 }
             })

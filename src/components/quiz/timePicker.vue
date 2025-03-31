@@ -64,15 +64,15 @@ export default {
       this.seconds = this.duration.ss;
     },
     hours() {
-      if (this.hours == "") this.hours = "0";
+      this.hours = this.normaliseTime(this.hours);
       this.switchStyles("hrsInput", parseInt(this.hours) <= 24);
     },
     minutes() {
-      if (this.minutes == "") this.minutes = "0";
+      this.minutes = this.normaliseTime(this.minutes);
       this.switchStyles("minInput", parseInt(this.minutes) <= 60);
     },
     seconds() {
-      if (this.seconds == "") this.seconds = "0";
+      this.seconds = this.normaliseTime(this.seconds);
       this.switchStyles("secInput", parseInt(this.seconds) <= 60);
     },
   },
@@ -82,6 +82,10 @@ export default {
       document.getElementById(`${id}`).style.color = condition
         ? "black"
         : "red";
+    },
+    normaliseTime(value) {
+      if (value == "") return 0;
+      return parseInt(value);
     },
   },
 };

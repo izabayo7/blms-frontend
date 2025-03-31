@@ -439,7 +439,7 @@ export default {
       return result;
     },
     to_hh_mm_ss(seconds) {
-      let string = new Date(seconds * 100).toISOString().substr(11, 8);
+      let string = new Date(seconds * 1000).toISOString().substr(11, 8);
       string = string.split(":");
       return {
         hh: string[0],
