@@ -307,12 +307,13 @@ export default {
   watch: {
     remaining_time() {
       if (this.remaining_time > 0) {
-        setTimeout(() => {
-          this.remaining_time -= 1;
-        }, 1000);
-        if (this.remaining_time === this.exam.duration - 1)
-          this.initialiseQuiz();
-
+        if (this.$store.state.user.user.category.name === 'STUDENT') {
+          setTimeout(() => {
+            this.remaining_time -= 1;
+          }, 1000);
+          if (this.remaining_time === this.exam.duration - 1)
+            this.initialiseQuiz();
+        }
         this.attempt.used_time = this.x - this.remaining_time;
       } else if (!this.done) {
         this.done = true;
@@ -366,6 +367,7 @@ export default {
           template: `exam_constraints`,
         })
       } else {
+        console.log('failed')
         this.saveAttempt(true)
       }
     },
@@ -570,11 +572,11 @@ export default {
             this.set_modal({
               template: `exam_closed_${this.attempt.auto_submitted ? 'timeout' : cheated ? 'failed' : 'successfull'}`,
             })
+            this.removeListeners()
           } else if (index !== undefined) {
             if (this.filesToUpload[index].file !== "")
               this.uploadFile(index);
           }
-          this.removeListeners()
         })
       }
     },
@@ -669,12 +671,13 @@ export default {
 
       if (exam.type === 'Closed-book examination')
         this.setUp()
-
-      let date = new Date(exam.starting_time)
-      date.setHours(date.getHours() - 2)
-      const diff = (new Date() - new Date(date));
-      if (diff > 0) {
-        exam.duration -= (diff / 1000)
+      if (this.$store.state.user.user.category.name === 'STUDENT') {
+        let date = new Date(exam.starting_time)
+        date.setHours(date.getHours() - 2)
+        const diff = (new Date() - new Date(date));
+        if (diff > 0) {
+          exam.duration -= (diff / 1000)
+        }
       }
       this.exam = exam
 
