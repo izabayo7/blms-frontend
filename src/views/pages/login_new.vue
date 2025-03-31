@@ -179,7 +179,7 @@ export default {
         this.institution = res.data.data.name;
         this.image = res.data.data.logo || this.image;
       } else {
-        this.$router.push("/college_login");
+        this.$router.push("/login");
       }
     }
   },
