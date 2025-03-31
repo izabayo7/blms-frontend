@@ -50,6 +50,9 @@ export default {
 
   .profile-container{
     position: relative;
+    display: flex;
+    align-items: center;
+
     .profile-card{
       position: absolute;
       right:-1.5rem;
