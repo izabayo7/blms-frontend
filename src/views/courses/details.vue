@@ -335,8 +335,7 @@ export default {
   },
   created() {
     this.findCourseByName({
-      userCategory: this.userCategory.toLowerCase(),
-      userId: this.$store.state.user.user._id,
+      user_name: this.$store.state.user.user.user_name,
       courseName: this.$route.params.name,
     }).then((course) => {
       const total_chapters = course.chapters.length;
