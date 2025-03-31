@@ -37,7 +37,7 @@
               </defs>
             </svg>
           </div>
-          Powered by Kurious learn
+          Powered by Brainiacs Learning Management System
         </div>
       </div>
       <div class="quick-links d-md-flex hidden-sm-and-down">
@@ -50,7 +50,9 @@
       </div>
       <div class="quick-links d-md-flex hidden-sm-and-down">
         <ul class="col col2 px-4 px-md-12">
-          <li class="py-2"><router-link to="/#pricing"> Plans </router-link></li>
+          <li class="py-2">
+            <router-link to="/#pricing"> Plans </router-link>
+          </li>
           <li class="py-2"><router-link to="/#contact"> Blog </router-link></li>
         </ul>
       </div>
@@ -195,7 +197,7 @@
               </defs>
             </svg>
           </div>
-          Powered by Kurious learn
+          Powered by Brainiacs Learning Management System
         </div>
       </div>
     </div>

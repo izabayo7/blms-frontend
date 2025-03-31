@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "vue-cli-service serve",
-    "build": "node --max_old_space_size=4096 node_modules/.bin/vue-cli-service build",
+    "dev": "export NODE_OPTIONS=--openssl-legacy-provider && vue-cli-service serve",
+    "build": "export NODE_OPTIONS=--openssl-legacy-provider && node --max_old_space_size=4096 node_modules/.bin/vue-cli-service build",
     "lint": "vue-cli-service lint",
     "pm2": "pm2 restart Kurious_Learn",
     "ui": "vue ui"

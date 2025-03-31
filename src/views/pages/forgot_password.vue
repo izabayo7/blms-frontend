@@ -50,7 +50,16 @@
             <div class="lower-message">
               <div class="message-row">
                 Remembered your password ?
-                <router-link :to="`/login${$route.query.institution ? '?institution='+$route.query.institution : ''}`">login</router-link>
+                <router-link
+                  :to="
+                    `/login${
+                      $route.query.institution
+                        ? '?institution=' + $route.query.institution
+                        : ''
+                    }`
+                  "
+                  >login</router-link
+                >
               </div>
             </div>
           </div>
@@ -68,7 +77,7 @@ export default {
     email: "",
     message: "",
     image: "https://apis.kurious.rw/assets/images/image%204.png",
-    institution: "Kurious Learn",
+    institution: "Brainiacs Learning Management System",
   }),
   methods: {
     async createPasswordReset() {
