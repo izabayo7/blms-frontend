@@ -3,9 +3,9 @@
     <!--    slot for profile picture-->
     <div class="pic col-xs-12 col-sm-2 col-md-3 col-lg-3">
       <img
-        v-if="data.image"
-        :src="data.image+'?height=50'"
-        :alt="`${data.name}'s profile picture`"
+          v-if="data.image"
+          :src="data.image+'?height=50'"
+          :alt="`${data.name}'s profile picture`"
       />
       <v-avatar v-else size="37" class="avatar">
         {{ data.name | computeText }}
@@ -22,9 +22,9 @@
       <!--        slot for the sent massage-->
       <div class="sender-message">
         <div
-          :class="{ 'unread-msg': !read }"
-          class="last_message_container"
-          v-if="!typing"
+            :class="{ 'unread-msg': !read }"
+            class="last_message_container"
+            v-if="!typing"
         >
           <div v-if="(data.is_group || is_mine) && data.last_message.sender">
             {{ data.last_message.sender.sur_name }} :
@@ -32,23 +32,23 @@
           <div :class="{ 'pl-1': data.is_group || is_mine }">
             {{
               data.last_message.content
-                | trimString(
+                  | trimString(
                   data.is_group
-                    ? 15
-                    : is_mine || !data.last_message.sender
-                    ? 50
-                    : 100
-                )
+                      ? 15
+                      : is_mine || !data.last_message.sender
+                      ? 50
+                      : 100
+                  )
             }}
           </div>
         </div>
         <div v-else>
           <div v-if="data.is_group">
             <span v-for="(member, i) in typing_members" :key="i"
-              >{{ `${i > 0 ? "," : ""} ${member}` }}
+            >{{ `${i > 0 ? "," : ""} ${member}` }}
             </span>
             <span
-              >{{ typing_members.length > 1 ? " are " : " is " }} typing</span
+            >{{ typing_members.length > 1 ? " are " : " is " }} typing</span
             >
           </div>
           <div v-else>Typing...</div>
@@ -59,12 +59,12 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import {mapGetters, mapMutations} from "vuex";
 
 export default {
   name: "Incoming-chat",
   props: {
-    data: { required: true },
+    data: {required: true},
   },
   data() {
     return {
@@ -74,11 +74,13 @@ export default {
   },
   computed: {
     ...mapGetters("chat", ["socket"]),
-
+    isMobile() {
+      return this.$vuetify.breakpoint.width < 960
+    },
     formatedIncomingMessagesLength() {
       return this.data.unreadMessagesLength > 9
-        ? 9
-        : this.data.unreadMessagesLength;
+          ? 9
+          : this.data.unreadMessagesLength;
     },
     read() {
       return this.formatedIncomingMessagesLength <= 0;
@@ -88,14 +90,14 @@ export default {
     },
     is_mine() {
       return this.data.last_message.sender
-        ? this.data.last_message.sender.sur_name == "You"
-        : undefined;
+          ? this.data.last_message.sender.sur_name == "You"
+          : undefined;
     },
     typing_members() {
       let names = [];
       for (const i in this.typers) {
         const user = this.data.members.filter(
-          (m) => m.data.user_name == this.typers[i]
+            (m) => m.data.user_name == this.typers[i]
         );
         names.push(user[0].data.sur_name);
       }
@@ -103,6 +105,7 @@ export default {
     },
   },
   methods: {
+    ...mapMutations("sidebar_navbar", ["TOGGLE_CHAT_MOBILE_NAVBAR"]),
     handleClick() {
       // only navigate to new paths ***going to the same route causes an erro***
       if (this.$route.path !== `/messages/${this.data.id}`) {
@@ -112,9 +115,11 @@ export default {
         // emit('chat_user_changed',this.data.id) //alert that user was changed so we need to fetch some new messages
         this.$router.push({
           path: `/messages/${this.data.id}`,
-          params: { username: this.data.id },
+          params: {username: this.data.id},
         });
       }
+      if (this.isMobile)
+        this.TOGGLE_CHAT_MOBILE_NAVBAR()
     },
   },
   mounted() {
@@ -152,6 +157,7 @@ export default {
 .active-chat {
   border-left: 4px solid $primary;
 }
+
 .incoming-chat {
   background-color: $main;
   display: flex;
@@ -199,6 +205,7 @@ export default {
         -webkit-box-orient: vertical;
         overflow: hidden;
       }
+
       div {
         display: flex;
 
@@ -216,6 +223,7 @@ export default {
         }
       }
     }
+
     .sender-message {
       font-size: 0.7rem;
       display: -webkit-box;
@@ -230,18 +238,22 @@ export default {
       }
     }
   }
+
   .unread {
     font-weight: 800;
   }
+
   .unread-msg {
     font-weight: 600;
   }
+
   .avatar {
     margin-top: 0px;
     background-color: $primary;
     color: white;
     cursor: pointer;
   }
+
   .last_message_container {
     display: flex;
     // overflow: hidden;
