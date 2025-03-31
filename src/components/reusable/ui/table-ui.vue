@@ -2,7 +2,7 @@
 <div class="my-table">
   <div class="table-container">
     <div class="table-wrapper">
-      <table>
+      <table :class="{'colored-rows':coloredRows}">
         <thead>
           <tr>
             <th><div class="select select-all">
@@ -54,7 +54,8 @@
 export default {
   name: "table-ui",
   props:{
-    data:{required:true,type:Array}
+    data:{required:true,type:Array},
+    coloredRows:{default:false,type:Boolean}
   },
   data(){
     return{
@@ -223,6 +224,17 @@ export default {
             padding:.6rem .5rem;
             box-sizing:border-box;
             min-width: fit-content;
+          }
+        }
+
+        &.colored-rows{
+          tr{
+            &:hover{
+              background-color:unset;
+            }
+            &:nth-child(even){
+              background-color:darken($bg-one,5);
+            }
           }
         }
       }
