@@ -10,12 +10,22 @@
         class="data-table"
       >
         <!-- display user name as a link to the submission -->
-        <template v-slot:item.name="{ item }">
+        <template v-slot:item.course_name="{ item }">
           <router-link
             class="normal--text"
             to="/"
             >{{
               returnCourseName(item.target)
+            }}</router-link
+          >
+        </template>
+        <!-- display user name as a link to the submission -->
+        <template v-slot:item.chapter_name="{ item }">
+          <router-link
+            class="normal--text"
+            to="/"
+            >{{
+              returnChapterName(item.target)
             }}</router-link
           >
         </template>
@@ -123,11 +133,11 @@ export default {
           text: "Courses",
           align: "start",
           sortable: false,
-          value: "name",
+          value: "course_name",
         },
         {
-          text: "Name of submission",
-          value: "submissionName",
+          text: "Chapter",
+          value: "chapter_name",
           align: "center",
         },
         {
@@ -162,6 +172,14 @@ export default {
       }
       else if(quiz_target.type == 'course'){
         return quiz_target.course.name;
+      }
+    },
+    returnChapterName(quiz_target) {
+      if(quiz_target.type == 'chapter'){
+        return quiz_target.chapter.name;
+      }
+      else {
+        return '-';
       }
     },
   },
