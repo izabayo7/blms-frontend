@@ -230,18 +230,17 @@
               <v-col class="col-12">
                 <feedback
                   v-if="
-                    attempt.answers[i].feedback.length ||
-                    userCategory === 'INSTRUCTOR'
+                    attempt.answers[i].feedback || userCategory === 'INSTRUCTOR'
                   "
                   :content="
-                    attempt.answers[i].feedback.length
-                      ? attempt.answers[i].feedback[0].content
+                    attempt.answers[i].feedback
+                      ? attempt.answers[i].feedback.content
                       : ''
                   "
                   :answerId="attempt.answers[i]._id"
                   :feedbackId="
-                    attempt.answers[i].feedback.length
-                      ? attempt.answers[i].feedback[0]._id
+                    attempt.answers[i].feedback
+                      ? attempt.answers[i].feedback._id
                       : ''
                   "
                 />

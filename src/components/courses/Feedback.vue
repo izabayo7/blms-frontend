@@ -76,6 +76,7 @@
 
 <script>
 import Apis from "@/services/apis";
+import { mapMutations } from "vuex";
 export default {
   props: {
     content: {
@@ -125,6 +126,7 @@ export default {
     },
   },
   methods: {
+    ...mapMutations("quiz_submission", ["add_answer_feedback"]),
     feedbackContent() {
       return this.$refs.feedback_input
         ? this.$refs.feedback_input.innerHTML
@@ -156,8 +158,11 @@ export default {
         },
         content: content,
       });
+      this.add_answer_feedback({
+        answer_id: this.answerId,
+        feedback: response.data.data,
+      });
       this.message = "feedback successfuly saved";
-      console.log(response);
     },
     async editFeedback() {
       const content = this.feedbackContent();
