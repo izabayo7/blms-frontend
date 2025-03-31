@@ -734,12 +734,13 @@ export default {
     },
     handlePresentationResponse(sender, allowed) {
       this.isHandRaised = false;
-      if (allowed)
-        this.set_modal({
-          template: 'presentation_request',
-          method: {action: 'live_session/change_confirmation', parameters: {value: 'accept_presenting'}},
-        })
-      else
+      if (allowed) {
+        if (!this.isStudentPresenting)
+          this.set_modal({
+            template: 'presentation_request',
+            method: {action: 'live_session/change_confirmation', parameters: {value: 'accept_presenting'}},
+          })
+      } else
         this.$store.dispatch("app_notification/SET_NOTIFICATION", {
           message: 'Sorry your request to present was denied',
           status: "danger",
@@ -1132,14 +1133,12 @@ export default {
       return this.participants.indexOf(result[0]);
     },
     removeParticipant(index) {
-      if (this.currentPresenter ? (this.currentPresenter._id == this.participants[index].userInfo._id) : this.instructor._id == this.participants[index].userInfo._id) {
+      if (!this.participants[index].name.includes('_screen') && (this.currentPresenter ? (this.currentPresenter._id == this.participants[index].userInfo._id) : this.instructor._id == this.participants[index].userInfo._id)) {
         this.currentPresenter = undefined
-        if (!this.participants[index].name.includes('_screen')) {
-          if (this.live_session.course.user == this.me.userInfo._id) {
-            this.onViewerStopedPresenting()
-          } else {
-            document.querySelector('video').setAttribute('class', 'show')
-          }
+        if (this.live_session.course.user == this.me.userInfo._id) {
+          this.onViewerStopedPresenting()
+        } else {
+          document.querySelector('video').setAttribute('class', 'show')
         }
       }
       this.participants.splice(index, 1)
