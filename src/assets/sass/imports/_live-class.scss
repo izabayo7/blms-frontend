@@ -188,7 +188,7 @@
   &--video {
     flex-basis: 70%;
 
-    &.--lg {
+    &.--lg, &.--xl {
       padding-left: 26px;
       padding-right: 26px;
     }
@@ -302,6 +302,11 @@
             top: 37%;
             z-index: 9;
             display: none;
+          }
+
+          &.--xl{
+            height: 70vh;
+            width: calc(70vh*(1.77777777778));
           }
 
           &.--lg, &.--md {
