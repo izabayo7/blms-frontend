@@ -7,31 +7,31 @@ const prefix = '/courses'
 const routes =  [
     {
         path: '/',
-        component: () => import( /* webpackPrefetch: true */ '@/views/courses'),
+        component: () => import( /* webpackPrefetch: true */  /* webpackChunkName: "courses" */ '@/views/courses'),
     },
     {
         path: '/preview/:name',
-        component: () => import( /* webpackPrefetch: true */ '@/views/courses/preview')
+        component: () => import( /* webpackPrefetch: true */  /* webpackChunkName: "course-preview" */ '@/views/courses/preview')
     },
     {
         path: '/edit/:name/:type',
         name: 'Edit Course',
         component: () =>
-            import( /* webpackPrefetch: true */ '@/views/courses/edit')
+            import( /* webpackPrefetch: true */  /* webpackChunkName: "course-edit" */ '@/views/courses/edit')
     },
     {
         path: '/new',
         name: 'Create course',
         component: () =>
-            import( /* webpackPrefetch: true */ '@/views/courses/create')
+            import( /* webpackPrefetch: true */  /* webpackChunkName: "new-course" */ '@/views/courses/create')
     },
     {
         path: '/:name',
-        component: () => import( /* webpackPrefetch: true */ '@/views/courses/details'),
+        component: () => import( /* webpackPrefetch: true */  /* webpackChunkName: "view-course" */ '@/views/courses/details'),
         children: [
             {
                 path: '/courses/:name/chapter/:index/:id',
-                component: () => import( /* webpackPrefetch: true */ '@/views/courses/chapter-details')
+                component: () => import( /* webpackPrefetch: true */  /* webpackChunkName: "course-chatper" */ '@/views/courses/chapter-details')
             }
         ]
     },

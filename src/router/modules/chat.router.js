@@ -7,19 +7,19 @@ const prefix = '/messages'
 const routes =  [
     {
         path: '/start-conversation',
-        component: () => import( /* webpackPrefetch: true */ '@/views/chat/StartConversation.vue'),
+        component: () => import( /* webpackPrefetch: true */ /* webpackChunkName: "start-conversation" */ '@/views/chat/StartConversation.vue'),
     },
     {
         path: '/no-conversation',
-        component: () => import( /* webpackPrefetch: true */ '@/views/chat/NoConversation.vue'),
+        component: () => import( /* webpackPrefetch: true */ /* webpackChunkName: "no-conversation" */ '@/views/chat/NoConversation.vue'),
     },
     {
         path: '',
-        component: () => import( /* webpackPrefetch: true */ '@/views/chat/Messages.vue'),
+        component: () => import( /* webpackPrefetch: true */ /* webpackChunkName: "messages" */ '@/views/chat/Messages.vue'),
         children: [
-            { path: '/group/:id', component: () => import( /* webpackPrefetch: true */ '@/views/chat/GroupSetting') },
-            { path: '/group/:id/add-member', component: () => import( /* webpackPrefetch: true */ '@/views/chat/AddMember') },
-            { path: '/:username', component: () => import( /* webpackPrefetch: true */ '@/views/chat/Chat.vue') }
+            { path: '/group/:id', component: () => import( /* webpackPrefetch: true */ /* webpackChunkName: "messages-group" */ '@/views/chat/GroupSetting') },
+            { path: '/group/:id/add-member', component: () => import( /* webpackPrefetch: true */ /* webpackChunkName: "messages-add-member" */ '@/views/chat/AddMember') },
+            { path: '/:username', component: () => import( /* webpackPrefetch: true */ /* webpackChunkName: "messages-dm" */ '@/views/chat/Chat.vue') }
         ]
     },
 ]
