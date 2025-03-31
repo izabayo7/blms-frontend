@@ -33,8 +33,10 @@
                 info.user.category === 'STUDENT' ? $store.state.user.user.category.name === 'INSTRUCTOR' ? 'Live class attendance status' : 'Detailed course scores' : 'Top 3 performing classes'
               }}</h3>
           </div>
-          <div class="enrol-course-card mt-1 mb-1" v-for="i in 3" :key="i">
-            <detailed-course-score-card :type="info.user.category"/>
+          <div class="holder customScroll">
+            <div class="enrol-course-card mt-1 mb-1" v-for="course in info.courses" :key="course._id">
+              <detailed-course-score-card :data="course" :type="info.user.category"/>
+            </div>
           </div>
         </div>
         <div v-if="$store.state.user.user.category.name === 'INSTRUCTOR' && info.user.category === 'INSTRUCTOR'"
@@ -42,8 +44,10 @@
           <div class="head mb-1">
             <h3>Archived courses ( Not in use)</h3>
           </div>
-          <div class="enrol-course-card mt-1 mb-1" v-for="i in 3" :key="i">
-            <course-archieved-card/>
+          <div class="holder customScroll">
+            <div class="enrol-course-card mt-1 mb-1" v-for="course in info.courses" :key="course._id">
+              <course-archieved-card :data="course"/>
+            </div>
           </div>
         </div>
         <!--          <enrol-course-card />-->
@@ -107,11 +111,17 @@ export default {
         color: lighten($primary, 20);
       }
     }
-
     &--course-created {
       .holder {
         max-height: 240px;
         overflow-y: auto;
+      }
+    }
+    &--performing-class{
+      .holder {
+        max-height: 200px;
+        overflow-y: auto;
+        overflow-x: hidden;
       }
     }
   }

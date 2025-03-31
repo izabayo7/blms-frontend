@@ -30,7 +30,7 @@ export default {
   beforeMount() {
     this.courses.map(x => {
       this.chartOptions.xaxis.categories.push(x.name.split(' '))
-      this.series[0].data.push(x.successRate || 0)
+      this.series[0].data.push((Math.round(x.successRate) || 0))
     })
   },
   data() {

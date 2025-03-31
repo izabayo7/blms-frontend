@@ -9,7 +9,7 @@
           <h3>{{ data.name }}</h3>
         </div>
         <div class="ccc--title--start-date">
-          <p>Started on {{ data.createdAt | formatDate }}</p>
+          <p>Started on {{ data.progress ? data.progress.createdAt : data.createdAt | formatDate }}</p>
         </div>
       </div>
       <!--      col 2 with success rate-->
