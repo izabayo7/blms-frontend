@@ -3,6 +3,18 @@
     <!-- view of the student -->
     <v-container v-if="userCategory == 'STUDENT'" id="courses" fluid>
       <v-row>
+        <v-vol class="col-12">
+          <h2>
+            Hey Mr{{
+              `${
+                  $store.state.user.user.gender.toLowerCase() === "male"
+                      ? ""
+                      : "s"
+              } ${$store.state.user.user.sur_name}`
+            }},
+          </h2>
+          <h3>Ready to start your courses?</h3>
+        </v-vol>
         <v-col cols="12">
           <h2 class="course-group-title">Ongoing Courses</h2>
         </v-col>
