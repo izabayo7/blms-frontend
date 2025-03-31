@@ -16,11 +16,12 @@ const filters = [
             if (string.length < length)
                 return string
             let trimedString = string.substring(0, length);
-            trimedString = trimedString.split(" ");
-            trimedString.splice(trimedString.length - 1, trimedString.length > 1 ? 1 : 0);
-            let arrlength = trimedString.length
-            trimedString = trimedString.join(" ");
-            trimedString += arrlength > 1 ? " ..." : ''
+            // trimedString = trimedString.split(" ");
+            // trimedString.splice(trimedString.length - 1, trimedString.length > 1 ? 1 : 0);
+            // let arrlength = trimedString.length
+            // trimedString = trimedString.join(" ");
+            // trimedString += arrlength > 1 ? " ..." : ''
+            trimedString += "..."
             return trimedString;
         },
     },
