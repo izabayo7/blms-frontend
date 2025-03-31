@@ -150,7 +150,7 @@ export default {
     display: flex;
     .inner {
       width: 201.09px;
-      height: 22.95px;
+      min-height: 22.95px;
 
       border-left: 0.827479px solid #dedede;
       box-sizing: border-box;

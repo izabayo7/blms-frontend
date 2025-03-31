@@ -230,7 +230,7 @@
             </small-card>
           </v-col>
           <v-col class="col-12 col-lg-6 pt-0">
-            <!-- <small-card>
+            <small-card :total="user_statistics.total_users" :series="computeOtherSeries()" type="users" :headers="['Faculties', 'Courses', 'Student groups']">
               <template v-slot:icon>
                 <svg
                   width="21"
@@ -257,7 +257,7 @@
                   />
                 </svg>
               </template>
-            </small-card> -->
+            </small-card>
           </v-col>
           <v-col class="col-12">
             <combined-statistics>
@@ -311,7 +311,8 @@ export default {
   data: () => ({
     showInviteUsers: false,
     showFacultyModal: false,
-    user_statistics: {}
+    user_statistics: {},
+    total_faculties: 0,
   }),
   components: {
     InviteUsersDialog: () => import("@/components/dashboard/InviteUsersDialog"),
@@ -328,11 +329,19 @@ export default {
       res.push(this.user_statistics.total_students)
       res.push(this.user_statistics.total_staff)
       return res
+    },
+    computeOtherSeries(){
+      const res = []
+      res.push(this.total_faculties)
+      return res
     }
   },
   async beforeMount(){
-    const res = await Apis.get("user/statistics");
+    let res = await Apis.get("user/statistics");
     this.user_statistics = res.data.data
+
+    res = await Apis.get("faculty/statistics");
+    this.total_faculties = res.data.data.total_faculties
   }
 };
 </script>
