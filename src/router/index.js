@@ -201,48 +201,40 @@ const router = new VueRouter({
 })
 // before navigating to any route
 router.beforeEach((to, from, next) => {
-    // if the session exist and the vuex store is not set
-    if (Vue.prototype.$session.exists() && (!store.state.user.isLoggedIn || !axios.defaults.headers.common.Authorization)) {
-        // get the token
-        const token = Vue.prototype.$session.get(
-            "jwt"
-        )
-        // set the token in axios headers
-        axios.defaults.headers.common.Authorization = `Bearer ${token}`;
-        // keep the decoded user in vuex store
-        store.dispatch("user/setUser", jwt.decode(token));
-    }
-    if (to.path === '/') {
-        next({
-            path: '/login'
-        })
-    }
-    // check if the destination route is protected
-    if (!to.meta.allowAnonymous && !store.state.user.isLoggedIn) {
-        // go to login
-        next({
-            path: '/login',
-            // after logging in redirect to the requested route
-            query: {
-                redirect: to.fullPath
-            }
-        })
-    }
+    if(to.path != from.path) {
+        // if the session exist and the vuex store is not set
+        if (Vue.prototype.$session.exists() && (!store.state.user.isLoggedIn || !axios.defaults.headers.common.Authorization)) {
+            // get the token
+            const token = Vue.prototype.$session.get(
+                "jwt"
+            )
+            // set the token in axios headers
+            axios.defaults.headers.common.Authorization = `Bearer ${token}`;
+            // keep the decoded user in vuex store
+            store.dispatch("user/setUser", jwt.decode(token));
+        }
+        if (to.path === '/') {
+            next({
+                path: '/login'
+            })
+        }
+        // check if the destination route is protected
+        if (!to.meta.allowAnonymous && !store.state.user.isLoggedIn) {
+            // go to login
+            next({
+                path: '/login',
+                // after logging in redirect to the requested route
+                query: {
+                    redirect: to.fullPath
+                }
+            })
+        } else if ((to.path === '/login' || to.path === '/') && store.state.user.isLoggedIn) {
+            next({
+                path: `/${store.state.user.user.category.name === 'STUDENT' || store.state.user.user.category.name === 'INSTRUCTOR' ? 'courses' : 'welcome'}`,
+            })
+        }
 
-    else if ((to.path === '/login' || to.path === '/') && store.state.user.isLoggedIn) {
-        next({
-            path: `/${store.state.user.user.category.name === 'STUDENT' || store.state.user.user.category.name === 'INSTRUCTOR' ? 'courses' : 'welcome'}`,
-        })
+        next()
     }
-
-    // go to the requested route
-    // else {
-    //     next()
-    // }
-
-    //avoiding errors
-    to;
-    from;
-    next()
 })
 export default router

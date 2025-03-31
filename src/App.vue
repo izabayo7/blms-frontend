@@ -1,8 +1,9 @@
 <template>
   <v-app class="home">
-    <router-view />
-    <app-dialog />
-    <new-group />
+    <router-view/>
+    <app-dialog/>
+    <new-group/>
+    <internet-checker @status="status"/>
   </v-app>
 </template>
 
@@ -12,6 +13,12 @@ export default {
   components: {
     appDialog: () => import("@/components/shared/Dialog"),
     NewGroup: () => import("@/components/messages/NewGroup"),
+    InternetChecker: () => import("vue-internet-checker"),
+  },
+  methods: {
+    status(ele) {
+      this.$store.commit("network/changeNetworkStatus", ele);
+    },
   },
   // created(){
   //   this.$store.dispatch("app_notification/SET_NOTIFICATION", {
@@ -29,6 +36,7 @@ body {
   margin: 0;
   box-sizing: border-box;
 }
+
 * {
   padding: 0;
   margin: 0;
