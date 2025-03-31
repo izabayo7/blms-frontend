@@ -9,7 +9,7 @@
       </div>
     </div>
     <div class="msg-input">
-          <div class="input" @click="inputClicked" @input="inputMsg">
+          <div class="input" @click="inputClicked" @input="inputMsg" @keydown.prevent.enter="sendMessage">
             <div ref="placeholder" contenteditable="false" class="placeholder" >Type something..</div>
             <div ref="input" contenteditable="true"  class="input-box"></div>
           </div>
@@ -32,6 +32,8 @@
 
 <script>
 import {mapGetters,mapState} from 'vuex'
+import {emit} from '@/services/event_bus'
+
 export default {
   name: "Send-message",
   data(){
@@ -63,6 +65,9 @@ export default {
       //after sending message let us make the div empty
       this.$refs['input'].textContent = ''
       this.p('Type something..')
+
+      //emit that we are message sent
+      emit('message-sent')
     },
     inputMsg(){
       let input = this.$refs['input']

@@ -28,6 +28,7 @@
 import {mapState, mapGetters} from 'vuex'
 // import {on} from "@/services/event_bus";
 import {chatMixins} from '@/services/mixins'
+import {on} from "@/services/event_bus";
 
 export default {
   name: "Chat-messaging",
@@ -78,6 +79,11 @@ export default {
       this.scrollChatToBottom()
     })
 
+    //when the chatting user send message let us scroll to the bottom
+    on('message-sent',() => {
+      console.log('message sent')
+        this.scrollChatToBottom()
+    })
     /*
     when this component is mounted Immediately scroll to the bottom
     the reason we call this function the end is that we need to wait for the all message to be rendered
