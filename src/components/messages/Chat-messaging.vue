@@ -85,6 +85,7 @@
               <!--            //for better html elements readability-->
               <div
                 class="msg"
+                :class="{'mx-auto': msgs.from === 'SYSTEM'}"
                 v-if="msg.content"
                 :inner-html.prop="msg.content | urlify"
               />
