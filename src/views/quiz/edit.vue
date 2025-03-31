@@ -51,7 +51,7 @@
         />
       </div>
       <div v-if="isExam" class="input-group assesment_type">
-        <label for="assessment-time">Expiration date & time</label>
+        <label for="assessment-time">Starting date & time</label>
         <input v-model="starting_time" id="assessment-time" type="datetime-local">
       </div>
       <div class="flex d-block d-md-flex">
@@ -546,6 +546,7 @@ export default {
         Apis.update('exams', this.$route.params.id, {
           name: this.title,
           course: this.selected_course,
+          type:this.type,
           instructions:
               editorContent ==
               `<ol><li><p>Write your custom instructions</p></li></ol>`
@@ -648,7 +649,7 @@ export default {
         this.questions = this.formatQuestionTypes(quiz.questions);
         this.type = quiz.type
         this.selected_course = quiz.course.name
-        this.starting_time = quiz.starting_time
+        this.starting_time = quiz.starting_time.substring(0, 16)
       });
       this.getCourses(!this.loaded)
     } else

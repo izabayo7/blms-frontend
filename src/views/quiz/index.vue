@@ -183,7 +183,7 @@
               :search="search"
               :headers="exam_headers"
               :items="exams"
-              sort-by="quizname"
+              sort-by="name"
               @click:row="handleRowClick"
           >
             <template v-slot:item.actions="{ item }">
@@ -255,11 +255,19 @@
             <template v-slot:item.marks="{ item }">
               <div>{{ item.total_marks }}</div>
             </template>
+            <template v-slot:item.date="{ item }">
+              <div class="assignment_td">
+                {{ item.starting_time | formatDate }}
+              </div>
+              <div class="assignment_td">
+                {{ getTime(item.starting_time) }}
+              </div>
+            </template>
             <template v-slot:item.duration="{ item }">
               <div>{{ new Date(item.duration * 1000).toISOString().substr(11, 8) }}</div>
             </template>
             <template v-slot:no-data>
-              <span class="text-h6">Quiz list is empty</span>
+              <span class="text-h6">Exam list is empty</span>
             </template>
           </v-data-table>
           <v-data-table
@@ -407,7 +415,6 @@ export default {
         value: "name",
       },
       {text: "Course", value: "course"},
-      {text: "Type", value: "type"},
       {text: "Date & Time", value: "date"},
       {text: "Duration", value: "duration"},
       {text: "Marks", value: "marks"},
@@ -460,6 +467,12 @@ export default {
   methods: {
     ...mapActions("quiz", ["getQuizes", "getAssignments","getExams"]),
     ...mapActions("modal", ["set_modal"]),
+    getTime(date) {
+      date = new Date(date)
+      date.setHours(date.getUTCHours())
+      date.setMinutes(date.getUTCMinutes())
+      return new Date(date).toLocaleTimeString()
+    },
     handleRowClick(value) {
       this.$router.push(this.currentView === 'quiz' ? `/quiz/attempt/${value.name}` : this.currentView === 'exams' ? `exams/attempt/${value._id}` : `/assignments/${value._id}`)
     },

@@ -113,10 +113,10 @@
             </template>
             <template v-slot:item.dueDate="{ item }">
               <div class="assignment_td">
-                {{ item.createdAt | formatDate }}
+                {{ item.dueDate | formatDate }}
               </div>
               <div class="assignment_td">
-                {{ getTime(item.createdAt) }}
+                {{ getTime(item.dueDate) }}
               </div>
             </template>
             <template v-slot:item.marks="{ item }">
