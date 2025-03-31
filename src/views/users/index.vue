@@ -141,7 +141,7 @@ export default {
           RouteTo: '/users/user/{id}',
           paramPropertyName: '_id'
         },
-        keysToShow: ["sur_name", "other_names", "user_name", "status", "gender"],
+        keysToShow: ["names", "email", "user_name", "status", "gender"],
         showSelect: true
       },
     }
@@ -213,8 +213,7 @@ export default {
             let filteredUsers = [];
 
             data.map(user => {
-              console.log();
-
+              user.names = user.sur_name + ' ' + user.other_names
               user.createdAt = moment(user.createdAt).format("DD MMM  YYYY")
               user.updatedAt = moment(user.updatedAt).format("DD MMM YYYY")
               user.status = user.status.disabled ? 'INACTIVE' : 'ACTIVE';
