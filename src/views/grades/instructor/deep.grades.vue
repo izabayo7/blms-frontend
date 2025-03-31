@@ -1,6 +1,6 @@
 <template>
-  <v-app id="reports-page" class="instructor_reports">
-    <!-- <back class="mt-0 mb-6 ml-n6" to="/reports" /> -->
+  <v-app id="grades-page" class="instructor_grades">
+    <!-- <back class="mt-0 mb-6 ml-n6" to="/grades" /> -->
     <div v-if="quiz_submission" class="table-one">
       <navigation title="Submissions" class="mb-6" :links="navigation_links"/>
       <v-data-table
@@ -63,7 +63,7 @@
     </div>
     <div v-else-if="loaded" class="err text-center">
       sorry the given submission id is invalid
-      <back class="mt-0 mb-6 mx-auto" target="/reports"/>
+      <back class="mt-0 mb-6 mx-auto" target="/grades"/>
     </div>
   </v-app>
 </template>
@@ -117,19 +117,19 @@ export default {
     navigation_links() {
       const links = [
         {
-          text: "reports",
-          link: "/reports",
+          text: "grades",
+          link: "/grades",
         },
       ]
       if (this.quiz_submission.target) {
         links.push({
           text: this.quiz_submission.target.course.name,
-          link: "/reports/" + this.$route.params.target,
+          link: "/grades/" + this.$route.params.target,
         })
         if (this.quiz_submission.target.chapter)
           links.push({
             text: this.quiz_submission.target.chapter.name,
-            link: "/reports/" + this.$route.params.target,
+            link: "/grades/" + this.$route.params.target,
           })
       }
       return links;
@@ -164,7 +164,7 @@ export default {
 };
 </script>
 <style lang="scss">
-.instructor_reports {
+.instructor_grades {
   // font-family: Poppins;
   .normal--text {
     font-size: 18px;

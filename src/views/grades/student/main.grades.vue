@@ -1,5 +1,5 @@
 <template>
-  <v-app id="reports-page">
+  <v-app id="grades-page">
     <div class="table-one">
       <div class="d-flex">
         <h3 class="mr-4" :class="{active : currentView === 'quiz'}" @click="currentView = 'quiz'">Quiz
@@ -82,7 +82,7 @@
           <v-icon
               small
               class="view-icon"
-              @click="$router.push(`reports/submissions/${item.name}`)"
+              @click="$router.push(`grades/submissions/${item.name}`)"
           >mdi-eye
           </v-icon
           >
@@ -101,7 +101,7 @@
           <v-progress-linear
               :active="false"
               :value="item.progress.progress"
-              :class="`mt-6 kurious--progressbar reports ${
+              :class="`mt-6 kurious--progressbar grades ${
               item.progress.progress === 100
                 ? 'completed-progress'
                 : 'ongoing-progress'
@@ -188,7 +188,7 @@ export default {
         this.$router.push(`/courses/preview/${value.name}`)
       else
 
-        this.$router.push(`/reports/${value._id}${value.submissions[0].assignment ? '/assignments' : value.submissions[0].exam ? '/exams' : ''}`)
+        this.$router.push(`/grades/${value._id}${value.submissions[0].assignment ? '/assignments' : value.submissions[0].exam ? '/exams' : ''}`)
     },
     returnCourseName(quiz) {
       if (quiz.target.type === "facultyCollegeyear") {

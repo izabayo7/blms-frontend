@@ -1,5 +1,5 @@
 <template>
-  <v-app id="reports-page" class="pa-0 instructor_reports">
+  <v-app id="grades-page" class="pa-0 instructor_grades">
 
     <div class="table-one">
       <div class="d-flex">
@@ -199,7 +199,7 @@ export default {
       if (value.attendedStudents)
         this.$router.push(`/courses/preview/${value.name}`)
       else
-        this.$router.push(`/reports/${value._id}${value.submissions[0].assignment ? '/assignments' : value.submissions[0].exam ? '/exams' : ''}`)
+        this.$router.push(`/grades/${value._id}${value.submissions[0].assignment ? '/assignments' : value.submissions[0].exam ? '/exams' : ''}`)
     },
   },
   created() {
@@ -211,7 +211,7 @@ export default {
 };
 </script>
 <style lang="scss">
-.instructor_reports {
+.instructor_grades {
   // font-family: Poppins;
   .normal--text {
     font-size: 14px;
