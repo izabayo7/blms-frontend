@@ -90,14 +90,19 @@ export default {
                         unreadMessagesLength: 67,
                     }
                     console.log(incoming_message,state.incomingMessages)
-                    // state.incomingMessages.shift(incoming_message)
+                    // state.incomingMessages.unshift(incoming_message)
                 }else {
-                    if(newMessage.sender._id === state.currentDisplayedUser.id)
-                        state.incomingMessages[idx].unreadMessagesLength = 0
-                    else
-                        state.incomingMessages[idx].unreadMessagesLength += 1
+                    let incomingMessage = state.incomingMessages[idx]
 
-                    state.incomingMessages[idx].last_message = newMessage
+                    if(newMessage.sender._id === state.currentDisplayedUser.id)
+                        incomingMessage.unreadMessagesLength = 0
+                    else
+                        incomingMessage.unreadMessagesLength += 1
+
+                    incomingMessage.last_message = newMessage
+
+                    state.incomingMessages.splice(idx,1)
+                    state.incomingMessages.unshift(incomingMessage)
                 }
             })
         },
@@ -135,11 +140,17 @@ export default {
                 if(idx === null){
                     //to be done later
                 }else {
-                    state.incomingMessages[idx].unreadMessagesLength = 0
-                    state.incomingMessages[idx].last_message = newMessage
+                    let incomingMessage = state.incomingMessages[idx]
+                    incomingMessage.unreadMessagesLength = 0
+                    incomingMessage.last_message = newMessage
+
+                    //remove the message
+                    state.incomingMessages.splice(idx,1)
+
+                    //add the message to the first place
+                    state.incomingMessages.unshift(incomingMessage)
                 }
             })
-
         },
 
         //change message read status and unread messages
@@ -149,8 +160,19 @@ export default {
                     state.incomingMessages[index].unreadMessagesLength = 0
                 }
             })
-        }
+        },
 
+        //sort incoming messages
+        // SORT_INCOMING_MESSAGES(state){
+        //     const sorted = state.incomingMessages.sort((a,b) =>{
+        //         const first = new Date(a.last_message.time).getTime()
+        //         const second  = new Date(b.last_message.time).getTime()
+        //
+        //         return first - second;
+        //         }
+        //     )
+        //
+        // }
 
     },
     actions:{
@@ -184,6 +206,7 @@ export default {
                 console.log(state.incomingMessages)
             });
         },
+
         //load user messages
         loadMessages({getters,state,commit},id){
             // get messages
