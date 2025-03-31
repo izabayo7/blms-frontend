@@ -75,9 +75,6 @@
                 this.$emit('replied',data)
             }
         },
-        mounted(){
-            console.log(this.content)
-        }
     }
 </script>
 
