@@ -24,6 +24,7 @@ import TableHeader from "../../../components/reusable/ui/table-header";
 import TableUi from "../../../components/reusable/ui/table-ui";
 import apis from "../../../services/apis";
 import moment from "moment";
+import {mapGetters} from "vuex";
 
 export default {
   //TODO using dynamic students from backend
@@ -31,11 +32,16 @@ name: "FacultyCourses",
   components: {TableUi, TableHeader},
   data(){
     return{
-      faculty:{},
       courses:[],
       options:{
         keysToShow:[ "name",  "published",  "status",  "updatedAt",  "createdAt"]
       }
+    }
+  },
+  computed:{
+    ...mapGetters('faculties',['faculties']),
+    faculty(){
+      return this.faculties
     }
   },
   methods:{
@@ -80,6 +86,7 @@ name: "FacultyCourses",
     }
   },
   mounted(){
+    this.$store.dispatch('faculties/changeHeader',{head:this.faculty.name,title:"Courses List"})
     this.getFacultyCourses();
     this.getFacultyInformation();
   }

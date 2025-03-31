@@ -18,6 +18,7 @@
 <script>
 import TableHeader from "../../../components/reusable/ui/table-header";
 import TableUi from "../../../components/reusable/ui/table-ui";
+import {mapGetters} from "vuex";
 
 export default {
   //TODO using dynamic students from backend
@@ -25,15 +26,20 @@ name: "FacultyUsers",
   components: {TableUi, TableHeader,},
   data(){
     return{
-      faculty:{},
       students:[],
       options:{
         keysToShow:[ "name",  "published",  "status",  "updatedAt",  "createdAt"]
       }
     }
   },
-  created(){
-    console.log('users')
+  computed:{
+    ...mapGetters('faculties',['faculties']),
+    faculty(){
+      return this.faculties
+    }
+  },
+  mounted(){
+        this.$store.dispatch('faculties/changeHeader',{head:this.faculty.name,title:"Users List"})
   }
 }
 </script>

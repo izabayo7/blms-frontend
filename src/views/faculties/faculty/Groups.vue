@@ -42,6 +42,7 @@
 import TableHeader from "../../../components/reusable/ui/table-header";
 import TableUi from "../../../components/reusable/ui/table-ui";
 import tableActionBurner from '../../../components/reusable/ui/table-action-burner'
+import {mapGetters} from "vuex";
 
 export default {
   //TODO add dynamic facalty groups
@@ -58,6 +59,15 @@ name: "FacultyGroups",
       ],
       facultyId:this.$route.params.facultyId
     }
+  },
+  computed:{
+    ...mapGetters('faculties',['faculties']),
+    faculty(){
+      return this.faculties
+    }
+  },
+  mounted(){
+    this.$store.dispatch('faculties/changeHeader',{head:this.faculty.name,title:"Student Groups List"})
   }
 }
 </script>
