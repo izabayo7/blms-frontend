@@ -1,5 +1,5 @@
 import io from 'socket.io-client'
-// import {emit} from '@/services/event_bus'
+import {emit} from '@/services/event_bus'
 import user from '@/store/modules/user'
 
 export default {
@@ -7,7 +7,9 @@ export default {
     state:{
         username:null,
         currentDisplayedUser:{},
-        messages:[]
+        currentChatMessages:[],
+        incomingMessages:[],
+        loadedMessages:[]
     },
     mutations:{
         //set the current user
@@ -15,7 +17,6 @@ export default {
 
             return new Promise((res,rej)=>{
                 state.username = username
-                console.log(state.username)
                 if(state.username.length > 0 || state.username != null)
                     res()
                 else
@@ -30,10 +31,34 @@ export default {
 
         //store loaded messages
         STORE_LOADED_DATA(state,data){
-            state.messages.push(data)
+            state.loadedMessages.push(data)
         }
     },
     actions:{
+        loadIncomingMessages({getters,state}){
+            // get contacts new style
+            getters.socket.emit('request_user_contacts');
+
+            // Get contacts new style
+            getters.socket.on('recieve_user_contacts', ({contacts}) => {
+                state.incomingMessages = contacts
+                emit('incoming_message_initially_loaded')
+            });
+        },
+
+        //load user messages
+        loadMessages({getters,state,commit},id){
+            console.log(id,state.username)
+            // get messages new style
+            getters.socket.emit('request_conversation',{ contactId: id});
+
+            // Get messages new style
+            getters.socket.on('recieve_conversation', ({conversation,}) => {
+                console.log(conversation,id)
+                commit('STORE_LOADED_DATA',{username:id,messages:conversation})
+                state.currentChatMessages = conversation
+            })
+        },
 
     },
     getters:{

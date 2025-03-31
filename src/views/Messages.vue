@@ -26,7 +26,7 @@
 import search from '@/components/reusable/Search'
 import incomingChat from '@/components/messages/Incoming-chat'
 import {mapMutations,mapGetters,mapState} from 'vuex'
-// import {on} from '@/services/event_bus'
+import {on} from '@/services/event_bus'
 
 export default {
   name: "Messages",
@@ -36,40 +36,32 @@ export default {
   },
   data(){
     return{
-      incomingMessages: [],
       user:null,
     }
   },
   computed: {
-      ...mapGetters('chat',['socket']),
-      ...mapState('chat',['username'])
+      ...mapGetters('chat',['socket',]),
+      ...mapState('chat',['username','incomingMessages'])
 
   },
   methods:{
       ...mapMutations('chat',['SET_USERNAME','SET_DISPLAYED_USER']),
-    loadIncomingMessages(){
-        console.log('called')
-      // get contacts new style
-      this.socket.emit('request_user_contacts');
 
-      // Get contacts new style
-      this.socket.on('recieve_user_contacts', ({contacts}) => {
-        this.incomingMessages = contacts
-        this.goToMessages()
-      });
-    },
     goToMessages(){
-      if(this.$route.params.username.length > 0)
+      if(this.$route.params.username)
         return
-
+      console.log('mwa')
       this.SET_DISPLAYED_USER({ contactId: this.incomingMessages[0].id})
       this.$router.push(`/messages/${this.incomingMessages[0].id}`)
 
     }
   },
   mounted(){
-    this.loadIncomingMessages()
-    this.goToMessages()
+    on('incoming_message_initially_loaded',()=>{
+      this.goToMessages()
+    })
+    this.$store.dispatch('chat/loadIncomingMessages')
+
     // this.SET_USERNAME(this.$route.params.username).then(()=> this.goToMessages())
   }
 }
@@ -87,8 +79,6 @@ export default {
   .messages-section{
 
   .incoming{
-    display: flex;
-    flex-direction: column;
 
       .message-search{
         padding:1rem 0;

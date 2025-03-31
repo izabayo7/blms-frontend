@@ -32,7 +32,7 @@ export default {
       axios.defaults.headers.common.Authorization = `${this.$session.get(
         "jwt"
       )}`;
-      this.$store.dispatch("setUser", jwt.decode(this.$session.get("jwt")));
+      this.$store.commit("user/SET_USER", jwt.decode(this.$session.get("jwt")));
       this.$store.state.isLoggedIn = true;
       if (
         this.$store.state.user.category === "Student" ||

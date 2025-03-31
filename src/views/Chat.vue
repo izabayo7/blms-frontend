@@ -9,7 +9,7 @@
       </chat-header>
     </div>
     <div ref="messages-list" class="messages-list" >
-      <chat-messaging :data="messages"/>
+      <chat-messaging :data="currentChatMessages"/>
     </div>
     <div ref="send-message" class="send-message">
       <send-message></send-message>
@@ -33,54 +33,31 @@ export default {
   },
   data(){
     return {
-    messages:[]
     }
   },
   computed:{
-    ...mapState('chat',['currentDisplayedUser']),
+    ...mapState('chat',['currentDisplayedUser','currentChatMessages','username']),
     ...mapGetters('chat',['socket'])
   },
   methods:{
-    // set the messages container's height according to the screen height
-    setMessagesContainerHeight(){
-      let chatHolder = this.$refs['my-chat']
-      // let chatHeader = this.$refs['chat-header'];
-      // let msgsList = this.$refs['messages-list'];
-      // let sendMsg = this.$refs['send-message'];
-
-      const height = getComputedStyle(chatHolder)
-      console.log(height.height)
-    },
-
-    //load user messages
-    loadMessages(){
-
-
-      // get messages new style
-      this.socket.emit('request_conversation',{ contactId: this.currentDisplayedUser.contactId});
-
-      // Get messages new style
-      this.socket.on('recieve_conversation', ({conversation,}) => {
-        console.log(conversation)
-        this.$store.commit('chat/STORE_LOADED_DATA',{username:this.currentDisplayedUser.contactId,messages:conversation})
-        this.messages = conversation
-      })
-    },
 
   },
   created() {
-    console.log('wee')
-    //let also announce the event since we are reloading the page
-    emit('chat_user_changed',this.$route.params.username)
+    if(this.currentChatMessages.length <=0){
+      this.$store.dispatch('chat/loadMessages')
+    }
   },
   mounted() {
+    //store the current user username/id
+    this.$store.commit('chat/SET_USERNAME',this.$route.params.username)
+    emit('chat_user_changed',this.$route.params.username) // make new massages loaded
+
     //listen if user to be display on chat was chenged
     on('chat_user_changed',username => {
-      console.log('mwaa')
-      if(username !== this.$route.params.username || this.messages.length <= 0 ){
-        console.log('inner')
-        this.loadMessages();
-        this.$store.commit('chat/SET_USERNAME',this.$route.params.username)
+      console.log('1')
+      if(username !== this.$route.params.username || this.currentChatMessages.length <= 0 ){
+        this.$store.dispatch('chat/loadMessages',this.username); //load msgs
+        this.$store.commit('chat/SET_USERNAME',this.$route.params.username) // set username in store
       }
     })
   }
