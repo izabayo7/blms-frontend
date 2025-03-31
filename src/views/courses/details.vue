@@ -44,7 +44,7 @@
       <!-- the course main content -->
       <v-col class="col-12 col-md-9 course-content customScroll pa-3">
         <!--        <chapter-details :activeIndex="activeIndex" />-->
-        <router-view /> </v-col
+        <router-view @changeActiveChapter="changeActiveChapter" /> </v-col
       >>
     </v-row>
   </v-container>

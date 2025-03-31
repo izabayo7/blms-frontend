@@ -78,7 +78,7 @@
                         v-if="activeIndex > 0"
                         rounded
                         @click="
-                          changeActiveChapter({
+                          $emit('changeActiveChapter', {
                             index: activeIndex - 1,
                             id: prevChapter(activeIndex),
                           })
@@ -93,7 +93,7 @@
                         :color="primary"
                         class="white--text next-chapter"
                         @click="
-                          changeActiveChapter({
+                          $emit('changeActiveChapter', {
                             index: activeIndex + 1,
                             id: nextChapter(activeIndex),
                           })
@@ -299,7 +299,6 @@ export default {
       });
     },
     immediateFunction() {
-      console.log("hhhhhhhhhhh");
       const { index, id } = this.$route.params;
       this.activeIndex = index;
 
@@ -330,7 +329,6 @@ export default {
 
       //getting chapter content
       this.getChapterMainContent(id).then((d) => {
-        console.log(d);
         this.editorContent = d;
       });
 
