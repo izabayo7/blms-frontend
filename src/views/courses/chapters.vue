@@ -100,6 +100,7 @@
                         </v-col>
                         <v-col class="col-12">
                           <kurious-file-picker
+                            :boundIndex="activeChapter + Math.random() * 100"
                             :allowedTypes="['video']"
                             @addFile="updateVideo"
                             @removeFile="removeVideo"
@@ -145,7 +146,7 @@
                         }}</v-col>
                         <v-col class="col-12">
                           <kurious-editor
-                          v-if="mode !== ''"
+                            v-if="mode !== ''"
                             ref="editor"
                             :mode="`${mode === 'edit' ? mode : 'preview'}`"
                             :defaultContent="
@@ -236,6 +237,7 @@
                         </v-col>
                         <v-col class="col-12">
                           <kurious-file-picker
+                            :boundIndex="activeChapter + Math.random() * 100"
                             multiple
                             @addFile="addAttachment"
                             @removeFile="removeAttachment"
@@ -304,7 +306,9 @@
                             <v-col class="col-6 px-0">
                               Duration
                               <span class="font-weight-bold caption">{{
-                                new Date(selectedQuiz.duration * 100).toISOString().substr(11, 8)
+                                new Date(selectedQuiz.duration * 100)
+                                  .toISOString()
+                                  .substr(11, 8)
                               }}</span>
                             </v-col>
                           </v-row>
@@ -397,7 +401,7 @@ export default {
       this.mode = "";
       this.content = "";
       this.selectedQuizName = "";
-      this.e6 = 1
+      this.e6 = 1;
       if (this.course.chapters[this.activeChapter]._id) {
         this.getChapterMainContent(
           this.course.chapters[this.activeChapter]._id

@@ -15,16 +15,32 @@
             color="error"
             class="ml-n2 mt-n2 remove--button"
             slot="badge"
-            @click="set_modal({ template: 'action_confirmation', method: { action: 'courses/delete_chapter', parameters: { id: chapter._id }}, title: 'Delete Chapter', message: 'Are you sure you want to delete this chapter?'}).then(()=>{updateActiveChapter()})"
+            @click="
+              set_modal({
+                template: 'action_confirmation',
+                method: {
+                  action: 'courses/delete_chapter',
+                  parameters: { id: chapter._id },
+                },
+                title: 'Delete Chapter',
+                message: 'Are you sure you want to delete this chapter?',
+              }).then(() => {
+                updateActiveChapter();
+              })
+            "
           >
             <v-icon color="#fff">mdi-window-close</v-icon>
           </v-btn>
 
           <button
             class="chapter-button"
-            :class="`${activeChapter === i ? 'white--text active-chapter': ''}`"
-            @click="activeChapter=i"
-          >{{chapter.name | trimString(20)}}</button>
+            :class="`${
+              activeChapter === i ? 'white--text active-chapter' : ''
+            }`"
+            @click="activeChapter = i"
+          >
+            {{ chapter.name | trimString(20) }}
+          </button>
         </v-badge>
         <v-btn width="90%" class="py-6" @click="addNewChapter">
           <v-icon>mdi-plus</v-icon>New Chapter
@@ -36,11 +52,10 @@
             <v-row>
               <v-col class="col-12">
                 <v-stepper v-model="e6" vertical>
-                  <v-stepper-step
-                    :complete="e6 > 1"
-                    step="1"
-                    editable
-                  >Chapter {{activeChapter + 1}} -name & description</v-stepper-step>
+                  <v-stepper-step :complete="e6 > 1" step="1" editable
+                    >Chapter {{ activeChapter + 1 }} -name &
+                    description</v-stepper-step
+                  >
 
                   <v-stepper-content step="1">
                     <v-card class="mb-12 pa-6 elevation-0" height="300px">
@@ -63,11 +78,11 @@
                     <v-btn color="primary" @click="e6 = 2">Continue</v-btn>
                   </v-stepper-content>
 
-                  <v-stepper-step
-                    :complete="e6 > 2"
-                    step="2"
-                    editable
-                  >{{`Chapter ${activeChapter + 1} - ${action == 'update' ? action : 'add'} video`}}</v-stepper-step>
+                  <v-stepper-step :complete="e6 > 2" step="2" editable>{{
+                    `Chapter ${activeChapter + 1} - ${
+                      action == "update" ? action : "add"
+                    } video`
+                  }}</v-stepper-step>
 
                   <v-stepper-content step="2">
                     <v-card class="mb-12 pa-6 elevation-0" height="auto">
@@ -78,11 +93,14 @@
                           id="video"
                         >
                           <vue-plyr>
-                            <video :src="course.chapters[activeChapter].mainVideo"></video>
+                            <video
+                              :src="course.chapters[activeChapter].mainVideo"
+                            ></video>
                           </vue-plyr>
                         </v-col>
                         <v-col class="col-12">
                           <kurious-file-picker
+                            :ref="`picker${activeChapter + Math.round() * 100}`"
                             v-if="mode !== ''"
                             :allowedTypes="['video']"
                             @addFile="updateVideo"
@@ -94,11 +112,11 @@
                     <v-btn color="primary" @click="e6 = 3">Continue</v-btn>
                   </v-stepper-content>
 
-                  <v-stepper-step
-                    :complete="e6 > 3"
-                    step="3"
-                    editable
-                  >{{ `Chapter ${activeChapter + 1} - ${action === 'update' ? action : 'add'} content`}}</v-stepper-step>
+                  <v-stepper-step :complete="e6 > 3" step="3" editable>{{
+                    `Chapter ${activeChapter + 1} - ${
+                      action === "update" ? action : "add"
+                    } content`
+                  }}</v-stepper-step>
 
                   <v-stepper-content step="3">
                     <v-card class="mb-12 elevation-0">
@@ -106,64 +124,92 @@
                         <v-col class="col-12 actions-container">
                           <v-row>
                             <v-col
-                              :class="`col-6 text-center ${mode=='edit' ? 'yellow white--text' : ''}`"
+                              :class="`col-6 text-center ${
+                                mode == 'edit' ? 'yellow white--text' : ''
+                              }`"
                               @click="switchMode('edit')"
-                            >Edit mode</v-col>
+                              >Edit mode</v-col
+                            >
                             <v-col
-                              :class="`col-6 text-center ${mode=='preview' ? 'yellow white--text' : ''}`"
+                              :class="`col-6 text-center ${
+                                mode == 'preview' ? 'yellow white--text' : ''
+                              }`"
                               @click="switchMode('preview')"
-                            >View mode</v-col>
+                              >View mode</v-col
+                            >
                           </v-row>
                         </v-col>
 
-                        <v-col
-                          v-if="mode === 'preview'"
-                          class="col-12 title"
-                        >{{course.chapters[activeChapter].name}}</v-col>
+                        <v-col v-if="mode === 'preview'" class="col-12 title">{{
+                          course.chapters[activeChapter].name
+                        }}</v-col>
                         <v-col
                           v-if="mode === 'preview'"
                           class="col-12 subtitle"
-                        >{{chapter.description}}</v-col>
+                          >{{ chapter.description }}</v-col
+                        >
                         <v-col class="col-12">
                           <kurious-editor
                             v-if="mode !== ''"
                             ref="editor"
                             :mode="`${mode === 'edit' ? mode : 'preview'}`"
-                            :defaultContent="course.chapters[activeChapter]._id ? content : undefined"
+                            :defaultContent="
+                              course.chapters[activeChapter]._id
+                                ? content
+                                : undefined
+                            "
                           />
                         </v-col>
                       </v-row>
                     </v-card>
-                    <v-btn color="primary" class="mr-4" @click="e6=4">Continue</v-btn>
-                    <v-btn text class="py-6 mt-n3" @click="reset('chapter')">Reset Chapter</v-btn>
+                    <v-btn color="primary" class="mr-4" @click="e6 = 4"
+                      >Continue</v-btn
+                    >
+                    <v-btn text class="py-6 mt-n3" @click="reset('chapter')"
+                      >Reset Chapter</v-btn
+                    >
                   </v-stepper-content>
 
-                  <v-stepper-step
-                    :complete="e6 > 4"
-                    step="4"
-                    editable
-                  >{{`Chapter ${activeChapter + 1} - ${action === 'update' ? action : 'add'} attachments`}}</v-stepper-step>
+                  <v-stepper-step :complete="e6 > 4" step="4" editable>{{
+                    `Chapter ${activeChapter + 1} - ${
+                      action === "update" ? action : "add"
+                    } attachments`
+                  }}</v-stepper-step>
 
                   <v-stepper-content step="4">
                     <v-card class="mb-12 elevation-0">
                       <v-row>
                         <v-col class="col-12">
                           <div
-                            v-if="course.chapters[activeChapter].attachments.length > 0"
+                            v-if="
+                              course.chapters[activeChapter].attachments
+                                .length > 0
+                            "
                             class="attachments"
                           >
                             <div
-                              v-for="(attachment, key) in course.chapters[activeChapter].attachments"
+                              v-for="(attachment, key) in course.chapters[
+                                activeChapter
+                              ].attachments"
                               :key="key"
                               class="file-listing d-flex"
                             >
-                              <div class="downloadable_attachment vertically--centered">
-                                <v-icon
-                                  color="#000000"
-                                  x-large
-                                >mdi-file{{findIcon(attachment.name)}}-outline</v-icon>
-                                <span class="filename text-truncate">{{attachment.name}}</span>
-                                <button @click.prevent="deleteAttachment(attachment._id)">
+                              <div
+                                class="downloadable_attachment vertically--centered"
+                              >
+                                <v-icon color="#000000" x-large
+                                  >mdi-file{{
+                                    findIcon(attachment.name)
+                                  }}-outline</v-icon
+                                >
+                                <span class="filename text-truncate">{{
+                                  attachment.name
+                                }}</span>
+                                <button
+                                  @click.prevent="
+                                    deleteAttachment(attachment._id)
+                                  "
+                                >
                                   <svg
                                     xmlns="http://www.w3.org/2000/svg"
                                     width="45"
@@ -195,6 +241,7 @@
                         </v-col>
                         <v-col class="col-12">
                           <kurious-file-picker
+                            :ref="`picker${activeChapter + Math.round() * 100}`"
                             v-if="mode !== ''"
                             multiple
                             @addFile="addAttachment"
@@ -245,33 +292,43 @@
                             </v-col>
                             <v-col class="col-6">
                               Name
-                              <span class="font-weight-bold caption">{{selectedQuiz.name}}</span>
+                              <span class="font-weight-bold caption">{{
+                                selectedQuiz.name
+                              }}</span>
                             </v-col>
                             <v-col class="col-6">
                               Number of questions
-                              <span
-                                class="font-weight-bold"
-                              >{{selectedQuiz.questions.length}}</span>
+                              <span class="font-weight-bold">{{
+                                selectedQuiz.questions.length
+                              }}</span>
                             </v-col>
                             <v-col class="col-6">
                               Course
-                              <span class="font-weight-bold caption">{{course.name}}</span>
+                              <span class="font-weight-bold caption">{{
+                                course.name
+                              }}</span>
                             </v-col>
                             <v-col class="col-6">
                               Duration
-                              <span
-                                class="font-weight-bold caption"
-                              >{{selectedQuiz.duration}}</span>
+                              <span class="font-weight-bold caption">{{
+                                selectedQuiz.duration
+                              }}</span>
                             </v-col>
                           </v-row>
                         </v-col>
                       </v-row>
                     </v-card>
-                    <v-btn color="primary" class="mr-4" @click="e6=5">Next</v-btn>
-                    <v-btn text class="py-6 mt-n3" @click="reset('chapter')">Reset Chapter</v-btn>
+                    <v-btn color="primary" class="mr-4" @click="e6 = 5"
+                      >Next</v-btn
+                    >
+                    <v-btn text class="py-6 mt-n3" @click="reset('chapter')"
+                      >Reset Chapter</v-btn
+                    >
                   </v-stepper-content>
 
-                  <v-stepper-step :complete="e6 > 5" step="5">update Chapter {{activeChapter + 1}}</v-stepper-step>
+                  <v-stepper-step :complete="e6 > 5" step="5"
+                    >update Chapter {{ activeChapter + 1 }}</v-stepper-step
+                  >
 
                   <v-stepper-content step="5">
                     <v-btn
@@ -279,9 +336,18 @@
                       color="primary"
                       class="mr-4"
                       @click="saveChapterChanges"
-                    >update Chapter</v-btn>
-                    <v-btn v-else color="primary" class="mr-4" @click="saveChapter">save Chapter</v-btn>
-                    <v-btn text class="py-6 mt-n3" @click="reset('chapter')">Reset Chapter</v-btn>
+                      >update Chapter</v-btn
+                    >
+                    <v-btn
+                      v-else
+                      color="primary"
+                      class="mr-4"
+                      @click="saveChapter"
+                      >save Chapter</v-btn
+                    >
+                    <v-btn text class="py-6 mt-n3" @click="reset('chapter')"
+                      >Reset Chapter</v-btn
+                    >
                   </v-stepper-content>
                 </v-stepper>
               </v-col>
@@ -404,13 +470,14 @@ export default {
     },
     switchMode(mode) {
       this.mode = "";
-      this.content = document.querySelector(".ProseMirror").innerHTML;
+      this.content = this.$refs.editor.getHTML();
       document
         .querySelector(".ProseMirror")
         .setAttribute("contenteditable", mode === "edit");
       this.mode = mode;
     },
     saveChapterChanges() {
+      const content = this.$refs.editor.getHTML();
       this.updateChapter({
         chapter: {
           name: this.course.chapters[this.activeChapter].name,
@@ -418,7 +485,10 @@ export default {
           course: this.course._id,
           description: this.course.chapters[this.activeChapter].description,
         },
-        content: this.$refs.editor.getHTML(),
+        content:
+          content === `<p>Type or paste your content here</p>` || content === ""
+            ? undefined
+            : content,
         video: this.chapterVideo,
         attachments: this.attachments,
         quiz: this.selectedQuiz,

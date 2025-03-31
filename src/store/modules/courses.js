@@ -107,11 +107,11 @@ export default {
                             'Content-Type': 'multipart/form-data'
                         },
                         onUploadProgress: (progressEvent) => {
-                            commit('modal/update_progress', parseInt(Math.round((progressEvent.loaded / progressEvent.total) * 100)), { root: true })
+                            dispatch('modal/set_progress', parseInt(Math.round((progressEvent.loaded / progressEvent.total) * 100)), { root: true })
                         }
                     }).then(courseData => {
                         courseObject.coverPicture = courseData.data.coverPicture
-                        dispatch('modal/reset_modal', null, { root: true })
+                        // dispatch('modal/reset_modal', null, { root: true })
                     })
                 }
                 courseObject.chapters = []
@@ -121,7 +121,7 @@ export default {
 
         },
         //update a course
-        updateCourse({ state, commit, dispatch }, { course, coverPicture }) {
+        updateCourse({ state, dispatch }, { course, coverPicture }) {
             let courseIndex
             for (const i in state.courses.data) {
                 if (state.courses.data[i]._id == state.selectedCourse) {
@@ -146,11 +146,11 @@ export default {
                             'Content-Type': 'multipart/form-data'
                         },
                         onUploadProgress: (progressEvent) => {
-                            commit('modal/update_progress', parseInt(Math.round((progressEvent.loaded / progressEvent.total) * 100)), { root: true })
+                            dispatch('modal/set_progress', parseInt(Math.round((progressEvent.loaded / progressEvent.total) * 100)), { root: true })
                         }
                     }).then(courseData => {
                         state.courses.data[courseIndex].coverPicture = courseData.data.coverPicture
-                        dispatch('modal/reset_modal', null, { root: true })
+                        // dispatch('modal/reset_modal', null, { root: true })
                     })
                 }
             })
@@ -221,12 +221,12 @@ export default {
                             'Content-Type': 'multipart/form-data'
                         },
                         onUploadProgress: (progressEvent) => {
-                            console.log(progressEvent)
-                            commit('modal/update_progress', parseInt(Math.round((progressEvent.loaded / progressEvent.total) * 100)), { root: true })
+                            dispatch('modal/set_progress', parseInt(Math.round((progressEvent.loaded / progressEvent.total) * 100)), { root: true })
                         }
                     }).then((videoResponse) => {
                         state.courses.data[courseIndex].chapters[chapterIndex].mainVideo = videoResponse.data.filepath
-                        dispatch('modal/reset_modal', null, { root: true })
+                        // dispatch('modal/reset_modal', null, { root: true })
+                        console.log('video done')
                     })
                 } if (attachments.length > 0) {
                     dispatch('modal/set_modal', { template: 'display_information', title: 'Updating Chapter', message: `uploading attachments` }, { root: true })
@@ -239,13 +239,14 @@ export default {
                             'Content-Type': 'multipart/form-data'
                         },
                         onUploadProgress: (progressEvent) => {
-                            commit('modal/update_progress', parseInt(Math.round((progressEvent.loaded / progressEvent.total) * 100)), { root: true })
+                            dispatch('modal/set_progress', parseInt(Math.round((progressEvent.loaded / progressEvent.total) * 100)), { root: true })
                         }
                     }).then((chapterResponse) => {
                         for (const i in chapterResponse.data) {
                             state.courses.data[courseIndex].chapters[chapterIndex].attachments.push(chapterResponse.data[i])
                         }
-                        dispatch('modal/reset_modal', null, { root: true })
+                        // dispatch('modal/reset_modal', null, { root: true })
+                        console.log('attachments done')
                     })
 
                 }
@@ -426,11 +427,11 @@ export default {
                             'Content-Type': 'multipart/form-data'
                         },
                         onUploadProgress: (progressEvent) => {
-                            commit('modal/update_progress', parseInt(Math.round((progressEvent.loaded / progressEvent.total) * 100)), { root: true })
+                            dispatch('modal/set_progress', parseInt(Math.round((progressEvent.loaded / progressEvent.total) * 100)), { root: true })
                         }
                     }).then((videoResponse) => {
                         state.courses.data[courseIndex].chapters[chapterIndex].mainVideo = videoResponse.data.filepath
-                        dispatch('modal/reset_modal', null, { root: true })
+                        // dispatch('modal/reset_modal', null, { root: true })
                     })
                 } if (attachments.length > 0) {
                     dispatch('modal/set_modal', { template: 'display_information', title: 'Saving Chapter', message: `uploading attachments` }, { root: true })
@@ -443,13 +444,13 @@ export default {
                             'Content-Type': 'multipart/form-data'
                         },
                         onUploadProgress: (progressEvent) => {
-                            commit('modal/update_progress', parseInt(Math.round((progressEvent.loaded / progressEvent.total) * 100)), { root: true })
+                            dispatch('modal/set_progress', parseInt(Math.round((progressEvent.loaded / progressEvent.total) * 100)), { root: true })
                         }
                     }).then((chapterResponse) => {
                         for (const i in chapterResponse.data) {
                             state.courses.data[courseIndex].chapters[chapterIndex].attachments.push(chapterResponse.data[i])
                         }
-                        dispatch('modal/reset_modal', null, { root: true })
+                        // dispatch('modal/reset_modal', null, { root: true })
                     })
 
                 }
