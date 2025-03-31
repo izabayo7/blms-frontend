@@ -191,6 +191,7 @@ export default {
   destroyed(){
     clearInterval(this.interval)
   },
+  created(){
     this.nearestLiveSession = calculateNearestLiveSession(this.course)
   }
 }
