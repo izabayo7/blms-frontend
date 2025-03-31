@@ -202,7 +202,7 @@
       <div class="v-col col-12 col-lg-8 py-0">
         <v-row class="pa-0">
           <v-col class="col-12 col-lg-6 pt-0">
-            <small-card :data="user_statistics" type="users">
+            <small-card :total="user_statistics.total_users" :series="computeUserSeries()" type="users" :headers="['Instuctors', 'Students', 'Staff']">
               <template v-slot:icon>
                 <svg
                   width="16"
@@ -230,7 +230,7 @@
             </small-card>
           </v-col>
           <v-col class="col-12 col-lg-6 pt-0">
-            <small-card>
+            <!-- <small-card>
               <template v-slot:icon>
                 <svg
                   width="21"
@@ -257,7 +257,7 @@
                   />
                 </svg>
               </template>
-            </small-card>
+            </small-card> -->
           </v-col>
           <v-col class="col-12">
             <combined-statistics>
@@ -322,6 +322,13 @@ export default {
   },
   methods: {
     ...mapActions("modal", ["set_modal"]),
+    computeUserSeries(){
+      const res = []
+      res.push(this.user_statistics.total_instructors)
+      res.push(this.user_statistics.total_students)
+      res.push(this.user_statistics.total_staff)
+      return res
+    }
   },
   async beforeMount(){
     const res = await Apis.get("user/statistics");
