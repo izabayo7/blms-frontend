@@ -133,11 +133,12 @@ export default {
 
           this.uploaded = true;
           this.profile_link = data.data.profile
-          console.log(data)
         }
         //call the function again
         else{
           const self = this;
+
+          //at least await 30 microsecond so that the recursion can't go that faster
           setTimeout(async ()=>{
             await self.uploadImage()
           },30)
