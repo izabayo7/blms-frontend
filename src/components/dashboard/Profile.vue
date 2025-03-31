@@ -1,13 +1,13 @@
 <template>
   <div class="profile">
-    <div class="profile-container">
-      <img @click="logout" v-if="$store.state.user.user.profile" :src="$store.state.user.user.profile" alt="profile picture"/>
-      <v-avatar @click="logout" v-else size="50" class="avatar">
+    <div class="profile-container" @click="profile_card_active = !profile_card_active">
+      <img v-if="$store.state.user.user.profile" :src="$store.state.user.user.profile" alt="profile picture"/>
+      <v-avatar v-else size="50" class="avatar">
         {{ `${$store.state.user.user.sur_name} ${$store.state.user.user.other_names}`| computeText }}
       </v-avatar>
       <v-icon>mdi-chevron-down</v-icon>
       <div class="profile-card">
-        <profile-card />
+        <profile-card v-if="profile_card_active" />
       </div>
     </div>
   </div>
@@ -17,6 +17,11 @@ import ProfileCard from "./ProfileCard";
 export default {
   name:"Profile",
   components: {ProfileCard},
+  data(){
+    return{
+      profile_card_active:false
+    }
+  }
 };
 </script>
 <style lang="scss" scoped>
