@@ -14,7 +14,7 @@ export default {
             ongoing:false,
             id:null,
             status:0
-        }
+        },
     },
     mutations:{
         //set the current user
@@ -104,7 +104,7 @@ export default {
                 }
 
             })
-        }
+        },
 
     },
     actions:{
@@ -116,7 +116,6 @@ export default {
 
 
             state.loadedMessages.map((conversation,index) => {
-                console.log(conversation,id)
                 if(conversation.username === id){
                     lastGroupedMessageIndex = state.loadedMessages[index].conversation.length -1
                     let lastIndividualMessageIndex = state.loadedMessages[index].conversation[lastGroupedMessageIndex].messages.length -1
@@ -176,7 +175,7 @@ export default {
                 }
             })
 
-        },
+        }
     },
     getters:{
         // connect to socket from sever side
@@ -216,7 +215,7 @@ export default {
         },
         conversationLoading(state){
             return state.request.ongoing
-        }
+        },
 
     },
 }

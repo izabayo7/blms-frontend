@@ -15,24 +15,35 @@
         </div>
 
       </div>
+      <div class=" receiving" v-if="typing">
+        <div class="typing ">
+          <div class="lds-ellipsis "><div></div><div></div><div></div><div></div></div>
+        </div>
+      </div>
     </div>
   </main>
 </template>
 
 <script>
-import {mapState} from 'vuex'
+import {mapState, mapGetters} from 'vuex'
 
 
 export default {
   name: "Chat-messaging",
   props:{
-    data:{type:[Array,Boolean],required:true}
+    data:{type:[Array,Boolean],required:true},
+  },
+  data(){
+    return {
+      typing:false
+    }
   },
   computed:{
     ...mapState('chat',['currentDisplayedUser']),
+    ...mapGetters('chat',['socket']),
   },
   methods: {
-    // is message going or comming
+    // is message going or coming
     msgGoing(owner) {
       return (owner && owner.toLowerCase() === 'me');
     },
@@ -42,6 +53,23 @@ export default {
 
   },
   mounted(){
+    // Someone typing to me
+    let timeout = undefined;
+
+    this.socket.on('typing', typist => {
+      //if the typist is the one we are chatting with
+      if (this.currentDisplayedUser.id === typist){
+
+        this.typing = true
+
+        clearTimeout(timeout)// before setting new timeout lets create old one
+
+        //if 5 seconds exceeds without new event of typing stop typing
+        timeout = setTimeout(()=>{
+          this.typing = false
+        },5000)
+      }
+    });
 
 
   }
@@ -57,6 +85,70 @@ export default {
     margin: 0 10px;
     overflow: auto;
     height: 100%;
+        .typing{
+          height: fit-content;
+          width: fit-content;
+          .lds-ellipsis {
+            display: inline-block;
+            position: relative;
+            width: 80px;
+            height: 1rem;
+            padding: .5rem;
+            margin-left: 50px;
+            margin-top: 10px;
+            //background-color: lighten($font,20);
+          }
+          .lds-ellipsis div {
+            position: absolute;
+            top:0;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: $secondary;
+            animation-timing-function: cubic-bezier(0, 1, 1, 0);
+          }
+          .lds-ellipsis div:nth-child(1) {
+            left: 5px;
+            animation: lds-ellipsis1 0.6s infinite;
+          }
+          .lds-ellipsis div:nth-child(2) {
+            left: 5px;
+            animation: lds-ellipsis2 0.6s infinite;
+          }
+          .lds-ellipsis div:nth-child(3) {
+            left: 20px;
+            animation: lds-ellipsis2 0.6s infinite;
+          }
+          .lds-ellipsis div:nth-child(4) {
+            left: 40px;
+            animation: lds-ellipsis3 0.6s infinite;
+          }
+          @keyframes lds-ellipsis1 {
+            0% {
+              transform: scale(0);
+            }
+            100% {
+              transform: scale(1);
+            }
+          }
+          @keyframes lds-ellipsis3 {
+            0% {
+              transform: scale(1);
+            }
+            100% {
+              transform: scale(0);
+            }
+          }
+          @keyframes lds-ellipsis2 {
+            0% {
+              transform: translate(0, 0);
+            }
+            100% {
+              transform: translate(24px, 0);
+            }
+          }
+
+        }
 
     .no-msgs{
       font-size: .8rem;
@@ -88,6 +180,7 @@ export default {
         width: fit-content;
         font-size: .8rem;
         font-weight: 400;
+        word-break: break-word;
       }
     }
 
@@ -100,6 +193,7 @@ export default {
         align-self: flex-end;
         display: flex;
         flex-direction: column;
+
         .msg{
           align-self: flex-end;
           background-color: $primary;

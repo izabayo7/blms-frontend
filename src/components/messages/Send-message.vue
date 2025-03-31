@@ -69,6 +69,9 @@ export default {
       let length = input.textContent.length
       this.msg = input.textContent;
 
+      //emit that we are typing
+      this.socket.emit('typing', {recipients: [{id: this.currentDisplayedUser.id}]});
+
       // check if the msg input is filled with something and then make placeholder empty and vice-versa
       if(length >0)
         this.p("")

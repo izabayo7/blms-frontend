@@ -24,7 +24,7 @@
 import ChatHeader from '@/components/messages/Chat-header'
 import SendMessage from '@/components/messages/Send-message'
 import ChatMessaging from '@/components/messages/Chat-messaging'
-import {mapGetters, mapState, mapActions} from 'vuex'
+import {mapGetters, mapState, mapActions, mapMutations} from 'vuex'
 import {on} from "@/services/event_bus";
 
 export default {
@@ -36,6 +36,7 @@ export default {
   },
   data(){
     return {
+
     }
   },
   computed:{
@@ -44,7 +45,8 @@ export default {
 
   },
   methods:{
-    ...mapActions('chat',['setUsername','loadMessages']),
+    ...mapActions('chat',['setUsername','loadMessages','isUsertyping']),
+    ...mapMutations('chat',['ADD_TYPIST','REMOVE_TYPIST']),
     scrollChatToBottom(){
       let el = document.getElementById('chat-holder')
       console.log(el.scrollTop,el.scrollHeight)
@@ -52,6 +54,9 @@ export default {
 
       console.log(el.scrollTop,el.scrollHeight)
 
+    },
+    doneTyping(){
+      this.typing.typist = ''
     }
   },
   mounted() {
@@ -63,14 +68,12 @@ export default {
 
       if(this.loadedMessages.length > 0) // if messages have loaded
                 this.$store.commit('chat/ADD_INCOMING_MESSAGE',message)
-
-      // for groups
-
-
-      // Scroll down
-      // chatMessages.scrollTop = chatMessages.scrollHeight;
     });
+
+
+
   },
+
   beforeMount() {
     //load user since the route have changed
     this.setUsername(this.$route.params.username).then(username => {
