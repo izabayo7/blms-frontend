@@ -1,7 +1,7 @@
 <template>
   <div class="combined-statistics pt-6">
     <div class="row">
-      <div class="selection col-12 col-lg-5" :class="{'px-0': $vuetify.breakpoint.width < 700 }">
+      <div class="selection col-12 col-lg-5 px-0" :class="{'px-0': $vuetify.breakpoint.width < 700 }">
         <div class="title mb-6">Select data</div>
         <button
             v-for="(obj, i) in data_categories"
@@ -13,13 +13,23 @@
         </button>
       </div>
       <div class="result-view mb-3 col-12 col-lg-7" :class="{'px-8': $vuetify.breakpoint.width < 700 }">
-        <div class="title">{{ selected_category }} rate</div>
+        <div class="filters-containter">
+          <div class="filters">
+            <div class="cursor-pointer" @click="activeFilter = 1" :class="{'active': activeFilter === 1}">All time</div>
+            <div class="cursor-pointer" @click="activeFilter = 2" :class="{'active': activeFilter === 2}">Year</div>
+            <div class="cursor-pointer" @click="activeFilter = 3" :class="{'active': activeFilter === 3}">Month</div>
+            <div class="cursor-pointer" @click="activeFilter = 4" :class="{'active': activeFilter === 4}">Week</div>
+            <div class="cursor-pointer" @click="activeFilter = 5" :class="{'active': activeFilter === 5}">Day</div>
+          </div>
+          <div class="hint">Select a time range to compare data</div>
+        </div>
         <div class="chart">
           <chart
               v-if="loaded"
               type="line"
               class="my-chart ml-n6"
-              width="390px"
+              width="305px"
+              height="170px"
               :options="chartOptions"
               :series="series"
           ></chart>
@@ -34,10 +44,12 @@ import Apexcharts from "vue-apexcharts";
 import Apis from "@/services/apis";
 
 export default {
+  name: "combined-statistics",
   data: () => ({
     selected_category: "User joins",
     userJoins: undefined,
     loaded: false,
+    activeFilter: 4,
     data_categories: [
       {name: "Users online"},
       {name: "User joins"},
@@ -121,8 +133,7 @@ export default {
         ]
         this.chartOptions.xaxis.categories = response.data.data.map(x => x._id)
         this.loaded = true
-      }
-      else {
+      } else {
         response = await Apis.get(`user_logs/statistics/${this.selected_category === "Course access" ? 'course_access' : 'live_session_access'}?start_date=${this.$store.state.sidebar_navbar.college.createdAt}&end_date=${new Date().toISOString()}`);
         this.series = [
           {
@@ -149,11 +160,13 @@ export default {
 
 <style lang="scss">
 .combined-statistics {
-  max-width: 734px;
+  max-width: 774px;
+  max-height: 253px;
   overflow-x: auto;
   background: #ffffff;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.25);
   border-radius: 4.14px;
+  padding: 17px 41px;
 
   .title {
     font-family: Inter;
@@ -164,7 +177,6 @@ export default {
     /* or 154% */
 
     color: #494949;
-    padding-left: 20%;
   }
 
   .selection {
@@ -172,7 +184,6 @@ export default {
 
     .choice {
       display: block;
-      padding-left: 20%;
       text-align: left;
       width: 100%;
 
@@ -204,6 +215,44 @@ export default {
 
   .result-view {
     width: 60%;
+
+    .filters-containter {
+      margin-left: auto;
+      max-width: 247px;
+
+      .filters {
+        font-family: Inter;
+        font-style: normal;
+        font-weight: bold;
+        font-size: 10.7572px;
+        line-height: 17px;
+        /* or 154% */
+        display: flex;
+
+        div {
+          margin-right: auto;
+        }
+
+        color: #ABABAB;
+
+        .active {
+          color: #193074;
+        }
+      }
+
+      .hint {
+        font-family: Inter;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 8px;
+        line-height: 17px;
+        /* or 207% */
+
+
+        color: #ABABAB;
+
+      }
+    }
   }
 }
 </style>

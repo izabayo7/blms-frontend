@@ -1,5 +1,5 @@
 <template>
-  <div class="small-card" :class="template">
+  <div class="small-card" :class="template + ' '+size">
     <div v-if="template === 'ADMIN'">
       <div class="d-flex">
         <div class="icon">
@@ -104,6 +104,9 @@ export default {
     data: {
       type: Object
     },
+    size: {
+      type: String
+    },
     width: {
       type: Number,
       default: 150
@@ -186,7 +189,11 @@ export default {
 
 <style lang="scss">
 .small-card {
-  max-width: 359.95px;
+  max-width: 350px;
+  &.small{
+    max-width: 286.95px
+  }
+  height: 229px;
   left: 0px;
   top: 0px;
 

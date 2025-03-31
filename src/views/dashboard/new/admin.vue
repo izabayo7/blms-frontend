@@ -4,8 +4,115 @@
       <div class="upper">Dashboard</div>
       <div class="lower">Overview</div>
     </v-row>
-    <v-row class="mt-6 px-4">
-      <div class="v-col col-12 col-md-4 pa-0">
+    <v-row class="">
+      <div class="v-col col-12 col-lg-7 py-0 mt-0 mt-md-n3" :class="{'px-0': $vuetify.breakpoint.width < 700 }">
+        <v-row class="pa-0 mt-6 mt-md-0" :class="{'px-0': $vuetify.breakpoint.width < 700 }">
+          <v-col class="col-12 pa-0 mb-4" :class="{'px-0': $vuetify.breakpoint.width < 700 }">
+            <combined-statistics v-if="$store.state.sidebar_navbar.college">
+              <template v-slot:icon>
+                <svg
+                    width="21"
+                    height="22"
+                    viewBox="0 0 21 22"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                >
+                  <rect
+                      x="0.644531"
+                      y="0.0536499"
+                      width="4.3645"
+                      height="4.3645"
+                      rx="2.18225"
+                      fill="#FFAE34"
+                  />
+                  <path
+                      d="M0.0488281 9.477V20.6858C0.0488281 21.9753 2.0327 21.8761 2.0327 20.6858C1.99964 19.8262 1.95335 16.1825 2.0327 14.8334C2.11206 13.4844 3.81818 13.4447 3.81818 14.8334C3.78512 16.0568 3.73883 18.8805 3.81818 20.3883C3.89754 21.896 5.70285 21.8761 5.70285 20.1899V11.1633C5.70285 9.97297 5.40527 8.68346 6.29801 8.68346H10.1665C11.4362 8.68346 11.6214 6.89798 10.1665 6.89798H2.42945C0.0488313 6.89798 0.0488301 7.8899 0.0488281 9.47697V9.477Z"
+                      fill="#FFAE34"
+                  />
+                  <path
+                      d="M20.4828 1.64074V14.635H15.0272L16.9118 21.777H15.0272L13.4401 14.635H11.5554L9.86913 21.777H7.98446L9.76993 14.635H7.19092V12.552H18.4989V3.42622H7.3893V1.64074H11.2578V0.847198H13.0433V1.64074H20.4828Z"
+                      fill="#FFAE34"
+                  />
+                </svg>
+              </template>
+            </combined-statistics>
+          </v-col>
+          <v-col class="col-12 col-lg-6 pt-0 mb-6 mb-md-0 px-0" :class="{'px-0': $vuetify.breakpoint.width < 700 }">
+            <small-card
+                :total="user_statistics.total_users"
+                :size="state ? 'small' : ''"
+                :series="computeUserSeries()"
+                :labels="['Instructors','Students','Staff']"
+                type="users"
+                :headers="['Instuctors', 'Students', 'Staff']"
+            >
+              <template v-slot:icon>
+                <svg
+                    width="16"
+                    height="18"
+                    viewBox="0 0 16 18"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                >
+                  <rect
+                      x="3.41162"
+                      y="0.23822"
+                      width="8.82547"
+                      height="8.82547"
+                      rx="4.41274"
+                      fill="#FFAE34"
+                  />
+                  <path
+                      fill-rule="evenodd"
+                      clip-rule="evenodd"
+                      d="M0.285645 17.2588H15.3632C15.0429 13.3758 11.79 10.3245 7.82444 10.3245C3.85886 10.3245 0.605977 13.3758 0.285645 17.2588Z"
+                      fill="#FFAE34"
+                  />
+                </svg>
+              </template>
+            </small-card>
+          </v-col>
+          <v-col class="col-12 col-lg-6 pa-0">
+            <small-card
+                :total="total_courses"
+                :size="state ? 'small' : ''"
+                class="ml-auto"
+                :series="computeOtherSeries()"
+                :labels="['Faculties','Courses','Student groups']"
+                type="others"
+                :headers="['Faculties', 'Courses', 'Student groups']"
+            >
+              <template v-slot:icon>
+                <svg
+                    width="21"
+                    height="22"
+                    viewBox="0 0 21 22"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                >
+                  <rect
+                      x="0.644531"
+                      y="0.0536499"
+                      width="4.3645"
+                      height="4.3645"
+                      rx="2.18225"
+                      fill="#FFAE34"
+                  />
+                  <path
+                      d="M0.0488281 9.477V20.6858C0.0488281 21.9753 2.0327 21.8761 2.0327 20.6858C1.99964 19.8262 1.95335 16.1825 2.0327 14.8334C2.11206 13.4844 3.81818 13.4447 3.81818 14.8334C3.78512 16.0568 3.73883 18.8805 3.81818 20.3883C3.89754 21.896 5.70285 21.8761 5.70285 20.1899V11.1633C5.70285 9.97297 5.40527 8.68346 6.29801 8.68346H10.1665C11.4362 8.68346 11.6214 6.89798 10.1665 6.89798H2.42945C0.0488313 6.89798 0.0488301 7.8899 0.0488281 9.47697V9.477Z"
+                      fill="#FFAE34"
+                  />
+                  <path
+                      d="M20.4828 1.64074V14.635H15.0272L16.9118 21.777H15.0272L13.4401 14.635H11.5554L9.86913 21.777H7.98446L9.76993 14.635H7.19092V12.552H18.4989V3.42622H7.3893V1.64074H11.2578V0.847198H13.0433V1.64074H20.4828Z"
+                      fill="#FFAE34"
+                  />
+                </svg>
+              </template>
+            </small-card>
+          </v-col>
+        </v-row>
+      </div>
+      <div class="v-col col-12 mx-md-auto col-md-4 pa-0">
         <div class="row">
           <div class="v-col col-12 pa-0">
             <div class="college_info">
@@ -187,7 +294,7 @@
               </div>
             </div>
           </v-col>
-          <v-col class="col-12 pt-0 pl-0">
+          <v-col class="col-12 col-lg-10 pt-0 pl-0">
             <router-link class="more text-right" to="/users">More ...</router-link>
             <div class="mt-5 d-flex">
               <button
@@ -203,110 +310,6 @@
           </v-col>
         </div>
       </div>
-      <div class="v-col col-12 col-lg-8 py-0 mt-0 mt-md-n3" :class="{'px-0': $vuetify.breakpoint.width < 700 }">
-        <v-row class="pa-0 mt-6 mt-md-0" :class="{'px-0': $vuetify.breakpoint.width < 700 }">
-          <v-col class="col-12 col-lg-6 pt-0 mb-6 mb-md-0" :class="{'px-0': $vuetify.breakpoint.width < 700 }">
-            <small-card
-                :total="user_statistics.total_users"
-                :series="computeUserSeries()"
-                :labels="['Instructors','Students','Staff']"
-                type="users"
-                :headers="['Instuctors', 'Students', 'Staff']"
-            >
-              <template v-slot:icon>
-                <svg
-                    width="16"
-                    height="18"
-                    viewBox="0 0 16 18"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                >
-                  <rect
-                      x="3.41162"
-                      y="0.23822"
-                      width="8.82547"
-                      height="8.82547"
-                      rx="4.41274"
-                      fill="#FFAE34"
-                  />
-                  <path
-                      fill-rule="evenodd"
-                      clip-rule="evenodd"
-                      d="M0.285645 17.2588H15.3632C15.0429 13.3758 11.79 10.3245 7.82444 10.3245C3.85886 10.3245 0.605977 13.3758 0.285645 17.2588Z"
-                      fill="#FFAE34"
-                  />
-                </svg>
-              </template>
-            </small-card>
-          </v-col>
-          <v-col class="col-12 col-lg-6 pa-0">
-            <small-card
-                :total="total_courses"
-                :series="computeOtherSeries()"
-                :labels="['Faculties','Courses','Student groups']"
-                type="others"
-                :headers="['Faculties', 'Courses', 'Student groups']"
-            >
-              <template v-slot:icon>
-                <svg
-                    width="21"
-                    height="22"
-                    viewBox="0 0 21 22"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                >
-                  <rect
-                      x="0.644531"
-                      y="0.0536499"
-                      width="4.3645"
-                      height="4.3645"
-                      rx="2.18225"
-                      fill="#FFAE34"
-                  />
-                  <path
-                      d="M0.0488281 9.477V20.6858C0.0488281 21.9753 2.0327 21.8761 2.0327 20.6858C1.99964 19.8262 1.95335 16.1825 2.0327 14.8334C2.11206 13.4844 3.81818 13.4447 3.81818 14.8334C3.78512 16.0568 3.73883 18.8805 3.81818 20.3883C3.89754 21.896 5.70285 21.8761 5.70285 20.1899V11.1633C5.70285 9.97297 5.40527 8.68346 6.29801 8.68346H10.1665C11.4362 8.68346 11.6214 6.89798 10.1665 6.89798H2.42945C0.0488313 6.89798 0.0488301 7.8899 0.0488281 9.47697V9.477Z"
-                      fill="#FFAE34"
-                  />
-                  <path
-                      d="M20.4828 1.64074V14.635H15.0272L16.9118 21.777H15.0272L13.4401 14.635H11.5554L9.86913 21.777H7.98446L9.76993 14.635H7.19092V12.552H18.4989V3.42622H7.3893V1.64074H11.2578V0.847198H13.0433V1.64074H20.4828Z"
-                      fill="#FFAE34"
-                  />
-                </svg>
-              </template>
-            </small-card>
-          </v-col>
-          <v-col class="col-12" :class="{'px-0': $vuetify.breakpoint.width < 700 }">
-            <combined-statistics v-if="$store.state.sidebar_navbar.college">
-              <template v-slot:icon>
-                <svg
-                    width="21"
-                    height="22"
-                    viewBox="0 0 21 22"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                >
-                  <rect
-                      x="0.644531"
-                      y="0.0536499"
-                      width="4.3645"
-                      height="4.3645"
-                      rx="2.18225"
-                      fill="#FFAE34"
-                  />
-                  <path
-                      d="M0.0488281 9.477V20.6858C0.0488281 21.9753 2.0327 21.8761 2.0327 20.6858C1.99964 19.8262 1.95335 16.1825 2.0327 14.8334C2.11206 13.4844 3.81818 13.4447 3.81818 14.8334C3.78512 16.0568 3.73883 18.8805 3.81818 20.3883C3.89754 21.896 5.70285 21.8761 5.70285 20.1899V11.1633C5.70285 9.97297 5.40527 8.68346 6.29801 8.68346H10.1665C11.4362 8.68346 11.6214 6.89798 10.1665 6.89798H2.42945C0.0488313 6.89798 0.0488301 7.8899 0.0488281 9.47697V9.477Z"
-                      fill="#FFAE34"
-                  />
-                  <path
-                      d="M20.4828 1.64074V14.635H15.0272L16.9118 21.777H15.0272L13.4401 14.635H11.5554L9.86913 21.777H7.98446L9.76993 14.635H7.19092V12.552H18.4989V3.42622H7.3893V1.64074H11.2578V0.847198H13.0433V1.64074H20.4828Z"
-                      fill="#FFAE34"
-                  />
-                </svg>
-              </template>
-            </combined-statistics>
-          </v-col>
-        </v-row>
-      </div>
     </v-row>
     <invite-users-dialog
         v-if="showInviteUsers"
@@ -321,7 +324,7 @@
 </template>
 
 <script>
-import {mapActions, mapGetters} from "vuex";
+import {mapActions, mapGetters, mapState} from "vuex";
 import Apis from "@/services/apis";
 import {elapsedDuration} from "../../../services/global_functions";
 
@@ -338,6 +341,7 @@ export default {
   }),
   computed: {
     ...mapGetters("chat", ["socket"]),
+    ...mapState("sidebar_navbar", {state: "sidebar_expanded"}),
   },
   components: {
     InviteUsersDialog: () => import("@/components/dashboard/InviteUsersDialog"),
