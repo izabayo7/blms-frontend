@@ -133,7 +133,7 @@ export default {
   },
   methods: {
     loadUsers() {
-      apis.get(`user/college/${this.$store.state.sidebar_navbar.college._id}/ALL`)
+      apis.get(`user/college/ALL`)
           .then(({data: {data}}) => {
             let filteredUsers = [];
 
