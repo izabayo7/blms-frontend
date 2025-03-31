@@ -412,9 +412,6 @@ export default {
     },
   },
   watch: {
-    all_quiz() {
-      this.calculateQuizNames();
-    },
     activeChapter() {
       this.mode = "";
       this.content = "";
@@ -437,7 +434,6 @@ export default {
       }
       this.video = undefined;
       this.attachments = [];
-      this.calculateQuizNames();
     },
     stepCounter() {
       if (this.stepCounter === 3) {
@@ -448,6 +444,9 @@ export default {
         this.course.chapters[
           this.activeChapter
         ].documentContent = this.$refs.editor.getHTML();
+      }
+      if (this.stepCounter == 4) {
+        this.calculateQuizNames();
       }
     },
   },
@@ -462,17 +461,18 @@ export default {
     ...mapActions("quiz", ["getQuizes"]),
     ...mapActions("modal", ["set_modal"]),
     calculateQuizNames() {
+      let quizes = JSON.parse(JSON.stringify(this.all_quiz));
+      console.log("yuhuuuuuuuuu", quizes);
       let quizNames = [];
-      if (this.all_quiz) {
-        for (const i in this.all_quiz) {
+      if (quizes) {
+        for (const i in quizes) {
           let addName = false;
-          if (this.all_quiz[i].target === undefined) {
+          if (!quizes[i].target) {
+            console.log(quizes[i]);
             addName = true;
-          } else if (
-            this.course.chapters[this.activeChapter].quiz.length > 0
-          ) {
+          } else if (this.course.chapters[this.activeChapter].quiz.length > 0) {
             if (
-              this.all_quiz[i].name ==
+              quizes[i].name ==
               this.course.chapters[this.activeChapter].quiz[0].name
             ) {
               addName = true;
@@ -480,7 +480,7 @@ export default {
           }
 
           if (addName) {
-            quizNames.push(this.all_quiz[i].name);
+            quizNames.push(quizes[i].name);
           }
         }
       }
@@ -490,8 +490,8 @@ export default {
       if (this.activeChapter === 0 && this.course.chapters.length === 0) {
         this.addNewChapter();
       } else {
-        if (this.course.chapters.length > this.activeChapter) {
-          this.activeChapter++;
+        if (this.course.chapters.length - 1 > this.activeChapter) {
+          this.activeChapter += 1;
         } else {
           this.activeChapter = 0;
         }
@@ -538,9 +538,7 @@ export default {
       }).then(() => {
         this.chapterVideo = undefined;
         this.attachments = [];
-        if (this.course.chapters.length - 1 == this.activeChapter)
-          this.type = "course";
-        else this.activeChapter += 1;
+        this.updateActiveChapter();
       });
     },
     saveChapter() {
@@ -562,9 +560,7 @@ export default {
       }).then(() => {
         this.chapterVideo = undefined;
         this.attachments = [];
-        if (this.course.chapters.length - 1 == this.activeChapter)
-          this.type = "course";
-        else this.activeChapter += 1;
+        this.updateActiveChapter();
       });
     },
     findIcon(name) {
@@ -587,7 +583,6 @@ export default {
     },
     removeQuiz() {
       this.selectedQuizName = "";
-      this.course.chapters[this.activeChapter].quiz = [];
     },
   },
   created() {

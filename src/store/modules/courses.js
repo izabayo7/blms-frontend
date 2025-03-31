@@ -181,36 +181,63 @@ export default {
                         state.courses.data[courseIndex].chapters[chapterIndex].documentContent = content
                     })
                 }
+                // attach quiz
                 if (quiz) {
-                    const quizId = quiz._id
+                    let quizCopy = JSON.parse(JSON.stringify(quiz))
+                    const quizId = quizCopy._id
                     // add quiz target
-                    quiz.target = {
+                    quizCopy.target = {
                         id: state.selectedChapter,
                         type: 'chapter'
                     }
                     //   remove unnecessary fields
-                    quiz._id = undefined
-                    quiz.__v = undefined
-                    quiz.createdAt = undefined
-                    quiz.updatedAt = undefined
-                    quiz.usage = undefined
-                    for (const k in quiz.questions) {
-                        if (quiz.questions[k].options) {
-                            for (const j in quiz.questions[k].options.choices) {
-                                if (quiz.questions[k].options.choices[j].src) {
-                                    if (quiz.questions[k].options.choices[j].src.includes('http')) {
-                                        const mediapath = quiz.questions[k].options.choices[j].src
-                                        quiz.questions[k].options.choices[j].src = mediapath.split("/")[mediapath.split("/").length - 1]
+                    quizCopy._id = undefined
+                    quizCopy.__v = undefined
+                    quizCopy.createdAt = undefined
+                    quizCopy.updatedAt = undefined
+                    quizCopy.usage = undefined
+                    quizCopy.course = undefined
+
+                    for (const k in quizCopy.questions) {
+                        if (quizCopy.questions[k].options) {
+                            for (const j in quizCopy.questions[k].options.choices) {
+                                if (quizCopy.questions[k].options.choices[j].src) {
+                                    if (quizCopy.questions[k].options.choices[j].src.includes('http')) {
+                                        const mediapath = quizCopy.questions[k].options.choices[j].src
+                                        quizCopy.questions[k].options.choices[j].src = mediapath.split("/")[mediapath.split("/").length - 1]
                                     }
                                 }
                             }
                         }
                     }
-                    apis.update('quiz', quizId, quiz).then((quizResponse) => {
+                    apis.update('quiz', quizId, quizCopy).then((quizResponse) => {
+                        if (state.courses.data[courseIndex].chapters[chapterIndex].quiz.length > 0) {
+                            commit('quiz/update_quiz_target', { id: state.courses.data[courseIndex].chapters[chapterIndex].quiz[0]._id, target: undefined }, { root: true })
+                            state.courses.data[courseIndex].chapters[chapterIndex].quiz.splice(0, 1)
+                        }
                         state.courses.data[courseIndex].chapters[chapterIndex].quiz.push(quizResponse.data)
-                        commit('quiz/add_quiz_target', { id: quizId, target: quiz.target }, { root: true })
+                        commit('quiz/update_quiz_target', { id: quizId, target: quizCopy.target }, { root: true })
                     })
 
+                }
+                // remove quiz 
+                else if (state.courses.data[courseIndex].chapters[chapterIndex].quiz.length > 0 && quiz === undefined) {
+                    let quizCopy = JSON.parse(JSON.stringify(state.courses.data[courseIndex].chapters[chapterIndex].quiz[0]))
+                    const quizId = quizCopy._id
+                    // remove quiz target
+                    quizCopy.target = undefined
+                    //   remove unnecessary fields
+                    quizCopy._id = undefined
+                    quizCopy.__v = undefined
+                    quizCopy.createdAt = undefined
+                    quizCopy.updatedAt = undefined
+                    quizCopy.usage = undefined
+                    quizCopy.course = undefined
+
+                    apis.update('quiz', quizId, quizCopy).then(() => {
+                        commit('quiz/update_quiz_target', { id: state.courses.data[courseIndex].chapters[chapterIndex].quiz[0]._id, target: undefined }, { root: true })
+                        state.courses.data[courseIndex].chapters[chapterIndex].quiz.splice(0, 1)
+                    })
                 }
                 if (video) {
                     // set the dialog
@@ -226,8 +253,6 @@ export default {
                         }
                     }).then((videoResponse) => {
                         state.courses.data[courseIndex].chapters[chapterIndex].mainVideo = videoResponse.data.filepath
-                        // dispatch('modal/reset_modal', null, { root: true })
-                        console.log('video done')
                     })
                 } if (attachments.length > 0) {
                     dispatch('modal/set_modal', { template: 'display_information', title: 'Updating Chapter', message: `uploading attachments` }, { root: true })
@@ -246,8 +271,6 @@ export default {
                         for (const i in chapterResponse.data) {
                             state.courses.data[courseIndex].chapters[chapterIndex].attachments.push(chapterResponse.data[i])
                         }
-                        // dispatch('modal/reset_modal', null, { root: true })
-                        console.log('attachments done')
                     })
 
                 }
@@ -402,19 +425,19 @@ export default {
                         id: d.data._id,
                         type: 'chapter'
                     }
-                    // for (const k in quiz.questions) {
-                    //     if (quiz.questions[k].options) {
-                    //         for (const j in quiz.questions[k].options.choices) {
-                    //             if (quiz.questions[k].options.choices[j].src.includes('http')) {
-                    //                 const mediapath = quiz.questions[k].options.choices[j].src
-                    //                 quiz.questions[k].options.choices[j].src = mediapath.split("/")[mediapath.split("/").length - 1]
+                    // for (const k in quizCopy.questions) {
+                    //     if (quizCopy.questions[k].options) {
+                    //         for (const j in quizCopy.questions[k].options.choices) {
+                    //             if (quizCopy.questions[k].options.choices[j].src.includes('http')) {
+                    //                 const mediapath = quizCopy.questions[k].options.choices[j].src
+                    //                 quizCopy.questions[k].options.choices[j].src = mediapath.split("/")[mediapath.split("/").length - 1]
                     //             }
                     //         }
                     //     }
                     // }
                     apis.update('quiz', quizId, quiz).then((quizResponse) => {
                         state.courses.data[courseIndex].chapters[chapterIndex].quiz.push(quizResponse.data)
-                        commit('quiz/add_quiz_target', { id: quizId, target: quiz.target }, { root: true })
+                        commit('quiz/update_quiz_target', { id: quizId, target: quiz.target }, { root: true })
                     })
 
                 }

@@ -11,8 +11,8 @@ export default {
         selected_quiz: ''
     },
     mutations: {
-        // add quiz target
-        add_quiz_target(state, { id, target }) {
+        // update quiz target
+        update_quiz_target(state, { id, target }) {
             for (const i in state.quiz.data) {
                 if (state.quiz.data[i]._id === id) {
                     state.quiz.data[i].target = target
