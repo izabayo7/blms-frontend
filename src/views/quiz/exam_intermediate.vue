@@ -4,7 +4,7 @@
       <div class="col-12">
         <back to="/assignments"/>
       </div>
-      <div v-if="exam && !disabled" class="col-12 content">
+      <div v-if="exam && !disabled" class="col-12 ml-md-8 content">
         <div class="title">{{ exam.name }}</div>
         <div class="subtitle">Before your attempt, Please read all the conditions bellow.
           This will prevent you from failing unexpectedly.
@@ -90,7 +90,7 @@ export default {
 <style lang="scss">
 #preview-exam {
   .content {
-    margin-left: 38px;
+    //margin-left: 38px;
   }
 
   .title {
@@ -153,6 +153,14 @@ export default {
       color: #FFFFFF;
       background: #193074;
       border-radius: 6px;
+    }
+  }
+}
+/* Portrait phones and smaller */
+@media (max-width: 700px) {
+  #preview-exam {
+    .card {
+      padding: 35px 26px;
     }
   }
 }
