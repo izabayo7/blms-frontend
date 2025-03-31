@@ -125,6 +125,11 @@ const routes = [
                                 component: () => import( /* webpackChunkName: "faculty-by-id" */ '@/views/faculties/faculty/Groups.vue'),
                             },
                             {
+                                path: '/faculties/:facultyId/groups/:groupId',
+                                name: "facultyStudentGroups",
+                                component: () => import( /* webpackChunkName: "faculty-by-id" */ '@/views/faculties/faculty/EditStudentGroup.vue'),
+                            },
+                            {
                                 path: '/faculties/:facultyId/students',
                                 name: "facultyStudents",
                                 component: () => import( /* webpackChunkName: "faculty-by-id" */ '@/views/faculties/faculty/Users.vue'),

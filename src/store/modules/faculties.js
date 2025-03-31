@@ -1,4 +1,5 @@
 import apis from "@/services/apis";
+
 const getDefaultState = () => ({
     // storage for all facultyCollegeYears
     facultyCollegeYears: {
@@ -9,17 +10,18 @@ const getDefaultState = () => ({
         data: [],
         loaded: false
     },
-    faculty:{
-        data:[],
-        loaded:false,
+    faculty: {
+        data: [],
+        loaded: false,
     },
+    selected_faculty: "",
     importable_faculties: {
         data: [],
         loaded: false
     },
-    header:{
-        head:"",
-        title:""
+    header: {
+        head: "",
+        title: ""
     }
 })
 
@@ -32,13 +34,22 @@ export default {
         },
 
         //mutating page header
-        SET_HEADER(state,header){
+        SET_HEADER(state, header) {
             state.header = header;
+        },
+        UPDATE_FACULTY(state, {id, name, description}) {
+            for (const i in state.faculties.data) {
+                if (state.faculties.data[i]._id == id) {
+                    state.faculties.data[i].name = name
+                    state.faculties.data[i].description = description
+                    break;
+                }
+            }
         }
     },
     actions: {
         //get facultyCollegeYears from backend
-        getFacultyCollegeYears({ state }) {
+        getFacultyCollegeYears({state}) {
             // when faculty college years not loaded fetch them
             if (!state.facultyCollegeYears.loaded) {
                 apis.get(`user_groups/user`).then(d => {
@@ -53,32 +64,32 @@ export default {
             }
         },
         //create a facultyCollegeYear
-        createFacultyCollegeYear({ state }, { facultyCollegeYear }) {
+        createFacultyCollegeYear({state}, {facultyCollegeYear}) {
             return apis.create('faculty_college_year', facultyCollegeYear).then(d => {
                 state.facultyCollegeYears.data.push(d.data)
             })
         },
         //get faculties from backend
-        async getFaculties({ state }) {
+        async getFaculties({state}) {
+            console.log("ngahooo")
             // when faculties not loaded fetch them
             if (!state.faculties.loaded) {
-                const {data:{data}} = await apis.get(`faculty/ALL`)
-                    state.faculties.data = data
-                    //announce that data have been loaded
-                    state.faculties.loaded = true
+                const {data: {data}} = await apis.get(`faculty/ALL`)
+                state.faculties.data = data
+                //announce that data have been loaded
+                state.faculties.loaded = true
             }
         },
-        async getFaculty({state}, facultyId){
+        async getFaculty({state, dispatch}, facultyId) {
             // when faculties not loaded fetch them
-            if (!state.faculty.loaded) {
-                const {data:{data}} = await apis.get(`faculty/${facultyId}`)
-                    state.faculty.data = data
-                    //announce that data have been loaded
-                    state.faculty.loaded = true
+            if (state.selected_faculty !== facultyId) {
+                state.selected_faculty = facultyId
             }
+            if (!state.faculties.loaded)
+                dispatch("getFaculties")
         },
         //get faculties that a college can imoprt from backend
-        getImportableFaculties({ state }, { collegeId }) {
+        getImportableFaculties({state}, {collegeId}) {
             // when faculties not loaded fetch them
             if (!state.importable_faculties.loaded) {
                 console.log(collegeId)
@@ -91,12 +102,12 @@ export default {
         },
         //create a faculty
         // eslint-disable-next-line no-empty-pattern
-        createFaculty({ }, { faculty }) {
+        createFaculty({}, {faculty}) {
             return apis.create('faculty', faculty)
         },
         //create a faculty_college
-        createFacultyCollege({ state }, { faculty, college }) {
-            return apis.create('faculty-college', { faculty: faculty, college: college }).then((d) => {
+        createFacultyCollege({state}, {faculty, college}) {
+            return apis.create('faculty-college', {faculty: faculty, college: college}).then((d) => {
                 state.faculties.data.push({
                     name: d.data.faculty.name,
                     attendants: 0,
@@ -114,8 +125,8 @@ export default {
         },
 
         //page header
-        changeHeader({commit},header){
-            commit("SET_HEADER",header)
+        changeHeader({commit}, header) {
+            commit("SET_HEADER", header)
         }
     },
     getters: {
@@ -143,8 +154,10 @@ export default {
             return state.faculties.data
         },
         // get faculty
-        faculty:state => {
-            return state.faculty.data
+        faculty: state => {
+            if (!state.faculties.data.length)
+                return undefined
+            return state.faculties.data.filter(e => e._id === state.selected_faculty)[0]
         },
         //get all specified importable_faculties
         importable_faculties: state => {

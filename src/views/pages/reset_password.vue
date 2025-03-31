@@ -217,12 +217,6 @@ export default {
 </script>
 
 <style lang="scss">
-@font-face {
-  font-family: "Inter";
-  src: local("Inter"),
-    url(../../assets/fonts/Inter/Inter-VariableFont_slnt.ttf) format("truetype");
-}
-
 .reset-password {
   &-page {
     background: radial-gradient(

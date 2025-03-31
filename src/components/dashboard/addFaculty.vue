@@ -1,21 +1,7 @@
 <template>
   <v-dialog v-model="visible" :persistent="!closable">
     <div class="faculty-dialog-body">
-      <!--      <div class="close">-->
-      <!--        <svg-->
-      <!--          xmlns="http://www.w3.org/2000/svg"-->
-      <!--          viewBox="0 0 24 24"-->
-      <!--          width="24"-->
-      <!--          height="24"-->
-      <!--          @click="$emit('closeModal')"-->
-      <!--        >-->
-      <!--          <path fill="none" d="M0 0h24v24H0z" />-->
-      <!--          <path-->
-      <!--            d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm0-11.414L9.172 7.757 7.757 9.172 10.586 12l-2.829 2.828 1.415 1.415L12 13.414l2.828 2.829 1.415-1.415L13.414 12l2.829-2.828-1.415-1.415L12 10.586z"-->
-      <!--          />-->
-      <!--        </svg>-->
-      <!--      </div>-->
-      <div class="tittle px-0 px-md-6 pa-6 pb-0">Create a faculty</div>
+      <div class="tittle px-0 px-md-6 pa-6 pb-0">{{ editMode ? 'Edit' : 'Create a' }} faculty</div>
       <div class="row px-0 px-md-6 pt-0">
         <div class="col-12 col-lg-6">
           <div class="input-group">
@@ -58,26 +44,26 @@
           </div>
         </div>
         <div class="col-12 col-lg-6">
-          <div class="input-group">
-            <div class="label">
-              <label for="faculty-name">Assign a dean (Optional) </label>
-              <!-- <span class="important">*</span> -->
-            </div>
-            <div class="input-container">
-              <select-ui
-                  label="Select dean instructor"
-                  name="role"
-                  id="user_category"
-                  :options="instructor_names"
-                  @input="
-                  (e) => {
-                    select_dean(e);
-                  }
-                "
-              />
-            </div>
-          </div>
-          <div class="input-group">
+<!--          <div class="input-group">-->
+<!--            <div class="label">-->
+<!--              <label for="faculty-name">Assign a dean (Optional) </label>-->
+<!--              &lt;!&ndash; <span class="important">*</span> &ndash;&gt;-->
+<!--            </div>-->
+<!--            <div class="input-container">-->
+<!--              <select-ui-->
+<!--                  label="Select dean instructor"-->
+<!--                  name="role"-->
+<!--                  id="user_category"-->
+<!--                  :options="instructor_names"-->
+<!--                  @input="-->
+<!--                  (e) => {-->
+<!--                    select_dean(e);-->
+<!--                  }-->
+<!--                "-->
+<!--              />-->
+<!--            </div>-->
+<!--          </div>-->
+          <div v-if="!editMode" class="input-group">
             <div class="label">
               <label for="faculty-description"
               >Add a student group to faculty
@@ -210,11 +196,21 @@
 </template>
 
 <script>
-import SelectUi from "@/components/reusable/ui/select-ui";
+// import SelectUi from "@/components/reusable/ui/select-ui";
 import Apis from "@/services/apis";
+import {mapGetters} from "vuex";
 
 export default {
-  components: {SelectUi},
+  props: {
+    editMode: {
+      type: Boolean,
+      default: false
+    },
+    facultyId: {
+      type: String
+    }
+  },
+  // components: {SelectUi},
   data: () => ({
     closable: false,
     editingIndex: -1,
@@ -234,16 +230,17 @@ export default {
     addedStudentGroups: [],
   }),
   computed: {
+    ...mapGetters('faculties', {state: "faculty"}),
     visible() {
       return 1;
     },
-    instructor_names() {
-      const res = []
-      for (const i in this.instructors) {
-        res.push(`${this.instructors[i].sur_name} ${this.instructors[i].other_names}`)
-      }
-      return res
-    }
+    // instructor_names() {
+    //   const res = []
+    //   for (const i in this.instructors) {
+    //     res.push(`${this.instructors[i].sur_name} ${this.instructors[i].other_names}`)
+    //   }
+    //   return res
+    // }
   },
   async beforeMount() {
     setTimeout(() => {
@@ -253,9 +250,13 @@ export default {
       dialog.style.setProperty("min-height", "538px", "important");
     }, 0);
 
-    let res = await Apis.get(`user/college/${this.$store.state.user.user.college}/INSTRUCTOR`);
-    this.instructors = res.data.data;
-    console.log(this.instructors)
+    // let res = await Apis.get(`user/college/${this.$store.state.user.user.college}/INSTRUCTOR`);
+    // this.instructors = res.data.data;
+
+    if (this.editMode) {
+      await this.$store.dispatch("faculties/getFaculty", this.facultyId)
+      this.faculty = {name: this.state.name, description: this.state.description}
+    }
   },
   watch: {
     error() {
@@ -293,7 +294,7 @@ export default {
     },
     saveStudentGroupChanges() {
       const dupplicates = this.addedStudentGroups.filter(s => s.name == this.currentStudentGroup)
-      if (dupplicates.length > 1 || this.addedStudentGroups.indexOf(dupplicates[0]) != this.editingIndex) {
+      if (dupplicates.length > 1 || (dupplicates.length && this.addedStudentGroups.indexOf(dupplicates[0]) != this.editingIndex)) {
         this.error = "Dupplicate names not allowed"
       } else {
         this.addedStudentGroups[this.editingIndex].name = this.currentStudentGroup;
@@ -314,7 +315,7 @@ export default {
     }
     ,
     async createFaculty() {
-      const res = await Apis.create("faculty", this.faculty);
+      const res = this.editMode ? await Apis.update("faculty", this.facultyId, this.faculty) : await Apis.create("faculty", this.faculty);
       if (res.data.status != 200 && res.data.status != 201) {
         this.$store.dispatch("app_notification/SET_NOTIFICATION", {
           message: res.data.message,
@@ -323,34 +324,44 @@ export default {
         })
       } else {
         this.$store.dispatch("app_notification/SET_NOTIFICATION", {
-          message: "Faculty successfully created",
+          message: this.editMode ? "Changes saved" : "Faculty successfully created",
           status: "success",
           uptime: 2000,
         })
-        const unsaved = []
-        for (const i in this.addedStudentGroups) {
-          const response = await Apis.create("user_groups", {
-            name: this.addedStudentGroups[i].name,
-            faculty: res.data.data._id
-          });
-          if (response.data.status != 200 && response.data.status != 201) {
+
+        if (!this.editMode) {
+          const unsaved = []
+          for (const i in this.addedStudentGroups) {
+            const response = await Apis.create("user_groups", {
+              name: this.addedStudentGroups[i].name,
+              faculty: res.data.data._id
+            });
+            if (response.data.status != 200 && response.data.status != 201) {
+              this.$store.dispatch("app_notification/SET_NOTIFICATION", {
+                message: response.data.message,
+                status: "danger",
+                uptime: 2000,
+              })
+              unsaved.push(this.addedStudentGroups[i])
+            }
+          }
+          if (!unsaved.length) {
             this.$store.dispatch("app_notification/SET_NOTIFICATION", {
-              message: response.data.message,
-              status: "danger",
+              message: "User groups added successfully",
+              status: "success",
               uptime: 2000,
             })
-            unsaved.push(this.addedStudentGroups[i])
-          }
-        }
-        if (!unsaved.length) {
-          this.$store.dispatch("app_notification/SET_NOTIFICATION", {
-            message: "User groups added successfully",
-            status: "success",
-            uptime: 2000,
+            this.$emit('closeModal')
+          } else
+            this.addedStudentGroups = unsaved
+        } else {
+          this.$store.commit("faculties/UPDATE_FACULTY", {
+            id: this.facultyId,
+            name: this.faculty.name,
+            description: this.faculty.description
           })
           this.$emit('closeModal')
-        } else
-          this.addedStudentGroups = unsaved
+        }
       }
     }
     ,
@@ -368,6 +379,9 @@ export default {
       if (this.faculty.description.length < 10) {
         return this.error = "Faculty description too short"
       }
+      if (!this.editMode && !this.addedStudentGroups.length)
+        return this.error = "Please enter atleast one student group"
+
       this.createFaculty()
     }
   }

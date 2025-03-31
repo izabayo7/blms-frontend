@@ -47,9 +47,9 @@
             </div>
           </div>
           <div class="v-col col-12 pa-0 mt-5">
-            <div class="row ml-0 more_info_container">
+            <div @click="$router.push('/faculties')" class="row ml-0 more_info_container cursor-pointer">
               <div class="v-col col-4 pa-0">
-                <div class="more_info">
+                <div  class="more_info">
                   <svg
                     width="27"
                     height="21"
@@ -187,7 +187,7 @@
               </div>
             </div>
           </v-col>
-          <v-col class="col-12 mt-5 pl-0">
+          <v-col class="col-12 pt-0 pl-0">
             <router-link class="more text-right" to="/users">More ...</router-link>
             <div class="mt-5 d-flex">
               <button

@@ -14,9 +14,6 @@
       <li class="subpage-navbar--link" :class="{active:activeLink === 'groups'}">
         <router-link :to="`/faculties/${facultyId}/groups`"> Student Groups </router-link>
         </li>
-      <li class="subpage-navbar--link" :class="{active:activeLink === 'administration'}">
-        <router-link :to="`/faculties/${facultyId}/administration`"> Adminstration </router-link>
-        </li>
     </ul>
   </div>
 </div>

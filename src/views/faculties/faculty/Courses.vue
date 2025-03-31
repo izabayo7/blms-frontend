@@ -38,23 +38,17 @@ name: "FacultyCourses",
     }
   },
   computed:{
-    ...mapGetters('faculties',['faculties']),
+    ...mapGetters('faculties',['faculty']),
     ...mapGetters('courses',['coursesByFaculty']),
-    faculty(){
-      return this.faculties
-    }
   },
   methods:{
 
   },
   async mounted(){
 
-      if(this.faculty.length <= 0)
-        await this.$store.dispatch("faculties/getFaculties",this.facultyId)
-
-
+    await this.$store.dispatch('faculties/getFaculty', this.facultyId);
     await this.$store.dispatch('courses/getCourseByFaculty',{facultyId:this.facultyId})
-    await this.$store.dispatch('faculties/changeHeader',{head:this.faculty.name,title:"Courses List"})
+    await this.$store.dispatch('faculties/changeHeader',{title:"Courses List"})
 
   }
 }
