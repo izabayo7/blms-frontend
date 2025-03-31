@@ -5,12 +5,16 @@ export default {
     namespaced: true,
     state: {
         user: null,
-        isLoggedIn: false
+        isLoggedIn: false,
+        disableFucntionalities: false
     },
     mutations: {
         SET_USER(state, user) {
             state.user = user
             state.isLoggedIn = true
+        },
+        TOOGLE_DISABLE_FUNCTIONALITIES(state, value) {
+            state.disableFucntionalities = value
         },
         UNSET_USER(state) {
             state.user = null
@@ -54,6 +58,9 @@ export default {
         // get user username
         username(state) {
             return state.user.user_name
+        },
+        disableFunctionalities(state){
+          return state.disableFucntionalities
         },
         userCategory(state) {
             return state.user.category.name

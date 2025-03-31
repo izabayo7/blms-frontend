@@ -19,12 +19,17 @@ export default {
   },
   methods: {
     ...mapMutations("notification", ["addNotification"]),
+    ...mapMutations("user", ["TOOGLE_DISABLE_FUNCTIONALITIES"]),
     ...mapMutations("courses", ["addCourse"]),
     ...mapMutations("chat", ["CHANGE_MESSAGE_READ_STATUS","SET_SOCKET"]),
     ...mapMutations("sidebar_navbar", {update_unread: "SET_TOTAL_UNREAD"}),
   },
   async created() {
     await apis.create('user_logs', {online: true})
+    apis.get('account_payments/status').then((res)=>{
+      console.log(res)
+      this.TOOGLE_DISABLE_FUNCTIONALITIES(res.data.data.disabled)
+    })
   },
   beforeMount() {
     this.SET_SOCKET()
