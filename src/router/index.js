@@ -259,7 +259,6 @@ router.beforeEach((to, from, next) => {
     }
     // go to the requested route
     else {
-        console.log(to)
         next()
     }
 })

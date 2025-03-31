@@ -66,7 +66,29 @@
                 Faculty Registration
               </h1>
             </v-col>
-            <v-col class="col-12 col-md-6">
+            <v-col class="col-12 col-md-5">
+              <label>Import Faculty</label>
+              <v-select
+                v-model="selectedFacultyName"
+                :items="facultyNames"
+                chips
+                dense
+                outlined
+                class="user-select"
+              >
+                <template v-if="selectedFacultyName !== ''" v-slot:append-outer>
+                  <v-slide-x-reverse-transition mode="out-in">
+                    <v-icon
+                      :color="'info'"
+                      @click="selectedFacultyName = ''"
+                      v-text="'mdi-close'"
+                    />
+                  </v-slide-x-reverse-transition>
+                </template>
+              </v-select>
+            </v-col>
+            <v-col class="col-12 col-md-2 vertically--centered"> Or </v-col>
+            <v-col class="col-12 col-md-5">
               <label>Faculty Name</label>
               <v-text-field v-model="name" type="text" solo />
             </v-col>
@@ -80,10 +102,7 @@
                 outlined
                 class="user-select"
               ></v-select>
-              <v-row
-                v-if="selectedUser"
-                class="user-details pa-4 user-select"
-              >
+              <v-row v-if="selectedUser" class="user-details pa-4 user-select">
                 <v-col class="col-12 px-0">
                   Email
                   <span class="font-weight-bold caption">{{
@@ -126,46 +145,71 @@ import { mapGetters, mapActions } from "vuex";
 export default {
   data: () => ({
     selectedUserName: "",
-    userNames: [],
+    selectedFacultyName: "",
     primary: colors.primary,
     name: "",
   }),
-  watch:{
-    users(){
-      this.calculateUserNames()
-    }
-  },
   computed: {
     // get users
     ...mapGetters("users", ["users", "loaded"]),
+    // get the faculties
+    ...mapGetters("faculties", ["importable_faculties", "i_loaded"]),
     selectedUser() {
       const result = this.users.filter(
         (user) => user.surName + " " + user.otherNames == this.selectedUserName
       )[0];
       return result ? result : undefined;
     },
+    selectedFaculty() {
+      const result = this.importable_faculties.filter(
+        (d) => d.name == this.selectedFacultyName
+      )[0];
+      return result ? result : undefined;
+    },
+    userNames() {
+      let result = [];
+      for (const i in this.users) {
+        result.push(`${this.users[i].surName} ${this.users[i].otherNames}`);
+      }
+      return result;
+    },
+    facultyNames() {
+      let result = [];
+      for (const i in this.importable_faculties) {
+        result.push(this.importable_faculties[i].name);
+      }
+      return result;
+    },
   },
   methods: {
-    ...mapActions("faculties", ["createFaculty"]),
+    ...mapActions("faculties", [
+      "createFaculty",
+      "getImportableFaculties",
+      "createFacultyCollege",
+    ]),
     ...mapActions("users", ["getUsers"]),
-    calculateUserNames() {
-      let users = this.users;
-      let userNames = [];
-      if (users) {
-        for (const i in users) {
-          userNames.push(`${users[i].surName} ${users[i].otherNames}`);
-        }
+    async saveFaculty() {
+      if (!this.selectedFaculty) {
+        await this.createFaculty({
+          faculty: {
+            name: this.name,
+          },
+        }).then((d) => {
+          this.createFacultyCollege({
+            faculty: d.data._id,
+            college: this.$store.state.user.user.college,
+          }).then(() => {
+            this.$router.push("/administration/faculties");
+          });
+        });
+      } else {
+        this.createFacultyCollege({
+          faculty: this.selectedFaculty._id,
+          college: this.$store.state.user.user.college,
+        }).then(() => {
+          this.$router.push("/administration/faculties");
+        });
       }
-      this.userNames = userNames;
-    },
-    saveFaculty() {
-      this.createFaculty({
-        faculty: {
-          name: this.name,
-        }
-      }).then(() => {
-        this.$router.push("/administration/faculties");
-      });
     },
   },
   created() {
@@ -173,9 +217,13 @@ export default {
       //get users on page load
       this.getUsers({
         collegeId: this.$store.state.user.user.college,
-      })
-    } else {
-      this.calculateUserNames();
+      });
+    }
+    if (!this.i_loaded) {
+      //get importable faculties on page load
+      this.getImportableFaculties({
+        collegeId: this.$store.state.user.user.college,
+      });
     }
   },
 };
@@ -224,7 +272,7 @@ export default {
       font-size: 17px;
     }
     form.v-form {
-      max-width: 500px;
+      max-width: 545px;
       margin-left: 135px;
       .form-title {
         color: #3d3d3d;
@@ -243,7 +291,7 @@ export default {
       }
     }
   }
-  .user-details{
+  .user-details {
     background-color: #fff;
   }
 }
