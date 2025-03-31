@@ -244,7 +244,8 @@
                       </span>
                         <span class="text">settings</span>
                       </button>
-                      <button v-if="isStudentPresenting && !$vuetify.breakpoint.mobile" @click="stop_presenting" class="start-settings">
+                      <button v-if="isStudentPresenting && !$vuetify.breakpoint.mobile" @click="stop_presenting"
+                              class="start-settings">
                       <span class="icon">
 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path
@@ -359,13 +360,10 @@ openQuiz">
         <div class="live-class--attendance--wrapper">
           <h3>ONLINE USERS : {{ participants.length }} </h3>
           <div class="online-users">
-            <online-user v-for="user in participants"
+            <online-user v-for="user in participants.filter(x=>x.userInfo.category != 'INSTRUCTOR')"
                          :user="user.userInfo"
                          :key="`${(Date.now() * Math.random())}${user.name}`" @accept_presenter="accept_presenter"
                          @deny_presenter="deny_presenter"/>
-            <!--            <online-user v-for="user in participants.filter(x=>x.userInfo.category != 'INSTRUCTOR')"-->
-            <!--                         :user="user.userInfo"-->
-            <!--                         :key="`${(Date.now() * Math.random())}${user.name}`"/>-->
           </div>
         </div>
         <div class="live-class--actions">
@@ -567,9 +565,12 @@ export default {
     ...mapGetters("live_session", ["live_session_confirmation"]),
 
     ...mapState("sidebar_navbar", {sidebarOpen: "sidebar_expanded"}),
+    instructorParticipant() {
+      const el = this.participants.filter(e => e.userInfo.category == "INSTRUCTOR" && e.userInfo._id == this.live_session.course.user)
+      return el[0]
+    },
     instructor() {
-      const el = this.participants.filter(e => e.userInfo.category == "INSTRUCTOR")
-      return el[0] ? el[0].userInfo : undefined
+      return this.instructorParticipant ? this.instructorParticipant.userInfo : undefined
     },
     userCategory() {
       return this.$store.state.user.user.category.name;
@@ -579,6 +580,19 @@ export default {
     }
   },
   methods: {
+    peresenterChanged(id) {
+      const video = this.me.getVideoElement();
+      if (this.me.userInfo._id == this.live_session.course.user)
+        this.me.rtcPeer.enabled = false
+
+      for (let i in this.participants) {
+        if (this.participants[i].userInfo._id == id) {
+          console.log(i, this.participants[i].rtcPeer)
+          video.srcObject = this.participants[i].rtcPeer.getRemoteStream()
+          break;
+        }
+      }
+    },
     onHandRaisedOrLowerd(sender, raisedHand) {
       for (const i in this.participants) {
         if (this.participants[i].userInfo._id == sender) {
@@ -607,6 +621,15 @@ export default {
         message: 'accept_presenting'
       });
       this.onHandRaisedOrLowerd(id, false)
+      // let me = this.me
+      // me.rtcPeer = new WebRtcPeer.WebRtcPeerRecvonly({},
+      //     function (error) {
+      //       if (error) {
+      //         return console.error(error);
+      //       }
+      //       this.generateOffer(me.offerToReceiveVideo.bind(me));
+      //
+      //     });
     },
     requestPresenting(raiseHand, id) {
       this.socket.emit("live/presentation_request", {
@@ -623,10 +646,27 @@ export default {
       this.onHandRaisedOrLowerd(id, false)
     },
     onViewerStopedPresenting() {
-
+      this.me.rtcPeer.enabled = true
+      this.me.rtcPeer.showLocalVideo();
     },
     start_presenting() {
       this.participationInfo.isOfferingCourse = true;
+      // live/presenterChanged
+      const session_id = this.live_session._id;
+      const receivers = []
+      this.participants.map(x => {
+        if (x.name != this.me.name) {
+          receivers.push({id: x.userInfo._id})
+        } else {
+          this.me.rtcPeer.enabled = true
+          this.me.rtcPeer.showLocalVideo()
+        }
+      })
+      console.log(receivers, session_id)
+      this.socket.emit("live/presenterChanged", {
+        receivers,
+        session_id
+      });
     },
     stop_presenting() {
       let id = this.instructor._id;
@@ -634,8 +674,6 @@ export default {
         receiver: {id},
         message: 'finished_presenting'
       });
-      this.isPresenting = false;
-      this.participationInfo.isOfferingCourse = false
     },
     toogleComments() {
       this.showComments = !this.showComments;
@@ -774,6 +812,10 @@ export default {
       self.socket.on("res/live/presentation_request/sent", ({message}) => {
         if (['request_presenting', 'revert_presenting_request'].includes(message)) {
           this.isHandRaised = !this.isHandRaised;
+        } else if (message == 'finished_presenting') {
+          this.isPresenting = false;
+          this.participationInfo.isOfferingCourse = false
+          this.me.rtcPeer.enabled = false
         }
       })
       self.socket.on("res/live/presentation_request", ({message, sender}) => {
@@ -788,6 +830,12 @@ export default {
           this.handlePresentationResponse(sender, false)
         else
           this.onViewerStopedPresenting()
+      })
+      self.socket.on("live/presenterChanged", ({id, session_id}) => {
+        console.log('\n\n', {id, session_id}, '\n\n')
+        if (session_id == self.live_session._id) {
+          self.peresenterChanged(id)
+        }
       })
 
       self.socket.on("res/live/checkAttendance", ({code}) => {
@@ -821,7 +869,7 @@ export default {
         //     "courses/SET_TOTAL_COMMENTS_ON_A_CHAPTER",
         //     this.totalComments == "" ? 1 : this.totalComments + 1
         // );
-        if(!self.showComments){
+        if (!self.showComments) {
           self.newCommentAvailable = true
         }
         if (result.reply) {
@@ -964,9 +1012,9 @@ export default {
         }
       };
 
-      if (!this.participationInfo.isOfferingCourse) {
-        constraints = null
-      }
+      // if (!this.participationInfo.isOfferingCourse) {
+      //   constraints = null
+      // }
 
       let participant = new Participant(self.isPresenting ? `${this.participationInfo.name}_screen` : this.participationInfo.name, this, true, await this.getUserInfo(this.participationInfo.name.split('_')[0]));
 
@@ -985,7 +1033,7 @@ export default {
         options.sendSource = 'screen'
       }
 
-      participant.rtcPeer = this.participationInfo.isOfferingCourse ? new WebRtcPeer.WebRtcPeerSendonly(options,
+      participant.rtcPeer = new WebRtcPeer.WebRtcPeerSendonly(options,
           function (error) {
             if (error) {
               return console.error(error);
@@ -993,17 +1041,32 @@ export default {
             if (self.me === null)
               self.me = participant;
             this.generateOffer(participant.offerToReceiveVideo.bind(participant));
-
-          }) : new WebRtcPeer.WebRtcPeerRecvonly(options,
-          function (error) {
-            if (error) {
-              return console.error(error);
+            if (!self.participationInfo.isOfferingCourse) {
+              participant.rtcPeer.enabled = false
+              video.srcObject = self.instructorParticipant ? self.instructorParticipant.rtcPeer.getRemoteStream() : undefined
+              video.muted = false
             }
-            if (self.me === null)
-              self.me = participant;
-            this.generateOffer(participant.offerToReceiveVideo.bind(participant));
+          })
 
-          });
+      // participant.rtcPeer = this.participationInfo.isOfferingCourse ? new WebRtcPeer.WebRtcPeerSendonly(options,
+      //     function (error) {
+      //       if (error) {
+      //         return console.error(error);
+      //       }
+      //       if (self.me === null)
+      //         self.me = participant;
+      //       this.generateOffer(participant.offerToReceiveVideo.bind(participant));
+      //
+      //     }) : new WebRtcPeer.WebRtcPeerRecvonly(options,
+      //     function (error) {
+      //       if (error) {
+      //         return console.error(error);
+      //       }
+      //       if (self.me === null)
+      //         self.me = participant;
+      //       this.generateOffer(participant.offerToReceiveVideo.bind(participant));
+      //
+      //     });
 
       msg.data.forEach(this.receiveVideo);
 
@@ -1075,21 +1138,24 @@ export default {
     },
     async receiveVideo(sender) {
       let participant = sender == this.participationInfo.name ? this.participants[this.participantIndex(sender)] : new Participant(sender, this, false, await this.getUserInfo(sender.split('_')[0]));
-      if (participant.userInfo.category == "INSTRUCTOR") {
-        let video = participant.getVideoElement();
-        let options = {
-          remoteVideo: video,
-          onicecandidate: participant.onIceCandidate.bind(participant)
-        }
-
-        participant.rtcPeer = new WebRtcPeer.WebRtcPeerRecvonly(options,
-            function (error) {
-              if (error) {
-                return console.error(error);
-              }
-              this.generateOffer(participant.offerToReceiveVideo.bind(participant));
-            })
+      // if (participant.userInfo.category == "INSTRUCTOR") {
+      let video = participant.getVideoElement();
+      let options = {
+        remoteVideo: video,
+        onicecandidate: participant.onIceCandidate.bind(participant)
       }
+      let self = this
+      participant.rtcPeer = new WebRtcPeer.WebRtcPeerRecvonly(options,
+          function (error) {
+            if (error) {
+              return console.error(error);
+            }
+            if (self.participationInfo.isOfferingCourse) {
+              self.onViewerStopedPresenting()
+            }
+            this.generateOffer(participant.offerToReceiveVideo.bind(participant));
+          })
+      // }
       if (sender != this.participationInfo.name) {
         this.participants.push(participant);
         this.addParticipant({id: participant.userInfo._id})
@@ -1161,9 +1227,9 @@ export default {
     videoEnabled() {
       this.noVideo = !this.videoEnabled
     },
-    showComments(){
-      if(this.showComments && this.newCommentAvailable){
-        this.newCommentAvailable= false
+    showComments() {
+      if (this.showComments && this.newCommentAvailable) {
+        this.newCommentAvailable = false
       }
     },
     live_session_confirmation() {
@@ -1176,7 +1242,7 @@ export default {
         if (this.live_session_confirmation !== '') {
           this.$store
               .dispatch(
-                  'live_session/change_confirmation',{value: ''}
+                  'live_session/change_confirmation', {value: ''}
               )
         }
       }
