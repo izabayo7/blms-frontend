@@ -1,4 +1,4 @@
- /* eslint-disable */
+/* eslint-disable */
 
 const PARTICIPANT_MAIN_CLASS = 'participant main';
 const PARTICIPANT_CLASS = 'participant';
@@ -15,13 +15,13 @@ const PARTICIPANT_CLASS = 'participant';
  * @param {boolean} offeringCourse - if participant is the one who is offering course
  * @return
  */
-export default function Participant(name,vm,offeringCourse = false, userInfo) {
+export default function Participant(name, vm, offeringCourse = false, userInfo) {
     this.name = name;
     this.userInfo = userInfo;
-    let container = document.createElement('div');
-    container.className = isPresentMainParticipant() ? PARTICIPANT_CLASS : PARTICIPANT_MAIN_CLASS;
-    container.id = name;
-    let span = document.createElement('span');
+    // let container = document.createElement('div');
+    // container.className = isPresentMainParticipant() ? PARTICIPANT_CLASS : PARTICIPANT_MAIN_CLASS;
+    // container.id = name;
+    // let span = document.createElement('span');
     // let video = document.createElement('video');
     let video = document.getElementById("video_feed");
     let rtcPeer;
@@ -36,13 +36,15 @@ export default function Participant(name,vm,offeringCourse = false, userInfo) {
     // span.appendChild(document.createTextNode(name));
     //
     // video.id = 'video-' + name;
-    // video.autoplay = true;
+    console.log(userInfo)
+    if (userInfo.category == "INSTRUCTOR")
+        video.autoplay = true;
     // video.controls = false;
 
 
-    this.getElement = function () {
-        return container;
-    }
+    // this.getElement = function () {
+    //     return container;
+    // }
 
     this.getVideoElement = function () {
         return video;
@@ -78,7 +80,7 @@ export default function Participant(name,vm,offeringCourse = false, userInfo) {
     }
 
 
-    this.onIceCandidate =  (candidate, wp) => {
+    this.onIceCandidate = (candidate, wp) => {
         console.log("Local candidate" + JSON.stringify(candidate));
 
         let message = {
@@ -94,7 +96,7 @@ export default function Participant(name,vm,offeringCourse = false, userInfo) {
 
     this.dispose = function () {
         console.log('Disposing participant ' + this.name);
-        this.rtcPeer.dispose();
-        container.parentNode.removeChild(container);
+        if (this.rtcpeer)
+            this.rtcPeer.dispose();
     };
 }
