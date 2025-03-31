@@ -131,7 +131,7 @@
                         @mouseenter="mouseOnPic($event,user.user_name,'user-profile-card')"
                         @mouseleave="mouseOutPic($event,'user-profile-card')">{{ user.sur_name }} {{ user.other_names }}
                     </td>
-                    <td @click="$router.push(`/users/${user.user_name}`)">{{ user.email }}</td>
+                    <td @click="$router.push(`/users/${user.user_name}`)" :title="user.email">{{ user.email | trimString(18) }}</td>
                     <td @click="$router.push(`/users/${user.user_name}`)">{{ user.user_name }}</td>
                     <td @click="$router.push(`/users/${user.user_name}`)">{{ user.status }}</td>
                     <td @click="$router.push(`/users/${user.user_name}`)">{{ user.gender }}</td>
