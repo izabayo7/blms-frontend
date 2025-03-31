@@ -51,7 +51,6 @@ export default {
       return this.formatedIncomingMessagesLength <= 0;
     },
     active(){
-      console.log(this.$route.params.username,this.data.id,this.$route.params.username === this.data.id)
       return this.$route.params.username === this.data.id
     }
   },
