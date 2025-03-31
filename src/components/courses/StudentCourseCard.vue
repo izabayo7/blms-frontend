@@ -180,27 +180,27 @@ export default {
       if (d) {
         this.rem_time = `${d} days`;
         if (d == 1)
-          setTimeout(this.setClock(endTime), 60000);
-        else return
+          setTimeout(() => {this.setClock(endTime)}, 60000);
+        return
       }
       var h = parseInt(totalSec / 3600) % 24;
       if (h) {
         this.rem_time = `${h} hours`;
         if (h == 1)
-          setTimeout(this.setClock(endTime), 60000);
-        else return
+          setTimeout(() => {this.setClock(endTime)}, 60000);
+        return
       }
       var m = parseInt(totalSec / 60) % 60;
       if (m) {
         this.rem_time = `${m} minutes`;
-        setTimeout(this.setClock(endTime), m > 1 ? 60000 : 1000)
+        setTimeout(() => {this.setClock(endTime)}, m > 1 ? 60000 : 1000)
         return
       }
 
       var s = parseInt(totalSec % 60, 10);
       if (s) {
         this.rem_time = `${s} seconds`;
-        setTimeout(this.setClock(endTime), 1000)
+        setTimeout(() => {this.setClock(endTime)}, 1000)
       }
     }
   },
