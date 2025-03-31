@@ -298,7 +298,7 @@
     />
     <faculty-dialog
       v-if="showFacultyModal"
-      @closeModal="showInviteUsers = false"
+      @closeModal="showFacultyModal = false"
     />
   </v-container>
 </template>
