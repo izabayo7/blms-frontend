@@ -37,7 +37,7 @@
               color="black"
               class="mt-6 px-6 py-5 profile_button"
               outlined
-              @click="pickfile()"
+              @click="removeProfilePicture()"
               >Remove photo</v-btn
             >
           </v-col>
@@ -207,6 +207,19 @@ export default {
       }
 
       this.saveChanges();
+    },
+    async removeProfilePicture() {
+      const splited = this.$store.state.user.user.profile.split("/");
+      // set the dialog
+      const response = await Apis.remove_user_profile(
+        splited[splited.length - 1]
+      );
+
+      // set the token in the session
+      this.$session.set("jwt", response.data.data);
+
+      const user = await jwt.decode(this.$session.get("jwt"));
+      this.$store.dispatch("user/setUser", user);
     },
     async saveChanges() {
       let response = await Apis.update_user({
