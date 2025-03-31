@@ -56,8 +56,8 @@ export default {
 
     this.socket.emit("messages/unread");
 
-    this.socket.on("res/messages/unread", (number) => {
-      this.update_unread(number)
+    this.socket.on("res/messages/unread", ({number,total_assignments}) => {
+      this.update_unread({number,total_assignments})
     });
 
     // listen to new course
