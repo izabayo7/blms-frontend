@@ -36,11 +36,12 @@ const routes = [
         meta: {
             allowAnonymous: false
         },
+        // for chat
         children: [{
             path: '/messages',
-            component: () => import('@/views/Messages.vue'),
+            component: () => import('@/views/chat/Messages.vue'),
             children: [
-                { path: '/messages/:username', component: () => import('@/views/Chat.vue') }
+                { path: '/messages/:username', component: () => import('@/views/chat/Chat.vue') }
             ]
         },
         // for courses

@@ -5,6 +5,28 @@
     class="quiz-page white px-16"
   >
     <v-row>
+      <v-col class="col-12" v-if="userCategory === 'Instructor'">
+        <v-row class="pa-0">
+          <v-col class="col-5 mx-auto d-flex">
+            <button
+              :class="`mode-type mx-2 ${
+                mode === 'view' ? 'active' : 'inactive'
+              }`"
+              @click="mode = 'view'"
+            >
+              View
+            </button>
+            <button
+              :class="`mode-type mx-2 ${
+                mode === 'edit' ? 'active' : 'inactive'
+              }`"
+              @click="mode = 'edit'"
+            >
+              Edit
+            </button>
+          </v-col>
+        </v-row>
+      </v-col>
       <v-col class="col-12 col-md-8">
         <h2>{{ selected_quiz_submission.quiz.name }}</h2>
       </v-col>
@@ -129,7 +151,12 @@
               </div>
             </div>
           </v-col>
-          <v-col class="col-2" v-if="selected_quiz_submission.marked || userCategory === 'Instructor'">
+          <v-col
+            class="col-2"
+            v-if="
+              selected_quiz_submission.marked || userCategory === 'Instructor'
+            "
+          >
             <div
               v-if="question.type === 'open-ended'"
               class="cool-box grey-bg ml-6 mt-n1"
@@ -190,6 +217,9 @@
                 </svg>
               </button>
               <button
+                v-if="
+                  attempt.answers[i].marks != question.marks && mode == 'edit'
+                "
                 @click="attempt.answers[i].marks = question.marks"
                 :class="`${
                   attempt.answers[i].marks == question.marks ? 'd-none' : ''
@@ -304,9 +334,9 @@ export default {
   }),
   computed: {
     ...mapGetters("quiz_submission", ["selected_quiz_submission"]),
-    userCategory(){
-      return this.$store.state.user.user.category
-    }
+    userCategory() {
+      return this.$store.state.user.user.category;
+    },
   },
   methods: {
     ...mapActions("quiz_submission", [
@@ -363,11 +393,7 @@ export default {
         marked: this.selected_quiz_submission.marked,
         totalMarks: this.selected_quiz_submission.totalMarks,
       };
-      if (
-        !this.attempt.marked &&
-        this.$store.state.user.category === "Instructor"
-      ) {
-        console.log(this.attempt.marked, this.$store.state.user.category)
+      if (!this.attempt.marked && this.userCategory === "Instructor") {
         this.mode = "edit";
       }
     }, 1000);
@@ -411,5 +437,17 @@ export default {
 .svg-check-marks {
   display: block;
   margin: 16px;
+}
+.mode-type {
+  width: 50%;
+  padding: 12px;
+}
+.active {
+  background-color: $primary;
+  color: white;
+}
+.inactive {
+  color: $primary;
+  border: 1px solid $primary;
 }
 </style>

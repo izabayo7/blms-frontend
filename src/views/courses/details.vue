@@ -274,10 +274,12 @@ export default {
       ).then((data) => {
         this.editorContent = data;
       });
-      this.findQuizSubmissionByStudentAndQuizNames({
-        studentName: `${this.$store.state.user.user.surName}_${this.$store.state.user.user.otherNames}`,
-        quizName: this.course.chapters[this.activeIndex].quiz[0].name
-      });
+      if (this.course.chapters[this.activeIndex].quiz.length > 0) {
+        this.findQuizSubmissionByStudentAndQuizNames({
+          studentName: `${this.$store.state.user.user.surName}_${this.$store.state.user.user.otherNames}`,
+          quizName: this.course.chapters[this.activeIndex].quiz[0].name,
+        });
+      }
     },
   },
   methods: {
@@ -290,7 +292,7 @@ export default {
       "findQuizSubmissionByStudentAndQuizNames",
     ]),
     async downloadAttachment(id) {
-      const url = `${process.env.VUE_APP_api_service_url}/file/downloadAttachment/${id}`;
+      const url = `${process.env.VUE_APP_api_service_url}/kurious/file/downloadAttachment/${id}`;
       window.location.href = url;
     },
     findIcon(name) {
@@ -318,7 +320,10 @@ export default {
       courseName: this.$route.params.name,
     });
     setTimeout(() => {
-      this.activeIndex = this.maximumIndex > this.course.chapters.length - 1 ? this.course.chapters.length - 1 : this.maximumIndex;
+      this.activeIndex =
+        this.maximumIndex > this.course.chapters.length - 1
+          ? this.course.chapters.length - 1
+          : this.maximumIndex;
     }, 1000);
   },
 };

@@ -16,7 +16,7 @@
             class="normal--text"
             :to="
               userCategory === 'Student'
-                ? `/courses/preview/${'aaaaaaaa'}`
+                ? `/courses/preview/${returnCourseName(item.quiz)}`
                 : `/quiz/${item.quiz.name}/${item.student.surName}_${item.student.otherNames}`
             "
             >{{
@@ -28,7 +28,13 @@
         </template>
         <!-- display the quiz name as alink to that quiz -->
         <template v-slot:item.submissionName="{ item }">
-          <span class="normal--text">{{ item.quiz.name }}</span>
+          <router-link
+            v-if="userCategory === 'Student'"
+            class="normal--text"
+            :to="`/quiz/${item.quiz.name}/${$store.state.user.user.surName}_${$store.state.user.user.otherNames}`"
+            >{{ item.quiz.name }}</router-link
+          >
+          <span v-else class="normal--text">{{ item.quiz.name }}</span>
         </template>
         <!-- display the date of submission -->
         <template v-slot:item.dateOfSubmission="{ item }">
@@ -60,9 +66,11 @@
         class="data-table"
       >
         <template v-slot:item.name="{ item }">
-          <router-link class="normal--text" :to="`/courses/preview/${item.name}`">{{
-            item.name
-          }}</router-link>
+          <router-link
+            class="normal--text"
+            :to="`/courses/preview/${item.name}`"
+            >{{ item.name }}</router-link
+          >
         </template>
         <template v-slot:item.actions="{ item }">
           <v-icon
@@ -74,7 +82,9 @@
         </template>
         <!-- display the date of starting the course -->
         <template v-slot:item.dateStarted="{ item }">
-          <span class="normal--text">{{ item.progress.dateStarted | formatDate }}</span>
+          <span class="normal--text">{{
+            item.progress.dateStarted | formatDate
+          }}</span>
         </template>
         <template v-slot:item.status="{ item }">
           <span v-if="item.status === 1">Pending..</span>
@@ -84,14 +94,18 @@
           <v-progress-linear
             :active="false"
             :value="item.progress.progress"
-            :class="`mt-6 kurious--progressbar ${item.progress.progress === 100 ? 'completed-progress' : 'ongoing-progress'}`"
+            :class="`mt-6 kurious--progressbar ${
+              item.progress.progress === 100
+                ? 'completed-progress'
+                : 'ongoing-progress'
+            }`"
           />
           <p class="text-caption mb-0 text-left ml-1">
             {{ Math.round(item.progress.progress) }}%
           </p>
         </template>
         <template v-slot:no-data>
-          <span class="text-h6">Oops You have not yet created a quiz.</span>
+          <span class="text-h6">Oops You don't have a course.</span>
         </template>
       </v-data-table>
     </div>
@@ -151,6 +165,7 @@ export default {
     },
     ...mapGetters("courses", ["courses"]),
     ...mapGetters("quiz_submission", ["quiz_submissions"]),
+    
   },
   methods: {
     ...mapActions("courses", ["getCourses"]),
@@ -160,7 +175,10 @@ export default {
         return "No course";
       }
       for (const i in this.courses) {
-        if (quiz.target.type === "course" && this.courses[i]._id === quiz.target.id) {
+        if (
+          quiz.target.type === "course" &&
+          this.courses[i]._id === quiz.target.id
+        ) {
           return this.courses[i].name;
         } else {
           for (const k in this.courses[i].chapters) {

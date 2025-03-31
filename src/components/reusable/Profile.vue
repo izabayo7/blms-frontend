@@ -10,7 +10,7 @@
     <img
       @click="logout"
       v-if="$store.state.user.user.profile"
-      src="@/assets/images/instructor.png"
+      :src="$store.state.user.user.profile"
       alt="profile picture"
     />
     <v-avatar @click="logout" v-else size="50" class="avatar">

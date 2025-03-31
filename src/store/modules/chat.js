@@ -216,8 +216,7 @@ export default {
     getters:{
         // connect to socket from sever side
         socket(){
-            // return io('http://161.35.199.197:7070',{
-            return io('http://localhost:7070',{
+            return io(process.env.VUE_APP_api_service_url,{
                 query:{
                     id:user.state.user._id // username of the connected user
                 }

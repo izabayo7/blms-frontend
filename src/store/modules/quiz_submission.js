@@ -92,17 +92,27 @@ export default {
 
         //find a quiz_submission by student name and submission name
         findQuizSubmissionByStudentAndQuizNames({ state, commit }, { studentName, quizName }) {
-            // if (state.quiz_submission.data.length < 1) {
+            let submissionFound = false
+            if (state.quiz_submission.loaded) {
+                let quiz_submission = state.quiz_submission.data.filter(quiz_submission => `${quiz_submission.student.surName}_${quiz_submission.student.otherNames}` == studentName && quiz_submission.quiz.name == quizName)
+                console.log(quiz_submission)
+                if (quiz_submission.length > 0) {
+                    submissionFound = true
+                    commit('set_selected_quiz_submission', quiz_submission[0]._id)
+
+                }
+            }
+            if (!submissionFound) {
+                console.log(state.quiz_submission.data)
                 apis.get(`quiz-submission/student/${studentName}/${quizName}`).then(d => {
-                    state.quiz_submission.data = [d.data]
+                    if (state.quiz_submission.loaded) {
+                        state.quiz_submission.data.push(d.data)
+                    } else {
+                        state.quiz_submission.data = [d.data]
+                    }
                     commit('set_selected_quiz_submission', d.data._id)
                 })
-            // } else {
-            //     let quiz_submission = state.quiz_submission.data.filter(quiz_submission => `${quiz_submission.student.surName}_${quiz_submission.student.otherNames}` == studentName && quiz_submission.quiz.name == quizName)[0]
-            //     commit('set_selected_quiz_submission', quiz_submission._id)
-            // }
-
-
+            }
         },
     },
     getters: {
