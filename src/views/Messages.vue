@@ -77,6 +77,7 @@ export default {
     on('incoming_message_initially_loaded',()=>{
       this.goToMessages()
     })
+    console.log('mwaa')
     this.$store.dispatch('chat/loadIncomingMessages')
 
     // this.SET_USERNAME(this.$route.params.username).then(()=> this.goToMessages())
