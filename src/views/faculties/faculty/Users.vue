@@ -13,13 +13,14 @@
           <div class="table">
             <table-ui :options="options">
               <template #tableHeaderRow>
-                <table-head-row :cols="options.keysToShow" />
+                <table-head-row @select="selectAll" :cols="options.keysToShow" />
               </template>
 
 <!--              rows-->
               <template #tableRows>
-                <table-row :data="user" v-for="user in usersOnFaculties" :key="user._id">
+                <table-row :selected="allSelected" @select="selectRow($event, user)" :data="user" v-for="user in usersOnFaculties" :key="user._id">
                   <template #cols>
+                    <td class="row--image"><img src="https://i2.wp.com/worldbusinessfitness.com/wp-content/uploads/2018/01/opulent-profile-square-07.jpg?ssl=1" alt=" profile pic"></td>
                     <td >{{user.sur_name}}</td>
                     <td>{{user.other_names}}</td>
                     <td>{{user.email}}</td>
@@ -49,11 +50,13 @@ name: "FacultyUsers",
   data(){
     return{
       students:[],
+      allSelected:false,
       facultyId:this.$route.params.facultyId,
       options:{
-        coloredRows:true,
-        keysToShow:[ "sur_name",  "other_names",  "email",  "gender"]
-      }
+        coloredRows:false,
+        keysToShow:[" ", "sur_name",  "other_names",  "email",  "gender"]
+      },
+      selectedUsers:[]
     }
   },
   computed:{
@@ -62,6 +65,19 @@ name: "FacultyUsers",
     faculty(){
       return this.faculties
     },
+  },
+  methods:{
+    hovered(){
+      console.log('hovered')
+    },
+    selectAll(){
+      this.allSelected = !this.allSelected
+    },
+    selectRow(){
+      const map = new Set();
+
+      map.add()
+    }
   },
   async mounted(){
 
@@ -72,6 +88,7 @@ name: "FacultyUsers",
     await this.$store.dispatch('faculties/changeHeader',{head:this.faculty.name,title:"Users List"})
 
     await this.$store.dispatch('users/loadUsersBasedOnFaculties',{facultyId:this.faculty._id,category:"STUDENT"})
+
   }
 }
 </script>
