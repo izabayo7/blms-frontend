@@ -6,13 +6,13 @@ const prefix = '/live'
 
 const routes =  [
     {
-        path:'/course/:id',
+        path:'/course/',
         name:"liveCourse",
         component:() => import("@/views/live/new/index.vue")
     },
     {
-        path:'/class',
-        name:"liveClass",
+        path:'/class/course',
+        name:"liveClassCourse",
         component:() => import("@/views/live/new/liveClass.vue")
     },
 ]
