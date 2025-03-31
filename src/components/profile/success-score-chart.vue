@@ -4,8 +4,8 @@
     <apex-charts
       type="bar"
       class="my-chart ml-n6"
-      width="390px"
-      height="400px"
+      width="300px"
+      height="250px"
       :options="chartOptions"
       :series="series"
     >
@@ -28,14 +28,16 @@ export default {
         chart: {
           id: "basic-bar",
           type:"bar",
-          height: 550
+        },
+        grid: {
+          show: false,      // you can either change hear to disable all grids
         },
         dataLabels: {
           style: {
-            colors: ["black"],
+            colors: ["#212121"],
           },
           offsetX: 0,
-          offsetY: -30,
+          offsetY: -15,
         },
         xaxis: {
           categories: [
@@ -45,10 +47,24 @@ export default {
             ["Another", "test", "course"],
             ["The course", "you failed"],
           ],
-        axisTicks: {
-          show: false,
-        }
+          axisBorder: {
+            show: true,
+            color: "#212121",
+            offsetX: 0,
+            offsetY: 0,
+          },
+          axisTicks: {
+            show: false,
         },
+        labels: {
+          style: {
+              colors: [],
+              fontSize: '9px',
+              fontWeight: 400,
+          },
+
+        },
+      },
 
         //end;
         yaxis: {
@@ -56,7 +72,10 @@ export default {
           max: 100,
           axisTicks: {
             show: false,
-          }
+          },
+          crosshairs: {
+            show: false,
+          },
         },
         //end
         plotOptions: {
@@ -83,7 +102,7 @@ export default {
       },
       series: [
         {
-          name: "series-1",
+          name: "success rate",
           data: [30, 81, 71, 46, 50],
         },
       ],
