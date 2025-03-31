@@ -287,10 +287,11 @@ export default {
       } else {
         this.socket.emit("message/create", {
           receiver: this.currentDisplayedUser.id,
-          content: this.msg
+          content: this.msg,
+          reply: this.replyMsg ? this.replyMsg.msg._id : undefined
         });
       }
-
+      this.setReplyMsg(undefined)
       //after sending message let us make the div empty
       this.$refs["input"].textContent = "";
       this.p("Type something..");

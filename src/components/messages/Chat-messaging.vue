@@ -157,8 +157,15 @@
                 <div
                     v-if="msg.content"
                     class="msg"
-                    :inner-html.prop="msg.content | urlify "
-                />
+                >
+                  <div v-if="msg.reply" class="reply">
+                    <div class="sender">{{ msg.reply.sender.sur_name + ' ' + msg.reply.sender.other_names }}</div>
+                    <div class="_msg">
+                      {{ msg.reply.content || 'attachment' }}
+                    </div>
+                  </div>
+                  {{ msg.content | urlify }}
+                </div>
                 <div
                     v-if="msg.attachments"
                     :class="`attachments-cotainer ${msg.content ? 'pushed' : ''} ${
@@ -641,6 +648,27 @@ export default {
         font-family: Poppins;
         word-break: break-word;
         position: relative;
+
+        .reply {
+          width: 340px;
+          height: 64px;
+          background: #E7ECF0;
+
+          font-family: Roboto;
+          font-style: normal;
+          font-weight: 500;
+          font-size: 15px;
+          padding: 11px;
+          margin-bottom: 6px;
+
+          /* Type color / Default */
+
+          color: #343434 !important;
+
+          .sender{
+            font-weight: bold;
+          }
+        }
 
         &.noBg {
           background: transparent !important;
