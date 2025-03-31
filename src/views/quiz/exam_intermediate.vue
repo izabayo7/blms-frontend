@@ -40,7 +40,9 @@
             </ul>
           </div>
           <div class="text-center">
-            <button>I Accept</button>
+            <button @click="set_modal({
+                        template: 'exam_constraints',
+                      })">I Accept</button>
           </div>
         </div>
       </div>
@@ -49,10 +51,15 @@
 </template>
 
 <script>
+import {mapActions} from "vuex";
+
 export default {
   name: "ExamIntermediate",
   components: {
     back: () => import("@/components/shared/back-button"),
+  },
+  methods:{
+    ...mapActions("modal", ["set_modal"]),
   }
 };
 </script>

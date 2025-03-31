@@ -107,15 +107,85 @@
         </svg>
 
         <h4 class="title">Ineligible to attend ( Payment needed)</h4>
-        <span class="sub-title">It appears you have not paid partialy or completely fees associated
-with this course.
-If you believe you have, check with the director of finance or pay
-due fees.</span>
+        <span class="sub-title">
+          It appears you have not paid partialy or completely fees associated
+          with this course.
+          If you believe you have, check with the director of finance or pay
+          due fees.
+        </span>
         <div class="actions">
           <v-btn
               @click="toogle_visibility"
               class="mx-2 white--text action-button"
           >Okay
+          </v-btn
+          >
+        </div>
+      </div>
+    </div>
+    <div
+        v-else-if="modal_template == 'exam_constraints'"
+        class="dialog-body dialog_t_1 exam_constraints"
+    >
+      <!-- show confirmations according to the set action -->
+      <div class="content">
+        <h4 class="title">Please read carefully</h4>
+        <span class="sub-title">
+          I accept that if do the following, <b>I will fail automatically.</b>
+        </span>
+        <div class="items">
+          <div class="item">
+            <div class="icon">
+              <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path
+                    d="M14.25 4.8075L13.1925 3.75L9 7.9425L4.8075 3.75L3.75 4.8075L7.9425 9L3.75 13.1925L4.8075 14.25L9 10.0575L13.1925 14.25L14.25 13.1925L10.0575 9L14.25 4.8075Z"
+                    fill="#FF0808"/>
+              </svg>
+            </div>
+            <div class="txt">Close exam window before submiting work.</div>
+          </div>
+          <div class="item">
+            <div class="icon">
+              <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path
+                    d="M14.25 4.8075L13.1925 3.75L9 7.9425L4.8075 3.75L3.75 4.8075L7.9425 9L3.75 13.1925L4.8075 14.25L9 10.0575L13.1925 14.25L14.25 13.1925L10.0575 9L14.25 4.8075Z"
+                    fill="#FF0808"/>
+              </svg>
+            </div>
+            <div class="txt">Minimize the exam window.</div>
+          </div>
+          <div class="item">
+            <div class="icon">
+              <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path
+                    d="M14.25 4.8075L13.1925 3.75L9 7.9425L4.8075 3.75L3.75 4.8075L7.9425 9L3.75 13.1925L4.8075 14.25L9 10.0575L13.1925 14.25L14.25 13.1925L10.0575 9L14.25 4.8075Z"
+                    fill="#FF0808"/>
+              </svg>
+            </div>
+            <div class="txt">Open another browser tab</div>
+          </div>
+          <div class="item">
+            <div class="icon">
+              <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path
+                    d="M14.25 4.8075L13.1925 3.75L9 7.9425L4.8075 3.75L3.75 4.8075L7.9425 9L3.75 13.1925L4.8075 14.25L9 10.0575L13.1925 14.25L14.25 13.1925L10.0575 9L14.25 4.8075Z"
+                    fill="#FF0808"/>
+              </svg>
+            </div>
+            <div class="txt">Use a sepatate computer or phone.</div>
+          </div>
+        </div>
+        <div class="actions">
+          <v-btn
+              @click="toogle_visibility"
+              class="mx-2 white--text action-button cancel"
+          >I decline
+          </v-btn
+          >
+          <v-btn
+              @click="toogle_visibility"
+              class="mx-2 white--text action-button"
+          >I accept
           </v-btn
           >
         </div>
@@ -249,7 +319,7 @@ export default {
   padding: 18px;
   border-radius: 12px;
 
-  &.payment_err {
+  &.payment_err, &.exam_constraints {
     border-radius: 0px;
   }
 
@@ -345,6 +415,56 @@ export default {
   .action-button {
     width: 138px;
     height: 44px !important;
+  }
+}
+
+.exam_constraints {
+  max-width: 665px;
+  width: 90vw;
+  min-height: 340px;
+  text-align: center;
+  padding-top: 38px;
+
+  .title {
+    font-family: Inter;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 24px;
+    margin-bottom: 19px;
+    color: #000000;
+  }
+
+  .sub-title {
+    font-family: Inter;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 15px;
+    line-height: 18px;
+    margin-bottom: 27px;
+    color: #000000;
+  }
+
+  .items {
+    margin: 27px auto 48px;
+    width: fit-content;
+
+    .item {
+      display: flex;
+
+      .icon {
+        margin-right: 12px;
+      }
+    }
+  }
+
+  .action-button {
+    width: 138px;
+    height: 44px;
+
+    &.cancel {
+      background: #BABABC !important;
+    }
   }
 }
 
