@@ -59,8 +59,8 @@
           </v-menu>
           <v-img
             v-if="course.cover_picture"
-            :src="course.cover_picture + '?height=300&width=300&token='+ $session.get('jwt')"
-            :lazy-src="course.cover_picture + '?height=300&width=300'"
+            :src="`${course.cover_picture}?height=300&width=300&token=${$session.get('jwt')}`"
+            :lazy-src="`${course.cover_picture}?height=300&width=300&token=${$session.get('jwt')}`"
             class="course-image hidden-md-and-down"
           >
             <template v-slot:placeholder>
