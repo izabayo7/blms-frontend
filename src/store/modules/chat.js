@@ -229,7 +229,7 @@ export default {
 
             // Get contacts new style
             getters.socket.on('res/message/contacts', ({ contacts }) => {
-                // console.log(contacts)
+                console.log(contacts)
                 state.incomingMessages = contacts
                 emit('incoming_message_initially_loaded')
             });

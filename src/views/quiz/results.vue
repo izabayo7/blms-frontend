@@ -1,18 +1,18 @@
 <template>
   <v-container fluid class="quiz_results_page white px-lg-16">
     <back class="mt-0 mb-6 ml-lg-n6" />
-    <v-row>
+    <v-row v-if="selected_quiz_submission">
       <div class="col-12 ml-2 mt-5">
         <div class="title">{{ "Quiz name" }}</div>
       </div>
       <v-col class="col-12 col-md-7">
-        <div v-if="1 == 1" class="passed_test">Success</div>
+        <div v-if="1 == 2" class="passed_test">Success</div>
         <div v-else class="failed_test">Attempt Failed</div>
         <div class="mt-3 d-flex marks_container">
           <div class="mr-12 label">Your score is</div>
           <div class="marks">{{ "18 / 20" }}</div>
         </div>
-        <div v-if="1 == 1" class="mt-8 text_2">
+        <div v-if="1 == 2" class="mt-8 text_2">
           <div>You have succeeded on this assesment</div>
           <div>You may continue your course.</div>
         </div>
@@ -30,7 +30,7 @@
             Go to course
           </button>
         </div>
-        <div v-if="$route.fullPath == '/quiz/timeout'" class="mt-8 text_1">
+        <div v-if="1 == 1" class="mt-8 text_1">
           <div>The pass mark is 10/20</div>
           <div>You have 1 Attempt left</div>
         </div>
@@ -123,11 +123,18 @@
         </div>
       </v-col>
     </v-row>
+    <div v-else>
+      Submission not found bro
+      <!-- <router-link
+        :to="`/quiz/${$route.params.name}/${$store.state.user.user.surName}_${$store.state.user.user.otherNames}`"
+        >review your submission</router-link
+      > -->
+    </div>
   </v-container>
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 export default {
   data: () => ({
     quiz: {},
@@ -142,186 +149,19 @@ export default {
     isInstructor() {
       return this.$store.state.user.user.category.name == "INSTRUCTOR";
     },
+    ...mapGetters("quiz_submission", ["selected_quiz_submission"]),
   },
-  beforeMount() {
-    if (!this.course) {
-      this.course = {
-        _id: "5fbc79c9bf2a5b0ba449ce57",
-        published: true,
-        status: 1,
-        name: "maths",
-        user: {
-          _id: "5f9a43cffae74e30347cf824",
-          sur_name: "Muhodari",
-          other_names: "Sage",
-          user_name: "user_942333",
-          gender: "male",
-          phone: "0788616951",
-          category: "INSTRUCTOR",
-        },
-        faculty_college_year: {
-          _id: "5f9a4279fae74e30347cf81f",
-          faculty_college: {
-            _id: "5f9a41eefae74e30347cf81e",
-            faculty: {
-              _id: "5f98eccb3cb1651a784b5ffe",
-              name: "Software Engineering",
-            },
-            college: {
-              _id: "5f98ec02e96a170d580e02fe",
-              name: "Rwanda Best University",
-            },
-          },
-          college_year: {
-            _id: "5f98ecaf3cb1651a784b5ffd",
-            digit: 1,
-          },
-        },
-        description: "abana biga imibare",
-        updatedAt: "2020-12-10T12:46:31.895Z",
-        createdAt: "2020-11-24T03:11:05.292Z",
-        __v: 0,
-        cover_picture:
-          "http://localhost:7070/api/course/maths/cover_picture/wallpaper-0.jpg",
-        published_on: "2020-12-10T12:46:31.895Z",
-        progress: {
-          id: "5fd234af47a12d38b0d2e06a",
-          progress: 100,
-          dateStarted: "2020-12-10T14:46:07.220Z",
-          lastUpdated: "2020-12-11T15:22:10.299Z",
-        },
-        assignmentsLength: 1,
-        chapters: [
-          {
-            _id: "5fbc7a21bf2a5b0ba449ce58",
-            status: 1,
-            name: "intoduction",
-            description: "the first chapter",
-            number: 1,
-            attachments: [
-              {
-                _id: "5fbc7a21bf2a5b0ba449ce59",
-                src: "amatorero 7.docx",
-                download_link:
-                  "http://localhost:7070/api/chapter/5fbc7a21bf2a5b0ba449ce58/attachment/amatorero 7.docx/download",
-                name: "amatorero 7.docx",
-              },
-            ],
-            updatedAt: "2020-11-24T12:23:07.259Z",
-            createdAt: "2020-11-24T03:12:33.648Z",
-            uploaded_video:
-              "http://localhost:7070/api/chapter/5fbc7a21bf2a5b0ba449ce58/video/Bruce Melodie - Abu Dhabi.mp4",
-            document:
-              "http://localhost:7070/api/chapter/5fbc7a21bf2a5b0ba449ce58/document",
-            quiz: [],
-            commentsLength: 0,
-          },
-          {
-            _id: "5fbd092eef451b3f9cfc76d9",
-            status: 1,
-            name: "mamiya",
-            description: "iri joro ndarigutuye",
-            number: 2,
-            attachments: [],
-            updatedAt: "2020-11-26T22:42:21.648Z",
-            createdAt: "2020-11-24T13:22:54.822Z",
-            document:
-              "http://localhost:7070/api/chapter/5fbd092eef451b3f9cfc76d9/document",
-            quiz: [
-              {
-                _id: "5fbb6430362a4516ecee94cf",
-                status: 1,
-                name: "Joji",
-                duration: 300,
-                user: "5f9a43cffae74e30347cf824",
-                questions: [
-                  {
-                    options: {
-                      choices: [],
-                    },
-                    _id: "5fbb6430362a4516ecee94d0",
-                    type: "open_ended",
-                    marks: 100,
-                    details: "what is weedaa",
-                  },
-                  {
-                    _id: "5fbb96a4bba0082c941c1efc",
-                    type: "single_text_select",
-                    marks: 0,
-                    details: "abana",
-                    options: {
-                      choices: [
-                        {
-                          right: false,
-                          _id: "5fbb96a4bba0082c941c1efd",
-                          text: "a",
-                        },
-                        {
-                          right: true,
-                          _id: "5fbb96a4bba0082c941c1efe",
-                          text: "b",
-                        },
-                      ],
-                    },
-                  },
-                  {
-                    _id: "5fbb9b0fbba0082c941c1f03",
-                    type: "single_file_select",
-                    marks: 5,
-                    details: "aaaaaaaaaaaaaaaaa",
-                    options: {
-                      choices: [
-                        {
-                          right: false,
-                          _id: "5fbba13c2875471b985a4f2e",
-                          src: "about1.PNG",
-                        },
-                        {
-                          right: true,
-                          _id: "5fbba13c2875471b985a4f2f",
-                          src: "about2.PNG",
-                        },
-                        {
-                          right: false,
-                          _id: "5fbba13c2875471b985a4f30",
-                          src: "about3.PNG",
-                        },
-                      ],
-                    },
-                  },
-                ],
-                total_marks: 105,
-                updatedAt: "2020-11-26T22:42:21.681Z",
-                createdAt: "2020-11-23T07:26:40.343Z",
-                __v: 7,
-                published: false,
-                target: {
-                  type: "chapter",
-                  id: "5fbd092eef451b3f9cfc76d9",
-                },
-              },
-            ],
-            commentsLength: 1,
-          },
-          {
-            _id: "5fd1e0878b5c772ea0ec88ac",
-            status: 1,
-            name: "last one",
-            description: "aaaaaaaaaaaaaaaaaa",
-            number: 3,
-            attachments: [],
-            updatedAt: "2020-12-10T08:47:03.655Z",
-            createdAt: "2020-12-10T08:47:03.655Z",
-            document:
-              "http://localhost:7070/api/chapter/5fd1e0878b5c772ea0ec88ac/document",
-            quiz: [],
-            commentsLength: 3,
-          },
-        ],
-        quiz: [],
-        attendedStudents: 3,
-      };
-    }
+  methods:{
+        ...mapActions("quiz_submission", [
+      "create_quiz_submission",
+      "findQuizSubmissionByStudentAndQuizNames",
+    ]),
+  },
+  created() {
+    this.findQuizSubmissionByStudentAndQuizNames({
+      studentName: `${this.$store.state.user.user.surName}_${this.$store.state.user.user.otherNames}`,
+      quizName: this.$route.params.name,
+    });
     // if (!this.course && !this.isInstructor) this.$router.push("/");
   },
 };

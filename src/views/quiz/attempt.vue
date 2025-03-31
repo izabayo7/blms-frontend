@@ -123,7 +123,7 @@
             class="radio-btn d-block mb-4 submitt-attempt"
             @click="
               $store.state.user.user.category.name == 'STUDENT'
-                ? saveAttempt
+                ? saveAttempt()
                 : $router.push('quiz/submitted')
             "
             rounded
@@ -334,10 +334,16 @@ export default {
       this.create_quiz_submission({
         submission: this.attempt,
         attachments: this.filesToUpload,
-      }).then(() => {
-        this.$router.push(
-          `${this.attempt.auto_submitted ? "/quiz/timeout" : "/quiz/submitted"}`
-        );
+      }).then((d) => {
+        if (d.is_selection_only) {
+          this.$router.push(`/quiz/${this.selected_quiz.name}/results`);
+        } else {
+          this.$router.push(
+            `${
+              this.attempt.auto_submitted ? "/quiz/timeout" : "/quiz/submitted"
+            }`
+          );
+        }
       });
     },
   },
@@ -346,7 +352,7 @@ export default {
     if (!this.loaded) {
       if (this.$store.state.user.user.category == "Student") {
         this.findQuizSubmissionByStudentAndQuizNames({
-          studentName: `${this.$store.state.user.user.surName}_${this.$store.state.user.user.otherNames}`,
+          userName: this.$store.state.user.user.user_name,
           quizName: this.$route.params.name,
         });
       }

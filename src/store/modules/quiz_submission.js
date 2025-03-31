@@ -98,7 +98,7 @@ export default {
             let submissionObject = {}
             return apis.create('quiz_submission', submission).then(d => {
                 d.data = d.data.data
-                submissionObject = d.data
+                submissionObject = d.data.document
                 if (attachments.length > 0) {
                     const formData = new FormData()
                     for (const i in attachments) {
@@ -121,7 +121,7 @@ export default {
                     })
                 }
                 state.quiz_submission.data.push(submissionObject)
-
+                return submissionObject;
             })
 
         },
