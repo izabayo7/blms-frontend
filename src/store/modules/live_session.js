@@ -43,7 +43,7 @@ export default {
             })
         }
     },
-    getters:{
+    getters: {
         participants: state => {
             return state.active_participants;
         },

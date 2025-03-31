@@ -48,6 +48,15 @@ function elapsedDuration(date_time) {
 }
 
 /**
+ * date_time to local time
+ * @param date_time
+ * @returns {string}
+ */
+function toLocal(date_time) {
+    return moment.utc(date_time).local().format()
+}
+
+/**
  * know if string is empty
  * @param string
  * @returns {boolean}
@@ -104,7 +113,6 @@ function convertUTCDateToLocalDate(date) {
     var offset = date.getTimezoneOffset() / 60;
     var hours = date.getHours();
     newDate.setHours(hours - Math.abs(offset));
-
     return newDate;
 }
 
@@ -117,5 +125,6 @@ export {
     empty,
     logout,
     calculateNearestLiveSession,
-    convertUTCDateToLocalDate
+    convertUTCDateToLocalDate,
+    toLocal
 }

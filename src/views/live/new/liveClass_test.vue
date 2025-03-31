@@ -111,7 +111,7 @@
           <div class="live-comments--wrapper">
             <div class="_title">LIVE COMMENTS</div>
             <div class="student-new-comment">
-              <student-new-comment-with-photo @sent="addComment" :isLive="true"/>
+<!--              <student-new-comment-with-photo @sent="addComment" :isLive="true"/>-->
             </div>
             <div class="live-comments-container">
               <discussion
@@ -195,7 +195,7 @@
             />
           </div>
           <div class="student-new-comment">
-            <student-new-comment-with-photo @sent="addComment" :isLive="true"/>
+<!--            <student-new-comment-with-photo @sent="addComment" :isLive="true"/>-->
           </div>
         </div>
         <div v-if="participationInfo.isOfferingCourse" class="live-class--actions">
@@ -241,16 +241,16 @@ import {WebRtcPeer} from "../../../plugins/kurentoLive/kurento-utils.js"
 import Participant from "../../../plugins/kurentoLive/participants";
 // import {WebRtcPeer} from 'kurento-utils'
 import {mapActions, mapGetters, mapState} from 'vuex'
-import Discussion from "../../../components/Live/Discussion";
+// import Discussion from "../../../components/Live/Discussion";
 import OnlineUser from "../../../components/Live/OnlineUser";
-import StudentNewCommentWithPhoto from "../../../components/Live/StudentNewCommentWithPhoto";
+// import StudentNewCommentWithPhoto from "../../../components/Live/StudentNewCommentWithPhoto";
 import Apis from '../../../services/apis'
 
 export default {
   name: "liveClass",
   components: {
-    Discussion,
-    StudentNewCommentWithPhoto,
+    // Discussion,
+    // StudentNewCommentWithPhoto,
     OnlineUser,
     back: () => import("@/components/shared/back-button"),
   },

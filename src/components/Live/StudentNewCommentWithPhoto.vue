@@ -71,7 +71,7 @@ export default {
         sender: this.username,
         target: {
           type: this.isLive ? "live_session" : "chapter",
-          id: this.isLive ? "609ab8838fc73f303874e10e" : this.selectedChapter
+          id: this.isLive ? this.$route.params.liveSessionId : this.selectedChapter
         },
         content: this.comment,
       };
