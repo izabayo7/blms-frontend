@@ -21,7 +21,7 @@ export default {
     ...mapMutations("notification", ["addNotification"]),
     ...mapMutations("user", ["TOOGLE_DISABLE_FUNCTIONALITIES"]),
     ...mapMutations("courses", ["addCourse"]),
-    ...mapMutations("chat", ["CHANGE_MESSAGE_READ_STATUS", "SET_SOCKET", "UPDATE_CONTACT_STATUS"]),
+    ...mapMutations("chat", ["CHANGE_MESSAGE_READ_STATUS", "SET_SOCKET", "UPDATE_CONTACT_STATUS", "UPDATE_CONTACT_LAST_MSG"]),
     ...mapMutations("sidebar_navbar", {update_unread: "SET_TOTAL_UNREAD"}),
   },
   async created() {
@@ -49,15 +49,19 @@ export default {
 
     // listen if the new message was sent
     this.socket.on("res/message/sent", (message) => {
-      setTimeout(this.scrollChatToBottom, 1);
-      message.sender.sur_name = "You";
-      this.$store.commit("chat/ADD_ONGOING_MESSAGE", message);
+      if (message.forwarded) {
+        this.UPDATE_CONTACT_LAST_MSG({id: message.receiver, msg: message})
+      } else {
+        setTimeout(this.scrollChatToBottom, 1);
+        message.sender.sur_name = "You";
+        this.$store.commit("chat/ADD_ONGOING_MESSAGE", message);
+      }
     });
 
     this.socket.emit("messages/unread");
 
-    this.socket.on("res/messages/unread", ({number,total_assignments}) => {
-      this.update_unread({number,total_assignments})
+    this.socket.on("res/messages/unread", ({number, total_assignments}) => {
+      this.update_unread({number, total_assignments})
     });
 
     // listen to new course

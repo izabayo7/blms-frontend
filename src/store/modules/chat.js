@@ -59,6 +59,16 @@ export default {
             }
         },
 
+        UPDATE_CONTACT_LAST_MSG(state, {id, msg}) {
+            for (const i in state.incomingMessages) {
+                if (state.incomingMessages[i].id === id) {
+                    state.incomingMessages[i].last_message.content = msg.content
+                    state.incomingMessages[i].last_message.time = msg.createdAt
+                    break
+                }
+            }
+        },
+
         ADD_INCOMING_CONTACT(state, data) {
             let FOUND = false;
 
