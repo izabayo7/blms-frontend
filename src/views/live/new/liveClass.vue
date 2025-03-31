@@ -527,9 +527,10 @@ export default {
 
     onParticipantLeft(request) {
       console.log('Participant ' + request.name + ' left');
+      this.participants[this.participantIndex(request.name)].dispose();
       this.removeParticipant(this.participantIndex(request.name))
       // let participant = this.participants[request.name];
-      // participant.dispose();
+      //
       // delete this.participants[request.name];
     },
     toogleMedia(obj){
