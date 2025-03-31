@@ -136,7 +136,10 @@ export default {
   methods: {
     ...mapActions("quiz_submission", ["getQuizSubmissionsInQuiz"]),
     handleRowClick(value) {
-      this.$router.push(`/quiz/${this.quiz_submission.name}/${value.user.user_name}`)
+      if (this.quiz_submission.submissionMode)
+        this.$router.push(`/assignments/${value.user.user_name}/${value._id}`)
+      else
+        this.$router.push(`/quiz/${this.quiz_submission.name}/${value.user.user_name}`)
     },
   },
   created() {
