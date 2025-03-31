@@ -135,6 +135,7 @@
                 <button class="cancel" @click="toogleEdit(4)">Cancel</button>
               </div>
             </div>
+            <div v-if="confirmation" class="hint">Confirm the email that was sent to {{ confirmation.email }}</div>
           </div>
           <div class="col-12 col-md-4">
             <div class="action">
@@ -204,6 +205,7 @@ export default {
     editStatus: [true, true, true, true, true, true],
     img: "",
     user: undefined,
+    confirmation: undefined,
     showUpdatePassword: false,
     largeDevices: ['md', 'lg', 'xl'],
     profile: undefined,
@@ -217,6 +219,9 @@ export default {
   },
   beforeMount() {
     this.user = this.getUser()
+    Apis.get('user/checkEmailUpdateRequest').then((res) => {
+      this.confirmation = res.data.data
+    })
   },
   mixins: [cropperMixin],
   methods: {
@@ -242,8 +247,10 @@ export default {
           uptime: 2000,
         });
         this.user = this.getUser()
-      }
-      else {
+        if (index === 4) {
+          this.confirmation = undefined
+        }
+      } else {
         // set the token in the session
         this.$session.set("jwt", res.data.data);
         if (index !== 2)
@@ -252,6 +259,7 @@ export default {
         this.$store.dispatch("user/setUser", user);
       }
     },
+
     saveChanges(index) {
       const user = this.$store.state.user.user
       let obj
@@ -286,6 +294,8 @@ export default {
               return
             else {
               obj = {email: this.user.email}
+              this.user.email = user.email
+              this.confirmation = obj
               break
             }
           }

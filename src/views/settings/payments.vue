@@ -38,7 +38,7 @@
           </div>
           <div class="col-12 col-md-4">
             <div class="action">
-              <button class="upgrade">Upgrade account</button>
+<!--              <button class="upgrade" @click="showModal=true">Upgrade account</button>-->
             </div>
           </div>
           <div class="col-12 col-md-3">
@@ -55,51 +55,55 @@
             <div class="current_value">{{ paymentStatus.endDate | formatDate }}</div>
           </div>
         </div>
-        <div class="row">
-          <div class="col-12 col-md-3">
-            <div class="label">Payment mode</div>
-          </div>
-          <div class="col-12 col-md-9">
-            <div class="current_value">Please enter you prefered payment method</div>
-            <div class="modes">
-              <button class="active">Credit/Debit cards</button>
-              <button>MTN Momopay</button>
-            </div>
-            <div class="current">
-              <div class="col-8">
-                <div class="d-flex">
-                  <div class="user_name">Kabanda Bertrand</div>
-                  <div class="card_number">xxxx-5895</div>
-                  <div class="default">Default</div>
-                </div>
-                <div>Expires on 05/25 Added on 24 May 2020</div>
-              </div>
-              <div class="d-flex justify-center align-center col-4">
-                <button>Add card</button>
-              </div>
-            </div>
-          </div>
-          <div class="col-12 col-md-3">
-            <div class="label">Payment history</div>
-          </div>
-          <div class="col-12 col-md-9">
-            <div class="history customScroll">
-              <div v-for="(payment, i) in payments" class="record" :key="i">
-                <div class="normal">{{ payment.amount_paid }} FRW</div>
-                <div class="normal">{{ payment.createdAt | formatDate }}</div>
-                <div class="normal bold">{{ payment.method_used }}</div>
-                <div class="normal">{{ payment.periodType === 'MONTH' ? 'Monthly' : 'Yearly' }} subscription</div>
-              </div>
-              <div v-if="!payments.length" class="d-flex justify-center align-center record no-payments">
-                <div class="normal bold">
-                  You have not yet made any payment
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+<!--        <div class="row">-->
+<!--          <div class="col-12 col-md-3">-->
+<!--            <div class="label">Payment mode</div>-->
+<!--          </div>-->
+<!--          <div class="col-12 col-md-9">-->
+<!--            <div class="current_value">Please enter you prefered payment method</div>-->
+<!--            <div class="modes">-->
+<!--              <button class="active">Credit/Debit cards</button>-->
+<!--              <button>MTN Momopay</button>-->
+<!--            </div>-->
+<!--            <div class="current">-->
+<!--              <div class="col-8">-->
+<!--                <div class="d-flex">-->
+<!--                  <div class="user_name">Kabanda Bertrand</div>-->
+<!--                  <div class="card_number">xxxx-5895</div>-->
+<!--                  <div class="default">Default</div>-->
+<!--                </div>-->
+<!--                <div>Expires on 05/25 Added on 24 May 2020</div>-->
+<!--              </div>-->
+<!--              <div class="d-flex justify-center align-center col-4">-->
+<!--                <button>Add card</button>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--          <div class="col-12 col-md-3">-->
+<!--            <div class="label">Payment history</div>-->
+<!--          </div>-->
+<!--          <div class="col-12 col-md-9">-->
+<!--            <div class="history customScroll">-->
+<!--              <div v-for="(payment, i) in payments" class="record" :key="i">-->
+<!--                <div class="normal">{{ payment.amount_paid }} FRW</div>-->
+<!--                <div class="normal">{{ payment.createdAt | formatDate }}</div>-->
+<!--                <div class="normal bold">{{ payment.method_used }}</div>-->
+<!--                <div class="normal">{{ payment.periodType === 'MONTH' ? 'Monthly' : 'Yearly' }} subscription</div>-->
+<!--              </div>-->
+<!--              <div v-if="!payments.length" class="d-flex justify-center align-center record no-payments">-->
+<!--                <div class="normal bold">-->
+<!--                  You have not yet made any payment-->
+<!--                </div>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </div>-->
       </div>
     </v-row>
+    <payment-modal
+        v-if="showModal"
+        @closeModal="showModal = false"
+    />
   </v-container>
 </template>
 
@@ -112,12 +116,15 @@ export default {
   name: "PaymentsSettings",
   data: () => ({
     collegePlan: undefined,
+    showModal: false,
     payments: []
   }),
   computed: {
     ...mapGetters('user', ['paymentStatus'])
   },
-  components: {},
+  components: {
+    paymentModal: () => import("@/components/dashboard/paymentModal"),
+  },
   methods: {
     fetchInfo() {
       Apis.get('college_payment_plans/current').then((res) => {

@@ -94,14 +94,14 @@ export default {
     });
 
     //handle errors
-    this.socket.on("error", (error) => {
-      this.$store.dispatch("app_notification/SET_NOTIFICATION", {
-        message: error,
-        status: "danger",
-        uptime: 2000,
-      })
-      // alert(error);
-    });
+    // this.socket.on("error", (error) => {
+    //   this.$store.dispatch("app_notification/SET_NOTIFICATION", {
+    //     message: error,
+    //     status: "danger",
+    //     uptime: 2000,
+    //   })
+    //   // alert(error);
+    // });
   },
 };
 </script>

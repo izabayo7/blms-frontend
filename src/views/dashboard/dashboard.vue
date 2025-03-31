@@ -9,7 +9,7 @@
       <div id="user-profile-card">
         <user-simple-card :loading="userByUsernameLoading" @close="mouseOutPic($event,'user-profile-card')">
           <template #name>{{ userByUsername.other_names + " " + userByUsername.sur_name }}</template>
-          <template #type>Instructor</template>
+          <template #type>{{ userByUsername.category }}</template>
           <template #image>
             <img v-if="userByUsername.profile" :src="userByUsername.profile + '?width=50'" alt=" profile pic">
             <v-avatar v-else :size="30" class="profile-avatar">
@@ -33,9 +33,7 @@
       <div class="main-content customScroll">
         <notification/>
         <router-view v-if="showPage"/>
-        <div class="d-flex justify-center align-center" v-else>
-          ayiiiiiiiiiiiiii weeeeeeeeeeeeeeeeeeee
-        </div>
+        <div class="lower-space"></div>
       </div>
     </main>
   </section>
@@ -58,7 +56,7 @@ export default {
     UserSimpleCard,
     Notification: () => import("@/components/shared/Notification"),
   },
-  mixins: [userSimpleCard,userPayment],
+  mixins: [userSimpleCard, userPayment],
   created() {
     this.redirect()
   },
@@ -113,6 +111,9 @@ export default {
       overflow-y: auto;
       overflow-x: hidden;
       background: $tertiary;
+      .lower-space {
+        height: 40px;
+      }
     }
   }
 
@@ -135,4 +136,5 @@ export default {
   opacity: 0;
   transform: translateY(100px);
 }
+
 </style>

@@ -1,43 +1,46 @@
 <template>
   <v-dialog id="kurious--dialog" v-model="visible" :persistent="!closable">
     <div class="dialog-body invite-users">
-<!--      <div class="close">-->
-<!--        <svg-->
-<!--          xmlns="http://www.w3.org/2000/svg"-->
-<!--          viewBox="0 0 24 24"-->
-<!--          width="24"-->
-<!--          height="24"-->
-<!--          @click="$emit('closeModal')"-->
-<!--        >-->
-<!--          <path fill="none" d="M0 0h24v24H0z" />-->
-<!--          <path-->
-<!--            d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm0-11.414L9.172 7.757 7.757 9.172 10.586 12l-2.829 2.828 1.415 1.415L12 13.414l2.828 2.829 1.415-1.415L13.414 12l2.829-2.828-1.415-1.415L12 10.586z"-->
-<!--          />-->
-<!--        </svg>-->
-<!--      </div>-->
+      <!--      <div class="close">-->
+      <!--        <svg-->
+      <!--          xmlns="http://www.w3.org/2000/svg"-->
+      <!--          viewBox="0 0 24 24"-->
+      <!--          width="24"-->
+      <!--          height="24"-->
+      <!--          @click="$emit('closeModal')"-->
+      <!--        >-->
+      <!--          <path fill="none" d="M0 0h24v24H0z" />-->
+      <!--          <path-->
+      <!--            d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm0-11.414L9.172 7.757 7.757 9.172 10.586 12l-2.829 2.828 1.415 1.415L12 13.414l2.828 2.829 1.415-1.415L13.414 12l2.829-2.828-1.415-1.415L12 10.586z"-->
+      <!--          />-->
+      <!--        </svg>-->
+      <!--      </div>-->
       <div v-show="sent_emails.length == 0" class="pre-send">
         <div class="mx-auto centered">
           <div class="title">Send user Invitations</div>
           <div class="role my-2">
             <select-ui
-              label="Select user category"
-              name="role"
-              id="user_category"
-              :options="user_categories"
-              @input="
+                label="Select user category"
+                name="role"
+                id="user_category"
+                :options="user_categories"
+                @input="
                 (e) => {
                   selected_user_category = e;
                 }
               "
             />
+            <div v-if="selected_user_category === 'ADMIN'" class="hint normal">
+              Admin accounts usage :{{ total_admins }} / 3
+            </div>
           </div>
-          <div class="role my-2">
+          <div v-if="selected_user_category !== 'ADMIN'" class="role my-2">
             <select-ui
-              label="Select user group"
-              name="role"
-              id="user_group"
-              :options="user_group_names"
-              @input="
+                label="Select user group"
+                name="role"
+                id="user_group"
+                :options="user_group_names"
+                @input="
                 (e) => {
                   selected_user_group = e;
                 }
@@ -46,16 +49,16 @@
           </div>
           <div class="d-flex my-1">
             <input-ui
-              ref="email_input"
-              class="email-input"
-              placeholder="Enter email"
-              :valid="email !== '' ? validateEmail(email) : true"
-              name="role"
-              id="role"
-              type="email"
-              :value="email"
-              @input="updateCurrentEmailValue"
-              @submit="addEmail"
+                ref="email_input"
+                class="email-input"
+                placeholder="Enter email"
+                :valid="email !== '' ? validateEmail(email) : true"
+                name="role"
+                id="role"
+                type="email"
+                :value="email"
+                @input="updateCurrentEmailValue"
+                @submit="addEmail"
             />
             <button class="add-email ml-2" @click="addEmail">Add</button>
           </div>
@@ -64,15 +67,15 @@
               <div class="text">{{ email }}</div>
               <button class="pl-1">
                 <svg
-                  width="9"
-                  height="9"
-                  viewBox="0 0 9 9"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
+                    width="9"
+                    height="9"
+                    viewBox="0 0 9 9"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
                 >
                   <path
-                    d="M4.49915 3.76324L7.58326 0.987549L8.46425 1.78044L5.38015 4.55614L8.46425 7.33183L7.58326 8.12472L4.49915 5.34903L1.41505 8.12472L0.534058 7.33183L3.61816 4.55614L0.534058 1.78044L1.41505 0.987549L4.49915 3.76324Z"
-                    fill="black"
+                      d="M4.49915 3.76324L7.58326 0.987549L8.46425 1.78044L5.38015 4.55614L8.46425 7.33183L7.58326 8.12472L4.49915 5.34903L1.41505 8.12472L0.534058 7.33183L3.61816 4.55614L0.534058 1.78044L1.41505 0.987549L4.49915 3.76324Z"
+                      fill="black"
                   />
                 </svg>
               </button>
@@ -97,15 +100,15 @@
             <div v-for="(email, i) in sent_emails" :key="i" class="email">
               <div class="text">{{ email }}</div>
               <svg
-                width="9"
-                height="9"
-                viewBox="0 0 9 9"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
+                  width="9"
+                  height="9"
+                  viewBox="0 0 9 9"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
               >
                 <path
-                  d="M4.49915 3.76324L7.58326 0.987549L8.46425 1.78044L5.38015 4.55614L8.46425 7.33183L7.58326 8.12472L4.49915 5.34903L1.41505 8.12472L0.534058 7.33183L3.61816 4.55614L0.534058 1.78044L1.41505 0.987549L4.49915 3.76324Z"
-                  fill="black"
+                    d="M4.49915 3.76324L7.58326 0.987549L8.46425 1.78044L5.38015 4.55614L8.46425 7.33183L7.58326 8.12472L4.49915 5.34903L1.41505 8.12472L0.534058 7.33183L3.61816 4.55614L0.534058 1.78044L1.41505 0.987549L4.49915 3.76324Z"
+                    fill="black"
                 />
               </svg>
             </div>
@@ -125,7 +128,12 @@ import InputUi from "@/components/reusable/ui/input-ui";
 import Apis from "@/services/apis";
 
 export default {
-  components: { SelectUi, InputUi },
+  components: {SelectUi, InputUi},
+  props: {
+    total_admins: {
+      type: Number
+    }
+  },
   data() {
     return {
       options: ["Principal", "Instructor", "Student"],
@@ -170,9 +178,9 @@ export default {
       this.email = email;
     },
     async sendInvitations() {
-      if (this.selected_user_group == "Select user group") {
+      if (this.selected_user_group === "Select user group" && this.selected_user_category !== "ADMIN") {
         this.error = "user group is required"
-      } else if (this.selected_user_category == "Select user category") {
+      } else if (this.selected_user_category === "Select user category") {
         this.error = "user category is required";
       } else if (!this.emails.length) {
         this.error = "you must atleast select one email";
@@ -180,21 +188,20 @@ export default {
         const res = await Apis.create("user_invitations", {
           college: this.$store.state.user.user.college,
           category: this.selected_user_category,
-          user_group: this.selected_user_group,
+          user_group: this.selected_user_group === "Select user group" ? undefined : this.selected_user_group,
           emails: this.emails,
         });
-        if(res.data.data) {
+        if (res.data.data) {
           for (const obj of res.data.data) {
             this.sent_emails.unshift(obj.email);
           }
-        }
-        else {
+        } else {
           this.error = res.data.message
         }
       }
     },
   },
-  watch:{
+  watch: {
     error() {
       if (this.error != "")
         this.$store.dispatch("app_notification/SET_NOTIFICATION", {

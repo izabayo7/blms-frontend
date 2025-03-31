@@ -21,7 +21,7 @@
           </div>
           <div class="search col">
             <div class="search-wrapper">
-              <search placeholder="Search user"/>
+<!--              <search placeholder="Search user"/>-->
             </div>
           </div>
           <div class="add-user col d-flex justify-end">
@@ -33,7 +33,7 @@
           </div>
         </div>
       </div>
-      <div class="tabular-users">
+      <div class="tabular-users all-users-table">
         <div class="table-wrapper mt-6" v-if="users.length > 0">
           <!--          {{ size }}-->
           <div class="table-header">
@@ -155,7 +155,7 @@
 
 <script>
 import buttonUi from '@/components/reusable/ui/button-ui'
-import Search from '@/components/reusable/Search2'
+// import Search from '@/components/reusable/Search2'
 // import tableUi from '@/components/reusable/ui/table-ui'
 import TableHeader from "../../components/reusable/ui/table-header";
 import apis from "../../services/apis"
@@ -170,7 +170,9 @@ import TableUi from "../../components/reusable/table/TableUi";
 export default {
   name: "Users",
   components: {
-    TableHeader, buttonUi, Search, tableActionBurner, TableRow, TableHeadRow, TableUi,
+    TableHeader, buttonUi,
+    // Search,
+    tableActionBurner, TableRow, TableHeadRow, TableUi,
     InviteUsersDialog: () => import("@/components/dashboard/InviteUsersDialog")
   },
   data() {
@@ -321,6 +323,20 @@ export default {
 
     .loader {
       height: 60vh;
+    }
+  }
+}
+/* Portrait phones and smaller */
+@media (max-width: 700px) {
+  .my-users-page {
+    .users-page-container {
+      .all-users-table{
+        overflow: auto;
+        .table-wrapper{
+          min-width: 945px;
+          overflow: auto;
+        }
+      }
     }
   }
 }

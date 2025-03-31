@@ -32,7 +32,7 @@
             closeSidebar();
             routeTo(userCategory === 'ADMIN' ? '/users' : '/students');
           "
-            :class="{ active: activeRoute('students') }"
+            :class="{ active: activeRoute(userCategory === 'ADMIN' ? 'users' : 'students') }"
         >
           <div class="link-icon">
             <svg

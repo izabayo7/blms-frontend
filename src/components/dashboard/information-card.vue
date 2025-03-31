@@ -79,8 +79,8 @@
             type="donut"
             class="my-chart"
             :class="{'ml-n6' : data === undefined}"
-            :width="width+'px'"
-            :height="width+'px'"
+            width="100%"
+            height="100%"
             :options="chartOptions"
             :series="[data.total,100-data.total]"
         ></chart>
@@ -206,6 +206,13 @@ export default {
   &.INSTRUCTOR {
     max-width: 217px;
     min-height: 197px;
+    .chart{
+      overflow: hidden;
+      max-width: 100%;
+      display: flex;
+      justify-content: center;
+      //display: none;
+    }
   }
 
   background: #ffffff;
@@ -381,6 +388,7 @@ export default {
   .small-card {
     &.INSTRUCTOR {
       height: 230px;
+      padding: 14px 15px;
     }
 
     .chart {

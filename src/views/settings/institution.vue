@@ -25,7 +25,7 @@
               fill="#FF4E4E"/>
         </svg>
         <span class="account_type">
-          Trial Account
+          {{ $store.state.sidebar_navbar.plan.plan }} Account
         </span>
       </div>
       <div class="col-12 col-md-10">

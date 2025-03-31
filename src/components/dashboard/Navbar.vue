@@ -120,13 +120,16 @@ export default {
     ...mapMutations("sidebar_navbar", {
       toggle: "TOGGLE_SIDEBAR_EXPANSION",
       set_college: "SET_COLLEGE_INFO",
+      set_plan: "SET_COLLEGE_PLAN"
     }),
   },
   async created() {
     const res = await Apis.get(
       `college/${this.$store.state.user.user.college}`
     );
+    const plan = await Apis.get('college_payment_plans/current')
     this.set_college(res.data.data);
+    this.set_plan(plan.data.data);
     this.college_logo = res.data.data.logo || this.college_logo;
   },
 };

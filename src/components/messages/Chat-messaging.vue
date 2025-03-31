@@ -129,14 +129,14 @@
           <div v-else class="msgs">
             <div class="announcement-container">
               <div class="d-flex">
-                <div class="col-12 col-md-2">
+                <div class="col-5">
                   <img
                     :src="$store.state.sidebar_navbar.college.logo"
                     alt=""
                     class="college-logo"
                   />
                 </div>
-                <div class="col-12 col-md-8 vertically--centered justify-start">
+                <div class="col-7 vertically--centered justify-start">
                   {{ msgs.title }}
                 </div>
               </div>
