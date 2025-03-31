@@ -16,7 +16,7 @@
               </div>
             </div></th>
             <th class="" v-for="tabHead in tabHeads" @click="sort(tabHead)" :key="`${tabHead}${Date.now()}` ">
-              <div class="head-tab-wrapper d-flex justify-space-between">
+              <div class="head-tab-wrapper d-flex justify-space-between" :class="{sorting:currentSortingTab === tabHead}">
                 <div class="content">{{tabHead}}</div>
                 <div class="icon">
                   <svg xmlns="http://www.w3.org/2000/svg" width="17" height="11" viewBox="0 0 17 11" fill="none">
@@ -28,7 +28,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr class="table-body-row" v-for="(content,i) in data" :key="`${content}${Date.now()*Math.random()}`">
+          <tr class="table-body-row" v-for="(content,i) in tabularData" :key="`${content}${Date.now()*Math.random()}`">
             <td><div class="select select-one">
               <div class="icon" @click="select(i)">
                 <div class="icon__checked" v-if="selected_all || inSelectedRows(i)">
@@ -59,6 +59,7 @@ export default {
       selected_all:false,
       selected:[],
       tabularData:this.data,
+      currentSortingTab:""
     }
   },
   computed:{
@@ -82,6 +83,7 @@ export default {
 
     },
     sort(tabHead){
+      this.currentSortingTab = tabHead
         this.tabularData = this.tabularData.sort((first,second) => {
           if(first[tabHead] < second[tabHead]) return -1
           if(first[tabHead] > second[tabHead]) return 1
