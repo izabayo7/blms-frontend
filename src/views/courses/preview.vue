@@ -352,7 +352,7 @@
                 <div class="mx-auto">
                   <div class="tooltip hidden-sm-and-down" @click="
                       course.chapters.length
-                        ? $router.push(`/schedule_live`)
+                        ? $router.push(`/live/schedule`)
                         : undefined
                     ">
                     <svg width="50" height="51" viewBox="0 0 50 51" fill="none" xmlns="http://www.w3.org/2000/svg">

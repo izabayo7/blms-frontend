@@ -85,11 +85,6 @@ const routes = [
                         }
                     },
                     {
-                        path: '/schedule_live',
-                        component: () =>
-                            import('@/views/live/schedule'),
-                    },
-                    {
                         path: '/messages/start-conversation',
                         component: () => import('@/views/chat/StartConversation.vue'),
                     },
