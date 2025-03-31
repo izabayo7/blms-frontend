@@ -32,6 +32,13 @@ export default {
       this.addNotification(notification);
     });
 
+    // listen if the new message was sent
+    this.socket.on("res/message/sent", (message) => {
+      setTimeout(this.scrollChatToBottom, 1);
+      message.sender.sur_name = "You";
+      this.$store.commit("chat/ADD_ONGOING_MESSAGE", message);
+    });
+
     this.socket.emit("messages/unread");
 
     this.socket.on("res/messages/unread", (number) => {
