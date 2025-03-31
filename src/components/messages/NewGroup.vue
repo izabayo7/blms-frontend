@@ -1,7 +1,7 @@
 <template>
-  <div class="new-group"  v-if="group_model">
+  <div class="new-group"  v-show="group_model">
     <div class="group-wrapper">
-      <cropper :img="img" @change="imageCropped"/>
+      <cropper 	min-height="500" min-width="500" :img="img" @change="imageCropped"/>
       <div class="background-darkness"></div>
       <div id="form" class="col-xs-11 col-sm-10 col-md-8 col-lg-8 col-xl-6">
         <div class="group-card row flex flex-column-reverse flex-md-row">
@@ -29,7 +29,7 @@
               </div>
               <div class="row action-buttons">
                 <button class="create-group-button">Create group</button>
-                <button class="cancel-group-creation">Cancel</button>
+                <button class="cancel-group-creation" @click="toggleGroup">Cancel</button>
               </div>
             </div>
           </div>
@@ -44,8 +44,8 @@
                           transform="translate(0 -2.25)" fill="#aaa"/>
                   </svg>
                 </div>
-                <div class="img-icon">
-                  <div class="input"><input @change="readURL" type="file" id="profile_img"></div>
+                <div class="img-icon" @click="$refs.filePicker.click()">
+                  <div class="input"><input ref="filePicker" @change="readURL" type="file" id="profile_img"></div>
                   <svg xmlns="http://www.w3.org/2000/svg" width="30.621" height="30.621" viewBox="0 0 30.621 30.621">
                     <g id="Icon_feather-image" data-name="Icon feather-image" transform="translate(-3 -3)">
                       <path id="Path_2162" data-name="Path 2162"
@@ -94,10 +94,13 @@ export default {
   },
   methods: {
     ...mapMutations('sidebar_navbar',{toggleGroup:'TOGGLE_GROUP_MODEL_VISIBILITY'}),
+
     closed(i) {
       this.group.members.splice(i, 1)
     },
     addMember() {
+      if(this.currentMember.length <=0)
+        return
       this.group.members.unshift(this.currentMember)
       this.currentMember = ''
     },
@@ -120,21 +123,21 @@ export default {
       const image  = document.getElementById('preview')
       image.src = img;
       console.log(img)
+    },
+    toggleDiv(e){
+      const thisDoc = e.target
+      console.log(e)
+      // const thisDoc = document.getElementById('form')
+      const clickInside = thisDoc.contains(e.target) //is what we clicked inside of component
+      //if not inside the make img empty to hide this component
+      if(!clickInside) this.toggleGroup()
     }
   },
   mounted() {
     on('image_cropped',()=>{
       document.getElementById('preview').style.display = 'block'
     })
-    //listen click on the document
-    if(this.group_model){ //when only group model is active
-      document.addEventListener('click',e => {
-        const thisDoc = document.getElementById('form')
-        const clickInside = thisDoc.contains(e.target) //is what we clicked inside of component
-        //if not inside the make img empty to hide this component
-        if(!clickInside) this.toggleGroup()
-      })
-    }
+
   }
 }
 </script>
@@ -195,27 +198,7 @@ export default {
               overflow-x: hidden;
               overflow-y: auto;
 
-              &::-webkit-scrollbar {
-                width: 8px;
-              }
-
-              &::-webkit-scrollbar-track {
-                background-color: transparent;
-                border-radius: 10px;
-              }
-
-              &::-webkit-scrollbar-track:hover {
-                background-color: lighten($secondary, 4);
-              }
-
-              &::-webkit-scrollbar-thumb {
-                background-color: lighten($font, 40);
-                border-radius: 10px;
-              }
-
-              &::-webkit-scrollbar-thumb:hover {
-                background-color: lighten($font, 30);
-              }
+              @include scroll-bar;
 
             }
           }
@@ -337,6 +320,7 @@ export default {
 
                 input {
                   opacity: 0;
+                  display: none;
                 }
               }
 

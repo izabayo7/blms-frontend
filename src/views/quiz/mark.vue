@@ -164,7 +164,7 @@
                   attempt.answers[i].marks > question.marks ? 'red--text' : ''
                 }`"
                 v-model="attempt.answers[i].marks"
-                :readonly="mode == 'view'"
+                :readonly="mode === 'view'"
                 type="text"
               />
               <span>{{ `/${question.marks}` }}</span>
@@ -359,7 +359,7 @@ export default {
             ) {
               if (
                 this.selected_quiz_submission.answers[i].choosedOptions[0]
-                  .src ==
+                  .src ===
                 rightChoices[0].src.split("/")[
                   rightChoices[0].src.split("/").length - 1
                 ]
@@ -371,7 +371,7 @@ export default {
             } else {
               if (
                 this.selected_quiz_submission.answers[i].choosedOptions[0]
-                  .text == rightChoices[0].text
+                  .text === rightChoices[0].text
               ) {
                 this.selected_quiz_submission.answers[
                   i
@@ -390,7 +390,7 @@ export default {
                   (choice) =>
                     choice.src.split("/")[
                       rightChoices[0].src.split("/").length - 1
-                    ] ==
+                    ] ===
                     this.selected_quiz_submission.answers[i].choosedOptions[k]
                       .src
                 );
@@ -403,9 +403,7 @@ export default {
               } else {
                 let checkStatus = rightChoices.filter(
                   (choice) =>
-                    choice.text ==
-                    this.selected_quiz_submission.answers[i].choosedOptions[k]
-                      .text
+                    choice.text === this.selected_quiz_submission.answers[i].choosedOptions[k].text
                 );
                 if (checkStatus.length > 0) {
                   this.selected_quiz_submission.answers[i].marks +=
@@ -454,7 +452,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .cool-box {
   height: 45px;
   padding: 2px 20px;

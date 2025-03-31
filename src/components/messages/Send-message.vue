@@ -53,6 +53,7 @@ export default {
       input.focus();
     },
     sendMessage(){
+
       if(this.msg.length <= 0)
         return
       this.socket.emit('send-message', {
@@ -122,22 +123,7 @@ export default {
           overflow-y: auto;
           overflow-x: hidden;
 
-          &::-webkit-scrollbar {
-            width: 10px;
-          }
-
-          &::-webkit-scrollbar-track {
-            background-color: transparent;
-            border-radius: 1px;
-          }
-
-          &::-webkit-scrollbar-thumb {
-            background-color: lighten($font,40);
-            border-radius: 1px;
-          }
-          &::-webkit-scrollbar-thumb:hover {
-            background-color: lighten($font,30);
-          }
+          @include scroll-bar;
 
         }
         .placeholder{

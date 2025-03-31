@@ -63,6 +63,7 @@ const routes = [
                         path: '/messages',
                         component: () => import('@/views/chat/Messages.vue'),
                         children: [
+                            { path: '/messages/group/:id', component: () => import('@/views/chat/GroupSetting') },
                             { path: '/messages/:username', component: () => import('@/views/chat/Chat.vue') }
                         ]
                     },
@@ -246,25 +247,37 @@ router.beforeEach((to, from, next) => {
         store.dispatch("user/setUser", jwt.decode(token));
     }
     // check if the destination route is protected
-    if (!to.meta.allowAnonymous && !store.state.user.isLoggedIn) {
-        // go to login
-        next({
-            path: '/login',
-            // after loging in redirect to the requested route
-            query: {
-                redirect: to.fullPath
-            }
-        })
-    }
+    // if (!to.meta.allowAnonymous && !store.state.user.isLoggedIn) {
+    //     // go to login
+    //     next({
+    //         path: '/login',
+    //         // after logging in redirect to the requested route
+    //         query: {
+    //             redirect: to.fullPath
+    //         }
+    //     })
+    // }
     // protect login page if user is logged in
+    // else if (to.path === '/login' && store.state.isLoggedIn) {
+    //     next({
+    //         path: `/${store.state.user.category === 'Student' || store.state.user.category === 'Instructor' ? 'courses' : 'users'}`,
+    //     })
+    // }
+
     else if ((to.path === '/login' || to.path === '/') && store.state.user.isLoggedIn) {
         next({
             path: `/${store.state.user.category === 'Student' || store.state.user.category === 'Instructor' ? 'courses' : 'administration'}`,
         })
     }
+
     // go to the requested route
-    else {
-        next()
-    }
+    // else {
+    //     next()
+    // }
+
+    //avoiding errors
+    to;
+    from;
+    next()
 })
 export default router

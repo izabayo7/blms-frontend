@@ -69,6 +69,7 @@ export default {
     });
     // Message from server
     this.socket.on("receive-message", (message) => {
+      console.log(message)
       this.scrollChatToBottom();
       if (this.loadedMessages.length > 0)
         // if messages have loaded

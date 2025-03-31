@@ -1,9 +1,5 @@
 <template>
 <div class="my-switch">
-
-
-
-
   <div class="switch-holder" :class="{'active':active}" @click="changeStatus">
     <div class="circle" :class="{'right':active,'left':!active}"></div>
   </div>

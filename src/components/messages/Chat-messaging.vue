@@ -33,7 +33,8 @@
         <!--        list of messages sent or received-->
         <div class="msgs">
           <div class="msg" v-for="(msg, i) in msgs.messages" :key="i">
-            {{ msg.content }}
+<!--            //for better html elements readability-->
+            <div :inner-html.prop="msg.content | urlify"/>
           </div>
         </div>
       </div>
@@ -52,6 +53,7 @@
 </template>
 
 <script>
+
 import { mapState, mapGetters, mapMutations } from "vuex";
 // import {on} from "@/services/event_bus";
 import { chatMixins } from "@/services/mixins";
@@ -66,6 +68,7 @@ export default {
   data() {
     return {
       typing: false,
+
     };
   },
   computed: {
@@ -96,7 +99,8 @@ export default {
         this.CHANGE_MESSAGE_READ_STATUS(this.currentDisplayedUser.id)
       }
     }
-  },
+
+},
   mounted() {
     // Someone typing to me
     let timeout = undefined;
@@ -138,6 +142,9 @@ export default {
     scrollableDiv.addEventListener('scroll',this.readMessages)
 
 
+    this.$store.getters['chat/socket'].on('message-sent',sentMessage => {
+      this.$store.commit('chat/ADD_ONGOING_MESSAGE',sentMessage)
+    })
     // this.socket.on('message-sent',message => {
     //   setTimeout(this.scrollChatToBottom, 1);
     //   this.$store.commit('chat/ADD_ONGOING_MESSAGE',message)
@@ -162,26 +169,7 @@ export default {
   scrollbar-track-color:transparent ;
   scrollbar-face-color: red;
 
-  &::-webkit-scrollbar {
-    width: 8px;
-  }
-
-  &::-webkit-scrollbar-track {
-    background-color: transparent;
-    border-radius: 10px;
-  }
-  &::-webkit-scrollbar-track:hover {
-    background-color: lighten($secondary, 4);
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background-color: lighten($font, 40);
-    border-radius: 10px;
-  }
-  &::-webkit-scrollbar-thumb:hover {
-    background-color: lighten($font, 30);
-  }
-
+  @include scroll-bar;
 
   .msg-container {
     margin: 0 10px;
@@ -302,6 +290,9 @@ export default {
           color: $main;
           border-radius: 15px 0 0 15px;
 
+          div{
+            color:inherit;
+          }
           &:last-child {
             border-bottom-right-radius: 15px;
           }
