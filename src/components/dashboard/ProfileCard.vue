@@ -1,27 +1,30 @@
 <template>
     <div class="my-profile-card">
         <div class="profile-card-container">
-            <div class="profile-information">
+            <div class="profile-information d-flex">
                 <div class="profile-pic">
-                    <img @click="logout" v-if="$store.state.user.user.profile" :src="$store.state.user.user.profile" alt="profile picture"/>
+                    <img @click="logout" v-if="user.profile" :src="user.profile" alt="profile picture"/>
                     <v-avatar @click="logout" v-else size="50" class="avatar">
-                        {{ `${$store.state.user.user.sur_name} ${$store.state.user.user.other_names}`| computeText }}
+                        {{ `${user.sur_name} ${user.other_names}`| computeText }}
                     </v-avatar>
                 </div>
-                <div class="profile-names-email"></div>
+                <div class="profile-names-email">
+                    <p class="name">{{ `${user.sur_name} ${user.other_names}`}}</p>
+                    <p class="email">{{ `${user.email}`}}</p>
+                </div>
                 <div class="profile-badge">
-                    <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="17.424" height="21.296" viewBox="0 0 17.424 21.296"><path id="Icon_material-verified-user" data-name="Icon material-verified-user" d="M13.212,1.5,4.5,5.372V11.18c0,5.372,3.717,10.4,8.712,11.616,4.995-1.22,8.712-6.244,8.712-11.616V5.372ZM11.276,16.988,7.4,13.116l1.365-1.365,2.507,2.5,6.379-6.379L19.02,9.244Z" transform="translate(-4.5 -1.5)" fill="#2680eb"/></svg></div>
+                    <verified-badge />
                 </div>
             </div>
             <div class="profile-actions">
                 <ul class="actions">
-                    <li> <div class="icon"> <v-icon>mdi-chevron-down</v-icon> </div><div class="content">My Account</div></li>
-                    <li> <div class="icon"> <v-icon>mdi-chevron-down</v-icon> </div><div class="content">Reports</div></li>
-                    <li> <div class="icon"> <v-icon>mdi-chevron-down</v-icon> </div><div class="content">Messages</div></li>
+                    <li class="d-flex"> <div class="icon"> <v-icon>mdi-account</v-icon> </div><div class="content">My Account</div></li>
+                    <li class="d-flex"> <div class="icon"> <v-icon>mdi-message-bulleted </v-icon> </div><div class="content">Reports</div></li>
+                    <li class="d-flex"> <div class="icon"> <v-icon>mdi-chart-box </v-icon> </div><div class="content">Messages</div></li>
                 </ul>
             </div>
-            <div class="logout">
-                <div class="icon"><v-icon>mdi-chevron-down</v-icon></div>
+            <div class="logout d-flex">
+                <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="12.673" height="11.089" viewBox="0 0 12.673 11.089"><path id="Icon_open-account-logout" data-name="Icon open-account-logout" d="M4.752,0V1.584h6.336V9.5H4.752v1.584h7.92V0ZM3.168,3.168,0,5.544,3.168,7.92V6.336H9.5V4.752H3.168Z"/></svg></div>
                 <div class="content">Logout</div>
             </div>
         </div>
@@ -29,8 +32,15 @@
 </template>
 
 <script>
+    import {mapGetters} from 'vuex'
+    import VerifiedBadge from "../reusable/ui/VerifiedBadge";
+
 export default {
     name: "ProfileCard",
+    components: {VerifiedBadge},
+    computed:{
+        ...mapGetters('user',['user'])
+    },
     methods: {
         logout() {
             // clear the session
@@ -58,6 +68,43 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+.profile-card{
+    .profile-card-container{
+        background-color: $main;
+        padding: 1rem;
 
+        .profile-information{
+            justify-content: center;
+            align-items: center;
+
+            .profile-pic{
+                .v-avatar{
+                    background-color: $primary;
+                    color:$main;
+
+                }
+
+            }
+            .profile-names-email{
+                padding: .2rem 1.3rem;
+                p{
+                    &.name{
+                        font-weight: 600;
+                    }
+                    &.email{
+                        font-size: .85rem;
+                        font-weight: 300;
+                    }
+                    margin:0;
+                }
+            }
+            .profile-badge{
+            }
+        }
+
+
+
+    }
+}
 </style>
