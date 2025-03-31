@@ -161,14 +161,12 @@ const routes = [
                             import('@/components/live-class.vue')
                     }, {
                         path: '/profile',
-                        name: 'profile',
                         component: () =>
-                            import('@/components/profile.vue')
+                            import('@/components/update_profile.vue')
                     }, {
-                        path: '/accounts/currentUser',
-                        name: 'User Profile',
+                        path: '/update/password',
                         component: () =>
-                            import('@/components/profile.vue')
+                            import('@/components/update_profile.vue')
                     },
                     // administration functionalities
                     {

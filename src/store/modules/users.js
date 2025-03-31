@@ -1,4 +1,5 @@
 import apis from "@/services/apis";
+
 const getDefaultState = () => ({
     users: {
         data: [],
@@ -63,7 +64,7 @@ export default {
         searchUser({ state }, { query, page, limit }) {
             let url = `user/search?data=${query}`
             url += page ? `&page=${page}` : ''
-            url += limit ? `&limit=${limit}` : '' 
+            url += limit ? `&limit=${limit}` : ''
 
             return apis.get(url).then((d) => {
                 d.data = d.data.data
@@ -74,8 +75,8 @@ export default {
         searchNewGroupMembers({ state }, { group_code, query, page, limit }) {
             let url = `chat_group/${group_code}/search_members?data=${query}`
             url += page ? `&page=${page}` : ''
-            url += limit ? `&limit=${limit}` : '' 
-            
+            url += limit ? `&limit=${limit}` : ''
+
             return apis.get(url).then((d) => {
                 d.data = d.data.data
                 state.search_results.data = d.data.results
