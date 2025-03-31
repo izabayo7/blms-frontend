@@ -21,8 +21,8 @@
               </div>
             </div>
             <div class="text-content">
-              <h4>Dashboard</h4>
-              <h2>Faculties List</h2>
+              <h4>{{header.head}}</h4>
+              <h2>{{ header.title }}</h2>
             </div>
           </div>
           <div class="search col">
@@ -59,6 +59,7 @@
 import FacultyNavbar from "../../../components/reusable/faculty-navbar";
 import Search from "../../../components/reusable/Search2";
 import ButtonUi from "../../../components/reusable/ui/button-ui";
+import {mapGetters} from "vuex";
 export default {
 name: "FacultyIndex",
   components: {ButtonUi, Search, FacultyNavbar},
@@ -66,6 +67,9 @@ name: "FacultyIndex",
     return{
       facultyId:this.$route.params.facultyId
     }
+  },
+  computed:{
+    ...mapGetters('faculties',['header']),
   },
   created(){
 
