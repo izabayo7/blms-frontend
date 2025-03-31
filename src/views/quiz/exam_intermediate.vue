@@ -48,6 +48,9 @@
           </div>
         </div>
       </div>
+      <div v-else>
+        {{message}}
+      </div>
     </v-row>
   </v-container>
 </template>
@@ -58,7 +61,8 @@ import {mapActions} from "vuex";
 export default {
   name: "ExamIntermediate",
   data: () => ({
-    exam: undefined
+    exam: undefined,
+    message: ""
   }),
   components: {
     back: () => import("@/components/shared/back-button"),
@@ -68,8 +72,9 @@ export default {
     ...mapActions("quiz", ["getExam"]),
   },
   async created() {
-    const {exam} = await this.getExam({id: this.$route.query.exam})
+    const {exam,msg} = await this.getExam({id: this.$route.query.exam})
     this.exam = exam
+    this.message = msg
   }
 };
 </script>

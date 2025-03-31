@@ -313,7 +313,7 @@ export default {
         if (this.remaining_time === this.exam.duration - 1)
           this.initialiseQuiz();
 
-        this.attempt.used_time = this.exam.duration - this.remaining_time;
+        this.attempt.used_time = this.x - this.remaining_time;
       } else if (!this.done) {
         this.done = true;
         const category = this.$store.state.user.user.category.name;
@@ -671,7 +671,8 @@ export default {
         this.setUp()
 
       let date = new Date(exam.starting_time)
-      const diff = (new Date() - date);
+      date.setHours(date.getHours() - 2)
+      const diff = (new Date() - new Date(date));
       if (diff > 0) {
         exam.duration -= (diff / 1000)
       }
