@@ -9,7 +9,12 @@
               new Date(assignment.dueDate).toLocaleTimeString()
             }}
           </div>
-          <div v-if="assignment_submission._id">Submitted on {{ assignment_submission.updatedAt | formatDate }}, at {{
+          <div v-if="assignment_submission._id">Submitted on {{ assignment_submission.createdAt | formatDate }}, at {{
+              new Date(assignment_submission.createdAt).toLocaleTimeString()
+            }}
+          </div>
+          <div v-if="assignment_submission._id && assignment_submission.createdAt !== assignment_submission.updatedAt">
+            Last edited on {{ assignment_submission.updatedAt | formatDate }}, at {{
               new Date(assignment_submission.updatedAt).toLocaleTimeString()
             }}
           </div>
@@ -193,9 +198,12 @@ export default {
       if (this.assignment.submissionMode === 'textInput') {
         if (this.$refs.editor.getHTML() === "<p>Type your answer here</p>")
           return this.error = "Please provide the requested details"
-      } else if (this.assignment.submissionMode === 'fileUpload')
+      } else if (this.assignment.submissionMode === 'fileUpload') {
         if (this.submissionAttachments.length === 0)
           return this.error = "Please upload the requested files"
+        if (this.submissionAttachments.length > 1 && !this.assignment.allowMultipleFilesSubmission)
+          return this.error = "You can only upload one file"
+      }
       if (this.assignment_submission._id)
         this.saveAssignmentSubmission()
       else
@@ -370,13 +378,13 @@ export default {
         color: #BABABC;
       }
 
-      &:nth-child(3), &:nth-child(4) {
+      &:nth-child(3), &:nth-child(4), &:nth-child(5) {
         font-weight: bold;
         font-size: 13px;
         color: #193074;
       }
 
-      &:nth-child(4) {
+      &:nth-child(4), &:nth-child(5) {
         color: #1cc83f;
       }
     }
