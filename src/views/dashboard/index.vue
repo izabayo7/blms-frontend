@@ -21,12 +21,12 @@ export default {
     ...mapMutations("notification", ["addNotification"]),
     ...mapMutations("user", ["TOOGLE_DISABLE_FUNCTIONALITIES"]),
     ...mapMutations("courses", ["addCourse"]),
-    ...mapMutations("chat", ["CHANGE_MESSAGE_READ_STATUS","SET_SOCKET"]),
+    ...mapMutations("chat", ["CHANGE_MESSAGE_READ_STATUS", "SET_SOCKET", "UPDATE_CONTACT_STATUS"]),
     ...mapMutations("sidebar_navbar", {update_unread: "SET_TOTAL_UNREAD"}),
   },
   async created() {
     await apis.create('user_logs', {online: true})
-    apis.get('account_payments/status').then((res)=>{
+    apis.get('account_payments/status').then((res) => {
       this.TOOGLE_DISABLE_FUNCTIONALITIES(res.data.data)
     })
   },
@@ -37,6 +37,14 @@ export default {
     // listen to new notifications
     this.socket.on("new-notification", ({notification}) => {
       this.addNotification(notification);
+    });
+
+    this.socket.on("users/online", ({id}) => {
+      this.UPDATE_CONTACT_STATUS({id, status: true})
+    });
+
+    this.socket.on("users/offline", ({id}) => {
+      this.UPDATE_CONTACT_STATUS({id, status: false})
     });
 
     // listen if the new message was sent
