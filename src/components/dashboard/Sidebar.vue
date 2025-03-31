@@ -318,7 +318,7 @@
               </defs>
             </svg>
           </div>
-          <div class="link-name" v-show="state">Quiz</div>
+          <div class="link-name" v-show="state">Assessments</div>
         </li>
       </ul>
     </div>

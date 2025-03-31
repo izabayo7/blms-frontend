@@ -103,7 +103,7 @@
                       </svg>
 
                     </div>
-                    <div>Exams {{ assignments.length }}</div>
+                    <div>Exams {{ exams.length }}</div>
                   </div>
                 </div>
               </div>
@@ -182,13 +182,37 @@
               v-else-if="currentView === 'exams'"
               :search="search"
               :headers="exam_headers"
-              :items="formated_quiz"
+              :items="exams"
               sort-by="quizname"
               @click:row="handleRowClick"
           >
             <template v-slot:item.actions="{ item }">
               <div class="d-flex">
-                <div @click.stop="$router.push(`quiz/edit/${item.name}`)" class="tooltip">
+                <div v-if="item.status !== 'RELEASED'" @click.stop="
+                  set_modal({
+                    template: 'action_confirmation',
+                    method: {
+                      action: 'quiz/change_exam_status',
+                      parameters: { id: item._id, status: item.status === 'DRAFT' ? 'PUBLISHED' : 'DRAFT', user_group: item.course.user_group, name: item.title },
+                    },
+                    title: 'Change Exam Status',
+                    message: `Are you sure you want to ${item.status === 'DRAFT' ? 'Publish' : 'Un publish'} this exam?`,
+                  })
+                " class="tooltip">
+                  <svg width="39" height="39" viewBox="0 0 39 39" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="19.5" cy="19.5" r="19.5" fill="#193074"/>
+                    <path
+                        d="M19.0993 29.812C19.4642 29.812 19.7599 29.5163 19.7599 29.1552V17.1608L22.7403 20.1412C22.8671 20.2679 23.0361 20.3332 23.205 20.3332C23.374 20.3332 23.543 20.2679 23.6698 20.1412C23.9271 19.8838 23.9271 19.4652 23.6698 19.2079L19.5641 15.1022C19.3067 14.8448 18.8881 14.8448 18.6308 15.1022L14.5289 19.2079C14.2716 19.4652 14.2716 19.8838 14.5289 20.1412C14.7863 20.3985 15.2049 20.3985 15.4622 20.1412L18.4426 17.1608V29.1552C18.4426 29.5163 18.7345 29.812 19.0993 29.812Z"
+                        fill="white"/>
+                    <path
+                        d="M27.2 11.6606C27.2 11.2957 26.9043 11 26.5433 11H11.6568C11.2919 11 11 11.2957 11 11.6606C11 12.0255 11.2957 12.3212 11.6568 12.3212H26.5433C26.9081 12.3174 27.2 12.0216 27.2 11.6606Z"
+                        fill="white"/>
+                  </svg>
+                  <div class="tooltip-text">
+                    {{ item.status === 'DRAFT' ? 'Publish' : 'Un publish' }}
+                  </div>
+                </div>
+                <div @click.stop="$router.push(`exams/edit/${item._id.toString()}`)" class="tooltip">
                   <svg width="39" height="39" viewBox="0 0 39 39" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <circle cx="19.5" cy="19.5" r="19.5" fill="#DEDEDE"/>
                     <circle cx="19.5" cy="19.5" r="19.5" stroke="#DEDEDE"/>
@@ -224,6 +248,15 @@
                   </div>
                 </div>
               </div>
+            </template>
+            <template v-slot:item.course="{ item }">
+              <div class="assignment_title">{{ item.course.name }}</div>
+            </template>
+            <template v-slot:item.marks="{ item }">
+              <div>{{ item.total_marks }}</div>
+            </template>
+            <template v-slot:item.duration="{ item }">
+              <div>{{ new Date(item.duration * 1000).toISOString().substr(11, 8) }}</div>
             </template>
             <template v-slot:no-data>
               <span class="text-h6">Quiz list is empty</span>
@@ -294,7 +327,7 @@
                     {{ item.status === 'DRAFT' ? 'Publish' : 'Un publish' }}
                   </div>
                 </div>
-                <div @click.stop="$router.push(`/assignments/edit/${item._id}`)" class="tooltip">
+                <div @click.stop="$router.push(`/assessments/assignments/edit/${item._id.toString()}`)" class="tooltip">
                   <svg width="39" height="39" viewBox="0 0 39 39" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <circle cx="19.5" cy="19.5" r="19.5" fill="#DEDEDE"/>
                     <circle cx="19.5" cy="19.5" r="19.5" stroke="#DEDEDE"/>
@@ -398,7 +431,7 @@ export default {
   }),
   computed: {
     // get the current course
-    ...mapGetters("quiz", ["all_quiz", "assignments"]),
+    ...mapGetters("quiz", ["all_quiz", "assignments","exams"]),
     // format the quiz to fit in the table
     formated_quiz() {
       let formated_quiz = [];
@@ -425,7 +458,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions("quiz", ["getQuizes", "getAssignments"]),
+    ...mapActions("quiz", ["getQuizes", "getAssignments","getExams"]),
     ...mapActions("modal", ["set_modal"]),
     handleRowClick(value) {
       this.$router.push(this.currentView === 'quiz' ? `/quiz/attempt/${value.name}` : `/assignments/${value._id}`)
@@ -446,6 +479,7 @@ export default {
       user_name: this.$store.state.user.user.user_name,
     });
     this.getAssignments();
+    this.getExams();
   },
 };
 </script>

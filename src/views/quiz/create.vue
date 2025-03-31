@@ -32,6 +32,21 @@
           "
         />
       </div>
+      <div class="input-group my-margin">
+        <label>Target course</label>
+        <select-ui
+            class="bold-border"
+            name="role"
+            :options="courseNames"
+            id="course"
+            label="Select course"
+            @input="
+            (e) => {
+              selected_course = e;
+            }
+          "
+        />
+      </div>
       <div class="flex d-block d-md-flex">
         <div class="input-group">
           <label for="quiz-duration">Duration</label>
@@ -247,13 +262,13 @@
       <button class="quiz-action" v-if="!questions.length" @click="recreate">Add
         questions
       </button>
-      <button class="quiz-action" v-else @click="validate">Save Quiz</button>
+      <button class="quiz-action" v-else @click="validate">Save {{ isExam ? 'exam' : 'quiz' }}</button>
     </div>
   </div>
 </template>
 
 <script>
-import {mapActions} from "vuex";
+import {mapActions, mapGetters, mapMutations} from "vuex";
 import Apis from "@/services/apis";
 
 export default {
@@ -266,12 +281,21 @@ export default {
     SwitchUi: () => import("@/components/reusable/ui/switcher")
   },
   computed: {
+    ...mapGetters("courses", ["courses", "loaded"]),
+    courseNames() {
+      let res = [];
+      for (const i in this.courses) {
+        res.push(this.courses[i].name);
+      }
+      return res;
+    },
     isExam() {
       return this.$route.path.includes('exams')
     }
   },
   data: () => ({
     type: "",
+    selected_course: "",
     questions_types: [
       "Open ended",
       "Single text select",
@@ -306,6 +330,7 @@ export default {
     this.getCourses(!this.loaded);
   },
   methods: {
+    ...mapMutations("quiz",["addExam"]),
     ...mapActions("courses", ["getCourses"]),
     fileTypeClicked(type, index) {
       if (index === -1) {
@@ -329,8 +354,11 @@ export default {
       if (this.title.length < 3)
         return this.error = "Title is too short"
 
-      if (this.isExam && this.type == "")
+      if (this.isExam && this.type === "Select exam type")
         return this.error = "Type is required"
+
+      if (this.isExam && this.selected_course === 'Select course')
+        return this.error = "Course is required"
 
       if (this.hours == 0 && this.minutes == 0)
         return this.error = "Duration is required"
@@ -487,8 +515,27 @@ export default {
       }
 
       const editorContent = this.$refs.editor.getHTML();
-      if (this.isExam)
-        Apis.create('exam', this.assignment).then(async (res) => {
+      if (this.isExam) {
+        for (const i in this.courses) {
+          if (this.courses[i].name === this.selected_course) {
+            this.selected_course = this.courses[i]._id
+            break
+          }
+        }
+
+        Apis.create('exams', {
+          name: this.title,
+          course: this.selected_course,
+          instructions:
+              editorContent ==
+              `<ol><li><p>Write your custom instructions</p></li></ol>`
+                  ? undefined
+                  : editorContent,
+          duration: this.calculateSeconds(),
+          user: this.$store.state.user.user.user_name,
+          questions: questions,
+          passMarks: this.passMarks
+        }).then(async (res) => {
           if (res.data.status !== 201) {
             this.$store.dispatch("app_notification/SET_NOTIFICATION", {
               message: res.data.message,
@@ -498,13 +545,19 @@ export default {
               this.error = ""
             })
           } else {
-            if (this.assignmentAttachments.length) {
-              const formData = new FormData()
-              let index = 0;
-              for (const i in this.assignmentAttachments) {
-                formData.append("files[" + index + "]", this.assignmentAttachments[i]);
-                index++
+            let pictureFound = false
+            let index = 0
+            const formData = new FormData()
+            for (const i in this.pictures) {
+              for (const k in this.pictures[i]) {
+                if (this.pictures[i][k] !== []) {
+                  pictureFound = true
+                  formData.append("files[" + index + "]", this.pictures[i][k]);
+                  index++
+                }
               }
+            }
+            if (pictureFound) {
               // set the dialog
               this.$store.dispatch('modal/set_modal', {
                 template: 'display_information',
@@ -521,15 +574,17 @@ export default {
                 }
               })
             }
-            this.addAssignment(res.data.data)
+
+            this.addExam(res.data.data)
             this.$store.dispatch("app_notification/SET_NOTIFICATION", {
-              message: "Assignment creation succeded",
+              message: "Exam creation succeded",
               status: "success",
               uptime: 5000,
             })
-            this.$router.push('/quiz')
+            this.$router.push('/assessments/exams')
           }
         })
+      }
       else
         this.create_quiz({
           quiz: {
