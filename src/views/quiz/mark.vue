@@ -398,7 +398,8 @@ export default {
             if (
               this.selected_quiz_submission.quiz.questions[i].type.includes(
                 "file"
-              )
+              ) &&
+              this.selected_quiz_submission.answers[i].choosed_options[0].length
             ) {
               if (
                 this.selected_quiz_submission.answers[i].choosed_options[0]

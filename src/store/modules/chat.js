@@ -15,8 +15,8 @@ const getDefaultState = () => ({
         id: null,
         status: 0
     },
-    group:{
-        error:""
+    group: {
+        error: ""
     }
 })
 
@@ -44,12 +44,12 @@ export default {
             if (!FOUND) state.incomingMessages.push(data)
         },
 
-        SET_GROUP_ERROR(state,err){
+        SET_GROUP_ERROR(state, err) {
             state.group.error = err;
 
             setTimeout(() => {
                 state.group.error = '';
-            },3000)
+            }, 3000)
         },
 
         //store loaded messages
@@ -178,17 +178,17 @@ export default {
         },
 
         // change conversation to first if new message is sent or received
-        CHANGE_CONVERSATION_STAND(state, {msg,creation = false}) {
+        CHANGE_CONVERSATION_STAND(state, { msg, creation = false }) {
             let idx;
             let id;
             let message;
 
 
             // when it is on creation either group or chat conversation
-            if(creation){
+            if (creation) {
                 id = msg.id;
                 message = msg;
-            }else { //when it is message sent or received
+            } else { //when it is message sent or received
                 id = msg.sender._id;
 
                 message = {
@@ -206,7 +206,7 @@ export default {
             if (idx) {
                 state.incomingMessages.splice(0, 0, state.incomingMessages.splice(idx, 1)[0])
                 state.incomingMessages[0].last_message = message
-            } else{
+            } else {
                 state.incomingMessages.unshift(message)
             }
 
@@ -238,6 +238,7 @@ export default {
 
             // Get contacts new style
             getters.socket.on('res/message/contacts', ({ contacts }) => {
+                // console.log(contacts)
                 state.incomingMessages = contacts
                 emit('incoming_message_initially_loaded')
             });
@@ -342,7 +343,7 @@ export default {
             })
         },
 
-        groupError(state){
+        groupError(state) {
             return state.group.error;
         },
 
