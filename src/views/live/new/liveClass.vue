@@ -161,7 +161,7 @@
       ws:null,
       participants:[],
       comment:"",
-      noVideo:true,
+      noVideo:false,
       isPresenting:false,
       participationInfo:{name:"",room:"",isOfferingCourse:false},
       showMenu:false,
@@ -312,6 +312,7 @@
       }
     },
     register() {
+      console.log("harahiye")
       document.getElementById('room-header').innerText = 'ROOM ' + this.participationInfo.room;
       document.getElementById('join').style.display = 'none';
       document.getElementById('room').style.display = 'block';
