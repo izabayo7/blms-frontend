@@ -1,21 +1,21 @@
 <template>
 <main class="my-send-message">
   <div class="msg-box row">
-    <div class="col-1 attach">
+    <div class="attach">
       <div class="icon">
         <svg xmlns="http://www.w3.org/2000/svg" width="27.99" height="33.481" viewBox="0 0 27.99 33.481">
           <path id="Icon_material-attach-file" data-name="Icon material-attach-file" d="M12.955,6.818V22.5a5.455,5.455,0,1,1-10.909,0V5.455a3.409,3.409,0,1,1,6.818,0V19.773a1.364,1.364,0,1,1-2.727,0V6.818H4.091V19.773a3.409,3.409,0,1,0,6.818,0V5.455A5.455,5.455,0,1,0,0,5.455V22.5a7.5,7.5,0,1,0,15,0V6.818Z" transform="translate(15) rotate(30)"/>
         </svg>
       </div>
     </div>
-    <div class="msg-input col-10">
+    <div class="msg-input">
           <div class="input" @click="inputClicked" @input="inputMsg">
             <div ref="placeholder" contenteditable="false" class="placeholder" >Type something..</div>
             <div ref="input" contenteditable="true"  class="input-box"></div>
           </div>
           <div class="filePreview"></div>
     </div>
-      <div class="col-1 send">
+      <div class="send">
         <div class="icon" @click="sendMessage">
           <svg xmlns="http://www.w3.org/2000/svg" width="45.928" height="45.079" viewBox="0 0 45.928 45.079">
             <g id="Icon_feather-send" data-name="Icon feather-send" transform="translate(15.951 -2.049) rotate(30)">
@@ -51,18 +51,23 @@ export default {
       input.focus();
     },
     sendMessage(){
-      // console.log(this.currentDisplayedUser)
       this.socket.emit('send-message', {
-        recipients:[this.currentDisplayedUser.id],
+        recipients:[{id:this.currentDisplayedUser.id}],
         msg: this.msg,
         group: undefined
       });
+
+      //adding sent message to store
+      this.$store.commit('chat/ADD_ONGOING_MESSAGE',this.msg)
+
+      //after sending message let us make the div empty
+      this.$refs['input'].textContent = ''
+      this.p('Type something..')
     },
     inputMsg(){
       let input = this.$refs['input']
       let length = input.textContent.length
       this.msg = input.textContent;
-      console.log(this.msg)
 
       // check if the msg input is filled with something and then make placeholder empty and vice-versa
       if(length >0)
@@ -86,23 +91,45 @@ export default {
     margin: auto;
     padding: .5rem 0;
     display: flex;
-    align-content: center;
-    justify-content: center;
+    align-content: flex-end;
+    justify-content: space-evenly;
 
     .msg-input{
-      padding: 0;
+      width: 80%;
       div.input{
         background-color: $secondary;
         position: relative;
         font-size: 14px;
         padding: 5px 14px;
-        border-radius: 30px;
+        border-radius: 20px;
 
         .input-box{
           width: 100%;
           height: 100%;
           font-weight: 400;
           outline: none;
+          padding: 0;
+          max-height: 5rem;
+          overflow-y: auto;
+          overflow-x: hidden;
+
+          &::-webkit-scrollbar {
+            width: 10px;
+          }
+
+          &::-webkit-scrollbar-track {
+            background-color: transparent;
+            border-radius: 1px;
+          }
+
+          &::-webkit-scrollbar-thumb {
+            background-color: lighten($font,40);
+            border-radius: 1px;
+          }
+          &::-webkit-scrollbar-thumb:hover {
+            background-color: lighten($font,30);
+          }
+
         }
         .placeholder{
           opacity: .7;
@@ -121,6 +148,7 @@ export default {
         cursor: pointer;
         justify-content: center;
         padding: 0;
+        align-self: flex-end;
 
         .icon{
           width: fit-content;
@@ -140,6 +168,7 @@ export default {
         height: fit-content;
         width: fit-content;
         cursor: pointer ;
+        align-self: flex-end;
 
         .icon{
           border-radius: 50%;

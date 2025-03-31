@@ -2,13 +2,16 @@
   <main class="my-chat-messaging">
 <!--    messages container-->
     <div class="msg-container" >
+<!--      if there are no messages-->
+      <div class="no-msgs" v-if="!data">you have not yet started conversation with {{currentDisplayedUser.name}}.</div>
+
 <!--      block of messages-->
       <div class="msgs-block" v-for="(msgs,i) in data" :key="i"  :class="{sending:msgGoing(msgs.from),receiving:!msgGoing(msgs.from)}">
 <!--        picture of the message sender-->
         <div class="picture"><img src="@/assets/images/instructor.png" alt="sender profile picture" ></div>
 <!--        list of messages sent or received-->
         <div class="msgs">
-          <div class="msg" v-for="(msg,i) in msgs.messages" :key="i">{{msg.message}}</div>
+          <div class="msg" v-for="(msg,i) in msgs.messages" :key="i">{{msg.content}}</div>
         </div>
 
       </div>
@@ -17,19 +20,29 @@
 </template>
 
 <script>
+import {mapState} from 'vuex'
+
+
 export default {
   name: "Chat-messaging",
   props:{
-    data:{type:Array,required:true}
+    data:{type:[Array,Boolean],required:true}
+  },
+  computed:{
+    ...mapState('chat',['currentDisplayedUser']),
   },
   methods: {
     // is message going or comming
     msgGoing(owner) {
-      return owner.toLowerCase() === 'me';
+      return (owner && owner.toLowerCase() === 'me');
     },
 
   },
   beforeMount() {
+
+  },
+  mounted(){
+
 
   }
 
@@ -45,6 +58,13 @@ export default {
     overflow: auto;
     height: 100%;
 
+    .no-msgs{
+      font-size: .8rem;
+      font-style: italic;
+      text-align: center;
+      margin-top: 4rem;
+      color: lighten($font,20);
+    }
     //css for the whole msg block
     .msgs-block{
       margin: 5px 0;
@@ -93,6 +113,10 @@ export default {
           &:first-child{
             border-top-right-radius: 15px;
           }
+        }
+
+        &:last-child{
+
         }
       }
     }

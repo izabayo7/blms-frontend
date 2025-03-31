@@ -12,32 +12,32 @@
           <h1>Welcome Back,</h1>
           <h3>Login To Continue</h3>
           <v-text-field
-            v-model="email"
-            required
-            :rules="emailRules"
-            placeholder="Example@gmail.com"
-            class="text-field"
-            solo
+              v-model="email"
+              required
+              :rules="emailRules"
+              placeholder="Example@gmail.com"
+              class="text-field"
+              solo
           />
           <v-text-field
-            v-model="password"
-            required
-            color="#ffc100"
-            placeholder="Password"
-            class="text-field"
-            :rules="simpleRules"
-            solo
-            @click:append="showPassword = !showPassword"
-            :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-            :type="showPassword ? 'text' : 'password'"
+              v-model="password"
+              required
+              color="#ffc100"
+              placeholder="Password"
+              class="text-field"
+              :rules="simpleRules"
+              solo
+              @click:append="showPassword = !showPassword"
+              :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+              :type="showPassword ? 'text' : 'password'"
           />
           <v-select
-            class="text-field"
-            v-model="userCategory"
-            :items="userCategories"
-            :rules="simpleRules"
-            prefix="Login as "
-            solo
+              class="text-field"
+              v-model="userCategory"
+              :items="userCategories"
+              :rules="simpleRules"
+              prefix="Login as "
+              solo
           ></v-select>
           <router-link to="/recover-password" class="forgot-pass">Forgot Password?</router-link>
           <v-btn class="login-btn" @click.native="validate()" type="submit">Login</v-btn>
@@ -50,7 +50,6 @@
     </kurious-dialog>
   </v-container>
 </template>
-
 <script>
 import Apis from "@/services/apis";
 import axios from "axios";
@@ -84,56 +83,30 @@ export default {
       try {
         // format the user category
         this.userCategory = this.userCategory
-          .toLowerCase()
-          .split(" ")
-          .join("-");
-
+            .toLowerCase()
+            .split(" ")
+            .join("-");
         const credentials = {
           email: this.email.toLowerCase(),
           password: this.password,
         };
-        // let response = await Apis.login(userCategory, credentials);
-        // if (response.data === errorMessage) {
-          userCategory = "instructor";
-          let response = await Apis.login(userCategory, credentials);
-          // if (response.data === errorMessage) {
-            // userCategory = "admin";
-            // response = await Apis.login(userCategory, credentials);
-            // if (response.data === errorMessage) {
-              // userCategory = "superAdmin";
-              // response = await Apis.login(userCategory, credentials);
-            // }
-          // }
-        // }
-        if (response.data === errorMessage) {
-          this.message = "Invalid passcode or password";
-          alert(this.message);
-        } else {
-          axios.defaults.headers.common.Authorization = `${response.data}`;
-          this.$session.start();
-          this.$session.set("jwt", response.data);
-          this.$store.commit("user/SET_USER", jwt.decode(this.$session.get("jwt")));
-
         // call the login api
         let response = await Apis.login(this.userCategory, credentials);
-
         // set the token in axios headers
         axios.defaults.headers.common.Authorization = `${response.data}`;
-
         // start the session
         this.$session.start();
         // set the token in the session
         this.$session.set("jwt", response.data);
         // keep the decoded user in vuex
-        this.$store.dispatch("setUser", jwt.decode(this.$session.get("jwt")));
-
+        this.$store.dispatch("user/setUser", jwt.decode(this.$session.get("jwt")));
         if (this.$route.query.redirect) {
           this.$router.push(this.$route.query.redirect);
         }
         // student and teacher land to courses
         else if (
-          this.userCategory === "student" ||
-          this.userCategory === "instructor"
+            this.userCategory === "student" ||
+            this.userCategory === "instructor"
         ) {
           this.$router.push("/courses");
         }
@@ -142,6 +115,7 @@ export default {
           this.$router.push("/users");
         }
       } catch (error) {
+        console.log(error)
         // handle errors
         // the server responded
         if (error.response) {
