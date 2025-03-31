@@ -32,7 +32,6 @@
         <select-ui
             class="bold-border"
             name="role"
-            id="user_group"
             :options="courseNames"
             :label="selected_course == ''? 'Select course' : selected_course"
             @input="
@@ -47,7 +46,6 @@
             label="Select chapter"
             class="bold-border"
             name="role"
-            id="user_group"
             :options="chapterNames"
             @input="
             (e) => {
@@ -102,7 +100,6 @@
         <select-ui
             class="bold-border"
             name="role"
-            id="user_group"
             :options="quizNames"
             @input="
             (e) => {
@@ -110,6 +107,10 @@
             }
           "
         />
+      </div>
+      <div class="input-container my-margin d-flex">
+        <div class="label mb-2">Record this live class </div>
+        <input v-model="record_session" class="mt-1 ml-2" type="checkbox">
       </div>
       <button class="submit" @click="validateForm()">Schedule class</button>
     </div>
@@ -168,6 +169,7 @@ export default {
       selected_course: "",
       selected_chapter: "",
       selected_quiz: "",
+      record_session: false,
       showModal: false,
       isConfirming: false,
     };
@@ -264,6 +266,7 @@ export default {
           },
           date: this.date,
           time: this.time,
+          record_session: this.record_session,
           quiz: this.selectedQuiz ? this.selectedQuiz : undefined
         },
       }).then(() => {
