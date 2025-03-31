@@ -16,7 +16,7 @@
         </div>
         <div class="table-wrapper mt-6">
           <div class="table-header">
-            <table-header/>
+            <table-header />
           </div>
 
           <div class="table">
@@ -64,7 +64,7 @@ import userSimpleCard from "../../../mixins/user-simple-card.mixin"
 export default {
   //TODO using dynamic students from backend
   name: "FacultyUsers",
-  components: {UserSimpleCard, TableRow, TableHeadRow, TableUi, TableHeader,},
+  components: {UserSimpleCard, TableRow, TableHeadRow, TableUi, TableHeader},
   mixins: [userSimpleCard],
   data() {
     return {
@@ -96,13 +96,15 @@ export default {
       map.add()
     }
   },
+  watch:{
+    faculty(){
+      this.$store.dispatch('users/loadUsersBasedOnFaculties', {facultyId: this.faculty._id, category: "STUDENT"})
+    }
+  },
   async mounted() {
 
     await this.$store.dispatch("faculties/getFaculty", this.facultyId)
-
     await this.$store.dispatch('faculties/changeHeader', {title: "Users List"})
-
-    await this.$store.dispatch('users/loadUsersBasedOnFaculties', {facultyId: this.faculty._id, category: "STUDENT"})
 
   }
 }
