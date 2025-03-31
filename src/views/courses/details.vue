@@ -43,9 +43,9 @@
       </kurious-page-actions>
       <!-- the course main content -->
       <v-col class="col-12 col-md-9 course-content customScroll pa-3">
-<!--        <chapter-details :activeIndex="activeIndex" />-->
-        <router-view />
-      </v-col>>
+        <!--        <chapter-details :activeIndex="activeIndex" />-->
+        <router-view /> </v-col
+      >>
     </v-row>
   </v-container>
 </template>
@@ -69,7 +69,7 @@ export default {
     showActions: false,
   }),
   computed: {
-    ...mapGetters("courses", ["course","selectedChapter"]),
+    ...mapGetters("courses", ["course", "selectedChapter"]),
     ...mapGetters("quiz_submission", ["selected_quiz_submission"]),
     userCategory() {
       return this.$store.state.user.user.category.name;
@@ -80,11 +80,12 @@ export default {
       if (this.userCategory === "STUDENT") {
         this.activeIndex = this.maximumIndex;
         //route to active index
-        const id = this.course.chapters[this.maximumIndex]._id
-        this.$router.push(`/courses/${this.$route.params.name}/chapter/${this.maximumIndex}/${id}`)
+        const id = this.course.chapters[this.maximumIndex]._id;
+        this.$router.push(
+          `/courses/${this.$route.params.name}/chapter/${this.maximumIndex}/${id}`
+        );
       }
     },
-
   },
   methods: {
     ...mapActions("courses", [
@@ -108,10 +109,11 @@ export default {
         return "";
       }
     },
-    changeActiveChapter({index,id}) {
+    changeActiveChapter({ index, id }) {
       this.activeIndex = index;
-      this.$router.push(`/courses/${this.$route.params.name}/chapter/${index}/${id}`)
-
+      this.$router.push(
+        `/courses/${this.$route.params.name}/chapter/${index}/${id}`
+      );
     },
   },
   created() {
@@ -126,12 +128,20 @@ export default {
         this.maximumIndex = total_chapters - 1;
         this.activeIndex = 0;
       } else {
-        this.maximumIndex = Math.round((course.progress.progress * total_chapters) / 100);
+        this.maximumIndex = Math.round(
+          (course.progress.progress * total_chapters) / 100
+        );
         if (this.maximumIndex > total_chapters - 1) {
           this.maximumIndex = total_chapters - 1;
-
         }
       }
+      this.$router.push(
+        `/courses/${this.$route.params.name}/chapter/0/${course.chapters[0]._id}`
+      );
+      this.$store.commit(
+        "courses/set_selected_chapter",
+        course.chapters[0]._id
+      );
     });
   },
 };
