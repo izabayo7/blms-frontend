@@ -1,9 +1,6 @@
 <template>
     <div class="my-reply-comment">
         <div class="my-reply-comment-container">
-            <div class="profile-pic">
-                <v-avatar >{{user.sur_name | computeText}}</v-avatar>
-            </div>
             <form action="" class="reply-comment">
                 <div class="input"><input type="text" placeholder="write-something"></div>
                 <div class="send">
@@ -21,10 +18,46 @@
         name: "ReplyComment",
         computed:{
             ...mapGetters('user',['user'])
-        }
+        },
+
     }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+.my-reply-comment{
+    .my-reply-comment-container{
+        display: flex;
+        align-items: center;
+        margin-bottom: .3rem;
+        margin-top: .3rem;
+        background-color: $tertiary;
 
+        .reply-comment{
+            display: flex;
+            flex-grow:1;
+
+            .input{
+                flex-grow: 1;
+                padding-top:.2rem;
+                padding-bottom:.2rem;
+                padding-left:.4rem;
+
+                input{
+                    width: 100%;
+                    padding-right: .3rem;
+                    font-size: .8rem;
+                }
+            }
+            .send{
+                background-color: $secondary;
+                cursor: pointer ;
+                .icon{
+                    svg{
+                        transform: scale(.7);
+                    }
+                }
+            }
+        }
+    }
+}
 </style>
