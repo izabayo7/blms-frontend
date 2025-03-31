@@ -1,5 +1,5 @@
 <template>
-  <main class="incoming-chat" @click="handleClick">
+  <main class="incoming-chat" @click="handleClick" :class="{'active-chat':active}">
     <!--    slot for profile picture-->
     <div class="pic col-xs-12 col-sm-2 col-md-3 col-lg-3">
       <img
@@ -84,7 +84,7 @@ export default {
       return this.formatedIncomingMessagesLength <= 0;
     },
     active() {
-      return this.$route.params.username === this.data.id;
+      return String(this.$route.params.username) === String(this.data.id);
     },
     is_mine() {
       return this.data.last_message.sender

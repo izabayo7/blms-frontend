@@ -15,6 +15,9 @@ const getDefaultState = () => ({
         id: null,
         status: 0
     },
+    group:{
+        error:""
+    }
 })
 
 export default {
@@ -38,8 +41,15 @@ export default {
                 if (msg.id === data.id) FOUND = true
             })
 
-            if (FOUND) return
-            else state.incomingMessages.push(data)
+            if (!FOUND) state.incomingMessages.push(data)
+        },
+
+        SET_GROUP_ERROR(state,err){
+            state.group.error = err;
+
+            setTimeout(() => {
+                state.group.error = '';
+            },3000)
         },
 
         //store loaded messages
@@ -167,15 +177,25 @@ export default {
             if (idx) state.incomingMessages[idx].unreadMessagesLength = 0;
         },
 
-        // change conversation to first if new messeage is sent or received
-        CHANGE_CONVERSATION_STAND(state, msg) {
+        // change conversation to first if new message is sent or received
+        CHANGE_CONVERSATION_STAND(state, {msg,creation = false}) {
             let idx;
-            let id = msg.sender._id;
+            let id;
+            let message;
 
-            let message = {
-                content: msg.content,
-                sender: msg.sender._id,
-                time: msg.createdAt
+
+            // when it is on creation either group or chat conversation
+            if(creation){
+                id = msg.id;
+                message = msg;
+            }else { //when it is message sent or received
+                id = msg.sender._id;
+
+                message = {
+                    content: msg.content,
+                    sender: msg.sender._id,
+                    time: msg.createdAt
+                }
             }
 
             // find the index of the incoming message
@@ -186,6 +206,8 @@ export default {
             if (idx) {
                 state.incomingMessages.splice(0, 0, state.incomingMessages.splice(idx, 1)[0])
                 state.incomingMessages[0].last_message = message
+            } else{
+                state.incomingMessages.unshift(message)
             }
 
         }
@@ -318,6 +340,10 @@ export default {
                     user_name: user.state.user.user_name // username of the connected user
                 }
             })
+        },
+
+        groupError(state){
+            return state.group.error;
         },
 
         //get messages from loaded messages base on its id

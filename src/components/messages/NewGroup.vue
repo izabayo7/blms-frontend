@@ -7,6 +7,11 @@
         <div class="group-card row flex flex-column-reverse flex-md-row">
           <div class="infos flex col col-xs-12 col-sm-12 col-md-8">
             <div class="infos-holder justify-center align-center">
+              <transition name="fade">
+                <div class="row error-wrapper" v-if="groupError.length">
+                  <div class="an_error">{{groupError}}</div>
+                </div>
+              </transition>
               <div class="row group-name">
                 <label for="group_name_input">Group name</label>
                 <input type="text" id="group_name_input" v-model="group.name" />
@@ -175,7 +180,7 @@
 
 <script>
 import { emit, on } from "@/services/event_bus";
-import { mapMutations, mapState, mapActions } from "vuex";
+import { mapMutations, mapState, mapActions, mapGetters } from "vuex";
 import a from "@/services/apis";
 import Member from "@/components/messages/Member";
 
@@ -204,6 +209,7 @@ export default {
   },
   computed: {
     ...mapState("sidebar_navbar", ["group_model"]),
+    ...mapGetters("chat", ["groupError"]),
     btnDisabled() {
       const test_empty = /^\s+$/g;
       const is_name_empty =
@@ -213,8 +219,11 @@ export default {
     },
   },
   methods: {
-    ...mapMutations("sidebar_navbar", {
-      toggleGroup: "TOGGLE_GROUP_MODEL_VISIBILITY",
+    ...mapMutations("sidebar_navbar", {toggleGroup: "TOGGLE_GROUP_MODEL_VISIBILITY"}),
+    ...mapMutations("chat", {
+      setGroupError:"SET_GROUP_ERROR",
+      changeConversationStand:"CHANGE_CONVERSATION_STAND",
+      setDisplayedUser:"SET_DISPLAYED_USER"
     }),
     ...mapActions("users", ["searchUser"]),
 
@@ -294,9 +303,42 @@ export default {
         college: this.$store.state.user.user.college,
       };
       const newGroup = await a.create("chat_group", body);
-      console.log(newGroup)
-      this.$router.push(`/messages/${newGroup.data.data.code}`);
-      this.toggleGroup()
+      const {status, message} = newGroup.data
+
+
+      //on error set an error
+      if(status === 200 || status === 201){
+
+        const {code, createdAt,members,name} = newGroup.data.data
+
+        // new group as contact
+        const newGroupAsContact = {
+          id:code,
+          is_group:true,
+          last_message:{
+            content:"This group was created by ",
+            time:createdAt
+          },
+          members:members,
+          name:name,
+          unreadMessagesLength:1,
+
+        }
+
+
+        this.changeConversationStand({msg:newGroupAsContact,creation:true}) // add the group on top of other conversations
+        await this.$router.push(`/messages/${newGroup.data.data.code}`); //then go to group chat by changing route
+        this.setDisplayedUser(newGroupAsContact) //set this group as current displayed user on chat
+        this.toggleGroup() //then switch off/make it invisible group creation model
+
+        //empty the group property
+        this.group.name =  ""
+        this.group.public =  false
+        this.group.members =  []
+      }else{
+        this.setGroupError(message)
+      }
+
     },
   },
   mounted() {
@@ -339,12 +381,33 @@ export default {
       left: 50%;
       transform: translate(-50%, -50%);
 
+
       .infos {
         .infos-holder {
           align-self: center !important;
           justify-self: center !important;
           max-width: 25rem;
           margin: auto;
+
+          //animation
+          .fade-enter-active, .fade-leave-active{
+            transition: .4s ease-in;
+          }
+          .fade-enter, .fade-leave-to{
+            opacity: 0;
+          }
+
+          .error-wrapper{
+            width: 100%;
+
+            .an_error{
+              padding: 1rem .5rem;
+              width: 100%;
+              border-left: 3px solid lighten($danger,5);
+              background-color: lighten($danger,25);
+              color:lighten($danger,5);
+            }
+          }
 
           .group-members,
           .group-name {
