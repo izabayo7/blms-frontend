@@ -146,7 +146,7 @@
                       type="number"
                       v-model="attempt.answers[i].marks"
                       :readonly="mode === 'view'"
-                      @change="computeTotalMarks()"
+                      @keyup="computeTotalMarks()"
                     />
                     <span>{{ `/${question.marks}` }}</span>
                   </div>
@@ -334,7 +334,7 @@ export default {
     quiz: {},
     attempt: {},
     mode: "view",
-    computedTotalMarks: 0
+    computedTotalMarks: 0,
   }),
   components: {
     back: () => import("@/components/shared/back-button"),
@@ -346,21 +346,21 @@ export default {
     userCategory() {
       return this.$store.state.user.user.category.name;
     },
-    navigation_links(){
+    navigation_links() {
       return [
         {
-          text: 'reports',
+          text: "reports",
           link: "/reports",
         },
         {
-          text: 'kanze wlh',
-          link: "/reports/" + '',
+          text: "kanze wlh",
+          link: "/reports/" + "",
         },
         {
           text: `${this.selected_quiz_submission.user.sur_name} ${this.selected_quiz_submission.user.other_names}`,
           link: this.$route.fullPath,
         },
-      ]
+      ];
     },
   },
   watch: {
@@ -379,7 +379,7 @@ export default {
       "findQuizSubmissionByUserAndQuizNames",
     ]),
     computeTotalMarks() {
-      console.log('ahooooooooooooooo')
+      console.log("ahooooooooooooooo");
       let result = 0;
       for (const i in this.selected_quiz_submission.answers) {
         result = parseInt(
@@ -525,7 +525,7 @@ export default {
       if (this.userCategory === "INSTRUCTOR") {
         this.mode = "edit";
       }
-      this.computeTotalMarks()
+      this.computeTotalMarks();
     });
   },
 };
