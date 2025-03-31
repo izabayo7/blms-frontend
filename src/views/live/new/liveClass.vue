@@ -206,8 +206,13 @@
         <div class="live-class--attendance--wrapper long">
           <h3>DISCUSSION BOARD </h3>
           <div class="online-users">
-            <!--            <online-user v-for="user in participants" :user="user.userInfo"-->
-            <!--                         :key="`${(Date.now() * Math.random())}${user.name}`"/>-->
+            <discussion
+                v-for="(comment, i) in comments"
+                :key="i"
+                :content="comment"
+                :verified="comment.sender.category !== 'STUDENT'"
+                @replied="replied"
+            />
           </div>
         </div>
         <div v-if="participationInfo.isOfferingCourse" class="live-class--actions">
@@ -303,7 +308,25 @@ export default {
           "updatedAt": "2021-02-23T06:46:48.317Z",
           "createdAt": "2021-02-23T06:46:48.317Z",
           "__v": 0
-        }]
+        },
+          {
+            "_id": "6034a4d8486da89738c1700d",
+            "sender": {
+              "email": "cedro@gmail.com",
+              "sur_name": "Cedric",
+              "other_names": "Izabayo",
+              "user_name": "user_238760",
+              "gender": "male",
+              "profile": "https://apis.kurious.rw/api/user/user_238760/profile/profile_1620119711766.png",
+              "category": "STUDENT"
+            },
+            "target": {"type": "chapter", "id": "600d9d6574bd7a7b60d7b4cd"},
+            "content": "ibintu numuti",
+            "reply": "6034a4ce486da89738c1700c",
+            "updatedAt": "2021-02-23T06:46:48.317Z",
+            "createdAt": "2021-02-23T06:46:48.317Z",
+            "__v": 0
+          }]
       }, {
         "_id": "601af4846725b4e249144313",
         "sender": {
@@ -1367,11 +1390,15 @@ export default {
             padding-left: 0 !important;
             background-color: transparent !important;
           }
-
+          .comment-replies {
+            padding-left: 0 !important;
+            border-left: none !important;
+          }
           .reply-comment-container {
             .right {
               margin-top: 6px;
             }
+
 
             .comment .temp-flex {
               display: flex;
@@ -1484,6 +1511,9 @@ export default {
 
       &.long {
         height: 490px;
+        .online-users{
+          max-height: 94%;
+        }
       }
     }
 
