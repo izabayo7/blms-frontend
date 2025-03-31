@@ -5,7 +5,7 @@
     <div class="teacher instructor_preview">
       <div class="tabs-container d-flex">
         <div class="item cursor-pointer" @click="panel1=true" :class="panel1? 'active' : ''">Course details</div>
-        <div class="item cursor-pointer" @click="panel1=false">Students list</div>
+        <div class="item cursor-pointer" @click="panel1=false" :class="panel1? '' : 'active'">Students list</div>
       </div>
       <div class="tabs-body">
         <div class="tab d-md-flex">
@@ -160,7 +160,7 @@
             <div class="title">Advanced car repair</div>
             <div class="subtitle">38 Attendees</div>
             <div class="students customScroll">
-              <div v-for="(stud, i) in 17" :key="i" class="individual d-flex">
+              <div v-for="(stud, i) in 17" :key="i" class="individual d-md-flex">
                 <div class="name mr-auto">Rita clemence Mugunga</div>
                 <div class="progress ml-auto">
                   <div class="text mx-auto">78 %</div>
@@ -337,7 +337,6 @@ export default {
 
             color: #3C3C3C;
           }
-
           .progress {
             width: 103px;
 
@@ -468,6 +467,13 @@ export default {
 
           svg {
             margin: auto 10px;
+          }
+        }
+        .students {
+          height: fit-content;
+          .individual{
+            border-top: 1px solid #B8B8B8;
+            padding: 17px 0;
           }
         }
       }
