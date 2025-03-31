@@ -633,6 +633,7 @@ export default {
 .live-class {
   &--wrapper {
     display: flex;
+    width: fit-content;
 
     input[type=checkbox], input[type=radio] {
       border: 1px solid #c0c0c0;
@@ -1045,15 +1046,15 @@ export default {
         .video-el {
           position: relative;
 
-          &.--lg {
+          &.--lg, &.--md {
             height: 320px;
             width: 568.89px;
           }
 
-          &.--md {
-            height: 253.1249px;
-            width: 450px;
-          }
+          //&.--md {
+          //  height: 253.1249px;
+          //  width: 450px;
+          //}
 
           &.--sm {
             height: 224.999px;
