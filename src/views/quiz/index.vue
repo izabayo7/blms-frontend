@@ -70,7 +70,8 @@
               </div>
               <div class="col-6">
                 <div class="text-right">
-                  <button @click="$router.push('/quiz/new')" class="create">
+                  <button @click="$router.push(`/quiz/new${currentView === 'quiz' ? '' : '?assignment=true'}`)"
+                          class="create">
                     Create new
                   </button>
                 </div>
@@ -291,8 +292,8 @@ export default {
     handleRowClick(value) {
       this.$router.push(`quiz/attempt/${value.name}`)
     },
-    async getAssignments(){
-      Apis.get('assignments').then((res)=>{
+    async getAssignments() {
+      Apis.get('assignments').then((res) => {
         this.assignments = res.data.data
       })
     }
