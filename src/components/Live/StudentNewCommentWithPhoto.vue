@@ -6,7 +6,7 @@
                     <v-avatar size="30">{{ user_full_names | computeText}} </v-avatar>
 
                 </div>
-                <div class="input mx-3 px-3 py-1"><input v-model="comment" type="text" placeholder="write something.."></div>
+                <div class="input mx-3 px-3 py-1"><textarea v-model="comment" type="text" placeholder="Add a comment ..."> </textarea></div>
                 <div class="send" :class="{disabled:comment_empty}" @click="send_comment">
                     <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"/><path d="M1.946 9.315c-.522-.174-.527-.455.01-.634l19.087-6.362c.529-.176.832.12.684.638l-5.454 19.086c-.15.529-.455.547-.679.045L12 14l6-8-8 6-8.054-2.685z"/></svg></div>
                 </div>
@@ -18,6 +18,7 @@
 <script>
     import {mapGetters} from 'vuex'
     import api from "@/services/apis"
+    import {empty} from "../../services/global_functions";
 
 
     export default {
@@ -38,14 +39,12 @@
                 }
             },
             comment_empty(){
-                return /^\s*$/.test(this.comment);
+                return empty(this.comment);
             }
         },
         methods:{
             async send_comment(){
-                if(this.comment_empty)
-                    return
-
+                if(empty(this.comment)) return
 
                 try{
                     let {data} = await api.create('comment',this.comment_object)
@@ -88,7 +87,7 @@
                     justify-items: center;
                     border-bottom:3px solid $secondary;
 
-                    input{
+                    textarea{
                         width: 100%;
                     }
                 }
