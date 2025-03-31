@@ -2,7 +2,7 @@
   <v-container fluid class="dashboard_page px-6 pl-lg-14 pt-9">
     <v-row class="page_title">
       <div class="upper">Dashboard</div>
-      <div class="lower" @click="showInviteUsers = true">Overview</div>
+      <div class="lower">Overview</div>
     </v-row>
     <v-row class="mt-6 px-4">
       <div class="v-col col-12 col-md-4 pa-0">
@@ -186,7 +186,7 @@
           <v-col class="col-12 mt-5 pl-0">
             <div class="more">More ...</div>
             <div class="mt-5">
-              <button class="lower_buttons mr-2">Close</button>
+              <button class="lower_buttons mr-2" @click="showInviteUsers = true">Invite users</button>
               <button class="lower_buttons">New Faculty</button>
             </div>
           </v-col>
