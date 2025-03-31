@@ -50,15 +50,15 @@ export default {
   data(){
     return{
       users:[
-        {username:"liberi",status:"pending", "User type":"Student",gender:"M",Faculty:"Economics"},
-        {username:"liberi",status:"pending", "User type":"Student",gender:"M",Faculty:"Economics"},
-        {username:"liberi",status:"pending", "User type":"Student",gender:"M",Faculty:"Economics"},
-        {username:"liberi",status:"pending", "User type":"Student",gender:"M",Faculty:"Economics"},
-        {username:"liberi",status:"pending", "User type":"Student",gender:"M",Faculty:"Economics"},
-        {username:"liberi",status:"pending", "User type":"Student",gender:"M",Faculty:"Economics"},
-        {username:"liberi",status:"pending", "User type":"Student",gender:"M",Faculty:"Economics"},
-        {username:"liberi",status:"pending", "User type":"Student",gender:"M",Faculty:"Economics"},
-        {username:"liberi",status:"pending", "User type":"Student",gender:"M",Faculty:"Economics"},
+        {username:"liberi",status:"pending", "User type":"Student",gender:"M",Faculty:"Economics","S group":"Year 2","Date added":"today","Date joined":"pending"},
+        {username:"liberi",status:"pending", "User type":"Student",gender:"M",Faculty:"Economics","S group":"Year 2","Date added":"today","Date joined":"pending"},
+        {username:"liberi",status:"pending", "User type":"Student",gender:"M",Faculty:"Economics","S group":"Year 2","Date added":"today","Date joined":"pending"},
+        {username:"liberi",status:"pending", "User type":"Student",gender:"M",Faculty:"Economics","S group":"Year 2","Date added":"today","Date joined":"pending"},
+        {username:"liberi",status:"pending", "User type":"Student",gender:"M",Faculty:"Economics","S group":"Year 2","Date added":"today","Date joined":"pending"},
+        {username:"liberi",status:"pending", "User type":"Student",gender:"M",Faculty:"Economics","S group":"Year 2","Date added":"today","Date joined":"pending"},
+        {username:"liberi",status:"pending", "User type":"Student",gender:"M",Faculty:"Economics","S group":"Year 2","Date added":"today","Date joined":"pending"},
+        {username:"liberi",status:"pending", "User type":"Student",gender:"M",Faculty:"Economics","S group":"Year 2","Date added":"today","Date joined":"pending"},
+        {username:"liberi",status:"pending", "User type":"Student",gender:"M",Faculty:"Economics","S group":"Year 2","Date added":"today","Date joined":"pending"},
       ]
     }
   }
@@ -72,7 +72,7 @@ export default {
 
   .users-page-container{
     height: 100%;
-    width:80%;
+    width:90%;
 
     .header{
       width:100%;
