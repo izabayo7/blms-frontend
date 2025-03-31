@@ -981,7 +981,15 @@ console.log('\n\n\n\n\n\n',participant)
         align-items: center;
 
         h2 {
-          font-size: 1.3rem;
+          font-family: Poppins;
+          font-style: normal;
+          font-weight: 500;
+          font-size: 17.7338px;
+          line-height: 27px;
+          /* identical to box height */
+
+
+          color: #4A4A4A;
         }
 
         span {
@@ -993,6 +1001,28 @@ console.log('\n\n\n\n\n\n',participant)
           height: fit-content;
           color: $main;
         }
+        .live{
+          width: 65.38px;
+          height: 18.97px;
+          font-family: Poppins;
+          font-style: normal;
+          font-weight: 500;
+          font-size: 13.7449px;
+          line-height: 21px;
+          text-align: center;
+
+          color: #FFFFFF;
+
+        }
+      }
+      .time{
+        font-family: Segoe UI;
+        font-style: normal;
+        font-weight: bold;
+        font-size: 15.618px;
+        line-height: 21px;
+
+        color: #343434;
       }
     }
 
