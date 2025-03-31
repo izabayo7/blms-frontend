@@ -68,8 +68,7 @@
                 </svg>
               </button>
               <video
-                  v-if="!participationInfo.isOfferingCourse || ((currentPresenter && me) ? (currentPresenter._id != me.userInfo._id) : false)"
-                  v-show="isPresenting"
+                  v-show="isPresenting && ((currentPresenter && me) ? (currentPresenter._id != me.userInfo._id) : true)"
                   id="viewer_screen_feed" class="show">
                 <!--                <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" >-->
               </video>
@@ -705,7 +704,7 @@ export default {
           vid.setAttribute('class', 'show')
           setTimeout(() => {
             vid.play()
-          }, 3000)
+          }, 500)
           this.currentPresenter = this.participants[i].userInfo;
           break;
         }
@@ -784,7 +783,7 @@ export default {
             this.me.rtcPeer.videoEnabled = false
 
           this.displaySrcVideo()
-          this.me.getVideoElement().play()
+          // this.me.getVideoElement().play()
         }
       })
       console.log(receivers, session_id)
@@ -1114,13 +1113,15 @@ export default {
     removeParticipant(index) {
       if (this.currentPresenter ? (this.currentPresenter._id == this.participants[index].userInfo._id) : false) {
         this.currentPresenter = undefined
+        if (!this.participants[index].name.includes('_screen')) {
+          if (this.live_session.course.user == this.me.userInfo._id) {
+            this.onViewerStopedPresenting()
+          } else {
+            document.querySelector('video').setAttribute('class', 'show')
+          }
+        }
       }
       this.participants.splice(index, 1)
-      if (this.live_session.course.user == this.me.userInfo._id) {
-        this.onViewerStopedPresenting()
-      } else {
-        document.querySelector('video').setAttribute('class', 'show')
-      }
     },
     receiveVideoResponse(result) {
 
@@ -1346,13 +1347,15 @@ export default {
               quiz: this.live_session.quiz,
               receivers: [{id: participant.userInfo._id}]
             });
+        } else if(participant.userInfo.category == 'INSTRUCTOR' && !this.isStudentPresenting){
+          this.displaySrcVideo()
         }
       }
     },
 
     onParticipantLeft(request) {
       this.displaySrcVideo();
-      console.log(this.participants)
+      console.log(this.participants,this.participantIndex(request.name))
       this.participants[this.participantIndex(request.name)].dispose();
       console.log(this.participants)
       this.removeParticipant(this.participantIndex(request.name))

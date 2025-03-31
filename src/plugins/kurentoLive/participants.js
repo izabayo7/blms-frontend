@@ -16,12 +16,13 @@ const PARTICIPANT_MAIN_CLASS = 'participant main';
 export default function Participant(name, vm, offeringCourse = false, userInfo, videoElement) {
     this.name = name;
     this.userInfo = userInfo;
-    let video = name.includes("_screen") ? document.getElementById(vm.participationInfo.isOfferingCourse ? "video_screen_feed" : "viewer_screen_feed") : videoElement;
+    let video = name.includes("_screen") ? document.getElementById(vm.participationInfo.isOfferingCourse && ((vm.currentPresenter && vm.me) ? (vm.currentPresenter._id == vm.me.userInfo._id) : true) ? "video_screen_feed" : "viewer_screen_feed") : videoElement;
+
     let rtcPeer;
     this.vm = vm;
     this.offeringCourse = offeringCourse
 
-    if (userInfo.category == "INSTRUCTOR") {
+    // if (userInfo.category == "INSTRUCTOR") {
         // video.setAttribute('poster','https://apis.kurious.rw/assets/images/video-loader.gif')
         video.setAttribute('poster', 'https://apis.kurious.rw/assets/images/video-loader.gif')
 
@@ -39,7 +40,7 @@ export default function Participant(name, vm, offeringCourse = false, userInfo, 
             }, 1500)
         };
 
-    }
+    // }
 
     this.getVideoElement = function () {
         return video;
@@ -78,7 +79,8 @@ export default function Participant(name, vm, offeringCourse = false, userInfo, 
         if (this.rtcPeer) {
             this.rtcPeer.dispose();
             let el = this.getVideoElement()
-            el.parentNode.removeChild(el)
+            if (el)
+                el.parentNode.removeChild(el)
         }
     };
 }
