@@ -358,7 +358,7 @@
                       @click="saveChapter"
                       >save Chapter</v-btn
                     >
-                    <v-btn text class="py-6 mt-n3" @click="updateActiveChapter"
+                    <v-btn text class="py-6 mt-n3" @click="$router.push('/courses')"
                       >Cancel</v-btn
                     >
                   </v-stepper-content>

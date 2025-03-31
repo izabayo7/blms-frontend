@@ -7,6 +7,10 @@ export default {
             data: [],
             loaded: false
         },
+        faculties: {
+            data: [],
+            loaded: false
+        },
     },
     mutations: {
     },
@@ -25,6 +29,17 @@ export default {
                 })
             }
         },
+        //get faculties from backend (currently I'm fetching all for faster development but in future we'll fetch according to the current logged in user)
+        getFaculties({ state }, collegeId) {
+            // when faculties not loaded fetch them
+            if (!state.facultyCollegeYears.loaded) {
+                apis.get(`faculty/college/${collegeId}`).then(d => {
+                    state.faculties.data = d.data
+                    //announce that data have been loaded
+                    state.faculties.loaded = true
+                })
+            }
+        },
     },
     getters: {
         //get a specified facultyCollegeYears
@@ -34,6 +49,14 @@ export default {
         //get a specified facultyCollegeYear by name
         facultyCollegeYear: state => (name) => {
             return state.facultyCollegeYears.data.filter(facultyCollegeYear => facultyCollegeYear.name == name)[0]
+        },
+        //get all specified facultyCollegeYears
+        facultyCollegeYears: state => {
+            return state.facultyCollegeYears.data
+        },
+        //get all specified faculties
+        faculties: state => {
+            return state.faculties.data
         },
         //get a specified facultyCollegeYear by name
         facultyCollegeYearNames: state => {

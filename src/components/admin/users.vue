@@ -1,8 +1,8 @@
 <template>
-  <v-app id="admin-dashboard">
+  <v-app id="admin-dashboard" :class="`pa-${state ? 4 : 12}`">
     <h2>
       Welcome,
-      <strong>Ahmed Mugu</strong>
+      <strong>{{$store.state.user.user.otherNames}} {{$store.state.user.user.surName}}</strong>
     </h2>
     <v-row>
       <v-col class="col-md-3 col-12">
@@ -275,7 +275,9 @@
             ></v-col>
             <v-col class="col-2 offset-1">
               <v-btn rounded to="/administration/register/users">
-                <v-icon color="#fff" class="mr-2">mdi-account-plus-outline</v-icon>Add new user
+                <v-icon color="#fff" class="mr-2"
+                  >mdi-account-plus-outline</v-icon
+                >Add new user
               </v-btn>
             </v-col>
           </v-row>
@@ -337,7 +339,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
+import { mapActions, mapGetters, mapState } from "vuex";
 export default {
   data: () => ({
     search: "",
@@ -361,6 +363,7 @@ export default {
     userCategory() {
       return this.$store.state.user.user.category;
     },
+    ...mapState("sidebar_navbar", { state: "sidebar_expanded" }),
     // get users
     ...mapGetters("users", ["users", "loaded"]),
     ...mapGetters("colleges", ["college", "c_loaded"]),

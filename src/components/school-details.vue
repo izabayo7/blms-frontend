@@ -151,9 +151,7 @@ export default {
         },
         logo: this.logo,
       }).then(() => {
-        this.college.name != this.$route.params.name
-          ? this.$router.push(`/administration/colleges/${this.college.name}`)
-          : undefined;
+        this.$router.push(`/administration`)
       });
     },
   },

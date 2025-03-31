@@ -66,7 +66,7 @@
                 ></v-text-field>
               </v-col>
               <v-col class="col-2 offset-1">
-                <v-btn rounded to="/register/faculty">
+                <v-btn rounded to="/administration/register/faculty">
                   <v-icon color="#fff">mdi-plus</v-icon>Add new Faculty
                 </v-btn>
               </v-col>
@@ -86,7 +86,7 @@
 </template>
 
 <script>
-// import { mapActions, mapGetters } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 export default {
   components: {
     back: () => import("@/components/shared/back-button"),
@@ -104,34 +104,18 @@ export default {
       { text: "Teacher", value: "teacher" },
       { text: "Action", value: "actions", sortable: false, align: "center" },
     ],
-    faculties: [],
   }),
-  beforeMount() {
-    this.getFaculties();
+  computed: {
+    // get the faculties
+    ...mapGetters("faculties", ["faculties"]),
   },
-  // methods: {
-  //   async getFaculties() {
-  //     try {
-  //       const response = await Apis.get(
-  //         `facility/college/${this.$store.state.user.college}`
-  //       );
-  //       for (const faculty of response.data) {
-  //         this.faculties.push({
-  //           name: faculty.name,
-  //           attendants: 250,
-  //           teacher: "Kankindi Marie",
-  //         });
-  //       }
-  //     } catch (error) {
-  //       if (error.request && !error.response) {
-  //         this.status = 503;
-  //         this.message = "Service Unavailable";
-  //         this.modal = false;
-  //         this.show = true;
-  //       }
-  //     }
-  //   },
-  // },
+  methods: {
+    ...mapActions("faculties", ["getFaculties"]),
+  },
+  created() {
+    // load faculties
+    this.getFaculties(this.$store.state.user.user.college);
+  },
 };
 </script>
 
