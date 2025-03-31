@@ -139,7 +139,7 @@ export default {
       options: {
         link: {
           routeTo: '/users/user/{id}',
-          paramPropertyName: '_id'
+          paramPropertyName: 'user_name'
         },
         keysToShow: ["names", "email", "user_name", "status", "gender"],
         showSelect: true
