@@ -54,13 +54,18 @@
         </div>
       </div>
     </div>
-    <v-btn
-      v-if="$store.state.user.user.category.name === 'INSTRUCTOR' && showSave"
-      @click="addFeedback()"
-      class="primary-bg px-6 py-4 mt-4"
-      rounded
-      >Save</v-btn
-    >
+    <div class="save_feedback d-flex">
+      <v-btn
+        v-if="$store.state.user.user.category.name === 'INSTRUCTOR' && showSave"
+        @click="addFeedback()"
+        class="primary-bg px-6 py-4 mt-4"
+        rounded
+        >Save</v-btn
+      >
+      <div v-show="message !== ''" class="mt-3 ml-5 text-right col-6">
+        {{ message }}
+      </div>
+    </div>
   </div>
 </template>
 
@@ -84,6 +89,7 @@ export default {
   data: () => ({
     element: undefined,
     showSave: false,
+    message: "",
   }),
   computed: {
     refName() {
