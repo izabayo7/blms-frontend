@@ -37,7 +37,7 @@
             <table-header />
           </div>
           <div class="table">
-            <table-ui :data="users"/>
+            <table-ui :options="options" :data="users"/>
           </div>
         </div>
       </div>
@@ -51,7 +51,6 @@ import Search from '@/components/reusable/Search2'
 import tableUi from '@/components/reusable/ui/table-ui'
 import TableHeader from "../../components/reusable/ui/table-header";
 import apis from "../../services/apis"
-import _ from "lodash"
 import moment from 'moment'
 
 export default {
@@ -59,14 +58,20 @@ export default {
   components:{TableHeader, buttonUi,Search,tableUi},
   data(){
     return {
-      users:[]
+      users:[],
+      options:{
+          link: {
+              RouteTo:'/users/user/{id}',
+              paramPropertyName:'_id'
+            },
+          keysToShow:[ "sur_name", "other_names", "email", "user_name","status", "gender"]
+        },
     }
   },
   methods:{
     loadUsers(){
       apis.get("user")
         .then(({data:{data}}) => {
-          const attributesToPick = [ "sur_name", "other_names", "email", "user_name","status", "gender",  "updatedAt", "createdAt"]
           let filteredUsers = [];
 
           data.map(user => {
@@ -74,10 +79,9 @@ export default {
 
             user.createdAt = moment(user.createdAt).format("DD MMM  YYYY")
             user.updatedAt = moment(user.updatedAt).format("DD MMM YYYY")
-            //TODO beautifying status
-            user.status = user.status.disabled && user.status.active;
+            user.status = user.status.disabled ? 'INACTIVE' : 'ACTIVE';
 
-            filteredUsers.push(_.pick(user,attributesToPick))
+            filteredUsers.push(user)
           })
           this.users = filteredUsers;
         })
