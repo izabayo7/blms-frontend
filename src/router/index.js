@@ -222,6 +222,10 @@ const routes = [
                             import( /* webpackChunkName: "settings" */ '@/views/settings'),
                         children: [
                             {
+                                path: '/',
+                                component: () => import( /* webpackChunkName: "settings" */ '@/views/settings/personal'),
+                            },
+                            {
                                 path: '/settings/institution',
                                 component: () => import( /* webpackChunkName: "settings" */ '@/views/settings/institution'),
                             },

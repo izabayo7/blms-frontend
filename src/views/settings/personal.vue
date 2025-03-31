@@ -1,6 +1,6 @@
 <template>
   <v-container fluid class="inner customScroll px-6 pl-lg-14 pr-md-2 pt-6">
-    <v-row v-if="state">
+    <v-row v-if="user">
       <div class="col-12 col-md-6">
         <svg width="18" height="16" viewBox="0 0 18 16" fill="none" xmlns="http://www.w3.org/2000/svg">
           <g clip-path="url(#clip0)">
@@ -19,24 +19,19 @@
         </span>
       </div>
       <div class="col-12 col-md-6 justify-end d-flex align-center">
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path
-              d="M2.66683 6.66699V11.3337H4.66683V6.66699H2.66683ZM6.66683 6.66699V11.3337H8.66683V6.66699H6.66683ZM1.3335 14.667H14.0002V12.667H1.3335V14.667ZM10.6668 6.66699V11.3337H12.6668V6.66699H10.6668ZM7.66683 0.666992L1.3335 4.00033V5.33366H14.0002V4.00033L7.66683 0.666992Z"
-              fill="#FF4E4E"/>
-        </svg>
-        <span class="account_type">
-          Trial Account
-        </span>
+        <div class="action">
+          <button class="upgrade">Change password</button>
+        </div>
       </div>
       <div class="col-12 col-md-10">
         <div class="row align-center">
           <div class="col-12 col-md-3">
-            <div class="label">Institution name</div>
+            <div class="label">First name</div>
           </div>
           <div class="col-12 col-md-5">
-            <div v-if="editStatus[0]" class="current_value">{{ state.name }}</div>
+            <div v-if="editStatus[0]" class="current_value">{{ user.sur_name }}</div>
             <div v-else class="edit">
-              <input v-model="college.name" type="text">
+              <input v-model="user.sur_name" type="text">
               <div class="actions">
                 <button class="save" @click="saveChanges(0)">Save</button>
                 <button @click="toogleEdit(0)" class="cancel">Cancel</button>
@@ -49,7 +44,25 @@
             </div>
           </div>
           <div class="col-12 col-md-3">
-            <div class="label">Institution logo</div>
+            <div class="label">Last name</div>
+          </div>
+          <div class="col-12 col-md-5">
+            <div v-if="editStatus[1]" class="current_value">{{ user.other_names }}</div>
+            <div v-else class="edit">
+              <input v-model="user.other_names" type="text">
+              <div class="actions">
+                <button class="save" @click="saveChanges(1)">Save</button>
+                <button @click="toogleEdit(1)" class="cancel">Cancel</button>
+              </div>
+            </div>
+          </div>
+          <div class="col-12 col-md-4">
+            <div class="action">
+              <button v-if="editStatus[1]" @click="toogleEdit(1)">Change</button>
+            </div>
+          </div>
+          <div class="col-12 col-md-3">
+            <div class="label">Profile picture</div>
           </div>
           <div class="col-12 col-md-5 text-center">
             <input
@@ -61,11 +74,11 @@
                 @change="handleFileUpload"
             />
             <img @click="pickfile()" class="college_logo cursor-pointer" :src="state.logo" alt="">
-            <div v-if="editStatus[1]" class="current_value lable"><span v-if="state.logo">Click on image to update the logo </span></div>
+            <div v-if="editStatus[2]" class="current_value lable"><span v-if="state.logo">Click on image to update the logo </span></div>
             <div v-else class="edit">
               <div class="actions">
-                <button class="save" @click="saveChanges(1)">Save</button>
-                <button class="cancel" @click="toogleEdit(1);profile=undefined;document.getElementById('picture').value = ''">Cancel</button>
+                <button class="save" @click="saveChanges(2)">Save</button>
+                <button class="cancel" @click="toogleEdit(2);profile=undefined;document.getElementById('picture').value = ''">Cancel</button>
               </div>
             </div>
           </div>
@@ -86,30 +99,12 @@
             </div>
           </div>
           <div class="col-12 col-md-3">
-            <div class="label">Institution moto</div>
+            <div class="label">Username</div>
           </div>
           <div class="col-12 col-md-5">
-            <div v-if="editStatus[2]" class="current_value">{{ state.motto || "not yet set" }}</div>
+            <div v-if="editStatus[3]" class="current_value">{{ user.user_name }}</div>
             <div v-else class="edit">
-              <input v-model="college.motto" type="text">
-              <div class="actions">
-                <button class="save" @click="saveChanges(2)">Save</button>
-                <button class="cancel" @click="toogleEdit(2)">Cancel</button>
-              </div>
-            </div>
-          </div>
-          <div class="col-12 col-md-4">
-            <div class="action">
-              <button v-if="editStatus[2]" @click="toogleEdit(2)">Change</button>
-            </div>
-          </div>
-          <div class="col-12 col-md-3">
-            <div class="label">Institutions’ Address</div>
-          </div>
-          <div class="col-12 col-md-5">
-            <div v-if="editStatus[3]" class="current_value">{{ state.location || "not yet set" }}</div>
-            <div v-else class="edit">
-              <input v-model="college.location" type="text">
+              <input v-model="user.user_name" type="text">
               <div class="actions">
                 <button class="save" @click="saveChanges(3)">Save</button>
                 <button class="cancel" @click="toogleEdit(3)">Cancel</button>
@@ -125,9 +120,9 @@
             <div class="label">Contact email</div>
           </div>
           <div class="col-12 col-md-5">
-            <div v-if="editStatus[4]" class="current_value">{{ state.email || "not yet set" }}</div>
+            <div v-if="editStatus[4]" class="current_value">{{ user.email }}</div>
             <div v-else class="edit">
-              <input v-model="college.email" type="text">
+              <input v-model="user.email" type="text">
               <div class="actions">
                 <button class="save" @click="saveChanges(4)">Save</button>
                 <button class="cancel" @click="toogleEdit(4)">Cancel</button>
@@ -143,9 +138,9 @@
             <div class="label">Contact phone</div>
           </div>
           <div class="col-12 col-md-5">
-            <div v-if="editStatus[5]" class="current_value">{{ state.phone || "not yet set" }}</div>
+            <div v-if="editStatus[5]" class="current_value">{{ user.phone || "not yet set" }}</div>
             <div v-else class="edit">
-              <input v-model="college.phone" type="text">
+              <input v-model="user.phone" type="text">
               <div class="actions">
                 <button class="save" @click="saveChanges(5)">Save</button>
                 <button class="cancel" @click="toogleEdit(5)">Cancel</button>
@@ -168,13 +163,13 @@
           <div class="col-12 col-md-4">
             <div class="action">
               <button class="delete" @click="
-              set_modal({
+                set_modal({
                   template: 'action_confirmation',
                   method: {
                   },
-                  title: 'Delege college',
+                  title: 'Delege account',
                   message:
-                    'Are you sure you want to delete this college?',
+                    'Are you sure you want to delete this account?',
                 })">Delete account</button>
             </div>
           </div>
@@ -188,46 +183,23 @@
 
 import Apis from "@/services/apis";
 import {mapActions, mapMutations, mapState} from "vuex";
+import jwt from "jsonwebtoken";
 
 export default {
-  name: "Institution Settings",
+  name: "Personal Settings",
   data: () => ({
-    editStatus: [true, true, true, true, true, true, true],
+    editStatus: [true, true, true, true, true,true],
     img: "",
     logo: undefined,
-    college: {
-      name: "",
-      motto: "",
-      location: "",
-      email: "",
-      phone: ""
-    }
   }),
-  beforeMount() {
-    this.constructCollege()
-  },
   computed: {
     ...mapState("sidebar_navbar", {state: "college"}),
-  },
-  watch: {
-    state() {
-      if (this.state) {
-  this.constructCollege()
-      }
-    }
+    user() {
+      const user = JSON.stringify(this.$store.state.user.user);
+      return JSON.parse(user);
+    },
   },
   methods: {
-    constructCollege(){
-      this.college.name = this.state.name
-      if (this.state.motto)
-        this.college.motto = this.state.motto
-      if (this.state.location)
-        this.college.location = this.state.location
-      if (this.state.email)
-        this.college.email = this.state.email
-      if (this.state.phone)
-        this.college.phone = this.state.phone
-    },
     ...mapActions("modal", ["set_modal"]),
     pickfile() {
       document.getElementById("picture").click();
@@ -242,7 +214,7 @@ export default {
       this.logo = document.getElementById("picture").files[0]
       this.toogleEdit(1)
     },
-    callback(res, index) {
+    async callback(res, index) {
       if (res.data.status !== 200)
         this.$store.dispatch("app_notification/SET_NOTIFICATION", {
           message: res.data.message,
@@ -250,56 +222,60 @@ export default {
           uptime: 2000,
         });
       else {
-        this.set_college(res.data.data);
+        // set the token in the session
+        this.$session.set("jwt", res.data.data);
         this.toogleEdit(index)
+        const user = await jwt.decode(this.$session.get("jwt"));
+        this.$store.dispatch("user/setUser", user);
       }
     },
     saveChanges(index) {
+      const user = this.$store.state.user.user
       let obj
 
-      if (index !== 1) {
+      if (index !== 2) {
         switch (index) {
           case 0: {
-            if (this.state.name === this.college.name)
+            if (this.user.sur_name === user.sur_name)
               return
             else
-              obj = {name: this.college.name}
+              obj = {sur_name: this.user.sur_name}
             break
           }
-          case 2: {
-            if (this.state.motto === this.college.motto)
+          case 1: {
+            if (this.user.other_names === user.other_names)
               return
             else {
-              obj = {motto: this.college.motto}
+              obj = {other_names: this.user.other_names}
               break
             }
           }
           case 3: {
-            if (this.state.location === this.college.location)
+            if (this.user.user_name === user.user_name)
               return
             else {
-              obj = {location: this.college.location}
+              obj = {user_name: this.user.user_name}
               break
             }
           }
           case 4: {
-            if (this.state.email === this.college.email)
+            if (this.user.email === user.email)
               return
             else {
-              obj = {email: this.college.email}
+              obj = {email: this.user.email}
               break
             }
           }
           case 5: {
-            if (this.state.phone === this.college.phone)
+            if (this.user.phone === user.phone)
               return
             else {
-              obj = {phone: this.college.phone}
+              obj = {phone: this.user.phone}
               break
             }
           }
         }
-        Apis.update('college', this.state._id, obj).then((res) => {
+        Apis.put('user', obj).then((res) => {
           this.callback(res, index)
         })
       } else {

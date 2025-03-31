@@ -145,7 +145,7 @@
 // import {elapsedDuration} from "../../../services/global_functions";
 
 export default {
-  name: "Settings",
+  name: "Payments Settings",
   data: () => ({}),
   computed: {},
   components: {},
