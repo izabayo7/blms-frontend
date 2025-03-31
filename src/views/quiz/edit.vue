@@ -139,8 +139,16 @@
                                 color="transparent"
                               >
                                 <v-img
-                                  :src="`${choice.src}?format=png&width=200&height=200`"
-                                  :lazy-src="`${choice.src}?format=png&width=200&height=200`"
+                                  :src="`${
+                                    choice.src
+                                  }?format=png&width=200&height=200&token=${$session.get(
+                                    'jwt'
+                                  )}`"
+                                  :lazy-src="`${
+                                    choice.src
+                                  }?format=png&width=200&height=200&token=${$session.get(
+                                    'jwt'
+                                  )}`"
                                   :gradient="
                                     choice.right
                                       ? 'to top right, rgba(100,115,201,.33), rgba(25,32,72,.7)'

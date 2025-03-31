@@ -67,7 +67,7 @@ export default {
                         // set the dialog
                         dispatch('modal/set_modal', { template: 'display_information', title: 'Creating quiz', message: 'uploading pictures' }, { root: true })
 
-                        apis.create(`file/quizAttachedFiles/${d.data._id}`, formData, {
+                        apis.create(`quiz/${d.data._id}/attachment`, formData, {
                             headers: {
                                 'Content-Type': 'multipart/form-data'
                             },
@@ -111,7 +111,7 @@ export default {
                     if (pictureFound) {
                         dispatch('modal/set_modal', { template: 'display_information', title: 'Updating quiz', message: 'uploading pictures' }, { root: true })
 
-                        apis.create(`file/quizAttachedFiles/${d.data._id}`, formData, {
+                        apis.create(`quiz/${d.data._id}/attachment`, formData, {
                             headers: {
                                 'Content-Type': 'multipart/form-data'
                             },
