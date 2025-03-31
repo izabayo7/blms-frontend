@@ -117,22 +117,27 @@
 
           <article class="infos pt-10">
             <div>
-<!--              <v-avatar size="40" class="bg-color-one">-->
-                <svg class="p-icon" xmlns="http://www.w3.org/2000/svg" width="62" height="62" viewBox="0 0 62 62">
-                  <circle id="Ellipse_218" data-name="Ellipse 218" cx="31" cy="31" r="31" fill="#fc6767"/>
-                  <g id="noun_index_1232133" transform="translate(13 13)">
-                    <g id="Group_125" data-name="Group 125" transform="translate(5.5 4)">
-                      <g id="Group_124" data-name="Group 124">
-                        <rect id="Rectangle_1142" data-name="Rectangle 1142" width="7.25" height="2.417" transform="translate(18.125 19.333)" fill="#fff"/>
-                        <rect id="Rectangle_1143" data-name="Rectangle 1143" width="7.25" height="2.417" transform="translate(18.125 22.958)" fill="#fff"/>
-                        <rect id="Rectangle_1144" data-name="Rectangle 1144" width="7.25" height="2.417" transform="translate(18.125 26.583)" fill="#fff"/>
-                        <path id="Path_1949" data-name="Path 1949" d="M5.5,33H22.417V22.125h8.458V4H5.5ZM28.458,19.708H20V30.583H11.542V6.417H28.458ZM7.917,6.417H9.125V30.583H7.917Z" transform="translate(-5.5 -4)" fill="#fff"/>
-                      </g>
+              <!--              <v-avatar size="40" class="bg-color-one">-->
+              <svg class="p-icon" xmlns="http://www.w3.org/2000/svg" width="62" height="62" viewBox="0 0 62 62">
+                <circle id="Ellipse_218" data-name="Ellipse 218" cx="31" cy="31" r="31" fill="#fc6767"/>
+                <g id="noun_index_1232133" transform="translate(13 13)">
+                  <g id="Group_125" data-name="Group 125" transform="translate(5.5 4)">
+                    <g id="Group_124" data-name="Group 124">
+                      <rect id="Rectangle_1142" data-name="Rectangle 1142" width="7.25" height="2.417"
+                            transform="translate(18.125 19.333)" fill="#fff"/>
+                      <rect id="Rectangle_1143" data-name="Rectangle 1143" width="7.25" height="2.417"
+                            transform="translate(18.125 22.958)" fill="#fff"/>
+                      <rect id="Rectangle_1144" data-name="Rectangle 1144" width="7.25" height="2.417"
+                            transform="translate(18.125 26.583)" fill="#fff"/>
+                      <path id="Path_1949" data-name="Path 1949"
+                            d="M5.5,33H22.417V22.125h8.458V4H5.5ZM28.458,19.708H20V30.583H11.542V6.417H28.458ZM7.917,6.417H9.125V30.583H7.917Z"
+                            transform="translate(-5.5 -4)" fill="#fff"/>
                     </g>
                   </g>
-                </svg>
+                </g>
+              </svg>
 
-<!--              </v-avatar>-->
+              <!--              </v-avatar>-->
               <span class="content">{{
                   `${course.chapters.length} chapter ${
                       course.chapters.length > 1 ? "s" : ""
@@ -140,121 +145,121 @@
                 }}</span>
             </div>
             <div>
-<!--              <v-avatar size="40" class="bg-color-one">-->
-                <svg
-                    class="p-icon"
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="62"
-                    height="62"
-                    viewBox="0 0 62 62"
-                >
-                  <circle
-                      id="Ellipse_219"
-                      data-name="Ellipse 219"
-                      cx="31"
-                      cy="31"
-                      r="31"
-                      fill="#3ce970"
+              <!--              <v-avatar size="40" class="bg-color-one">-->
+              <svg
+                  class="p-icon"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="62"
+                  height="62"
+                  viewBox="0 0 62 62"
+              >
+                <circle
+                    id="Ellipse_219"
+                    data-name="Ellipse 219"
+                    cx="31"
+                    cy="31"
+                    r="31"
+                    fill="#3ce970"
+                />
+                <g id="noun_Assignment_1833812" transform="translate(15 15)">
+                  <path
+                      id="Path_1950"
+                      data-name="Path 1950"
+                      d="M8.453,45.716h.905v-1.81H9.81V43H8v.905h.453Z"
+                      transform="translate(-3.284 -22.443)"
+                      fill="#fff"
                   />
-                  <g id="noun_Assignment_1833812" transform="translate(15 15)">
-                    <path
-                        id="Path_1950"
-                        data-name="Path 1950"
-                        d="M8.453,45.716h.905v-1.81H9.81V43H8v.905h.453Z"
-                        transform="translate(-3.284 -22.443)"
-                        fill="#fff"
-                    />
-                    <rect
-                        id="Rectangle_1145"
-                        data-name="Rectangle 1145"
-                        width="1"
-                        height="1"
-                        transform="translate(6 27)"
-                        fill="#fff"
-                    />
-                    <path
-                        id="Path_1951"
-                        data-name="Path 1951"
-                        d="M2.25,24.13l.655.328V28.7a.453.453,0,0,0,.453.453H24.63a.453.453,0,0,0,.453-.453V18.234L29.1,10.815a.453.453,0,0,0-.2-.62L27.1,9.289a.452.452,0,0,0-.6.189l-1.412,2.607V2.453A.453.453,0,0,0,24.63,2H5.621a.453.453,0,0,0-.453.453V16.076a2.267,2.267,0,0,0-1.81,2.217,2.227,2.227,0,0,0,.2.923A1.813,1.813,0,0,0,2,21.009v2.716a.453.453,0,0,0,.25.4Zm6.741,0a.453.453,0,0,0,.25-.4V22.367h.453v1.81H8.9ZM27.082,10.295l1,.5L22.63,20.861l-1-.5ZM20.621,22.587,19.9,23.8l-.212-1.273L21.1,21.107l1.22.61-.353,2.117-1.3.432.728-1.214ZM24.177,2.905V13.757l-3.535,6.526-1.764,1.764a.452.452,0,0,0-.126.394l.453,2.716a.453.453,0,0,0,.59.355l2.716-.905a.453.453,0,0,0,.3-.355l.44-2.641.924-1.706v8.345H8.336V25.083h1.81a.453.453,0,0,0,.453-.453V21.914a.453.453,0,0,0-.453-.453H9.242v-.453a1.813,1.813,0,0,0-1.559-1.793L7.69,19.2h2.457a.453.453,0,0,0,.453-.453V16.031a.453.453,0,0,0-.453-.453H7.431a.453.453,0,0,0-.453.453v.464a2.243,2.243,0,0,0-.905-.418V2.905ZM7.884,18.294v-1.81h1.81v1.81ZM2.905,21.009A.906.906,0,0,1,3.81,20.1h.624a.453.453,0,0,0,.3-.793,1.338,1.338,0,0,1-.47-1.017,1.358,1.358,0,0,1,2.716,0,1.338,1.338,0,0,1-.47,1.017.453.453,0,0,0,.3.793h.624a.906.906,0,0,1,.905.905v2.436l-.655.328a.453.453,0,0,0-.25.4v4.073H3.81V24.177a.453.453,0,0,0-.25-.4l-.655-.327Z"
-                        fill="#fff"
-                    />
-                    <rect
-                        id="Rectangle_1146"
-                        data-name="Rectangle 1146"
-                        width="11"
-                        height="2"
-                        transform="translate(12 4)"
-                        fill="#fff"
-                    />
-                    <rect
-                        id="Rectangle_1147"
-                        data-name="Rectangle 1147"
-                        width="11"
-                        height="1"
-                        transform="translate(12 11)"
-                        fill="#fff"
-                    />
-                    <rect
-                        id="Rectangle_1148"
-                        data-name="Rectangle 1148"
-                        width="9"
-                        height="1"
-                        transform="translate(12 17)"
-                        fill="#fff"
-                    />
-                    <rect
-                        id="Rectangle_1149"
-                        data-name="Rectangle 1149"
-                        width="6"
-                        height="1"
-                        transform="translate(12 23)"
-                        fill="#fff"
-                    />
-                    <path
-                        id="Path_1952"
-                        data-name="Path 1952"
-                        d="M13.453,9.621h2.716a.453.453,0,0,0,.453-.453V6.453A.453.453,0,0,0,16.168,6H13.453A.453.453,0,0,0,13,6.453V9.168A.453.453,0,0,0,13.453,9.621Zm.453-2.716h1.81v1.81h-1.81Z"
-                        transform="translate(-6.021 -2.19)"
-                        fill="#fff"
-                    />
-                    <path
-                        id="Path_1953"
-                        data-name="Path 1953"
-                        d="M13.453,22.621h2.716a.453.453,0,0,0,.453-.453V19.453A.453.453,0,0,0,16.168,19H13.453a.453.453,0,0,0-.453.453v2.716A.453.453,0,0,0,13.453,22.621Zm.453-2.716h1.81v1.81h-1.81Z"
-                        transform="translate(-6.021 -9.306)"
-                        fill="#fff"
-                    />
-                    <rect
-                        id="Rectangle_1150"
-                        data-name="Rectangle 1150"
-                        height="1"
-                        transform="translate(28 2)"
-                        fill="#fff"
-                    />
-                    <rect
-                        id="Rectangle_1151"
-                        data-name="Rectangle 1151"
-                        height="1"
-                        transform="translate(28 3)"
-                        fill="#fff"
-                    />
-                    <rect
-                        id="Rectangle_1152"
-                        data-name="Rectangle 1152"
-                        width="1"
-                        transform="translate(28 3)"
-                        fill="#fff"
-                    />
-                    <rect
-                        id="Rectangle_1153"
-                        data-name="Rectangle 1153"
-                        width="2"
-                        transform="translate(26 3)"
-                        fill="#fff"
-                    />
-                  </g>
-                </svg>
-<!--              </v-avatar>-->
+                  <rect
+                      id="Rectangle_1145"
+                      data-name="Rectangle 1145"
+                      width="1"
+                      height="1"
+                      transform="translate(6 27)"
+                      fill="#fff"
+                  />
+                  <path
+                      id="Path_1951"
+                      data-name="Path 1951"
+                      d="M2.25,24.13l.655.328V28.7a.453.453,0,0,0,.453.453H24.63a.453.453,0,0,0,.453-.453V18.234L29.1,10.815a.453.453,0,0,0-.2-.62L27.1,9.289a.452.452,0,0,0-.6.189l-1.412,2.607V2.453A.453.453,0,0,0,24.63,2H5.621a.453.453,0,0,0-.453.453V16.076a2.267,2.267,0,0,0-1.81,2.217,2.227,2.227,0,0,0,.2.923A1.813,1.813,0,0,0,2,21.009v2.716a.453.453,0,0,0,.25.4Zm6.741,0a.453.453,0,0,0,.25-.4V22.367h.453v1.81H8.9ZM27.082,10.295l1,.5L22.63,20.861l-1-.5ZM20.621,22.587,19.9,23.8l-.212-1.273L21.1,21.107l1.22.61-.353,2.117-1.3.432.728-1.214ZM24.177,2.905V13.757l-3.535,6.526-1.764,1.764a.452.452,0,0,0-.126.394l.453,2.716a.453.453,0,0,0,.59.355l2.716-.905a.453.453,0,0,0,.3-.355l.44-2.641.924-1.706v8.345H8.336V25.083h1.81a.453.453,0,0,0,.453-.453V21.914a.453.453,0,0,0-.453-.453H9.242v-.453a1.813,1.813,0,0,0-1.559-1.793L7.69,19.2h2.457a.453.453,0,0,0,.453-.453V16.031a.453.453,0,0,0-.453-.453H7.431a.453.453,0,0,0-.453.453v.464a2.243,2.243,0,0,0-.905-.418V2.905ZM7.884,18.294v-1.81h1.81v1.81ZM2.905,21.009A.906.906,0,0,1,3.81,20.1h.624a.453.453,0,0,0,.3-.793,1.338,1.338,0,0,1-.47-1.017,1.358,1.358,0,0,1,2.716,0,1.338,1.338,0,0,1-.47,1.017.453.453,0,0,0,.3.793h.624a.906.906,0,0,1,.905.905v2.436l-.655.328a.453.453,0,0,0-.25.4v4.073H3.81V24.177a.453.453,0,0,0-.25-.4l-.655-.327Z"
+                      fill="#fff"
+                  />
+                  <rect
+                      id="Rectangle_1146"
+                      data-name="Rectangle 1146"
+                      width="11"
+                      height="2"
+                      transform="translate(12 4)"
+                      fill="#fff"
+                  />
+                  <rect
+                      id="Rectangle_1147"
+                      data-name="Rectangle 1147"
+                      width="11"
+                      height="1"
+                      transform="translate(12 11)"
+                      fill="#fff"
+                  />
+                  <rect
+                      id="Rectangle_1148"
+                      data-name="Rectangle 1148"
+                      width="9"
+                      height="1"
+                      transform="translate(12 17)"
+                      fill="#fff"
+                  />
+                  <rect
+                      id="Rectangle_1149"
+                      data-name="Rectangle 1149"
+                      width="6"
+                      height="1"
+                      transform="translate(12 23)"
+                      fill="#fff"
+                  />
+                  <path
+                      id="Path_1952"
+                      data-name="Path 1952"
+                      d="M13.453,9.621h2.716a.453.453,0,0,0,.453-.453V6.453A.453.453,0,0,0,16.168,6H13.453A.453.453,0,0,0,13,6.453V9.168A.453.453,0,0,0,13.453,9.621Zm.453-2.716h1.81v1.81h-1.81Z"
+                      transform="translate(-6.021 -2.19)"
+                      fill="#fff"
+                  />
+                  <path
+                      id="Path_1953"
+                      data-name="Path 1953"
+                      d="M13.453,22.621h2.716a.453.453,0,0,0,.453-.453V19.453A.453.453,0,0,0,16.168,19H13.453a.453.453,0,0,0-.453.453v2.716A.453.453,0,0,0,13.453,22.621Zm.453-2.716h1.81v1.81h-1.81Z"
+                      transform="translate(-6.021 -9.306)"
+                      fill="#fff"
+                  />
+                  <rect
+                      id="Rectangle_1150"
+                      data-name="Rectangle 1150"
+                      height="1"
+                      transform="translate(28 2)"
+                      fill="#fff"
+                  />
+                  <rect
+                      id="Rectangle_1151"
+                      data-name="Rectangle 1151"
+                      height="1"
+                      transform="translate(28 3)"
+                      fill="#fff"
+                  />
+                  <rect
+                      id="Rectangle_1152"
+                      data-name="Rectangle 1152"
+                      width="1"
+                      transform="translate(28 3)"
+                      fill="#fff"
+                  />
+                  <rect
+                      id="Rectangle_1153"
+                      data-name="Rectangle 1153"
+                      width="2"
+                      transform="translate(26 3)"
+                      fill="#fff"
+                  />
+                </g>
+              </svg>
+              <!--              </v-avatar>-->
               <span class="content"
               >{{ course.assignmentsLength }} assignments</span
               >
@@ -400,10 +405,17 @@
                   </div>
                   <div class="tooltip" @click="
                       course.chapters.length
-                        ? tooglePublishCourse().then(() => {
-                            $router.push('/courses');
-                          })
-                        : undefined
+                        ?                       set_modal({
+                        template: 'action_confirmation',
+                        method: { action: 'courses/tooglePublishCourse' },
+                        title: `${course.published ? 'Unpublish' : 'Publish'} Course`,
+                        message: `Are you sure you want to ${course.published ? 'unpublish' : 'publish'} this course?`,
+                      })
+                        : $store.dispatch(`app_notification/SET_NOTIFICATION`, {
+                  message: 'Can not publish course without chapters',
+                  status: 'danger',
+                  uptime: 2000,
+                  })
                     ">
                     <svg width="51" height="51" viewBox="0 0 51 51" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path
@@ -437,7 +449,7 @@
                       Update course
                     </div>
                   </div>
-                  <div class="tooltip" @click="
+                  <div v-if="!course.published" class="tooltip" @click="
                       set_modal({
                         template: 'action_confirmation',
                         method: { action: 'courses/delete_course' },
@@ -479,87 +491,96 @@
       </div>
       <div v-else class="live_course">
         <div class="d-lg-flex">
-        <div class="left-pane">
-          <div class="d-flex">
-            <div class="icon"><svg width="50" height="50" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="25" cy="25" r="25" fill="#FC6767"/>
-              <path d="M37 20L30 25L37 30V20Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M28 18H17C15.8954 18 15 18.8954 15 20V30C15 31.1046 15.8954 32 17 32H28C29.1046 32 30 31.1046 30 30V20C30 18.8954 29.1046 18 28 18Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
+          <div class="left-pane">
+            <div class="d-flex">
+              <div class="icon">
+                <svg width="50" height="50" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="25" cy="25" r="25" fill="#FC6767"/>
+                  <path d="M37 20L30 25L37 30V20Z" stroke="white" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round"/>
+                  <path
+                      d="M28 18H17C15.8954 18 15 18.8954 15 20V30C15 31.1046 15.8954 32 17 32H28C29.1046 32 30 31.1046 30 30V20C30 18.8954 29.1046 18 28 18Z"
+                      stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+              <div class="title">LIVE BROADCAST DETAILS</div>
             </div>
-            <div class="title">LIVE BROADCAST DETAILS</div>
+            <div class="d-flex detail">
+              <div class="subtitle">Course :</div>
+              <div class="sub-text">{{ course.name }}</div>
+            </div>
+            <div class="d-flex detail">
+              <div class="subtitle">Chapter :</div>
+              <div class="sub-text"> 1.2.0 Introduction</div>
+            </div>
+            <div class="d-flex detail">
+              <div class="subtitle">Scheduled date :</div>
+              <div class="sub-text">{{ nearestLiveSession.date | formatDate }}</div>
+            </div>
+            <div class="d-flex detail">
+              <div class="subtitle">Scheduled Time :</div>
+              <div class="sub-text">{{ nearestLiveSession.time }} Local time</div>
+            </div>
           </div>
-          <div class="d-flex detail">
-            <div class="subtitle">Course :</div>
-            <div class="sub-text">{{course.name}}</div>
-          </div>
-          <div class="d-flex detail">
-            <div class="subtitle">Chapter :</div>
-            <div class="sub-text"> 1.2.0 Introduction</div>
-          </div>
-          <div class="d-flex detail">
-            <div class="subtitle">Scheduled date :</div>
-            <div class="sub-text">{{nearestLiveSession.date | formatDate}}</div>
-          </div>
-          <div class="d-flex detail">
-            <div class="subtitle">Scheduled Time :</div>
-            <div class="sub-text">{{nearestLiveSession.time}} Local time</div>
-          </div>
-        </div>
-        <div class="right-pane ml-auto mx-auto">
-          <svg width="194" height="125" viewBox="0 0 194 125" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M139.582 30L124.996 45.0893C132.289 55.625 132.289 69.2857 124.996 79.8214L139.582 94.9107C157.119 76.875 157.119 49.6429 139.582 30ZM168.319 0L154.167 14.5536C178.216 41.5179 178.216 82.0536 154.167 110.446L168.319 125C202.178 90.2679 202.265 36.1607 168.319 0Z" fill="#FF4E4E"/>
-            <path d="M54.1644 30L68.75 45.0893C61.4572 55.625 61.4572 69.2857 68.75 79.8214L54.1644 94.9107C36.6269 76.875 36.6269 49.6429 54.1644 30ZM25.4272 0L39.5787 14.5536C15.5298 41.5179 15.5298 82.0536 39.5787 110.446L25.4272 125C-8.43231 90.2679 -8.51913 36.1607 25.4272 0Z" fill="#FF4E4E"/>
-            <circle cx="96.8711" cy="59.376" r="15.625" fill="#FF4E4E"/>
-          </svg>
-          <div class="mb-1">0 student watching</div>
-          <div>00:00:00</div>
-          <div>
-            <button @click="
+          <div class="right-pane ml-auto mx-auto">
+            <svg width="194" height="125" viewBox="0 0 194 125" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path
+                  d="M139.582 30L124.996 45.0893C132.289 55.625 132.289 69.2857 124.996 79.8214L139.582 94.9107C157.119 76.875 157.119 49.6429 139.582 30ZM168.319 0L154.167 14.5536C178.216 41.5179 178.216 82.0536 154.167 110.446L168.319 125C202.178 90.2679 202.265 36.1607 168.319 0Z"
+                  fill="#FF4E4E"/>
+              <path
+                  d="M54.1644 30L68.75 45.0893C61.4572 55.625 61.4572 69.2857 68.75 79.8214L54.1644 94.9107C36.6269 76.875 36.6269 49.6429 54.1644 30ZM25.4272 0L39.5787 14.5536C15.5298 41.5179 15.5298 82.0536 39.5787 110.446L25.4272 125C-8.43231 90.2679 -8.51913 36.1607 25.4272 0Z"
+                  fill="#FF4E4E"/>
+              <circle cx="96.8711" cy="59.376" r="15.625" fill="#FF4E4E"/>
+            </svg>
+            <div class="mb-1">0 student watching</div>
+            <div>00:00:00</div>
+            <div>
+              <button @click="
         $router.push(`/live/${nearestLiveSession._id}`)
-      ">GO LIVE</button>
-          </div>
-          <div class="actions">
-            <div class="tooltip" @click="
+      ">GO LIVE
+              </button>
+            </div>
+            <div class="actions">
+              <div class="tooltip" @click="
                       course.chapters.length
                         ? tooglePublishCourse().then(() => {
                             $router.push('/courses');
                           })
                         : undefined
                     ">
-              <svg width="51" height="51" viewBox="0 0 51 51" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path
-                    d="M25.1623 50.0345C38.895 50.0345 50.0276 38.9019 50.0276 25.1691C50.0276 11.4363 38.895 0.303711 25.1623 0.303711C11.4295 0.303711 0.296875 11.4363 0.296875 25.1691C0.296875 38.9019 11.4295 50.0345 25.1623 50.0345Z"
-                    fill="black"/>
-                <path
-                    d="M35.038 28.7744V33.0988C35.038 33.6723 34.8102 34.2222 34.4047 34.6277C33.9992 35.0332 33.4492 35.261 32.8758 35.261H17.7403C17.1669 35.261 16.6169 35.0332 16.2114 34.6277C15.8059 34.2222 15.5781 33.6723 15.5781 33.0988V28.7744"
-                    stroke="white" stroke-width="2.16221" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M30.7134 21.2063L25.3079 15.8008L19.9023 21.2063" stroke="white" stroke-width="2.16221"
-                      stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M25.3086 15.8008V28.774" stroke="white" stroke-width="2.16221" stroke-linecap="round"
-                      stroke-linejoin="round"/>
-              </svg>
-              <div class="tooltip-text">
-                {{ course.published ? "Unpublish" : "Publish" }} course
+                <svg width="51" height="51" viewBox="0 0 51 51" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path
+                      d="M25.1623 50.0345C38.895 50.0345 50.0276 38.9019 50.0276 25.1691C50.0276 11.4363 38.895 0.303711 25.1623 0.303711C11.4295 0.303711 0.296875 11.4363 0.296875 25.1691C0.296875 38.9019 11.4295 50.0345 25.1623 50.0345Z"
+                      fill="black"/>
+                  <path
+                      d="M35.038 28.7744V33.0988C35.038 33.6723 34.8102 34.2222 34.4047 34.6277C33.9992 35.0332 33.4492 35.261 32.8758 35.261H17.7403C17.1669 35.261 16.6169 35.0332 16.2114 34.6277C15.8059 34.2222 15.5781 33.6723 15.5781 33.0988V28.7744"
+                      stroke="white" stroke-width="2.16221" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M30.7134 21.2063L25.3079 15.8008L19.9023 21.2063" stroke="white" stroke-width="2.16221"
+                        stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M25.3086 15.8008V28.774" stroke="white" stroke-width="2.16221" stroke-linecap="round"
+                        stroke-linejoin="round"/>
+                </svg>
+                <div class="tooltip-text">
+                  {{ course.published ? "Unpublish" : "Publish" }} course
+                </div>
               </div>
-            </div>
-            <div class="tooltip" @click="$router.push(`/courses/edit/${course.name}/details`)">
-              <svg width="51" height="51" viewBox="0 0 51 51" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path
-                    d="M25.7248 50.0345C39.4575 50.0345 50.5901 38.9019 50.5901 25.1691C50.5901 11.4363 39.4575 0.303711 25.7248 0.303711C11.992 0.303711 0.859375 11.4363 0.859375 25.1691C0.859375 38.9019 11.992 50.0345 25.7248 50.0345Z"
-                    fill="black"/>
-                <path
-                    d="M24.8042 16.5869H17.2364C16.663 16.5869 16.113 16.8147 15.7075 17.2202C15.302 17.6257 15.0742 18.1757 15.0742 18.7491V33.8846C15.0742 34.458 15.302 35.008 15.7075 35.4135C16.113 35.819 16.663 36.0468 17.2364 36.0468H32.3719C32.9453 36.0468 33.4953 35.819 33.9008 35.4135C34.3063 35.008 34.5341 34.458 34.5341 33.8846V26.3168"
-                    stroke="white" stroke-width="2.16221" stroke-linecap="round" stroke-linejoin="round"/>
-                <path
-                    d="M32.9102 14.9649C33.3408 14.5373 33.9233 14.2978 34.5302 14.2988C35.137 14.2999 35.7187 14.5414 36.1478 14.9705C36.5769 15.3997 36.8185 15.9813 36.8195 16.5882C36.8206 17.195 36.5811 17.7776 36.1535 18.2082L25.883 28.4787L21.5586 29.5598L22.6397 25.2354L32.9102 14.9649Z"
-                    stroke="white" stroke-width="2.16221" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-              <div class="tooltip-text">
-                Update course
+              <div class="tooltip" @click="$router.push(`/courses/edit/${course.name}/details`)">
+                <svg width="51" height="51" viewBox="0 0 51 51" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path
+                      d="M25.7248 50.0345C39.4575 50.0345 50.5901 38.9019 50.5901 25.1691C50.5901 11.4363 39.4575 0.303711 25.7248 0.303711C11.992 0.303711 0.859375 11.4363 0.859375 25.1691C0.859375 38.9019 11.992 50.0345 25.7248 50.0345Z"
+                      fill="black"/>
+                  <path
+                      d="M24.8042 16.5869H17.2364C16.663 16.5869 16.113 16.8147 15.7075 17.2202C15.302 17.6257 15.0742 18.1757 15.0742 18.7491V33.8846C15.0742 34.458 15.302 35.008 15.7075 35.4135C16.113 35.819 16.663 36.0468 17.2364 36.0468H32.3719C32.9453 36.0468 33.4953 35.819 33.9008 35.4135C34.3063 35.008 34.5341 34.458 34.5341 33.8846V26.3168"
+                      stroke="white" stroke-width="2.16221" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path
+                      d="M32.9102 14.9649C33.3408 14.5373 33.9233 14.2978 34.5302 14.2988C35.137 14.2999 35.7187 14.5414 36.1478 14.9705C36.5769 15.3997 36.8185 15.9813 36.8195 16.5882C36.8206 17.195 36.5811 17.7776 36.1535 18.2082L25.883 28.4787L21.5586 29.5598L22.6397 25.2354L32.9102 14.9649Z"
+                      stroke="white" stroke-width="2.16221" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <div class="tooltip-text">
+                  Update course
+                </div>
               </div>
-            </div>
-            <div class="tooltip" @click="
+              <div class="tooltip" @click="
                       set_modal({
                         template: 'action_confirmation',
                         method: { action: 'courses/delete_course' },
@@ -567,20 +588,20 @@
                         message: 'Are you sure you want to delete this course?',
                       })
                     ">
-              <svg width="51" height="51" viewBox="0 0 51 51" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path
-                    d="M25.2834 50.0345C39.0161 50.0345 50.1487 38.9019 50.1487 25.1691C50.1487 11.4363 39.0161 0.303711 25.2834 0.303711C11.5506 0.303711 0.417969 11.4363 0.417969 25.1691C0.417969 38.9019 11.5506 50.0345 25.2834 50.0345Z"
-                    fill="black"/>
-                <path
-                    d="M18.7959 32.7371C18.7977 33.31 19.026 33.859 19.4311 34.2641C19.8363 34.6693 20.3852 34.8976 20.9582 34.8993H29.607C30.1799 34.8976 30.7289 34.6693 31.134 34.2641C31.5391 33.859 31.7675 33.31 31.7692 32.7371V19.7639H18.7959V32.7371ZM32.8503 16.5206H29.0664L27.9853 15.4395H22.5798L21.4987 16.5206H17.7148V18.6828H32.8503V16.5206Z"
-                    stroke="white" stroke-width="1.44147"/>
-              </svg>
-              <div class="tooltip-text">
-                Delete course
+                <svg width="51" height="51" viewBox="0 0 51 51" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path
+                      d="M25.2834 50.0345C39.0161 50.0345 50.1487 38.9019 50.1487 25.1691C50.1487 11.4363 39.0161 0.303711 25.2834 0.303711C11.5506 0.303711 0.417969 11.4363 0.417969 25.1691C0.417969 38.9019 11.5506 50.0345 25.2834 50.0345Z"
+                      fill="black"/>
+                  <path
+                      d="M18.7959 32.7371C18.7977 33.31 19.026 33.859 19.4311 34.2641C19.8363 34.6693 20.3852 34.8976 20.9582 34.8993H29.607C30.1799 34.8976 30.7289 34.6693 31.134 34.2641C31.5391 33.859 31.7675 33.31 31.7692 32.7371V19.7639H18.7959V32.7371ZM32.8503 16.5206H29.0664L27.9853 15.4395H22.5798L21.4987 16.5206H17.7148V18.6828H32.8503V16.5206Z"
+                      stroke="white" stroke-width="1.44147"/>
+                </svg>
+                <div class="tooltip-text">
+                  Delete course
+                </div>
               </div>
             </div>
           </div>
-        </div>
         </div>
         <div class="bottom-pane">
           <div class="d-lg-flex">
@@ -630,7 +651,7 @@ export default {
       return this.course !== undefined;
     },
     isLive() {
-      if(!this.nearestLiveSession) return false;
+      if (!this.nearestLiveSession) return false;
       for (const i in this.course.chapters) {
         if (this.course.chapters[i].live_sessions.length) {
           // if()

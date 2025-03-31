@@ -79,7 +79,7 @@
             "
             outlined
             class="mx-2 action-button-outlined"
-            >Delete</v-btn
+            >Continue</v-btn
           >
         </div>
       </div>
@@ -118,8 +118,9 @@ export default {
 <style lang="scss">
 // resize the modal
 .v-dialog:not(.v-dialog--fullscreen) {
-  height: 260px !important;
-  width: 36% !important;
+  height: fit-content !important;
+  width: fit-content !important;
+  max-width: 100% !important;
   border-radius: 22px !important;
   .dialog-body {
     height: 100%;

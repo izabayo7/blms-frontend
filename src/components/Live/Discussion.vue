@@ -262,4 +262,22 @@ export default {
     }
   }
 }
+/* Portrait phones and smaller */
+@media (max-width: 700px) {
+  .my-discussion {
+    .my-discussion-container {
+      .right {
+        .comment {
+          &__name {
+            font-size: 0.8rem;
+          }
+
+          &__text {
+            font-size: 0.7rem;
+          }
+        }
+      }
+    }
+  }
+}
 </style>

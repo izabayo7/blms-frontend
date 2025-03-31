@@ -143,7 +143,7 @@ export default {
                     })
                 }
                 courseObject.chapters = []
-                state.courses.data.push(courseObject)
+                state.courses.data.unshift(courseObject)
                 commit('initialise_new_chapter')
             })
 
@@ -288,6 +288,7 @@ export default {
                 if (d.data.published) {
                     rootGetters['chat/socket'].emit('course-published', { courseId: d.data._id })
                 }
+                router.push('/courses')
             })
         },
         //delete a course
