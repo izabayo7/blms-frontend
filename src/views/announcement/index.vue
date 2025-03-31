@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid class="announcements_page px-6 pl-lg-14 pt-9">
+  <v-container fluid class="announcements_page px-6 pl-lg-14 pr-md-9 pt-9">
     <v-row class="page_title">
       <div class="col-4 col-md-6">
         <div class="upper">Dashboard</div>
