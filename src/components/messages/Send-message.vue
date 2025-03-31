@@ -72,7 +72,7 @@
               <audio-recorder
                   upload-url="some url"
                   filename="ninja"
-                  format="mp3"
+                  format="wav"
                   :attempts="3"
                   :time="15"
                   @upload="uploadAudio"
