@@ -127,7 +127,7 @@
       </div>
       <div v-if="announcement && showContent" class="col-12 col-md-8 pt-0">
         <div class="announcement view">
-          <div class="d-flex">
+          <div class="d-md-flex">
             <div class=" col-12 col-md-2"><img :src="$store.state.sidebar_navbar.college.logo" alt=""
                                                class="college-logo"></div>
             <div class="col-12 col-md-8 vertically--centered justify-start">{{ announcement.title }}</div>
@@ -140,7 +140,7 @@
               :defaultContent="announcement.content"
           />
         </div>
-        <div v-if="announcement.sender.user_name === $store.state.user.user.user_name" class="actions">
+        <div v-if="announcement.sender.user_name === $store.state.user.user.user_name" class="actions mb-12 mb-md-0">
           <button class="button" @click="$router.push(`/announcements/edit/${$route.params.id}`)">Edit announcement
           </button>
           <button class="outlined button mx-auto" @click="
