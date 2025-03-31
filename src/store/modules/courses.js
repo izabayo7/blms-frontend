@@ -107,7 +107,7 @@ export default {
             return apis.create('course', course).then(d => {
                 d.data = d.data.data
 
-                courseObject = pick(d.data, ['_id', 'name', 'description', 'faculty_college_year', 'updatedAt'])
+                courseObject = pick(d.data, ['_id', 'name', 'description', 'user_group', 'updatedAt'])
 
                 commit('set_selected_course', d.data._id)
 
