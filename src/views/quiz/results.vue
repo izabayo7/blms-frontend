@@ -9,7 +9,8 @@
         <div
           v-if="
             selected_quiz_submission.total_marks >=
-            selected_quiz_submission.quiz.total_marks / 2
+            selected_quiz_submission.quiz.total_marks *
+              (selected_quiz_submission.quiz.passMarks / 100)
           "
           class="passed_test"
         >
@@ -52,7 +53,8 @@
           <div>
             The pass mark is
             {{
-              selected_quiz_submission.quiz.total_marks / 2 +
+              selected_quiz_submission.quiz.total_marks *
+              (selected_quiz_submission.quiz.passMarks / 100) +
               "/" +
               selected_quiz_submission.quiz.total_marks
             }}
@@ -151,13 +153,6 @@
         </div>
       </v-col>
     </v-row>
-    <div v-else>
-      Submission not found bro
-      <!-- <router-link
-        :to="`/quiz/${$route.params.name}/${$store.state.user.user.surName}_${$store.state.user.user.otherNames}`"
-        >review your submission</router-link
-      > -->
-    </div>
   </v-container>
 </template>
 
