@@ -540,69 +540,8 @@
             <div>
               <button @click="
         $router.push(`/live/${nearestLiveSession._id}`)
-      ">GO LIVE
+      ">{{ userCategory === 'ADMIN' ? 'JOIN STREAM' : 'GO LIVE' }}
               </button>
-            </div>
-            <div class="actions">
-              <div class="tooltip" @click="
-                      course.chapters.length
-                        ? tooglePublishCourse().then(() => {
-                            $router.push('/courses');
-                          })
-                        : undefined
-                    ">
-                <svg width="51" height="51" viewBox="0 0 51 51" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path
-                      d="M25.1623 50.0345C38.895 50.0345 50.0276 38.9019 50.0276 25.1691C50.0276 11.4363 38.895 0.303711 25.1623 0.303711C11.4295 0.303711 0.296875 11.4363 0.296875 25.1691C0.296875 38.9019 11.4295 50.0345 25.1623 50.0345Z"
-                      fill="black"/>
-                  <path
-                      d="M35.038 28.7744V33.0988C35.038 33.6723 34.8102 34.2222 34.4047 34.6277C33.9992 35.0332 33.4492 35.261 32.8758 35.261H17.7403C17.1669 35.261 16.6169 35.0332 16.2114 34.6277C15.8059 34.2222 15.5781 33.6723 15.5781 33.0988V28.7744"
-                      stroke="white" stroke-width="2.16221" stroke-linecap="round" stroke-linejoin="round"/>
-                  <path d="M30.7134 21.2063L25.3079 15.8008L19.9023 21.2063" stroke="white" stroke-width="2.16221"
-                        stroke-linecap="round" stroke-linejoin="round"/>
-                  <path d="M25.3086 15.8008V28.774" stroke="white" stroke-width="2.16221" stroke-linecap="round"
-                        stroke-linejoin="round"/>
-                </svg>
-                <div class="tooltip-text">
-                  {{ course.published ? "Unpublish" : "Publish" }} course
-                </div>
-              </div>
-              <div class="tooltip" @click="$router.push(`/courses/edit/${course.name}/details`)">
-                <svg width="51" height="51" viewBox="0 0 51 51" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path
-                      d="M25.7248 50.0345C39.4575 50.0345 50.5901 38.9019 50.5901 25.1691C50.5901 11.4363 39.4575 0.303711 25.7248 0.303711C11.992 0.303711 0.859375 11.4363 0.859375 25.1691C0.859375 38.9019 11.992 50.0345 25.7248 50.0345Z"
-                      fill="black"/>
-                  <path
-                      d="M24.8042 16.5869H17.2364C16.663 16.5869 16.113 16.8147 15.7075 17.2202C15.302 17.6257 15.0742 18.1757 15.0742 18.7491V33.8846C15.0742 34.458 15.302 35.008 15.7075 35.4135C16.113 35.819 16.663 36.0468 17.2364 36.0468H32.3719C32.9453 36.0468 33.4953 35.819 33.9008 35.4135C34.3063 35.008 34.5341 34.458 34.5341 33.8846V26.3168"
-                      stroke="white" stroke-width="2.16221" stroke-linecap="round" stroke-linejoin="round"/>
-                  <path
-                      d="M32.9102 14.9649C33.3408 14.5373 33.9233 14.2978 34.5302 14.2988C35.137 14.2999 35.7187 14.5414 36.1478 14.9705C36.5769 15.3997 36.8185 15.9813 36.8195 16.5882C36.8206 17.195 36.5811 17.7776 36.1535 18.2082L25.883 28.4787L21.5586 29.5598L22.6397 25.2354L32.9102 14.9649Z"
-                      stroke="white" stroke-width="2.16221" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-                <div class="tooltip-text">
-                  Update course
-                </div>
-              </div>
-              <div class="tooltip" @click="
-                      set_modal({
-                        template: 'action_confirmation',
-                        method: { action: 'courses/delete_course' },
-                        title: 'Delete Course',
-                        message: 'Are you sure you want to delete this course?',
-                      })
-                    ">
-                <svg width="51" height="51" viewBox="0 0 51 51" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path
-                      d="M25.2834 50.0345C39.0161 50.0345 50.1487 38.9019 50.1487 25.1691C50.1487 11.4363 39.0161 0.303711 25.2834 0.303711C11.5506 0.303711 0.417969 11.4363 0.417969 25.1691C0.417969 38.9019 11.5506 50.0345 25.2834 50.0345Z"
-                      fill="black"/>
-                  <path
-                      d="M18.7959 32.7371C18.7977 33.31 19.026 33.859 19.4311 34.2641C19.8363 34.6693 20.3852 34.8976 20.9582 34.8993H29.607C30.1799 34.8976 30.7289 34.6693 31.134 34.2641C31.5391 33.859 31.7675 33.31 31.7692 32.7371V19.7639H18.7959V32.7371ZM32.8503 16.5206H29.0664L27.9853 15.4395H22.5798L21.4987 16.5206H17.7148V18.6828H32.8503V16.5206Z"
-                      stroke="white" stroke-width="1.44147"/>
-                </svg>
-                <div class="tooltip-text">
-                  Delete course
-                </div>
-              </div>
             </div>
           </div>
         </div>
