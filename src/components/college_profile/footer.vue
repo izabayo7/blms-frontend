@@ -42,38 +42,38 @@
       </div>
       <div class="quick-links d-md-flex hidden-sm-and-down">
         <ul class="col col1 px-4 px-md-12">
-          <li class="py-2"><nuxt-link to="/#about"> About </nuxt-link></li>
+          <li class="py-2"><router-link to="/#about"> About </router-link></li>
           <li class="py-2">
-            <nuxt-link to="/#features"> Features </nuxt-link>
+            <router-link to="/#features"> Features </router-link>
           </li>
         </ul>
       </div>
       <div class="quick-links d-md-flex hidden-sm-and-down">
         <ul class="col col2 px-4 px-md-12">
-          <li class="py-2"><nuxt-link to="/#pricing"> Plans </nuxt-link></li>
-          <li class="py-2"><nuxt-link to="/#contact"> Blog </nuxt-link></li>
+          <li class="py-2"><router-link to="/#pricing"> Plans </router-link></li>
+          <li class="py-2"><router-link to="/#contact"> Blog </router-link></li>
         </ul>
       </div>
       <div class="quick-links d-md-flex hidden-sm-and-down">
         <ul class="col col1 px-4 px-md-12">
           <li class="py-2">
-            <nuxt-link to="/#about"> Privacy Policy </nuxt-link>
+            <router-link to="/#about"> Privacy Policy </router-link>
           </li>
           <li class="py-2">
-            <nuxt-link to="/#features"> Terms of use </nuxt-link>
+            <router-link to="/#features"> Terms of use </router-link>
           </li>
         </ul>
       </div>
       <div class="quick-links hidden-md-and-up">
         <ul class="col col1 px-4 px-md-12 text-center mt-n4">
           <li class="py-2">
-            <nuxt-link to="/#about"> Login </nuxt-link>
+            <router-link to="/#about"> Login </router-link>
           </li>
           <li class="py-2">
-            <nuxt-link to="/#features"> Privacy Policy </nuxt-link>
+            <router-link to="/#features"> Privacy Policy </router-link>
           </li>
           <li class="py-2">
-            <nuxt-link to="/#features"> Terms of use </nuxt-link>
+            <router-link to="/#features"> Terms of use </router-link>
           </li>
         </ul>
       </div>

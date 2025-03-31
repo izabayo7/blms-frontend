@@ -118,6 +118,7 @@
                 v-for="course in category.courses"
                 :key="course.id"
                 :course="course"
+                :college_id="college.id"
               />
             </div>
           </div>
@@ -144,7 +145,7 @@
       </div>
       <div class="identity"></div>
       <div class="footer">
-        <Footer />
+        <MyFooter />
       </div>
     </div>
   </v-container>
@@ -155,7 +156,7 @@ export default {
   name: "SchoolProfile",
   components: {
     Carousel: () => import("@/components/college_profile/carousel/Carousel"),
-    Footer: () => import("@/components/college_profile/footer"),
+    MyFooter: () => import("@/components/college_profile/footer"),
     Course: () => import("@/components/college_profile/course"),
   },
   data() {
@@ -165,6 +166,7 @@ export default {
         logo: "https://i.ibb.co/2jk5mBD/ibtc-1.png",
         category: "Multimedia School",
         name: "IBTC FILM & DESIGN SCHOOL",
+        id: 'ibtc',
         motto:
           "You are one click away to update your skillset with our courses. check them out bellow.",
         phone: "+250791257065",
@@ -174,18 +176,21 @@ export default {
           name: "Film Making",
           courses: [
             {
+              id: "course989",
               name: "Video Editing & Sound Design",
               language: "English",
               haveCertificate: true,
               coverPicture: "https://i.ibb.co/742qjYk/Rectangle-2994.png",
             },
             {
+              id: "course989",
               name: "Script writing",
               language: "English",
               haveCertificate: true,
               coverPicture: "https://i.ibb.co/cFW9Dcp/Rectangle-2992.png",
             },
             {
+              id: "course989",
               name: "Camera",
               language: "English",
               haveCertificate: true,
@@ -197,18 +202,21 @@ export default {
           name: "Web Design",
           courses: [
             {
+              id: "course989",
               name: "WEB DESIGN I ( HTML&CSS)",
               language: "English",
               haveCertificate: true,
               coverPicture: "https://i.ibb.co/cFW9Dcp/Rectangle-2992.png",
             },
             {
+              id: "course989",
               name: "WEB DESIGN II ( Javascript)",
               language: "English",
               haveCertificate: true,
               coverPicture: "https://i.ibb.co/742qjYk/Rectangle-2994.png",
             },
             {
+              id: "course989",
               name: "WEB DESIGN III ( PHP)",
               language: "English",
               haveCertificate: true,

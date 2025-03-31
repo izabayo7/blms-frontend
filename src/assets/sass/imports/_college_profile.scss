@@ -326,13 +326,13 @@
         }
         .information {
           width: 503px;
+          max-width: 100%;
           height: 46px;
           font-family: "Montserrat";
           font-style: normal;
           font-weight: 500;
           font-size: 15px;
           line-height: 36px;
-
           /* identical to box height, or 240% */
 
           color: #ffffff;
@@ -341,8 +341,6 @@
         .video {
           width: 529px;
           height: 293px;
-          left: 659px;
-          top: 273px;
 
           background: rgba(0, 0, 0, 0.5);
           border: 1px solid #616161;
@@ -460,6 +458,77 @@
     .details {
       .title {
         font-size: 22px !important;
+      }
+    }
+    .top {
+      max-width: 100%;
+      padding: 0px 9px;
+      .navigation.hidden-md-and-up {
+        margin-top: 6px;
+        margin-left: 70px;
+      }
+      .buttons {
+        button {
+          width: 160px;
+          &:last-child {
+            background: none;
+            svg {
+              display: none;
+            }
+            div {
+              color: #000000;
+            }
+          }
+        }
+      }
+    }
+    .routeContent-container {
+      .routeContent {
+        .course-details {
+          width: 100%;
+          height: 680px;
+          .absolute{
+            padding: 0;
+          }
+          .information{
+            background-color: transparent;
+            font-size: 12px;
+          }
+        }
+        .content-container {
+          flex-direction: column-reverse;
+          .course-name {
+            font-size: 15px;
+          }
+          .category {
+            font-size: 20px;
+          }
+          .price {
+            font-size: 15px;
+          }
+          .action button {
+            width: 100%;
+            height: 48px;
+          }
+          .video{
+            height: 260px;
+            width: 100vw;
+            * {
+              width: 100vw;
+              height: 260px;
+            }
+          }
+          .details{
+            padding: 16px 30px;
+          }
+        }
+        .needed-materials{
+          margin-left: 30px;
+          .material div{
+            font-size: 12.4949px;
+          }
+        }
+
       }
     }
   }

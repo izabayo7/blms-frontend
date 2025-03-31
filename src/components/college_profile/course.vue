@@ -6,6 +6,7 @@
         ? `background: linear-gradient(180deg, rgba(1, 1, 1, 0) 48.55%, rgba(43, 43, 43, 0.74) 100%), url(${course.coverPicture});`
         : ''
     "
+    @click="$router.push(`/schools/${college_id}/${course.id}`)"
   >
     <div class="details">
       <div class="name">{{ course.name }}</div>
@@ -50,6 +51,10 @@ export default {
   props: {
     course: {
       type: Object,
+      required: true,
+    },
+    college_id: {
+      type: String,
       required: true,
     },
   },
