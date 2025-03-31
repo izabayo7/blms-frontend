@@ -508,6 +508,7 @@ export default {
 
 
     const host = '198.211.107.132:8080'
+    // const host = '169.254.107.40:8081'
 
     this.ws = new WebSocket('wss://' + host + '/kurious_stream'+`?token=${this.$session.get("jwt")}`);
 
