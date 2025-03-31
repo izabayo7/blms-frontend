@@ -77,7 +77,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="footer">
+                <div @click="$router.push('/reports')" class="footer cursor-pointer">
                   View reports
                 </div>
               </div>
