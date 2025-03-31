@@ -81,7 +81,7 @@
                 <button
                     class="create-group-button"
                     :class="{ disabled: btnDisabled }"
-                    @click="createGroup"
+                    @click="btnDisabled ? undefined : createGroup()"
                 >
                   Create group
                 </button>
@@ -306,7 +306,7 @@ export default {
         })),
         // private:!this.group.public,
         // profile: await getImgFile(this.b64Img,`${this.group.name}_cover_photo.png`),
-        college: this.$store.state.user.user.college,
+        college: this.$store.state.sidebar_navbar.college._id,
       };
       const newGroup = await a.create("chat_group", body);
       const {status, message, data} = newGroup.data;
@@ -363,6 +363,7 @@ export default {
         this.group.name = "";
         this.group.public = false;
         this.group.members = [];
+        this.$router.push(`/messages/${data.code}`)
       } else {
         this.setGroupError(message);
       }
