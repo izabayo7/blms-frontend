@@ -14,7 +14,7 @@
             class="normal--text"
             to="/"
             >{{
-              item.taget.course.name
+              item.target.course.name
             }}</router-link
           >
         </template>
@@ -23,7 +23,7 @@
             class="normal--text"
             to="/"
             >{{
-              item.taget.chapter.name
+              item.target.chapter.name
             }}</router-link
           >
         </template>
