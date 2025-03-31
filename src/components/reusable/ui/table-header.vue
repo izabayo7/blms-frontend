@@ -4,7 +4,7 @@
 <div class="my-table-header">
   <div class="table-header-container d-flex justify-end pt-2">
     <div class="actions d-flex">
-      <div class="action mx-2">
+      <div class="action mx-2" @click="click('notify')">
         <table-action-burner >
           <template #icon>
             <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 11 11" fill="none">
@@ -14,7 +14,7 @@
           <template #text>Notify </template>
         </table-action-burner>
       </div>
-      <div class="action mx-2">
+      <div class="action mx-2" @click="click('invite')">
         <table-action-burner >
           <template #icon>
             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="11" viewBox="0 0 14 11" fill="none">
@@ -24,7 +24,7 @@
           <template #text>Send invitations </template>
         </table-action-burner>
       </div>
-      <div class="action mx-2">
+      <div class="action mx-2" @click="click('delete')">
         <table-action-burner >
           <template #icon>
             <svg width="10" height="12" viewBox="0 0 10 12" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -34,7 +34,7 @@
           <template #text>Delete account </template>
         </table-action-burner>
       </div>
-      <div class="action mx-2">
+      <div class="action mx-2" @click="click('hold')">
         <table-action-burner >
           <template #icon>
             <svg width="15" height="14" viewBox="0 0 15 14" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -53,7 +53,12 @@
 import TableActionBurner from "./table-action-burner";
 export default {
 name: "table-header",
-  components: {TableActionBurner}
+  components: {TableActionBurner},
+  methods:{
+    click(action){
+      this.$emit(action)
+    }
+  }
 }
 </script>
 
