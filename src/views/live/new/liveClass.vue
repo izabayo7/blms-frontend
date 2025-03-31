@@ -1075,7 +1075,8 @@ export default {
       return response.data.data
     },
     toggleMenu(status) {
-      this.showMenu = status
+      console.log(status)
+      // this.showMenu = status
       // const self = this;
       // if (status) {
       //   setTimeout(() => {
