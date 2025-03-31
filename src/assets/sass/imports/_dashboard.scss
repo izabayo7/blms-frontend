@@ -1,8 +1,10 @@
 .dashboard_page {
   background-color: #f3f6ff;
   height: fit-content;
+
   .page_title {
     display: block;
+
     .upper {
       font-family: Inter;
       font-size: 17px;
@@ -14,6 +16,7 @@
       color: #343434;
       margin-bottom: 15px;
     }
+
     .lower {
       font-family: Inter;
       font-style: normal;
@@ -21,13 +24,15 @@
       font-size: 24.8244px;
       line-height: 13px;
       /* identical to box height, or 53% */
-margin-bottom: 45px;
+      margin-bottom: 45px;
       color: #343434;
     }
   }
+
   .more_info_container {
     max-width: 358.8px;
   }
+
   .college_info {
     max-width: 358.8px;
     // width: 100%;
@@ -36,6 +41,7 @@ margin-bottom: 45px;
     box-shadow: 0px 5.79235px 13.2397px rgba(180, 180, 180, 0.25);
     border-radius: 4.13739px;
     padding: 17.38px 13.05px 9.1px 19.65px;
+
     .college_name {
       font-family: Inter;
       font-style: normal;
@@ -48,9 +54,11 @@ margin-bottom: 45px;
       color: #193074;
       margin-bottom: 50.48px;
     }
+
     .lower_content {
       display: flex;
     }
+
     .number_of_users {
       font-family: Inter;
       font-style: normal;
@@ -64,8 +72,10 @@ margin-bottom: 45px;
 
       color: #3c3c3c;
     }
+
     .account_type {
       display: flex;
+
       .text {
         font-family: Inter;
         font-style: normal;
@@ -81,6 +91,7 @@ margin-bottom: 45px;
       }
     }
   }
+
   .more_info {
     width: 111.01px;
     height: 89.8px;
@@ -102,6 +113,7 @@ margin-bottom: 45px;
 
       color: #000000;
     }
+
     .description {
       width: 99.66px;
       height: 34.54px;
@@ -117,6 +129,7 @@ margin-bottom: 45px;
       color: #3c3c3c;
     }
   }
+
   .heading {
     font-family: Inter;
     font-style: normal;
@@ -125,6 +138,7 @@ margin-bottom: 45px;
     line-height: 4px;
     color: #343434;
   }
+
   .recent {
     max-width: 358px;
     width: 100%;
@@ -132,10 +146,12 @@ margin-bottom: 45px;
     background: #ffffff;
     box-shadow: 0px 5.9px 13.2px rgba(0, 0, 0, 0.1);
   }
+
   .record {
     display: flex;
     padding: 12px;
     justify-content: space-between;
+
     .name {
       font-family: Inter;
       font-style: normal;
@@ -144,6 +160,7 @@ margin-bottom: 45px;
       color: #000000;
       flex: 1;
     }
+
     .category {
       font-family: Inter;
       font-style: normal;
@@ -152,6 +169,7 @@ margin-bottom: 45px;
       color: #000000;
       flex: 1;
     }
+
     .time {
       font-family: Inter;
       font-style: normal;
@@ -161,6 +179,7 @@ margin-bottom: 45px;
       flex: 1;
     }
   }
+
   .more {
     font-family: Inter;
     font-style: normal;
@@ -172,6 +191,7 @@ margin-bottom: 45px;
     max-width: 310.8px;
     color: #193074;
   }
+
   .lower_buttons {
     width: 153.91px;
     height: 43.86px;
@@ -190,12 +210,15 @@ margin-bottom: 45px;
 
     color: #ffffff;
   }
+
   .my-chart {
     max-width: 20%;
   }
-  &.instructor{
-    .body{
+
+  &.instructor {
+    .body {
       height: 100%;
+
       .empty {
         height: 100%;
         font-family: Inter;
@@ -208,27 +231,33 @@ margin-bottom: 45px;
         .title {
           font-size: 15px;
         }
-        div{
+
+        div {
           text-align: center;
         }
+
         vertical-align: center;
       }
-      .data{
+
+      .data {
         font-family: Inter;
         font-style: normal;
         font-size: 14px;
-        .student-name{
+
+        .student-name {
           font-weight: bold;
           line-height: 4px;
           color: #343434;
           margin-bottom: 20px;
         }
-        .course-name{
+
+        .course-name {
           font-weight: bold;
           line-height: 5px;
           color: #193074;
         }
-        .time{
+
+        .time {
           font-weight: normal;
           line-height: 4px;
           color: #343434;
@@ -236,24 +265,29 @@ margin-bottom: 45px;
         }
       }
     }
+
     .college_info {
-      .body{
+      .body {
         height: 75%;
       }
+
       max-width: 208px;
       min-height: 112px;
       background: #ffffff;
       box-shadow: 0px 5.79235px 13.2397px rgba(180, 180, 180, 0.25);
       border-radius: 4.13739px;
       padding: 24px 13.05px 9.1px 19.65px;
-      &.long{
+
+      &.long {
         max-width: 485px;
         padding: 16px;
         min-height: 155px;
       }
+
       font-family: Inter;
       font-style: normal;
-      .label{
+
+      .label {
 
         font-weight: 500;
         font-size: 11.0783px;
@@ -262,11 +296,12 @@ margin-bottom: 45px;
 
         color: #000000;
       }
-      .number{
+
+      .number {
         font-weight: bold;
         font-size: 30px;
         /* or 369% */
-margin-left: 13.5px;
+        margin-left: 13.5px;
         display: flex;
         align-items: center;
         text-align: center;
@@ -274,7 +309,7 @@ margin-left: 13.5px;
         color: #000000;
       }
 
-      .footer{
+      .footer {
         font-weight: bold;
         font-size: 12px;
         line-height: 30px;
@@ -282,7 +317,8 @@ margin-left: 13.5px;
         text-align: right;
       }
     }
-    .details{
+
+    .details {
       margin-top: 45px;
       margin-bottom: 17px;
       font-family: Inter;
@@ -296,35 +332,44 @@ margin-left: 13.5px;
       align-items: center;
 
       color: #343434;
-      &.near{
+
+      &.near {
         margin-top: 23px;
       }
     }
-    .lower_buttons {margin-top: 30px;
-      &.outlined{
+
+    .lower_buttons {
+      margin-top: 30px;
+
+      &.outlined {
         background-color: transparent;
         font-size: 12px;
         color: #193074;
         margin-left: 34px;
       }
     }
-    .recent-discussions{
+
+    .recent-discussions {
       box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.25);
       max-width: 479px;
       min-height: 119px;
       background-color: #FFFFFF;
       padding: 12px 5px;
-      .d-flex{
+
+      .d-flex {
         border-radius: 5px;
         padding: 0px 25px;
-        &:hover{
+
+        &:hover {
           background: rgba(25, 48, 116, 0.15);
         }
-        height: 25px;
+
+        min-height: 25px;
         font-family: Inter;
         font-style: normal;
         font-size: 14px;
-        .student-name{
+
+        .student-name {
           font-family: Inter;
           font-style: normal;
           font-weight: bold;
@@ -337,9 +382,9 @@ margin-left: 13.5px;
           /* Type color / Default */
 
           color: #343434;
-
         }
-        .course-name{
+
+        .course-name {
           font-family: Inter;
           font-style: normal;
           font-weight: normal;
@@ -356,7 +401,8 @@ margin-left: 13.5px;
           margin-bottom: 12px;
 
         }
-        .time{
+
+        .time {
           font-family: Inter;
           font-style: normal;
           font-weight: bold;
@@ -381,15 +427,31 @@ margin-left: 13.5px;
   .dashboard_page {
     .more_info {
       width: 97px;
+
       .total_number {
         height: fit-content;
         font-size: 25.0991px;
         margin-top: -8px;
       }
+
       .description {
         width: 85px;
       }
-      margin-bottom: 12px ;
+
+      margin-bottom: 12px;
+    }
+    &.instructor .recent-discussions {
+      .d-flex .student-name{
+        line-height: 10px;
+      }
+      .d-flex .course-name{
+        line-height: 10px;
+      }
+      .d-flex .course-name,.time{
+        text-align: right;
+        justify-content: flex-end;
+        align-items: flex-end !important;
+      }
     }
   }
 }

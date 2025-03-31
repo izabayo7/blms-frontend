@@ -109,7 +109,6 @@ export default {
     },
     type: {
       type: String,
-      required: true,
     },
     total: {
       type: Number,
@@ -133,6 +132,7 @@ export default {
         width: 380,
         type: "donut",
       },
+      plotOptions: {},
       dataLabels: {
         enabled: false,
       },

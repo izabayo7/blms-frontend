@@ -5,7 +5,7 @@
         <div class="upper">Dashboard</div>
         <div class="lower">Overviewer</div>
       </v-row>
-      <v-row class="mt-6 px-4">
+      <v-row v-if="course_statistics" class="mt-6 px-4">
         <div class="v-col col-12 col-md-6 pa-0">
           <div class="row">
             <div class="v-col col-12 col-md-6 pa-0">
@@ -25,7 +25,7 @@
                       />
                     </svg>
                   </div>
-                  <div class="number">0</div>
+                  <div class="number">{{ course_statistics.total_courses }}</div>
                 </div>
                 <div class="label">Number of courses</div>
               </div>
@@ -48,43 +48,30 @@
                     </svg>
 
                   </div>
-                  <div class="number">0</div>
+                  <div class="number">{{ course_statistics.total_students }}</div>
                 </div>
                 <div class="label">Number of students</div>
               </div>
             </div>
             <div class="v-col col-12 pa-0">
               <div class="details">
-                Recent assignment submissions (0)
+                Recent assignment submissions
               </div>
               <div class="college_info long">
                 <div class="body">
-                  <div v-if="1==9" class="empty d-flex justify-center align-center">
+                  <div v-if="submission_statistics.submissions.length === 0" class="empty d-flex justify-center align-center">
                     <div>
                       <div class="title">No submission to show</div>
                       <div>Create a course to see more traffic here!</div>
                     </div>
                   </div>
                   <div class="data">
-                    <div class="d-flex">
-                      <div class="student-name">Manzi gustave</div>
-                      <div class="course-name mx-auto">Managing personal ...</div>
-                      <div class="time">2 minutes ago</div>
-                    </div>
-                    <div class="d-flex">
-                      <div class="student-name">Manzi gustave</div>
-                      <div class="course-name mx-auto">Managing personal ...</div>
-                      <div class="time">2 minutes ago</div>
-                    </div>
-                    <div class="d-flex">
-                      <div class="student-name">Manzi gustave</div>
-                      <div class="course-name mx-auto">Managing personal ...</div>
-                      <div class="time">2 minutes ago</div>
-                    </div>
-                    <div class="d-flex">
-                      <div class="student-name">Manzi gustave</div>
-                      <div class="course-name mx-auto">Managing personal ...</div>
-                      <div class="time">2 minutes ago</div>
+                    <div v-for="data in submission_statistics.submissions" :key="data._id" class="d-flex">
+                      <div class="student-name">{{ data.user.sur_name + ' ' + data.user.other_names }}</div>
+                      <div class="course-name mx-auto">{{ data.quiz.name | trimString(20) }}</div>
+                      <div class="time">{{
+                          elapsedDuration(data.createdAt)
+                        }}</div>
                     </div>
                   </div>
                 </div>
@@ -120,14 +107,13 @@
           </div>
         </div>
         <div class="v-col col-12 col-md-6 py-0">
-          <v-row class="pa-0 px-md-6 pa-xl-0 pa-lg-0">
+          <v-row v-if="submission_statistics" class="pa-0 px-md-6 pa-xl-0 pa-lg-0">
             <v-col class="col-12 col-md-6 pt-0">
               <small-card
-                  :total="user_statistics.total_users"
                   :data="{
                   start: 'Grade-book',
                   end: 'Marking status',
-                  total: 36,
+                  total: Math.round(submission_statistics.marking_status),
                   colors: ['#193074','rgba(25, 48, 116, 0.24)']
                 }"
                   template="INSTRUCTOR"
@@ -135,11 +121,10 @@
             </v-col>
             <v-col class="col-12 col-md-6 pt-0">
               <small-card
-                  :total="total_courses"
                   :data="{
                   start: 'Performance',
                   end: 'Overall success score',
-                  total: 75,
+                  total: Math.round(submission_statistics.perfomance),
                   colors: ['#3CE970','rgba(25, 48, 116, 0.24)']
                 }"
                   template="INSTRUCTOR"
@@ -147,36 +132,23 @@
             </v-col>
             <v-col class="col-12">
               <div class="details near">
-                Recent assignment submissions (0)
+                Recent discussions
               </div>
               <div class="recent-discussions">
                 <div class="body">
-                  <div v-if="1==1" class="empty vertically--centered">
+                  <div v-if="course_statistics.latestComments.length === 0" class="empty vertically--centered">
                     <div>
                       <div class="title">It feels lonely here</div>
                       <div>Create a course to see more traffic here!</div>
                     </div>
                   </div>
                   <div v-else class="data">
-                    <div class="d-flex">
-                      <div class="student-name">Manzi gustave</div>
-                      <div class="course-name mx-auto">Managing personal ...</div>
-                      <div class="time">2 minutes ago</div>
-                    </div>
-                    <div class="d-flex">
-                      <div class="student-name">Manzi gustave</div>
-                      <div class="course-name mx-auto">Managing personal ...</div>
-                      <div class="time">2 minutes ago</div>
-                    </div>
-                    <div class="d-flex">
-                      <div class="student-name">Manzi gustave</div>
-                      <div class="course-name mx-auto">Managing personal ...</div>
-                      <div class="time">2 minutes ago</div>
-                    </div>
-                    <div class="d-flex">
-                      <div class="student-name">Manzi gustave</div>
-                      <div class="course-name mx-auto">Managing personal ...</div>
-                      <div class="time">2 minutes ago</div>
+                    <div v-for="data in course_statistics.latestComments" :key="data._id" class="d-flex">
+                      <div class="student-name">{{ data.sender.sur_name + ' ' + data.sender.other_names }}</div>
+                      <div class="course-name mx-auto">{{ data.chapter | trimString(20) }}</div>
+                      <div class="time">{{
+                          elapsedDuration(data.createdAt)
+                        }}</div>
                     </div>
                   </div>
                 </div>
@@ -187,7 +159,7 @@
       </v-row>
     </div>
     <div v-else>
-      <v-row class="page_title d-flex">
+      <v-row v-if="submission_statistics" class="page_title d-flex">
         <div class="col-6">
           <div class="upper">Dashboard</div>
           <div class="lower">Overviewer</div>
@@ -208,28 +180,26 @@
         </div>
         <div class="col-6">
           <small-card
-              :total="user_statistics.total_users"
               :data="{
                   start: 'Grade-book',
                   end: 'Marking status',
-                  total: 36,
+                  total: Math.round(submission_statistics.marking_status),
                   colors: ['#193074','rgba(25, 48, 116, 0.24)']
                 }"
-              :width="10"
+              :width="80"
               template="INSTRUCTOR"
           />
         </div>
         <div class="col-6">
           <small-card
-              :total="total_courses"
               :data="{
                   start: 'Performance',
                   end: 'Overall success score',
-                  total: 75,
+                  total: Math.round(submission_statistics.perfomance),
                   colors: ['#3CE970','rgba(25, 48, 116, 0.24)']
                 }"
               template="INSTRUCTOR"
-              :width="10"
+              :width="80"
           />
         </div>
         <div class="col-6">
@@ -249,7 +219,7 @@
                   />
                 </svg>
               </div>
-              <div class="number">0</div>
+              <div class="number">{{ course_statistics.total_courses }}</div>
             </div>
             <div class="label">Number of courses</div>
           </div>
@@ -272,100 +242,70 @@
                 </svg>
 
               </div>
-              <div class="number">0</div>
+              <div class="number">{{ course_statistics.total_students }}</div>
             </div>
             <div class="label">Number of students</div>
           </div>
         </div>
-        <div class="col-12">              <div class="details near">
-          Recent assignment submissions (0)
-        </div></div>
-        <div class="col-12"><div class="college_info long">
-          <div class="body">
-            <div v-if="1==9" class="empty d-flex justify-center align-center">
-              <div>
-                <div class="title">No submission to show</div>
-                <div>Create a course to see more traffic here!</div>
+        <div class="col-12">
+          <div class="details near">
+            Recent assignment submissions
+          </div>
+        </div>
+        <div class="col-12">
+          <div class="college_info long">
+            <div class="body">
+              <div v-if="submission_statistics.submissions.length === 0" class="empty d-flex justify-center align-center">
+                <div>
+                  <div class="title">No submission to show</div>
+                  <div>Create a course to see more traffic here!</div>
+                </div>
+              </div>
+              <div v-else class="data">
+                <div v-for="data in submission_statistics.submissions" :key="data._id">
+                  <div class="d-flex">
+                    <div class="student-name">{{ data.user.sur_name + ' ' + data.user.other_names }}</div>
+                    <div class="course-name mx-auto">{{ data.quiz.name | trimString(20) }}</div>
+                  </div>
+                  <div class="time">{{
+                      elapsedDuration(data.createdAt)
+                    }}</div>
+                </div>
               </div>
             </div>
-            <div class="data">
-              <div>
-                <div class="d-flex">
-                  <div class="student-name">Manzi gustave</div>
-                  <div class="course-name mx-auto">Managing personal ...</div>
-                </div>
-                <div class="time">2 minutes ago</div>
-              </div>
-              <div>
-                <div class="d-flex">
-                  <div class="student-name">Manzi gustave</div>
-                  <div class="course-name mx-auto">Managing personal ...</div>
-                </div>
-                <div class="time">2 minutes ago</div>
-              </div>
-              <div>
-                <div class="d-flex">
-                  <div class="student-name">Manzi gustave</div>
-                  <div class="course-name mx-auto">Managing personal ...</div>
-                </div>
-                <div class="time">2 minutes ago</div>
-              </div>
-              <div>
-                <div class="d-flex">
-                  <div class="student-name">Manzi gustave</div>
-                  <div class="course-name mx-auto">Managing personal ...</div>
-                </div>
-                <div class="time">2 minutes ago</div>
-              </div>
+            <div class="footer">
+              View reports
             </div>
           </div>
-          <div class="footer">
-            View reports
+        </div>
+        <div class="col-12">
+          <div class="details near">
+            Recent discussions
           </div>
-        </div></div>
-        <div class="col-12">              <div class="details near">
-          Recent assignment submissions (0)
-        </div></div>
-        <div class="col-12 mb-16"><div class="recent-discussions">
-          <div class="body">
-            <div v-if="1==2" class="empty vertically--centered">
-              <div>
-                <div class="title">It feels lonely here</div>
-                <div>Create a course to see more traffic here!</div>
-              </div>
-            </div>
-            <div v-else class="data">
-              <div class="d-flex mb-4 mb-md-0">
-                <div class="student-name">Manzi gustave</div>
-                <div class="ml-auto">
-                <div class="course-name">Managing personal ...</div>
-                <div class="time">2 minutes ago</div>
+        </div>
+        <div class="col-12 mb-16">
+          <div class="recent-discussions">
+            <div class="body">
+              <div v-if="course_statistics.latestComments.length === 0" class="empty vertically--centered">
+                <div>
+                  <div class="title">It feels lonely here</div>
+                  <div>Create a course to see more traffic here!</div>
                 </div>
               </div>
-              <div class="d-flex mb-4 mb-md-0">
-                <div class="student-name">Manzi gustave</div>
-                <div class="ml-auto">
-                <div class="course-name">Managing personal ...</div>
-                <div class="time">2 minutes ago</div>
-                </div>
-              </div>
-              <div class="d-flex mb-4 mb-md-0">
-                <div class="student-name">Manzi gustave</div>
-                <div class="ml-auto">
-                  <div class="course-name">Managing personal ...</div>
-                  <div class="time">2 minutes ago</div>
-                </div>
-              </div>
-              <div class="d-flex mb-4 mb-md-0">
-                <div class="student-name">Manzi gustave</div>
-                <div class="ml-auto">
-                  <div class="course-name">Managing personal ...</div>
-                  <div class="time">2 minutes ago</div>
+              <div v-else class="data">
+                <div v-for="data in course_statistics.latestComments" :key="data._id" class="d-flex mb-4 mb-md-0">
+                  <div class="student-name">{{ data.sender.sur_name + ' ' + data.sender.other_names }}</div>
+                  <div class="ml-auto">
+                    <div class="course-name">{{ data.chapter | trimString(20) }}</div>
+                    <div class="time">{{
+                        elapsedDuration(data.createdAt)
+                      }}</div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div></div>
+        </div>
       </v-row>
     </div>
   </v-container>
@@ -373,26 +313,27 @@
 
 <script>
 import {mapActions} from "vuex";
-// import Apis from "@/services/apis";
+import Apis from "@/services/apis";
+import {elapsedDuration} from "../../../services/global_functions";
 
 export default {
   name: "ApplicationDashboard",
   data: () => ({
-    showInviteUsers: false,
-    showFacultyModal: false,
-    user_statistics: {},
-    total_faculties: 0,
-    total_courses: 0,
-    total_student_groups: 0,
+    course_statistics: undefined,
+    submission_statistics: undefined,
   }),
   components: {
     SmallCard: () => import("@/components/dashboard/information-card"),
   },
   methods: {
+    elapsedDuration,
     ...mapActions("modal", ["set_modal"]),
   },
   async beforeMount() {
-
+    const courseStatistics = await Apis.get('course/statistics/user')
+    this.course_statistics = courseStatistics.data.data
+    const submissionStatistics = await Apis.get('quiz_submission/statistics/user')
+    this.submission_statistics = submissionStatistics.data.data
   },
 };
 </script>
