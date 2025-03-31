@@ -10,6 +10,12 @@ const routes =  [
     }
 ]
 
+//changing all routes to have prefix live
+// this indicates that all routes from this file will have starting string 'live'
+// example of how path could be converted
+//      -  path: '/course' => path: '/live/course'      [FINE]
+//      - path: 'course' => path: '/livecourse'         [WRONG] (it may result into undesired results)
+//      - path: '/course/{id}' => path:'live/course/{id}    [FINE]
 
 routes.forEach(route => route.path = `${prefix}${route.path}`)
 
