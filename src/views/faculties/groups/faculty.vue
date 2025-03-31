@@ -31,7 +31,7 @@
           <div class="add-user d-flex justify-end col">
             <div class="add-user-button">
               <button-ui>
-                <template #content>Create faculty</template>
+                <template #content>Create user group</template>
               </button-ui>
             </div>
           </div>
@@ -53,9 +53,9 @@
 
 <script>
 import buttonUi from '@/components/reusable/ui/button-ui'
-import Search from "../../components/reusable/Search2";
-import TableHeader from "../../components/reusable/ui/table-header";
-import TableUi from "../../components/reusable/ui/table-ui";
+import Search from "../../../components/reusable/Search2";
+import TableHeader from "../../../components/reusable/ui/table-header";
+import TableUi from "../../../components/reusable/ui/table-ui";
 
 export default {
 name: "Faculty",
