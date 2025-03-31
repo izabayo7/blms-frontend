@@ -34,7 +34,7 @@
                         <path d="M37.8387 15.542C41.9726 15.542 45.2848 12.205 45.2848 8.07107C45.2848 3.93713 41.9726 0.600098 37.8387 0.600098C33.7048 0.600098 30.3677 3.93713 30.3677 8.07107C30.3677 12.205 33.7048 15.542 37.8387 15.542ZM17.9161 15.542C22.0501 15.542 25.3622 12.205 25.3622 8.07107C25.3622 3.93713 22.0501 0.600098 17.9161 0.600098C13.7822 0.600098 10.4452 3.93713 10.4452 8.07107C10.4452 12.205 13.7822 15.542 17.9161 15.542ZM17.9161 20.5227C12.1137 20.5227 0.483871 23.4364 0.483871 29.2388V35.4646H35.3484V29.2388C35.3484 23.4364 23.7186 20.5227 17.9161 20.5227ZM37.8387 20.5227C37.1165 20.5227 36.2947 20.5725 35.4231 20.6472C38.3119 22.7391 40.329 25.5531 40.329 29.2388V35.4646H55.271V29.2388C55.271 23.4364 43.6412 20.5227 37.8387 20.5227Z" fill="#193074"/>
                       </svg>
                     </div>
-                    <div class="faculty--information-card--number faculty--information-card--inner-row"> 68 </div>
+                    <div class="faculty--information-card--number faculty--information-card--inner-row"> {{faculty.total_instructors + faculty.total_students}} </div>
                     <div class="faculty--information-card--text faculty--information-card--inner-row"> Users </div>
                   </div>
                 </div>
@@ -47,7 +47,7 @@
                         <path d="M37.8387 15.542C41.9726 15.542 45.2848 12.205 45.2848 8.07107C45.2848 3.93713 41.9726 0.600098 37.8387 0.600098C33.7048 0.600098 30.3677 3.93713 30.3677 8.07107C30.3677 12.205 33.7048 15.542 37.8387 15.542ZM17.9161 15.542C22.0501 15.542 25.3622 12.205 25.3622 8.07107C25.3622 3.93713 22.0501 0.600098 17.9161 0.600098C13.7822 0.600098 10.4452 3.93713 10.4452 8.07107C10.4452 12.205 13.7822 15.542 17.9161 15.542ZM17.9161 20.5227C12.1137 20.5227 0.483871 23.4364 0.483871 29.2388V35.4646H35.3484V29.2388C35.3484 23.4364 23.7186 20.5227 17.9161 20.5227ZM37.8387 20.5227C37.1165 20.5227 36.2947 20.5725 35.4231 20.6472C38.3119 22.7391 40.329 25.5531 40.329 29.2388V35.4646H55.271V29.2388C55.271 23.4364 43.6412 20.5227 37.8387 20.5227Z" fill="#193074"/>
                       </svg>
                     </div>
-                    <div class="faculty--information-card--number faculty--information-card--inner-row"> 4 </div>
+                    <div class="faculty--information-card--number faculty--information-card--inner-row">  </div>
                     <div class="faculty--information-card--text faculty--information-card--inner-row"> Students Groups </div>
                   </div>
                 </div>
@@ -92,12 +92,28 @@
 
 <script>
 
+import apis from "../../../services/apis";
+
 export default {
 name: "Faculty",
   data(){
     return{
-      facultyId:this.$route.params.facultyId
+      facultyId:this.$route.params.facultyId,
+      faculty:{}
     }
+  },
+  methods:{
+    loadFacultyInformation(){
+
+      apis.get(`faculty/college/${this.facultyId}`)
+        .then(({data:{data}}) => {
+          this.faculty = data[0];
+          console.log(data[0])
+        })
+    }
+  },
+  created(){
+    this.loadFacultyInformation();
   }
 }
 </script>
