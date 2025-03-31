@@ -65,6 +65,24 @@
           </div>
         </li>
         <li
+          v-if="userCategory === 'INSTRUCTOR'"
+          @click="$router.push('/faculties')"
+          :class="{ active: activeRoute.includes('/faculties') }"
+        >
+          <div class="link-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="26" viewBox="0 0 22 26" fill="none">
+              <path d="M10.9737 25.0983C10.9389 25.0983 10.9041 25.0952 10.8698 25.0892C4.46983 23.9667 0 20.1148 0 15.7221V1.2096C0 0.883251 0.266889 0.618652 0.596067 0.618652H21.3512C21.6804 0.618652 21.9472 0.883251 21.9472 1.2096V15.7221C21.9472 20.1148 17.4774 23.9667 11.0774 25.0892C11.0431 25.0952 11.0084 25.0983 10.9737 25.0983Z" fill="white"/>
+              <path d="M11.3954 7.79366L5.06445 5.68335V14.9687L11.3954 17.079M11.3954 7.79366L17.7263 5.68335V14.5467L11.3954 17.079M11.3954 7.79366V17.079M13.5057 9.90397L16.0381 9.05985M13.5057 12.4363L16.0381 11.5922M9.28508 12.4363L6.7527 11.5922M9.28508 9.90397L6.7527 9.05985" stroke="#193074" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div
+            class="link-name animate__animated animate__bounce"
+            v-show="state"
+          >
+            Faculties
+          </div>
+        </li>
+        <li
           v-if="userCategory === 'STUDENT' || userCategory === 'INSTRUCTOR'"
           @click="$router.push('/courses')"
           :class="{ active: activeRoute.includes('/courses') }"
