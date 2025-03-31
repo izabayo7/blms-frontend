@@ -187,7 +187,7 @@ export default {
 .v-dialog:not(.v-dialog--fullscreen) {
   height: fit-content !important;
   width: fit-content !important;
-  max-width: 100% !important;
+  max-width: fit-content !important;
   border-radius: 22px !important;
 
   .dialog-body {

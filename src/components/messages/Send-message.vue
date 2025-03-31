@@ -182,42 +182,6 @@ export default {
     ...mapGetters("chat", ["socket"]),
     ...mapState("chat", ["currentDisplayedUser"]),
   },
-  created() {
-    // listen if the new message was sent
-    this.socket.on("res/message/sent", (message) => {
-      if(message.attachments.length)
-      {
-        // set the dialog
-        this.$store.dispatch('modal/set_modal', {
-          template: 'display_information',
-          title: 'Creating Course',
-          message: `uploading attachments`
-        })
-        const formData = new FormData()
-        for (const k in this.files) {
-            formData.append("files[" + k + "]", this.files[k]);
-        }
-        apis.update('message', `${message._id}/attachements`, formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data'
-          },
-          onUploadProgress: (progressEvent) => {
-            this.$store.dispatch('modal/set_progress', parseInt(Math.round((progressEvent.loaded / progressEvent.total) * 100)))
-          }
-        }).then(res => {
-          if(res.data.status === 200) {
-            this.socket.emit("message/notify-users", {
-              message
-            });
-            this.clearFiles()
-          }
-        })
-      }
-      setTimeout(this.scrollChatToBottom, 1);
-      message.sender.sur_name = "You";
-      this.$store.commit("chat/ADD_ONGOING_MESSAGE", message);
-    });
-  },
   methods: {
     pickFile() {
       this.$refs["picker"].clickButton()
@@ -239,7 +203,7 @@ export default {
       const res = []
       if (this.files.length)
         for (const i in this.files) {
-          res.push({src: this.files[i].name})
+          res.push(this.files[i].name)
         }
       return res
     },
@@ -249,11 +213,38 @@ export default {
 
       if (this.msg.length <= 0 && !attachments.length) return;
 
-      this.socket.emit("message/create", {
-        receiver: this.currentDisplayedUser.id,
-        content: this.msg,
-        attachments
-      });
+      if (attachments.length) {
+        // set the dialog
+        this.$store.dispatch('modal/set_modal', {
+          template: 'display_information',
+          title: 'Creating Message',
+          message: `uploading attachments`
+        })
+        const formData = new FormData()
+        for (const k in this.files) {
+          formData.append("files[" + k + "]", this.files[k]);
+        }
+        let str = ""
+        if (this.msg.length)
+          str = `content=${this.msg}`
+        str += attachments.length ? `${str.length ? '&' : ''}attachments=${attachments.join('&attachments=')}` : ''
+
+        apis.update('message', `${this.currentDisplayedUser.id}/attachements?${str}`, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          },
+          onUploadProgress: (progressEvent) => {
+            this.$store.dispatch('modal/set_progress', parseInt(Math.round((progressEvent.loaded / progressEvent.total) * 100)))
+          }
+        }).then(() => {
+          this.clearFiles()
+        })
+      } else {
+        this.socket.emit("message/create", {
+          receiver: this.currentDisplayedUser.id,
+          content: this.msg
+        });
+      }
 
       //after sending message let us make the div empty
       this.$refs["input"].textContent = "";
