@@ -4,7 +4,7 @@
       <div class="profile-information d-flex">
         <div class="profile-pic">
           <img v-if="user.profile" :src="user.profile" alt="profile picture" />
-          <v-avatar @click="logout" v-else size="50" class="avatar">
+          <v-avatar v-else size="50" class="avatar">
             {{ `${user.sur_name} ${user.other_names}` | computeText }}
           </v-avatar>
         </div>

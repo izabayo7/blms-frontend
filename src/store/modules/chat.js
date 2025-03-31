@@ -180,6 +180,7 @@ export default {
         // change conversation to first if new message is sent or received
         CHANGE_CONVERSATION_STAND(state, msg) {
             let idx;
+            console.log(msg)
             const id = msg.group ? msg.group : msg.sender.user_name;
             const message = {
                 content: msg.content,
@@ -189,10 +190,10 @@ export default {
 
             // find the index of the incoming message
             state.incomingMessages.map((val, i) => {
-                if (val.id === id) idx = i
+                if (val.id == id) idx = i
             })
 
-            console.log('id',idx)
+            console.log('id', idx)
             console.log(state.incomingMessages.splice(idx, 1))
             if (idx) {
                 state.incomingMessages.splice(0, 0, state.incomingMessages.splice(idx, 1)[0])
