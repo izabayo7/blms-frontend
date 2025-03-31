@@ -1,12 +1,17 @@
 <template>
+
+
+
+
+
 <div class="my-table-action-burner">
-  <div class="table-action-burner-container flex">
+  <div class="table-action-burner-container py-1 px-2 d-flex align-center">
     <div class="icon">
       <div class="icon-wrapper">
         <slot name="icon"></slot>
       </div>
     </div>
-    <div class="text">
+    <div class="text pl-2">
       <h6><slot name="text"></slot></h6>
     </div>
   </div>
@@ -22,7 +27,22 @@ name: "table-action-burner"
 <style lang="scss" scoped>
   .my-table-action-burner{
     .table-action-burner-container{
+      background-color: $bg-one;
+      border-radius: 4.2px;
+      cursor: pointer;
 
+      .icon{
+        .icon-wrapper{
+          svg{
+            transform:scale(1.1);
+          }
+        }
+      }
+      .text{
+        h6{
+          font-size:.8rem;
+        }
+      }
     }
   }
 </style>
