@@ -61,6 +61,7 @@
       <faculty-dialog
           v-if="showFacultyModal"
           @closeModal="showFacultyModal = false"
+          @saved="location.reload()"
           :editMode="true"
           :facultyId="facultyId"
       />

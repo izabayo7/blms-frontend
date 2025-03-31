@@ -63,7 +63,7 @@
 <!--              />-->
 <!--            </div>-->
 <!--          </div>-->
-          <div v-if="!editMode" class="input-group">
+          <div class="input-group">
             <div class="label">
               <label for="faculty-description"
               >Add a student group to faculty
@@ -329,7 +329,7 @@ export default {
           uptime: 2000,
         })
 
-        if (!this.editMode) {
+        if (!this.editMode || this.addedStudentGroups.length) {
           const unsaved = []
           for (const i in this.addedStudentGroups) {
             const response = await Apis.create("user_groups", {
