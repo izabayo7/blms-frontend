@@ -37,7 +37,7 @@
 
 <script>
 export default {
-name: "detailed-course-score-card"
+  name: "detailed-course-score-card"
 }
 </script>
 
@@ -46,8 +46,8 @@ name: "detailed-course-score-card"
 .dcsc{
   max-width:28rem;
   &--wrapper{
-    background-color:lighten($primary,60);
-    padding:.5rem 1rem;
+    background-color:lighten($primary,67);
+    padding:.3rem 1rem;
     border-radius:6.5px;
   }
   &--col{
@@ -70,6 +70,7 @@ name: "detailed-course-score-card"
   }
 
   &--success-rate{
+    margin:0 1rem;
     p{
       font-size:.75rem;
     }
