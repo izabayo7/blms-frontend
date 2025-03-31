@@ -13,7 +13,7 @@
       template="small"
     />
     <span class="quiz_lable my-6">Quiz duration</span>
-    <vue-timepicker v-model="duration" format="hh:mm:ss" />
+    <time-picker :duration="duration" @updateTime="updateDutation" />
     <span class="quiz_lable my-6">Questions</span>
     <v-row v-for="(question, i) in questions" :key="i">
       <v-col class="col-12">
@@ -121,7 +121,12 @@
             </v-row>
           </v-col>
           <v-col class="col-1 px-0">
-            <v-btn v-if="questions.length > 1" class="mt-10" icon @click="removeQuestion(i)">
+            <v-btn
+              v-if="questions.length > 1"
+              class="mt-10"
+              icon
+              @click="removeQuestion(i)"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="21"
@@ -160,10 +165,10 @@
 
 <script>
 import { mapActions } from "vuex";
-import VueTimepicker from "vue2-timepicker/src/vue-timepicker.vue";
+import TimePicker from "@/components/quiz/timePicker";
 export default {
   components: {
-    VueTimepicker,
+    TimePicker,
   },
   data: () => ({
     pictures: [[], []],
@@ -195,9 +200,17 @@ export default {
   },
   methods: {
     ...mapActions("quiz", ["create_quiz"]),
+    updateDutation(hh, mm, ss) {
+      this.duration.hh = hh;
+      this.duration.mm = mm;
+      this.duration.ss = ss;
+    },
     addPicture(file, boundIndex) {
       this.pictures[boundIndex].push(file);
-      this.questions[boundIndex].options.choices.push({ src: file.name, right: false });
+      this.questions[boundIndex].options.choices.push({
+        src: file.name,
+        right: false,
+      });
     },
     removePicture(index, boundIndex) {
       this.pictures[boundIndex].splice(index, 1);
@@ -240,7 +253,10 @@ export default {
         }
       }
       if (this.questions[questionIndex].type.includes("file")) {
-        this.$refs[`picker${questionIndex}`][0].showRightFiles(questionIndex,rightChoices);
+        this.$refs[`picker${questionIndex}`][0].showRightFiles(
+          questionIndex,
+          rightChoices
+        );
       }
     },
     handleTypeChange(index) {
@@ -259,7 +275,7 @@ export default {
           choices: [],
         };
       }
-      this.pictures[index] = []
+      this.pictures[index] = [];
     },
     addQuestion() {
       this.questions.push({
