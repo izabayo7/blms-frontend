@@ -239,6 +239,9 @@ export default {
         this.activeIndex = this.maximumIndex;
       }
     },
+    currentRoute() {
+      this.immediateFunction();
+    },
   },
   computed: {
     ...mapGetters("courses", ["course", "totalComments"]),
@@ -246,6 +249,9 @@ export default {
 
     userCategory() {
       return this.$store.state.user.user.category.name;
+    },
+    currentRoute() {
+      return this.$route.params.id;
     },
   },
   methods: {
@@ -309,17 +315,15 @@ export default {
         courseName: this.$route.params.name,
       }).then((course) => {
         const total_chapters = course.chapters.length;
-        if (this.userCategory === "INSTRUCTOR" && !index && !id) {
-          this.maximumIndex = total_chapters - 1;
-          this.activeIndex = 0;
-        } else {
-          this.maximumIndex = Math.round(
-            (course.progress.progress * total_chapters) / 100
-          );
-          if (this.maximumIndex > total_chapters - 1) {
-            this.maximumIndex = total_chapters - 1;
+
+        let index = 0;
+        for (const i in course.chapters) {
+          if (course.chapters[i]._id == this.$route.params.id) {
+            index = parseInt(i);
+            break;
           }
         }
+        this.activeIndex = index;
       });
 
       //getting chapter content
