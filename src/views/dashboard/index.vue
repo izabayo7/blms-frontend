@@ -53,6 +53,7 @@ export default {
 
     // Message from server
     this.socket.on("res/message/new", (message) => {
+      console.log(message, this.loadedMessages)
       this.scrollChatToBottom();
       if (this.loadedMessages.length > 0)
         // if messages have loaded

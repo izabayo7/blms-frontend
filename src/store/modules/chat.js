@@ -75,8 +75,7 @@ export default {
 
             const id = newMessage.group ? newMessage.group : newMessage.sender.user_name
             //get last message from stored conversation
-            store.dispatch('chat/lastMessageInCertainChatMessages', id).then(({ lastMessage, groupIndex, userIndex }) => {
-
+            store.dispatch('chat/lastMessageInCertainChatMessages', id.toString()).then(({ lastMessage, groupIndex, userIndex }) => {
                 //if conversation was found and message not duplicated
                 if (userIndex === undefined || lastMessage._id === newMessage._id)
                     return
