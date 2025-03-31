@@ -1,5 +1,5 @@
 <template>
-  <v-app id="reports-page">
+  <v-app id="reports-page" class="pa-0">
     <div class="table-one">
       <h3>Submissions</h3>
       <v-data-table
@@ -13,30 +13,14 @@
         <template v-slot:item.name="{ item }">
           <router-link
             class="normal--text"
-            :to="
-              userCategory === 'STUDENT'
-                ? `/courses/preview/${returnCourseName(item.quiz)}`
-                : `/quiz/${item.quiz.name}/${item.user.user_name}`
-            "
+            to="/"
             >{{
-              userCategory === "STUDENT"
-                ? returnCourseName(item.quiz)
-                : item.user.sur_name + " " + item.user.other_names
+              returnCourseName(item.target)
             }}</router-link
           >
         </template>
-        <!-- display the quiz name as alink to that quiz -->
-        <template v-slot:item.submissionName="{ item }">
-          <router-link
-            v-if="userCategory === 'STUDENT'"
-            class="normal--text"
-            :to="`/quiz/${item.quiz.name}/${$store.state.user.user.user_name}`"
-            >{{ item.quiz.name }}</router-link
-          >
-          <span v-else class="normal--text">{{ item.quiz.name }}</span>
-        </template>
         <!-- display the date of submission -->
-        <template v-slot:item.dateOfSubmission="{ item }">
+        <!-- <template v-slot:item.dateOfSubmission="{ item }">
           <span class="normal--text">{{ item.createdAt | formatDate }}</span>
         </template>
         <template v-slot:item.marked="{ item }">
@@ -44,13 +28,13 @@
             :class="`font-weight-bold ${item.marked ? 'green--text' : ''}`"
             >{{ item.marked ? "Marked" : "Pending.." }}</span
           >
-        </template>
+        </template> -->
         <!-- display the grades -->
-        <template v-slot:item.grade="{ item }">
+        <!-- <template v-slot:item.grade="{ item }">
           <span class="normal--text">{{
             (item.marked ? item.total_marks : "") + "/" + item.quiz.total_marks
           }}</span>
-        </template>
+        </template> -->
         <template v-slot:no-data>
           <span class="text-h6">Oops You have no submissions.</span>
         </template>
@@ -136,9 +120,7 @@ export default {
     submissionHeaders() {
       return [
         {
-          text: `${
-            this.userCategory === "STUDENT" ? "Course" : "STUDENT"
-          } Name`,
+          text: "Courses",
           align: "start",
           sortable: false,
           value: "name",
@@ -171,26 +153,15 @@ export default {
   methods: {
     ...mapActions("courses", ["getCourses"]),
     ...mapActions("quiz_submission", ["getQuizSubmissions"]),
-    returnCourseName(quiz) {
-      if (quiz.target.type === "facultyCollegeyear") {
+    returnCourseName(quiz_target) {
+      if (quiz_target.type === "faculty_college_year") {
         return "No course";
       }
-      for (const i in this.courses) {
-        if (
-          quiz.target.type === "course" &&
-          this.courses[i]._id === quiz.target.id
-        ) {
-          return this.courses[i].name;
-        } else {
-          for (const k in this.courses[i].chapters) {
-            if (
-              quiz.target.type === "chapter" &&
-              this.courses[i].chapters[k]._id === quiz.target.id
-            ) {
-              return this.courses[i].name;
-            }
-          }
-        }
+      else if(quiz_target.type == 'chapter'){
+        return quiz_target.chapter.course.name;
+      }
+      else if(quiz_target.type == 'course'){
+        return quiz_target.course.name;
       }
     },
   },
