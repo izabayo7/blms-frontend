@@ -263,6 +263,7 @@ export default {
   data: () => ({
     recorder: undefined,
     videoSaved: false,
+    tempVideoData: "",
     exam: undefined,
     alphabets: [
       "A",
@@ -746,23 +747,16 @@ export default {
     },
     sendDataToBackend(base64EncodedData) {
 
-      Apis.create(`exam_submission/${this.submission_id}/video`, {data: base64EncodedData}).then((res) => {
-        if (res.data.saved)
+      Apis.create(`exam_submission/${this.submission_id}/video`, {data: this.tempVideoData+base64EncodedData}).then((res) => {
+        if (res.data.saved) {
           this.videoSaved = true
+          this.tempVideoData = ""
+        }
+      }).catch((err)=>{
+        console.error(err)
+        this.videoSaved = false
+        this.tempVideoData += base64EncodedData
       })
-
-      // this.socket.emit('save-exam-video', {
-      //   exam_id: this.exam._id,
-      //   data: base64EncodedData,
-      //   saved: this.videoSaved,
-      //   submission_id: this.submission_id
-      // })
-      //
-      // // TODO handle data loss
-      // this.socket.on('exam-video-saved', ({saved}) => {
-      //   if (saved && !this.videoSaved)
-      //     this.videoSaved = true
-      // })
     },
     setCamera() {
       const video = document.getElementById("userStream")
