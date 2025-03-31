@@ -120,9 +120,25 @@
                         </v-col>
                       </v-row>
                     </v-card>
-                    <v-btn class="primary-button" @click="stepCounter = 3"
-                    >Continue
-                    </v-btn>
+                    <div class="d-flex">
+                      <v-btn class="primary-button" @click="stepCounter = 3"
+                      >Continue
+                      </v-btn>
+                      <v-btn v-if="course.chapters[activeChapter].uploaded_video" class="primary-button danger ml-4"
+                             @click.prevent="
+                                    set_modal({
+                                      template: 'action_confirmation',
+                                      method: {
+                                        action: 'courses/deleteVideo',
+                                      },
+                                      title: 'Delete video',
+                                      message:
+                                        'Are you sure you want to delete this chapter\'s video?',
+                                    })
+                                  "
+                      >Remove video
+                      </v-btn>
+                    </div>
                   </v-stepper-content>
 
                   <v-stepper-step :complete="stepCounter > 3" step="3" editable
@@ -490,6 +506,7 @@ export default {
       "deleteAttachment",
       "initialise_new_chapter",
       "createChapter",
+      "deleteVideo"
     ]),
     ...mapActions("quiz", ["getQuizes"]),
     ...mapActions("modal", ["set_modal"]),
@@ -712,5 +729,8 @@ export default {
 .primary-button {
   background-color: $primary !important;
   color: white !important;
+  &.danger{
+    background-color: red !important;
+  }
 }
 </style>

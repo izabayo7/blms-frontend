@@ -268,6 +268,7 @@
     <!--      teacher preview-->
     <div class="teacher" v-if="userCategory === 'INSTRUCTOR'">
       <div v-if="!isLive" class="teacher instructor_preview">
+        <back class="mb-6" to="/courses"/>
         <div class="tabs-container d-flex">
           <div class="item cursor-pointer" @click="panel1=true" :class="panel1? 'active' : ''">Course details</div>
           <div class="item cursor-pointer" @click="panel1=false" :class="panel1? '' : 'active'">Students list</div>
@@ -453,13 +454,13 @@
               <div class="title">{{ course.name }}</div>
               <div class="subtitle">{{ course.attendedStudents }} Attendees</div>
               <div class="students customScroll">
-                <div v-for="(stud, i) in student_list" :key="i" class="individual d-md-flex">
-                  <div class="name mr-auto">{{ stud.user.sur_name }} {{ stud.user.other_names }}</div>
-                  <div class="progress ml-auto">
+                <div v-for="(stud, i) in student_list" :key="i" class="individual row">
+                  <div class="col-12 col-md-4 name mr-auto">{{ stud.user.sur_name }} {{ stud.user.other_names }}</div>
+                  <div class="col-12 col-md-4 progress ml-auto">
                     <div class="text mx-auto">{{ Math.round(stud.progress) }} %</div>
                     <progress :value="stud.progress" max="100"></progress>
                   </div>
-                  <div class="joinedon ml-auto">Joined on {{ stud.createdAt  | formatDate }}</div>
+                  <div class="col-12 col-md-4 joinedon ml-auto">Joined on {{ stud.createdAt  | formatDate }}</div>
                 </div>
               </div>
             </div>

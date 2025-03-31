@@ -3,10 +3,13 @@
     <v-row>
       <v-col class="col-12 title d-block pt-0">{{ course.name }}</v-col>
       <v-col
-          v-if="course.chapters[activeIndex].uploaded_video"
+          v-if="course.chapters[activeIndex].uploaded_video || recorded_video != ''"
           class="col-8 pt-0"
           id="video"
       >
+<!--
+wrong date in recorder
+-->
         <vue-plyr>
           <video
               :src="recorded_video == '' ? `${
@@ -142,7 +145,7 @@
                           attachment.src
                         }}</span>
                       <button
-                          @click="downloadAttachment(attachment.download_link)"
+                          @click="downloadAttachment(attachment.download_link+'?token='+$session.get('jwt'))"
                       >
                         <svg
                             class="attachment-download"
