@@ -54,7 +54,10 @@ name: "course-created-card"
 
   &--title{
     &--name{
-      font-size:.9rem;
+      h3{
+        font-size:.9rem;
+        color:$font;
+      }
     }
     &--start-date{
       font-size:.6rem;
@@ -68,12 +71,12 @@ name: "course-created-card"
   &--class{
     padding:0 1rem;
     p{
-      font-size:.75rem;
+      font-size:.65rem;
       color:lighten($primary,10)
     }
 
     &--name{
-      font-size:0.75rem;
+      font-size:0.65rem;
 
     }
 
@@ -81,15 +84,17 @@ name: "course-created-card"
 
   &--students{
     p{
-      font-size:.75rem;
+      font-size:.65rem;
     }
 
     &--title{
 
     }
 
-    &--score{
-
+    &--number{
+      h5{
+        font-size:.65rem;
+      }
     }
   }
 }

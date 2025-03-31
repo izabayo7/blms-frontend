@@ -58,6 +58,10 @@ name: "enrol-course-card"
   &--title{
     &--name{
       font-size:.9rem;
+      h3{
+        color:$font;
+        font-size:.9rem;
+      }
     }
     &--start-date{
       font-size:.6rem;
@@ -70,12 +74,12 @@ name: "enrol-course-card"
 
   &--completion{
     &--text{
-      font-size:0.75rem;
+      font-size:0.65rem;
     }
     &--progress-bar{
       &--bar{
         width:8rem;
-        height:.7rem;
+        height:.5rem;
         background-color: lighten($warn,30);
         border-radius:10rem;
 
@@ -93,13 +97,13 @@ name: "enrol-course-card"
   &--last-access{
     &--chapter-name{
       p{
-        font-size:.75rem;
+        font-size:.65rem;
       }
     }
 
     &--latest-step{
       h5{
-        font-size:.75rem;
+        font-size:.65rem;
       }
     }
   }

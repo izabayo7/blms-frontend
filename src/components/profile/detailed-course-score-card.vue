@@ -58,7 +58,10 @@ export default {
 
   &--title{
     &--name{
-      font-size:.9rem;
+      h3{
+        color:$font;
+        font-size:.9rem;
+      }
     }
     &--start-date{
       font-size:.6rem;
@@ -72,11 +75,11 @@ export default {
   &--success-rate{
     margin:0 1rem;
     p{
-      font-size:.75rem;
+      font-size:.65rem;
     }
 
     &--title{
-      font-size:0.75rem;
+      font-size:0.65rem;
     }
     &--progress{
 
@@ -86,7 +89,7 @@ export default {
 
   &--last-quiz{
     p{
-      font-size:.75rem;
+      font-size:.65rem;
     }
 
     &--title{
@@ -94,7 +97,9 @@ export default {
     }
 
     &--score{
-
+      h5{
+        font-size:.65rem;
+      }
     }
   }
 }
