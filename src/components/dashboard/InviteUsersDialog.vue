@@ -40,6 +40,7 @@
               type="email"
               :value="email"
               @input="updateCurrentEmailValue"
+              @submit="addEmail"
             />
             <button class="add-email ml-2" @click="addEmail">Add</button>
           </div>
@@ -149,7 +150,14 @@ export default {
     updateCurrentEmailValue(email) {
       this.email = email;
     },
-    sendInvitations() {},
+    sendInvitations() {
+      console.log({
+        college: this.$store.state.user.user.college,
+        category: this.selected_user_category,
+        faculty_college_year: this.selected_user_group,
+        emails: this.emails,
+      });
+    },
   },
   async beforeMount() {
     const category_res = await Apis.get("user_category/open");

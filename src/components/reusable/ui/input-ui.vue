@@ -7,6 +7,7 @@
           @focusin="focused"
           @focusout="unfocused"
           @input="handleInput"
+          @keyup.enter="submitEmail"
           v-model="input"
           :type="type"
           :name="name"
@@ -43,6 +44,9 @@ export default {
     },
     clear() {
       this.input = "";
+    },
+    submitEmail() {
+      this.$emit("submit");
     },
   },
   mounted() {
