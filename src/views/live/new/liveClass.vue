@@ -846,23 +846,37 @@ export default {
           //width: fit-content;
           max-height: 20rem;
           position: relative;
-
+          background-color: #000;
           video{
             height: 100%;
+            max-height: 20rem;
             width: 100%;
           }
 
           .video-controls{
+            position: absolute;
+            display: block;
+            width: 100%;
+
             &--wrapper{
               display: flex;
               justify-content: space-evenly;
+              background-color: transparentize(#000,.7);
+              padding:.3rem 1rem;
 
               button{
                 display: flex;
                 align-items: center;
+                padding:.4rem 1rem;
+                border:2px solid $main;
+                border-radius: 5px;
+                &:focus{
+
+                }
 
                 span{
                   padding:0 .2rem;
+                  color:$main;
                   display: block;
                   text-transform: capitalize;
                   font-size: .9rem;
@@ -870,6 +884,7 @@ export default {
                   svg{
                     width:13px;
                     height:13px;
+                    fill:$main;
                   }
                 }
               }
