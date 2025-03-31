@@ -10,10 +10,10 @@
 
       <!--      block of messages -->
       <div
-        class="msgs-block"
-        v-for="(msgs, i) in data"
-        :key="i"
-        :class="{
+          class="msgs-block"
+          v-for="(msgs, i) in data"
+          :key="i"
+          :class="{
           sending: msgGoing(msgs.from),
           system_message: systemMsg(msgs.from),
           receiving: !msgGoing(msgs.from),
@@ -23,16 +23,17 @@
         <!--        picture of the message sender-->
         <div v-if="!systemMsg(msgs.from)" class="picture mt-4">
           <img
-            v-if="msgs.image"
-            :src="msgs.image+'?height=50'"
-            :alt="`${msgs.from}'s profile picture`"
+              v-if="msgs.image"
+              :src="msgs.image+'?height=50'"
+              :alt="`${msgs.from}'s profile picture`"
           />
           <v-avatar min-width="40" min-height="40" v-else class="avatar">
             {{ msgs.from | computeText }}
           </v-avatar>
         </div>
         <div class="msg-block">
-          <div v-if="!msgGoing(msgs.from) && currentDisplayedUser.is_group && !systemMsg(msgs.from)" class="sender_name">
+          <div v-if="!msgGoing(msgs.from) && currentDisplayedUser.is_group && !systemMsg(msgs.from)"
+               class="sender_name">
             {{ msgs.from }} {{ msgs.messages[0].createdAt | getTimeDifference }}
           </div>
           <div v-else class="sender_name" :class="msgs.from.toLowerCase()">
@@ -42,7 +43,7 @@
           <div class="msgs">
             <div class="msg" v-for="(msg, i) in msgs.messages" :key="i">
               <!--            //for better html elements readability-->
-              <div :inner-html.prop="msg.content | urlify" />
+              <div :inner-html.prop="msg.content | urlify"/>
             </div>
           </div>
         </div>
@@ -50,11 +51,11 @@
       <div class="receiving" v-if="typing">
         <!-- <div class="receiving" v-if="1"> -->
         <div
-          v-if="currentDisplayedUser.is_group"
-          class="sender_name text-center"
+            v-if="currentDisplayedUser.is_group"
+            class="sender_name text-center"
         >
           <span v-for="(member, i) in typing_members" :key="i"
-            >{{ `${i > 0 ? "," : ""} ${member}` }}
+          >{{ `${i > 0 ? "," : ""} ${member}` }}
           </span>
           <span>{{ typing_members.length > 1 ? " are " : " is " }} typing</span>
         </div>
@@ -72,15 +73,15 @@
 </template>
 
 <script>
-import { mapState, mapGetters, mapMutations } from "vuex";
+import {mapState, mapGetters, mapMutations} from "vuex";
 // import {on} from "@/services/event_bus";
-import { chatMixins } from "@/services/mixins";
+import {chatMixins} from "@/services/mixins";
 
 export default {
   name: "Chat-messaging",
   mixins: [chatMixins],
   props: {
-    data: { type: [Array, Boolean], required: true },
+    data: {type: [Array, Boolean], required: true},
   },
   data() {
     return {
@@ -95,7 +96,7 @@ export default {
       let names = [];
       for (const i in this.typers) {
         const user = this.currentDisplayedUser.members.filter(
-          (m) => m.data.user_name == this.typers[i]
+            (m) => m.data.user_name == this.typers[i]
         );
         names.push(user[0].data.sur_name);
       }
@@ -135,14 +136,18 @@ export default {
     let timeout = undefined;
 
     this.socket.on("res/message/typing", (typist, group) => {
+      console.log(this.currentDisplayedUser)
+      if (!this.currentDisplayedUser)
+        return
+
       if (this.currentDisplayedUser.is_group) {
         // const user = this.currentDisplayedUser.members.some(el => el._id === typist)
       }
       if (!this.typers.includes(typist)) this.typers.push(typist);
       //if the typist is the one we are chatting with
       if (
-        this.currentDisplayedUser.id === typist ||
-        this.currentDisplayedUser.id === group
+          this.currentDisplayedUser.id === typist ||
+          this.currentDisplayedUser.id === group
       ) {
         this.typing = true;
 
@@ -187,7 +192,7 @@ export default {
   height: 100%;
   scrollbar-track-color: transparent;
   scrollbar-face-color: red;
-  
+
   // design sender name
   .sender_name {
     font-size: 11px;
@@ -197,9 +202,9 @@ export default {
     font-family: Poppins;
     width: 100%;
 
-    p{
+    p {
       margin: 0;
-      color:inherit;
+      color: inherit;
     }
   }
 
@@ -213,6 +218,7 @@ export default {
     .typing {
       height: fit-content;
       width: fit-content;
+
       .lds-ellipsis {
         display: inline-block;
         position: relative;
@@ -223,6 +229,7 @@ export default {
         margin-top: 10px;
         //background-color: lighten($font,20);
       }
+
       .lds-ellipsis div {
         position: absolute;
         top: 0;
@@ -232,22 +239,27 @@ export default {
         background: $secondary;
         animation-timing-function: cubic-bezier(0, 1, 1, 0);
       }
+
       .lds-ellipsis div:nth-child(1) {
         left: 5px;
         animation: lds-ellipsis1 0.6s infinite;
       }
+
       .lds-ellipsis div:nth-child(2) {
         left: 5px;
         animation: lds-ellipsis2 0.6s infinite;
       }
+
       .lds-ellipsis div:nth-child(3) {
         left: 20px;
         animation: lds-ellipsis2 0.6s infinite;
       }
+
       .lds-ellipsis div:nth-child(4) {
         left: 40px;
         animation: lds-ellipsis3 0.6s infinite;
       }
+
       @keyframes lds-ellipsis1 {
         0% {
           transform: scale(0);
@@ -292,6 +304,7 @@ export default {
       .picture {
         display: flex;
         place-items: flex-start;
+
         img {
           width: 40px;
           height: 40px;
@@ -301,43 +314,46 @@ export default {
         }
       }
 
-        //whole msg bar css
-        .msg {
-          max-width: 20rem;
-          padding: 0.5rem 1.7rem;
-          margin: 1.5px;
-          width: -webkit-fit-content;
-          width: -moz-fit-content;
-          width: fit-content;
-          font-size: 0.8rem;
-          font-weight: 400;
-          font-family: Poppins;
-          word-break: break-word;
-        }
+      //whole msg bar css
+      .msg {
+        max-width: 20rem;
+        padding: 0.5rem 1.7rem;
+        margin: 1.5px;
+        width: -webkit-fit-content;
+        width: -moz-fit-content;
+        width: fit-content;
+        font-size: 0.8rem;
+        font-weight: 400;
+        font-family: Poppins;
+        word-break: break-word;
+      }
     }
 
-   // design system message
-  .msgs-block.system_message.receiving {
-    text-align: center;
-    .msg{
-      background-color: #fff;
-      max-width: 100%;
-    }
+    // design system message
+    .msgs-block.system_message.receiving {
+      text-align: center;
 
-  }
+      .msg {
+        background-color: #fff;
+        max-width: 100%;
+      }
+
+    }
 
     //css for the only sending msgs
     .sending {
       .picture {
         display: none;
       }
-      .msg-block{
 
-        .sender_name{
+      .msg-block {
+
+        .sender_name {
           display: flex;
           justify-content: flex-end;
           padding-right: .4rem;
         }
+
         .msgs {
           align-self: flex-end;
           display: flex;
@@ -352,6 +368,7 @@ export default {
             div {
               color: inherit;
             }
+
             &:last-child {
               border-bottom-right-radius: 15px;
             }
@@ -393,6 +410,7 @@ export default {
       }
     }
   }
+
   .avatar {
     width: 30px !important;
     height: 30px !important;
