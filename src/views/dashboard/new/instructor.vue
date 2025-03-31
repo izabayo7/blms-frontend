@@ -130,7 +130,7 @@
                   total: Math.round(submission_statistics.perfomance),
                   colors: ['#3CE970','rgba(25, 48, 116, 0.24)']
                 }"
-                  :labels="['Marking Status']"
+                  :labels="['Student perfomance']"
                   template="INSTRUCTOR"
               />
             </v-col>
@@ -204,7 +204,7 @@
                   total: Math.round(submission_statistics.perfomance),
                   colors: ['#3CE970','rgba(25, 48, 116, 0.24)']
                 }"
-              :labels="['Marking Status']"
+              :labels="['Student perfomance']"
               template="INSTRUCTOR"
               :width="80"
           />
