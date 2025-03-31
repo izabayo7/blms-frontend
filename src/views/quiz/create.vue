@@ -312,7 +312,7 @@ export default {
         this.questions[index].type = this.questions[index].type
           .toLowerCase()
           .split(" ")
-          .join("_");
+          .join("-");
         if (!this.questions[index].type.includes("select")) {
           this.questions[index].options = undefined;
         }
@@ -326,11 +326,11 @@ export default {
           name: this.name,
           instructions:
             editorContent ==
-            `<ol><li><p>Write your custom instructions</p></li></ol>`
+              `<ol><li><p>Write your custom instructions</p></li></ol>`
               ? undefined
               : editorContent,
           duration: this.toSeconds(this.duration),
-          user: this.$store.state.user.user.user_name,
+          instructor: this.$store.state.user.user._id,
           questions: questions,
         },
         pictures: this.pictures,

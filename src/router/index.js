@@ -98,7 +98,13 @@ const routes = [
                     },
                     {
                         path: '/courses/:name',
-                        component: () => import('@/views/courses/details')
+                        component: () => import('@/views/courses/details'),
+                        children: [
+                            {
+                                path:'/courses/:name/chapter/:index/:id',
+                                component:() => import('@/views/courses/chapter-details')
+                            }
+                        ]
                     },
                     // for quiz
                     {
@@ -130,20 +136,10 @@ const routes = [
                     // for reports
                     {
                         path: '/reports',
+                        name: 'Reports',
                         component: () =>
                             import('@/views/reports')
-                    },
-                    {
-                        path: '/reports/:target',
-                        component: () =>
-                            import('@/views/reports/student_reports')
-                    },
-                    {
-                        path: '/reports/:target/:user_name',
-                        component: () =>
-                            import('@/views/reports')
-                    },
-                    {
+                    }, {
                         path: '/library',
                         name: 'Library',
                         component: () =>
