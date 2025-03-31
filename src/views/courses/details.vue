@@ -3,7 +3,7 @@
     <v-row v-if="course && activeIndex > -1" id="courseDetails">
       <!-- button to show chapters list in small devices -->
       <v-btn
-        @click="showActions = true"
+        @click="$store.commit('sidebar_navbar/TOGGLE_PAGE_ACTIONS_VISIBILITY')"
         class="hidden-md-and-up mr-n8 white--text"
         :color="primary"
         right
@@ -27,8 +27,6 @@
       </v-col>
       <!-- chapters list for small devices -->
       <kurious-page-actions
-        v-on:hideActions="showActions = false"
-        :visible="showActions"
         class="hidden-md-and-up"
       >
         <kurious-chapter-list
@@ -69,7 +67,6 @@ export default {
     progressId: "",
     maximumIndex: -1,
     attachments: [],
-    showActions: false,
   }),
   computed: {
     ...mapGetters("courses", ["course", "selectedChapter"]),
