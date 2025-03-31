@@ -4,6 +4,7 @@
     justify-content: center;
     align-items: center;
     min-height: 338px;
+
     .logo {
       width: 122px;
       height: 122px;
@@ -17,17 +18,21 @@
       align-items: center;
       margin: auto;
     }
+
     &-content {
       max-width: 445px;
+
       &:nth-child(1) {
         max-width: 193px;
         margin-right: 179px;
         text-align: center;
       }
+
       &.hidden-md-and-up {
         margin-top: 29px;
       }
     }
+
     .welcome {
       font-family: "Montserrat";
       font-style: normal;
@@ -36,10 +41,11 @@
       line-height: 45px;
 
       /* or 129% */
-      font-feature-settings: "liga" off;
+      font-feature-settings: "liga"off;
 
       color: #fcfcfc;
     }
+
     .motto {
       font-family: "Montserrat";
       font-style: normal;
@@ -51,6 +57,7 @@
 
       color: #d8d8d8;
     }
+
     .category {
       font-family: "Montserrat";
       font-style: normal;
@@ -63,6 +70,7 @@
       color: #d8d8d8;
       margin-bottom: 21px;
     }
+
     .login {
       font-family: "Montserrat";
       font-style: normal;
@@ -74,6 +82,7 @@
 
       color: #ffffff;
     }
+
     .connect {
       button {
         width: 193px;
@@ -88,6 +97,7 @@
         font-weight: 500;
         font-size: 18px;
         line-height: 30px;
+
         span {
           color: #ffffff;
         }
@@ -102,6 +112,7 @@
       max-width: 80%;
       width: 1090px;
       padding-top: 100px;
+
       .title {
         font-family: "Montserrat";
         font-style: normal;
@@ -110,13 +121,15 @@
         line-height: 45px;
 
         /* identical to box height, or 129% */
-        font-feature-settings: "liga" off;
+        font-feature-settings: "liga"off;
 
         color: #000000;
         margin-bottom: 7px;
       }
+
       .category {
         margin-bottom: 26px;
+
         &-name {
           font-family: "Montserrat";
           font-style: normal;
@@ -125,7 +138,7 @@
           line-height: 45px;
 
           /* identical to box height, or 180% */
-          font-feature-settings: "liga" off;
+          font-feature-settings: "liga"off;
 
           color: #000000;
           margin-bottom: 20px;
@@ -133,6 +146,7 @@
       }
     }
   }
+
   .details {
     .title {
       max-width: 499px;
@@ -149,6 +163,7 @@
       color: #000000;
       margin-bottom: 15px;
     }
+
     .subtitle {
       font-family: "Inter";
       font-style: normal;
@@ -160,11 +175,13 @@
       text-align: center;
 
       color: #343434;
+
       div {
         margin-bottom: 15px;
       }
     }
   }
+
   .testimonials .title {
     font-family: "Inter";
     font-style: normal;
@@ -179,12 +196,15 @@
 
     margin: 37px 27px;
   }
+
   .top {
     max-width: 80%;
     margin: auto;
     margin-bottom: 47px;
+
     .buttons {
       display: flex;
+
       button {
         width: 193px;
         height: 48px;
@@ -194,9 +214,11 @@
         display: flex;
         justify-content: center;
         align-items: center;
+
         svg {
           margin-right: 16px;
         }
+
         div {
           font-family: "Montserrat";
           font-style: normal;
@@ -209,12 +231,14 @@
 
           color: #ffffff;
         }
+
         &:last-child {
           margin-left: auto;
         }
       }
     }
   }
+
   .routeContent-container {
     .routeContent {
       .course-details {
@@ -225,15 +249,18 @@
         background-repeat: no-repeat;
         background-size: cover;
         position: relative;
+
         .absolute {
           position: absolute;
           top: 0;
           width: 100%;
           padding: 45px 77px 0px;
+
           .details {
             max-width: 368px;
           }
         }
+
         .course-name {
           font-family: "Montserrat";
           font-style: normal;
@@ -242,10 +269,11 @@
           line-height: 45px;
           margin-bottom: 8px;
           /* identical to box height, or 180% */
-          font-feature-settings: "liga" off;
+          font-feature-settings: "liga"off;
 
           color: #ffffff;
         }
+
         .language {
           font-family: "Inter";
           font-style: normal;
@@ -255,6 +283,7 @@
 
           color: #ffffff;
         }
+
         .category {
           font-family: "Montserrat";
           font-style: normal;
@@ -264,6 +293,7 @@
 
           color: #ffffff;
         }
+
         .description {
           font-family: "Inter";
           font-style: normal;
@@ -273,6 +303,7 @@
           margin-bottom: 8px;
           color: #ffffff;
         }
+
         .price div {
           font-family: "Montserrat";
           font-style: normal;
@@ -281,6 +312,7 @@
           line-height: 37px;
 
           color: #ffffff;
+
           &:last-child {
             margin-left: 12px;
             font-family: "Inter";
@@ -298,6 +330,7 @@
             background: #ffffff;
           }
         }
+
         .action button {
           width: 193px;
           height: 48px;
@@ -315,6 +348,7 @@
 
           color: #ffffff;
         }
+
         .certificate div {
           font-family: "Inter";
           font-style: normal;
@@ -324,6 +358,7 @@
 
           color: #ffffff;
         }
+
         .information {
           width: 503px;
           max-width: 100%;
@@ -338,6 +373,7 @@
           color: #ffffff;
           background: rgba(253, 253, 253, 0.25);
         }
+
         .video {
           width: 529px;
           height: 293px;
@@ -345,40 +381,77 @@
           background: rgba(0, 0, 0, 0.5);
           border: 1px solid #616161;
           margin-bottom: 24px;
+
           * {
             width: 526px;
             height: 290px;
           }
         }
       }
+
       .bg-one {
         height: 100%;
         width: 100%;
-        background: linear-gradient(
-          90deg,
-          #0e0e0e 45.63%,
-          #0e0e0e 45.64%,
-          rgba(1, 1, 1, 0) 88.87%
-        );
+        background: linear-gradient(90deg,
+            #0e0e0e 45.63%,
+            #0e0e0e 45.64%,
+            rgba(1, 1, 1, 0) 88.87%);
         transform: rotate(-180deg);
       }
+
       .bg-two {
         height: 300px;
         width: 100%;
         bottom: 0;
-        background: linear-gradient(
-          180deg,
-          #2b2b2b 0%,
-          rgba(1, 1, 1, 0) 81.07%
-        );
+        background: linear-gradient(180deg,
+            #2b2b2b 0%,
+            rgba(1, 1, 1, 0) 81.07%);
         border-radius: 5.41262px;
         transform: rotate(-180deg);
         position: absolute;
       }
+
+      &.register {
+        margin: auto;
+        width: 100%;
+        max-width: 744px;
+
+        * {
+          max-width: 100%;
+        }
+
+        .contact {
+          margin-top: 15px;
+          font-family: 'Inter';
+          font-style: normal;
+          font-weight: 500;
+          font-size: 16px;
+          line-height: 24px;
+
+          /* identical to box height, or 150% */
+
+          color: #343434;
+
+          .number {
+            margin-top: 4px;
+            font-family: 'Inter';
+            font-style: normal;
+            font-weight: 700;
+            font-size: 20px;
+            line-height: 24px;
+
+            /* identical to box height, or 120% */
+
+            color: #343434;
+          }
+        }
+      }
     }
   }
+
   .needed-materials {
     margin-left: 260px;
+
     .tittle {
       font-family: "Montserrat";
       font-style: normal;
@@ -388,6 +461,7 @@
       margin: 27px 0px 3px;
       color: #000000;
     }
+
     .contact div {
       font-family: "Inter";
       font-style: normal;
@@ -398,6 +472,7 @@
       /* identical to box height, or 150% */
 
       color: #343434;
+
       &:last-child {
         font-family: "Inter";
         font-style: normal;
@@ -411,11 +486,13 @@
         margin-bottom: 92px;
       }
     }
+
     .material {
       display: flex;
       align-items: center;
       justify-content: center;
       margin-bottom: 27px;
+
       div {
         margin-left: 6px;
         max-width: 184px;
@@ -429,6 +506,190 @@
       }
     }
   }
+
+  .left-registration {
+    .tittle {
+      font-family: 'Montserrat';
+      font-style: normal;
+      font-weight: 700;
+      font-size: 25px;
+      line-height: 45px;
+
+      /* identical to box height, or 180% */
+      text-align: left;
+      font-feature-settings: 'liga'off;
+      margin-bottom: 7px;
+      color: #000000;
+    }
+
+    .subtittle {
+      max-width: 290px !important;
+      font-family: 'Montserrat';
+      font-style: normal;
+      font-weight: 500;
+      font-size: 15px;
+      line-height: 18px;
+      margin-bottom: 15px;
+      color: #141414;
+    }
+
+    .course {
+      width: 320px;
+      height: 99px;
+      padding: 16px 20px;
+      background: #000000;
+      border-radius: 13px;
+
+      img {
+        width: 61px;
+        height: 61px;
+
+        border: 1px solid #FFFFFF;
+        border-radius: 6px;
+      }
+
+      .name {
+        font-family: 'Montserrat';
+        font-style: normal;
+        font-weight: 700;
+        font-size: 20px;
+        line-height: 45px;
+
+        /* or 225% */
+        display: flex;
+        align-items: center;
+        text-align: center;
+        font-feature-settings: 'liga'off;
+
+        color: #FFFFFF;
+        margin-left: 35px;
+
+      }
+
+      .label {
+        font-family: 'Inter';
+        font-style: normal;
+        font-weight: 500;
+        font-size: 10.8252px;
+        line-height: 13px;
+        margin-right: 7px;
+        color: #FFFFFF;
+        margin-left: 39px;
+      }
+
+      .duration {
+        width: 94px;
+        height: 18px;
+        background: #FFFFFF;
+        border-radius: 5px;
+        font-family: 'Inter';
+        font-style: normal;
+        font-weight: 500;
+        font-size: 10.8252px;
+        line-height: 13px;
+
+        color: #000000;
+
+
+      }
+    }
+
+
+  }
+
+  .right-registration {
+    margin-left: 89px;
+
+    .input-group {
+      div {
+        width: 200px;
+
+        &.long {
+          max-width: 400px;
+          width: 400px;
+        }
+      }
+
+      div:nth-child(even) {
+        margin-left: 12px;
+      }
+    }
+
+    .cursor-pointer {
+      width: 160px !important;
+      max-width: 44% !important;
+
+      * {
+        text-align: center;
+        margin-left: 0px !important;
+      }
+
+      svg {
+        width: 60px;
+      }
+    }
+
+    .title {
+      font-family: 'Montserrat';
+      font-style: normal;
+      font-weight: 700;
+      font-size: 15px;
+      line-height: 18px;
+      margin-bottom: 5px;
+      color: #141414;
+    }
+
+    input,
+    select {
+      width: 145px;
+      height: 24px;
+      left: 756px;
+      top: 280px;
+      margin-bottom: 15px;
+      border: 1px solid #717171;
+      border-radius: 6px;
+
+      font-family: 'Montserrat';
+      font-style: normal;
+      font-weight: 500;
+      font-size: 15px;
+      line-height: 18px;
+
+      color: #141414;
+      padding: 5px;
+    }
+
+    button {
+      width: 193px;
+      height: 48px;
+      left: 755px;
+      top: 470px;
+
+      background: #000000;
+      border-radius: 9px;
+      font-family: 'Montserrat';
+      font-style: normal;
+      font-weight: 500;
+      font-size: 18px;
+      line-height: 30px;
+
+      /* identical to box height, or 167% */
+      text-align: center;
+
+      color: #FFFFFF;
+
+    }
+  }
+
+  .label {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 10.8252px;
+    line-height: 13px;
+    margin-bottom: 2px;
+    color: #141414;
+  }
 }
 
 /* Portrait phones and smaller */
@@ -440,41 +701,56 @@
         max-width: 100%;
         text-align: center;
       }
+
       .welcome {
         font-size: 15px;
       }
+
       .motto {
         font-size: 12px;
       }
+
       .connect {
         button {
           margin: 29px auto 14px;
         }
       }
+
       .login {
         padding-bottom: 27px;
       }
     }
+
     .details {
       .title {
         font-size: 22px !important;
       }
     }
+
     .top {
       max-width: 100%;
       padding: 0px 9px;
+
       .navigation.hidden-md-and-up {
         margin-top: 6px;
         margin-left: 70px;
       }
+
+      .navigation {
+        flex-wrap: wrap;
+      }
+
       .buttons {
         button {
           width: 160px;
+
           &:last-child {
             background: none;
+
             svg {
               display: none;
             }
+
             div {
               color: #000000;
             }
@@ -482,53 +758,99 @@
         }
       }
     }
+
     .routeContent-container {
       .routeContent {
         .course-details {
           width: 100%;
           height: 680px;
-          .absolute{
+
+          .absolute {
             padding: 0;
           }
-          .information{
+
+          .information {
             background-color: transparent;
             font-size: 12px;
           }
         }
+
         .content-container {
           flex-direction: column-reverse;
+
           .course-name {
             font-size: 15px;
           }
+
           .category {
             font-size: 20px;
           }
+
           .price {
             font-size: 15px;
           }
+
           .action button {
             width: 100%;
             height: 48px;
           }
-          .video{
+
+          .video {
             height: 260px;
             width: 100vw;
+
             * {
               width: 100vw;
               height: 260px;
             }
           }
-          .details{
+
+          .details {
             padding: 16px 30px;
           }
         }
-        .needed-materials{
+
+        .needed-materials {
           margin-left: 30px;
-          .material div{
+
+          .material div {
             font-size: 12.4949px;
           }
         }
 
+        &.register {
+          margin: auto;
+          width: 80%;
+
+          .tittle,
+          .subtittle,
+          .contact {
+            text-align: center;
+          }
+
+          .course {
+            .name {
+              font-size: 14px;
+            }
+          }
+
+          .right-registration {
+            margin: 0;
+
+            .title {
+              margin: 20px 0px;
+              text-align: center;
+            }
+
+            div:nth-child(even) {
+              margin-left: 0px;
+            }
+          }
+        }
+
+        .right-registration .input-group div.long {
+          max-width: 100% !important;
+        }
       }
     }
   }
