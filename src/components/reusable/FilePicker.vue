@@ -168,7 +168,7 @@ div.remove-container a {
                     v-if="files[key].src"
                     @click="fileClicked(key)"
                     class="attachment vertically--centered"
-                    :class="template"
+                    :class="template + ` ${files[key].right ? 'rightChoice' : ''}`"
                     :src="`${files[key].src}?width=100&token=${$session.get('jwt')}`"
                     v-bind:ref="'preview' + parseInt(key)"
                 />
@@ -180,7 +180,7 @@ div.remove-container a {
                     :class="template"
                     v-bind:ref="'preview' + parseInt(key)"
                 />
-                <div class="absolute">
+                <div class="absolute" :class="{'d-flex' : files[key].right}">
                   <svg width="38" height="39" viewBox="0 0 38 39" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <g filter="url(#filter0_d)">
                       <circle cx="19.1714" cy="12.7837" r="11.8686" fill="white" fill-opacity="0.5"/>
