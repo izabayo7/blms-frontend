@@ -1,5 +1,5 @@
 <template>
-<main class="incoming-chat" @click="$router.push(username)">
+<main class="incoming-chat" @click="$router.push(`/messages/${username}`)">
 <!--    slot for profile picture-->
       <div class="pic col-3"><slot name="pic"></slot></div>
       <div class="content col-9">
