@@ -10,7 +10,7 @@
             <h3>Course created</h3>
           </div>
           <div class="course-card" v-for="i in 4" :key="i">
-            <course-created-card/>
+            <course-created-card :type="user.category"/>
           </div>
         </div>
       </div>

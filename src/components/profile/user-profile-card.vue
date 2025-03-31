@@ -37,7 +37,7 @@
       <article class="upc--cat--buttons d-flex justify-space-between">
 <!--        msg button-->
         <div class="upc--cat--message">
-          <button-ui fill class-list="px-16 py-3"> <template #content>Message</template></button-ui>
+          <button-ui @click="$router.push(`/messages/${user.user_name}`)"  fill class-list="px-16 py-3"> <template #content>Message</template></button-ui>
         </div>
 <!--        call button-->
         <div class="upc--cat--call">

@@ -1,9 +1,9 @@
 <template>
-<!--course created card-->
+  <!--course created card-->
 
   <div class="ccc">
     <div class="ccc--wrapper d-flex justify-space-between">
-<!--      col 1 with tittle-->
+      <!--      col 1 with tittle-->
       <div class="ccc--col ccc--col__1 ccc--title">
         <div class="ccc--title--name">
           <h3>Bookkeeping basics</h3>
@@ -12,14 +12,17 @@
           <p>Started on 27 jan 2021</p>
         </div>
       </div>
-<!--      col 2 with success rate-->
+      <!--      col 2 with success rate-->
       <div class="ccc--col ccc--col__2 ccc--class">
-        <div class="ccc--class--name">
+        <div v-if="type === 'INSTRUCTOR'" class="ccc--class--name">
           <p>Communication design year1</p>
         </div>
-
+        <div v-else class="ccc--class--name">
+          <div class="text mx-auto">{{ Math.round(23.3) }} % completion</div>
+          <progress :value="23.3" max="100"></progress>
+        </div>
       </div>
-<!--      col 3 with last attempted quiz infos-->
+      <!--      col 3 with last attempted quiz infos-->
       <div class="ccc--col ccc--col__3 ccc--students">
         <div class="ccc--students--title">
           <p>Students</p>
@@ -34,33 +37,42 @@
 
 <script>
 export default {
-name: "course-created-card"
+  name: "course-created-card",
+  props: {
+    type: {
+      type: String,
+      required: true
+    }
+  }
 }
 </script>
 
 <style lang="scss" scoped>
-.ccc{
-  max-width:28rem;
+.ccc {
+  max-width: 28rem;
   min-height: 100%;
-  &--wrapper{
-    padding:.5rem 0;
-    border-radius:6.5px;
+
+  &--wrapper {
+    padding: .5rem 0;
+    border-radius: 6.5px;
   }
-  &--col{
-    &__2{
+
+  &--col {
+    &__2 {
 
     }
   }
 
-  &--title{
-    &--name{
-      h3{
-        font-size:.9rem;
-        color:$font;
+  &--title {
+    &--name {
+      h3 {
+        font-size: .9rem;
+        color: $font;
       }
     }
-    &--start-date{
-      font-size:.6rem;
+
+    &--start-date {
+      font-size: .6rem;
     }
   }
 
@@ -68,32 +80,70 @@ name: "course-created-card"
     margin-bottom: .5rem;
   }
 
-  &--class{
-    padding:0 1rem;
-    p{
-      font-size:.65rem;
-      color:lighten($primary,10)
+  &--class {
+    padding: 0 1rem;
+
+    p {
+      font-size: .65rem;
+      color: lighten($primary, 10)
     }
 
-    &--name{
-      font-size:0.65rem;
+    &--name {
+      font-size: 0.65rem;
+      .text{
+        font-family: Roboto;
+        font-style: normal;
+        font-weight: 300;
+        font-size: 11.7092px;
+        line-height: 14px;
 
+        color: #000000;
+      }
+      progress{
+        height: 9px;
+        background: #FFD0A7 !important;
+        border-radius: 20px;
+      }
+      progress {
+        color: #FFD0A7;
+        border-radius: 20px;
+      }
+
+      progress::-webkit-progress-value {
+        background: #FFD0A7;
+        border-radius: 20px;
+      }
+
+      progress::-moz-progress-bar {
+        background: #FF7700;
+        border-radius: 20px;
+      }
+
+      progress::-webkit-progress-value {
+        background: #FF7700;
+        border-radius: 20px;
+      }
+
+      progress::-webkit-progress-bar {
+        background: #FFD0A7;
+        border-radius: 20px;
+      }
     }
 
   }
 
-  &--students{
-    p{
-      font-size:.65rem;
+  &--students {
+    p {
+      font-size: .65rem;
     }
 
-    &--title{
+    &--title {
 
     }
 
-    &--number{
-      h5{
-        font-size:.65rem;
+    &--number {
+      h5 {
+        font-size: .65rem;
       }
     }
   }
