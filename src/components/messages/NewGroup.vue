@@ -1,7 +1,7 @@
 <template>
   <div class="new-group"  v-show="group_model">
     <div class="group-wrapper">
-      <cropper 	min-height="500" min-width="500" :img="img" @change="imageCropped"/>
+      <cropper :img="img" @change="imageCropped"/>
       <div class="background-darkness"></div>
       <div id="form" class="col-xs-11 col-sm-10 col-md-8 col-lg-8 col-xl-6">
         <div class="group-card row flex flex-column-reverse flex-md-row">
@@ -21,7 +21,7 @@
                       <svg v-if="userLoading" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"/><path d="M12 3a9 9 0 0 1 9 9h-2a7 7 0 0 0-7-7V3z"/></svg>
                       <div class="no-user" v-if="NotFoundText.length>0">{{ NotFoundText }}</div>
                       <transition-group name="members">
-                        <div class="member" :class="{disabled:disabled(user.email)}" v-for="(user,i) in foundUsers" @click="addMember(user)" :key="i">
+                        <div class="member" :class="{disabled:disabled(user.email)}" v-for="(user) in foundUsers" @click="addMember(user)" :key="user.email">
                           <img src="" alt="" v-if="user.pic" >
                           <v-avatar size="25" class="avatar" v-else> {{ user.sur_name | computeText }}</v-avatar>
                           <div class="name">{{ user.other_names + ' ' + user.sur_name}}</div>
@@ -33,7 +33,7 @@
                 </div>
                 <div class="added-members-list" v-if="group.members.length > 0">
                   <transition-group name="chips">
-                    <chip v-for="(member,i) in group.members" @closed="closed(i)" :key="i">
+                    <chip v-for="(member,i) in group.members" @closed="closed(i)" :key="member.email">
                       {{ member.sur_name + ' ' + member.other_names }}
                     </chip>
                   </transition-group>
@@ -46,7 +46,7 @@
                 </div>
               </div>
               <div class="row action-buttons">
-                <button class="create-group-button" :class="{disabled:btnDisabled}">Create group</button>
+                <button class="create-group-button" :class="{disabled:btnDisabled}" @click="createGroup">Create group</button>
                 <button class="cancel-group-creation" @click="toggleGroup">Cancel</button>
               </div>
             </div>
@@ -89,6 +89,7 @@
 <script>
 import {emit, on} from '@/services/event_bus';
 import {mapMutations, mapState, mapActions} from "vuex";
+import a from '@/services/apis'
 
 export default {
   name: "NewGroup",
@@ -100,6 +101,7 @@ export default {
   data() {
     return {
       img:'',
+      b64Img:'',
       currentMember: '',
       foundUsers:[],
       userLoading:false,
@@ -117,7 +119,6 @@ export default {
       const test_empty = /^\s+$/g
       const is_name_empty = test_empty.test(this.group.name) || this.group.name.length <= 0
       const is_members_empty = this.group.members.length <= 0
-      console.log(is_name_empty,is_members_empty)
       return is_members_empty || is_name_empty
     }
   },
@@ -148,12 +149,10 @@ export default {
 
         //tell user that we didnt find the user with such id
         this.NotFoundText = (result.length > 0) ? '' : "No user found"
-        console.log(result)
       })
     },
     addMember(user) {
       const membersNotAvailable = this.foundUsers.length <= 0
-      console.log(membersNotAvailable)
       const disabled = this.disabled(user.email)
 
       if(membersNotAvailable || this.currentMember.length <= 0 || disabled)
@@ -179,15 +178,26 @@ export default {
     imageCropped(img){
       const image  = document.getElementById('preview')
       image.src = img;
-      console.log(img)
+      this.b64Img = img
     },
     toggleDiv(e){
       const thisDoc = e.target
-      console.log(e)
       // const thisDoc = document.getElementById('form')
       const clickInside = thisDoc.contains(e.target) //is what we clicked inside of component
       //if not inside the make img empty to hide this component
       if(!clickInside) this.toggleGroup()
+    },
+   async createGroup(){
+
+        const body = {
+          name:this.group.name,
+          // description:'',
+          members:this.group.members.map(member => ({user_name:member.user_name})),
+          // private:!this.group.public,
+          // profile: await getImgFile(this.b64Img,`${this.group.name}_cover_photo.png`),
+          college:this.$store.state.user.user.college
+        }
+        await a.create('chat_group',body)
     }
   },
   mounted() {
