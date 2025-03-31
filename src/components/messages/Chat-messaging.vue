@@ -420,7 +420,8 @@ export default {
         }
       }
       .announcement-container {
-        width: 486px;
+        max-width: 486px;
+        widows: 100%;
         margin-left: 18px;
         padding: 21px 15px;
         background: #e7ecf0;
@@ -485,6 +486,9 @@ export default {
           }
         }
       }
+    }
+    .msg-block{
+      width: 100%;
     }
 
     // design system message
