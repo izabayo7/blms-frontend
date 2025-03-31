@@ -347,7 +347,7 @@ export default {
         width: 86%;
         margin-left: 24px;
         height: 70px;
-        overflow: auto;
+        overflow: hidden;
         background: #E7ECF0;
         padding: 12px 31px;
 
@@ -371,7 +371,7 @@ export default {
           font-family: Roboto;
           font-style: normal;
           font-weight: 500;
-          font-size: 15px;
+          font-size: 13px;
           /* or 5% */
 
           display: flex;

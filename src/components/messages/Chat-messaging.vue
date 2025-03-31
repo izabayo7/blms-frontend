@@ -660,13 +660,19 @@ export default {
           font-size: 15px;
           padding: 11px;
           margin-bottom: 6px;
-
+          overflow: hidden;
           /* Type color / Default */
-
+          text-overflow: ellipsis;
           color: #343434 !important;
 
-          .sender{
+          .sender {
             font-weight: bold;
+          }
+
+          ._msg {
+            font-size: 13px;
+            display: inline;
+            white-space: nowrap;
           }
         }
 
