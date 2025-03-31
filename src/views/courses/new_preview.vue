@@ -234,6 +234,7 @@ export default {
         left: 126px;
         top: 199px;
         background-size: cover;
+        background-position: center;
       }
 
       .content {
