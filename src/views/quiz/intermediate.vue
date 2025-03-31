@@ -163,7 +163,7 @@
               :disabled="!proceed"
               :class="{disabled : !proceed}"
             class="start_quiz mt-5 mb-14 mb-md-0"
-            @click="$router.push(`/quiz/attempt/${$route.params.name}`)"
+            @click="$router.push(`/assessments/quiz/attempt/${$route.params.name}`)"
           >
             Take Quiz
           </button>

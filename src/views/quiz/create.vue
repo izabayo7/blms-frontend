@@ -607,7 +607,7 @@ export default {
           },
           pictures: this.pictures,
         }).then(() => {
-          this.$router.push("/quiz");
+          this.$router.push("/assessments/quiz");
         }).catch((e) => {
           this.$store.dispatch("app_notification/SET_NOTIFICATION", {
             message: e.message,
