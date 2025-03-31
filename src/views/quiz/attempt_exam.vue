@@ -305,11 +305,11 @@ export default {
         if (this.$store.state.user.user.category.name === 'STUDENT') {
           setTimeout(() => {
             this.remaining_time -= 1;
+            this.attempt.used_time += 1;
           }, 1000);
           if (this.remaining_time === this.exam.duration - 1)
             this.initialiseQuiz();
         }
-        this.attempt.used_time = this.x - this.remaining_time;
       } else if (!this.done) {
         this.done = true;
         const category = this.$store.state.user.user.category.name;
