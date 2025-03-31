@@ -123,7 +123,7 @@ export default {
   },
   methods: {
     ...mapMutations('sidebar_navbar',{toggleGroup:'TOGGLE_GROUP_MODEL_VISIBILITY'}),
-    ...mapActions('users',['searchUser']),
+    ...mapActions('users',['searchNewGroupMembers']),
 
     closed(i) {
       this.group.members.splice(i, 1)
@@ -142,7 +142,7 @@ export default {
         return
       }
 
-      this.searchUser({query: this.currentMember}).then(result => {
+      this.searchNewGroupMembers({grop_code: , query: this.currentMember}).then(result => {
         this.userLoading = false;
         this.foundUsers= result;
 

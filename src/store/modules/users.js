@@ -66,6 +66,13 @@ export default {
                 state.search_results.data = d.data.results
                 return d.data.results
             })
+        },
+        searchNewGroupMembers({ state }, { group_code, query, page, limit }) {
+            return apis.get(`chat_group/${group_code}/search_members?data=${query}&page=${page}&limit=${limit}`).then((d) => {
+                // d.data = d.data.data
+                // state.search_results.data = d.data.results
+                return d.data.results
+            })
         }
     },
     getters: {
