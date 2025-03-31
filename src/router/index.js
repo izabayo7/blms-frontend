@@ -10,8 +10,6 @@ const routes = [
     {
         path: '/',
         name: 'Home',
-        component: () =>
-            import('@/views/pages/home'),
         meta: {
             allowAnonymous: true
         },
@@ -332,6 +330,11 @@ router.beforeEach((to, from, next) => {
         axios.defaults.headers.common.Authorization = `Bearer ${token}`;
         // keep the decoded user in vuex store
         store.dispatch("user/setUser", jwt.decode(token));
+    }
+    if (to.path === '/') {
+        next({
+            path: '/login'
+        })
     }
     // check if the destination route is protected
     if (!to.meta.allowAnonymous && !store.state.user.isLoggedIn) {
