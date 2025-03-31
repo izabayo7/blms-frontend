@@ -27,6 +27,7 @@
 <!--        </div>-->
 <!--      </div>-->
 <!--    </div>-->
+
     <div class="live-class--video">
       <div class="head">
         <div class="text">
@@ -40,7 +41,15 @@
       <div class="video">
         <div class="video--wrapper" >
             <div class="video-el" @mouseenter="toggleMenu(true)" @mouseleave="toggleMenu(false)">
-              <video >
+              <div class="no-video">
+                <div class="no-video--wrapper">
+                  <img src="https://s3.amazonaws.com/cms-assets.tutsplus.com/uploads/users/810/profiles/19338/profileImage/profile-square-extra-small.png" alt="profile picture" class="picture">
+                  <h2 class="course">Economics Basics: Chapter 8 part II</h2>
+                  <span class="source">by instuctor</span>
+                  <h2 class="name">Rubogora Emanuel</h2>
+                </div>
+              </div>
+              <video v-if="false">
                 <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" autoplay>
               </video>
               <transition name="fade">
@@ -121,11 +130,11 @@
   import Participant from "../../../plugins/kurentoLive/participants";
   import {WebRtcPeer} from 'kurento-utils'
   import {mapGetters} from 'vuex'
-  import OnlineUser from "../../../components/Live/OnlineUser";
-  import UnrealTimeDiscussionBoard from "../../../components/Live/UnrealTimeDiscussionBoard";
+  // import OnlineUser from "../../../components/Live/OnlineUser";
+  // import UnrealTimeDiscussionBoard from "../../../components/Live/UnrealTimeDiscussionBoard";
 export default {
   name: "liveClass",
-  components: {UnrealTimeDiscussionBoard, OnlineUser},
+  // components: {UnrealTimeDiscussionBoard, OnlineUser},
   data(){
     return{
       ws:null,
@@ -339,31 +348,29 @@ export default {
     } else {
         console.log('\n\n\n\n\n student joined \n\n\n\n\n')
         constraints = {audio:false,video:false}
-
       }
 
       console.log(this.participationInfo.name + " registered in room " + this.participationInfo.room);
 
-      //
 
-        let participant = new Participant(this.participationInfo.name,this,true);
-        this.participants[this.participationInfo.name] = participant;
+      let participant = new Participant(this.participationInfo.name,this,true);
+      this.participants[this.participationInfo.name] = participant;
 
 
-        let video = participant.getVideoElement();
+      let video = participant.getVideoElement();
 
-        let options = {
-              localVideo: video,
-              mediaConstraints: constraints,
-              onicecandidate: participant.onIceCandidate.bind(participant)
-            }
-        participant.rtcPeer = new WebRtcPeer.WebRtcPeerSendonly(options,
-          function (error) {
-            if(error) {
-              return console.error(error);
-            }
-            this.generateOffer (participant.offerToReceiveVideo.bind(participant));
-        });
+      let options = {
+            localVideo: video,
+            mediaConstraints: constraints,
+            onicecandidate: participant.onIceCandidate.bind(participant)
+          }
+      participant.rtcPeer = new WebRtcPeer.WebRtcPeerSendonly(options,
+        function (error) {
+          if(error) {
+            return console.error(error);
+          }
+          this.generateOffer (participant.offerToReceiveVideo.bind(participant));
+      });
 
 
       msg.data.forEach(console.log)
@@ -917,6 +924,18 @@ export default {
             }
           }
 
+          //no video card
+          .no-video{
+            &--wrapper{
+              display:flex;
+              flex-direction: column;
+              align-items: center;
+
+              img{
+                
+              }
+            }
+          }
         }
       }
     }
