@@ -122,7 +122,7 @@
         class="courses-home"
         fluid
     >
-      <v-row>
+      <v-row class="mx-0">
         <v-col cols="12" md="6" class="courses-header mt-5">
           <h2>
             Hey Mr{{
@@ -238,7 +238,7 @@
         </v-col>
         <v-col cols="12" md="6">
           <v-card class="live-class">
-            <v-row>
+            <v-row class="mx-0">
               <v-col cols="12">
                 <v-img :src="require('@/assets/images/live-class.svg')"></v-img>
               </v-col>
