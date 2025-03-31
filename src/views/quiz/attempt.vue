@@ -52,7 +52,7 @@
                   v-for="(choice, k) in question.options.choices"
                   :key="k"
                   @click="handleOptionClick(i, k)"
-                  :class="`text-selection ${
+                  :class="`text-selection cursor-pointer ${
                     checkChoiceStatus(attempt.answers[i].choosed_options, {
                       text: choice.text,
                     })
