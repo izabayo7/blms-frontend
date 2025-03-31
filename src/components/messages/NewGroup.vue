@@ -406,7 +406,9 @@ export default {
       position: absolute;
       top: 50%;
       left: 50%;
+      max-height: 90%;
       transform: translate(-50%, -50%);
+      overflow: auto;
 
       .infos {
         .infos-holder {
