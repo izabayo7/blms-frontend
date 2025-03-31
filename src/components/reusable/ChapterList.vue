@@ -1,5 +1,5 @@
 <template>
-  <v-container class="details-menu pa-0">
+  <v-container class="details-menu customScroll pa-0" fluid>
     <v-row>
       <v-col class="chapters px-8">
         <v-btn
@@ -33,9 +33,42 @@
             </v-list-item-content>
 
             <v-list-item-action>
-              <v-icon
+              <!-- <v-icon
                 :color="maximumIndex > i  ? '#FFD248' : '#B4B4B4'"
-              >mdi-checkbox-{{maximumIndex > i ? 'marked' : 'blank'}}-circle{{maximumIndex > i ? '' : '-outline'}}</v-icon>
+              >mdi-checkbox-{{maximumIndex > i ? 'marked' : 'blank'}}-circle{{maximumIndex > i ? '' : '-outline'}}</v-icon>-->
+              <svg v-if="maximumIndex > i" xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 35 35">
+                <circle
+                  id="Ellipse_101"
+                  data-name="Ellipse 101"
+                  cx="17.5"
+                  cy="17.5"
+                  r="17.5"
+                  fill="#ffd248"
+                />
+                <path
+                  id="Icon_feather-check"
+                  data-name="Icon feather-check"
+                  d="M21.571,9,10.866,19.705,6,14.839"
+                  transform="translate(4 3)"
+                  fill="none"
+                  stroke="#fff"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="3"
+                />
+              </svg>
+              <svg v-else xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 35 35">
+                <g
+                  id="Ellipse_102"
+                  data-name="Ellipse 102"
+                  fill="none"
+                  stroke="#b4b4b4"
+                  stroke-width="3"
+                >
+                  <circle cx="17.5" cy="17.5" r="17.5" stroke="none" />
+                  <circle cx="17.5" cy="17.5" r="16" fill="none" />
+                </g>
+              </svg>
             </v-list-item-action>
           </v-list-item>
         </v-list>
@@ -59,10 +92,16 @@ export default {
       type: Number,
       required: true,
     },
+    currentIndex: {
+      type: Number,
+      required: true,
+    },
   },
-  data: () => ({
-    activeIndex: 0,
-  }),
+  computed: {
+    activeIndex() {
+      return this.currentIndex + 0;
+    },
+  },
 };
 </script>
 <style lang="scss">

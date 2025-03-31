@@ -4,7 +4,7 @@
     <v-container v-if="userCategory == 'Student'" id="courses" fluid>
       <v-row>
         <v-col cols="12">
-          <h2 class="mt-10 course-group-title">Ongoing Courses {{$vuetify.breakpoint.name}}</h2>
+          <h2 class="mt-10 course-group-title">Ongoing Courses</h2>
         </v-col>
       </v-row>
       <v-col class="col-12 pa-0">
@@ -129,18 +129,20 @@ export default {
       "unpublishedCourses",
       "ongoingCourses",
       "finishedCourses",
+      "loaded",
     ]),
   },
   methods: {
     ...mapActions("courses", ["getCourses"]),
   },
   created() {
-    //get courses on page load
-    this.getCourses({
-      userCategory: this.$store.state.user.category.toLowerCase(),
-      userId: this.$store.state.user._id,
-    });
-    console.log(this.$store.state.courses);
+    if (!this.loaded) {
+      //get courses on page load
+      this.getCourses({
+        userCategory: this.$store.state.user.category.toLowerCase(),
+        userId: this.$store.state.user._id,
+      });
+    }
   },
 };
 </script>

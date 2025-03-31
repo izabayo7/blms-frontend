@@ -10,7 +10,7 @@
       class="bg-color-one preview-media no-image text-center preview-image"
       style="width: 100%"
     >
-      <span class="text-h1 white--text">{{computeText(name)}}</span>
+      <span class="text-h1 white--text">{{name | computeText}}</span>
     </div>
 
     <!-- preview information -->
@@ -27,7 +27,9 @@
       </div>
       <!-- preview button -->
     </div>
-    <button @click="progress ? handleCourseClick(name) : startCourse">{{`${progress.progress == 100 ? 'proceed to course' : progress.progress > 0 ? 'continue course' : 'start course'}`}}</button>
+    <button
+      @click="progress ? handleCourseClick(name) : startCourse($store.state.user._id)"
+    >{{`${!progress ? 'start course' : progress.progress == 100 ? 'proceed to course' : 'continue course'}`}}</button>
   </div>
 </template>
 <script>
@@ -49,11 +51,11 @@ export default {
     },
   },
   methods: {
+    ...mapActions("courses", ["startCourse"]),
     handleCourseClick(name) {
       // navigate to the course
-      this.$router.push(`courses/${name}`);
+      this.$router.push(`/courses/${name}`);
     },
-    ...mapActions(["courses"], ["startCourse"]),
   },
 };
 </script>

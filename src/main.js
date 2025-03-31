@@ -6,7 +6,7 @@ import store from './store'
 import Vuetify from 'vuetify'
 import 'vuetify/dist/vuetify.min.css'
 import './plugins/kurious'
-import './plugins/globalFunctions'
+import './plugins/globalFilters'
 import '@/assets/sass/styles.scss'
 import vuetify from './plugins/vuetify';
 import VueSession from 'vue-session'

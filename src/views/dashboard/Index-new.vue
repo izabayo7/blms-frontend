@@ -10,7 +10,7 @@
       <div class="my-navbar">
         <navbar />
       </div>
-      <div class="main-content">
+      <div class="main-content customScroll">
         <router-view />
       </div>
     </main>
@@ -53,24 +53,7 @@ export default {
     .main-content {
       height: calc(100vh - 76px);
       overflow-y: auto;
-      &::-webkit-scrollbar {
-        width: 8px;
-      }
-      &::-webkit-scrollbar-track {
-        background-color: #f8f8ff;
-        border-radius: 10px;
-      }
-      &::-webkit-scrollbar-track:hover {
-        background-color: lighten($secondary, 4);
-      }
-
-      &::-webkit-scrollbar-thumb {
-        background-color: lighten($font, 40);
-        border-radius: 10px;
-      }
-      &::-webkit-scrollbar-thumb:hover {
-        background-color: lighten($font, 30);
-      }
+      // overflow-x: hidden;
     }
   }
 }

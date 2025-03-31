@@ -7,13 +7,13 @@
           <p class="course-chapters mt-0">{{course.chapters.length}} Chapters</p>
           <p
             :class="`instructor-course-description ${course.published ? 'hidden-md-and-down' : ''}`"
-          >{{trimString({string: course.description,length: 50})}}</p>
+          >{{course.description | trimString(50)}}</p>
           <p
             :class="`published-date ${course.published ? 'hidden-md-and-down' : ''}`"
             v-if="course.published"
-          >Published on 7th July</p>
-          <v-btn class="edit-btn ml-0" :to="`/courses/${course.name}`">
-            View Course
+          >Published on {{ course.publishedOn | formatDate }}</p>
+          <v-btn v-else class="edit-btn ml-0" :to="`/courses/preview/${course.name}`">
+            Preview Course
             <v-icon color="#fff">mdi-arrow-right</v-icon>
           </v-btn>
         </v-col>
@@ -41,18 +41,21 @@
           ></v-img>
           <v-avatar
             class="course-image white--text bg-color-one text-h2"
-            size="125"
+            size="106"
             v-else
-          >{{computeText(course.name)}}</v-avatar>
-          <p class="course-students" v-if="course.published">60 students</p>
+          >{{course.name | computeText}}</v-avatar>
+          <p
+            class="course-students"
+            v-if="course.published"
+          >{{`${course.attendedStudents} Student${course.attendedStudents > 1 ? 's' : ''}`}}</p>
         </v-col>
       </v-row>
       <v-row v-if="course.published" class="second-row hidden-md-and-down text-center">
         <v-col class="col-md-6">
-          <v-btn text color="error" class="action-btn">Unpublish Course</v-btn>
+          <v-btn @click="tooglePublishCourse(course._id)" text color="error" class="action-btn">Unpublish Course</v-btn>
         </v-col>
         <v-col class="col-md-6 text-right">
-          <v-btn text class="action-btn">Preview Course</v-btn>
+          <v-btn :to="`/courses/preview/${course.name}`" text class="action-btn">Preview Course</v-btn>
         </v-col>
       </v-row>
     </v-card>
@@ -60,6 +63,7 @@
 </template>
 
 <script>
+import {mapActions} from 'vuex'
 export default {
   data: () => ({
     power: 67,
@@ -79,6 +83,12 @@ export default {
       type: Object,
       required: true,
     },
+  },
+  methods: {
+    ...mapActions("courses", [
+      "tooglePublishCourse",
+      "deleteCourse",
+    ]),
   },
 };
 </script>
@@ -144,6 +154,7 @@ export default {
           border-radius: 55px;
           border: 2px solid #ffd248;
           margin: 6px 0;
+          font-size: 35px !important;
         }
         .course-students {
           margin: 18px 18px 0;

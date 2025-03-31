@@ -4,6 +4,7 @@ import courses from "@/store/modules/courses";
 
 Vue.use(Vuex)
 export default new Vuex.Store({
+    namespaceed: true,
     state: {
         user: null,
         isLoggedIn: false,

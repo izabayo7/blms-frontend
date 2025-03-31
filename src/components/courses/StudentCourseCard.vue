@@ -2,7 +2,7 @@
   <v-container fluid>
     <v-card
       v-if="category=='ongoing'"
-      @click="handleCourseClick(course._id)"
+      @click="$router.push(`/courses/preview/${course.name}`)"
       class="course-card elevation-0 py-1 px-3"
     >
       <v-row class="card-content">
@@ -12,18 +12,29 @@
             class="course-image white--text bg-color-one text-h2"
             size="125"
             v-else
-          >{{computeText(course.name)}}</v-avatar>
+          >{{course.name | computeText}}</v-avatar>
         </v-col>
         <v-col class="col-7 coure-details-side pt-6">
           <p class="course-title">{{course.name}}</p>
           <p class="course-instructor">{{course.instructor.surName}}</p>
-          <p class="course-description">{{trimString({string: course.description,length: 100})}}</p>
-          <v-progress-linear :value="course.progress.progress" color="#ffc100" class="course-progress" />
-          <p class="course-completion">{{Math.round(course.progress.progress)}}% completion</p>
+          <p class="course-description">{{course.description | trimString(100)}}</p>
+          <v-progress-linear
+            v-if="course.progress"
+            :value="course.progress.progress"
+            color="#ffc100"
+            class="course-progress"
+          />
+          <p
+            class="course-completion"
+          >{{ course.progress ? Math.round(course.progress.progress) + '% completion' : 'Not yet started'}}</p>
         </v-col>
       </v-row>
     </v-card>
-    <v-card v-else @click="handleCourseClick(course._id)" class="course completed">
+    <v-card
+      v-else
+      @click="$router.push(`/courses/preview/${course.name}`)"
+      class="course completed"
+    >
       <v-row>
         <v-col class="col-12 pa-0" id="cover-pic">
           <v-img
@@ -33,18 +44,24 @@
             style="height: 217px"
           ></v-img>
           <div v-else class="bg-color-one no-image text-center pt-12">
-            <span class="text-h1 white--text">{{computeText(course.name)}}</span>
+            <span class="text-h1 white--text">{{course.name | computeText}}</span>
           </div>
         </v-col>
         <v-col cols="12" class="completed-results">
           <span class="title d-block text-truncate mb-2 mb-sm-1 pt-3">{{ course.name }}</span>
           <span
             class="course-description text-caption d-block mb-6"
-          >{{ trimString({string: course.description, length: 150}) }}</span>
+          >{{ course.description | trimString(150) }}</span>
           <h4>
-            <v-avatar size="30" :class="`${course.instructor.profile? '' : 'bg-color-one'} user-profile`">
+            <v-avatar
+              size="30"
+              :class="`${course.instructor.profile? '' : 'bg-color-one'} user-profile`"
+            >
               <img v-if="course.instructor.profile" :src="course.instructor.profile" alt="avatar" />
-              <span class="white--text" v-else>{{computeText(`${course.instructor.surName} ${course.instructor.otherNames}`)}}</span>
+              <span
+                class="white--text"
+                v-else
+              >{{`${course.instructor.surName} ${course.instructor.otherNames}` | computeText}}</span>
             </v-avatar>
             Instructor {{ course.instructor.surName }}
           </h4>
@@ -67,15 +84,6 @@ export default {
     category: {
       type: String,
       required: true,
-    },
-  },
-  methods: {
-    handleCourseClick(id) {
-      //update the selectedCourse
-      this.$store.commit("set_selected_course", id);
-
-      // navigate to the course
-      this.$router.push(`courses/preview/${this.course.name}`);
     },
   },
 };

@@ -40,6 +40,12 @@ const routes = [
             component: () => import('@/views/courses/preview')
         },
         {
+            path: '/courses/edit/:name',
+            name: 'Edit Course',
+            component: () =>
+                import('@//views/courses/edit')
+        },
+        {
             path: '/courses/:name',
             component: () => import('@/views/courses/details')
         }, {
@@ -47,12 +53,7 @@ const routes = [
             name: 'New Course',
             component: () =>
                 import('@/components/newCourse.vue')
-        }, {
-            path: '/courses/edit/:id',
-            name: 'Edit Course',
-            component: () =>
-                import('@/components/editCourse.vue')
-        }, {
+        },  {
             path: '/quiz/new-quiz',
             name: 'Set Quiz',
             component: () =>
