@@ -467,7 +467,7 @@ export default {
 
         // remove media path from src
         else if (
-            this.questions[index].type.includes("image-select")
+            this.questions[index].type.includes("image_select")
         ) {
           for (const i in this.questions[index].options.choices) {
             const mediapath = this.questions[index].options
