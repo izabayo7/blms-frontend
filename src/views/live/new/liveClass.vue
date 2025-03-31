@@ -336,6 +336,7 @@ export default {
             // }
           } else {
             this.live_session = d.data.data
+            this.startCounting(d.data.data);
 
             this.initialiseSession()
             this.loadComments()
@@ -395,9 +396,11 @@ export default {
         console.log("ERR: ", evt);
       };
 
+
       window.onbeforeunload = () => {
-        console.log("bibaye before unload")
+        console.log('before unload g')
         this.ws.close();
+        this.handleMediaTracks();
       };
 
       this.ws.onmessage = (message) => {
@@ -718,7 +721,8 @@ export default {
         this.participants[key].dispose();
       }
 
-      this.ws.close();
+      // this.ws.close();
+      // this.handleMediaTracks();
       this.$router.push('/')
     },
     async receiveVideo(sender) {
@@ -778,17 +782,38 @@ export default {
           this.noVideo = !this.noVideo
         }
       }
+    },
+    stopTracks(tracks) {
+      for (const i in tracks) {
+        tracks[i].stop()
+      }
+    },
+    startCounting(live_session) {
+      this.interval = setInterval(() => {
+        this.elapsed_time = elapsedDuration(convertUTCDateToLocalDate(new Date(live_session.date.replace("00:00", live_session.time))));
+      }, 1000)
+    },
+    handleMediaTracks() {
+      const screen = document.getElementById("video_screen_feed");
+      const video = document.getElementById("video_feed");
+      console.log(screen, video)
+      if (video)
+        if (video.srcObject) {
+          this.stopTracks(video.srcObject.getTracks())
+        }
+      if (screen)
+        if (screen.srcObject) {
+          this.stopTracks(screen.srcObject.getTracks())
+        }
     }
   },
-  created() {
-    this.interval = setInterval(() => {
-      this.elapsed_time = elapsedDuration(convertUTCDateToLocalDate(new Date(this.live_session.date.replace("00:00", this.live_session.time))));
-    }, 1000)
-  },
-  destroyed() {
+  beforeRouteLeave(to, from, next) {
+    console.log('aha')
     if (this.ws)
       this.ws.close();
+    this.handleMediaTracks();
     clearInterval(this.interval)
+    next();
   }
   ,
   watch: {
