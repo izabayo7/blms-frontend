@@ -1,4 +1,5 @@
 import apis from "@/services/apis";
+import user from '@/store/modules/user'
 const getDefaultState = () => ({
     // storage for all quiz_submissions 
     quiz_submission: {
@@ -61,7 +62,7 @@ export default {
         getQuizSubmissions({ state }, { user_name }) {
             // if submission not loaded fetch them
             if (!state.quiz_submission.loaded) {
-                apis.get(`quiz_submission/user/${user_name}`).then(d => {
+                return apis.get(`quiz_submission/user/${user_name}`).then(d => {
                     d.data = d.data.data
                     state.quiz_submission.data = d.data
                     for (const k in d.data) {
@@ -69,17 +70,22 @@ export default {
                     }
                     //announce that data have been loaded
                     state.quiz_submission.loaded = true
+
+                    return d.data
                 })
             }
         },
 
         //get quiz_submissions  in a quiz
-        async getQuizSubmissionsInQuiz({ state }, { quiz_id }) {
+        async getQuizSubmissionsInQuiz({ state, dispatch }, { quiz_id }) {
             let quiz_submissions = state.quiz_submission.data
 
             // if submission not loaded fetch them
             if (!quiz_submissions.length) {
-                quiz_submissions = await this.getQuizSubmissions()
+
+                // eslint-disable-next-line no-undef
+                quiz_submissions = await dispatch('getQuizSubmissions', { user_name: user.state.user.user_name })
+                console.log(quiz_submissions)
             }
 
             let result = quiz_submissions.filter(e => e._id == quiz_id)

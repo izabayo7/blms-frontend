@@ -4,7 +4,7 @@
       <navigation title="Submissions" class="mb-6" :links="navigation_links" />
       <v-data-table
         :headers="submissionHeaders"
-        :items="quiz_submissions"
+        :items="quiz_submission.submissions"
         :items-per-page="5"
         sort-by="dateOfSubmission"
         class="data-table"
@@ -63,7 +63,7 @@
   </v-app>
 </template>
 <script>
-import { mapGetters, mapActions } from "vuex";
+import { mapActions } from "vuex";
 import colors from "@/assets/sass/imports/_colors.scss";
 export default {
   components:{
@@ -71,6 +71,7 @@ export default {
   },
   data: () => ({
     primary: colors.primary,
+    quiz_submission: undefined
   }),
   computed: {
     submissionHeaders() {
@@ -120,23 +121,21 @@ export default {
     userCategory() {
       return this.$store.state.user.user.category.name;
     },
-    ...mapGetters("quiz_submission", ["quiz_submissions"]),
-    // only display courses we started
-    activeCourses() {
-      return this.courses.filter((course) => course.progress);
-    },
   },
   methods: {
-    ...mapActions("quiz_submission", ["getQuizSubmissions"]),
+    ...mapActions("quiz_submission", ["getQuizSubmissionsInQuiz"]),
     guess(){
       return Math.random() > Math.random()
     }
   },
   created() {
     //get submissions on page load
-    this.getQuizSubmissions({
-      user_name: this.$store.state.user.user.user_name,
-    });
+    this.getQuizSubmissionsInQuiz({
+      quiz_id: this.$route.params.target
+    }).then((d)=>{
+      console.log(d)
+      this.quiz_submission = d
+    })
   },
 };
 </script>
