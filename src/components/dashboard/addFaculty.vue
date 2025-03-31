@@ -462,10 +462,10 @@ export default {
         height: 45.9px;
         font-family: Source Sans Pro;
         font-style: normal;
-        font-weight: 600;
+        font-weight: 400;
         font-size: 15.2686px;
         line-height: 23px;
-        color: #6d7580;
+        color: black;
         padding: 11.5px;
       }
 
