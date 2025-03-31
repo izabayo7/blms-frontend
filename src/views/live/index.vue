@@ -1,18 +1,31 @@
 <template>
   <v-container class="live_video customScroll" fluid>
     <v-row>
-      <video-item v-for="(item, i) in videosList" :todo="item" :key="i">
-      </video-item>
+      <vue-plyr v-for="(item, i) in videosList" :key="i">
+        <video
+          controls
+          autoplay
+          playsinline
+          :srcObject.prop="item.srcObject"
+          :muted="item.muted"
+          :id="item.id"
+        ></video>
+      </vue-plyr>
     </v-row>
     <v-row>
       <v-col class="col-6 text-center mx-auto">
         <v-text-field
+          v-model="name"
           placeholder="Enter meeting name"
           class="text-field"
           solo
         />
-        <v-btn :color="primary" class="white--text next-chapter px-12" rounded
-          id="open-or-join-room">Open or join</v-btn
+        <v-btn
+          :color="primary"
+          class="white--text next-chapter px-12"
+          rounded
+          @click="openOrJoinGroup"
+          >Open or join</v-btn
         ></v-col
       >
     </v-row>
@@ -21,98 +34,95 @@
 
 <script>
 import colors from "@/assets/sass/imports/_colors.scss";
-// eslint-disable-next-line no-unused-vars
-import io from "socket.io-client";
+
+import * as io from "socket.io-client";
+window.io = io;
 import * as RTCMultiConnection from "../../assets/js/RTCMultiConnection";
 
-const component = {
+export default {
   name: "LiveClass",
-  components: {
-    videoItem: {
-      props: ["video_obj"],
-      template:
-        '<video controls autoplay playsinline :srcObject.prop="video_obj.srcObject" :muted="video_obj.muted" :id="video_obj.id"></video>',
-    },
-  },
   data: () => ({
+    connection: new RTCMultiConnection(),
     primary: colors.primary,
-    courseName: "Economy Basics",
+    name: "",
     videosList: [],
   }),
-  // mounted() {
-  //   const socket_plugin = document.createElement("script");
-  //   socket_plugin.setAttribute("src", `${process.env.VUE_APP_api_service_url}/socket.io/socket.io.js`);
-  //   socket_plugin.async = true;
-  //   document.head.appendChild(socket_plugin);
-
-  //   const rtc_plugin = document.createElement("script");
-  //   rtc_plugin.setAttribute("src", "../../assets/js/RTCMultiConnection.min.js");
-  //   rtc_plugin.async = true;
-  //   document.head.appendChild(rtc_plugin);
-
-  // },
-};
-
-export default component;
-
-// ......................................................
-// ..................RTCMultiConnection Code.............
-// ......................................................
-
-// eslint-disable-next-line no-undef
-var connection = new RTCMultiConnection();
-
-// by default, socket.io server is assumed to be deployed on your own URL
-connection.socketURL = `${process.env.VUE_APP_api_service_url}/socket.io/socket.io.js`;
-
-connection.socketMessageEvent = "video-conference-demo";
-
-connection.session = {
-  audio: true,
-  video: true,
-};
-
-console.log(this.courseName);
-
-connection.sdpConstraints.mandatory = {
-  OfferToReceiveAudio: true,
-  OfferToReceiveVideo: true,
-};
-
-// https://www.rtcmulticonnection.org/docs/iceServers/
-// use your own TURN-server here!
-connection.iceServers = [
-  {
-    urls: [
-      "stun:stun.l.google.com:19302",
-      "stun:stun1.l.google.com:19302",
-      "stun:stun2.l.google.com:19302",
-      "stun:stun.l.google.com:19302?transport=udp",
-    ],
+  methods: {
+    addVideos(video_obj) {
+      console.log("kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk", video_obj);
+      this.videosList.push(video_obj);
+    },
+    resetVideos(videos) {
+      this.videosList = videos;
+    },
+    openOrJoinGroup() {
+      if (this.name == "") alert("name is required");
+      this.connection.openOrJoin(this.name);
+    },
   },
-];
+  mounted() {
+    const vm = this;
 
-document.getElementById('open-or-join-room').onclick = function() {
-    connection.openOrJoin(document.getElementById('room-id').value);
-};
+    // ......................................................
+    // ..................RTCMultiConnection Code.............
+    // ......................................................
 
-connection.autoCreateMediaElement = false;
-connection.onstream = function (event) {
-  this.videosList.push({
-    id: event.streamid,
-    srcObject: event.stream,
-    muted: event.type === "local",
-  });
-};
+    // eslint-disable-next-line no-undef
 
-connection.onstreamended = function (event) {
-  var newList = [];
-  this.videosList.forEach(function (item) {
-    if (item.id !== event.streamid) {
-      newList.push(item);
-    }
-  });
-  this.videosList = newList;
+    // by default, socket.io server is assumed to be deployed on your own URL
+    this.connection.socketURL = `${process.env.VUE_APP_api_service_url}/`;
+
+    this.connection.socketMessageEvent = "video-conference-demo";
+
+    this.connection.session = {
+      audio: true,
+      video: true,
+    };
+
+    this.connection.sdpConstraints.mandatory = {
+      OfferToReceiveAudio: true,
+      OfferToReceiveVideo: true,
+    };
+
+    // https://www.rtcmulticonnection.org/docs/iceServers/
+    // use your own TURN-server here!
+    this.connection.iceServers = [
+      {
+        urls: [
+          "stun:stun.l.google.com:19302",
+          "stun:stun1.l.google.com:19302",
+          "stun:stun2.l.google.com:19302",
+          "stun:stun.l.google.com:19302?transport=udp",
+        ],
+      },
+    ];
+
+    this.connection.autoCreateMediaElement = false;
+
+    this.connection.onstream = (event) => {
+      try {
+        console.log(event);
+
+        vm.addVideos({
+          id: event.streamid,
+          srcObject: event.stream,
+          muted: event.type === "local",
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    this.connection.onstreamended = function (event) {
+      var newList = [];
+      vm.data().videosList.forEach(function (item) {
+        if (item.id !== event.streamid) {
+          newList.push(item);
+        }
+      });
+      vm.resetVideos(newList);
+    };
+  },
 };
 </script>
 

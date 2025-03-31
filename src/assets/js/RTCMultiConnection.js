@@ -381,6 +381,7 @@ var RTCMultiConnection = function(roomid, forceOptions) {
         });
 
         connection.socket.on('error', function(event) {
+            console.log(event)
             connection.onSocketError(event);
         });
 
@@ -4236,6 +4237,7 @@ var RTCMultiConnection = function(roomid, forceOptions) {
             callback = callback || function() {};
 
             connection.checkPresence(roomid, function(isRoomExist, roomid) {
+
                 if (isRoomExist) {
                     connection.sessionid = roomid;
 
