@@ -85,6 +85,11 @@ div#app{
 
 }
 
+.profile-avatar{
+  background-color: $primary;
+  color: $main;
+}
+
 .v-dialog:not(.v-dialog--fullscreen) {
   border-radius: 0 !important;
 }

@@ -6,16 +6,18 @@
           <user-simple-card :loading="userByUsernameLoading" >
             <template #name>{{userByUsername.other_names + " " + userByUsername.sur_name}}</template>
             <template #type>Instructor</template>
-            <template #image><img src="https://i2.wp.com/worldbusinessfitness.com/wp-content/uploads/2018/01/opulent-profile-square-07.jpg?ssl=1" alt=" profile pic"></template>
+            <template #image>
+              <img v-if="userByUsername.profile" :src="userByUsername.profile" alt=" profile pic">
+              <v-avatar v-else :size="30" class="profile-avatar">
+                {{ `${userByUsername.sur_name} ${userByUsername.other_names}` | computeText }}
+              </v-avatar>
+            </template>
           </user-simple-card>
         </div>
         <div class="table-wrapper mt-6">
           <div class="table-header">
             <table-header />
           </div>
-<!--          <div class="table" v-if="usersOnFaculties.length > 0">-->
-<!--            <table-ui :data="usersOnFaculties" :options="options"/>-->
-<!--          </div>-->
 
           <div class="table">
             <table-ui :options="options">
@@ -27,7 +29,12 @@
               <template #tableRows>
                 <table-row :selected="allSelected" @select="selectRow($event, user)" :data="user" v-for="user in usersOnFaculties" :key="user._id">
                   <template #cols>
-                    <td class="row--image" @mouseenter="mouseOnPic($event,user.user_name,'user-profile-card')" @mouseleave="mouseOutPic($event,'user-profile-card')"><img src="https://i2.wp.com/worldbusinessfitness.com/wp-content/uploads/2018/01/opulent-profile-square-07.jpg?ssl=1" alt=" profile pic"></td>
+                    <td class="row--image" @mouseenter="mouseOnPic($event,user.user_name,'user-profile-card')" @mouseleave="mouseOutPic($event,'user-profile-card')">
+                      <img v-if="user.profile" :src="user.profile" class="img" alt=" profile pic">
+                      <v-avatar v-else size="30" class="profile-avatar img">
+                        {{ `${user.sur_name} ${user.other_names}` | computeText }}
+                      </v-avatar>
+                    </td>
                     <td >{{user.sur_name}}</td>
                     <td>{{user.other_names}}</td>
                     <td>{{user.email}}</td>

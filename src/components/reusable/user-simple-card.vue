@@ -98,6 +98,10 @@ export default {
           border-radius:50%;
           border:3.5px solid $primary;
         }
+        .profile-avatar{
+          width:4rem;
+          height:4rem;
+        }
       }
 
     }
