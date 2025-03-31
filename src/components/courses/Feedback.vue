@@ -174,7 +174,7 @@ export default {
     },
     currentContent() {
       return this.$refs.feedback_input
-          ? this.$refs.feedback_input.innerHTML
+          ? this.removeNonBreakingSpace(this.$refs.feedback_input.innerHTML)
           : "";
     },
   },
@@ -215,12 +215,13 @@ export default {
       })
     },
     saveChanges() {
+      const content = this.feedbackContent()
       if (this.file) {
         this.upoadFeedback()
       }
       if (this.feedbackId !== '')
         this.editFeedback()
-      else if(this.content.replace(/\s/g, '').length)
+      else if(content.replace(/\s/g, '').length)
         this.addFeedback()
     },
     pickfile(index) {
@@ -240,7 +241,7 @@ export default {
     ]),
     feedbackContent() {
       return this.$refs.feedback_input
-          ? this.$refs.feedback_input.innerHTML
+          ? this.removeNonBreakingSpace(this.$refs.feedback_input.innerHTML)
           : "";
     },
     computeFeedbackClass() {
@@ -253,13 +254,13 @@ export default {
         }
       }
       // show or hide save button
-      this.showSave = this.feedbackContent() != this.content;
+      this.showSave = this.feedbackContent() !== this.content;
     },
     removeNonBreakingSpace(text) {
       return text.replace(/&nbsp;/g, "");
     },
     async addFeedback() {
-      let content = this.removeNonBreakingSpace(this.feedbackContent());
+      let content = this.feedbackContent();
 
       if (content === "") {
         return;
@@ -286,7 +287,7 @@ export default {
     },
     async editFeedback() {
       const content = this.feedbackContent();
-      if (content == "") {
+      if (content === "") {
         return;
       }
       const response = await Apis.update("comment", this.feedbackId, {
