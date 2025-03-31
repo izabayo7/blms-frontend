@@ -652,8 +652,6 @@ export default {
     setDetector() {
       const video = document.getElementById("userStream")
       const canvas = document.createElement('canvas')
-      canvas.style.height = "186px"
-      canvas.style.width = "104.6px"
       video.parentElement.append(canvas)
 
       //  Load posenet
@@ -674,11 +672,24 @@ export default {
         if (
             video.readyState === 4
         ) {
+          // Get Video Properties
+          const videoWidth = video.videoWidth;
+          const videoHeight = video.videoHeight;
+
+          // Set video width
+          // webcamRef.current.video.width = videoWidth;
+          // webcamRef.current.video.height = videoHeight;
+
+          // Set canvas width
+          canvas.width = videoWidth;
+          canvas.height = videoHeight;
+
           // Make Detections
           // OLD MODEL
           //       const face = await net.estimateFaces(video);
           // NEW MODEL
           const face = await net.estimateFaces({input: video});
+          console.log(face);
           // Get canvas context
           const ctx = canvas.getContext("2d");
           requestAnimationFrame(() => {
@@ -692,6 +703,7 @@ export default {
     },
     setCamera() {
       const video = document.getElementById("userStream")
+      console.log(video)
       navigator.getUserMedia(
           {video: {}},
           stream => {

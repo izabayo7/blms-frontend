@@ -89,15 +89,19 @@
       position: fixed;
       margin-top: 3%;
 
-      .webcam{
+      .webcam, .webcam video, canvas {
+        width: 186px;
+        height: 104.6px;
+      }
+
+      .webcam {
         position: relative;
-        video{
-          width: 186px;
-          height: 104.6px;
-        }
-        canvas{
+
+        video, canvas {
           position: absolute;
-          left:0;
+          margin: auto;
+          left: 12px;
+          right: 0;
         }
       }
 
