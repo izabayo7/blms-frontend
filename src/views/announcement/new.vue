@@ -63,7 +63,7 @@
                       d="M2.41355 12.6584C2.86033 13.7301 4.03747 14.2926 5.15186 13.9669L8.24673 13.0627L6.23214 8.2303L3.4115 9.79227C2.39575 10.3546 1.96676 11.5867 2.41355 12.6584Z"
                       fill="#2D3E70"/>
                 </svg>
-                {{ announcement.name | trimString(18) }}
+                {{ announcement.title | trimString(18) }}
               </div>
               <div class="details">
                 <div class="time">{{ announcement.createdAt | formatDate }}</div>
@@ -111,8 +111,6 @@
                       </clipPath>
                     </defs>
                   </svg>
-
-                  {{ announcement.views }}
                 </div>
               </div>
               <div class="new">New</div>
@@ -120,8 +118,8 @@
           </div>
           <div class="col-12">
             <div class="input-group">
-              <div class="label">Announcement name</div>
-              <input v-model="announcement.name" type="text">
+              <div class="label">Announcement title</div>
+              <input v-model="announcement.title" type="text">
             </div>
             <div class="input-group">
               <SelectUi
@@ -159,11 +157,11 @@
             mode="edit"
             class="editor-container"
             :inverted="true"
-            :defaultContent="'<ol><li><p>Write your custom instructions</p></li></ol>'"
+            :defaultContent="'<ol><li><p>Write your content here</p></li></ol>'"
         />
         <div class="actions">
-          <button class="button">Save</button>
-          <button class="cancel button mx-auto">Cancel</button>
+          <button class="button" @click="validate">Save</button>
+          <button class="cancel button mx-auto" @click="$router.push('/announcements')">Cancel</button>
         </div>
       </div>
     </v-row>
@@ -175,7 +173,7 @@ import SelectUi from "@/components/reusable/ui/select-ui";
 import Apis from "@/services/apis";
 
 export default {
-  name: "Navbar",
+  name: "CreateAnnouncement",
   components: {
     Editor: () => import("@/components/reusable/Editor"),
     SelectUi
@@ -183,10 +181,9 @@ export default {
   computed: {},
   data: () => ({
     announcement: {
-      name: "",
+      title: "",
       target: "",
       content: "",
-      views: 0,
       createdAt: new Date()
     },
     target_types: ['course', 'student group', 'faculty', 'college'],
@@ -195,7 +192,8 @@ export default {
     select_options: [],
     courses: [],
     student_groups: [],
-    faculties: []
+    faculties: [],
+    error: ""
   }),
   methods: {
     async computeOptions() {
@@ -216,8 +214,7 @@ export default {
         this.student_groups.map(x => {
           this.select_options.push(x.name)
         })
-      }
-      else if (this.selected_target_type === 'faculty') {
+      } else if (this.selected_target_type === 'faculty') {
         if (this.$store.state.user.user.category.name === 'INSTRUCTOR') {
           const res = await Apis.get('faculty/user')
           this.faculties = res.data.data
@@ -229,8 +226,7 @@ export default {
         this.faculties.map(x => {
           this.select_options.push(x.name)
         })
-      }
-      else if (this.selected_target_type === 'course') {
+      } else if (this.selected_target_type === 'course') {
         if (this.$store.state.user.user.category.name === 'INSTRUCTOR') {
           const res = await Apis.get('course/user')
           this.courses = res.data.data
@@ -243,12 +239,73 @@ export default {
           this.select_options.push(x.name)
         })
       }
+    },
+    validate() {
+      this.announcement.content = this.$refs.editor.getHTML();
+      if (this.announcement.title === "")
+        return this.error = "Announcement title is required"
+      if (this.announcement.title.length < 5)
+        return this.error = "Announcement title too short"
+      if (this.selected_target_id === 'Select target')
+        return this.error = "Announcement target is required"
+      if (this.announcement.content === '<ol><li><p>Write your content here</p></li></ol>')
+        return this.error = "Announcement content is required"
+      this.announcement.createdAt = undefined
+      this.announcement.target = {
+        type: this.selected_target_type === 'student group' ? 'student_group' : this.selected_target_type,
+        id: this.findId()
+      }
+      this.saveAnnouncement();
+    },
+    findId(){
+      if(this.selected_target_type === 'college')
+        return this.$store.state.sidebar_navbar.college._id
+      else if (this.selected_target_type === 'student group') {
+        for (const i in this.student_groups) {
+          if(this.student_groups[i].name === this.selected_target_id)
+            return this.student_groups[i]._id
+        }
+      } else if (this.selected_target_type === 'faculty') {
+        for (const i in this.faculties) {
+          if(this.faculties[i].name === this.selected_target_id)
+            return this.faculties[i]._id
+        }
+      } else if (this.selected_target_type === 'course') {
+        for (const i in this.courses) {
+          if(this.courses[i].name === this.selected_target_id)
+            return this.courses[i]._id
+        }
+      }
+    },
+    async saveAnnouncement() {
+
+      const response = await Apis.create('announcement/group', this.announcement)
+      if(response.data.status !== 201)
+        this.error = response.data.message
+      else {
+        this.$store.dispatch("app_notification/SET_NOTIFICATION", {
+          message: "Announcement was successfully created",
+          status: "success",
+          uptime: 2000,
+        })
+        this.$router.push('/announcements')
+      }
     }
   },
   watch: {
     selected_target_type() {
       this.computeOptions()
-    }
+    },
+    error() {
+      if (this.error !== "")
+        this.$store.dispatch("app_notification/SET_NOTIFICATION", {
+          message: this.error,
+          status: "danger",
+          uptime: 2000,
+        }).then(() => {
+          this.error = ""
+        })
+    },
   },
   async created() {
     // const res = await Apis.get(
