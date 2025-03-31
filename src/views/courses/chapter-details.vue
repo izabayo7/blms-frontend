@@ -317,6 +317,10 @@ export default {
         let index = 0;
         for (const i in course.chapters) {
           if (course.chapters[i]._id == this.$route.params.id) {
+            this.$store.commit(
+              "courses/SET_TOTAL_COMMENTS_ON_A_CHAPTER",
+              course.chapters[i].commentsLength
+            );
             index = parseInt(i);
             break;
           }

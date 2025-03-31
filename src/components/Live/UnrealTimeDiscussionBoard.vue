@@ -64,7 +64,6 @@ export default {
   },
   methods: {
     async get_comments() {
-      console.log(this.selectedChapter);
       this.commentsLoading = true;
       const comments = await api.get(`comment/chapter/${this.selectedChapter}`);
       this.comments = comments.data.data;
