@@ -128,7 +128,7 @@
       <div v-if="announcement && showContent" class="col-12 col-md-8 pt-0">
         <div class="announcement view">
           <div class="d-flex">
-            <div class=" col-12 col-md-1"><img :src="$store.state.sidebar_navbar.college.logo" alt="" class="college-logo"></div>
+            <div class=" col-12 col-md-2"><img :src="$store.state.sidebar_navbar.college.logo" alt="" class="college-logo"></div>
             <div class="col-12 col-md-8 vertically--centered justify-start">{{announcement.title}}</div>
           </div>
           <Editor
