@@ -29,7 +29,7 @@ export default {
   },
   data(){
     return {
-      selectSelected:false,
+      selectSelected:this.selected,
     }
   },
   computed:{
@@ -40,6 +40,7 @@ export default {
   methods:{
     select(e){
       this.$emit('select',e)
+      console.log('select row')
       this.selectSelected  = !this.selectSelected;
     }
   }
