@@ -1,5 +1,5 @@
 <template>
-  <div class="profile">
+  <div class="profile" ref="profile">
     <div class="profile-container" @click="profile_card_active = !profile_card_active">
       <img v-if="$store.state.user.user.profile" :src="$store.state.user.user.profile" alt="profile picture"/>
       <v-avatar v-else size="50" class="avatar">
@@ -7,7 +7,9 @@
       </v-avatar>
       <v-icon>mdi-chevron-down</v-icon>
       <div class="profile-card">
-        <profile-card v-if="profile_card_active" />
+        <div class="profile-card-wrapper" v-if="profile_card_active" >
+          <profile-card />
+        </div>
       </div>
     </div>
   </div>
@@ -21,6 +23,20 @@ export default {
     return{
       profile_card_active:false
     }
+  },
+  methods:{
+    outsideClickDetector() {
+      let self = this
+      document.addEventListener("click", function (e) {
+
+        if (!self.$refs['profile'] || !self.$refs['profile'].contains(e.target)) {
+          self.profile_card_active = false;
+        }
+      });
+    },
+  },
+  mounted() {
+    this.outsideClickDetector();
   }
 };
 </script>
