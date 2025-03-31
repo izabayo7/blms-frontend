@@ -443,7 +443,7 @@ export default {
       }
 
       .incoming-messages {
-        max-height: 100%;
+        max-height: 96%;
         overflow-x: hidden;
         overflow-y: auto;
 

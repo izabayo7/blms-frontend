@@ -41,9 +41,17 @@
           </div>
           <!--        list of messages sent or received-->
           <div class="msgs">
-            <div class="msg" v-for="(msg, i) in msgs.messages" :key="i">
+            <div :class="`msg-cntnr ${!msg.content || msg.content === '' ? 'noBg' : ''}`"
+                 v-for="(msg, i) in msgs.messages"
+                 :key="i">
               <!--            //for better html elements readability-->
-              <div :inner-html.prop="msg.content | urlify"/>
+              <div class="msg" v-if="msg.content" :inner-html.prop="msg.content | urlify"/>
+              <div v-if="msg.attachments"
+                   :class="`attachments-cotainer ${msg.content ? 'pushed' : ''} ${msg.attachments.length > 1 ? msg.attachments.length > 2 ? 'more':'two':''}`">
+                <div v-for="(attachment, k) in msg.attachments" :key="k" class="attachment">
+                  <img :src="attachment.src + `?token=${$session.get('jwt')}`" alt="">
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -213,7 +221,7 @@ export default {
   .msg-container {
     margin: 0 10px;
     overflow: auto;
-    //height: 100vh;
+    height: 100%;
 
     .typing {
       height: fit-content;
@@ -316,7 +324,7 @@ export default {
 
       //whole msg bar css
       .msg {
-        max-width: 20rem;
+        max-width: 28rem;
         padding: 0.5rem 1.7rem;
         margin: 1.5px;
         width: -webkit-fit-content;
@@ -326,6 +334,48 @@ export default {
         font-weight: 400;
         font-family: Poppins;
         word-break: break-word;
+        position: relative;
+
+        &.noBg {
+          background: transparent !important;
+        }
+
+      }
+
+      .attachments-cotainer {
+        //position: absolute;
+        display: flex;
+
+        &.pushed {
+          margin-top: .5rem
+        }
+
+        .attachment {
+          width: fit-content;
+          padding: 0;
+          background: transparent;
+
+          img {
+            width: 402px;
+            object-fit: cover;
+            max-height: 199px;
+            border-radius: 10px;
+            border: 1px solid #193074;
+          }
+        }
+        &.two {
+          img {
+            width: 201px;
+            margin: 0px 5px;
+          }
+        }
+        &.more {
+          .attachment img {
+            width: 130px;
+            height: 108px;
+            margin: 0px 5px;
+          }
+        }
       }
     }
 
@@ -338,6 +388,9 @@ export default {
         max-width: 100%;
       }
 
+      .attachments-cotainer {
+        left: 0;
+      }
     }
 
     //css for the only sending msgs
@@ -358,9 +411,18 @@ export default {
           align-self: flex-end;
           display: flex;
           flex-direction: column;
+          position: relative;
+
+          .msg-cntnr {
+            align-self: flex-end;
+            .attachments-cotainer {
+              right: 0;
+            }
+          }
 
           .msg {
             align-self: flex-end;
+            margin-left: auto;
             background-color: $primary;
             color: $main;
             border-radius: 15px 0 0 15px;

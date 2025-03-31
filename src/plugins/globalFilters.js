@@ -45,11 +45,11 @@ const filters = [
             }); // format to format the date
             const formatedDate = dateFormat.formatToParts(new Date(dateToFormat)); //lets format date
             const [
-                { value: month },
+                {value: month},
                 ,
-                { value: day },
+                {value: day},
                 ,
-                { value: year },
+                {value: year},
             ] = formatedDate; //lets destruct data from the formated date
 
             return `${day} ${month} ${year}`;
@@ -80,7 +80,7 @@ const filters = [
             } else if (Difference_In_Days === 1) {
                 result = 'yesterday'
             } else {
-                result = date1.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })
+                result = date1.toLocaleString('en-US', {hour: 'numeric', minute: 'numeric', hour12: true})
             }
 
             return result
@@ -89,6 +89,8 @@ const filters = [
     {
         name: 'urlify',
         structure(text) {
+            if (!text)
+                return
             // return text.replace(urlRegex, '<a href="$1" target="_blank">$1</a>')
             return text.replace(urlRegex, (d) => {
                 return `<a href="${d}" target="_blank" >${d} </a>`

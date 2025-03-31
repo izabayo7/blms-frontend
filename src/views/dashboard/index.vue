@@ -48,13 +48,6 @@ export default {
       alert('upgrade papa !')
     });
 
-    // listen if the new message was sent
-    this.socket.on("res/message/sent", (message) => {
-      setTimeout(this.scrollChatToBottom, 1);
-      message.sender.sur_name = "You";
-      this.$store.commit("chat/ADD_ONGOING_MESSAGE", message);
-    });
-
     // Message from server
     this.socket.on("res/message/new", (message) => {
       this.update_unread(this.unreads + 1)
