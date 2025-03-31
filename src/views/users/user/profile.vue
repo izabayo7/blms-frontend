@@ -7,7 +7,7 @@
         </div>
         <div class="profile--user-profile-card--course-created">
           <div class="head mt-4 mb-1">
-            <h3>Course created</h3>
+            <h3>Course {{ user.category === 'STUDENT' ?  'enroled' : 'created' }}</h3>
           </div>
           <div class="course-card" v-for="i in 4" :key="i">
             <course-created-card :type="user.category"/>
@@ -82,6 +82,8 @@ export default {
     border: 2px solid lighten($font, 70);
     padding: .5rem 2rem;
     background: $main;
+    max-width: 450px;
+    width: 100%;
 
     .head {
       h3 {

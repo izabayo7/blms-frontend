@@ -24,11 +24,11 @@
       </div>
       <!--      col 3 with last attempted quiz infos-->
       <div v-if="type === 'INSTRUCTOR'" class="ccc--col ccc--col__3 ccc--students">
+        <div class="ccc--students--number text-center">
+          <h5>62</h5>
+        </div>
         <div class="ccc--students--title">
           <p>Students</p>
-        </div>
-        <div class="ccc--students--number">
-          <h5>62</h5>
         </div>
       </div>
       <div v-else class="ccc--col ccc--col__3 ccc--students">
@@ -102,14 +102,21 @@ export default {
 
   &--class {
     padding: 0 1rem;
-
+    overflow-wrap: anywhere;
+    max-width: 170px;
     p {
       font-size: .65rem;
       color: lighten($primary, 10)
     }
 
     &--name {
-      font-size: 0.65rem;
+      font-family: Roboto;
+      font-style: normal;
+      font-weight: 500;
+      font-size: 10px;
+      line-height: 12px;
+
+      color: #193074;
       .text{
         font-family: Roboto;
         font-style: normal;
