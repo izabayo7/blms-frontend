@@ -162,7 +162,7 @@ const routes = [
                         component: () =>
                             import('@/components/live-class.vue')
                     }, {
-                        path: '/profile',
+                        path: '/profile/:user_name',
                         component: () =>
                             import('@/components/update_profile.vue')
                     }, {
