@@ -27,7 +27,7 @@
               </div>
             </div>
             <div class="text-content">
-              <h4>{{ header.head }}</h4>
+              <h4>{{ $store.getters['faculties/faculty'] ? $store.getters['faculties/faculty'].name : '' }}</h4>
               <h2>{{ header.title }}</h2>
             </div>
           </div>
@@ -85,6 +85,12 @@ export default {
   computed: {
     ...mapGetters('faculties', ['header']),
   },
+  // watch:{
+  //   showFacultyModal(){
+  //     if(!this.showFacultyModal)
+  //
+  //   }
+  // },
   created() {
 
     // only route when we are not on children routes

@@ -123,7 +123,7 @@ name: "Faculty",
   },
   async mounted(){
       await this.$store.dispatch("faculties/getFaculty",this.facultyId)
-      await this.$store.dispatch('faculties/changeHeader',{head:this.faculty.name,title:"Faculty Details"})
+      await this.$store.dispatch('faculties/changeHeader',{title:"Faculty Details"})
 
 }
 }

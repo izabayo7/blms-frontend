@@ -328,6 +328,7 @@ export default {
           status: "success",
           uptime: 2000,
         })
+
         if (!this.editMode) {
           const unsaved = []
           for (const i in this.addedStudentGroups) {
@@ -354,6 +355,11 @@ export default {
           } else
             this.addedStudentGroups = unsaved
         } else {
+          this.$store.commit("faculties/UPDATE_FACULTY", {
+            id: this.facultyId,
+            name: this.faculty.name,
+            description: this.faculty.description
+          })
           this.$emit('closeModal')
         }
       }
