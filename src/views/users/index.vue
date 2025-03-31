@@ -35,7 +35,7 @@
       </div>
       <div class="tabular-users">
         <div class="table-wrapper mt-6" v-if="users.length > 0">
-<!--          {{ size }}-->
+          <!--          {{ size }}-->
           <div class="table-header">
             <table-header>
               <template v-if="size" #actions>
@@ -139,6 +139,9 @@
             </table-ui>
           </div>
         </div>
+        <div v-else class="d-flex justify-center align-center loader">
+          <img class="" src="https://kurious.rw/_nuxt/img/loader.059b462.gif" alt="lodading ...">
+        </div>
       </div>
     </div>
     <invite-users-dialog
@@ -184,8 +187,7 @@ export default {
       },
     }
   },
-  computed: {
-  },
+  computed: {},
   mixins: [userSimpleCard],
   methods: {
     ...mapActions("modal", ["set_modal"]),
@@ -307,6 +309,9 @@ export default {
 
     }
 
+    .loader {
+      height: 60vh;
+    }
   }
 }
 </style>
