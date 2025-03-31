@@ -76,7 +76,7 @@ export default {
     justify-content: center;
 
     .msg-input{
-
+      padding: 0;
       div.input{
         background-color: $secondary;
         position: relative;
@@ -120,15 +120,14 @@ export default {
       }
 
       .send{
-        margin-left:.4rem;
-        border-radius: 50%;
         display: flex;
         height: fit-content;
         width: fit-content;
         cursor: pointer ;
 
         .icon{
-          padding: .2rem;
+          border-radius: 50%;
+          padding: .2rem .3rem;
           background-color: $primary;
           svg{
             width: 20px;

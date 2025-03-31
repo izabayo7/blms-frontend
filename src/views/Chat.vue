@@ -21,8 +21,7 @@
 import ChatHeader from '@/components/messages/Chat-header'
 import SendMessage from '@/components/messages/Send-message'
 import ChatMessaging from '@/components/messages/Chat-messaging'
-import {mapGetters, mapState} from 'vuex'
-import {emit,on} from '@/services/event_bus'
+import {mapGetters, mapState, mapActions} from 'vuex'
 
 export default {
   name: "Chat",
@@ -37,29 +36,39 @@ export default {
   },
   computed:{
     ...mapState('chat',['currentDisplayedUser','currentChatMessages','username']),
-    ...mapGetters('chat',['socket'])
+    ...mapGetters('chat',['socket']),
   },
   methods:{
+    ...mapActions('chat',['setUsername']),
+    loadNewCurrentMessages(username){
+      // to load new messages we need to make sure that the current user has changed
+      // and also make sure that there are no currently loaded messages
+      if(username !== this.$route.params.username || this.currentChatMessages.length <= 0 ){
+        this.$store.dispatch('chat/loadMessages',this.username); //load msgs
+      }
+    }
 
   },
   created() {
+    //if there  are no current loaded messages, loads them
     if(this.currentChatMessages.length <=0){
       this.$store.dispatch('chat/loadMessages')
     }
   },
-  mounted() {
-    //store the current user username/id
-    this.$store.commit('chat/SET_USERNAME',this.$route.params.username)
-    emit('chat_user_changed',this.$route.params.username) // make new massages loaded
-
-    //listen if user to be display on chat was chenged
-    on('chat_user_changed',username => {
-      console.log('1')
-      if(username !== this.$route.params.username || this.currentChatMessages.length <= 0 ){
-        this.$store.dispatch('chat/loadMessages',this.username); //load msgs
-        this.$store.commit('chat/SET_USERNAME',this.$route.params.username) // set username in store
-      }
+  beforeMount() {
+    //load user since the route have changed
+    this.setUsername(this.$route.params.username).then(username => {
+      this.loadNewCurrentMessages(username)
     })
+  },
+  beforeRouteUpdate(to,from,next){
+    //since username has changed let us also load new chat
+    this.setUsername(this.$route.params.username).then(username => {
+      this.loadNewCurrentMessages(username)
+
+    })
+
+    next()
   }
 }
 </script>

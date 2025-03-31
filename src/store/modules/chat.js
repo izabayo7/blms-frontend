@@ -14,24 +14,31 @@ export default {
     mutations:{
         //set the current user
         SET_USERNAME(state, username){
-
-            return new Promise((res,rej)=>{
-                state.username = username
-                if(state.username.length > 0 || state.username != null)
-                    res()
-                else
-                    rej()
-            })
+            state.username = username
         },
 
         //set the user who is being displayed on the chat
         SET_DISPLAYED_USER(state,data){
+            console.log(data)
             state.currentDisplayedUser = data;
         },
 
         //store loaded messages
         STORE_LOADED_DATA(state,data){
-            state.loadedMessages.push(data)
+            // verify if data object has information
+            if(data.messages.length <=0 || data.username === undefined || data.username == null || data.username.length<=0)
+                return
+
+            let exists = false;
+
+            //check if the messages we are about to add doesn't exist
+            state.loadedMessages.map(loadedMsg => {
+                if(loadedMsg.username === data.username)
+                    exists = true
+            })
+
+            if(!exists)
+                state.loadedMessages.push(data)
         }
     },
     actions:{
@@ -40,7 +47,7 @@ export default {
             getters.socket.emit('request_user_contacts');
 
             // Get contacts new style
-            getters.socket.on('recieve_user_contacts', ({contacts}) => {
+            getters.socket.on('receive_user_contacts', ({contacts}) => {
                 state.incomingMessages = contacts
                 emit('incoming_message_initially_loaded')
             });
@@ -48,17 +55,27 @@ export default {
 
         //load user messages
         loadMessages({getters,state,commit},id){
-            console.log(id,state.username)
             // get messages new style
             getters.socket.emit('request_conversation',{ contactId: id});
 
             // Get messages new style
-            getters.socket.on('recieve_conversation', ({conversation,}) => {
-                console.log(conversation,id)
+            getters.socket.on('receive_conversation', ({conversation,}) => {
                 commit('STORE_LOADED_DATA',{username:id,messages:conversation})
                 state.currentChatMessages = conversation
             })
         },
+        setUsername({commit,state},username){
+            commit('SET_USERNAME',username)
+
+            return new Promise((res,rej) => {
+                if(state.username === username){
+                    res(state.username)
+                }else {
+                    rej()
+                }
+            })
+
+        }
 
     },
     getters:{

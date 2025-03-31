@@ -5,14 +5,7 @@
     <div class="side incoming col-3">
     <div class="message-search"> <search bg="#ffffff" placeholder="search message" :width="100" :fontSize="12" /> </div>
     <div class="incoming-messages" v-if="incomingMessages.length > 0">
-      <incoming-chat v-for="(message,i) in incomingMessages" :read="message.unreadMessagesLength <= 0" :key="i" :username="message.id" :incoming-msgs="message.unreadMessagesLength" :typing="message.typing">
-<!--        profile picture of the sender-->
-        <template #pic><img src="@/assets/images/instructor.png" alt="profile picture"></template>
-<!--        name of the sender-->
-        <template #sender>{{ message.name }}</template>
-<!--        massage sent by sender-->
-        <template #massage> {{ message.last_message.content}}</template>
-      </incoming-chat>
+      <incoming-chat v-for="(message,i) in incomingMessages" :read="message.unreadMessagesLength <= 0" :key="i" :data="message" :typing="message.typing" />
     </div>
   </div>
   <div class="side chat col-9" >
@@ -47,18 +40,22 @@ export default {
   methods:{
       ...mapMutations('chat',['SET_USERNAME','SET_DISPLAYED_USER']),
 
+    //here we check if the current route has a selected chat if not we directly
+    // select the latest contact in chat and we make it active
     goToMessages(){
       if(this.$route.params.username)
         return
-      console.log('mwa')
       this.SET_DISPLAYED_USER({ contactId: this.incomingMessages[0].id})
       this.$router.push(`/messages/${this.incomingMessages[0].id}`)
 
     }
   },
   mounted(){
+
+    //listen if recent chat contact was loaded
     on('incoming_message_initially_loaded',()=>{
       this.goToMessages()
+      console.log(this.incomingMessages)
     })
     this.$store.dispatch('chat/loadIncomingMessages')
 
