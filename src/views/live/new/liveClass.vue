@@ -200,14 +200,14 @@
         </div>
       </div>
       <div v-else class="live-class--attendance">
-        <div class="live-class--attendance--wrapper">
-          <h3>ONLINE USERS : {{ participants.length }} </h3>
+        <div class="live-class--attendance--wrapper long">
+          <h3>DISCUSSION BOARD </h3>
           <div class="online-users">
-            <online-user v-for="user in participants" :user="user.userInfo"
-                         :key="`${(Date.now() * Math.random())}${user.name}`"/>
+            <!--            <online-user v-for="user in participants" :user="user.userInfo"-->
+            <!--                         :key="`${(Date.now() * Math.random())}${user.name}`"/>-->
           </div>
         </div>
-        <div class="live-class--actions">
+        <div v-if="participationInfo.isOfferingCourse" class="live-class--actions">
           <div class="live-class--action attendance">
             <button>
             <span class="icon">
@@ -1035,16 +1035,17 @@ export default {
           {
             opacity: 0;
           }
-.overlay{
-  height: 100%;
-  width: 100%;
-  position: absolute;
-  background: linear-gradient(
-          180deg
-      , rgba(0, 0, 0, 0) 0%, #000000 100%);
-  display: block;
-  bottom: 0;
-}
+
+          .overlay {
+            height: 100%;
+            width: 100%;
+            position: absolute;
+            background: linear-gradient(
+                    180deg, rgba(0, 0, 0, 0) 0%, #000000 100%);
+            display: block;
+            bottom: 0;
+          }
+
           //video controls
           .video-controls {
             position: absolute;
@@ -1249,6 +1250,9 @@ export default {
       border-radius: 4px;
       margin-top: 1rem;
 
+      &.long {
+        height: 490px;
+      }
     }
 
     h3 {
