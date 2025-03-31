@@ -309,7 +309,8 @@ export default {
             type: "chapter",
             id: chapter_id,
           },
-          starting_time: this.date,
+          date: this.date,
+          time: this.time,
           quiz: this.selectedQuiz ? this.selectedQuiz : undefined
         },
       }).then(() => {

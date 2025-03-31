@@ -142,6 +142,7 @@
 <script>
 import colors from "@/assets/sass/imports/_colors.scss";
 import {convertUTCDateToLocalDate} from "@/services/global_functions"
+
 export default {
   props: {
     course: {
@@ -182,6 +183,10 @@ export default {
       let live_session = undefined
       for (const i in this.course.chapters) {
         if (this.course.chapters[i].live_sessions.length) {
+          console.log(
+              new Date(this.course.chapters[i].live_sessions[0].date),
+              new Date(this.currentDate),
+              new Date(this.course.chapters[i].live_sessions[0].date) >= new Date(this.currentDate))
           if (!live_session && (new Date(this.course.chapters[i].live_sessions[0].date) >= new Date(this.currentDate))) {
             live_session = this.course.chapters[i].live_sessions[0]
           } else if (live_session) {
@@ -195,10 +200,10 @@ export default {
       if (live_session && this.rem_time == "") {
         console.log("before", this.nearestLiveSession.date, this.nearestLiveSession.time)
         let date = new Date(this.nearestLiveSession.date.replace("00:00", this.nearestLiveSession.time))
-        console.log("utc",date)
+        console.log("utc", date)
         date = convertUTCDateToLocalDate(date)
-        console.log("loca",date)
-        this.setClock( date / 1000)
+        console.log("loca", date)
+        this.setClock(date / 1000)
       }
     },
     setClock(endTime) {
