@@ -13,7 +13,7 @@
       </div>
       <div class="members">
         <div class="header">
-          <p>Members</p>
+          <p>22 members</p>
           <div class="member-btn">
             <div class="icon">
               <svg id="user-add-line" xmlns="http://www.w3.org/2000/svg" width="33" height="33" viewBox="0 0 33 33">
@@ -77,6 +77,7 @@ export default {
       padding:1rem;
       display: flex;
       flex-direction: column;
+      min-width: 50rem;
 
       .profile{
         align-self: center;
@@ -166,8 +167,11 @@ export default {
       }
 
       .action-btn{
+        display: flex;
+        justify-content: flex-end;
         padding: .4rem 0;
         button{
+
           padding:.4rem 1rem;
           margin: .4rem;
           min-width: 8rem;
