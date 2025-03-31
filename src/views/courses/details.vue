@@ -63,7 +63,7 @@
                 <v-icon class="mx-2">mdi-book-open-variant</v-icon>Chapter
               </v-tab>
               <v-tab>
-                <v-icon class="mx-2">mdi-chat-outline</v-icon>Discussions
+                <v-icon class="mx-2">mdi-chat-outline</v-icon>Discussions (20000)
               </v-tab>
               <v-tab>
                 <v-icon class="mx-2">mdi-file-download-outline</v-icon>Downloads
