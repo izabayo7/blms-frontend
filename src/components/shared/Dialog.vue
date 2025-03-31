@@ -124,8 +124,9 @@
       </div>
     </div>
     <div
-        v-else-if="template === 'delete_message_confirmation'"
+        v-else-if="template === 'delete_message_confirmation' || template === 'forward_message'"
         class="dialog-body dialog_t_1 payment_err delete_msg"
+        :class="{'forward_msg' : template === 'forward_message'}"
     >
       <div class="close-dialog show">
         <svg
@@ -145,12 +146,12 @@
       </div>
       <div class="d-flex justify-center align-center content">
         <div class="content confirmation-dialog ma-0">
-          <h4 class="title">Delete message</h4>
-          <span class="sub-title">
+          <h4 class="title">{{ template === 'delete_message_confirmation' ? "Delete message" : "Forward message" }}</h4>
+          <span v-if="template === 'delete_message_confirmation'" class="sub-title">
    Are you sure you want to delete this message
         </span>
           <slot/>
-          <div class="actions">
+          <div v-if="template === 'delete_message_confirmation'" class="actions">
             <v-btn
                 @click="$emit('close')"
                 class="mx-2 white--text action-button cancel"
@@ -484,6 +485,164 @@ export default {
     }
   }
 
+  &.forward_msg {
+    min-height: 80vh;
+
+    .message-search {
+      //height: 100%;
+      position: relative;
+
+      .placeholder {
+        font-family: Inter;
+        font-style: normal;
+        font-weight: 500;
+        font-size: 12px;
+        line-height: 17px;
+        /* or 138% */
+        svg {
+          margin-right: 6px;
+        }
+
+        height: 100%;
+        color: #828282;
+      }
+
+      .search-input {
+        width: 288px;
+        height: 35px;
+        margin-top: 16px;
+        background: #DEDEDE;
+        border-radius: 10px;
+        position: relative;
+
+        input {
+          position: absolute;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          top: 0;
+          padding: 6px 12px;
+        }
+      }
+
+      .search-results {
+        height: 58vh;
+        position: absolute;
+        z-index: 7;
+
+        .w-full {
+          width: 100%;
+          button{
+            cursor: pointer;
+            svg{
+              fill: #193074;
+            }
+            &.disabled svg{
+              fill: black;
+            }
+          }
+        }
+
+        .centered {
+          width: 100%;
+          height: 68%;
+          font-family: Inter;
+          font-style: normal;
+          font-weight: 500;
+          font-size: 12px;
+          line-height: 17px;
+          /* or 138% */
+
+          display: flex;
+          align-items: center;
+          text-align: center;
+
+          color: #828282;
+        }
+
+        .searched-users {
+          max-width: 318px;
+          max-height: 90%;
+          overflow-y: auto;
+          left: 121px;
+          top: 180px;
+          margin-top: 9px;
+          background: #FFFFFF;
+          padding: 19px 8px !important;
+
+          li {
+            margin-bottom: 8px;
+            max-width: 303px;;
+            list-style-type: none;
+            height: 68px;
+            display: flex;
+            background: #FFFFFF;
+            box-shadow: 0px 4px 5px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            padding: 16px;
+
+            &:hover {
+              background-color: lighten($font, 65);
+            }
+
+            .avatar {
+              background-color: $primary;
+              color: white;
+              cursor: pointer;
+              margin: 0.2rem 0.3rem;
+            }
+
+            img {
+              width: 36px;
+              height: 36px;
+              border-radius: 50%;
+            }
+
+            p {
+              font-family: Roboto;
+              font-style: normal;
+              font-weight: bold;
+              font-size: 15px;
+              /* or 5% */
+
+              display: flex;
+              align-items: center;
+
+              /* Type color / Default */
+
+              color: #343434;
+            }
+
+            span {
+              font-family: Roboto;
+              font-style: normal;
+              font-weight: bold;
+              font-size: 9px;
+              line-height: 1px;
+              /* identical to box height, or 8% */
+              width: fit-content;
+              padding: 4px;
+              height: 21px;
+
+              /* Alert colors / Success */
+
+              background: #3CE970;
+              border-radius: 14px;
+              display: flex;
+              align-items: center;
+
+              /* Type color / Default */
+
+              color: #343434;
+            }
+          }
+
+        }
+      }
+    }
+  }
+
+
   &.payment_err, &.exam_constraints {
     border-radius: 0px;
   }
@@ -551,6 +710,7 @@ export default {
     background-color: $primary !important;
     border-color: $primary;
   }
+
 }
 
 .payment_err {

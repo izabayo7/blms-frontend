@@ -138,7 +138,7 @@
                       Delete message
                     </div>
                   </div>
-                  <div class="action tooltip">
+                  <div class="action tooltip cursor-pointer" @click="msg_to_forward=msg._id">
                     <div class="icon">
                       <svg width="18" height="15" viewBox="0 0 18 15" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path
@@ -155,7 +155,7 @@
               </div>
               <div v-if="(msg.content || msg.attachments) && msgs.from !== 'SYSTEM'">
                 <div v-if="msg.forwarded" class="forward">
-                  {{ msgs.from === 'Me' ? 'You forwarded a' :'Forwarded' }} message
+                  {{ msgs.from === 'Me' ? 'You forwarded a' : 'Forwarded' }} message
                 </div>
                 <div
                     v-if="msg.content || msg.reply"
@@ -302,6 +302,52 @@
         </div>
       </div>
     </div>
+    <Modal template="forward_message" v-if="msg_to_forward" @close="msg_to_forward = undefined;forwarded_users=[]">
+      <div class="message-search">
+        <div class="search-input">
+          <div v-if="searchKey === ''" class="placeholder vertically--centered">
+            <svg width="11" height="11" viewBox="0 0 11 11" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path
+                  d="M7.86164 6.91824H7.36478L7.18868 6.74843C7.80503 6.03145 8.1761 5.10063 8.1761 4.08805C8.1761 1.83019 6.34591 0 4.08805 0C1.83019 0 0 1.83019 0 4.08805C0 6.34591 1.83019 8.1761 4.08805 8.1761C5.10063 8.1761 6.03145 7.80503 6.74843 7.18868L6.91824 7.36478V7.86164L10.0629 11L11 10.0629L7.86164 6.91824ZM4.08805 6.91824C2.52201 6.91824 1.25786 5.65409 1.25786 4.08805C1.25786 2.52201 2.52201 1.25786 4.08805 1.25786C5.65409 1.25786 6.91824 2.52201 6.91824 4.08805C6.91824 5.65409 5.65409 6.91824 4.08805 6.91824Z"
+                  fill="#828282"/>
+            </svg>
+            Search users or groups
+          </div>
+          <input @input="searchIt" v-model="searchKey" type="text"/>
+        </div>
+        <div v-if="searchKey !== '' || this.incomingMessages.length < 1" class="search-results">
+          <ul class="searched-users" v-if="foundUsers.length > 0">
+            <li
+                class="user d-flex align-center"
+                v-for="(user, i) in foundUsers"
+                :class="{disabled: forwarded_users.includes(user.user_name)}"
+                :key="i"
+            >
+              <div class="d-flex justify-start w-full">
+                <img
+                    v-if="user.pic"
+                    :src="user.pic+'?height=50'"
+                    :alt="`${user.names} profile picture`"
+                />
+                <v-avatar size="36" v-else class="avatar">
+                  {{ user.names | computeText }}
+                </v-avatar>
+                <p class="ml-4 my-auto">{{ user.names }}</p>
+                <button class="ml-auto" :class="{disabled: forwarded_users.includes(user.user_name)}"
+                        :disabled="forwarded_users.includes(user.user_name)" @click="forward_msg(user.user_name)">
+                  <svg width="21" height="18" viewBox="0 0 21 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M0 18L21 9L0 0V7L15 9L0 11V18Z"/>
+                  </svg>
+                </button>
+              </div>
+            </li>
+          </ul>
+          <div v-else class="centered">
+            search users above and start conversations
+          </div>
+        </div>
+      </div>
+    </Modal>
   </main>
 </template>
 
@@ -324,9 +370,13 @@ export default {
   data() {
     return {
       typing: false,
+      msg_to_forward: undefined,
+      forwarded_users: [],
+      searchKey: '',
       typers: [],
       topmsg: undefined,
       msgTDlt: undefined,
+      foundUsers: [],
     };
   },
   computed: {
@@ -346,15 +396,43 @@ export default {
       return names;
     },
   },
-  // watch: {
-  //   $route() {
-  //     this.scrollChatToBottom(); //scroll chat to bottom
-  //   }
-  // },
+  watch: {
+    searchKey() {
+      if (this.searchKey === '')
+        this.foundUsers = []
+    }
+  },
   methods: {
+    ...mapActions("users", ["searchUser"]),
     ...mapMutations("chat", ["CHANGE_MESSAGE_READ_STATUS"]),
     ...mapActions("chat", ["loadMessages", "deleteMsg", "setReplyMsg"]),
     ...mapMutations("chat", ["setReplyMsg"]),
+    forward_msg(username) {
+      Apis.create(`message/${username}/forward/${this.msg_to_forward}`, {}).then((res) => {
+        if (res.data.status === 200)
+          this.forwarded_users.push(username)
+      })
+    },
+    searchIt() {
+      this.search(this.searchKey);
+    },
+    search(str) {
+      if (str === '')
+        return
+      this.foundUsers = [];
+      this.searchUser({query: str}).then((results) => {
+        this.foundUsers = [];
+        for (const i in results) {
+          this.foundUsers.push({
+            names: `${results[i].sur_name} ${results[i].other_names}`,
+            pic: results[i].profile,
+            category: results[i].category,
+            user_name: results[i].user_name,
+            selected: false,
+          });
+        }
+      });
+    },
     findTotalMessages() {
       let i = 0
       for (const k in this.data) {
@@ -637,6 +715,7 @@ export default {
           max-height: 57px;
         }
       }
+
       .forward {
         font-family: Roboto;
         font-style: normal;
@@ -651,6 +730,7 @@ export default {
 
         color: #343434;
       }
+
       //whole msg bar css
       .msg {
         max-width: 28rem;
