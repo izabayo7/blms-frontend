@@ -55,6 +55,18 @@
                     </button>
                   </div>
                 </div>
+                <div v-if="question.type === 'file_upload' && !attempt.answers[i].src" class="file-container row">
+                  <div class="indicator mb-2 col-12 pa-0">
+                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path
+                          d="M9 0C4.03763 0 0 4.03763 0 9C0 13.9624 4.03763 18 9 18C13.9624 18 18 13.9624 18 9C18 4.03763 13.9624 0 9 0ZM9 16.875C4.6575 16.875 1.125 13.3425 1.125 9C1.125 4.6575 4.6575 1.125 9 1.125C13.3425 1.125 16.875 4.6575 16.875 9C16.875 13.3425 13.3425 16.875 9 16.875Z"
+                          fill="#193074"/>
+                      <path d="M9 4.1543L9 10.1543" stroke="#193074" stroke-width="1.5" stroke-linecap="round"/>
+                      <circle cx="9" cy="13" r="1" fill="#193074"/>
+                    </svg>
+                    <span class="ml-1">No file choosen</span>
+                  </div>
+                </div>
                 <textarea
                     v-if="question.type === 'open_ended'"
                     v-model="attempt.answers[i].text"
