@@ -80,8 +80,11 @@
           </div>
         </div>
       </v-col>
-      <v-col v-if="files.length === 0" class="col-12">
+      <v-col v-if="files.length === 0" class="col-10">
         <span>Drop the files here!</span>
+      </v-col>
+      <v-col class="col-2">
+        <v-btn class="mt-n2" large icon><v-icon>mdi-paperclip</v-icon></v-btn>
       </v-col>
     </v-row>
   </form>

@@ -8,13 +8,7 @@
       solo
       required
     />
-    <v-text-field
-      v-model="duration"
-      placeholder="Enter the quiz maximum duration"
-      class="question-options"
-      solo
-      required
-    />
+    <vue-timepicker v-model="duration" format="hh:mm:ss" />
     <v-row v-for="(question, i) in questions" :key="i">
       <v-col cols="1" sm="1">
         <v-btn text @click="removeQuestion(i)">
@@ -64,19 +58,19 @@
 
 <script>
 import Apis from "@/services/apis";
+import VueTimepicker from "vue2-timepicker/src/vue-timepicker.vue";
 export default {
+  components: {
+    VueTimepicker,
+  },
   data: () => ({
-    return: {
-      time: "11:15",
-      timeStep: "10:10",
-    },
     methods: {
       allowedHours: (v) => v % 2,
       allowedMinutes: (v) => v >= 10 && v <= 50,
       allowedStep: (m) => m % 10 === 0,
     },
     name: "",
-    duration: 0,
+    duration: { hh: "00", mm: "00", ss: "00" },
     questionTypes: [
       "Open ended",
       "Single select",
@@ -126,15 +120,20 @@ export default {
       this.questions.splice(index, 1);
     },
     async saveQuiz() {
-      let questions = []
+      let questions = [];
       for (const question of this.questions) {
-        if (!question.type.includes('select')) {
-          question.options = undefined
+        if (!question.type.includes("select")) {
+          question.options = undefined;
         }
-        question.type = question.type.toLowerCase().replace(' ','-')
-        questions.push(question)
+        question.type = question.type.toLowerCase().replace(" ", "-");
+        questions.push(question);
       }
-      const response = await Apis.create("quiz", { name: this.name, duration: this.duration, instructor: this.$store.state.user._id, questions: questions });
+      const response = await Apis.create("quiz", {
+        name: this.name,
+        duration: this.duration,
+        instructor: this.$store.state.user._id,
+        questions: questions,
+      });
       console.log(response);
     },
   },

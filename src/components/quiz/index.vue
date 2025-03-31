@@ -1,5 +1,5 @@
 <template>
-  <v-container id="quiz" class="smooth--background">
+  <v-container class="round smooth--background">
     <v-row class="d-none">student</v-row>
     <v-row>
       <v-col class="col-12">
@@ -7,9 +7,9 @@
           <v-avatar size="100" color="#4592ee">
             <v-icon size="55" dark>mdi-clipboard-text-multiple-outline</v-icon>
           </v-avatar>
-          <v-card-subtitle class="pa-1">Quizes</v-card-subtitle>
+          <v-card-subtitle class="pa-1 text-h6">Quizes</v-card-subtitle>
 
-          <v-card-subtitle class="pa-1">8</v-card-subtitle>
+          <v-card-subtitle class="pa-1 text-h6">{{quizes.length}}</v-card-subtitle>
         </v-card>
       </v-col>
       <v-col class="col-12">
@@ -19,7 +19,7 @@
               <v-col class="col-12 col-md-2 py-0 px-md-6 px-10">Users</v-col>
               <v-col class="col-12 col-md-8 pa-0">
                 <v-row>
-                  <v-col class="col-12 col-md-4 ml-12 pa-0 mt-n3">
+                  <v-col class="col-10 col-md-4 ml-12 pa-0 mt-n3">
                     <v-text-field
                       v-model="search"
                       append-icon="mdi-magnify"
@@ -32,49 +32,47 @@
               </v-col>
               <v-col class="col-12 col-md-2 pa-md-0 px-4 pt-4">
                 <v-btn rounded to="/quiz/new-quiz">
-                  <v-icon>mdi-account-plus-outline</v-icon>Add new quiz
+                  <v-icon class="pr-2">mdi-plus</v-icon>Add new quiz
                 </v-btn>
               </v-col>
             </v-row>
           </v-card-title>
-          <v-data-table :headers="headers" :items="items" sort-by="quizname">
+          <v-data-table :headers="headers" :items="quizes" sort-by="quizname">
             <template v-slot:item.actions="{ item }">
+              <v-icon small color="error" @click="deleteQuiz(item._id)">mdi-delete</v-icon>
+              <v-icon small color="warning" @click="$router.push(`quiz/view/${item._id}`)">mdi-eye</v-icon>
               <v-icon
                 small
                 color="success"
-                @click="$router.push(`reports/submissions/${item.quizname}`)"
-              >mdi-account-edit</v-icon>
-              <v-icon
-                small
-                color="error"
-                @click="$router.push(`reports/submissions/${item.quizname}`)"
-              >mdi-delete</v-icon>
-              <v-icon
-                small
-                color="warning"
-                @click="$router.push(`reports/submissions/${item.quizname}`)"
-              >mdi-eye</v-icon>
+                @click="$router.push(`quiz/edit/${item._id}`)"
+              >mdi-square-edit-outline</v-icon>
             </template>
           </v-data-table>
         </v-card>
       </v-col>
     </v-row>
+    <kurious-dialog :show="show" :message="message" />
   </v-container>
 </template>
 
 <script>
+import Apis from "@/services/apis";
 export default {
   data: () => ({
+    search: "",
+    show: true,
+    message: "just testing",
+    quizes: [],
     headers: [
       {
         text: "Quiz name",
         align: "start",
         sortable: false,
-        value: "quizname",
+        value: "name",
       },
-      { text: "Course name", value: "coursename" },
+      { text: "Course name", value: "course" },
       { text: "usage", value: "usage" },
-      { text: "No of questions", value: "questionslength" },
+      { text: "No of questions", value: "containedQuestions" },
       { text: "Duration", value: "duration" },
       { text: "Date Added", value: "date" },
       { text: "Action", value: "actions", sortable: false, align: "center" },
@@ -114,11 +112,51 @@ export default {
       },
     ],
   }),
+  beforeMount() {
+    this.getQuizes();
+  },
+  methods: {
+    async getQuizes() {
+      try {
+        this.quizes = [];
+        const response = await Apis.get("quiz");
+        for (const quiz of response.data) {
+          const newQuiz = {
+            _id: quiz._id,
+            name: quiz.name,
+            course: "nyuma",
+            usage: 0,
+            containedQuestions: quiz.questions.length,
+            duration: `${quiz.duration.hh === "" ? "00" : quiz.duration.hh}:${
+              quiz.duration.mm === "" ? "00" : quiz.duration.mm
+            }:${quiz.duration.ss === "" ? "00" : quiz.duration.ss}`,
+            date: quiz.createdAt.split("T")[0].split("-").reverse().join("/"),
+          };
+          this.quizes.push(newQuiz);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async deleteQuiz(id) {
+      try {
+        await Apis.delete("quiz", id);
+        for (const i in this.quizes) {
+          if (this.quizes[i]._id === id) {
+            this.quizes.splice(i, 1);
+            break;
+          }
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+  },
 };
 </script>
 
 <style lang="scss">
-#quiz {
+.round {
   .v-card > *:first-child:not(.v-btn):not(.v-chip),
   .v-card > .v-card__progress + *:not(.v-btn):not(.v-chip) {
     border-top-left-radius: 50%;

@@ -173,7 +173,7 @@
                           />
                         </v-col>
                         <v-col class="col-12">
-                          <kurious-drag @addFile="addAttachment" @removeFile="removeAttachment" />
+                          <kurious-file-picker @addFile="addAttachment" @removeFile="removeAttachment" />
                         </v-col>
                       </v-row>
                     </v-card>
