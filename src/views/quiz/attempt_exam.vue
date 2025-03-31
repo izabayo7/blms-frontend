@@ -237,7 +237,7 @@
     </div>
     <div v-else-if="disabled" class="px-4 px-md-16">
       <ErrorPage
-          title="You are not allowed to  do a quiz "
+          title="You are not allowed to  do exams "
           subtitle="You must first pay your school fees to regain access"
       />
     </div>
@@ -250,6 +250,7 @@
 <script>
 import Apis from "@/services/apis";
 import {mapGetters, mapActions} from "vuex";
+import {assessmentMixins} from "../../services/mixins";
 
 export default {
   data: () => ({
@@ -290,18 +291,12 @@ export default {
     remaining_time: 0,
     submission_id: "",
   }),
-  components: {
-    ErrorPage: () => import("@/components/dashboard/error.vue"),
-  },
+  mixins: [assessmentMixins],
   computed: {
     ...mapGetters("chat", ["socket"]),
-    ...mapGetters("user", ["paymentStatus"]),
     ...mapGetters("network", ["onLine"]),
     formated_remaining_time() {
       return new Date(this.remaining_time * 1000).toISOString().substr(11, 8);
-    },
-    disabled() {
-      return this.paymentStatus.paid === false
     }
   },
   watch: {
@@ -367,7 +362,6 @@ export default {
           template: `exam_constraints`,
         })
       } else {
-        console.log('failed')
         this.saveAttempt(true)
       }
     },

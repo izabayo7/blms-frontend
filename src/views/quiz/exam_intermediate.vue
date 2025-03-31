@@ -4,7 +4,7 @@
       <div class="col-12">
         <back to="/assignments"/>
       </div>
-      <div v-if="exam" class="col-12 content">
+      <div v-if="exam && !disabled" class="col-12 content">
         <div class="title">{{ exam.name }}</div>
         <div class="subtitle">Before your attempt, Please read all the conditions bellow.
           This will prevent you from failing unexpectedly.
@@ -48,6 +48,12 @@
           </div>
         </div>
       </div>
+      <div v-else-if="disabled">
+        <ErrorPage
+            title="You are not allowed to  do exams "
+            subtitle="You must first pay your school fees to regain access"
+        />
+      </div>
       <div v-else>
         {{message}}
       </div>
@@ -57,6 +63,7 @@
 
 <script>
 import {mapActions} from "vuex";
+import {assessmentMixins} from "../../services/mixins";
 
 export default {
   name: "ExamIntermediate",
@@ -64,6 +71,7 @@ export default {
     exam: undefined,
     message: ""
   }),
+  mixins: [assessmentMixins],
   components: {
     back: () => import("@/components/shared/back-button"),
   },

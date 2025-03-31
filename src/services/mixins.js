@@ -1,4 +1,5 @@
 import {emit} from "./event_bus";
+import {mapGetters} from "vuex";
 
 const chatMixins = {
     methods: {
@@ -9,6 +10,17 @@ const chatMixins = {
                 el.scrollTop = el.scrollHeight
             }
         },
+    }
+}
+const assessmentMixins = {
+    components:{
+        ErrorPage: () => import("@/components/dashboard/error.vue"),
+    },
+    computed: {
+        ...mapGetters("user", ["paymentStatus"]),
+        disabled() {
+            return this.paymentStatus.paid === false
+        }
     }
 }
 
@@ -48,4 +60,4 @@ const cropperMixin = {
     }
 }
 
-export {cropperMixin, chatMixins}
+export {cropperMixin, chatMixins,assessmentMixins}

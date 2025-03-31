@@ -232,6 +232,7 @@
 <script>
 import Apis from "@/services/apis";
 import {mapGetters, mapActions} from "vuex";
+import {assessmentMixins} from "../../services/mixins";
 
 export default {
   data: () => ({
@@ -270,21 +271,15 @@ export default {
     remaining_time: 0,
     submission_id: "",
   }),
-  components:{
-    ErrorPage: () => import("@/components/dashboard/error.vue"),
-  },
+  mixins: [assessmentMixins],
   computed: {
     ...mapGetters("chat", ["socket"]),
-    ...mapGetters("user", ["paymentStatus"]),
     ...mapGetters("network", ["onLine"]),
     // get the current course
     ...mapGetters("quiz", ["selected_quiz"]),
     ...mapGetters("quiz_submission", ["selected_quiz_submission", "loaded"]),
     formated_remaining_time() {
       return new Date(this.remaining_time * 1000).toISOString().substr(11, 8);
-    },
-    disabled() {
-      return this.paymentStatus.paid === false
     }
   },
   watch: {
