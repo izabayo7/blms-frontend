@@ -131,7 +131,7 @@
                   v-model="question.details"
                   placeholder="Type your question here ..."
                   class="kurious--textarea mb-4 customScroll"
-                  rows="8"
+                  @input="autoResizeQuestionInput"
               ></textarea>
             </div>
           </div>
@@ -145,7 +145,7 @@
                                   :placeholder="`option ${k+1}`"
                                   v-model="option.text"
                                   class="kurious--textarea mb-4 customScroll"
-                                  rows="8"
+                                  @input="autoResizeQuestionInput"
                               ></textarea>
               </div>
               <div class="status mx-auto">
@@ -273,6 +273,7 @@
 
 <script>
 import {mapActions, mapGetters, mapMutations} from "vuex";
+import {autoResizeQuestionInput} from '@/services/global_functions'
 import Apis from "@/services/apis";
 
 export default {
@@ -337,6 +338,7 @@ export default {
   methods: {
     ...mapMutations("quiz",["addExam"]),
     ...mapActions("courses", ["getCourses"]),
+    autoResizeQuestionInput,
     fileTypeClicked(type, index) {
       if (index === -1) {
         if (this.allowed_submission_file_types.includes(type))
