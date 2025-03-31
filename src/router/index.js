@@ -207,16 +207,6 @@ const routes = [
                         },
                     },
                     {
-                        path: '/profile/:user_name',
-                        component: () =>
-                            import( /* webpackChunkName: "user-profile" */ '@/components/update_profile.vue')
-                    },
-                    {
-                        path: '/update/password',
-                        component: () =>
-                            import( /* webpackChunkName: "change-password" */ '@/components/update_password.vue')
-                    },
-                    {
                         path: '/settings',
                         component: () =>
                             import( /* webpackChunkName: "settings" */ '@/views/settings'),
