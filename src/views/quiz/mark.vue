@@ -1,6 +1,6 @@
 <template>
   <v-container
-      v-if="selected_quiz_submission"
+      v-if="selected_quiz_submission && attempt.quiz"
       fluid
       class="quiz-page white pl-lg-16"
   >
@@ -24,7 +24,7 @@
                   {{ `${i + 1}. ${question.details}` }}
                 </p>
                 <div v-if="question.type === 'file_upload'" class="file-container row">
-                  <div class="indicator mb-2">
+                  <div class="indicator mb-2 col-12 pa-0">
                     <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path
                           d="M9 0C4.03763 0 0 4.03763 0 9C0 13.9624 4.03763 18 9 18C13.9624 18 18 13.9624 18 9C18 4.03763 13.9624 0 9 0ZM9 16.875C4.6575 16.875 1.125 13.3425 1.125 9C1.125 4.6575 4.6575 1.125 9 1.125C13.3425 1.125 16.875 4.6575 16.875 9C16.875 13.3425 13.3425 16.875 9 16.875Z"
@@ -35,7 +35,9 @@
                     <span class="ml-1">Click on file to open</span>
                   </div>
                   <div class="pick-file file-picked col-12 col-md-8 d-flex px-4">
-                    <button @click="downloadAttachment(`${backend_url}/api/quiz_submission/${selected_quiz_submission._id}/attachment/${attempt.answers[i].src}/view?token=${$session.get('jwt')}`)" class="file-name">
+                    <button
+                        @click="downloadAttachment(`${backend_url}/api/quiz_submission/${selected_quiz_submission._id}/attachment/${attempt.answers[i].src}/view?token=${$session.get('jwt')}`)"
+                        class="file-name">
                       {{ attempt.answers[i].src }}
                     </button>
                     <div class="file-size">
@@ -227,11 +229,7 @@
                 </div>
               </v-col>
             </v-row>
-            <v-row
-                v-if="
-                selected_quiz_submission.marked || userCategory === 'INSTRUCTOR'
-              "
-            >
+            <v-row>
               <v-col class="col-12 col-md-6 d-flex pb-0">
                 <div class="mr-3 marks-label">Award marks:</div>
                 <div class="d-flex align-center">
@@ -252,8 +250,9 @@
 
               <v-col class="col-12 pt-0">
                 <feedback
-                    v-if="
-                    selected_quiz_submission.answers[i].feedback ||
+                    v-if="(
+                    selected_quiz_submission.answers[i].feedback_src ||
+                    selected_quiz_submission.answers[i].feedback) ||
                     userCategory === 'INSTRUCTOR'
                   "
                     :content="
@@ -261,12 +260,16 @@
                       ? selected_quiz_submission.answers[i].feedback.content
                       : ''
                   "
+                    :submission_id="selected_quiz_submission._id"
+                    :feedback_name="selected_quiz_submission.answers[i].feedback_src"
                     :answerId="selected_quiz_submission.answers[i]._id"
                     :feedbackId="
                     selected_quiz_submission.answers[i].feedback
                       ? selected_quiz_submission.answers[i].feedback._id
                       : ''
                   "
+                    :isFileUpload="question.type === 'file_upload'"
+                    :index="i"
                 />
               </v-col>
             </v-row>

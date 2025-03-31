@@ -7,6 +7,8 @@ const getDefaultState = () => ({
     title: '',
     // the text to display
     message: '',
+    // the text to display
+    code: '',
     // ability to close the modal
     closable: false,
     // request status
@@ -56,6 +58,10 @@ export default {
         update_confirmation_method(state, value) {
             state.confirmation_method = value
         },
+        // update the code
+        update_code(state, value) {
+            state.code = value
+        },
         // update modal template
         update_modal_template(state, value) {
             state.modal_template = value
@@ -66,13 +72,14 @@ export default {
     },
     actions: {
         // set up the dialog
-        set_modal({ state, commit }, { template, method, title, message, closable = false }) {
+        set_modal({ state, commit }, { template, method, title, message, closable = false, code }) {
             commit('update_modal_template', template)
             commit('update_confirmation_method', method)
             commit('update_title', title)
             commit('update_message', message);
             commit('update_closability', closable)
             commit('update_confirmation', false)
+            commit('update_code', code)
             if (!state.visible) {
                 commit('toogle_visibility');
             }
@@ -86,6 +93,7 @@ export default {
             commit('update_message', '');
             commit('toogle_visibility');
             commit('update_progress', 0)
+            commit('update_code', '')
             commit('update_closability', false)
         },
         // set the progress
@@ -113,6 +121,10 @@ export default {
         //get message
         message: state => {
             return state.message
+        },
+        //get codde
+        code: state => {
+            return state.code
         },
         //get title
         title: state => {
