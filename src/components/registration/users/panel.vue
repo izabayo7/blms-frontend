@@ -1,6 +1,6 @@
 <template>
   <div id="regist-card">
-    <v-btn @click="$router.push(`/admin`)">
+    <v-btn @click="$router.push(`/users`)">
       <v-icon>mdi-chevron-left</v-icon>Back
     </v-btn>
     <v-card>

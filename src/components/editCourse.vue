@@ -24,65 +24,83 @@
       </v-col>
       <v-col v-if="type=='details'" class="col-12">
         <form>
-          <h3>Course Name</h3>
-          <v-text-field
-            v-model="course.name"
-            required
-            :rules="nameRules"
-            placeholder="Type course name..."
-            outlined
-            class="course-input"
-          ></v-text-field>
-          <h3>Student Group</h3>
-          <v-select
-            v-model="course.facilityCollegeYear"
-            :items="facilityCollegeYearNames"
-            chips
-            :rules="simpleRules"
-            outlined
-            class="group-select"
-          ></v-select>
-          <h3>Course Description</h3>
-          <textarea v-model="course.description" class="kurious--textarea mb-4" cols="60" rows="8"></textarea>
-          <h3>Course Cover Image</h3>
-          <v-btn
-            fab
-            small
-            color="#828282"
-            class="white--text course-image mt-4 mb-6 mr-4"
-            @click="pickfile()"
-          >
-            <v-icon>mdi-paperclip</v-icon>
-          </v-btn>
-          <span>{{course.coverPicture === undefined ? 'Upload Course CoverPicture' : course.coverPicture.name}}</span>
-          <input
-            ref="file"
-            type="file"
-            hidden
-            accept="image/*"
-            id="picture"
-            class="d-none my-6"
-            @change="handleFileUpload()"
-          />
-          <v-btn
-            rounded
-            color="#3CE970"
-            class="white--text mb-6 d-block"
-            @click="updateCourse()"
-          >update Course</v-btn>
+          <v-row>
+            <v-col class="col-12 col-md-8">
+              <h3>Course Name</h3>
+              <v-text-field
+                v-model="course.name"
+                required
+                :rules="nameRules"
+                placeholder="Type course name..."
+                outlined
+                class="course-input"
+              ></v-text-field>
+              <h3>Student Group</h3>
+              <v-select
+                v-model="course.facilityCollegeYear"
+                :items="facilityCollegeYearNames"
+                chips
+                :rules="simpleRules"
+                outlined
+                class="group-select"
+              ></v-select>
+              <h3>Course Description</h3>
+              <textarea
+                v-model="course.description"
+                class="kurious--textarea mb-4"
+                cols="60"
+                rows="8"
+              ></textarea>
+            </v-col>
+            <v-col class="col-12 col-md-4">
+              <v-avatar size="245" class="user-profile ml-2 mt-6 d-block">
+                <img
+                  :src="`http://161.35.199.197:7070/kurious/file/courseCoverPicture/${$route.params.id}`"
+                  alt="avatar"
+                />
+              </v-avatar>
+              <v-btn
+                fab
+                small
+                color="#828282"
+                class="white--text course-image mt-4 mb-6 mr-4"
+                @click="pickfile()"
+              >
+                <v-icon>mdi-paperclip</v-icon>
+              </v-btn>
+              <span>{{course.coverPicture === undefined ? 'Upload Course CoverPicture' : coverPicture ? coverPicture.name : "Update Course CoverPicture" }}</span>
+              <input
+                ref="file"
+                type="file"
+                hidden
+                accept="image/*"
+                id="picture"
+                class="d-none my-6"
+                @change="handleFileUpload()"
+              />
+            </v-col>
+            <v-col class="col-12 text-center">
+              <v-btn
+                rounded
+                color="#3CE970"
+                class="white--text mb-6"
+                @click="updateCourse()"
+              >update Course</v-btn>
+            </v-col>
+          </v-row>
         </form>
       </v-col>
       <v-col v-else class="col-12 pr-12">
-        <v-row>
+        <v-row v-if="activeChapter > -1">
           <v-col class="col-12 col-md-3 px-0 text-left">
             <v-btn
               v-for="(chapter, i) in chapters"
               :key="i"
               :color="activeChapter === i ? '#ffd248': ''"
               width="90%"
-              :class="`${activeChapter === i ? 'white--text': ''} d-block my-4 pt-5 pb-8`"
+              :class="`${activeChapter === i ? 'white--text': ''} d-block my-4 pt-5 pb-8 text-wrap`"
               @click="activeChapter=i"
-            >{{chapter.name}}</v-btn>
+            >{{trimString(chapter.name, 20)}}</v-btn>
             <v-btn width="90%" class="py-6" @click="addChapter()">
               <v-icon>mdi-plus</v-icon>New Chapter
             </v-btn>
@@ -129,6 +147,13 @@
                       <v-stepper-content step="2">
                         <v-card class="mb-12 pa-6 elevation-0" height="auto">
                           <v-row>
+                            <v-col v-if="chapters[activeIndex].mainVideo" class="col-12" id="video">
+                              <vue-plyr>
+                                <video
+                                  :src="`http://161.35.199.197:7070/kurious/file/chapterMainVideo/${chapters[activeIndex]._id}`"
+                                ></video>
+                              </vue-plyr>
+                            </v-col>
                             <v-col class="col-12">
                               <kurious-file-picker
                                 :allowedTypes="['video']"
@@ -173,7 +198,7 @@
                                 v-if="mode !== ''"
                                 ref="editor"
                                 :mode="`${mode === 'edit' ? mode : 'preview'}`"
-                                :defaultContent="mode === content"
+                                :defaultContent="content"
                               />
                             </v-col>
                           </v-row>
@@ -191,6 +216,28 @@
                       <v-stepper-content step="4">
                         <v-card class="mb-12 elevation-0">
                           <v-row>
+                            <v-col class="col-12">
+                              <div v-if="attachments.length > 0" class="attachments">
+                                <div
+                                  v-for="(attachment, key) in attachments"
+                                  :key="key"
+                                  class="file-listing d-flex"
+                                >
+                                  <v-btn
+                                    class="pa-6 mb-4"
+                                    color="deep-purple accent-4"
+                                    outlined
+                                    @click="downloadAttachment(attachment._id)"
+                                  >
+                                    <v-icon
+                                      color="#ffd248"
+                                      x-large
+                                    >mdi-file{{findIcon(attachment.name)}}-outline</v-icon>
+                                    <span class="filename text-truncate">{{attachment.name}}</span>
+                                  </v-btn>
+                                </div>
+                              </div>
+                            </v-col>
                             <v-col class="col-12">
                               <kurious-file-picker
                                 multiple
@@ -285,7 +332,7 @@ export default {
     e6: 1,
     facilityCollegeYearNames: [],
     facilityCollegeYearCodes: [],
-    activeChapter: 0,
+    activeChapter: -1,
     quizNames: ["None"],
     selectedQuizName: "None",
     coverPicture: undefined,
@@ -314,6 +361,10 @@ export default {
     simpleRules: [(v) => !!v || "This field is required"],
   }),
   watch: {
+    activeChapter() {
+      this.mode = "";
+      this.getChapterDocument();
+    },
     e6() {
       if (this.e6 === 2) {
         document.querySelector(".ProseMirror").focus();
@@ -326,6 +377,7 @@ export default {
     },
     type() {
       if (this.type === "chapters") {
+        this.activeChapter = 0;
         this.getQuizes();
       }
     },
@@ -333,9 +385,19 @@ export default {
   beforeMount() {
     this.getFaculties();
     this.getEsssentials();
-    this.getChapterDocument();
   },
   methods: {
+    trimString(string, length) {
+      if (string.length < length) {
+        return string;
+      } else {
+        let trimedString = string.substring(0, length);
+        trimedString = trimedString.split(" ");
+        trimedString.splice(trimedString.length - 1, 1);
+        trimedString = trimedString.join(" ") + " ...";
+        return trimedString;
+      }
+    },
     async getChapterDocument() {
       try {
         this.content = "";
@@ -378,15 +440,14 @@ export default {
     async getEsssentials() {
       try {
         const course = await Apis.get(`course/${this.$route.params.id}`);
-        console.log(course);
         this.course = course.data;
         this.course.facilityCollegeYear = this.facilityCollegeYearNames[
           this.facilityCollegeYearCodes.indexOf(this.course.facilityCollegeYear)
         ];
         const chapters = await Apis.get(`chapter/course/${this.course._id}`);
         this.chapters = chapters.data;
-        this.getChapterDocument();
       } catch (error) {
+        console.log(error);
         if (error.response) {
           this.status = error.response.status;
           this.message = "Course No Found";
@@ -395,6 +456,21 @@ export default {
           this.status = 503;
           this.message = "Service Unavailable";
           this.show = true;
+        }
+      }
+    },
+    async getAttachments() {
+      this.attachments = [];
+      try {
+        const response = await Apis.get(
+          `file/getAttachments/${this.chapters[this.activeChapter]._id}`
+        );
+        this.attachments = response.data;
+      } catch (error) {
+        if (error.response) {
+          this.message = error.response.data;
+        } else if (error.request) {
+          this.message = "Service Unavailable";
         }
       }
     },
@@ -477,7 +553,7 @@ export default {
           formData.append("file", this.coverPicture);
 
           response = await axios.put(
-            `http://localhost:7070/kurious/file/updateCourseCoverPicture/${this.course._id}`,
+            `http://161.35.199.197:7070/kurious/file/updateCourseCoverPicture/${this.course._id}`,
             formData,
             { headers: { "Content-Type": "multipart/form-data" } }
           );
@@ -560,7 +636,7 @@ export default {
             formData.append("files[" + i + "]", this.attachments[i]);
           }
           response = await axios.post(
-            `http://localhost:7070/kurious/file/UpdateAttachments/${this.chapter._id}`,
+            `http://161.35.199.197:7070/kurious/file/UpdateAttachments/${this.chapter._id}`,
             formData,
             { headers: { "Content-Type": "multipart/form-data" } }
           );
@@ -572,7 +648,7 @@ export default {
           const formData = new FormData();
           formData.append("file", this.chapter.video);
           response = await axios.post(
-            `http://localhost:7070/kurious/file/updateMainVideo/${this.chapter._id}`,
+            `http://161.35.199.197:7070/kurious/file/updateMainVideo/${this.chapter._id}`,
             formData,
             { headers: { "Content-Type": "multipart/form-data" } }
           );

@@ -1,9 +1,16 @@
 #courseDetails {
     .chapters {
-        background-color: #F5F5F5;
+        background-color: #fbfbfb;
     }
     .course-content {
         background-color: #fff;
+        z-index: 4;
+    }
+    .details-menu{
+        position: fixed;
+        width: 21.1%;
+        height: 100vh;
+        margin: -11px 0 0 0;
     }
     .chapters-list {
         background: inherit;

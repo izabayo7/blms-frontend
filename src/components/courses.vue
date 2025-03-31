@@ -3,50 +3,26 @@
     <v-container v-if="$store.state.user.category === 'Student'" id="courses" fluid>
       <v-row>
         <v-col cols="12">
-          <h2 class="mt-10">Ongoing Courses {{$vuetify.breakpoint.name}}</h2>
+          <h2 class="mt-10 course-group-title">Ongoing Courses {{$vuetify.breakpoint.name}}</h2>
         </v-col>
       </v-row>
-      <v-col class="course-heading col-12">
+      <v-col class="col-12 pa-0">
         <v-row>
-          <v-col
-            v-for="(course, i) in coursesfake"
-            :key="i"
-            cols="12"
-            sm="6"
-            md="4"
-            class="n-padding"
-          >
-            <kurious-student-course-card
-              to="/courses/anyCourse"
-              category="ongoing"
-              :image="course.image"
-              :course="{name: course.title, instructor: course.instructor, description: course.description}"
-            />
-          </v-col>
-        </v-row>
-      </v-col>
-      <v-col class="course-heading col-12">
-        <v-row>
-          <v-col v-for="(course, i) in courses" :key="i" cols="12" sm="6" md="4" class="n-padding">
-            <kurious-student-course-card
-              category="ongoing"
-              :course="course"
-              :image="course.coverPicture === undefined ? 'https://media.inmobalia.com/imgV1/B8vEv5Xh~OlgGrmOOeWCtYHtdv2TGtX20HosCpYxDmKApRO9fqu6aebRr_kOYwWZUUBuTZKwOZPzAYj7tZulyLOn1CMNcFuV2RqXoT28SJ2OnPhaGG~JUijtTYAgMuK~95K_MTLY7d8_mFzQgU5qCIR0acc49iB4a7RKlRbhA4L7nCLwQUoy~55Chgn65VnEfSbkn8wPAPU65wNYna0WPiwq3DO5FR3ZyC4GVH6cISHb5qeFj9bXdaLtSafxK6JAQUDjvlHmu11lcAZR0m_DzjaXII2SqzhJKqZGy8Wosxgange8oRKNfl1fRhzEUpEtTw8_MfQPTjpPx4wbxN_lreBfVwnD1tE-.jpg' : `http://localhost:7070/kurious/file/courseCoverPicture/${course._id}`"
-            />
+          <v-col v-for="(course, i) in courses" :key="i" class="n-padding col-12 col-md-4 pa-0">
+            <kurious-student-course-card category="ongoing" :course="course" />
           </v-col>
         </v-row>
       </v-col>
       <v-col cols="12">
-        <h2 class="second-title">Completed Courses</h2>
+        <h2 class="second-title course-group-title">Completed Courses</h2>
       </v-col>
-      <v-col class="course-heading col-12">
+      <v-col class="col-12">
         <v-row>
-          <v-col v-for="(course, i) in coursesfake" :key="i" cols="12" sm="6" md="4">
+          <v-col v-for="(course, i) in courses" :key="i" cols="12" sm="6" md="4">
             <kurious-student-course-card
               to="/courses/anyCourse"
               category="completed"
-              :image="course.image"
-              :course="{name: course.title, instructor: course.instructor, description: course.description}"
+              :course="course"
             />
           </v-col>
         </v-row>
@@ -54,8 +30,8 @@
     </v-container>
     <v-container v-if="$store.state.user.category === 'Instructor'" class="classes-home">
       <v-row>
-        <v-col cols="12" md="6" class="classes-header mt-10">
-          <h2>Hey Mrs Ellen,</h2>
+        <v-col cols="12" md="6" class="classes-header mt-5">
+          <h2>Hey Mr{{`${$store.state.user.gender === 'Male' ? '' : 's'} ${$store.state.user.surName}`}},</h2>
           <h3>Ready to start your classes?</h3>
           <div class="class-btns">
             <v-btn
@@ -75,13 +51,31 @@
               @click="type='published'"
             >Published Classes</v-btn>
           </div>
-          <kurious-instructor-course-card
-            v-for="(course, i) in activeCourses"
-            :key="i"
-            :course="course"
-            v-on:childToParent="performAction"
-          />
-          {{activeCourses.length === 0 ? `${type} courses are empty`:''}}
+          <div v-if="activeCourses.length > 0">
+            <kurious-instructor-course-card
+              v-for="(course, i) in activeCourses"
+              :key="i"
+              :course="course"
+              v-on:childToParent="performAction"
+            />
+          </div>
+          <div v-else>
+            <v-img src="@/assets/images/Blank canvas-rafiki.svg" class="courses-not-found-image mt-4"></v-img>
+            <div class="text-h5 text-center courses-not-found-image pa-12 ml-n4">
+              <span class="d-block ml-n-12">Oops You {{`${type == 'published' ? 'have not yet published any course' : 'dont have unpublished courses'}`}}.</span>
+              <v-btn
+                rounded
+                color="#ffd248"
+                class="mt-3 white--text px-12"
+                x-large
+                :to="type == 'published' ? undefined : '/courses/new-course'"
+                @click="type = 'unpublished' "
+                v-if="$route.name=='Courses' && $store.state.user.category === 'Instructor'"
+              >
+                {{`${type == 'published' ? 'Publish one' : 'Create one'}`}}
+              </v-btn>
+            </div>
+          </div>
         </v-col>
         <v-col cols="12" md="6">
           <v-card class="live-class">
@@ -112,32 +106,6 @@ export default {
   data: () => ({
     type: "unpublished",
     courses: [],
-    coursesfake: [
-      {
-        title: "Algebra and Calculus",
-        instructor: "Jyoni",
-        description:
-          "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nisi facilis quos inventore,officia officiis eius",
-        image:
-          "https://media.inmobalia.com/imgV1/B8vEv5Xh_VThvnEqMx4G0YtA8lAADdw1sBC5uN5pSX6~ImMWYgK8f72a6_2V5Fsi3Ei28Kvmds~cBwEukMeKfUqYSWBBx9dABGpiKVqX3duVN6IEC7a3fmuwpC4jE02qSn1_fEuDmqtn3cNbb5YsvDhrezEpAj8jK1u2cB7hDtjnp3AjMGMJ6~dvCdzQTUzEhF7JQMwYxJv4fg68HkKU8sZFpu9wlzdv_yAQb6xKkB3xf53zeE9XnkLocRN_LBREHQ4O2b40z7mI6SsIADH4NFjdTEzU0BB1JLPy97TaP8VEuGQ8kY0VfXj44~0sKXt_9OXj9oUWLtb7LxRlF0sn6eXgIKhrovrdTA--.jpg",
-      },
-      {
-        title: "Algebra and Calculus",
-        instructor: "Jyoni",
-        description:
-          "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nisi facilis quos inventore,officia officiis eius",
-        image:
-          "https://media.inmobalia.com/imgV1/B8vEv5Xh~OlgGrmOOeWCtYHtdv2TGtX20HosCpYxDmKApRO9fqu6aebRr_kOYwWZUUBuTZKwOZPzAYj7tZulyLOn1CMNcFuV2RqXoT28SJ2OnPhaGG~JUijtTYAgMuK~95K_MTLY7d8_mFzQgU5qCIR0acc49iB4a7RKlRbhA4L7nCLwQUoy~55Chgn65VnEfSbkn8wPAPU65wNYna0WPiwq3DO5FR3ZyC4GVH6cISHb5qeFj9bXdaLtSafxK6JAQUDjvlHmu11lcAZR0m_DzjaXII2SqzhJKqZGy8Wosxgange8oRKNfl1fRhzEUpEtTw8_MfQPTjpPx4wbxN_lreBfVwnD1tE-.jpg",
-      },
-      {
-        title: "Algebra and Calculus",
-        instructor: "Jyoni",
-        description:
-          "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nisi facilis quos inventore,officia officiis eius",
-        image:
-          "https://media.inmobalia.com/imgV1/B8vEv5Xh~OlgGrmOOeWCtYHtdv2TGtX20HosCpYxDmKApRO9fqu6aebRr_kOYwWZUUBuTZKwOZPzAYj7tZulyLOn1CMNcFuV2RqXoT28SJ2OnPhaGG~JUijtTYAm92TMoqn5vKlCgmlDm1fJFTC~eEH0YVpJPXok9tTHQsxjtb8qqVipJvT8IfWKux_tIpDIJ1HfJkb5d_gZ9c2D9JHACBXNvkqwg6ZTLWgW_yoFUGFHuIVx58NSuXnAOkF3iTTjvRxnsmP3eNI7FjqdQ0XW1N91pQ14UxD~S9YY5iU7Zg24xstwbdVF5D_SJR5TltSg2vkhz9xEVQCQKge_d6qZaFjwnDP_tqg-.jpg",
-      },
-    ],
   }),
   computed: {
     activeCourses() {
@@ -147,7 +115,7 @@ export default {
     },
   },
   beforeMount() {
-    // this.getEssentials();
+    this.getEssentials();
     if (this.activeCourses.length === 0) {
       this.type = "published";
     }
@@ -155,24 +123,22 @@ export default {
   methods: {
     async getEssentials() {
       try {
+        let response;
+        let facilityCollegeYear = "";
+        if (this.$store.state.user.category === "Student") {
+          response = await Apis.get(
+            `student-facility-college-year/student/${this.$store.state.user._id}`
+          );
+          facilityCollegeYear = response.data.facilityCollegeYear;
+        }
         const url =
           this.$store.state.user.category === "Instructor"
             ? `course/instructor/${this.$store.state.user._id}`
             : this.$store.state.user.category === "Student"
-            ? `course/facility-college-year/5f0ab5f7deea002f14fd93a2`
+            ? `course/facility-college-year/${facilityCollegeYear}`
             : undefined;
         const courses = await Apis.get(url);
-        if (!courses.data.includes("No")) {
-          this.courses = courses.data;
-          if (this.$store.state.user.category === "Student") {
-            for (const course of this.courses) {
-              const instructor = await Apis.get(
-                `instructor/${course.instructor}`
-              );
-              course.instructor = `${instructor.data.surName} ${instructor.data.otherNames}`;
-            }
-          }
-        }
+        this.courses = courses.data;
       } catch (error) {
         console.log(error);
       }
@@ -212,5 +178,8 @@ export default {
 .classes-home {
   background-color: #f8f8f8;
   padding-left: 40px;
+}
+.course-group-title {
+  color: #6a6a6a;
 }
 </style>

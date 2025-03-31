@@ -11,9 +11,9 @@ import vuetify from './plugins/vuetify';
 import VueSession from 'vue-session'
 import VuePlyr from 'vue-plyr'
 import mdi from '@mdi/font/css/materialdesignicons.css'
-import 'bootstrap'
-import 'bootstrap/dist/css/bootstrap.min.css'
-import 'animate.css/animate.min.css'
+// import 'bootstrap'
+// import 'bootstrap/dist/css/bootstrap.min.css'
+// import 'animate.css/animate.min.css'
 
 const options = {
     persist: true,
@@ -32,8 +32,8 @@ export default new Vuetify(opts)
 Vue.config.productionTip = false
 
 new Vue({
-    router,
     store,
+    router,
     mdi,
     vuetify,
     render: h => h(App)

@@ -1,6 +1,5 @@
 <template>
   <v-container class="round smooth--background">
-    <v-row class="d-none">student</v-row>
     <v-row>
       <v-col class="col-12">
         <v-card class="mx-auto elevation-0 pa-12 text-center smooth--card" max-width="344">
@@ -37,7 +36,7 @@
               </v-col>
             </v-row>
           </v-card-title>
-          <v-data-table :headers="headers" :items="quizes" sort-by="quizname">
+          <v-data-table :search="search" :headers="headers" :items="quizes" sort-by="quizname">
             <template v-slot:item.actions="{ item }">
               <v-icon small color="error" @click="deleteQuiz(item._id)">mdi-delete</v-icon>
               <v-icon small color="warning" @click="$router.push(`quiz/view/${item._id}`)">mdi-eye</v-icon>
@@ -46,6 +45,9 @@
                 color="success"
                 @click="$router.push(`quiz/edit/${item._id}`)"
               >mdi-square-edit-outline</v-icon>
+            </template>
+            <template v-slot:no-data>
+              <span class="text-h6">Oops You have not yet created a quiz.</span>
             </template>
           </v-data-table>
         </v-card>
@@ -129,27 +131,31 @@ export default {
     async getQuizes() {
       try {
         this.quizes = [];
-        const response = await Apis.get("quiz");
+        const response = await Apis.get(
+          `quiz/instructor/${this.$store.state.user._id}`
+        );
         for (const quiz of response.data) {
+          console.log(quiz);
           const newQuiz = {
             _id: quiz._id,
             name: quiz.name,
-            course: "nyuma",
+            course: "under construction",
             usage: 0,
             containedQuestions: quiz.questions.length,
-            duration: `${quiz.duration.hh === "" ? "00" : quiz.duration.hh}:${
-              quiz.duration.mm === "" ? "00" : quiz.duration.mm
-            }:${quiz.duration.ss === "" ? "00" : quiz.duration.ss}`,
+            duration: new Date(quiz.duration * 1000)
+              .toISOString()
+              .substr(11, 8),
             date: quiz.createdAt.split("T")[0].split("-").reverse().join("/"),
           };
           this.quizes.push(newQuiz);
         }
       } catch (error) {
+        console.log(error);
         if (error.request) {
           this.status = 503;
           this.message = "Service Unavailable";
+          this.show = true;
         }
-        this.show = true;
       }
     },
     async deleteQuiz(id) {
