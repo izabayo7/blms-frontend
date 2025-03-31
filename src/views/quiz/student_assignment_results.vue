@@ -89,6 +89,7 @@
             </div>
             <div class="submission">
               <FilePicker
+                  v-if="!assignment_submission._id || userCategory === 'STUDENT'"
                   :ref="`picker`"
                   template="attachment-files"
                   :allowedTypes="findAcceptedFiles()"
@@ -97,6 +98,31 @@
                   @addFile="addAssignmentAttachment"
                   @removeFile="removeAssignmentAttachment"
               />
+              <div v-else class="col-12">
+                <div class="row ma-0" v-for="(attachment, i) in assignment_submission.attachments" :key="i">
+                  <div class="pick-file col-12 col-md-8 d-flex px-4">
+                    <button
+                        @click="downloadAttachment(`${backend_url}/api/assignment_submission/${assignment_submission._id}/attachment/${attachment.src}/view?&token=${$session.get('jwt')}`)"
+                        class="file-name">
+                      {{ attachment.src }}
+                    </button>
+                    <!--                    <div class="file-size mx-auto">-->
+                    <!--                      26kb-->
+                    <!--                    </div>-->
+                    <div class="file-type ml-auto">
+                      {{ attachment.src.split('.')[attachment.src.split('.').length - 1] }}
+                    </div>
+
+                  </div>
+                  <div class="col-12 col-md-4 py-0">
+                    <button
+                        @click="downloadAttachment(`${backend_url}/api/assignment_submission/${assignment_submission._id}/attachment/${attachment.src}/download?token=${$session.get('jwt')}`)"
+                        class="download-attachment">
+                      Download
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
           <div v-else class="text-input">

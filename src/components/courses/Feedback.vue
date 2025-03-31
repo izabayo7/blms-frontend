@@ -137,7 +137,6 @@ export default {
     },
     answerId: {
       type: String,
-      required: true,
     },
     feedbackId: {
       type: String,
