@@ -2,13 +2,13 @@
 <div class="my-table">
   <div class="table-container">
     <div class="table-wrapper">
-      <table>
+      <table :class="{'colored-rows':coloredRows}">
         <thead>
           <tr>
             <th><div class="select select-all">
               <div class="icon" @click="selectAll">
                 <div class="icon__checked " v-if="selected_all">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"/><path d="M4 3h16a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zm1 2v14h14V5H5zm6.003 11L6.76 11.757l1.414-1.414 2.829 2.829 5.656-5.657 1.415 1.414L11.003 16z"/></svg>
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"/><path d="M4 3h16a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zm7.003 13l7.07-7.071-1.414-1.414-5.656 5.657-2.829-2.829-1.414 1.414L11.003 16z"/></svg>
                 </div>
                 <div class="icon__unchecked" v-else>
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"/><path d="M4 3h16a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zm1 2v14h14V5H5z"/></svg>
@@ -28,18 +28,18 @@
           </tr>
         </thead>
         <tbody>
-          <tr class="table-body-row" v-for="(content,i) in tabularData" :key="`${content}${Date.now()*Math.random()}`">
+          <tr class="table-body-row" @click="rowClicked(content[options.link.paramPropertyName] || null)" v-for="(content,i) in tabularData" :key="`${content}${Date.now()*Math.random()}`">
             <td><div class="select select-one">
               <div class="icon" @click="select(i)">
                 <div class="icon__checked" v-if="selected_all || inSelectedRows(i)">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"/><path d="M4 3h16a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zm1 2v14h14V5H5zm6.003 11L6.76 11.757l1.414-1.414 2.829 2.829 5.656-5.657 1.415 1.414L11.003 16z"/></svg>
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"/><path d="M4 3h16a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zm7.003 13l7.07-7.071-1.414-1.414-5.656 5.657-2.829-2.829-1.414 1.414L11.003 16z"/></svg>
                 </div>
                 <div class="icon__unchecked" v-else>
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"/><path d="M4 3h16a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zm1 2v14h14V5H5z"/></svg>
                 </div>
               </div>
             </div></td>
-            <td v-for="tabHead in tabHeads" :key="`${tabHead}${Date.now()*Math.random()}` ">{{content[tabHead]}}</td>
+            <td v-for="col in columnNames" :key="`${col}${Date.now()*Math.random()}` ">{{content[col]}}</td>
           </tr>
         </tbody>
       </table>
@@ -49,10 +49,16 @@
 </template>
 
 <script>
+//TODO auto flexible column based on length of data [liberi]
+import S from 'string'
+
 export default {
   name: "table-ui",
   props:{
-    data:{required:true,type:Array}
+    data:{required:true,type:Array},
+    coloredRows:{default:false,type:Boolean},
+    options:{type:Object},
+
   },
   data(){
     return{
@@ -64,14 +70,52 @@ export default {
     }
   },
   computed:{
+
+    /**
+     * formatted tab/column names that are inserted in table
+     *
+     * @returns {string[]} array
+     */
     tabHeads(){
-      return Object.keys(this.data[0])
+      let tabHeadsCols = this.columnNames;
+
+      tabHeadsCols = tabHeadsCols.map(aTabHead => {
+        let s = S(aTabHead).humanize().s;
+        s = S(s).chompLeft("Total").s;
+
+        return S(s).humanize().s;
+      })
+
+      return tabHeadsCols;
+    },
+
+
+    /**
+     * pure / not formatted tab/column names
+     *
+     * @returns {string[]} array
+     */
+    columnNames(){
+      const {keysToShow} = this.options;
+      return keysToShow || Object.keys(this.data[0]);
     }
   },
   methods:{
     inSelectedRows(idx){
       const selected = new Set(this.selected)
       return selected.has(idx)
+    },
+    rowClicked(id){
+      if(!id)
+        return
+
+      const {link:{routeTo}} = this.options
+
+      const paramTestRegex = /{([a-z0-9])+}/gim
+
+      const link = routeTo.replace(paramTestRegex,id)
+
+      this.$router.push(link)
     },
     selectAll(){
       //if selected all was currently true delete all selected elements to set them to false
@@ -221,6 +265,17 @@ export default {
             padding:.6rem .5rem;
             box-sizing:border-box;
             min-width: fit-content;
+          }
+        }
+
+        &.colored-rows{
+          tr{
+            &:hover{
+              background-color:unset;
+            }
+            &:nth-child(even){
+              background-color:darken($bg-one,5);
+            }
           }
         }
       }

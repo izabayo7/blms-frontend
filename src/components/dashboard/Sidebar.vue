@@ -5,12 +5,8 @@
         <div class="active-link"></div>
         <li
           v-if="userCategory === 'ADMIN'"
-          @click="
-            $router.push('/administration');
-            closeSidebar();
-          "
-          class="vertically--centered"
-          :class="{ active: activeRoute.includes('/administration') }"
+          @click="closeSidebar();$router.push('/administration')"
+          :class="{ active: activeRoute('administration') }"
         >
           <div class="link-icon">
             <svg
@@ -36,12 +32,8 @@
         </li>
         <li
           v-if="userCategory === 'INSTRUCTOR'"
-          @click="
-            $router.push('/users');
-            closeSidebar();
-          "
-          class="vertically--centered"
-          :class="{ active: activeRoute.includes('/users') }"
+          @click="closeSidebar();$router.push('/users')"
+          :class="{ active: activeRoute('users') }"
         >
           <div class="link-icon">
             <svg
@@ -97,13 +89,27 @@
           </div>
         </li>
         <li
+          v-if="userCategory === 'INSTRUCTOR'"
+          @click="$router.push('/faculties')"
+          :class="{ active: activeRoute('faculties') }"
+        >
+          <div class="link-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="26" viewBox="0 0 22 26" fill="none">
+              <path d="M10.9737 25.0983C10.9389 25.0983 10.9041 25.0952 10.8698 25.0892C4.46983 23.9667 0 20.1148 0 15.7221V1.2096C0 0.883251 0.266889 0.618652 0.596067 0.618652H21.3512C21.6804 0.618652 21.9472 0.883251 21.9472 1.2096V15.7221C21.9472 20.1148 17.4774 23.9667 11.0774 25.0892C11.0431 25.0952 11.0084 25.0983 10.9737 25.0983Z" fill="white"/>
+              <path d="M11.3954 7.79366L5.06445 5.68335V14.9687L11.3954 17.079M11.3954 7.79366L17.7263 5.68335V14.5467L11.3954 17.079M11.3954 7.79366V17.079M13.5057 9.90397L16.0381 9.05985M13.5057 12.4363L16.0381 11.5922M9.28508 12.4363L6.7527 11.5922M9.28508 9.90397L6.7527 9.05985" stroke="#193074" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div
+            class="link-name animate__animated animate__bounce"
+            v-show="state"
+          >
+            Faculties
+          </div>
+        </li>
+        <li
           v-if="userCategory === 'STUDENT' || userCategory === 'INSTRUCTOR'"
-          @click="
-            $router.push('/courses');
-            closeSidebar();
-          "
-          class="vertically--centered"
-          :class="{ active: activeRoute.includes('/courses') }"
+          @click="closeSidebar();$router.push('/courses')"
+          :class="{ active: activeRoute('courses') }"
         >
           <div class="link-icon">
             <svg
@@ -124,12 +130,8 @@
         </li>
         <li
           v-if="userCategory === 'STUDENT' || userCategory === 'INSTRUCTOR'"
-          @click="
-            $router.push('/reports');
-            closeSidebar();
-          "
-          class="vertically--centered"
-          :class="{ active: activeRoute.includes('/reports') }"
+          @click="closeSidebar();$router.push('/reports')"
+          :class="{ active: activeRoute('reports') }"
         >
           <div class="link-icon">
             <svg
@@ -150,12 +152,8 @@
         </li>
         <li
           v-if="userCategory === 'STUDENT' || userCategory === 'INSTRUCTOR'"
-          @click="
-            $router.push('/library');
-            closeSidebar();
-          "
-          class="vertically--centered"
-          :class="{ active: activeRoute.includes('/library') }"
+          @click="closeSidebar();$router.push('/library')"
+          :class="{ active: activeRoute('library') }"
         >
           <div class="link-icon">
             <svg
@@ -175,12 +173,8 @@
           <div class="link-name" v-show="state">Library</div>
         </li>
         <li
-          @click="
-            $router.push('/messages');
-            closeSidebar();
-          "
-          class="vertically--centered"
-          :class="{ active: activeRoute.includes('/messages') }"
+          @click="closeSidebar();$router.push('/messages')"
+          :class="{ active: activeRoute('messages') }"
         >
           <div class="link-icon">
             <svg
@@ -201,12 +195,8 @@
         </li>
         <li
           v-if="userCategory === 'INSTRUCTOR'"
-          @click="
-            $router.push('/quiz');
-            closeSidebar();
-          "
-          class="vertically--centered"
-          :class="{ active: activeRoute.includes('/quiz') }"
+          @click="closeSidebar();$router.push('/quiz')"
+          :class="{ active: activeRoute('quiz') }"
         >
           <div class="link-icon">
             <svg
@@ -227,12 +217,8 @@
         </li>
         <li
           v-if="userCategory === 'STUDENT' || userCategory === 'INSTRUCTOR'"
-          @click="
-            $router.push('/settings');
-            closeSidebar();
-          "
-          class="vertically--centered"
-          :class="{ active: activeRoute.includes('/sinz kbx') }"
+          @click="closeSidebar();$router.push('/settings')"
+          :class="{ active: activeRoute('settings') }"
         >
           <div class="link-icon">
             <svg
@@ -262,9 +248,6 @@ export default {
   name: "Sidebar",
   computed: {
     ...mapState("sidebar_navbar", { state: "sidebar_expanded" }),
-    activeRoute() {
-      return this.$route.path;
-    },
     userCategory() {
       return this.$store.state.user.user.category.name;
     },
@@ -277,8 +260,15 @@ export default {
   },
   methods: {
     ...mapMutations("sidebar_navbar", { toggle: "TOGGLE_SIDEBAR_EXPANSION" }),
+    activeRoute(route) {
+      const routeParts = this.$route.path.split("/");
+
+      console.log(route === routeParts[1]);
+
+      return route === routeParts[1];
+    },
     closeSidebar() {
-      console.log(this.onPhone)
+      // console.log(this.onPhone);
       if (this.onPhone) {
         this.toggle();
       }
