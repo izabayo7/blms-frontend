@@ -6,7 +6,14 @@
           v-if="data.image"
           :src="data.image+'?height=50'"
           :alt="`${data.name}'s profile picture`"
-      />
+      />  
+      <div v-else-if="data.name === 'Announcements'" class="announcement">
+      <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+<circle cx="20" cy="20" r="20" fill="#FFD248"/>
+<path d="M19.9995 28.6957C20.956 28.6957 21.7386 27.9131 21.7386 26.9565H18.2604C18.2604 27.9131 19.043 28.6957 19.9995 28.6957ZM25.2169 23.4783V19.1304C25.2169 16.4609 23.7995 14.2261 21.3038 13.6348V13.0435C21.3038 12.3217 20.7212 11.7391 19.9995 11.7391C19.2778 11.7391 18.6951 12.3217 18.6951 13.0435V13.6348C16.2082 14.2261 14.7821 16.4522 14.7821 19.1304V23.4783L13.043 25.2174V26.087H26.956V25.2174L25.2169 23.4783ZM23.4778 24.3478H16.5212V19.1304C16.5212 16.9739 17.8343 15.2174 19.9995 15.2174C22.1647 15.2174 23.4778 16.9739 23.4778 19.1304V24.3478Z" fill="#343434"/>
+</svg>
+
+      </div>
       <v-avatar v-else size="37" class="avatar">
         {{ data.name | computeText }}
       </v-avatar>
@@ -30,7 +37,8 @@
             {{ data.last_message.sender.sur_name }} :
           </div>
           <div :class="{ 'pl-1': data.is_group || is_mine }">
-            {{
+            {{ data.name === 'Announcements' ? 
+            data.last_message.title :
               data.last_message.content
                   | trimString(
                   data.is_group

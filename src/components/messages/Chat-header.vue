@@ -13,7 +13,7 @@
         >{{ `${i > 0 ? "," : ""} ${member.data.user_name == $store.state.user.user.user_name ? 'You' : member.data.sur_name}` }}
         </span>
               </p>
-              <p v-else class="online">{{ userOnline }}</p>
+              <p v-else class="online">{{ currentDisplayedUser.name === 'Announcements' ? currentDisplayedUser.last_message.title : userOnline }}</p>
           </div>
       </div>
 
