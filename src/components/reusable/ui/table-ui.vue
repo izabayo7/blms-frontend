@@ -82,11 +82,11 @@ export default {
 
     },
     sort(tabHead){
-            this.tabularData = this.tabularData.sort((first,second) => {
-              if(first[tabHead] < second[tabHead]) return -1
-              if(first[tabHead] > second[tabHead]) return 1
-              return 0
-            })
+        this.tabularData = this.tabularData.sort((first,second) => {
+          if(first[tabHead] < second[tabHead]) return -1
+          if(first[tabHead] > second[tabHead]) return 1
+          return 0
+        })
     },
     select(i){
       const selected = new Set(this.selected)
