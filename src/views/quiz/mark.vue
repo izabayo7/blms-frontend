@@ -442,7 +442,6 @@ export default {
       }, 2000);
     },
     computeTotalMarks() {
-      console.log("ahooooooooooooooo");
       let result = 0;
       for (const i in this.selected_quiz_submission.answers) {
         result = parseInt(

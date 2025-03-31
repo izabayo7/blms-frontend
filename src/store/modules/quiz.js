@@ -89,6 +89,15 @@ export default {
             })
 
         },
+        release_marks({ dispatch }, {id}){
+            apis.update('quiz/release_marks',id).then(()=>{
+                dispatch("app_notification/SET_NOTIFICATION", {
+                    message: "Marks released",
+                    status: "success",
+                    uptime: 5000,
+                }, { root: true });
+            })
+        },
         //update a quiz
         update_quiz({ state, dispatch }, { quiz, pictures }) {
             return apis.update('quiz', state.selected_quiz, quiz).then(d => {
