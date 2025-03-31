@@ -8,6 +8,9 @@ const routes =  [
     {
         path: '/',
         name: 'Quiz',
+        meta: {
+            allowedUsers: ["INSTRUCTOR"]
+        },
         component: () =>
             import( /* webpackChunkName: "quiz" */ '@/views/quiz')
     },
