@@ -19,12 +19,16 @@ export default {
   },
   methods: {
     ...mapMutations("notification", ["addNotification"]),
+    ...mapMutations("user", ["TOOGLE_DISABLE_FUNCTIONALITIES"]),
     ...mapMutations("courses", ["addCourse"]),
     ...mapMutations("chat", ["CHANGE_MESSAGE_READ_STATUS","SET_SOCKET"]),
     ...mapMutations("sidebar_navbar", {update_unread: "SET_TOTAL_UNREAD"}),
   },
   async created() {
     await apis.create('user_logs', {online: true})
+    apis.get('account_payments/status').then((res)=>{
+      this.TOOGLE_DISABLE_FUNCTIONALITIES(res.data.data.disabled)
+    })
   },
   beforeMount() {
     this.SET_SOCKET()
@@ -59,7 +63,6 @@ export default {
     });
 
     this.socket.on("all_read", ({conversation_id}) => {
-      console.log(conversation_id)
       this.CHANGE_MESSAGE_READ_STATUS(conversation_id);
     })
 
@@ -92,7 +95,11 @@ export default {
 
     //handle errors
     this.socket.on("error", (error) => {
-      console.log("ikibazo broda", error);
+      this.$store.dispatch("app_notification/SET_NOTIFICATION", {
+        message: error,
+        status: "danger",
+        uptime: 2000,
+      })
       // alert(error);
     });
   },

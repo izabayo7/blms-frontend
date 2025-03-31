@@ -21,7 +21,6 @@ export default function Participant(name, vm, offeringCourse = false, userInfo) 
     this.vm = vm;
     this.offeringCourse = offeringCourse
 
-    console.log(userInfo)
     if (userInfo.category == "INSTRUCTOR") {
         // video.setAttribute('poster','https://apis.kurious.rw/assets/images/video-loader.gif')
         video.setAttribute('poster','https://apis.kurious.rw/assets/images/video-loader.gif')
@@ -31,7 +30,6 @@ export default function Participant(name, vm, offeringCourse = false, userInfo) 
             video.play();
 
             setTimeout(function(){
-                console.log(video.paused)
                 if(video.paused){
                     video.removeAttribute('poster')
                     let button  = document.querySelector('.play_button')
@@ -53,7 +51,6 @@ export default function Participant(name, vm, offeringCourse = false, userInfo) 
 
     this.offerToReceiveVideo = function (error, offerSdp, wp) {
         if (error) return console.error("sdp offer error")
-        console.log('Invoking SDP offer callback function');
         let msg = {
             id: "receiveVideoFrom",
             sender: name,
@@ -65,7 +62,6 @@ export default function Participant(name, vm, offeringCourse = false, userInfo) 
 
 
     this.onIceCandidate = (candidate, wp) => {
-        console.log("Local candidate" + JSON.stringify(candidate));
 
         let message = {
             id: 'onIceCandidate',
@@ -79,7 +75,6 @@ export default function Participant(name, vm, offeringCourse = false, userInfo) 
     Object.defineProperty(this, 'rtcPeer', {writable: true});
 
     this.dispose = function () {
-        console.log('Disposing participant ' + this.name);
         if (this.rtcPeer)
             this.rtcPeer.dispose();
     };

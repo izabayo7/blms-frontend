@@ -5,12 +5,10 @@ const chatMixins = {
         //scroll chat to button
         scrollChatToBottom() {
             let el = document.getElementById('my-chat-messaging')
-            console.log(el, el.scrollTop, el.scrollHeight)
             if (el){
                 el.scrollTop = el.scrollHeight
 
                 el.scrollTo({top: el.scrollHeight, behavior: 'smooth'})
-                console.log(el, el.scrollTop, el.scrollHeight)
             }
         },
     }

@@ -158,7 +158,6 @@ export default {
   computed: {
     isLive() {
       if (!this.nearestLiveSession) return false;
-      console.log(this.nearestLiveSession)
       for (const i in this.course.chapters) {
         if (this.course.chapters[i].live_sessions.length) {
           // if()

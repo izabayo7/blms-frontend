@@ -393,7 +393,6 @@ export default {
     });
 
     this.socket.on("res/users/new", ({user}) => {
-      console.log(this.recentJoinedUsers, user)
       if (this.recentJoinedUsers.indexOf(user) == -1) {
         this.recentJoinedUsers.unshift(user)
         this.recentJoinedUsers.pop()

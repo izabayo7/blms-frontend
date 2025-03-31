@@ -322,7 +322,6 @@ export default {
     this.getQuizes({
       user_name: this.$store.state.user.user.user_name,
     });
-    console.log(this.$store.state.courses.selectedCourse, this.course)
     if (this.course) {
       this.selected_course = this.course.name
     }

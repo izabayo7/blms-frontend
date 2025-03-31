@@ -164,7 +164,6 @@ export default {
       return "feedback_" + Math.random() * 1000;
     },
     mode() {
-      // console.log(this.feedbackContent());
       // return this.feedbackContent() == this.content ? "view" : "edit";
       return "any";
     },
@@ -176,7 +175,6 @@ export default {
   },
   watch: {
     element() {
-      console.log("hahiyeeeeee");
       this.computeFeedbackClass();
     },
     message() {
@@ -251,7 +249,6 @@ export default {
       let content = this.removeNonBreakingSpace(this.feedbackContent());
 
       if (content == "") {
-        console.log("reka genda");
         return;
       }
       const response = await Apis.create("comment", {
@@ -277,7 +274,6 @@ export default {
     async editFeedback() {
       const content = this.feedbackContent();
       if (content == "") {
-        console.log("reka genda");
         return;
       }
       const response = await Apis.update("comment", this.feedbackId, {
@@ -293,8 +289,7 @@ export default {
       this.message = "feedback successfuly updated";
     },
     async removeFeedback() {
-      const response = await Apis.delete("comment", this.feedbackId);
-      console.log(response);
+      await Apis.delete("comment", this.feedbackId);
       let element = this.$refs.feedback_input;
       element.innerHTML = "";
       element.className = element.className.replace(

@@ -287,7 +287,11 @@ export default {
             this.users = filteredUsers;
           })
           .catch(err => {
-            console.log(err)
+            this.$store.dispatch("app_notification/SET_NOTIFICATION", {
+              message: err,
+              status: "danger",
+              uptime: 2000,
+            })
           })
     }
   },

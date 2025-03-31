@@ -6,19 +6,12 @@ const prefix = '/messages'
 
 const routes =  [
     {
-        path: '/start-conversation',
-        component: () => import( /* webpackChunkName: "start-conversation" */ '@/views/chat/StartConversation.vue'),
-    },
-    // {
-    //     path: '/no-conversation',
-    //     component: () => import( /* webpackChunkName: "no-conversation" */ '@/views/chat/NoConversation.vue'),
-    // },
-    {
         path: '/',
+        name:"chatingPlace",
         component: () => import( /* webpackChunkName: "messages" */ '@/views/chat/Messages.vue'),
         children: [
-            { path: '/messages/group/:id', component: () => import( /* webpackChunkName: "messages-group" */ '@/views/chat/GroupSetting') },
-            { path: '/messages/group/:id/add-member', component: () => import( /* webpackChunkName: "messages-add-member" */ '@/views/chat/AddMember') },
+            { path: '/messages/group/:id', name:"chatingGroup", component: () => import( /* webpackChunkName: "messages-group" */ '@/views/chat/GroupSetting') },
+            { path: '/messages/group/:id/add-member', name:"chatingAddMember", component: () => import( /* webpackChunkName: "messages-add-member" */ '@/views/chat/AddMember') },
             { path: '/messages/:username', name:"chatingRoom", component: () => import( /* webpackChunkName: "messages-dm" */ '@/views/chat/Chat.vue') }
         ]
     },

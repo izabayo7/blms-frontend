@@ -257,7 +257,6 @@ export default {
     let timeout = undefined;
 
     this.socket.on("res/message/typing", (typist, group) => {
-      console.log(this.currentDisplayedUser);
       if (!this.currentDisplayedUser) return;
 
       if (this.currentDisplayedUser.is_group) {
@@ -285,8 +284,7 @@ export default {
     });
 
     //track scroll so that we can determine if use has read new messages
-    let scrollableDiv = document.getElementById("my-chat-messaging");
-    console.log(scrollableDiv.offsetHeight, scrollableDiv.scrollTop);
+    // let scrollableDiv = document.getElementById("my-chat-messaging");
     // scrollableDiv.addEventListener("scroll", this.readMessages);
     this.readMessages();
     //when message came stop typing

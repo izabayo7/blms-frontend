@@ -197,10 +197,6 @@ export default {
   beforeRouteUpdate(to, from, next) {
     //since username has changed let us also load new chat
     this.setUsername(to.params.username);
-    //   .then((username) => {
-    // // console.log(username);
-    // });
-
     next();
   },
 };

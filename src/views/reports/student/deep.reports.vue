@@ -135,7 +135,6 @@ export default {
     this.getQuizSubmissionsInQuiz({
       quiz_id: this.$route.params.target,
     }).then((d) => {
-      console.log(d);
       this.course = d;
     });
   },

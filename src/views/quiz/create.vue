@@ -370,7 +370,6 @@ export default {
       this.pictures = [[], []];
     },
     handleOptionClick(questionIndex, optionIndex) {
-      console.log(questionIndex, optionIndex)
       let rightChoices = [];
 
       for (const k in this.questions[questionIndex].options.choices) {

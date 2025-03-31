@@ -4,7 +4,7 @@
       <ul ref="nav" class="d-flex">
         <div class="active-link"></div>
         <li
-            v-if="userCategory === 'ADMIN' || userCategory === 'INSTRUCTOR'"
+            v-if="!disableFunctionalities&&(userCategory === 'ADMIN' || userCategory === 'INSTRUCTOR')"
             @click="
             closeSidebar();
             routeTo('/welcome');
@@ -25,9 +25,15 @@
             </svg>
 
           </div>
+          <div
+              class="link-name"
+              v-show="state"
+          >
+            Home
+          </div>
         </li>
         <li
-            v-if="userCategory === 'ADMIN' || userCategory === 'INSTRUCTOR'"
+            v-if="!disableFunctionalities&&(userCategory === 'ADMIN' || userCategory === 'INSTRUCTOR')"
             @click="
             closeSidebar();
             routeTo(userCategory === 'ADMIN' ? '/users' : '/students');
@@ -80,6 +86,12 @@
               </defs>
             </svg>
           </div>
+          <div
+              class="link-name"
+              v-show="state"
+          >
+            {{ userCategory === 'ADMIN' ? 'Users' : 'Students' }}
+          </div>
         </li>
         <li
             v-if="userCategory === 'ADMIN'"
@@ -108,9 +120,15 @@
               />
             </svg>
           </div>
+          <div
+              class="link-name"
+              v-show="state"
+          >
+            Faculties
+          </div>
         </li>
         <li
-            v-if="userCategory === 'STUDENT' || userCategory === 'INSTRUCTOR'"
+            v-if="!disableFunctionalities&&(userCategory === 'STUDENT' || userCategory === 'INSTRUCTOR')"
             @click="
             closeSidebar();
             routeTo('/courses');
@@ -132,9 +150,10 @@
               />
             </svg>
           </div>
+          <div class="link-name" v-show="state">Courses</div>
         </li>
         <li
-            v-if="userCategory === 'ADMIN' || userCategory === 'INSTRUCTOR'"
+            v-if="!disableFunctionalities&&(userCategory === 'ADMIN' || userCategory === 'INSTRUCTOR')"
             @click="
             closeSidebar();
             routeTo('/announcements');
@@ -164,9 +183,10 @@
             </svg>
 
           </div>
+          <div class="link-name" v-show="state">Announcements</div>
         </li>
         <li
-            v-if="userCategory === 'STUDENT' || userCategory === 'INSTRUCTOR'"
+            v-if="!disableFunctionalities&&(userCategory === 'STUDENT' || userCategory === 'INSTRUCTOR')"
             @click="
             closeSidebar();
             routeTo('/reports');
@@ -188,6 +208,7 @@
               />
             </svg>
           </div>
+          <div class="link-name" v-show="state">Reports</div>
         </li>
         <!--        <li-->
         <!--          v-if="userCategory === 'STUDENT' || userCategory === 'INSTRUCTOR'"-->
@@ -252,9 +273,10 @@
               </defs>
             </svg>
           </div>
+          <div class="link-name" v-show="state">Messages</div>
         </li>
         <li
-            v-if="userCategory === 'INSTRUCTOR'"
+            v-if="!disableFunctionalities&&(userCategory === 'INSTRUCTOR')"
             @click="
             closeSidebar();
             routeTo('/quiz');
@@ -276,6 +298,7 @@
               />
             </svg>
           </div>
+          <div class="link-name" v-show="state">Quiz</div>
         </li>
       </ul>
     </div>
@@ -283,15 +306,17 @@
 </template>{
 <script>
 import { mapMutations, mapState } from "vuex";
+import userPayment from "../../mixins/user-payments.mixin";
 
 export default {
   name: "Sidebar",
   computed: {
-    ...mapState("sidebar_navbar", { state: "sidebar_expanded" }),
     userCategory() {
       return this.$store.state.user.user.category.name;
     },
+    ...mapState("sidebar_navbar", {state: "sidebar_expanded", unreads: "total_unread_messages"}),
   },
+  mixins: [userPayment],
   methods: {
     routeTo(path){
       if(this.$route.path != path)

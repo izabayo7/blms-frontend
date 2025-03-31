@@ -315,9 +315,6 @@ export default {
         this.error = "You are offline, continue doing your quiz"
       }
     },
-    attempt() {
-      console.log(this.attempt)
-    }
   },
   methods: {
     saveProgress(index) {
@@ -332,12 +329,11 @@ export default {
       const formData = new FormData()
       formData.append("files[0]", this.filesToUpload[index].file);
 
-      const response = await Apis.create(`quiz_submission/${this.submission_id}/attachment`, formData, {
+      await Apis.create(`quiz_submission/${this.submission_id}/attachment`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
       })
-      console.log(response)
     },
     ...mapActions("quiz", ["findQuizByName"]),
     ...mapActions("quiz_submission", [
@@ -496,13 +492,11 @@ export default {
       this.saveAttempt();
     },
     initialiseQuiz() {
-      console.log('aho shn', this.selected_quiz._id)
       this.socket.emit('start-quiz', {
         quiz: this.selected_quiz._id
       })
       this.socket.on('start-quiz', (id) => {
         this.submission_id = id;
-        console.log("byabaye wlh ", id)
       })
       this.socket.on('progress-saved', ({index, end, is_selection_only}) => {
         if(end){
@@ -523,7 +517,6 @@ export default {
           }
         }
         else if (index != undefined) {
-          console.log("progress of answer ", index + 1, " saved")
           if (this.filesToUpload[index].file != "")
             this.uploadFile(index);
         }

@@ -310,10 +310,6 @@ export default {
     deleteStudentGroup(i) {
       this.addedStudentGroups.splice(i, 1)
     },
-    select_dean(name) {
-      console.log(name)
-    }
-    ,
     async createFaculty() {
       const res = this.editMode ? await Apis.update("faculty", this.facultyId, this.faculty) : await Apis.create("faculty", this.faculty);
       if (res.data.status != 200 && res.data.status != 201) {

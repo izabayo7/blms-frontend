@@ -74,9 +74,6 @@ export default {
       this.selectSelected = !this.selectSelected;
     }
   },
-  mounted() {
-    console.log('mounted')
-  }
 }
 </script>
 

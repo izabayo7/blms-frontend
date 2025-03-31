@@ -190,7 +190,7 @@ import Apis from "@/services/apis";
 import {mapActions, mapMutations, mapState} from "vuex";
 
 export default {
-  name: "Institution Settings",
+  name: "InstitutionSettings",
   data: () => ({
     editStatus: [true, true, true, true, true, true, true],
     img: "",

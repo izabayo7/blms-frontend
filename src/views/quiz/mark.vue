@@ -461,7 +461,6 @@ export default {
   methods: {
     handleFeedbackSent(index, value) {
       this.questions_have_feedback[index] = value
-      console.log(this.questions_have_feedback)
     },
     downloadAttachment,
     ...mapActions("quiz_submission", [
@@ -529,7 +528,6 @@ export default {
       userName: this.$route.params.user_name,
       quizName: this.$route.params.quiz_name,
     }).then(async () => {
-      console.log(this.selected_quiz_submission)
       this.attempt = {
         quiz: this.selected_quiz_submission.quiz._id,
         user: this.selected_quiz_submission.user.user_name,
