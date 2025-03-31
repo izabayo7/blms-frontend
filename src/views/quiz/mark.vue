@@ -533,8 +533,9 @@ export default {
         auto_submitted: this.selected_quiz_submission.auto_submitted,
         used_time: this.selected_quiz_submission.used_time,
         answers: this.selected_quiz_submission.answers.map((x) => {
-              x.feedback = undefined
-              return x
+              let y = JSON.parse(JSON.stringify(x))
+              y.feedback = undefined
+              return y
             }
         ),
         marked: this.selected_quiz_submission.marked,
