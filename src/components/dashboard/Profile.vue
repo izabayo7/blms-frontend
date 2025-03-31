@@ -6,36 +6,17 @@
         {{ `${$store.state.user.user.sur_name} ${$store.state.user.user.other_names}`| computeText }}
       </v-avatar>
       <v-icon>mdi-chevron-down</v-icon>
+      <div class="profile-card">
+        <profile-card />
+      </div>
     </div>
   </div>
 </template>
 <script>
+import ProfileCard from "./ProfileCard";
 export default {
   name:"Profile",
-  methods: {
-    logout() {
-      // clear the session
-      this.$session.destroy();
-      
-      // reset the modules
-      this.$store.dispatch("user/unsetUser");
-      this.$store.commit("users/RESET_STATE");
-      this.$store.commit("sidebar_navbar/RESET_STATE");
-      this.$store.commit("quiz/RESET_STATE");
-      this.$store.commit("quiz_submission/RESET_STATE");
-      this.$store.commit("notification/RESET_STATE");
-      this.$store.commit("modal/RESET_STATE");
-      this.$store.commit("faculties/RESET_STATE");
-      this.$store.commit("courses/RESET_STATE");
-      this.$store.commit("colleges/RESET_STATE");
-      this.$store.commit("chat/RESET_STATE");
-      this.$store.commit("years/RESET_STATE");
-
-      // redirect to login
-      this.$router.push("/login");
-      console.log('ark koko')
-    },
-  },
+  components: {ProfileCard},
 };
 </script>
 <style lang="scss" scoped>
@@ -46,29 +27,41 @@ export default {
   justify-content: center;
   padding: 1rem;
 
-  img {
-    width: 50px;
-    border-radius: 50%;
-    cursor: pointer;
-  }
-  .avatar {
-    margin-top: 0px;
-    background-color: $primary;
-    color: white;
-    cursor: pointer;
-  }
-  p {
-    height: fit-content;
-    width: fit-content;
-    margin: 0;
-    padding-right: 1.5rem;
-    cursor: pointer;
-
-    &:hover {
-      color: darken($font, 10);
+  .profile-container{
+    position: relative;
+    .profile-card{
+      position: absolute;
+      right:-1.5rem;
+      top:4rem
     }
-    span {
-      padding-right: 0.7rem;
+    img {
+      width: 50px;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+    .avatar {
+      margin-top: 0px;
+      background-color: $primary;
+      color: white;
+      cursor: pointer;
+    }
+    .v-icon{
+      padding-left: 1rem;
+    }
+
+    p {
+      height: fit-content;
+      width: fit-content;
+      margin: 0;
+      padding-right: 1.5rem;
+      cursor: pointer;
+
+      &:hover {
+        color: darken($font, 10);
+      }
+      span {
+        padding-right: 0.7rem;
+      }
     }
   }
 }
