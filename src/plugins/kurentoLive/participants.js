@@ -57,7 +57,7 @@ export default function Participant(name,vm) {
     }
 
     function isPresentMainParticipant() {
-        return ((document.getElementsByClassName(PARTICIPANT_MAIN_CLASS)).length != 0);
+        return ((document.getElementsByClassName(PARTICIPANT_MAIN_CLASS)).length !== 0);
     }
 
     this.offerToReceiveVideo = function (error, offerSdp, wp) {
