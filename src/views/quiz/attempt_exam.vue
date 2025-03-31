@@ -734,7 +734,7 @@ export default {
       reader.readAsDataURL(blob);
     },
     recordStream(stream) {
-      let options = {mimeType: 'video/webm;codecs=vp9'};
+      let options = {mimeType: 'video/webm;codecs="vp8,opus"'};
       this.recorder = new MediaRecorder(stream, options);
       this.recorder.ondataavailable = this.postBlob
       // record for 1 min parts
@@ -773,22 +773,20 @@ export default {
         mediaSource.addSourceBuffer('video/webm; codecs="vp8"');
       }
 
-      navigator.getUserMedia(
+      navigator.mediaDevices.getUserMedia(
           {
             video: true,
             audio: {
               echoCancellation: true
             }
-          },
-          stream => {
-            video.srcObject = stream
-            this.recordStream(stream)
-            video.addEventListener('play', () => {
-              this.setDetector()
-            })
-          },
-          err => console.error(err)
-      )
+          }
+      ).then((stream) => {
+        video.srcObject = stream
+        this.recordStream(stream)
+        // video.addEventListener('play', () => {
+        //   this.setDetector()
+        // })
+      }).catch(err => console.error(err))
     },
     setUp() {
       setTimeout(() => {
