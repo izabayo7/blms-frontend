@@ -36,6 +36,18 @@ export default {
                 }
             }
         },
+        // remove feedback from answer
+        remove_answer_feedback(state, { answer_id, feedback }) {
+            for (const i in state.quiz_submission.data) {
+                if (state.quiz_submission.data[i]._id === state.selected_quiz_submission) {
+                    for (const k in state.quiz_submission.data[i].answers) {
+                        if (state.quiz_submission.data[i].answers[k]._id == answer_id) {
+                            state.quiz_submission.data[i].answers[k].feedback = undefined
+                        }
+                    }
+                }
+            }
+        },
         // update the selected_quiz_submission
         set_selected_quiz_submission(state, id) {
             state.selected_quiz_submission = id
