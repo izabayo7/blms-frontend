@@ -1,7 +1,7 @@
 <template>
   <tr>
 <!--            select checkbox-->
-    <th v-if="options.showSelect" class="select--wrapper" >
+    <th v-if="showSelect" class="select--wrapper" >
       <div class="select select-all" >
         <div class="icon" @click="select">
           <div class="icon__checked " v-if="selected">
@@ -42,7 +42,8 @@ export default {
   name: "TableHeadRow",
   props:{
     cols:{type:Array,required:true},
-    ascendingCol:{default:""}
+    ascendingCol:{default:""},
+    showSelect:{default:true}
   },
   data(){
     return{
@@ -57,6 +58,9 @@ export default {
       this.$emit('select',e)
       this.selected = !this.selected;
     }
+  },
+  mounted(){
+    console.log('mounted')
   }
 }
 </script>

@@ -1,7 +1,7 @@
 <template>
   <tr class="table-body-row" >
 <!--            select checkbox-->
-    <td v-if="options.showSelect" class="select--wrapper">
+    <td v-if="showSelect" class="select--wrapper">
       <div class="select select-one" >
       <div class="icon" @click="select">
         <div class="icon__checked" v-if="selectSelected">
@@ -23,7 +23,8 @@ export default {
   name: "TableRow",
   props:{
     selected:{default:false},
-    data:{required:true}
+    data:{required:true},
+    showSelect:{default:false}
   },
   data(){
     return {
