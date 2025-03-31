@@ -25,9 +25,9 @@
             </router-link>
           </li>
           <li v-if="['INSTRUCTOR','STUDENT'].includes(user.category.name)" class="d-flex">
-            <router-link to="/reports">
+            <router-link to="/grades">
               <div class="icon"><v-icon>mdi-chart-box</v-icon></div>
-              <div class="content">Reports</div>
+              <div class="content">grades</div>
             </router-link>
           </li>
           <li class="d-flex">

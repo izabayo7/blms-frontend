@@ -121,7 +121,7 @@
         <div class="confirm_nocheat mt-4">
           <div class="content">
             <div class="mt-8">
-              You may check your submission status in reports
+              You may check your submission status in grades
               <svg
                 id="file-chart-fill"
                 xmlns="http://www.w3.org/2000/svg"

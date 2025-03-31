@@ -274,9 +274,9 @@ to start presenting</span>
         </div>
         <div class="actions">
           <v-btn
-              @click="toogle_visibility();$router.push('/reports')"
+              @click="toogle_visibility();$router.push('/grades')"
               class="mx-2 white--text action-button"
-          >Reports
+          >grades
           </v-btn
           >
         </div>

@@ -411,7 +411,7 @@ export default {
             status: "success",
             uptime: 5000,
           })
-          this.$router.push('/reports/' + this.$route.params.id)
+          this.$router.push('/grades/' + this.$route.params.id)
         }
       })
     },

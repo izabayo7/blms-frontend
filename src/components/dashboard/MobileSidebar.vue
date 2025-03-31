@@ -169,9 +169,9 @@
             v-if="!disableFunctionalities&&(userCategory === 'STUDENT' || userCategory === 'INSTRUCTOR')"
             @click="
             closeSidebar();
-            routeTo('/reports');
+            routeTo('/grades');
           "
-            :class="{ active: activeRoute('reports') }"
+            :class="{ active: activeRoute('grades') }"
         >
           <div class="link-icon">
             <svg

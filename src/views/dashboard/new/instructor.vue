@@ -78,8 +78,8 @@
                     </div>
                   </div>
                 </div>
-                <div @click="$router.push('/reports')" class="footer cursor-pointer">
-                  View reports
+                <div @click="$router.push('/grades')" class="footer cursor-pointer">
+                  View grades
                 </div>
               </div>
             </div>
@@ -289,7 +289,7 @@
               </div>
             </div>
             <div class="footer">
-              View reports
+              View grades
             </div>
           </div>
         </div>

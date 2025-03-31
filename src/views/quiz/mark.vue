@@ -3,7 +3,7 @@
       fluid
       class="quiz-page white pl-lg-16"
   >
-    <back :target="userCategory == 'STUDENT' ? '/reports' : `/reports/${selected_quiz_submission.answers ? selected_quiz_submission[isExam?'exam':'quiz']._id :  selected_quiz_submission[isExam?'exam':'quiz']._id}${isExam?'/exams':''}`" class="mt-0 mb-6 ml-0 ml-md-n6"/>
+    <back :target="userCategory == 'STUDENT' ? '/grades' : `/grades/${selected_quiz_submission.answers ? selected_quiz_submission[isExam?'exam':'quiz']._id :  selected_quiz_submission[isExam?'exam':'quiz']._id}${isExam?'/exams':''}`" class="mt-0 mb-6 ml-0 ml-md-n6"/>
 
     <v-row v-if="selected_quiz_submission && (attempt.quiz || attempt.exam)" class="relative mx-0">
       <v-col class="col-12 col-md-8 px-0">
@@ -373,7 +373,7 @@
           <v-btn
               v-if="userCategory === 'INSTRUCTOR'"
               class="red-bg mr-3 px-8"
-              :to="`/reports/${selected_quiz_submission[isExam ? 'exam' : 'quiz']._id}/${isExam ? 'exams': ''}`"
+              :to="`/grades/${selected_quiz_submission[isExam ? 'exam' : 'quiz']._id}/${isExam ? 'exams': ''}`"
           >Cancel
           </v-btn
           >
@@ -459,15 +459,15 @@ export default {
     navigation_links() {
       const links = [
         {
-          text: "reports",
-          link: "/reports",
+          text: "grades",
+          link: "/grades",
         },
         {
           text: this.isExam ? this.selected_quiz_submission.exam.course.name : this.selected_quiz_submission.quiz.target.course.name,
           link:
               this.userCategory === "INSTRUCTOR"
-                  ? `/reports/${this.isExam ? this.selected_quiz_submission.exam._id : this.selected_quiz_submission.quiz._id}/${this.isExam ? 'exams' : ''}`
-                  : "/reports",
+                  ? `/grades/${this.isExam ? this.selected_quiz_submission.exam._id : this.selected_quiz_submission.quiz._id}/${this.isExam ? 'exams' : ''}`
+                  : "/grades",
         },
       ];
       if (!this.isExam)
@@ -475,8 +475,8 @@ export default {
           text: this.selected_quiz_submission.quiz.name,
           link:
               this.userCategory === "INSTRUCTOR"
-                  ? "/reports/" + this.selected_quiz_submission.quiz._id
-                  : "/reports",
+                  ? "/grades/" + this.selected_quiz_submission.quiz._id
+                  : "/grades",
         })
       links.push({
         text: this.selected_quiz_submission.user.sur_name
@@ -573,7 +573,7 @@ export default {
             }
           }
         }
-        this.$router.push(`/reports/${this.selected_quiz_submission.answers ? this.selected_quiz_submission.quiz._id : this.selected_quiz_submission[this.isExam ? 'exam' : 'quiz']._id}/${this.isExam ? 'exams' : ''}`);
+        this.$router.push(`/grades/${this.selected_quiz_submission.answers ? this.selected_quiz_submission.quiz._id : this.selected_quiz_submission[this.isExam ? 'exam' : 'quiz']._id}/${this.isExam ? 'exams' : ''}`);
       });
     },
   },
