@@ -11,7 +11,7 @@ const routes =  [
         component:() => import("@/views/live/new/index.vue")
     },
     {
-        path:'/class/course',
+        path:'/class/course/:courseId',
         name:"liveClassCourse",
         component:() => import("@/views/live/new/liveClass.vue")
     },

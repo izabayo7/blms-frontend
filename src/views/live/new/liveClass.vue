@@ -35,50 +35,53 @@
   // import * as kurentoUtils from "../../../plugins/kurentoLive/kurento-utils.js"
   import Participant from "../../../plugins/kurentoLive/participants";
   import {WebRtcPeer} from 'kurento-utils'
-
+  import {mapGetters} from 'vuex'
 export default {
   name: "liveClass",
   data(){
     return{
       ws:null,
-      name:"",
-      room:"",
       participants:[],
+      participationInfo:{name:"",room:"",isOfferingCourse:false}
     }
+  },
+  computed:{
+    ...mapGetters('user',['user']),
   },
   methods:{
      register() {
-      this.name = document.getElementById('name').value;
-      this.room = document.getElementById('roomName').value;
-
-      document.getElementById('room-header').innerText = 'ROOM ' + this.room;
+      document.getElementById('room-header').innerText = 'ROOM ' + this.participationInfo.room;
       document.getElementById('join').style.display = 'none';
       document.getElementById('room').style.display = 'block';
 
       let message = {
         id : 'joinRoom',
-        name : this.name,
-        room : this.room,
+        name : this.participationInfo.name,
+        room : this.participationInfo.room,
+        offeringCourse:this.participationInfo.isOfferingCourse
       }
       this.sendMessage(message);
     },
     sendMessage(message) {
       let jsonMessage = JSON.stringify(message);
-      console.log('Sending message: ' + jsonMessage);
+      console.log('Sending message: ' , message, this.participants);
       this.ws.send(jsonMessage);
     },
 
     onNewParticipant(request) {
+       console.log('new participant',request, this.participants)
       this.receiveVideo(request.name);
     },
 
     receiveVideoResponse(result) {
+       console.log('receiving video', result, this.participants)
       this.participants[result.name].rtcPeer.processAnswer (result.sdpAnswer, function (error) {
         if (error) return console.error (error);
       });
     },
 
     callResponse(message) {
+       console.log('call response', message, this.participants)
       if (message.response != 'accepted') {
         console.info('Call not accepted by peer. Closing call');
         stop();
@@ -90,6 +93,7 @@ export default {
     },
 
     onExistingParticipants(msg) {
+     console.log('existing participant',msg, this.participants)
       let constraints = {
         audio : true,
         video : {
@@ -101,24 +105,39 @@ export default {
         }
       };
 
-      console.log(this.name + " registered in room " + this.room);
-      let participant = new Participant(this.name,this);
-      this.participants[this.name] = participant;
-      let video = participant.getVideoElement();
+     if(this.participationInfo.isOfferingCourse){
+          console.log('\n\n\n\n\n instructor joined \n\n\n\n\n')
+    } else {
+        console.log('\n\n\n\n\n student joined \n\n\n\n\n')
+        constraints = {audio:false,video:false}
 
-      let options = {
-            localVideo: video,
-            mediaConstraints: constraints,
-            onicecandidate: participant.onIceCandidate.bind(participant)
-          }
-      participant.rtcPeer = new WebRtcPeer.WebRtcPeerSendonly(options,
-        function (error) {
-          if(error) {
-            return console.error(error);
-          }
-          this.generateOffer (participant.offerToReceiveVideo.bind(participant));
-      });
+      }
 
+      console.log(this.participationInfo.name + " registered in room " + this.participationInfo.room);
+
+      //
+
+        let participant = new Participant(this.participationInfo.name,this,true);
+        this.participants[this.participationInfo.name] = participant;
+
+
+        let video = participant.getVideoElement();
+
+        let options = {
+              localVideo: video,
+              mediaConstraints: constraints,
+              onicecandidate: participant.onIceCandidate.bind(participant)
+            }
+        participant.rtcPeer = new WebRtcPeer.WebRtcPeerSendonly(options,
+          function (error) {
+            if(error) {
+              return console.error(error);
+            }
+            this.generateOffer (participant.offerToReceiveVideo.bind(participant));
+        });
+
+
+      msg.data.forEach(console.log)
       msg.data.forEach(this.receiveVideo);
     },
 
@@ -139,6 +158,7 @@ export default {
     },
 
     receiveVideo(sender) {
+      console.log(`\n\n\n\n\n receiving video for ${sender} \n\n\n\n\n`)
       let participant = new Participant(sender,this);
       this.participants[sender] = participant;
       let video = participant.getVideoElement();
@@ -166,12 +186,26 @@ export default {
     }
   },
   created(){
+    //know if this user has ability to give live class
+    this.participationInfo.isOfferingCourse = this.user.category.name ==='INSTRUCTOR'
+    console.log(this.user)
+
+    const self = this
+    this.participationInfo.name = `${this.user.other_names} ${this.user.sur_name}`
+    this.participationInfo.room = this.$route.params.courseId
 
 
     const host = '198.211.107.132:8443'
     
     this.ws = new WebSocket('wss://' + host + '/groupcall');
 
+    this.ws.addEventListener('open', () => {
+      self.register();
+    })
+
+    this.ws.onerror = function (evt) {
+        console.log("ERR: ", evt);
+    };
 
     window.onbeforeunload = () => {
       this.ws.close();
@@ -179,7 +213,7 @@ export default {
     
     this.ws.onmessage = (message) => {
       let parsedMessage = JSON.parse(message.data);
-      console.info('Received message: ' + message.data);
+      console.info('Received message: ', message);
     
       switch (parsedMessage.id) {
       case 'existingParticipants':
@@ -207,6 +241,9 @@ export default {
       }
     }
     
+
+  },
+  mounted(){
 
   }
 }
@@ -421,7 +458,6 @@ export default {
     }
 
     .participant {
-      border-radius: 4px;
       /* border: 2px groove; */
       margin-left: 5;
       margin-right: 5;

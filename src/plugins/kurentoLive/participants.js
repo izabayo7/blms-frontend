@@ -12,9 +12,10 @@ const PARTICIPANT_CLASS = 'participant';
  * @param {Object} vm -    vue instance that contains send message method
  *
  *
+ * @param {boolean} offeringCourse - if participant is the one who is offering course
  * @return
  */
-export default function Participant(name,vm) {
+export default function Participant(name,vm,offeringCourse = false) {
     this.name = name;
     let container = document.createElement('div');
     container.className = isPresentMainParticipant() ? PARTICIPANT_CLASS : PARTICIPANT_MAIN_CLASS;
@@ -23,6 +24,7 @@ export default function Participant(name,vm) {
     let video = document.createElement('video');
     let rtcPeer;
     this.vm = vm;
+    this.offeringCourse = offeringCourse
 
     container.appendChild(video);
     container.appendChild(span);
