@@ -1,5 +1,5 @@
 <template>
-  <tr class="table-body-row table-row" >
+  <tr @click="rowClicked(data[options.link.paramPropertyName] || null)" class="table-body-row table-row" >
 <!--            select checkbox-->
     <td v-if="showSelect" class="select--wrapper">
       <div class="select select-one" >
@@ -25,7 +25,8 @@ export default {
   props:{
     selected:{default:false},
     data:{required:true},
-    showSelect:{default:true}
+    showSelect:{default:true},
+    options: {type: Object}
   },
   data(){
     return {
@@ -42,7 +43,19 @@ export default {
       this.$emit('select',e)
       console.log('select row')
       this.selectSelected  = !this.selectSelected;
-    }
+    },
+    rowClicked(id) {
+      if (!id)
+        return
+
+      const {link: {routeTo}} = this.options
+
+      const paramTestRegex = /{([a-z0-9])+}/gim
+
+      const link = routeTo.replace(paramTestRegex, id)
+
+      this.$router.push(link)
+    },
   }
 }
 </script>
