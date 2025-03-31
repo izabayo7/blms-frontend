@@ -23,12 +23,20 @@
         </div>
       </div>
       <!--      col 3 with last attempted quiz infos-->
-      <div class="ccc--col ccc--col__3 ccc--students">
+      <div v-if="type === 'INSTRUCTOR'" class="ccc--col ccc--col__3 ccc--students">
         <div class="ccc--students--title">
           <p>Students</p>
         </div>
         <div class="ccc--students--number">
           <h5>62</h5>
+        </div>
+      </div>
+      <div v-else class="ccc--col ccc--col__3 ccc--students">
+        <div class="ccc--students--title">
+          <p>Last chapter accessed</p>
+        </div>
+        <div class="ccc--students--number">
+          <h5>4.2 Rounding</h5>
         </div>
       </div>
     </div>
@@ -66,13 +74,25 @@ export default {
   &--title {
     &--name {
       h3 {
-        font-size: .9rem;
-        color: $font;
+        font-family: Roboto;
+        font-style: normal;
+        font-weight: bold;
+        font-size: 13.0102px;
+        /* identical to box height */
+
+
+        color: #3C3C3C;
       }
     }
 
     &--start-date {
-      font-size: .6rem;
+      font-family: Roboto;
+      font-style: normal;
+      font-weight: normal;
+      font-size: 9.80613px;
+      line-height: 9px;
+
+      color: #000000;
     }
   }
 
@@ -138,7 +158,29 @@ export default {
     }
 
     &--title {
+      p{
+        font-family: Roboto;
+        font-style: normal;
+        font-weight: 300;
+        font-size: 11.7092px;
+        line-height: 14px;
+        /* identical to box height */
 
+
+        color: #000000;
+      }
+      h5{
+        font-family: Roboto;
+        font-style: normal;
+        font-weight: 500;
+        font-size: 11.7092px;
+        line-height: 14px;
+        /* identical to box height */
+
+
+        color: #000000;
+
+      }
     }
 
     &--number {
