@@ -3,7 +3,7 @@
     <v-row class="fill-height">
       <v-col class="chapters px-8">
         <v-btn
-            @click="userCategory === 'ADMIN' ? $router.go(-1) : $router.push('/courses')"
+            @click="userCategory === 'ADMIN' ? $router.push('/courses/preview/'+$route.params.name) : $router.push('/courses')"
             rounded
             color="#fff"
             elevation="0"
