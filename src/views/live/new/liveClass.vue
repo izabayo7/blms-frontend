@@ -54,14 +54,14 @@
                   <div class="screen-sharing-video" v-if="isPresenting">
                     <div class="screen-sharing-video--wrapper">
                       <h4>You are presenting your screen</h4>
-                      <video id="video_feed_screen" autoplay>
+                      <video id="video_feed_screen">
                         <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
                       </video>
                     </div>
                   </div>
                 </div>
               </div>
-              <video v-show="!noVideo" autoplay id="video_feed">
+              <video v-show="!noVideo" id="video_feed">
                 <!--                <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" >-->
               </video>
               <transition name="fade">
@@ -503,7 +503,7 @@ export default {
    async receiveVideo(sender) {
       console.log(`\n\n\n\n\n receiving video for ${sender} \n\n\n\n\n`)
      let participant = sender == this.participationInfo.name ? this.participants[this.participantIndex(sender)] : new Participant(sender, this, false, await this.getUserInfo(sender.split('_')[0]));
-
+console.log('\n\n\n\n\n\n',participant)
       console.log("\n\n\n", sender, "\n\n\n", (!this.participationInfo.isOfferingCourse && sender != this.participationInfo.name))
       if ((!this.participationInfo.isOfferingCourse && sender != this.participationInfo.name) || (this.participationInfo.isOfferingCourse && sender == this.participationInfo.name)) {
         let video = participant.getVideoElement();
