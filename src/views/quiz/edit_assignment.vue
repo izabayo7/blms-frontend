@@ -246,6 +246,14 @@ export default {
   },
   methods: {
     findLocalTime,
+    fileTypeClicked(type, index) {
+      if (index === -1) {
+        if (this.allowed_submission_file_types.includes(type))
+          this.allowed_submission_file_types.splice(this.allowed_submission_file_types.indexOf(type), 1)
+        else
+          this.allowed_submission_file_types.push(type)
+      }
+    },
     ...mapActions("courses", ["getCourses"]),
     ...mapActions("modal", ["set_modal"]),
     ...mapActions("quiz", ["getAssignment"]),
