@@ -316,11 +316,11 @@ export default {
   watch: {
     remaining_time() {
       if (this.remaining_time > 0) {
-        setTimeout(() => {
-          this.remaining_time -= 1;
-        }, 1000);
-        if (this.remaining_time === this.exam.duration - 1)
-          this.initialiseQuiz();
+        // setTimeout(() => {
+        //   this.remaining_time -= 1;
+        // }, 1000);
+        // if (this.remaining_time === this.exam.duration - 1)
+        //   this.initialiseQuiz();
 
         this.attempt.used_time = this.exam.duration - this.remaining_time;
       } else if (!this.done) {
@@ -651,19 +651,11 @@ export default {
     }
   },
   created() {
-    this.setUp()
-
-    this.mode = "edit";
-    if (this.$store.state.user.user.category.name === "STUDENT") {
-      // this.findQuizSubmissionByUserAndQuizNames({
-      //   userName: this.$store.state.user.user.user_name,
-      //   quizName: this.$route.params.name,
-      // }).then(() => {
-      //   if (this.exam_submission != undefined)
-      //     this.$router.push(`/quiz/${this.$route.params.name}/${this.$store.state.user.user.user_name}`)
-      // })
-    }
     this.getExam({id: this.$route.params.id}).then((exam) => {
+      if (exam.submission)
+        return this.$router.push(`/assessments/exams/${this.$route.params.id}/${this.$store.state.user.user.user_name}`)
+
+      this.setUp()
       this.exam = exam
       this.remaining_time = exam.duration;
       this.attempt = {
