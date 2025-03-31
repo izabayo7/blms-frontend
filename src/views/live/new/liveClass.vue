@@ -841,7 +841,7 @@ export default {
     }
 
     .online-users{
-      max-height: 21.5rem;
+      max-height: 19rem;
       overflow-y: auto;
 
       @include scroll-bar;
@@ -849,7 +849,9 @@ export default {
 
   }
 
-  &--actions{}
+  &--actions{
+    margin-top: 2rem;
+  }
 
   &--action{
     border-radius: 3px;
@@ -859,6 +861,8 @@ export default {
       display: flex;
       align-items: center;
       padding-left: 1rem;
+      width: 100%;
+
       span{
         display: flex;
         align-items: center;
