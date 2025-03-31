@@ -43,8 +43,6 @@
               },
               title: 'Delete member',
               message: 'Are you sure you want to delete this member?',
-            }).then(() => {
-              $emit('removeMember', member);
             })
           "
         >
@@ -86,7 +84,8 @@
 
 <script>
 import Checkbox from "@/components/reusable/ui/Checkbox";
-import { mapActions } from "vuex";
+import { mapActions, mapState } from "vuex";
+import apis from "@/services/apis";
 export default {
   name: "Group-member",
   components: { Checkbox },
@@ -100,13 +99,28 @@ export default {
     };
   },
   computed: {
+    ...mapState("modal", ["confirmed"]),
     IamTheOwner() {
       return (
         this.member.data.user_name === this.$store.state.user.user.user_name
       );
     },
   },
+  watch: {
+    confirmed() {
+      if (this.confirmed) {
+        this.$emit("removeMember", this.member);
+      }
+    },
+  },
   methods: {
+    async removeMember() {
+      await apis.update(
+        "chat_group",
+        `${this.$route.params.id}/toogle_isAdmin/${this.member.data.user_name}`
+      );
+      this.$emit("toogleMemberAdmin", this.member);
+    },
     ...mapActions("chat", ["start_conversation"]),
     ...mapActions("modal", ["set_modal"]),
   },

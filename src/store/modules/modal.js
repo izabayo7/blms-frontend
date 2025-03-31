@@ -72,6 +72,7 @@ export default {
             commit('update_title', title)
             commit('update_message', message);
             commit('update_closability', closable)
+            commit('update_confirmation', false)
             if (!state.visible) {
                 commit('toogle_visibility');
             }

@@ -67,11 +67,15 @@
           >
           <v-btn
             @click="
-              $store.dispatch(
-                confirmation_method.action,
-                confirmation_method.parameters
-              );
-              toogle_visibility();
+              $store
+                .dispatch(
+                  confirmation_method.action,
+                  confirmation_method.parameters
+                )
+                .then(() => {
+                  update_confirmation(true)
+                  reset_modal();
+                })
             "
             outlined
             class="mx-2 action-button-outlined"
@@ -84,9 +88,10 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from "vuex";
+import { mapGetters, mapMutations, mapState, mapActions } from "vuex";
 export default {
   computed: {
+    ...mapState("modal", ["confirmed"]),
     ...mapGetters("modal", [
       "visible",
       "title",
@@ -102,7 +107,11 @@ export default {
     ]),
   },
   methods: {
-    ...mapMutations("modal", ["toogle_visibility", "update_confirmation"]),
+    ...mapMutations("modal", [
+      "toogle_visibility",
+      "update_confirmation"
+    ]),
+    ...mapActions("modal", ['reset_modal'])
   },
 };
 </script>
