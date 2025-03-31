@@ -29,7 +29,7 @@
             @click="$route.path === no.link ? undefined : $router.push(no.link)"
             @click.stop="cardActive = false"
           >
-            <img class="pic" src="@/assets/images/instructor.png" />
+            <!-- <img class="pic" src="@/assets/images/instructor.png" /> -->
             <div class="content">
               <p class="msg">
                 <span>{{ no.name }}</span> {{ no.msg }}
