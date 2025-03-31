@@ -37,7 +37,7 @@
         <div class="table-wrapper mt-6" v-if="users.length > 0">
           <div class="table-header">
             <table-header>
-              <template #actions>
+              <template v-if="selected_users.size" #actions>
                 <div class="action mx-2" @click="click('announce')">
                   <table-action-burner>
                     <template #icon>
