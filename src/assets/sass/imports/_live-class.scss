@@ -804,7 +804,7 @@
     padding-right: 19.2px;
     margin-top: -2.6rem;
     padding-top: 36.6px;
-    height: 24.6vh;
+    min-height: 24.6vh;
 
     &--wrapper {
       padding-top: 1rem;
@@ -973,5 +973,57 @@
     justify-content: center;
     align-content: center;
     padding-top: 5rem;
+  }
+
+}
+
+/* Portrait phones and smaller */
+@media (max-width: 700px) {
+  .live-class {
+    &--wrapper {
+      display: block;
+    }
+
+    &--attendance {
+      margin-top: 25px;
+
+      &--wrapper {
+        margin: auto;
+      }
+    }
+    &--actions {
+      margin-bottom: 90px;
+    }
+    &--action {
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .live-class-details {
+      &--wrapper {
+        display: block;
+
+        h2 {
+          font-family: Poppins;
+          font-style: normal;
+          font-weight: 500;
+          font-size: 17px;
+          line-height: 25px;
+          margin-top: 10px;
+          color: #4A4A4A;
+          margin-bottom: 14px;
+        }
+
+        .quiz {
+          button {
+            width: 303px;
+            height: 35px;
+            border-radius: 0px;
+            margin-top: 15px;
+            margin-bottom: 10px;
+          }
+        }
+      }
+    }
   }
 }

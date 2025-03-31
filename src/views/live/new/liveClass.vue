@@ -2,7 +2,7 @@
   <div class="live-class">
     <div v-if="loaded && !error" class="live-class--wrapper">
       <div class="live-class--video" :class="`--${$vuetify.breakpoint.name}`">
-        <back v-if="!participationInfo.isOfferingCourse" class="mt-6"/>
+        <back v-if="!participationInfo.isOfferingCourse" class="mt-6 hidden-sm-and-down"/>
         <div class="head hidden-sm-and-down">
           <div class="text">
             <h2>{{ live_session.course.name }}: Chapter </h2>
@@ -15,7 +15,7 @@
             {{ participants.length }} watching
           </div>
         </div>
-        <div class="video mt-6 mt-md-0">
+        <div class="video">
           <div class="video--wrapper">
             <div class="video-el"
                  :class="`--${$vuetify.breakpoint.name} ${sidebarOpen ? '' : 'viewer'}`"
@@ -154,6 +154,7 @@
         </div>
         <div v-else class="live-class-details">
           <div class="live-class-details--wrapper">
+            <h2 class="hidden-md-and-up">{{ live_session.course.name }}: Chapter </h2>
             <div class="description">{{ live_session.chapter.description }}
             </div>
             <div v-if="displayQuiz && quiz" class="quiz ml-auto ">
