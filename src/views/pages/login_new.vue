@@ -7,7 +7,9 @@
             <div class="welcome">Welcome to</div>
             <div class="college-name">{{ institution }}.</div>
             <img :src="image" alt="" class="logo mx-auto" />
-            <div class="message">Please login to continue</div>
+            <div :class="`message ${valid ? '' : 'red--text'}`">
+              {{ message }}
+            </div>
             <div class="input-container">
               <div class="input-icon">
                 <svg
@@ -35,9 +37,10 @@
               </div>
               <input
                 type="text"
-                name=""
-                id=""
                 placeholder="Email or Username"
+                v-model="email_user_name_or_phone"
+                autocomplete="false"
+                @keyup="validate"
               />
             </div>
             <div class="input-container">
@@ -65,10 +68,16 @@
                   />
                 </svg>
               </div>
-              <input type="password" name="" id="" placeholder="Password" />
+              <input
+                type="password"
+                v-model="password"
+                @keyup="validate"
+                autocomplete="false"
+                placeholder="Password"
+              />
             </div>
             <div class="input-container un_bordered">
-              <input type="checkbox" name="" id="" />
+              <input type="checkbox" />
               <div class="text">Remember me</div>
             </div>
             <div class="login-button">LOGIN</div>
@@ -91,16 +100,20 @@ export default {
     email_user_name_or_phone: "",
     showPassword: false,
     password: "",
+    message: "Please login to continue",
     image: "https://apis.kurious.rw/assets/images/image%204.png",
     institution: "Kurious Learn",
-    simpleRules: [(v) => !!v || "This Field is required"],
   }),
   methods: {
     // validate the form
     validate() {
-      if (this.$refs.loginForm.validate()) {
-        this.login();
-      }
+      this.message =
+        this.email_user_name_or_phone.length < 3
+          ? "username or email too short"
+          : this.password.length < 8
+          ? "Password too short"
+          : "Please login to continue";
+      this.valid = this.message == "Please login to continue";
     },
     async login() {
       try {
