@@ -23,7 +23,7 @@
             class="normal--text"
             to="/"
             >{{
-              returnChapterName(item.target)
+              item.tager.chapter.name
             }}</router-link
           >
         </template>
