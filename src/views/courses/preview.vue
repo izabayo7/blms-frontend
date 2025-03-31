@@ -80,7 +80,7 @@
             <article>
               <img
                 v-if="course.user.profile"
-                :src="course.user.profile"
+                :src="`${course.user.profile}?width=50`"
                 alt="profile picture"
               />
               <v-avatar v-else size="50" class="bg-color-one">
