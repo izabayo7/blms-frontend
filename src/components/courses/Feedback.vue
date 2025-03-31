@@ -57,7 +57,7 @@
     <div class="save_feedback d-flex">
       <v-btn
         v-if="$store.state.user.user.category.name === 'INSTRUCTOR' && showSave"
-        @click="content == '' ? editFeedback() : addFeedback()"
+        @click="content != '' ? editFeedback() : addFeedback()"
         class="primary-bg px-6 py-4 mt-4"
         rounded
         >Save</v-btn
