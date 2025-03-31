@@ -84,6 +84,7 @@ export default {
       const scrollHeight = e.scrollHeight - e.offsetHeight //scrollable length
       const scrollTop = e.scrollTop //current scrolled length
 
+
       //if the are no more space to scroll means we are on bottom
       //send event that all messages read
       if(scrollTop === scrollHeight){
@@ -123,7 +124,6 @@ export default {
       this.typing = false;
       this.scrollChatToBottom();//scroll to bottom
       this.CHANGE_MESSAGE_READ_STATUS(this.currentDisplayedUser.id) //read all messages
-      this.readMessages() //if there can't be scroll read all messages
     });
 
     //when the chatting user send message let us scroll to the bottom
