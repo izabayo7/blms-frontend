@@ -5,6 +5,7 @@
       type="bar"
       class="my-chart ml-n6"
       width="390px"
+      height="400px"
       :options="chartOptions"
       :series="series"
     >
@@ -26,6 +27,8 @@ export default {
       chartOptions: {
         chart: {
           id: "basic-bar",
+          type:"bar",
+          height: 550
         },
         dataLabels: {
           style: {
@@ -42,12 +45,18 @@ export default {
             ["Another", "test", "course"],
             ["The course", "you failed"],
           ],
+        axisTicks: {
+          show: false,
+        }
         },
 
         //end;
         yaxis: {
           show: false,
           max: 100,
+          axisTicks: {
+            show: false,
+          }
         },
         //end
         plotOptions: {
@@ -59,7 +68,9 @@ export default {
               ranges: [
                 { from: 0, to: 40, color: "#fc6767" },
                 { from: 41, to: 50, color: "#FF7700" },
+                { from: 51, to: 100, color: "#193074" },
               ],
+              backgroundBarOpacity: 1,
             },
             dataLabels: {
               position: "top",
