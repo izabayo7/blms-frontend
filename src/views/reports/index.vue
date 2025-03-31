@@ -10,19 +10,19 @@
         sort-by="dateOfSubmission"
         class="data-table"
       >
-        <!-- display student name as a link to the submission -->
+        <!-- display user name as a link to the submission -->
         <template v-slot:item.name="{ item }">
           <router-link
             class="normal--text"
             :to="
               userCategory === 'STUDENT'
                 ? `/courses/preview/${returnCourseName(item.quiz)}`
-                : `/quiz/${item.quiz.name}/${item.student.surName}_${item.student.otherNames}`
+                : `/quiz/${item.quiz.name}/${item.user.user_name}`
             "
             >{{
               userCategory === "STUDENT"
                 ? returnCourseName(item.quiz)
-                : item.student.surName + " " + item.student.otherNames
+                : item.user.sur_name + " " + item.user.other_names
             }}</router-link
           >
         </template>
@@ -198,12 +198,11 @@ export default {
   created() {
     //get courses on page load
     this.getCourses({
-      userCategory: this.userCategory.toLowerCase(),
-      userId: this.$store.state.user.user._id,
+      user_name: this.$store.state.user.user.user_name,
     });
     //get submissions on page load
     this.getQuizSubmissions({
-      userId: this.$store.state.user.user._id,
+      user_name: this.$store.state.user.user.user_name,
     });
   },
 };

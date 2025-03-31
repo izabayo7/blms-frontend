@@ -72,8 +72,16 @@
                   class="ma-1"
                 >
                   <v-img
-                    :src="`${choice.src}?format=png&width=200&height=200`"
-                    :lazy-src="`${choice.src}?format=png&width=200&height=200`"
+                    :src="`${
+                      choice.src
+                    }?format=png&width=200&height=200&token=${$session.get(
+                      'jwt'
+                    )}`"
+                    :lazy-src="`${
+                      choice.src
+                    }?format=png&width=200&height=200&token=${$session.get(
+                      'jwt'
+                    )}`"
                     :gradient="
                       checkChoiceStatus(attempt.answers[i].choosed_options, {
                         src: choice.src,
@@ -201,12 +209,9 @@ export default {
       "findQuizSubmissionByStudentAndQuizNames",
     ]),
     start_couter() {
-      console.log("ahoooooooooo");
       while (this.remaining_time > 0) {
-        setTimeout(() => {
-          console.log(this.remaining_time);
-          this.remaining_time -= 60;
-        }, 1000);
+        console.log(this.remaining_time);
+        this.remaining_time -= 60;
       }
     },
     checkChoiceStatus(choosed_options, choice) {
@@ -282,7 +287,9 @@ export default {
       }
       if (!deleted) {
         if (
-          this.selected_quiz.questions[questionIndex].type.includes("single")
+          this.selected_quiz.questions[questionIndex].type
+            .toLowerCase()
+            .includes("single")
         ) {
           this.attempt.answers[questionIndex].choosed_options = [value];
         } else {
@@ -308,27 +315,28 @@ export default {
       });
     }
     this.findQuizByName({
-      userId: this.$store.state.user.user._id,
+      user_name: this.$store.state.user.user.user_name,
       quizName: this.$route.params.name,
     }).then((quiz) => {
       this.remaining_time = quiz.duration;
       this.attempt = {
         quiz: quiz._id,
-        user: this.$store.state.user.user._id,
+        user: this.$store.state.user.user.user_name,
         auto_submitted: false,
         used_time: 0,
         answers: [],
       };
       for (const question of quiz.questions) {
-        if (question.type === "open-ended") {
+        if (question.type === "open_ended") {
           this.attempt.answers.push({ text: "" });
-        } else if (question.type === "file-upload") {
+        } else if (question.type === "file_upload") {
           this.attempt.answers.push({ src: "" });
           this.filesToUpload.push({ file: "" });
         } else {
           this.attempt.answers.push({ choosed_options: [] });
         }
       }
+      this.start_couter();
     });
   },
 };
