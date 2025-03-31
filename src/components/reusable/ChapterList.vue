@@ -1,6 +1,6 @@
 <template>
   <v-container class="details-menu customScroll pa-0" fluid>
-    <v-row>
+    <v-row class="fill-height">
       <v-col class="chapters px-8">
         <v-btn
           @click="$router.push('/courses')"
