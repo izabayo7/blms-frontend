@@ -123,7 +123,7 @@
           <div class="link-name" v-show="state">Messages</div>
         </li>
         <li
-          v-if="userCategory === 'INSTRUCTOR'"
+          v-if="userCategory === 'INSTRUCTOR' || userCategory === 'STUDENT'"
           @click="$router.push('/quiz')"
           :class="{ active: activeRoute.includes('/quiz') }"
         >
@@ -195,8 +195,8 @@ export default {
   box-shadow: 0 0 15px 0 $secondary;
   transition: 0.4s ease-out;
 
-  .toggle-container {
-    border-bottom: 1px solid lighten($font, 65);
+  .toggle-container{
+      border-bottom: 1px solid lighten($font,65);
 
     .toggle {
       display: inline-flex;
@@ -238,7 +238,7 @@ export default {
             height: 27px;
             fill: #828282;
 
-            path {
+            path{
               fill: #828282;
             }
           }
@@ -257,8 +257,8 @@ export default {
           svg {
             fill: $main;
 
-            path {
-              fill: $main;
+            path{
+              fill:$main;
             }
           }
           .link-name {
