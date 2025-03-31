@@ -24,10 +24,20 @@
                   {{ `${i + 1}. ${question.details}` }}
                 </p>
                 <div v-if="question.type === 'file_upload'" class="file-container row">
+                  <div class="indicator mb-2">
+                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path
+                          d="M9 0C4.03763 0 0 4.03763 0 9C0 13.9624 4.03763 18 9 18C13.9624 18 18 13.9624 18 9C18 4.03763 13.9624 0 9 0ZM9 16.875C4.6575 16.875 1.125 13.3425 1.125 9C1.125 4.6575 4.6575 1.125 9 1.125C13.3425 1.125 16.875 4.6575 16.875 9C16.875 13.3425 13.3425 16.875 9 16.875Z"
+                          fill="#193074"/>
+                      <path d="M9 4.1543L9 10.1543" stroke="#193074" stroke-width="1.5" stroke-linecap="round"/>
+                      <circle cx="9" cy="13" r="1" fill="#193074"/>
+                    </svg>
+                    <span class="ml-1">Click on file to open</span>
+                  </div>
                   <div class="pick-file file-picked col-12 col-md-8 d-flex px-4">
-                    <div class="file-name">
+                    <button @click="downloadAttachment(`${backend_url}/api/quiz_submission/${selected_quiz_submission._id}/attachment/${attempt.answers[i].src}/view?token=${$session.get('jwt')}`)" class="file-name">
                       {{ attempt.answers[i].src }}
-                    </div>
+                    </button>
                     <div class="file-size">
 
                     </div>
@@ -38,7 +48,7 @@
                   </div>
                   <div class="col-12 col-md-4 py-0">
                     <button
-                        @click="downloadAttachment(`${backend_url}/api/quiz_submission/${selected_quiz_submission._id}/attachment/${attempt.answers[i].src}?token=${$session.get('jwt')}`)"
+                        @click="downloadAttachment(`${backend_url}/api/quiz_submission/${selected_quiz_submission._id}/attachment/${attempt.answers[i].src}/download?token=${$session.get('jwt')}`)"
                         class="download-attachment">
                       Download
                     </button>
@@ -442,7 +452,6 @@ export default {
       }, 2000);
     },
     computeTotalMarks() {
-      console.log("ahooooooooooooooo");
       let result = 0;
       for (const i in this.selected_quiz_submission.answers) {
         result = parseInt(
