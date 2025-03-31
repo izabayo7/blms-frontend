@@ -50,18 +50,18 @@
                     <template #text>Notify</template>
                   </table-action-burner>
                 </div>
-<!--                <div class="action mx-2" @click="click('invite')">-->
-<!--                  <table-action-burner>-->
-<!--                    <template #icon>-->
-<!--                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="11" viewBox="0 0 14 11" fill="none">-->
-<!--                        <path-->
-<!--                            d="M12.0394 0.725159H1.84074C1.13959 0.725159 0.572292 1.29883 0.572292 1.99999L0.565918 9.64895C0.565918 10.3501 1.13959 10.9238 1.84074 10.9238H12.0394C12.7405 10.9238 13.3142 10.3501 13.3142 9.64895V1.99999C13.3142 1.29883 12.7405 0.725159 12.0394 0.725159ZM12.0394 3.27481L6.94005 6.46188L1.84074 3.27481V1.99999L6.94005 5.18705L12.0394 1.99999V3.27481Z"-->
-<!--                            fill="#193074"/>-->
-<!--                      </svg>-->
-<!--                    </template>-->
-<!--                    <template #text>Send invitations</template>-->
-<!--                  </table-action-burner>-->
-<!--                </div>-->
+                <!--                <div class="action mx-2" @click="click('invite')">-->
+                <!--                  <table-action-burner>-->
+                <!--                    <template #icon>-->
+                <!--                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="11" viewBox="0 0 14 11" fill="none">-->
+                <!--                        <path-->
+                <!--                            d="M12.0394 0.725159H1.84074C1.13959 0.725159 0.572292 1.29883 0.572292 1.99999L0.565918 9.64895C0.565918 10.3501 1.13959 10.9238 1.84074 10.9238H12.0394C12.7405 10.9238 13.3142 10.3501 13.3142 9.64895V1.99999C13.3142 1.29883 12.7405 0.725159 12.0394 0.725159ZM12.0394 3.27481L6.94005 6.46188L1.84074 3.27481V1.99999L6.94005 5.18705L12.0394 1.99999V3.27481Z"-->
+                <!--                            fill="#193074"/>-->
+                <!--                      </svg>-->
+                <!--                    </template>-->
+                <!--                    <template #text>Send invitations</template>-->
+                <!--                  </table-action-burner>-->
+                <!--                </div>-->
                 <div class="action mx-2" @click="click('delete')">
                   <table-action-burner>
                     <template #icon>
@@ -90,7 +90,7 @@
             </table-header>
           </div>
           <div class="table">
-            <table-ui :options="options" :data="users"/>
+            <table-ui :options="options" @select="handleSelect" :data="users"/>
           </div>
         </div>
       </div>
@@ -110,6 +110,7 @@ import TableHeader from "../../components/reusable/ui/table-header";
 import apis from "../../services/apis"
 import tableActionBurner from '../../components/reusable/ui/table-action-burner'
 import moment from 'moment'
+import {mapActions} from "vuex";
 
 export default {
   name: "Users",
@@ -120,6 +121,7 @@ export default {
   data() {
     return {
       users: [],
+      selected_users: [],
       showInviteUsers: false,
       options: {
         link: {
@@ -132,6 +134,48 @@ export default {
     }
   },
   methods: {
+    ...mapActions("modal", ["set_modal"]),
+    click(value) {
+      if (!this.selected_users.size)
+        return this.$store.dispatch("app_notification/SET_NOTIFICATION", {
+          message: "please select atleast one user",
+          status: "info",
+          uptime: 5000,
+        })
+
+      console.log(value)
+
+      if (value === 'hold') {
+        const ids = []
+
+        for (const item of this.selected_users) {
+          ids.push(this.users[item].user_name)
+        }
+
+        this.set_modal({
+          template: 'action_confirmation',
+          title: "Hold accounts",
+          method: { action: 'uses/holdAccounts', parameters: {usernames: ids, hold: true} },
+          message: `Are you sure you want to hold ${this.selected_users.has(-1) ? 'All' : this.selected_users.size} user${this.selected_users.size > 1 || this.selected_users.has(-1) ? 's' : ''}?`,
+        })
+      } else if (value === 'delete') {
+        const ids = []
+
+        for (const item of this.selected_users) {
+          ids.push(this.users[item]._id)
+        }
+
+        this.set_modal({
+          template: 'action_confirmation',
+          title: "Delete accounts",
+          method: { action: 'uses/deleteAccounts', parameters: {usernames: ids} },
+          message: `Are you sure you want to delete ${this.selected_users.has(-1) ? 'All' : this.selected_users.size} user${this.selected_users.size > 1 || this.selected_users.has(-1) ? 's' : ''}?`,
+        })
+      }
+    },
+    handleSelect(value) {
+      this.selected_users = value
+    },
     loadUsers() {
       apis.get(`user/college/ALL`)
           .then(({data: {data}}) => {
