@@ -276,7 +276,7 @@ export default {
                             dispatch('modal/set_progress', parseInt(Math.round((progressEvent.loaded / progressEvent.total) * 100)), { root: true })
                         }
                     }).then((videoResponse) => {
-                        state.courses.data[courseIndex].chapters[chapterIndex].mainVideo = videoResponse.data.data.filepath
+                        state.courses.data[courseIndex].chapters[chapterIndex].uploaded_video = videoResponse.data.data.uploaded_video
                     })
                 }
             })
@@ -423,7 +423,7 @@ export default {
                 if (content) {
                     const formData = new FormData()
                     formData.append("file", video)
-                    apis.update('file/updateChapterContent', d.data._id, { content: content }).then(() => {
+                    apis.update(`chapter/${d.data._id}`, 'document', { content: content }).then(() => {
                         state.courses.data[courseIndex].chapters[chapterIndex].documentContent = content
                     })
                 }
@@ -476,7 +476,7 @@ export default {
                     dispatch('modal/set_modal', { template: 'display_information', title: 'Updating Chapter', message: `uploading ${video.name}` }, { root: true })
                     const formData = new FormData()
                     formData.append("file", video)
-                    apis.update('file/updateMainVideo', state.selectedChapter, formData, {
+                    apis.update(`chapter/${d.data._id}`, 'video', formData, {
                         headers: {
                             'Content-Type': 'multipart/form-data'
                         },
@@ -484,7 +484,7 @@ export default {
                             dispatch('modal/set_progress', parseInt(Math.round((progressEvent.loaded / progressEvent.total) * 100)), { root: true })
                         }
                     }).then((videoResponse) => {
-                        state.courses.data[courseIndex].chapters[chapterIndex].mainVideo = videoResponse.data.data.filepath
+                        state.courses.data[courseIndex].chapters[chapterIndex].uploaded_video = videoResponse.data.data.uploaded_video
                     })
                 }
             })
