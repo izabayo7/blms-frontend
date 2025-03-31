@@ -132,6 +132,14 @@ export default {
     ]),
     ...mapGetters("chat", ["socket", "conversationLoading", "currentMessages"]),
   },
+  watch: {
+    $route() {
+      if (this.currentDisplayedUser.unreadMessagesLength)
+        this.socket.emit("message/all_messages_read", {
+          conversation_id: this.currentDisplayedUser.id,
+        });
+    },
+  },
   methods: {
     ...mapActions("chat", ["setUsername", "loadMessages", "isUsertyping"]),
     ...mapMutations("chat", [

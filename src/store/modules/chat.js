@@ -176,7 +176,7 @@ export default {
             })
 
             // if found then unread messages
-            if (idx) state.incomingMessages[idx].unreadMessagesLength = 0;
+            if (idx > -1) state.incomingMessages[idx].unreadMessagesLength = 0;
         },
 
         // change conversation to first if new message is sent or received

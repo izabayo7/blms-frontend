@@ -55,6 +55,11 @@ export default {
       alert('upgrade papa !')
     });
 
+    this.socket.on("all_read", ({conversation_id}) => {
+      console.log(conversation_id)
+      this.CHANGE_MESSAGE_READ_STATUS(conversation_id);
+    })
+
     // Message from server
     this.socket.on("res/message/new", (message) => {
       this.update_unread(this.unreads + 1)
