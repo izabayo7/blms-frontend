@@ -30,7 +30,7 @@ export default {
             state.totalCommentsOnAChapter = num
         },
         // update number of total comments
-        DELETE_TOTAL_COMMENTS_ON_A_CHAPTER(state,num){
+        DELETE_TOTAL_COMMENTS_ON_A_CHAPTER(state){
             state.totalCommentsOnAChapter = 0
         },
         // initialise a new chapter
