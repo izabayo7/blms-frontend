@@ -32,7 +32,7 @@
         <div class="head">
           <div class="text">
             <h2>Economics Basics: Chapter 8 part II</h2>
-            <span class="live">Live</span>
+            <span class="live" v-if="userCategory == 'INSTRUCTOR'">Live</span>
           </div>
           <div class="time">
             00 : 00 : 36
