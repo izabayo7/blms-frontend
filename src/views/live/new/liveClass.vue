@@ -632,9 +632,12 @@ export default {
       }
     },
     create_videoElement(id) {
-      let element = document.createElement('video')
-      element.setAttribute('id', `video_feed${id}`)
-      document.querySelector('.video-container').appendChild(element)
+      let element = document.querySelector(`#video_feed${id}`)
+      if (!element) {
+        element = document.createElement('video')
+        element.setAttribute('id', `video_feed${id}`)
+        document.querySelector('.video-container').appendChild(element)
+      }
       return element
     },
     stop_presenter() {
@@ -730,7 +733,7 @@ export default {
       }
     },
     handlePresentationResponse(sender, allowed) {
-      this.isHandRaised = !this.isHandRaised;
+      this.isHandRaised = false;
       if (allowed)
         this.set_modal({
           template: 'presentation_request',
