@@ -2,7 +2,9 @@
   <v-app class="home">
     <router-view />
     <app-dialog />
-    <new-group />
+    <keep-alive >
+      <new-group />
+    </keep-alive>
   </v-app>
 </template>
 

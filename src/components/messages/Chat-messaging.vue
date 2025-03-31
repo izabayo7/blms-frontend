@@ -33,7 +33,7 @@
         <!--        list of messages sent or received-->
         <div class="msgs">
           <div class="msg" v-for="(msg, i) in msgs.messages" :key="i">
-<!--            {{ msg.content | urlify }}-->
+<!--            //for better html elements readability-->
             <div :inner-html.prop="msg.content | urlify"/>
           </div>
         </div>
@@ -142,9 +142,8 @@ export default {
     scrollableDiv.addEventListener('scroll',this.readMessages)
 
 
-    this.$store.getters['chat/socket'].on('message-sent',message => {
-      console.log(message, new Date())
-      this.$store.commit('chat/ADD_ONGOING_MESSAGE',message)
+    this.$store.getters['chat/socket'].on('message-sent',sentMessage => {
+      this.$store.commit('chat/ADD_ONGOING_MESSAGE',sentMessage)
     })
     /*
     when this component is mounted Immediately scroll to the bottom
@@ -165,26 +164,7 @@ export default {
   scrollbar-track-color:transparent ;
   scrollbar-face-color: red;
 
-  &::-webkit-scrollbar {
-    width: 8px;
-  }
-
-  &::-webkit-scrollbar-track {
-    background-color: transparent;
-    border-radius: 10px;
-  }
-  &::-webkit-scrollbar-track:hover {
-    background-color: lighten($secondary, 4);
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background-color: lighten($font, 40);
-    border-radius: 10px;
-  }
-  &::-webkit-scrollbar-thumb:hover {
-    background-color: lighten($font, 30);
-  }
-
+  @include scroll-bar;
 
   .msg-container {
     margin: 0 10px;
