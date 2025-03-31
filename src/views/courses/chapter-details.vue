@@ -339,7 +339,7 @@ export default {
       try{
         next();
       }catch (e) {
-
+        console.log(e)
       }
   },
   created() {
