@@ -32,7 +32,7 @@ const routes = [
     {
         path: '/test',
         component: () =>
-            import( /* webpackPrefetch: true */ /* webpackChunkName: "test" */ '@/views/live/popup'),
+            import( /* webpackChunkName: "test" */ '@/views/live/popup'),
         meta: {
             allowAnonymous: true
         }
@@ -40,7 +40,7 @@ const routes = [
     {
         path: '/reset_password',
         component: () =>
-            import( /* webpackPrefetch: true */ /* webpackChunkName: "reset-password" */ '@/views/pages/reset_password'),
+            import( /* webpackChunkName: "reset-password" */ '@/views/pages/reset_password'),
         meta: {
             allowAnonymous: true
         }
@@ -48,7 +48,7 @@ const routes = [
     {
         path: '/forgot_password',
         component: () =>
-            import( /* webpackPrefetch: true */ /* webpackChunkName: "forgot-password" */ '@/views/pages/forgot_password'),
+            import( /* webpackChunkName: "forgot-password" */ '@/views/pages/forgot_password'),
         meta: {
             allowAnonymous: true
         }
@@ -61,7 +61,7 @@ const routes = [
          */
         path: '/app',
         component: () =>
-            import( /* webpackPrefetch: true */ '@/views/dashboard/index'),
+            import( '@/views/dashboard/index'),
         meta: {
             allowAnonymous: false
         },
@@ -73,7 +73,7 @@ const routes = [
                  */
                 path: '/dashboard',
                 component: () =>
-                    import( /* webpackPrefetch: true */ /* webpackChunkName: "dashboard" */ '@/views/dashboard/dashboard'),
+                    import( /* webpackChunkName: "dashboard" */ '@/views/dashboard/dashboard'),
                 meta: {
                     allowAnonymous: false
                 },
@@ -92,48 +92,48 @@ const routes = [
                     {
                         path: '/users',
                         name: "users",
-                        component: () => import( /* webpackPrefetch: true */ /* webpackChunkName: "users" */ '@/views/users/index.vue'),
+                        component: () => import( /* webpackChunkName: "users" */ '@/views/users/index.vue'),
                     },
                     {
                         path: '/users/students',
                         name: "students",
-                        component: () => import( /* webpackPrefetch: true */ /* webpackChunkName: "users-students" */ '@/views/users/students.vue'),
+                        component: () => import( /* webpackChunkName: "users-students" */ '@/views/users/students.vue'),
                     },
                     {
                         path: '/users/user/:username',
                         name: "students",
-                        component: () => import( /* webpackPrefetch: true */ /* webpackChunkName: "user-by-name" */ '@/views/users/user/profile.vue'),
+                        component: () => import( /* webpackChunkName: "user-by-name" */ '@/views/users/user/profile.vue'),
                     },
                     //for faculties
                     {
                         path: '/faculties',
                         name: "faculties",
-                        component: () => import( /* webpackPrefetch: true */ /* webpackChunkName: "faculties" */ '@/views/faculties/index.vue'),
+                        component: () => import( /* webpackChunkName: "faculties" */ '@/views/faculties/index.vue'),
                     },
                     {
                         path: '/faculties/:facultyId',
                         name: "faculty",
-                        component: () => import( /* webpackPrefetch: true */ /* webpackChunkName: "faculty-by-id" */ '@/views/faculties/faculty/index.vue'),
+                        component: () => import( /* webpackChunkName: "faculty-by-id" */ '@/views/faculties/faculty/index.vue'),
                         children: [
                             {
                                 path: '/faculties/:facultyId/details',
                                 name: "facultyDetails",
-                                component: () => import( /* webpackPrefetch: true */ /* webpackChunkName: "faculty-by-id" */ '@/views/faculties/faculty/Faculty.vue'),
+                                component: () => import( /* webpackChunkName: "faculty-by-id" */ '@/views/faculties/faculty/Faculty.vue'),
                             },
                             {
                                 path: '/faculties/:facultyId/groups',
                                 name: "facultyGroups",
-                                component: () => import( /* webpackPrefetch: true */ /* webpackChunkName: "faculty-by-id" */ '@/views/faculties/faculty/Groups.vue'),
+                                component: () => import( /* webpackChunkName: "faculty-by-id" */ '@/views/faculties/faculty/Groups.vue'),
                             },
                             {
                                 path: '/faculties/:facultyId/students',
                                 name: "facultyStudents",
-                                component: () => import( /* webpackPrefetch: true */ /* webpackChunkName: "faculty-by-id" */ '@/views/faculties/faculty/Users.vue'),
+                                component: () => import( /* webpackChunkName: "faculty-by-id" */ '@/views/faculties/faculty/Users.vue'),
                             },
                             {
                                 path: '/faculties/:facultyId/courses',
                                 name: "facultyCourses",
-                                component: () => import( /* webpackPrefetch: true */ /* webpackChunkName: "faculty-by-id" */ '@/views/faculties/faculty/Courses.vue'),
+                                component: () => import( /* webpackChunkName: "faculty-by-id" */ '@/views/faculties/faculty/Courses.vue'),
                             },
                         ]
                     },
@@ -142,40 +142,40 @@ const routes = [
                     {
                         path: '/reports',
                         component: () =>
-                            import( /* webpackPrefetch: true */ /* webpackChunkName: "reports" */ '@/views/reports')
+                            import( /* webpackChunkName: "reports" */ '@/views/reports')
                     },
                     {
                         path: '/reports/:target',
                         component: () =>
-                            import( /* webpackPrefetch: true */ /* webpackChunkName: "reports-by-target" */ '@/views/reports/deep')
+                            import( /* webpackChunkName: "reports-by-target" */ '@/views/reports/deep')
                     },
                     {
                         path: '/reports/:target/:user_name',
                         component: () =>
-                            import( /* webpackPrefetch: true */ /* webpackChunkName: "user-reports" */ '@/views/reports')
+                            import( /* webpackChunkName: "user-reports" */ '@/views/reports')
                     },
                     {
                         path: '/profile/:user_name',
                         component: () =>
-                            import( /* webpackPrefetch: true */ /* webpackChunkName: "user-profile" */ '@/components/update_profile.vue')
+                            import( /* webpackChunkName: "user-profile" */ '@/components/update_profile.vue')
                     },
                     {
                         path: '/update/password',
                         component: () =>
-                            import( /* webpackPrefetch: true */ /* webpackChunkName: "change-password" */ '@/components/update_password.vue')
+                            import( /* webpackChunkName: "change-password" */ '@/components/update_password.vue')
                     },
+
+                    // course routes
+                    ...course,
+
+                    // quiz routes
+                    ...quiz,
 
                     // chat routes
                     ...chat,
 
                     // live routes
                     ...live,
-
-                    // quiz routes
-                    ...quiz,
-
-                    // course routes
-                    ...course
                 ]
             },
         ],
@@ -185,12 +185,12 @@ const routes = [
         path: '/recover-password',
         name: 'Recover-Password',
         component: () =>
-            import( /* webpackPrefetch: true */ /* webpackChunkName: "recover-password" */ '@/components/recover-password.vue')
+            import( /* webpackChunkName: "recover-password" */ '@/components/recover-password.vue')
     },
     {
         // catch all 404 - define at the very end
         path: "*",
-        component: () => import( /* webpackPrefetch: true */ /* webpackChunkName: "error" */"@/views/pages/notFound.vue")
+        component: () => import( /* webpackChunkName: "error" */"@/views/pages/notFound.vue")
     }
 ]
 const router = new VueRouter({
