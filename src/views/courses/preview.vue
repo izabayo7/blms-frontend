@@ -281,7 +281,7 @@
     <!--      end of student preview-->
 
     <!--      teacher preview-->
-    <div class="teacher" v-if="userCategory === 'INSTRUCTOR'">
+    <div class="teacher" v-if="userCategory === 'INSTRUCTOR' && course">
       <div v-if="!isLive" class="teacher instructor_preview">
         <back class="mb-6" to="/courses"/>
         <div class="tabs-container d-flex">
@@ -706,7 +706,6 @@ export default {
           }
         }
       }
-      console.log(this.nearestLiveSession)
     })
   },
 };
