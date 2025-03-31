@@ -6,10 +6,7 @@
           <div class="heading">
             <div class="college-name">{{ institution }}.</div>
             <div class="welcome">Reset password</div>
-            <!-- <div :class="`message ${valid ? '' : 'red--text'}`">
-              {{ message }}
-            </div> -->
-            <form @submit.prevent="login">
+            <form @submit.prevent="validate">
               <div class="label">Email</div>
               <div class="input-container disabled">
                 <input
@@ -18,102 +15,123 @@
                   v-model="obj.email"
                   autocomplete="false"
                   disabled
-                  class="wide"
-                  required
+                  class="wider"
                 />
               </div>
               <div class="label">Choose A Password</div>
-              <div class="input-container">
-                <div class="input-icon">
+              <div class="input-container with_hint">
+                <input
+                  :type="`${showPassword1 ? 'text' : 'password'}`"
+                  v-model="obj.new_password"
+                  autocomplete="false"
+                  class="wider"
+                  required
+                />
+                <div class="input-icon" @click="showPassword1 = !showPassword1">
                   <svg
-                    width="15"
-                    height="18"
-                    viewBox="0 0 15 18"
-                    fill="none"
+                    v-if="!showPassword1"
                     xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    width="24"
+                    height="24"
                   >
+                    <path fill="none" d="M0 0h24v24H0z" />
                     <path
-                      d="M13.8 16.1999V14.5999C13.8 13.7512 13.4629 12.9373 12.8627 12.3372C12.2626 11.737 11.4487 11.3999 10.6 11.3999H4.2C3.35131 11.3999 2.53737 11.737 1.93726 12.3372C1.33714 12.9373 1 13.7512 1 14.5999V16.1999"
-                      stroke="#BABABC"
-                      stroke-width="1.8"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
+                      d="M12 3c5.392 0 9.878 3.88 10.819 9-.94 5.12-5.427 9-10.819 9-5.392 0-9.878-3.88-10.819-9C2.121 6.88 6.608 3 12 3zm0 16a9.005 9.005 0 0 0 8.777-7 9.005 9.005 0 0 0-17.554 0A9.005 9.005 0 0 0 12 19zm0-2.5a4.5 4.5 0 1 1 0-9 4.5 4.5 0 0 1 0 9zm0-2a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z"
                     />
+                  </svg>
+                  <svg
+                    v-else
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    width="24"
+                    height="24"
+                  >
+                    <path fill="none" d="M0 0h24v24H0z" />
                     <path
-                      d="M7.39995 8.1998C9.16726 8.1998 10.6 6.76712 10.6 4.9998C10.6 3.23249 9.16726 1.7998 7.39995 1.7998C5.63264 1.7998 4.19995 3.23249 4.19995 4.9998C4.19995 6.76712 5.63264 8.1998 7.39995 8.1998Z"
-                      stroke="#BABABC"
-                      stroke-width="1.8"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
+                      d="M17.882 19.297A10.949 10.949 0 0 1 12 21c-5.392 0-9.878-3.88-10.819-9a10.982 10.982 0 0 1 3.34-6.066L1.392 2.808l1.415-1.415 19.799 19.8-1.415 1.414-3.31-3.31zM5.935 7.35A8.965 8.965 0 0 0 3.223 12a9.005 9.005 0 0 0 13.201 5.838l-2.028-2.028A4.5 4.5 0 0 1 8.19 9.604L5.935 7.35zm6.979 6.978l-3.242-3.242a2.5 2.5 0 0 0 3.241 3.241zm7.893 2.264l-1.431-1.43A8.935 8.935 0 0 0 20.777 12 9.005 9.005 0 0 0 9.552 5.338L7.974 3.76C9.221 3.27 10.58 3 12 3c5.392 0 9.878 3.88 10.819 9a10.947 10.947 0 0 1-2.012 4.592zm-9.084-9.084a4.5 4.5 0 0 1 4.769 4.769l-4.77-4.769z"
                     />
                   </svg>
                 </div>
-                <input
-                  type="email"
-                  placeholder="Email"
-                  v-model="email_user_name_or_phone"
-                  autocomplete="false"
-                  class="wide"
-                  @keyup="validate"
-                  required
-                />
+              </div>
+              <div class="label hint">
+                password must include atleast one capital letter, one lower
+                letter, one digit and one symbol, the minimum length is 8.
               </div>
               <div class="label">Confirm Password</div>
               <div class="input-container">
-                <div class="input-icon">
+                <input
+                  :type="`${showPassword2 ? 'text' : 'password'}`"
+                  v-model="obj.confirm_password"
+                  autocomplete="false"
+                  class="wider"
+                  required
+                />
+                <div class="input-icon" @click="showPassword2 = !showPassword2">
                   <svg
-                    width="15"
-                    height="18"
-                    viewBox="0 0 15 18"
-                    fill="none"
+                    v-if="!showPassword2"
                     xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    width="24"
+                    height="24"
                   >
+                    <path fill="none" d="M0 0h24v24H0z" />
                     <path
-                      d="M13.8 16.1999V14.5999C13.8 13.7512 13.4629 12.9373 12.8627 12.3372C12.2626 11.737 11.4487 11.3999 10.6 11.3999H4.2C3.35131 11.3999 2.53737 11.737 1.93726 12.3372C1.33714 12.9373 1 13.7512 1 14.5999V16.1999"
-                      stroke="#BABABC"
-                      stroke-width="1.8"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
+                      d="M12 3c5.392 0 9.878 3.88 10.819 9-.94 5.12-5.427 9-10.819 9-5.392 0-9.878-3.88-10.819-9C2.121 6.88 6.608 3 12 3zm0 16a9.005 9.005 0 0 0 8.777-7 9.005 9.005 0 0 0-17.554 0A9.005 9.005 0 0 0 12 19zm0-2.5a4.5 4.5 0 1 1 0-9 4.5 4.5 0 0 1 0 9zm0-2a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z"
                     />
+                  </svg>
+                  <svg
+                    v-else
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    width="24"
+                    height="24"
+                  >
+                    <path fill="none" d="M0 0h24v24H0z" />
                     <path
-                      d="M7.39995 8.1998C9.16726 8.1998 10.6 6.76712 10.6 4.9998C10.6 3.23249 9.16726 1.7998 7.39995 1.7998C5.63264 1.7998 4.19995 3.23249 4.19995 4.9998C4.19995 6.76712 5.63264 8.1998 7.39995 8.1998Z"
-                      stroke="#BABABC"
-                      stroke-width="1.8"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
+                      d="M17.882 19.297A10.949 10.949 0 0 1 12 21c-5.392 0-9.878-3.88-10.819-9a10.982 10.982 0 0 1 3.34-6.066L1.392 2.808l1.415-1.415 19.799 19.8-1.415 1.414-3.31-3.31zM5.935 7.35A8.965 8.965 0 0 0 3.223 12a9.005 9.005 0 0 0 13.201 5.838l-2.028-2.028A4.5 4.5 0 0 1 8.19 9.604L5.935 7.35zm6.979 6.978l-3.242-3.242a2.5 2.5 0 0 0 3.241 3.241zm7.893 2.264l-1.431-1.43A8.935 8.935 0 0 0 20.777 12 9.005 9.005 0 0 0 9.552 5.338L7.974 3.76C9.221 3.27 10.58 3 12 3c5.392 0 9.878 3.88 10.819 9a10.947 10.947 0 0 1-2.012 4.592zm-9.084-9.084a4.5 4.5 0 0 1 4.769 4.769l-4.77-4.769z"
                     />
                   </svg>
                 </div>
-                <input
-                  type="email"
-                  placeholder="Email"
-                  v-model="email_user_name_or_phone"
-                  autocomplete="false"
-                  class="wide"
-                  @keyup="validate"
-                  required
-                />
               </div>
-              <button
-                :disabled="!valid"
-                :class="`login-button ${valid ? '' : 'disabled'}`"
-              >
-                UPDATE PASSWORD
-              </button>
+              <button class="login-button">UPDATE PASSWORD</button>
             </form>
             <div class="lower-message">
               <div class="message-row">
                 Don’t have an account contact us ?
-                <router-link href="/register">Register</router-link>
+                <router-link to="/register">Register</router-link>
               </div>
               <div class="message-row">
-                Remembered your password ?
-                <router-link href="/login">Login</router-link>
+                Remembered your password ? <router-link to="/login" />
               </div>
               <div class="message-row">
                 Having trouble resseting your password ?
               </div>
             </div>
+          </div>
+          <div class="message" v-show="message !== ''">
+            <svg
+              width="14"
+              height="15"
+              viewBox="0 0 13 15"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M12 1L1.48047 13.71"
+                stroke="#8B601F"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M1.48047 1L12 13.71"
+                stroke="#8B601F"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+
+            {{ message }}
           </div>
         </div>
       </v-col>
@@ -127,28 +145,41 @@ import jwt from "jsonwebtoken";
 export default {
   name: "Login",
   data: () => ({
-    valid: true,
     userCategory: "",
     email_user_name_or_phone: "",
-    showPassword: false,
+    showPassword1: false,
+    showPassword2: false,
     password: "",
-    message: "Please login to continue",
+    message: "",
     image: "https://apis.kurious.rw/assets/images/image%204.png",
     institution: "Kurious Learn",
     obj: {
       email: "cedricizabayo7@gmail.com",
     },
   }),
+  watch: {
+    message() {
+      setTimeout(() => {
+        this.message = "";
+      }, 3000);
+    },
+  },
   methods: {
     // validate the form
     validate() {
-      this.message =
-        this.email_user_name_or_phone.length < 3
-          ? "username or email too short"
-          : this.password.length < 8
-          ? "Password too short"
-          : "Please login to continue";
-      this.valid = this.message == "Please login to continue";
+      this.message = !this.validatePassword(this.obj.new_password)
+        ? "new password is too weak"
+        : this.obj.confirm_password !== this.obj.new_password
+        ? "passwords must match"
+        : "";
+      if (this.message == "") {
+        this.reset_password();
+      }
+    },
+    validatePassword(password) {
+      // eslint-disable-next-line no-useless-escape
+      const re = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/;
+      return re.test(password);
     },
     async login() {
       try {
@@ -234,13 +265,40 @@ export default {
     margin-top: 54px;
     background-color: white;
     border-radius: 33px;
-    padding: 40px;
+    padding: 30px 40px;
     text-align: center;
     font-family: Inter;
     form {
       height: 60%;
-      padding-top: 40px;
+      padding-top: 10px;
       justify-content: center;
+    }
+    .message {
+      width: 413px;
+      height: 53px;
+      left: 476px;
+      top: 188px;
+      position: absolute;
+      background-color: #ffae34;
+      box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.15);
+      border-radius: 4px;
+      font-family: Inter;
+      font-style: normal;
+      font-weight: normal;
+      font-size: 15px;
+      line-height: 15px;
+      /* or 99% */
+
+      text-align: center;
+
+      color: #8b601f;
+      svg {
+        position: absolute;
+        width: 4.97px;
+        height: 6px;
+        right: 15px;
+        top: 14px;
+      }
     }
     .welcome {
       font-family: Inter;
@@ -263,18 +321,18 @@ export default {
       max-width: 100%;
       max-height: 73px;
     }
-    .message {
-      font-style: normal;
-      font-weight: normal;
-      font-size: 13px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #000000;
-      background: inherit;
-      margin: 13px auto;
-      padding: 0;
-    }
+    // .message {
+    //   font-style: normal;
+    //   font-weight: normal;
+    //   font-size: 13px;
+    //   display: flex;
+    //   align-items: center;
+    //   justify-content: center;
+    //   color: #000000;
+    //   background: inherit;
+    //   margin: 13px auto;
+    //   padding: 0;
+    // }
     .label {
       text-align: left;
       font-family: Inter;
@@ -291,7 +349,7 @@ export default {
         margin: 5px auto 24px;
         border: 1.34978px solid #bababc;
         box-sizing: border-box;
-        border-radius: 10px;
+        border-radius: 5px;
         display: flex;
         &.un_bordered {
           border: none;
@@ -321,6 +379,9 @@ export default {
           &.wide {
             width: 70%;
           }
+          &.wider {
+            width: 82%;
+          }
         }
         &.disabled {
           background-color: #eeeeee;
@@ -334,16 +395,26 @@ export default {
           font-weight: normal;
           font-size: 11.3404px;
         }
+        &.with_hint {
+          margin: 5px auto 5px;
+        }
       }
       &-icon {
-        padding: 10px 20px 10px 20px;
+        padding: 5px 20px 10px 20px;
+        svg {
+          fill: #bababc;
+        }
       }
+    }
+    .hint {
+      margin-bottom: 19px;
     }
     .login-button {
       max-width: 177px;
       width: 100%;
       height: 46.25px;
       margin: 8px;
+      margin-bottom: 30px;
       background: #193074;
       border-radius: 4.36304px;
       display: flex;
