@@ -238,9 +238,9 @@
           </v-col>
           <v-col class="col-12 col-lg-6 pt-0">
             <small-card
-              :total="user_statistics.total_users"
+              :total="total_courses"
               :series="computeOtherSeries()"
-              type="users"
+              type="others"
               :headers="['Faculties', 'Courses', 'Student groups']"
             >
               <template v-slot:icon>

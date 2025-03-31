@@ -20,7 +20,13 @@
           ></chart>
         </div>
         <div class="total mt-n4">{{ total }}</div>
-        <div class="label">Total number of users</div>
+        <div class="label">
+          {{
+            type == "users"
+              ? "Total number of users"
+              : "Total number of courses"
+          }}
+        </div>
       </div>
       <div class="details mt-4">
         <div class="element">
@@ -101,7 +107,7 @@ export default {
       dataLabels: {
         enabled: false,
       },
-      colors:['#ffae34','#193074','#ff0808'],
+      colors: ["#ffae34", "#193074", "#ff0808"],
       responsive: [
         {
           breakpoint: 480,
