@@ -104,7 +104,8 @@ export default {
       type: Object
     },
     width: {
-      type: Number
+      type: Number,
+      default: 150
     },
     type: {
       type: String,
@@ -112,7 +113,6 @@ export default {
     },
     total: {
       type: Number,
-      default: 150
     },
     labels: {
       type: Array
@@ -341,6 +341,15 @@ export default {
           }
         }
       }
+    }
+  }
+}
+
+/* Portrait phones and smaller */
+@media (max-width: 700px) {
+  .small-card {
+    .chart {
+      margin: 18px auto 45px;
     }
   }
 }
