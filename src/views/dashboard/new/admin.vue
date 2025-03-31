@@ -209,6 +209,7 @@
             <small-card
               :total="user_statistics.total_users"
               :series="computeUserSeries()"
+              :labels="['Instructors','Students','Staff']"
               type="users"
               :headers="['Instuctors', 'Students', 'Staff']"
             >
@@ -242,6 +243,7 @@
             <small-card
               :total="total_courses"
               :series="computeOtherSeries()"
+              :labels="['Faculties','Courses','Student groups']"
               type="others"
               :headers="['Faculties', 'Courses', 'Student groups']"
             >

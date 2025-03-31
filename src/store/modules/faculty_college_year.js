@@ -16,7 +16,7 @@ export default {
     },
     actions: {
         getFacultyCollegeYearsByFaculty({commit}, {facultyId}) {
-            apis.get(`faculty_college_year/college/${facultyId}`)
+            apis.get(`user_groups/college/${facultyId}`)
                 .then(({data:{data}}) => {
                     commit('SET_FACULTY_COLLEGE_YEARS',{data})
                 })

@@ -114,8 +114,9 @@ export default {
   },
   methods:{
     loadUsers(){
-      apis.get("user")
+      apis.get(`user/college/${this.$store.state.sidebar_navbar.college._id}/ALL`)
         .then(({data:{data}}) => {
+          console.log(data)
           let filteredUsers = [];
 
           data.map(user => {

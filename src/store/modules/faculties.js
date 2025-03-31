@@ -62,7 +62,7 @@ export default {
         async getFaculties({ state }) {
             // when faculties not loaded fetch them
             if (!state.faculties.loaded) {
-                const {data:{data}} = await apis.get(`faculty/college/ALL`)
+                const {data:{data}} = await apis.get(`faculty/ALL`)
                     state.faculties.data = data
                     //announce that data have been loaded
                     state.faculties.loaded = true
@@ -71,7 +71,7 @@ export default {
         async getFaculty({state}, facultyId){
             // when faculties not loaded fetch them
             if (!state.faculty.loaded) {
-                const {data:{data}} = await apis.get(`faculty/college/${facultyId}`)
+                const {data:{data}} = await apis.get(`faculty/${facultyId}`)
                     state.faculty.data = data
                     //announce that data have been loaded
                     state.faculty.loaded = true

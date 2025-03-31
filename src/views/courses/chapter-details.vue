@@ -22,7 +22,7 @@
     <v-row>
       <v-col class="col-12 col-md-8">
         <!-- <span v-if="course !== undefined">{{course.name}}</span> -->
-        <v-tabs v-if="selectedTab == 0 || selectedTab == 1" background-color="white" color="#ffd248" right v-model="selectedTab">
+        <v-tabs background-color="white" color="#ffd248" right v-model="selectedTab">
           <v-tab :key="0" id="content-tab">
             <v-icon class="mx-2">mdi-book-open-variant</v-icon>
             Chapter
@@ -224,6 +224,7 @@ import UnrealTimeDiscussionBoard from "../../components/Live/UnrealTimeDiscussio
 import {downloadAttachment} from "@/services/global_functions"
 import colors from "@/assets/sass/imports/_colors.scss";
 import {emit} from "../../services/event_bus";
+import Apis from "../../services/apis";
 
 export default {
   name: "chapter-details",
@@ -316,7 +317,7 @@ export default {
         });
       });
     },
-    immediateFunction() {
+    async immediateFunction() {
       const {index, id} = this.$route.params;
       this.activeIndex = index;
 
@@ -364,6 +365,7 @@ export default {
       this.findRecordedClass();
       // go to contents
       // document.getElementById("content-tab").click();
+      await Apis.create('user_logs',{course_id: this.course._id})
     },
   },
   beforeRouteUpdate(to, from, next) {
