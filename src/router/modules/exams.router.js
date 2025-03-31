@@ -30,9 +30,11 @@ const routes = [
         },
     },
     {
-        path: '/preview/:id',
-        component: () =>
-            import( /* webpackChunkName: "preview-exam" */ '@/views/quiz/intermediate')
+        path: '/instructions',
+        component: () => import( /* webpackChunkName: "exams" */ '@/views/quiz/exam_intermediate.vue'),
+        meta: {
+            allowedUsers: ["STUDENT","INSTRUCTOR"]
+        },
     },
     {
         path: '/attempt/:id',

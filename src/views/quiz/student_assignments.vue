@@ -113,10 +113,10 @@
             </template>
             <template v-slot:item.dueDate="{ item }">
               <div class="assignment_td">
-                {{ item.dueDate | formatDate }}
+                {{ item.starting_time | formatDate }}
               </div>
               <div class="assignment_td">
-                {{ getTime(item.dueDate) }}
+                {{ getTime(item.starting_time) }}
               </div>
             </template>
             <template v-slot:item.marks="{ item }">
@@ -140,7 +140,7 @@
               <button class="attempt-exam" :class="{disabled : disabled || item.submission}" :disabled="item.submission" @click=" disabled ?
                       set_modal({
                         template: 'payment_err',
-                      }) : $router.push('/exam/instructions?exam='+item._id)">
+                      }) : $router.push('/assessments/exams/instructions?exam='+item._id)">
                 Attempt
               </button>
             </template>
@@ -156,6 +156,7 @@
 
 <script>
 import {mapActions, mapGetters} from "vuex";
+import {getTime} from "../../services/global_functions";
 
 export default {
   data: () => ({
@@ -200,7 +201,7 @@ export default {
     ...mapActions("quiz", ["getAssignments", "getExams"]),
     ...mapActions("modal", ["set_modal"]),
     handleRowClick(value) {
-      this.$router.push(`/assignments/${value._id}`)
+      this.$router.push(`/assessments/assignments/${value._id}`)
     },
     computeClass(item) {
       if (!item.submission)
@@ -213,12 +214,7 @@ export default {
       else
         return 'marked'
     },
-    getTime(date) {
-      date = new Date(date)
-      date.setHours(date.getUTCHours())
-      date.setMinutes(date.getUTCMinutes())
-      return new Date(date).toLocaleTimeString()
-    }
+    getTime,
   },
   created() {
     this.getAssignments()

@@ -200,13 +200,12 @@
           >Submit Answers
           </button
           >
-          <v-btn
+          <button
               v-else
               class="radio-btn d-block mb-4 submitt-attempt"
-              @click="$router.push('/quiz')"
-              rounded
+              @click="$router.push('/assessments/quiz')"
           >Back to quiz
-          </v-btn
+          </button
           >
         </v-col>
         <v-col class="col-12 col-md-5 timer-side">
@@ -285,15 +284,15 @@ export default {
       return new Date(this.remaining_time * 1000).toISOString().substr(11, 8);
     },
     disabled() {
-      return this.paymentStatus.paid !== false
+      return this.paymentStatus.paid === false
     }
   },
   watch: {
     remaining_time() {
       if (this.remaining_time > 0) {
-        // setTimeout(() => {
-        //   this.remaining_time -= 1;
-        // }, 1000);
+        setTimeout(() => {
+          this.remaining_time -= 1;
+        }, 1000);
         if (this.remaining_time == this.selected_quiz.duration - 1)
           this.initialiseQuiz();
 

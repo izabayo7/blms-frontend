@@ -271,6 +271,7 @@
 <script>
 import {mapActions, mapGetters, mapMutations} from "vuex"
 import Apis from "@/services/apis";
+import {findLocalTime} from "../../services/global_functions";
 
 export default {
   name: "EditQuiz",
@@ -328,6 +329,7 @@ export default {
     }
   },
   methods: {
+    findLocalTime,
     ...mapActions('quiz', ['getExam']),
     ...mapActions("courses", ["getCourses"]),
     ...mapMutations("quiz",["editExam"]),
@@ -649,7 +651,7 @@ export default {
         this.questions = this.formatQuestionTypes(quiz.questions);
         this.type = quiz.type
         this.selected_course = quiz.course.name
-        this.starting_time = quiz.starting_time.substring(0, 16)
+        this.starting_time = this.findLocalTime(quiz.starting_time)
       });
       this.getCourses(!this.loaded)
     } else

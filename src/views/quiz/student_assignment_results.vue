@@ -391,7 +391,7 @@ export default {
             status: "success",
             uptime: 5000,
           })
-          this.$router.push('/assignments')
+          this.$router.push('/assessments')
         }
       })
     },
@@ -457,11 +457,11 @@ export default {
           }
           // this.addAssignment(res.data.data)
           this.$store.dispatch("app_notification/SET_NOTIFICATION", {
-            message: "Assignment submission creation succeded",
+            message: "Assignment submission update succeded",
             status: "success",
             uptime: 5000,
           })
-          this.$router.push('/assignments')
+          this.$router.push('/assessments')
         }
       })
     },

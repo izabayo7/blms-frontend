@@ -188,6 +188,7 @@
 <script>
 import {mapActions, mapGetters, mapMutations} from "vuex";
 import Apis from "@/services/apis";
+import {findLocalTime} from "../../services/global_functions";
 
 export default {
   name: "CreateAssignment",
@@ -244,6 +245,7 @@ export default {
     this.computeAssignment();
   },
   methods: {
+    findLocalTime,
     ...mapActions("courses", ["getCourses"]),
     ...mapActions("modal", ["set_modal"]),
     ...mapActions("quiz", ["getAssignment"]),
@@ -256,7 +258,7 @@ export default {
           type: res.target.type,
           id: res.target.id,
         },
-        dueDate: res.dueDate.substring(0, 16),
+        dueDate: this.findLocalTime(res.dueDate),
         details: res.details,
         submissionMode: res.submissionMode,
         allowMultipleFilesSubmission: res.allowMultipleFilesSubmission,
@@ -370,7 +372,7 @@ export default {
             status: "success",
             uptime: 5000,
           })
-          this.$router.push('/quiz')
+          this.$router.push('/assessments/assignments')
         }
       })
     },

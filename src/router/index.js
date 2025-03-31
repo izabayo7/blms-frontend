@@ -112,36 +112,11 @@ const routes = [
                     },
 
                     {
-                        path: '/assignments',
+                        path: '/assessments',
                         name: "assignments",
                         component: () => import( /* webpackChunkName: "assignments" */ '@/views/quiz/student_assignments.vue'),
                         meta: {
                             allowedUsers: ["STUDENT"]
-                        },
-                    },
-                    {
-                        path: '/exam/instructions',
-                        component: () => import( /* webpackChunkName: "exams" */ '@/views/quiz/exam_intermediate.vue'),
-                        meta: {
-                            allowedUsers: ["STUDENT","INSTRUCTOR"]
-                        },
-                    },
-
-                    {
-                        path: '/assignments/:user_name/:id',
-                        name: "user_assignments",
-                        component: () => import( /* webpackChunkName: "assignments" */ '@/views/quiz/student_assignment_results.vue'),
-                        meta: {
-                            allowedUsers: ["STUDENT","INSTRUCTOR"]
-                        },
-                    },
-
-                    {
-                        path: '/assignments/:id',
-                        name: "assignment",
-                        component: () => import( /* webpackChunkName: "assignments" */ '@/views/quiz/student_assignment_results.vue'),
-                        meta: {
-                            allowedUsers: ["STUDENT","INSTRUCTOR"]
                         },
                     },
 

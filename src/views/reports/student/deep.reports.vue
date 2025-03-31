@@ -139,7 +139,8 @@ export default {
   },
   methods: {
     handleRowClick(value) {
-      this.$router.push(value.quiz ? `/quiz/${value.quiz.name}/${this.$store.state.user.user.user_name}` : value.assignment ? `/assignments/${value.assignment._id}` : `/assessments/exams/${value.exam._id}/${this.username}`)
+      console.log(value)
+      this.$router.push(value.quiz ? `/assessments/quiz/${value.quiz.name}/${this.$store.state.user.user.user_name}` : value.assignment ? `/assessments/assignments/${value.assignment._id}` : `/assessments/exams/${value.exam._id}/${this.username}`)
     },
     ...mapActions("quiz_submission", ["getQuizSubmissionsInQuiz"]),
     guess() {

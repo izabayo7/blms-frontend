@@ -32,12 +32,18 @@ const routes =  [
     {
         path: '/:id',
         component: () =>
-            import( /* webpackChunkName: "attempt-quiz" */ '@/views/quiz/attempt')
+            import( /* webpackChunkName: "attempt-quiz" */ '@/views/quiz/student_assignment_results'),
+        meta: {
+            allowedUsers: ["STUDENT","INSTRUCTOR"]
+        },
     },
     {
-        path: '/:id',
+        path: '/:user_name/:id',
         component: () =>
-            import( /* webpackChunkName: "mark-quiz" */ '@/views/quiz/mark')
+            import( /* webpackChunkName: "mark-quiz" */ '@/views/quiz/student_assignment_results'),
+        meta: {
+            allowedUsers: ["STUDENT","INSTRUCTOR"]
+        },
     },
 ]
 

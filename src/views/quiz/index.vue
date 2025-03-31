@@ -296,7 +296,10 @@
             </template>
             <template v-slot:item.dueDate="{ item }">
               <div class="assignment_td">
-                {{ item.dueDate }}
+                {{ item.dueDate | formatDate }}
+              </div>
+              <div class="assignment_td">
+                {{ getTime(item.dueDate) }}
               </div>
             </template>
             <template v-slot:item.marks="{ item }">
@@ -388,6 +391,7 @@
 
 <script>
 import {mapActions, mapGetters} from "vuex";
+import {getTime} from "../../services/global_functions";
 
 export default {
   data: () => ({
@@ -467,14 +471,9 @@ export default {
   methods: {
     ...mapActions("quiz", ["getQuizes", "getAssignments","getExams"]),
     ...mapActions("modal", ["set_modal"]),
-    getTime(date) {
-      date = new Date(date)
-      date.setHours(date.getUTCHours())
-      date.setMinutes(date.getUTCMinutes())
-      return new Date(date).toLocaleTimeString()
-    },
+    getTime,
     handleRowClick(value) {
-      this.$router.push(this.currentView === 'quiz' ? `/quiz/attempt/${value.name}` : this.currentView === 'exams' ? `exams/attempt/${value._id}` : `/assignments/${value._id}`)
+      this.$router.push(this.currentView === 'quiz' ? `quiz/attempt/${value.name}` : this.currentView === 'exams' ? `exams/attempt/${value._id}` : `assignments/${value._id}`)
     },
     setCurrentView() {
       if (this.$route.path.includes('/assessments/quiz'))

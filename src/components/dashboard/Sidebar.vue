@@ -214,11 +214,11 @@
             v-if="!disableFunctionalities&&(userCategory === 'STUDENT')"
             @click="
             closeSidebar();
-            routeTo('/assignments');
+            routeTo('/assessments');
           "
-            :class="{ active: activeRoute('assignments') }"
+            :class="{ active: activeRoute('assessments') }"
         >
-          <div v-if="!activeRoute('assignments') && assignments" class="number">{{ assignments }}</div>
+          <div v-if="!activeRoute('assessments') && assignments" class="number">{{ assignments }}</div>
           <div class="link-icon">
             <svg width="24" height="32" viewBox="0 0 24 32" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path
@@ -230,7 +230,7 @@
             </svg>
 
           </div>
-          <div class="link-name" v-show="state">Assignments</div>
+          <div class="link-name" v-show="state">Assessments</div>
         </li>
         <!--        <li-->
         <!--          v-if="userCategory === 'STUDENT' || userCategory === 'INSTRUCTOR'"-->
