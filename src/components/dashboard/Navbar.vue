@@ -4,28 +4,14 @@
       <search />
     </div>
     <div v-if="showCreateCourseButton" class="create_course col-2">
-      <v-btn
-        rounded
-        dark
-        class="add_course mt-3 white--text hidden-md-and-down"
-        to="/courses/new"
-      >
+      <v-btn rounded dark class="add_course mt-3 white--text hidden-md-and-down" to="/courses/new">
         <v-icon>mdi-plus</v-icon>Create new course
       </v-btn>
-      <v-btn
-        dark
-        icon
-        class="add_course mt-3 white--text hidden-lg-and-up"
-        to="/courses/new"
-      >
+      <v-btn dark icon class="add_course mt-3 white--text hidden-lg-and-up" to="/courses/new">
         <v-icon>mdi-plus</v-icon>
       </v-btn>
     </div>
-    <div
-      :class="`notification col-1 offset-1 ${
-        !showCreateCourseButton ? 'offset-md-3' : ''
-      }`"
-    >
+    <div :class="`notification col-1 offset-1 ${!showCreateCourseButton ? 'offset-md-3' : ''}`">
       <notifications />
     </div>
     <div class="profile col-3">
