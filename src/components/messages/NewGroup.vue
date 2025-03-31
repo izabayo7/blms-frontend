@@ -29,7 +29,7 @@
               </div>
               <div class="row action-buttons">
                 <button class="create-group-button">Create group</button>
-                <button class="cancel-group-creation">Cancel</button>
+                <button class="cancel-group-creation" @click="toggleGroup">Cancel</button>
               </div>
             </div>
           </div>
