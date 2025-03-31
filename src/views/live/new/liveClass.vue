@@ -42,14 +42,14 @@
         <div class="video--wrapper" >
             <div class="video-el" @mouseenter="toggleMenu(true)" @mouseleave="toggleMenu(false)">
               <div class="no-video" v-if="noVideo">
-                <div class="no-video--wrapper presenting">
+                <div class="no-video--wrapper" :class="{presenting:isPresenting}">
                   <div class="instructor-info">
                     <img src="https://s3.amazonaws.com/cms-assets.tutsplus.com/uploads/users/810/profiles/19338/profileImage/profile-square-extra-small.png" alt="profile picture" class="picture">
                     <h2 class="course">Economics Basics: Chapter 8 part II</h2>
                     <span class="source">by instuctor</span>
                     <h2 class="name">Rubogora Emanuel</h2>
                   </div>
-                  <div class="screen-sharing-video">
+                  <div class="screen-sharing-video" v-if="isPresenting">
                     <div class="screen-sharing-video--wrapper">
                       <h4>You are presenting your screen</h4>
                       <video >
@@ -150,6 +150,7 @@ export default {
       ws:null,
       participants:[],
       noVideo:true,
+      isPresenting:false,
       participationInfo:{name:"",room:"",isOfferingCourse:false},
       showMenu:false,
       users:[
