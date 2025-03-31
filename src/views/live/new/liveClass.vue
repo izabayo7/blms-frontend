@@ -18,7 +18,7 @@
                  :class="`--${$vuetify.breakpoint.name} ${sidebarOpen ? '' : 'viewer'}`"
                  @mouseenter="toggleMenu(true)"
                  @mouseleave="toggleMenu(false)">
-              <div class="no-video" v-show="noVideo">
+              <div class="no-video" v-show="noVideo || (isPresenting && participationInfo.isOfferingCourse)">
                 <div class="no-video--wrapper" :class="{presenting:isPresenting}">
                   <div class="instructor-info">
                     <img
@@ -33,14 +33,17 @@
                   <div class="screen-sharing-video" v-if="isPresenting">
                     <div class="screen-sharing-video--wrapper">
                       <h4>You are presenting your screen</h4>
-                      <video id="video_feed_screen">
-                        <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+                      <video id="video_screen_feed">
+<!--                        <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">-->
                       </video>
                     </div>
                   </div>
                 </div>
               </div>
-              <video v-show="!noVideo" id="video_feed">
+              <video v-show="!noVideo && !isPresenting" id="video_feed">
+                <!--                <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" >-->
+              </video>
+              <video v-if="!participationInfo.isOfferingCourse" v-show="!noVideo && isPresenting" id="viewer_screen_feed">
                 <!--                <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" >-->
               </video>
               <transition name="fade">
@@ -65,13 +68,13 @@
                       </span>
                         <span class="text">{{ audioEnabled ? 'Mute' : 'Unmute' }}</span>
                       </button>
-<!--                      <button class="start-mute-sound">-->
-<!--                      <span class="icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24"-->
-<!--                                              height="24"><path fill="none" d="M0 0h24v24H0z"/><path-->
-<!--                          d="M10 7.22L6.603 10H3v4h3.603L10 16.78V7.22zM5.889 16H2a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1h3.889l5.294-4.332a.5.5 0 0 1 .817.387v15.89a.5.5 0 0 1-.817.387L5.89 16zm14.525-4l3.536 3.536-1.414 1.414L19 13.414l-3.536 3.536-1.414-1.414L17.586 12 14.05 8.464l1.414-1.414L19 10.586l3.536-3.536 1.414 1.414L20.414 12z"/></svg></span>-->
-<!--                        <span class="text">Mute</span>-->
-<!--                      </button>-->
-                      <button class="start-share-screen">
+                      <!--                      <button class="start-mute-sound">-->
+                      <!--                      <span class="icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24"-->
+                      <!--                                              height="24"><path fill="none" d="M0 0h24v24H0z"/><path-->
+                      <!--                          d="M10 7.22L6.603 10H3v4h3.603L10 16.78V7.22zM5.889 16H2a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1h3.889l5.294-4.332a.5.5 0 0 1 .817.387v15.89a.5.5 0 0 1-.817.387L5.89 16zm14.525-4l3.536 3.536-1.414 1.414L19 13.414l-3.536 3.536-1.414-1.414L17.586 12 14.05 8.464l1.414-1.414L19 10.586l3.536-3.536 1.414 1.414L20.414 12z"/></svg></span>-->
+                      <!--                        <span class="text">Mute</span>-->
+                      <!--                      </button>-->
+                      <button class="start-share-screen" @click="shareScreen">
                       <span class="icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24"
                                               height="24"><path fill="none" d="M0 0h24v24H0z"/><path
                           d="M9 3v2H4v14h16v-9h2v10a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h6zm9.95 2L16 2.05 17.414.636l5.34 5.34A.6.6 0 0 1 22.33 7H14a2 2 0 0 0-2 2v6h-2V9a4 4 0 0 1 4-4h4.95z"/></svg></span>
@@ -321,9 +324,20 @@ export default {
     },
     shareScreen() {
       let message = {
-        id: 'shareScreen',
+        id: this.isPresenting ? 'stopSharingScreen' : 'shareScreen',
       }
+
       this.sendMessage(message);
+      this.isPresenting = !this.isPresenting;
+      if(!this.isPresenting){
+        this.sendMessage({
+          id: "notifyUser",
+          receiver: "ALL",
+          videoStatus: this.videoEnabled,
+          audioStatus: this.audioEnabled,
+          screenStatus: this.isPresenting
+        })
+      }
     },
     register() {
       console.log("harahiye")
@@ -337,6 +351,7 @@ export default {
         room: this.participationInfo.room,
         offeringCourse: this.participationInfo.isOfferingCourse
       }
+
       this.sendMessage(message);
     },
     sendMessage(message) {
@@ -347,7 +362,9 @@ export default {
 
     onNewParticipant(request) {
       console.log('new participant', request, this.participants)
-      this.receiveVideo(request.name);
+      if (request.name != this.participationInfo.name + '_screen') {
+        this.receiveVideo(request.name);
+      }
     },
     participantIndex(name) {
       const result = this.participants.filter(e => e.name == name)
@@ -379,7 +396,10 @@ export default {
     async onExistingParticipants(msg) {
       const self = this
       console.log('existing participant', msg, this.participants)
-      let constraints = {
+      let constraints = self.isPresenting ? {
+        audio: true,
+        video: true
+      } : {
         audio: true,
         video: {
           mandatory: {
@@ -401,11 +421,10 @@ export default {
       console.log(this.participationInfo.name + " registered in room " + this.participationInfo.room);
 
 
-      let participant = new Participant(this.participationInfo.name, this, true, await this.getUserInfo(this.participationInfo.name.split('_')[0]));
+      let participant = new Participant(self.isPresenting ? `${this.participationInfo.name}_screen` : this.participationInfo.name, this, true, await this.getUserInfo(this.participationInfo.name.split('_')[0]));
 
       this.participants.push(participant);
       this.addParticipant({id: participant.userInfo._id})
-
 
       let video = participant.getVideoElement();
 
@@ -414,6 +433,11 @@ export default {
         mediaConstraints: constraints,
         onicecandidate: participant.onIceCandidate.bind(participant)
       }
+
+      if (self.isPresenting) {
+        options.sendSource = 'screen'
+      }
+
       participant.rtcPeer = this.participationInfo.isOfferingCourse ? new WebRtcPeer.WebRtcPeerSendonly(options,
           function (error) {
             if (error) {
@@ -435,6 +459,16 @@ export default {
 
       msg.data.forEach(console.log)
       msg.data.forEach(this.receiveVideo);
+
+      if(self.isPresenting){
+        self.sendMessage({
+          id: "notifyUser",
+          receiver: "ALL",
+          videoStatus: this.videoEnabled,
+          audioStatus: this.audioEnabled,
+          screenStatus: this.isPresenting
+        })
+      }
 
     },
 
@@ -566,6 +600,9 @@ export default {
         case 'roomClosed':
           alert('Room Closed')
           this.onCloseRoom();
+          break;
+        case 'screenAllowed':
+          this.onExistingParticipants({data: []});
           break;
         case 'initialScreenOff':
           this.noVideo = true;
