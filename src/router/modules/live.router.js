@@ -1,4 +1,6 @@
-//prefix of the path is "live"
+// NOTE: prefix of all  paths in this file is  "/live"
+// NOTE: make sure you don't start with '/live' on your file path as it may lead to confusion
+//          or inconsistency in you routes
 
 const prefix = '/live'
 
