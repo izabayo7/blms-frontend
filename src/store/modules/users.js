@@ -1,4 +1,6 @@
 import apis from "@/services/apis";
+import jwt from "jsonwebtoken";
+
 const getDefaultState = () => ({
     users: {
         data: [],
@@ -60,10 +62,35 @@ export default {
                 }
             })
         },
+        //update a user
+        updateUser({ dispatch }, { user }) {
+
+            apis.update('user', user).then(async d => {
+                d.data = d.data.data
+
+                // set the token in the session
+                this.$session.set("jwt", d.data);
+
+                const user = await jwt.decode(this.$session.get("jwt"));
+                const category = user.category.name;
+                // keep the decoded user in vuex
+                dispatch("user/setUser", user);
+
+                if (category === "STUDENT" || category === "INSTRUCTOR") {
+                    this.$router.push("/courses");
+                }
+                // others land to the dashboard
+                else if (category === "ADMIN") {
+                    this.$router.push("/administration");
+                }
+
+            })
+
+        },
         searchUser({ state }, { query, page, limit }) {
             let url = `user/search?data=${query}`
             url += page ? `&page=${page}` : ''
-            url += limit ? `&limit=${limit}` : '' 
+            url += limit ? `&limit=${limit}` : ''
 
             return apis.get(url).then((d) => {
                 d.data = d.data.data
@@ -74,8 +101,8 @@ export default {
         searchNewGroupMembers({ state }, { group_code, query, page, limit }) {
             let url = `chat_group/${group_code}/search_members?data=${query}`
             url += page ? `&page=${page}` : ''
-            url += limit ? `&limit=${limit}` : '' 
-            
+            url += limit ? `&limit=${limit}` : ''
+
             return apis.get(url).then((d) => {
                 d.data = d.data.data
                 state.search_results.data = d.data.results

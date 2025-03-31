@@ -12,10 +12,7 @@
               class="mt-4 d-block"
               id="user_pic"
             >
-              <img
-                src="https://cdn.vuetifyjs.com/images/john.jpg"
-                alt="avatar"
-              />
+              <img :src="user.profile" alt="avatar" />
             </v-avatar>
             <v-avatar
               v-else
@@ -73,8 +70,8 @@
           <p class="lable font-weight-medium mt-5">User name</p>
           <input v-model="user.user_name" type="text" class="course_input" />
         </div>
-        <div class="title text-h5 mt-5">Enrolled courses</div>
-        <div class="enrolled_courses">
+        <div v-if="user.category.name == 'STUDENT'" class="title text-h5 mt-5">Enrolled courses</div>
+        <div v-if="user.category.name == 'STUDENT'" class="enrolled_courses">
           <v-row>
             <v-col class="col-12 col-md-8">
               <v-row>
@@ -176,6 +173,7 @@ export default {
     ...mapGetters("courses", ["started_courses"]),
   },
   methods: {
+    ...mapActions("users", ["updateUser"]),
     ...mapActions("courses", ["getCourses"]),
     comparePassword() {
       this.passwordMatch = this.newPassword === this.confirmNewPassword;
