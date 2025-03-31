@@ -23,7 +23,7 @@
                     <li class="d-flex"> <div class="icon"> <v-icon>mdi-message-bulleted </v-icon> </div><div class="content">Messages</div></li>
                 </ul>
             </div>
-            <div class="logout d-flex">
+            <div class="logout d-flex" @click="logout()">
                 <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="12.673" height="11.089" viewBox="0 0 12.673 11.089"><path id="Icon_open-account-logout" data-name="Icon open-account-logout" d="M4.752,0V1.584h6.336V9.5H4.752v1.584h7.92V0ZM3.168,3.168,0,5.544,3.168,7.92V6.336H9.5V4.752H3.168Z"/></svg></div>
                 <div class="content">Logout</div>
             </div>
