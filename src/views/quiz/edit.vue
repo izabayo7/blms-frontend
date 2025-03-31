@@ -512,7 +512,7 @@ export default {
     formatQuestionType(value) {
       for (const index in this.questionTypes) {
         if (
-          value == this.questionTypes[index].toLowerCase().split(" ").join("-")
+          value == this.questionTypes[index].toLowerCase().split(" ").join("_")
         ) {
           return this.questionTypes[index];
         }
