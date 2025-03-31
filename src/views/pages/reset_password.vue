@@ -133,7 +133,14 @@
           </div>
         </div>
         <div v-else class="reset-password-box mx-auto d-flex align-center justify-center">
-          {{ message }}
+          <div>
+            {{ message }}
+            <div class="lower-message">
+              <div class="message-row mt-4">
+                <router-link to="/login"><button class="login-button mx-auto">Back to login</button></router-link>
+              </div>
+            </div>
+          </div>
         </div>
       </v-col>
     </v-row>
@@ -159,13 +166,6 @@ export default {
       confirmPasswordError: ""
     },
   }),
-  watch: {
-    message() {
-      setTimeout(() => {
-        this.message = "";
-      }, 10000);
-    },
-  },
   methods: {
     // validate the form
     validate() {
