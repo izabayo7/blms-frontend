@@ -34,10 +34,10 @@
           class="bold-border"
           name="role"
           id="user_group"
-          :options="user_group_names"
+          :options="courseNames"
           @input="
             (e) => {
-              selected_user_group = e;
+              selected_course = e;
             }
           "
         />
@@ -48,10 +48,10 @@
           class="bold-border"
           name="role"
           id="user_group"
-          :options="user_group_names"
+          :options="chapterNames"
           @input="
             (e) => {
-              selected_user_group = e;
+              selected_chapter = e;
             }
           "
         />
@@ -122,10 +122,10 @@
           class="bold-border"
           name="role"
           id="user_group"
-          :options="user_group_names"
+          :options="quizNames"
           @input="
             (e) => {
-              selected_user_group = e;
+              selected_quiz = e;
             }
           "
         />
@@ -137,23 +137,33 @@
 
 <script>
 import SelectUi from "@/components/reusable/ui/select-ui";
-import { mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 import TimePicker from "@/components/TimePicker";
 export default {
   components: { SelectUi, TimePicker },
   data() {
     return {
       user_group_names: ["Principal", "Instructor", "Student"],
-      date: "2018-09-15",
+      date: new Date().toISOString().substring(0,10),
       menu: false,
       time: "00:00",
       useSeconds: false,
       startNow: false,
       showPicker: false,
       counter: 0,
+      selected_course: "",
+      selected_chapter:"",
+      selected_quiz: "",
     };
   },
+  watch:{
+    selected_course(){
+      this.selected_chapter=""
+    }
+  },
   computed: {
+    ...mapGetters("courses", ["courses", "loaded"]),
+    ...mapGetters("quiz", ["all_quiz"]),
     hours() {
       return this.time.split(":")[0];
     },
@@ -161,9 +171,36 @@ export default {
       console.log(this.time.toString());
       return this.time.split(":")[1];
     },
+    courseNames() {
+      let res = [];
+      for (const i in this.courses) {
+        res.push(this.courses[i].name);
+      }
+      return res;
+    },
+    chapterNames() {
+      let res = [];
+      for (const i in this.courses) {
+        if (this.courses[i].name == this.selected_course){
+          for (const k in this.courses[i].chapters) {
+            res.push(this.courses[i].chapters[k].name);
+          }
+        }
+      }
+      return res;
+    },
+    quizNames(){
+      let res = []
+      // for (const i in this.all_quiz) {
+      //   res.push(this.quiz[i].name)
+      // }
+      return res
+    }
   },
   methods: {
-    ...mapActions("live_session",["createLiveSession"]),
+    ...mapActions("live_session", ["createLiveSession"]),
+    ...mapActions("courses", ["getCourses"]),
+    ...mapActions("quiz", ["getQuizes"]),
     updateTime(value) {
       // console.log(value, this.counter);
       if (value) {
@@ -185,19 +222,36 @@ export default {
       this.useSeconds = showSeconds;
       this.showPicker = true;
     },
-    async saveSession(){
+    async saveSession() {
+      let chapter_id="";
+      for (const i in this.courses) {
+        if (this.courses[i].name == this.selected_course){
+          for (const k in this.courses[i].chapters) {
+            if(this.courses[i].chapters[k].name == this.selected_chapter){
+              chapter_id = this.courses[i].chapters[k]._id
+            }
+          }
+        }
+      }
       this.createLiveSession({
         session: {
           target: {
             type: "chapter",
-            id: "5fc01903bff43af061f71727"
+            id: chapter_id,
           },
-          starting_time:this.date,
-        }
-      }).then(()=>{
-        console.log("Live session created")
-      })
-    }
+          starting_time: this.date,
+          quiz: this.selected_quiz ? this.selected_quiz : undefined
+        },
+      }).then(() => {
+        console.log("Live session created");
+      });
+    },
+  },
+  created() {
+    this.getCourses();
+    this.getQuizes({
+      user_name: this.$store.state.user.user.user_name,
+    });
   },
 };
 </script>
