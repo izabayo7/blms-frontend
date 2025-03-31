@@ -72,7 +72,7 @@
           <div class="row">
             <div class="col-12 col-md-6">
               <select-ui
-                  label="Select question type"
+                  :label="question.type === '' ? 'Select question type' : question.type"
                   name="question-type"
                   id="question-type"
                   class="mb-15px"
@@ -88,7 +88,7 @@
             <div class="col-12 col-md-2">
               <div class="required mb-15px d-flex">
                 <div class="text">Required</div>
-                <switch-ui :active="question.required"
+                <switch-ui :defaultValue="question.required" :active="question.required"
                            @input="
                 (e) => {
                   question.required = e;
@@ -121,6 +121,14 @@
                   </defs>
                 </svg>
 
+              </div>
+              <div class="delete-question cursor-pointer mb-15px">
+                <svg @click="duplicateQuestion(i)" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24"
+                     height="24">
+                  <path fill="none" d="M0 0h24v24H0z"/>
+                  <path
+                      d="M7 6V3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1h-3v3c0 .552-.45 1-1.007 1H4.007A1.001 1.001 0 0 1 3 21l.003-14c0-.552.45-1 1.007-1H7zM5.003 8L5 20h10V8H5.003zM9 6h8v10h2V4H9v2z"/>
+                </svg>
               </div>
             </div>
           </div>
@@ -300,7 +308,7 @@ export default {
   },
   data: () => ({
     type: "",
-    starting_time:"",
+    starting_time: "",
     selected_course: "",
     questions_types: [
       "Open ended",
@@ -336,9 +344,12 @@ export default {
     this.getCourses(!this.loaded);
   },
   methods: {
-    ...mapMutations("quiz",["addExam"]),
+    ...mapMutations("quiz", ["addExam"]),
     ...mapActions("courses", ["getCourses"]),
     autoResizeQuestionInput,
+    duplicateQuestion(index) {
+      this.questions.push(this.questions[index])
+    },
     fileTypeClicked(type, index) {
       if (index === -1) {
         if (this.allowed_submission_file_types.includes(type))
@@ -430,9 +441,9 @@ export default {
     recreate() {
       this.questions = [
         {
-          type: "Open ended",
+          type: '',
           marks: 0,
-          required: false,
+          required: true,
           details: "",
           options: {
             choices: [],
@@ -485,7 +496,8 @@ export default {
     },
     addQuestion() {
       this.questions.push({
-        type: "Open ended",
+        type: '',
+        required: true,
         marks: 0,
         details: "",
         options: {
@@ -592,8 +604,7 @@ export default {
             this.$router.push('/assessments/exams')
           }
         })
-      }
-      else
+      } else
         this.create_quiz({
           quiz: {
             name: this.title,
