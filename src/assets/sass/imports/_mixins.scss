@@ -33,7 +33,7 @@
 }
 
 
-@mixin users-page-header{
+@mixin admin-page-header{
       width:100%;
 
     .header-wrapper{
@@ -59,7 +59,9 @@
       .add-user{
 
         .add-user-button{
-          max-width: 10rem;
+          max-width: 15rem;
+          width:fit-content;
+          min-width: fit-content;
         }
       }
     }
