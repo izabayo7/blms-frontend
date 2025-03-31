@@ -42,7 +42,7 @@
                       append-icon="mdi-magnify"
                       label="Search"
                       single-line
-                      hide-details
+                      hide-details  
                     />
                   </v-col>
                 </v-row>
