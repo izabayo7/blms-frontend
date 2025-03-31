@@ -218,7 +218,7 @@
                     />
                   </svg>
 
-                  <span class="ml-2">
+                  <span class="ml-2 font-weight-bold">
                     {{
                       attempt.answers[i].marks == question.marks
                         ? "Right answer"
