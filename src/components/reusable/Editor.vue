@@ -122,7 +122,9 @@
             :class="{ 'is-active': isActive.code() }"
             @click="commands.code"
           >
-            <v-icon>mdi-code-tags</v-icon>
+            <svg style="width:24px;height:24px" viewBox="0 0 24 24">
+              <path fill="currentColor" d="M14.6,16.6L19.2,12L14.6,7.4L16,6L22,12L16,18L14.6,16.6M9.4,16.6L4.8,12L9.4,7.4L8,6L2,12L8,18L9.4,16.6Z" />
+            </svg>
           </button>
 
           <button
@@ -221,7 +223,9 @@
             :class="{ 'is-active': isActive.blockquote() }"
             @click="commands.blockquote"
           >
-            <v-icon>mdi-format-quote-close</v-icon>
+            <svg style="width:24px;height:24px" viewBox="0 0 24 24">
+              <path fill="currentColor" d="M14,17H17L19,13V7H13V13H16M6,17H9L11,13V7H5V13H8L6,17Z" />
+            </svg>
           </button>
 
           <button
@@ -230,7 +234,9 @@
             :class="{ 'is-active': isActive.code_block() }"
             @click="commands.code_block"
           >
-            <v-icon>mdi-code-not-equal-variant</v-icon>
+            <svg style="width:24px;height:24px" viewBox="0 0 24 24">
+              <path fill="currentColor" d="M11,6.5V9.33L8.33,12L11,14.67V17.5L5.5,12M13,6.43L18.57,12L13,17.57V14.74L15.74,12L13,9.26M5,3C3.89,3 3,3.9 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5A2,2 0 0,0 19,3H5Z" />
+            </svg>
           </button>
 
           <button
@@ -238,15 +244,21 @@
             class="menubar__button"
             @click="commands.horizontal_rule"
           >
-            <v-icon>mdi-minus</v-icon>
+            <svg style="width:24px;height:24px" viewBox="0 0 24 24">
+              <path fill="currentColor" d="M19,13H5V11H19V13Z" />
+            </svg>
           </button>
 
           <button type="button" class="menubar__button" @click="commands.undo">
-            <v-icon>mdi-undo</v-icon>
+            <svg style="width:24px;height:24px" viewBox="0 0 24 24">
+              <path fill="currentColor" d="M12.5,8C9.85,8 7.45,9 5.6,10.6L2,7V16H11L7.38,12.38C8.77,11.22 10.54,10.5 12.5,10.5C16.04,10.5 19.05,12.81 20.1,16L22.47,15.22C21.08,11.03 17.15,8 12.5,8Z" />
+            </svg>
           </button>
 
           <button type="button" class="menubar__button" @click="commands.redo">
-            <v-icon>mdi-redo</v-icon>
+            <svg style="width:24px;height:24px" viewBox="0 0 24 24">
+              <path fill="currentColor" d="M18.4,10.6C16.55,9 14.15,8 11.5,8C6.85,8 2.92,11.03 1.54,15.22L3.9,16C4.95,12.81 7.95,10.5 11.5,10.5C13.45,10.5 15.23,11.22 16.62,12.38L13,16H22V7L18.4,10.6Z" />
+            </svg>
           </button>
           <button
             type="button"
@@ -259,7 +271,9 @@
               })
             "
           >
-            <v-icon>mdi-table</v-icon>
+            <svg style="width:24px;height:24px" viewBox="0 0 24 24">
+              <path fill="currentColor" d="M5,4H19A2,2 0 0,1 21,6V18A2,2 0 0,1 19,20H5A2,2 0 0,1 3,18V6A2,2 0 0,1 5,4M5,8V12H11V8H5M13,8V12H19V8H13M5,14V18H11V14H5M13,14V18H19V14H13Z" />
+            </svg>
           </button>
 
           <span v-if="isActive.table()">
@@ -268,56 +282,72 @@
               class="menubar__button"
               @click="commands.deleteTable"
             >
-              <v-icon>mdi-table-minus</v-icon>
+              <svg style="width:24px;height:24px" viewBox="0 0 24 24">
+    <path fill="currentColor" d="M15 19V17H23V19H15M4 3H18C19.11 3 20 3.9 20 5V12.08C18.45 11.82 16.92 12.18 15.68 13H12V17H13.08C12.97 17.68 12.97 18.35 13.08 19H4C2.9 19 2 18.11 2 17V5C2 3.9 2.9 3 4 3M4 7V11H10V7H4M12 7V11H18V7H12M4 13V17H10V13H4Z" />
+</svg>
             </button>
             <button
               type="button"
               class="menubar__button"
               @click="commands.addColumnBefore"
             >
-              <v-icon>mdi-table-column-plus-before</v-icon>
+              <svg style="width:24px;height:24px" viewBox="0 0 24 24">
+    <path fill="currentColor" d="M13,2A2,2 0 0,0 11,4V20A2,2 0 0,0 13,22H22V2H13M20,10V14H13V10H20M20,16V20H13V16H20M20,4V8H13V4H20M9,11H6V8H4V11H1V13H4V16H6V13H9V11Z" />
+</svg>
             </button>
             <button
               type="button"
               class="menubar__button"
               @click="commands.addColumnAfter"
             >
-              <v-icon>mdi-table-column-plus-after</v-icon>
+              <svg style="width:24px;height:24px" viewBox="0 0 24 24">
+    <path fill="currentColor" d="M11,2A2,2 0 0,1 13,4V20A2,2 0 0,1 11,22H2V2H11M4,10V14H11V10H4M4,16V20H11V16H4M4,4V8H11V4H4M15,11H18V8H20V11H23V13H20V16H18V13H15V11Z" />
+</svg>
             </button>
             <button
               type="button"
               class="menubar__button"
               @click="commands.deleteColumn"
             >
-              <v-icon>mdi-table-column-remove</v-icon>
+              <svg style="width:24px;height:24px" viewBox="0 0 24 24">
+    <path fill="currentColor" d="M4,2H11A2,2 0 0,1 13,4V20A2,2 0 0,1 11,22H4A2,2 0 0,1 2,20V4A2,2 0 0,1 4,2M4,10V14H11V10H4M4,16V20H11V16H4M4,4V8H11V4H4M17.59,12L15,9.41L16.41,8L19,10.59L21.59,8L23,9.41L20.41,12L23,14.59L21.59,16L19,13.41L16.41,16L15,14.59L17.59,12Z" />
+</svg>
             </button>
             <button
               type="button"
               class="menubar__button"
               @click="commands.addRowBefore"
             >
-              <v-icon>mdi-table-row-plus-before</v-icon>
+              <svg style="width:24px;height:24px" viewBox="0 0 24 24">
+    <path fill="currentColor" d="M22,14A2,2 0 0,0 20,12H4A2,2 0 0,0 2,14V21H4V19H8V21H10V19H14V21H16V19H20V21H22V14M4,14H8V17H4V14M10,14H14V17H10V14M20,14V17H16V14H20M11,10H13V7H16V5H13V2H11V5H8V7H11V10Z" />
+</svg>
             </button>
             <button
               type="button"
               class="menubar__button"
               @click="commands.addRowAfter"
             >
-              <v-icon>mdi-table-row-plus-after</v-icon>
+              <svg style="width:24px;height:24px" viewBox="0 0 24 24">
+    <path fill="currentColor" d="M22,10A2,2 0 0,1 20,12H4A2,2 0 0,1 2,10V3H4V5H8V3H10V5H14V3H16V5H20V3H22V10M4,10H8V7H4V10M10,10H14V7H10V10M20,10V7H16V10H20M11,14H13V17H16V19H13V22H11V19H8V17H11V14Z" />
+</svg>
             </button>
             <button
               type="button"
               class="menubar__button"
               @click="commands.deleteRow"
             >
-              <v-icon>mdi-table-row-remove</v-icon>
+              <svg style="width:24px;height:24px" viewBox="0 0 24 24">
+    <path fill="currentColor" d="M9.41,13L12,15.59L14.59,13L16,14.41L13.41,17L16,19.59L14.59,21L12,18.41L9.41,21L8,19.59L10.59,17L8,14.41L9.41,13M22,9A2,2 0 0,1 20,11H4A2,2 0 0,1 2,9V6A2,2 0 0,1 4,4H20A2,2 0 0,1 22,6V9M4,9H8V6H4V9M10,9H14V6H10V9M16,9H20V6H16V9Z" />
+</svg>
             </button>
             <button
               type="button"
               class="menubar__button"
               @click="commands.toggleCellMerge"
             >
-              <v-icon>mdi-table-merge-cells</v-icon>
+              <svg style="width:24px;height:24px" viewBox="0 0 24 24">
+    <path fill="currentColor" d="M5,10H3V4H11V6H5V10M19,18H13V20H21V14H19V18M5,18V14H3V20H11V18H5M21,4H13V6H19V10H21V4M8,13V15L11,12L8,9V11H3V13H8M16,11V9L13,12L16,15V13H21V11H16Z" />
+</svg>
             </button>
           </span>
         </div>
@@ -340,7 +370,9 @@
             :class="{ 'is-active': isActive.bold() }"
             @click="commands.bold"
           >
-            <v-icon>mdi-format-bold</v-icon>
+            <svg style="width:24px;height:24px" viewBox="0 0 24 24">
+              <path fill="currentColor" d="M13.5,15.5H10V12.5H13.5A1.5,1.5 0 0,1 15,14A1.5,1.5 0 0,1 13.5,15.5M10,6.5H13A1.5,1.5 0 0,1 14.5,8A1.5,1.5 0 0,1 13,9.5H10M15.6,10.79C16.57,10.11 17.25,9 17.25,8C17.25,5.74 15.5,4 13.25,4H7V18H14.04C16.14,18 17.75,16.3 17.75,14.21C17.75,12.69 16.89,11.39 15.6,10.79Z" />
+            </svg>
           </button>
 
           <button
@@ -349,7 +381,9 @@
             :class="{ 'is-active': isActive.italic() }"
             @click="commands.italic"
           >
-            <v-icon>mdi-format-italic</v-icon>
+            <svg style="width:24px;height:24px" viewBox="0 0 24 24">
+              <path fill="currentColor" d="M10,4V7H12.21L8.79,15H6V18H14V15H11.79L15.21,7H18V4H10Z" />
+            </svg>
           </button>
 
           <button
@@ -358,7 +392,9 @@
             :class="{ 'is-active': isActive.code() }"
             @click="commands.code"
           >
-            <v-icon>mdi-code-tags</v-icon>
+            <svg style="width:24px;height:24px" viewBox="0 0 24 24">
+              <path fill="currentColor" d="M14.6,16.6L19.2,12L14.6,7.4L16,6L22,12L16,18L14.6,16.6M9.4,16.6L4.8,12L9.4,7.4L8,6L2,12L8,18L9.4,16.6Z" />
+            </svg>
           </button>
         </div>
       </editor-menu-bubble>
