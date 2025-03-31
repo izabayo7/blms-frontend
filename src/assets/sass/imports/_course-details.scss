@@ -1,0 +1,33 @@
+#courseDetails {
+    .chapters {
+        background-color: #F5F5F5;
+    }
+    .course-content {
+        background-color: #fff;
+    }
+    .chapters-list {
+        background: inherit;
+    }
+    button.mt-13.mb-6.hidden-sm-and-down.d-block.v-btn.v-btn--rounded.theme--light.elevation-0.v-size--default {
+        margin-left: 0;
+    }
+    video#video {
+        width: 100%;
+        height: 300px;
+        object-fit: cover;
+    }
+    #video i.v-icon.notranslate.play--button.mdi.mdi-play-circle-outline {
+        left: 50%;
+        transform: translate(-96%, -391%);
+    }
+    .description {
+        color: #828282;
+        font-size: 14px;
+    }
+    .next-chapter {
+        box-shadow: 0 11px 20px rgb(135, 135, 135, .44);
+    }
+    button.hidden-md-and-up.mr-n8.white--text.v-btn.v-btn--bottom.v-btn--contained.v-btn--fixed.v-btn--right.v-btn--rounded.theme--light.v-size--default {
+        z-index: 999;
+    }
+}
