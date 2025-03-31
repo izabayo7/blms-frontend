@@ -243,7 +243,7 @@
                 </div>
               </v-col>
             </v-row>
-            <v-row>
+            <v-row v-if="selected_quiz_submission[isExam?'exam':'quiz'].status === 2 || selected_quiz_submission[isExam?'exam':'quiz'].status === 'RELEASED' || userCategory === 'INSTRUCTOR'">
               <v-col class="col-12 col-md-6 d-flex pb-0">
                 <div class="mr-3 marks-label">Award marks:</div>
                 <div class="d-flex align-center">
@@ -297,6 +297,7 @@
         </v-row>
       </v-col>
       <v-col
+          v-if="selected_quiz_submission[isExam?'exam':'quiz'].status === 2 || selected_quiz_submission[isExam?'exam':'quiz'].status === 'RELEASED' || userCategory === 'INSTRUCTOR'"
           :class="`col-12 col-md-4 mt-16 mb-16 ${
           $vuetify.breakpoint.name == 'lg' ? 'fixed right-0 pl-12' : ''
         }`"
