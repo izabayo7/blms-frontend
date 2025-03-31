@@ -159,6 +159,7 @@
                 <input
                     class="marks-input"
                     v-model="total_marks"
+                    :readonly="userCategory !=='INSTRUCTOR'"
                     type="text"
                 />
                 <span>{{ `/${assignment.total_marks}` }}</span>
@@ -170,7 +171,8 @@
                     class="quiz-action cancel">
               Cancel
             </button>
-            <button v-if="userCategory === 'STUDENT' || $route.params.user_name" class="quiz-action" @click="validate">
+            <button v-if="(userCategory === 'STUDENT' && assignment.status !=='RELEASED') || $route.params.user_name"
+                    class="quiz-action" @click="validate">
               {{ assignment_submission._id ? 'Save' : 'Submit' }}
             </button>
             <button v-if="userCategory === 'STUDENT' && assignment_submission._id && !assignment_submission.marked"

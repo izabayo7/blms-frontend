@@ -89,7 +89,7 @@ export default {
       {text: "Target", value: "target"},
       {text: "Due date", value: "dueDate"},
       {text: "Marks", value: "marks"},
-      {text: "Status", value: "status",sortable: true},
+      {text: "Status", value: "status", sortable: true},
       {text: "My grade", value: "grades", sortable: false, align: "center"},
     ],
   }),
@@ -119,12 +119,12 @@ export default {
     handleRowClick(value) {
       this.$router.push(`/assignments/${value._id}`)
     },
-    computeClass(item){
-      if(new Date() > new Date(item.dueDate))
+    computeClass(item) {
+      if (new Date() > new Date(item.dueDate))
         return 'expired'
-      if(!item.submission)
+      if (!item.submission)
         return 'not_done'
-      if(!item.marked)
+      if (!(item.status === 'RELEASED' && item.submission.marked))
         return 'pending'
       else
         return 'marked'
@@ -147,7 +147,8 @@ export default {
   .tooltip svg {
     margin-right: 17px;
   }
-  .tooltip-text{
+
+  .tooltip-text {
     visibility: hidden;
     width: fit-content;
     background: #1c1e23;
@@ -168,35 +169,43 @@ export default {
     line-height: 15px;
     color: #FFFFFF;
   }
+
   .tooltip-text::after {
     border: none;
   }
+
   .tooltip:hover .tooltip-text {
     visibility: visible;
     opacity: 1;
   }
-  .status{
+
+  .status {
     width: 110px;
     height: 36px;
     border-radius: 10px;
     display: flex;
     justify-content: center;
     align-items: center;
-    &.expired{
+
+    &.expired {
       background: #FC6767;
       color: #FFFFFF;
     }
-    &.not_done{
+
+    &.not_done {
       background: #BABABC;
     }
-    &.pending{
+
+    &.pending {
       background: #FFD248;
     }
-    &.marked{
+
+    &.marked {
       background: #3CE970;
     }
   }
-  .assignment_title{
+
+  .assignment_title {
     font-family: Inter;
     font-style: normal;
     font-weight: 500;
@@ -210,8 +219,9 @@ export default {
 
     color: #2D3E70;
   }
-  .target{
-    .title{
+
+  .target {
+    .title {
       font-family: Inter;
       font-style: normal;
       font-weight: bold;
@@ -225,7 +235,8 @@ export default {
 
       color: #2D3E70;
     }
-    .subtitle{
+
+    .subtitle {
       font-family: Inter;
       font-style: normal;
       font-weight: normal;
@@ -241,6 +252,7 @@ export default {
 
     }
   }
+
   table {
     tbody {
       tr {
@@ -314,6 +326,7 @@ export default {
     }
   }
 }
+
 .round {
   .v-card > *:first-child:not(.v-btn):not(.v-chip),
   .v-card > .v-card__progress + *:not(.v-btn):not(.v-chip) {
