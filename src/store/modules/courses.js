@@ -482,7 +482,7 @@ export default {
             return state.selectedCourse
         },
         //get the selected chapter
-        selectedChapter:state => {
+        selectedChapter: state => {
             return state.selectedChapter
         },
         //get all courses
@@ -509,7 +509,6 @@ export default {
         unpublishedCourses: state => {
             return state.courses.data.filter(course => !course.published)
         },
-
         totalComments: state => {
             return state.totalCommentsOnAChapter;
         }

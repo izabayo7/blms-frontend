@@ -25,7 +25,7 @@
             v-for="(item, i) in chapters"
             :key="i"
             :disabled="i > maximumIndex"
-            @click="$emit('change-chapter', {index:i,id:item._id})"
+            @click="$emit('change-chapter', { index: i, id: item._id })"
             :class="activeIndex === i ? 'active--chapter' : ''"
           >
             <v-list-item-content class="vertically--centered">

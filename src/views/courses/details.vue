@@ -44,8 +44,10 @@
       <!-- the course main content -->
       <v-col class="col-12 col-md-9 course-content customScroll pa-3">
         <!--        <chapter-details :activeIndex="activeIndex" />-->
-        <router-view /> </v-col
-      >>
+        <router-view
+          @changeActiveChapter="changeActiveChapter"
+          @changeMaximumIndex="changeMaximumIndex"
+        /> </v-col>
     </v-row>
   </v-container>
 </template>
@@ -93,6 +95,11 @@ export default {
       "getChapterMainContent",
       "finish_chapter",
     ]),
+    changeMaximumIndex(index) {
+      console.log(index);
+      if (index == this.course.chapters.length) this.$router.push("/courses");
+      else this.maximumIndex = index;
+    },
     ...mapActions("quiz_submission", ["findQuizSubmissionByUserAndQuizNames"]),
     async downloadAttachment(url) {
       window.location.href = url;
@@ -133,10 +140,16 @@ export default {
           this.maximumIndex = total_chapters - 1;
         }
       }
+      const index = this.userCategory == "STUDENT" ? this.maximumIndex : 0;
+      console.log(index);
 
-      this.$router.push(`/courses/${this.$route.params.name}/chapter/0/${course.chapters[this.maximumIndex]._id}`);
-      this.$store.commit("courses/set_selected_chapter", course.chapters[0]._id);
-
+      this.$router.push(
+        `/courses/${this.$route.params.name}/chapter/0/${course.chapters[index]._id}`
+      );
+      this.$store.commit(
+        "courses/set_selected_chapter",
+        course.chapters[index]._id
+      );
     });
   },
 };
