@@ -28,16 +28,17 @@ export default {
         set_selected_quiz_submission(state, id) {
             state.selected_quiz_submission = id
         },
-                RESET_STATE(state) {
+        RESET_STATE(state) {
             Object.assign(state, getDefaultState())
         }
     },
     actions: {
         //get quiz_submissions  from backend
-        getQuizSubmissions({ state }, { userCategory, userId }) {
+        getQuizSubmissions({ state }, { userId }) {
             // if submission not loaded fetch them
             if (!state.quiz_submission.loaded) {
-                apis.get(`quiz-submission/${userCategory}/${userId}`).then(d => {
+                apis.get(`quiz_submission/user/${userId}`).then(d => {
+                    d.data = d.data.data
                     state.quiz_submission.data = d.data
                     //announce that data have been loaded
                     state.quiz_submission.loaded = true
@@ -48,7 +49,8 @@ export default {
         //create a quiz_submission
         create_quiz_submission({ state, commit, dispatch }, { submission, attachments }) {
             let submissionObject = {}
-            return apis.create('quiz-submission', submission).then(d => {
+            return apis.create('quiz_submission', submission).then(d => {
+                d.data = d.data.data
                 submissionObject = d.data
                 if (attachments.length > 0) {
                     const formData = new FormData()
@@ -67,7 +69,7 @@ export default {
                             commit('modal/update_progress', parseInt(Math.round((progressEvent.loaded / progressEvent.total) * 100)), { root: true })
                         }
                     }).then((response) => {
-                        submissionObject = response.data
+                        submissionObject = response.data.data
                         dispatch('modal/reset_modal', null, { root: true })
                     })
                 }
@@ -80,7 +82,8 @@ export default {
         //create a quiz_submission
         update_quiz_submission({ state }, { submission }) {
             submission.totalMarks = undefined
-            return apis.update('quiz-submission', state.selected_quiz_submission, submission).then(d => {
+            return apis.update('quiz_submission', state.selected_quiz_submission, submission).then(d => {
+                d.data = d.data.data
                 for (const i in state.quiz_submission.data) {
                     if (state.quiz_submission.data[i]._id == state.selected_quiz_submission) {
                         state.quiz_submission.data[i].answers = d.data.answers
@@ -94,11 +97,11 @@ export default {
 
         },
 
-        //find a quiz_submission by student name and submission name
-        findQuizSubmissionByStudentAndQuizNames({ state, commit }, { studentName, quizName }) {
+        //find a quiz_submission by user name and submission name
+        findQuizSubmissionByUserAndQuizNames({ state, commit }, { userName, quizName }) {
             let submissionFound = false
             if (state.quiz_submission.loaded) {
-                let quiz_submission = state.quiz_submission.data.filter(quiz_submission => `${quiz_submission.student.surName}_${quiz_submission.student.otherNames}` == studentName && quiz_submission.quiz.name == quizName)
+                let quiz_submission = state.quiz_submission.data.filter(quiz_submission => `${quiz_submission.user.sur_name}_${quiz_submission.user.other_names}` == userName && quiz_submission.quiz.name == quizName)
 
                 if (quiz_submission.length > 0) {
                     submissionFound = true
@@ -107,7 +110,11 @@ export default {
                 }
             }
             if (!submissionFound) {
-                return apis.get(`quiz-submission/student/${studentName}/${quizName}`).then(d => {
+                return apis.get(`quiz_submission/user/${userName}/${quizName}`).then(d => {
+                    d.data = d.data.data
+                    if (!d.data)
+                        return d.data
+                        
                     if (state.quiz_submission.loaded) {
                         state.quiz_submission.data.push(d.data)
                     } else {

@@ -1,7 +1,7 @@
 <template>
   <div class="courses-container">
     <!-- view of the student -->
-    <v-container v-if="userCategory == 'Student'" id="courses" fluid>
+    <v-container v-if="userCategory == 'STUDENT'" id="courses" fluid>
       <v-row>
         <v-col cols="12">
           <h2 class="mt-10 course-group-title">Ongoing Courses</h2>
@@ -105,7 +105,7 @@
     </v-container>
     <!-- view of instructor -->
     <v-container
-      v-else-if="userCategory == 'Instructor'"
+      v-else-if="userCategory == 'INSTRUCTOR'"
       class="courses-home"
       fluid
     >
@@ -114,7 +114,7 @@
           <h2>
             Hey Mr{{
               `${$store.state.user.user.gender === "Male" ? "" : "s"} ${
-                $store.state.user.user.surName
+                $store.state.user.user.sur_name
               }`
             }},
           </h2>
@@ -256,7 +256,7 @@ export default {
   computed: {
     // get the userCategory
     userCategory() {
-      return this.$store.state.user.user.category;
+      return this.$store.state.user.user.category.name;
     },
     // get courses published and unpublished
     ...mapGetters("courses", [

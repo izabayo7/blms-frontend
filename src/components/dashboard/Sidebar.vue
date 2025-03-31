@@ -7,7 +7,7 @@
       <ul ref="nav">
         <div class="active-link"></div>
         <li
-          v-if="userCategory === 'Admin'"
+          v-if="userCategory === 'ADMIN'"
           @click="$router.push('/administration')"
           :class="{ active: activeRoute.includes('/administration') }"
         >
@@ -34,7 +34,7 @@
           </div>
         </li>
         <li
-          v-if="userCategory === 'Student' || userCategory === 'Instructor'"
+          v-if="userCategory === 'STUDENT' || userCategory === 'INSTRUCTOR'"
           @click="$router.push('/courses')"
           :class="{ active: activeRoute.includes('/courses') }"
         >
@@ -56,7 +56,7 @@
           <div class="link-name" v-show="state">Courses</div>
         </li>
         <li
-          v-if="userCategory === 'Student' || userCategory === 'Instructor'"
+          v-if="userCategory === 'STUDENT' || userCategory === 'INSTRUCTOR'"
           @click="$router.push('/reports')"
           :class="{ active: activeRoute.includes('/reports') }"
         >
@@ -78,7 +78,7 @@
           <div class="link-name" v-show="state">Reports</div>
         </li>
         <li
-          v-if="userCategory === 'Student' || userCategory === 'Instructor'"
+          v-if="userCategory === 'STUDENT' || userCategory === 'INSTRUCTOR'"
           @click="$router.push('/library')"
           :class="{ active: activeRoute.includes('/library') }"
         >
@@ -121,7 +121,7 @@
           <div class="link-name" v-show="state">Messages</div>
         </li>
         <li
-          v-if="userCategory === 'Instructor' || userCategory === 'Student'"
+          v-if="userCategory === 'INSTRUCTOR' || userCategory === 'STUDENT'"
           @click="$router.push('/quiz')"
           :class="{ active: activeRoute.includes('/quiz') }"
         >
@@ -143,7 +143,7 @@
           <div class="link-name" v-show="state">Quiz</div>
         </li>
         <li
-          v-if="userCategory === 'Student' || userCategory === 'Instructor'"
+          v-if="userCategory === 'STUDENT' || userCategory === 'INSTRUCTOR'"
           @click="$router.push('/settings')"
           :class="{ active: activeRoute.includes('/sinz kbx') }"
         >
@@ -179,7 +179,7 @@ export default {
       return this.$route.path;
     },
     userCategory() {
-      return this.$store.state.user.user.category;
+      return this.$store.state.user.user.category.name;
     },
   },
   methods: {

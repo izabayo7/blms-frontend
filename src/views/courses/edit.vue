@@ -172,13 +172,14 @@ export default {
     handleFileUpload() {
       this.coverPicture = this.$refs.file.files[0];
     },
+
     saveCourseChanges() {
       this.updateCourse({
         course: {
           name: this.course.name,
-          instructor: this.$store.state.user.user._id,
+          user: this.$store.state.user.user._id,
           description: this.course.description,
-          facultyCollegeYear: this.selectedFacultyCollegeYearCode,
+          faculty_college_year: this.selectedFacultyCollegeYearCode,
         },
         coverPicture: this.coverPicture,
       }).then(() => {
@@ -190,12 +191,11 @@ export default {
   },
   created() {
     this.getFacultyCollegeYears(this.$store.state.user.user.college);
-    this.findCourseByName({
-      userCategory: this.$store.state.user.user.category.toLowerCase(),
+    this.findCourseByName({ 
       userId: this.$store.state.user.user._id,
       courseName: this.$route.params.name,
     }).then((course) => {
-      this.selectedFacultyCollegeYearName = `${course.facultyCollegeYear.facultyCollege.faculty.name} ${course.facultyCollegeYear.collegeYear.digit}`;
+      this.selectedFacultyCollegeYearName = `${course.faculty_college_year.faculty_college.faculty.name} ${course.faculty_college_year.college_year.digit}`;
     });
   },
 };

@@ -17,7 +17,7 @@
               {{ `${i + 1}. ${question.details}` }}
             </p>
             <v-btn
-              v-if="question.type === 'file-upload'"
+              v-if="question.type === 'file_upload'"
               rounded
               color="#ffd248"
               class="white--text course-image mt-4 mb-6 d-block"
@@ -31,7 +31,7 @@
               }}</span>
             </v-btn>
             <input
-              v-if="question.type === 'file-upload'"
+              v-if="question.type === 'file_upload'"
               type="file"
               :id="`file${i}`"
               hidden
@@ -40,7 +40,7 @@
 
             <textarea
               v-model="attempt.answers[i].text"
-              v-if="question.type === 'open-ended'"
+              v-if="question.type === 'open_ended'"
               cols="50"
               rows="5"
               placeholder="Type your answer here"
@@ -53,7 +53,7 @@
                   :key="k"
                   @click="handleOptionClick(i, k)"
                   :class="`text-selection ${
-                    checkChoiceStatus(attempt.answers[i].choosedOptions, {
+                    checkChoiceStatus(attempt.answers[i].choosed_options, {
                       text: choice.text,
                     })
                       ? 'selected'
@@ -75,7 +75,7 @@
                     :src="`${choice.src}?format=png&width=200&height=200`"
                     :lazy-src="`${choice.src}?format=png&width=200&height=200`"
                     :gradient="
-                      checkChoiceStatus(attempt.answers[i].choosedOptions, {
+                      checkChoiceStatus(attempt.answers[i].choosed_options, {
                         src: choice.src,
                       })
                         ? 'to top right, rgba(100,115,201,.33), rgba(25,32,72,.7)'
@@ -98,7 +98,7 @@
                     </template>
                     <v-icon
                       v-if="
-                        checkChoiceStatus(attempt.answers[i].choosedOptions, {
+                        checkChoiceStatus(attempt.answers[i].choosed_options, {
                           src: choice.src,
                         })
                       "
@@ -112,7 +112,7 @@
             </div>
           </v-row>
           <v-btn
-            v-if="$store.state.user.user.category == 'Student'"
+            v-if="$store.state.user.user.category.name == 'STUDENT'"
             class="radio-btn d-block mb-4 submitt-attempt"
             @click="saveAttempt"
             rounded
@@ -209,15 +209,15 @@ export default {
         }, 1000);
       }
     },
-    checkChoiceStatus(choosedOptions, choice) {
+    checkChoiceStatus(choosed_options, choice) {
       if (choice.src) {
-        for (const option of choosedOptions) {
+        for (const option of choosed_options) {
           if (option.src === this.removeMediaPath(choice.src)) {
             return true;
           }
         }
       } else if (choice.text) {
-        for (const option of choosedOptions) {
+        for (const option of choosed_options) {
           if (option.text === choice.text) {
             return true;
           }
@@ -257,24 +257,24 @@ export default {
       let deleted = false;
       for (
         let i = 0;
-        i < this.attempt.answers[questionIndex].choosedOptions.length;
+        i < this.attempt.answers[questionIndex].choosed_options.length;
         i++
       ) {
         if (this.selected_quiz.questions[questionIndex].type.includes("text")) {
           if (
-            this.attempt.answers[questionIndex].choosedOptions[i].text ===
+            this.attempt.answers[questionIndex].choosed_options[i].text ===
             value.text
           ) {
-            this.attempt.answers[questionIndex].choosedOptions.splice(i, 1);
+            this.attempt.answers[questionIndex].choosed_options.splice(i, 1);
             deleted = true;
             break;
           }
         } else {
           if (
-            this.attempt.answers[questionIndex].choosedOptions[i].src ===
+            this.attempt.answers[questionIndex].choosed_options[i].src ===
             value.src
           ) {
-            this.attempt.answers[questionIndex].choosedOptions.splice(i, 1);
+            this.attempt.answers[questionIndex].choosed_options.splice(i, 1);
             deleted = true;
             break;
           }
@@ -284,9 +284,9 @@ export default {
         if (
           this.selected_quiz.questions[questionIndex].type.includes("single")
         ) {
-          this.attempt.answers[questionIndex].choosedOptions = [value];
+          this.attempt.answers[questionIndex].choosed_options = [value];
         } else {
-          this.attempt.answers[questionIndex].choosedOptions.push(value);
+          this.attempt.answers[questionIndex].choosed_options.push(value);
         }
       }
     },
@@ -308,16 +308,15 @@ export default {
       });
     }
     this.findQuizByName({
-      userCategory: this.$store.state.user.user.category.toLowerCase(),
       userId: this.$store.state.user.user._id,
       quizName: this.$route.params.name,
     }).then((quiz) => {
       this.remaining_time = quiz.duration;
       this.attempt = {
         quiz: quiz._id,
-        student: this.$store.state.user.user._id,
-        autoSubmitted: false,
-        usedTime: 0,
+        user: this.$store.state.user.user._id,
+        auto_submitted: false,
+        used_time: 0,
         answers: [],
       };
       for (const question of quiz.questions) {
@@ -327,7 +326,7 @@ export default {
           this.attempt.answers.push({ src: "" });
           this.filesToUpload.push({ file: "" });
         } else {
-          this.attempt.answers.push({ choosedOptions: [] });
+          this.attempt.answers.push({ choosed_options: [] });
         }
       }
     });

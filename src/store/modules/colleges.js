@@ -25,6 +25,7 @@ export default {
             // if colleges not loaded fetch them
             if (!state.colleges.loaded) {
                 apis.get(`college`).then(d => {
+                    d.data = d.data.data
                     state.colleges.data = d.data
                     //announce that data have been loaded
                     state.colleges.loaded = true
@@ -36,6 +37,7 @@ export default {
             // if colleges not loaded fetch them
             if (!state.colleges.loaded) {
                 apis.get(`college/${collegeId}`).then(d => {
+                    d.data = d.data.data
                     state.colleges.data = [d.data]
                     commit('set_selected_college', d.data._id)
                     //announce that data have been loaded
@@ -57,6 +59,7 @@ export default {
             }
             if (!collegeFound) {
                 return apis.get(`college/name/${collegeName}`).then(d => {
+                    d.data = d.data.data
                     if (state.colleges.loaded) {
                         state.colleges.data.push(d.data)
                     } else {
@@ -71,7 +74,7 @@ export default {
         //create a college
         createCollege({ state }, { college }) {
             return apis.create('college', college).then(d => {
-                state.colleges.data.push(d)
+                state.colleges.data.push(d.data.data)
                 router.push('/administration')
             })
         },
@@ -86,6 +89,8 @@ export default {
             }
 
             return apis.update('college', state.selected_college, college).then(d => {
+                
+                d.data = d.data.data
 
                 state.colleges.data[collegeIndex].name = d.data.name
                 state.colleges.data[collegeIndex].email = d.data.email
@@ -105,7 +110,7 @@ export default {
                             dispatch('modal/set_progress', parseInt(Math.round((progressEvent.loaded / progressEvent.total) * 100)), { root: true })
                         }
                     }).then(collegeData => {
-                        state.colleges.data[collegeIndex].logo = collegeData.data.logo
+                        state.colleges.data[collegeIndex].logo = collegeData.data.data.logo
                     })
                 }
             })

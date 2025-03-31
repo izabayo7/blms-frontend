@@ -8,9 +8,9 @@
       <v-row class="card-content">
         <v-col cols="5" class="course-image-side">
           <v-img
-            v-if="course.coverPicture"
-            :src="`${course.coverPicture}?format=png&width=200&height=200`"
-            :lazy-src="`${course.coverPicture}?format=png&width=200&height=200`"
+            v-if="course.cover_picture"
+            :src="`${course.cover_picture}?format=png&width=200&height=200`"
+            :lazy-src="`${course.cover_picture}?format=png&width=200&height=200`"
             class="course-image"
           >
             <template v-slot:placeholder>
@@ -31,7 +31,7 @@
         </v-col>
         <v-col class="col-7 coure-details-side pt-6">
           <p class="course-title">{{ course.name | trimString(30) }}</p>
-          <p class="course-instructor">{{ course.instructor.surName }}</p>
+          <p class="course-instructor">{{ course.user.sur_name }}</p>
           <p class="course-description">
             {{ course.description | trimString(50) }}
           </p>
@@ -59,9 +59,9 @@
       <v-row>
         <v-col class="col-12 pa-0" id="cover-pic">
           <v-img
-            v-if="course.coverPicture"
-            :src="`${course.coverPicture}?format=png&width=300&height=300`"
-            :lazy-src="`${course.coverPicture}?format=png&width=300&height=300`"
+            v-if="course.cover_picture"
+            :src="`${course.cover_picture}?format=png&width=300&height=300`"
+            :lazy-src="`${course.cover_picture}?format=png&width=300&height=300`"
             class="course-image"
           >
             <template v-slot:placeholder>
@@ -93,20 +93,20 @@
             <v-avatar
               size="30"
               :class="`${
-                course.instructor.profile ? '' : 'bg-color-one'
+                course.user.profile ? '' : 'bg-color-one'
               } user-profile mr-2 course-image`"
             >
-              <img
-                v-if="course.instructor.profile"
-                :src="course.instructor.profile"
+              <v-img
+                v-if="course.user.profile"
+                :src="course.user.profile"
                 alt="avatar"
               />
               <span class="white--text" v-else>{{
-                `${course.instructor.surName} ${course.instructor.otherNames}`
+                `${course.user.surName} ${course.user.otherNames}`
                   | computeText
               }}</span>
             </v-avatar>
-            Instructor {{ course.instructor.surName }}
+            Instructor {{ course.user.surName }}
           </h4>
           <div class="mt-4">
             <div class="svg">
@@ -250,7 +250,7 @@ export default {
   .course-image {
     height: 160.6px;
     margin: -12px 0 0 0px;
-    border-radius: 0;
+    // border-radius: 0;
   }
 
   .completed-results {

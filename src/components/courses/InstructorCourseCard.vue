@@ -59,8 +59,8 @@
           </v-menu>
           <v-img
             v-if="course.coverPicture"
-            :src="course.coverPicture + '?height=200&width=200'"
-            :lazy-src="course.coverPicture + '?height=200&width=200'"
+            :src="course.coverPicture + '?height=300&width=300'"
+            :lazy-src="course.coverPicture + '?height=300&width=300'"
             class="course-image hidden-md-and-down"
           >
             <template v-slot:placeholder>

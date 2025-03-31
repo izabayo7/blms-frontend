@@ -2,8 +2,8 @@
   <div class="profile">
     <p class="name d-none d-md-flex">
       <span
-        >{{ $store.state.user.user.surName }}
-        {{ $store.state.user.user.otherNames }}</span
+        >{{ $store.state.user.user.sur_name }}
+        {{ $store.state.user.user.other_names }}</span
       >
       <v-icon>mdi-chevron-down</v-icon>
     </p>
@@ -15,7 +15,7 @@
     />
     <v-avatar @click="logout" v-else size="50" class="avatar">
       {{
-        `${$store.state.user.user.surName} ${$store.state.user.user.otherNames}`
+        `${$store.state.user.user.sur_name} ${$store.state.user.user.other_names}`
           | computeText
       }}
     </v-avatar>
@@ -29,7 +29,7 @@ export default {
       this.$session.destroy();
       
       // reset the modules
-      this.$store.commit("user/unsetUser");
+      this.$store.dispatch("user/unsetUser");
       this.$store.commit("users/RESET_STATE");
       this.$store.commit("sidebar_navbar/RESET_STATE");
       this.$store.commit("quiz/RESET_STATE");
@@ -59,6 +59,7 @@ export default {
 
   img {
     width: 50px;
+    border-radius: 50%;
     cursor: pointer;
   }
   .avatar {

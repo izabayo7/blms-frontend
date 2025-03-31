@@ -21,7 +21,7 @@
           :currentIndex="activeIndex"
           :maximumIndex="maximumIndex"
           :progress="
-            userCategory === 'Instructor' ? 0 : course.progress.progress
+            userCategory === 'INSTRUCTOR' ? 0 : course.progress.progress
           "
         />
       </v-col>
@@ -37,7 +37,7 @@
           :currentIndex="activeIndex"
           :maximumIndex="maximumIndex"
           :progress="
-            userCategory === 'Instructor' ? 0 : course.progress.progress
+            userCategory === 'INSTRUCTOR' ? 0 : course.progress.progress
           "
         />
       </kurious-page-actions>
@@ -46,12 +46,12 @@
         <v-row>
           <v-col class="col-12 title d-block pt-0">{{ course.name }}</v-col>
           <v-col
-            v-if="course.chapters[activeIndex].mainVideo"
+            v-if="course.chapters[activeIndex].uploaded_video"
             class="col-8 pt-0"
             id="video"
           >
             <vue-plyr>
-              <video :src="course.chapters[activeIndex].mainVideo"></video>
+              <video :src="course.chapters[activeIndex].uploaded_video"></video>
             </vue-plyr>
           </v-col>
         </v-row>
@@ -84,7 +84,7 @@
                         class="vertically--centered"
                       />
                       <kurious-editor
-                        v-if="editorContent !== ''"
+                        v-if="editorContent !== '' && editorContent"
                         :defaultContent="editorContent"
                       />
                     </v-col>
@@ -95,6 +95,7 @@
                       <v-btn
                         v-if="
                           course.chapters[activeIndex].quiz.length > 0 &&
+                          userCategory === 'STUDENT' &&
                           !selected_quiz_submission
                         "
                         :color="primary"
@@ -105,7 +106,7 @@
                       >
                       <v-btn
                         v-else-if="
-                          userCategory === 'Student' &&
+                          userCategory === 'STUDENT' &&
                           course.progress.progress < 100
                         "
                         :color="primary"
@@ -158,7 +159,7 @@
                   <v-row v-else-if="n === 3">
                     <div
                       v-if="course.chapters[activeIndex].attachments.length > 0"
-                      class="attachments"
+                      class="attachments col col-12"
                     >
                       <div
                         v-for="(attachment, key) in course.chapters[activeIndex]
@@ -171,13 +172,17 @@
                         >
                           <v-icon color="#000000" x-large
                             >mdi-file{{
-                              findIcon(attachment.name)
+                              findIcon(attachment.src)
                             }}-outline</v-icon
                           >
                           <span class="filename text-truncate">{{
-                            attachment.name
+                            attachment.src
                           }}</span>
-                          <button @click="downloadAttachment(attachment._id)">
+                          <button
+                            @click="
+                              downloadAttachment(attachment.download_link)
+                            "
+                          >
                             <svg
                               class="attachment-download"
                               xmlns="http://www.w3.org/2000/svg"
@@ -237,10 +242,9 @@
                         </div>
                       </div>
                     </div>
-                    <span v-else
-                      >Chapter {{ course.chapters[activeIndex].name }} have no
-                      attachments</span
-                    >
+                    <div v-else class="col col-12 text-center">
+                      <span>There are have no attachments</span>
+                    </div>
                   </v-row>
                 </v-container>
               </v-tab-item>
@@ -273,29 +277,31 @@ export default {
     ...mapGetters("courses", ["course"]),
     ...mapGetters("quiz_submission", ["selected_quiz_submission"]),
     userCategory() {
-      return this.$store.state.user.user.category;
+      return this.$store.state.user.user.category.name;
     },
   },
   watch: {
     maximumIndex() {
-      if (this.userCategory === "Student") {
+      if (this.userCategory === "STUDENT") {
         this.activeIndex = this.maximumIndex;
       }
     },
     activeIndex() {
-      this.$store.commit('quiz_submission/set_selected_quiz_submission', undefined)
+      this.$store.commit(
+        "quiz_submission/set_selected_quiz_submission",
+        undefined
+      );
       this.editorContent = "";
-      console.log(this.activeIndex);
       this.getChapterMainContent(
         this.course.chapters[this.activeIndex]._id
       ).then((data) => {
         this.editorContent = data;
       });
       if (this.course.chapters[this.activeIndex].quiz.length > 0) {
-        this.findQuizSubmissionByStudentAndQuizNames({
-          studentName: `${this.$store.state.user.user.surName}_${this.$store.state.user.user.otherNames}`,
+        this.findQuizSubmissionByUserAndQuizNames({
+          user_name: this.$store.state.user.user.user_name,
           quizName: this.course.chapters[this.activeIndex].quiz[0].name,
-        })
+        });
       }
     },
   },
@@ -305,11 +311,8 @@ export default {
       "getChapterMainContent",
       "finish_chapter",
     ]),
-    ...mapActions("quiz_submission", [
-      "findQuizSubmissionByStudentAndQuizNames",
-    ]),
-    async downloadAttachment(id) {
-      const url = `${process.env.VUE_APP_api_service_url}/kurious/file/downloadAttachment/${id}`;
+    ...mapActions("quiz_submission", ["findQuizSubmissionByUserAndQuizNames"]),
+    async downloadAttachment(url) {
       window.location.href = url;
     },
     findIcon(name) {
@@ -336,7 +339,7 @@ export default {
       userId: this.$store.state.user.user._id,
       courseName: this.$route.params.name,
     }).then((course) => {
-      if (this.userCategory === "Instructor") {
+      if (this.userCategory === "INSTRUCTOR") {
         this.maximumIndex = this.course.chapters.length - 1;
         this.activeIndex = 0;
       } else {

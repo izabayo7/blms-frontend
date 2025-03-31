@@ -34,10 +34,11 @@ export default {
     },
     actions: {
         //get quiz from backend
-        getQuizes({ state }, { userCategory, userId }) {
+        getQuizes({ state }, { userId }) {
             // when quiz is not loaded fetch quizes
             if (!state.quiz.loaded) {
-                apis.get(`quiz/${userCategory}/${userId}`).then(d => {
+                apis.get(`quiz/user/${userId}`).then(d => {
+                    d.data = d.data.data
                     state.quiz.data = d.data
                     //announce that data have been loaded
                     state.quiz.loaded = true
@@ -48,6 +49,7 @@ export default {
         create_quiz({ state, dispatch }, { quiz, pictures }) {
 
             return apis.create('quiz', quiz).then(d => {
+                d.data = d.data.data
                 if (pictures.length > 0) {
                     let index = 0
                     let pictureFound = false
@@ -85,6 +87,7 @@ export default {
         //update a quiz
         update_quiz({ state, dispatch }, { quiz, pictures }) {
             return apis.update('quiz', state.selected_quiz, quiz).then(d => {
+                d.data = d.data.data
                 let quizIndex
                 for (const i in state.quiz.data) {
                     if (state.quiz.data[i]._id === state.selected_quiz) {
@@ -116,7 +119,7 @@ export default {
                                 dispatch('modal/set_progress', parseInt(Math.round((progressEvent.loaded / progressEvent.total) * 100)), { root: true })
                             }
                         }).then((response) => {
-                            state.quiz.data[quizIndex] = response.data
+                            state.quiz.data[quizIndex] = response.data.data
                         })
                     } else {
                         state.quiz.data[quizIndex] = d.data
@@ -127,7 +130,7 @@ export default {
         },
 
         //find a quiz by name
-        findQuizByName({ state, commit }, { userCategory, userId, quizName }) {
+        findQuizByName({ state, commit }, { userId, quizName }) {
             let quizFound = false
             if (state.quiz.loaded) {
                 let quiz = state.quiz.data.filter(quiz => quiz.name == quizName)
@@ -138,7 +141,8 @@ export default {
                 }
             }
             if (!quizFound) {
-                return apis.get(`quiz/${userCategory}/${userId}/${quizName}`).then(d => {
+                return apis.get(`quiz/user/${userId}/${quizName}`).then(d => {
+                    d.data = d.data.data
                     if (state.quiz.loaded) {
                         state.quiz.data.push(d.data)
                     } else {

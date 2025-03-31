@@ -78,7 +78,7 @@ export default {
         };
         // call the login api
         let response = await Apis.login(credentials);
-        console.log(response);
+
         if (response.data.status == 200) {
           // set the token in axios headers
           axios.defaults.headers.common.Authorization = `${response.data.data.data}`;

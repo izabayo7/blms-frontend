@@ -112,7 +112,7 @@ const routes = [
                         component: () =>
                             import('@/views/quiz/attempt')
                     }, {
-                        path: '/quiz/:quiz_name/:student_name',
+                        path: '/quiz/:quiz_name/:user_name',
                         name: 'MarkQuiz',
                         component: () =>
                             import('@/views/quiz/mark')

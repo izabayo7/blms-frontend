@@ -137,9 +137,9 @@ export default {
       this.createCourse({
         course: {
           name: this.course.name,
-          instructor: this.$store.state.user.user._id,
+          user: this.$store.state.user.user._id,
           description: this.course.description,
-          facultyCollegeYear: this.selectedFacultyCollegeYearCode,
+          faculty_college_year: this.selectedFacultyCollegeYearCode,
         },
         coverPicture: this.coverPicture,
       }).then(() => {

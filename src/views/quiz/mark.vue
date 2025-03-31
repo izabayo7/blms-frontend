@@ -6,7 +6,7 @@
   >
   <back class="mt-0 mb-6 ml-n6" to="/reports" />
     <v-row>
-      <v-col class="col-12" v-if="userCategory === 'Instructor'">
+      <v-col class="col-12" v-if="userCategory === 'INSTRUCTOR'">
         <v-row class="pa-0">
           <v-col class="col-5 mx-auto d-flex">
             <button
@@ -39,7 +39,7 @@
           <p class="white--text">
             {{
               `${attempt.marked ? attempt.totalMarks + "/" : ""}${
-                selected_quiz_submission.quiz.totalMarks
+                selected_quiz_submission.quiz.total_marks
               }`
             }}
           </p>
@@ -92,7 +92,7 @@
                   v-for="(choice, k) in question.options.choices"
                   :key="k"
                   :class="`text-selection ${
-                    checkChoiceStatus(attempt.answers[i].choosedOptions, {
+                    checkChoiceStatus(attempt.answers[i].choosed_options, {
                       text: choice.text,
                     })
                       ? 'selected'
@@ -114,7 +114,7 @@
                     :src="`${choice.src}?format=png&width=200&height=200`"
                     :lazy-src="`${choice.src}?format=png&width=200&height=200`"
                     :gradient="
-                      checkChoiceStatus(attempt.answers[i].choosedOptions, {
+                      checkChoiceStatus(attempt.answers[i].choosed_options, {
                         src: choice.src,
                       })
                         ? 'to top right, rgba(100,115,201,.33), rgba(25,32,72,.7)'
@@ -136,7 +136,7 @@
                     </template>
                     <v-icon
                       v-if="
-                        checkChoiceStatus(attempt.answers[i].choosedOptions, {
+                        checkChoiceStatus(attempt.answers[i].choosed_options, {
                           src: choice.src,
                         })
                       "
@@ -152,7 +152,7 @@
           <v-col
             class="col-2"
             v-if="
-              selected_quiz_submission.marked || userCategory === 'Instructor'
+              selected_quiz_submission.marked || userCategory === 'INSTRUCTOR'
             "
           >
             <div
@@ -249,7 +249,7 @@
           </v-col>
         </v-row>
         <v-btn
-          v-if="userCategory === 'Instructor'"
+          v-if="userCategory === 'INSTRUCTOR'"
           class="radio-btn d-block mb-4 submitt-attempt"
           @click="updateSubmission"
           rounded
@@ -302,7 +302,7 @@ export default {
   computed: {
     ...mapGetters("quiz_submission", ["selected_quiz_submission"]),
     userCategory() {
-      return this.$store.state.user.user.category;
+      return this.$store.state.user.user.category.name;
     },
   },
   watch: {
@@ -318,17 +318,17 @@ export default {
   methods: {
     ...mapActions("quiz_submission", [
       "update_quiz_submission",
-      "findQuizSubmissionByStudentAndQuizNames",
+      "findQuizSubmissionByUserAndQuizNames",
     ]),
-    checkChoiceStatus(choosedOptions, choice) {
+    checkChoiceStatus(choosed_options, choice) {
       if (choice.src) {
-        for (const option of choosedOptions) {
+        for (const option of choosed_options) {
           if (option.src === this.removeMediaPath(choice.src)) {
             return true;
           }
         }
       } else if (choice.text) {
-        for (const option of choosedOptions) {
+        for (const option of choosed_options) {
           if (option.text === choice.text) {
             return true;
           }
@@ -358,7 +358,7 @@ export default {
               )
             ) {
               if (
-                this.selected_quiz_submission.answers[i].choosedOptions[0]
+                this.selected_quiz_submission.answers[i].choosed_options[0]
                   .src ==
                 rightChoices[0].src.split("/")[
                   rightChoices[0].src.split("/").length - 1
@@ -370,7 +370,7 @@ export default {
               }
             } else {
               if (
-                this.selected_quiz_submission.answers[i].choosedOptions[0]
+                this.selected_quiz_submission.answers[i].choosed_options[0]
                   .text == rightChoices[0].text
               ) {
                 this.selected_quiz_submission.answers[
@@ -380,7 +380,7 @@ export default {
             }
           } else {
             for (const k in this.selected_quiz_submission.answers[i]
-              .choosedOptions) {
+              .choosed_options) {
               if (
                 this.selected_quiz_submission.quiz.questions[i].type.includes(
                   "file"
@@ -391,7 +391,7 @@ export default {
                     choice.src.split("/")[
                       rightChoices[0].src.split("/").length - 1
                     ] ==
-                    this.selected_quiz_submission.answers[i].choosedOptions[k]
+                    this.selected_quiz_submission.answers[i].choosed_options[k]
                       .src
                 );
 
@@ -404,7 +404,7 @@ export default {
                 let checkStatus = rightChoices.filter(
                   (choice) =>
                     choice.text ==
-                    this.selected_quiz_submission.answers[i].choosedOptions[k]
+                    this.selected_quiz_submission.answers[i].choosed_options[k]
                       .text
                 );
                 if (checkStatus.length > 0) {
@@ -433,13 +433,13 @@ export default {
     },
   },
   created() {
-    this.findQuizSubmissionByStudentAndQuizNames({
-      studentName: this.$route.params.student_name,
+    this.findQuizSubmissionByUserAndQuizNames({
+      userName: this.$route.params.user_name,
       quizName: this.$route.params.quiz_name,
     }).then(async () => {
       this.attempt = {
         quiz: this.selected_quiz_submission.quiz._id,
-        student: this.selected_quiz_submission.student._id,
+        user: this.selected_quiz_submission.user._id,
         autoSubmitted: this.selected_quiz_submission.autoSubmitted,
         usedTime: this.selected_quiz_submission.usedTime,
         answers: this.selected_quiz_submission.answers,
