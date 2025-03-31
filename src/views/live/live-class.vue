@@ -38,9 +38,12 @@
               <div :class="`controls ${playerHovered ? 'hovered' : ''}`">
                 <button
                   id="toogleScreenShare"
-                  :class="`round top_right ${state ? '' : 'expanded'}`"
+                  :class="`round top_right ${state ? '' : 'expanded'} ${
+                    isScreenShared ? 'muted' : ''
+                  }`"
                 >
                   <svg
+                    v-if="!isScreenShared"
                     xmlns="http://www.w3.org/2000/svg"
                     width="24.056"
                     height="16.038"
@@ -51,6 +54,21 @@
                       data-name="Icon material-screen-share"
                       d="M20.047,20.033a2,2,0,0,0,1.995-2L22.052,8a2,2,0,0,0-2-2H4.009A2,2,0,0,0,2,8V18.028a2,2,0,0,0,2,2H0v2H24.056v-2Zm-7.016-3.538V14.3c-2.787,0-4.621.852-6.014,2.726.561-2.676,2.115-5.343,6.014-5.884V9.007l4.009,3.739Z"
                       transform="translate(0 -6)"
+                      fill="#fff"
+                    />
+                  </svg>
+                  <svg
+                    v-else
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20.318"
+                    height="17.778"
+                    viewBox="0 0 20.318 17.778"
+                  >
+                    <path
+                      id="Icon_material-stop-screen-share"
+                      data-name="Icon material-stop-screen-share"
+                      d="M17.965,16.386l1.693,1.693h.66V16.386Zm.652-1.693.008-8.466a1.693,1.693,0,0,0-1.693-1.693H6.112L10.54,8.961c.152-.034.3-.059.466-.085v-1.8l3.386,3.158-1.338,1.244,4.69,4.69a1.678,1.678,0,0,0,.872-1.473ZM2.023,2.595.94,3.67l1.3,1.3a1.679,1.679,0,0,0-.55,1.253v8.466a1.693,1.693,0,0,0,1.693,1.693H0v1.693H15.349l2.294,2.294L18.718,19.3Zm3.9,11.251a6.54,6.54,0,0,1,1.752-3.437l1.346,1.346A5.271,5.271,0,0,0,5.926,13.846Z"
+                      transform="translate(0 -2.595)"
                       fill="#fff"
                     />
                   </svg>
@@ -233,7 +251,7 @@ export default {
     videoMuted: undefined,
     localVideoStream: undefined,
     screenSharingStream: undefined,
-    isScreenShared: false,
+    isScreenShared: undefined,
     playerHovered: false,
   }),
   computed: {
@@ -538,8 +556,17 @@ export default {
     }
 
     document.querySelector("#toogleScreenShare").onclick = function () {
-      getMixedCameraAndScreen();
-      vm.isScreenShared = true;
+      console.log(vm.screenSharingStream)
+      if (vm.isScreenShared) {
+        vm.screenSharingStream.getTracks().forEach(function (track) {
+          console.log(track)
+          track.stop();
+        });
+        vm.isScreenShared = false;
+      } else {
+        getMixedCameraAndScreen(); // hello ladies vp abajama banjye
+        vm.isScreenShared = true;
+      }
     };
 
     function afterScreenCaptured(screenStream) {
