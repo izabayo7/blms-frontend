@@ -7,7 +7,7 @@
         <v-row>
           <v-col class="col-7 mx-auto">
             <v-avatar
-              v-if="profile ||user.profile"
+              v-if="profile || user.profile"
               width="auto"
               height="245"
               class="mt-4 d-block"
@@ -145,14 +145,14 @@ import colors from "@/assets/sass/imports/_colors.scss";
 import jwt from "jsonwebtoken";
 import Apis from "@/services/apis";
 import { mapGetters, mapActions } from "vuex";
-import {cropperMixin} from "../services/mixins"
+import { cropperMixin } from "../services/mixins";
 
 export default {
   name: "UserProfile",
   components: {
     cropper: () => import("@/components/reusable/ui/ImageCropper"),
   },
-  mixins:[cropperMixin],
+  mixins: [cropperMixin],
   data: () => ({
     tab: null,
     error: "",
@@ -206,10 +206,10 @@ export default {
       } else if (this.user.email.length < 3) {
         return (this.error = "email is too short");
       }
-      if (this.user.phone === "") {
-        return (this.error = "phone is required");
-      } else if (this.user.phone.length < 3) {
-        return (this.error = "phone is too short");
+      if (this.user.phone) {
+        if (this.user.phone.length < 3) {
+          return (this.error = "phone is too short");
+        }
       }
       if (this.user.user_name === "") {
         return (this.error = "user_name is required");
