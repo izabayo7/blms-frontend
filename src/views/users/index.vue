@@ -96,7 +96,7 @@ export default {
     width:90%;
 
     .header{
-      @include users-page-header;
+      @include admin-page-header;
 
     }
 
