@@ -58,7 +58,7 @@ export default {
   },
   mounted() {
 
-    //when new image uploaded makd this cropper visible
+    //when new image uploaded make this cropper visible
     on('new-image-loaded',()=>{
       this.visible = true
     })
