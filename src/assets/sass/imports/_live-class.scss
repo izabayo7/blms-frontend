@@ -440,6 +440,17 @@
             .toogle-comments {
               display: grid;
               place-items: center;
+              .unread{
+                background: #ffffff;
+                border-radius: 50%;
+                width: 20px;
+                height: 20px;
+                font-size: 13px;
+                margin-left: 17px;
+                &.active{
+                  background: #3CE970;
+                }
+              }
             }
 
             .comments-area {
