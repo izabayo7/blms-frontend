@@ -1,32 +1,6 @@
 <template>
   <div class="live-class">
     <div class="live-class--wrapper">
-      <!--    <div id="container">-->
-      <!--      <div id="wrapper">-->
-      <!--        <div id="join" class="animate join">-->
-      <!--          <h1>Join a Room</h1>-->
-      <!--          <form @submit.prevent="register" accept-charset="UTF-8">-->
-      <!--            <p>-->
-      <!--              <input type="text" name="name" value="" id="name"-->
-      <!--                placeholder="Username" required>-->
-      <!--            </p>-->
-      <!--            <p>-->
-      <!--              <input type="text" name="room" value="" id="roomName"-->
-      <!--                placeholder="Room" required>-->
-      <!--            </p>-->
-      <!--            <p class="submit">-->
-      <!--              <input type="submit" name="commit" value="Join!">-->
-      <!--            </p>-->
-      <!--          </form>-->
-      <!--        </div>-->
-      <!--        <div id="room" style="display: none;">-->
-      <!--          <h2 id="room-header"></h2>-->
-      <!--          <div id="participants"></div>-->
-      <!--          <input type="button" id="button-leave" onmouseup="leaveRoom();"-->
-      <!--            value="Leave room">-->
-      <!--        </div>-->
-      <!--      </div>-->
-      <!--    </div>-->
       <div class="live-class--video" :class="`--${$vuetify.breakpoint.name}`">
         <back v-if="!participationInfo.isOfferingCourse" class="mt-6"/>
         <div class="head">
