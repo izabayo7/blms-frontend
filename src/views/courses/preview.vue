@@ -214,7 +214,7 @@
             class="preview-media"
             :src="course.coverPicture"
           />
-          <div v-else class="bg-color-one no-image text-center preview-image" style="height: 100%">
+          <div v-else class="bg-color-one vertically--centered text-center preview-image" style="height: 100%">
             <span class="text-h1 white--text">{{course.name | computeText}}</span>
           </div>
         </div>

@@ -3,6 +3,7 @@ import Vuex from 'vuex'
 import courses from "@/store/modules/courses";
 import faculties from "@/store/modules/faculties";
 import modal from "@/store/modules/modal";
+import quiz from "@/store/modules/quiz";
 
 Vue.use(Vuex)
 export default new Vuex.Store({
@@ -36,6 +37,7 @@ export default new Vuex.Store({
     modules: {
         courses,
         faculties,
-        modal
+        modal,
+        quiz
     }
 })

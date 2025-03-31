@@ -1,5 +1,4 @@
 import apis from "@/services/apis";
-// import router from '@/router'
 export default {
     namespaced: true,
     state: {

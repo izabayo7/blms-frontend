@@ -9,11 +9,17 @@ export default {
             loaded: false
         },
         // the current course's id (the one we are viewing or editing)
-        selectedCourse: ''
+        selectedCourse: '',
+        // the current chapter's id (the one we are viewing or editing)
+        selectedChapter: '',
     },
     mutations: {
         // update the selectedCourse
         set_selected_course(state, id) {
+            state.selectedCourse = id
+        },
+        // update the selectedChapter
+        set_selected_chapter(state, id) {
             state.selectedCourse = id
         },
         // update progress of a student in a course
@@ -67,9 +73,16 @@ export default {
             }
             return state.courses.data.filter(course => course.name == courseName)[0]
         },
-        //get a course by name from backend
+        //update a course
         updateCourse({ state, commit }, { course, coverPicture }) {
-            return apis.update('course', state.selectedCourse, course).then(d => {
+            commit('modal/update_title', "Updating course", { root: true })
+            commit('modal/update_message', "uploading changes", { root: true })
+            commit('modal/toogle_visibility', null, { root: true })
+            return apis.update('course', state.selectedCourse, course, {
+                onUploadProgress: (progressEvent) => {
+                    commit('modal/update_progress', parseInt(Math.round((progressEvent.loaded / progressEvent.total) * 100)), { root: true })
+                }
+            }).then(d => {
                 for (const i in state.courses.data) {
                     if (state.courses.data[i]._id == state.selectedCourse) {
                         state.courses.data[i].name = d.data.name
@@ -79,6 +92,7 @@ export default {
                     }
                 }
                 if (coverPicture) {
+                    commit('modal/update_message', `uploading ${coverPicture.name}`, { root: true })
                     const formData = new FormData()
                     formData.append("file", coverPicture)
                     apis.update('file/updateCourseCoverPicture', state.selectedCourse, formData, {
@@ -90,6 +104,78 @@ export default {
                         }
                     })
                 }
+                setTimeout(() => {
+                    commit('modal/toogle_visibility', null, { root: true })
+                    commit('modal/reset_progress', null, { root: true })
+                    commit('modal/reset_message', null, { root: true })
+                    commit('modal/reset_title', null, { root: true })
+                }, 1000);
+
+            })
+
+        },
+        //update a chapter
+        updateChapter({ state, commit }, { chapter, content, video, attachments }) {
+            commit('modal/update_title', "Updating chapter", { root: true })
+            commit('modal/update_message', "uploading changes", { root: true })
+            commit('modal/toogle_visibility', null, { root: true })
+            return apis.update('chapter', state.selectedChapter, chapter, {
+                onUploadProgress: (progressEvent) => {
+                    commit('modal/update_progress', parseInt(Math.round((progressEvent.loaded / progressEvent.total) * 100)), { root: true })
+                }
+            }).then(d => {
+                for (const i in state.courses.data) {
+                    if (state.courses.data[i]._id == state.selectedCourse) {
+                        state.courses.data[i].name = d.data.name
+                        state.courses.data[i].description = d.data.description
+                        state.courses.data[i].facultyCollegeYear = d.data.facultyCollegeYear
+                        break
+                    }
+                }
+                if (content) {
+                    commit('modal/update_message', `uploading content`, { root: true })
+                    const formData = new FormData()
+                    formData.append("file", video)
+                    apis.update('file/updateChapterContent', state.selectedChapter, { content: content }, {
+                        onUploadProgress: (progressEvent) => {
+                            commit('modal/update_progress', parseInt(Math.round((progressEvent.loaded / progressEvent.total) * 100)), { root: true })
+                        }
+                    })
+                }
+                if (video) {
+                    commit('modal/update_message', `uploading ${video.name}`, { root: true })
+                    const formData = new FormData()
+                    formData.append("file", video)
+                    apis.update('file/updateMainVideo', state.selectedChapter, formData, {
+                        headers: {
+                            'Content-Type': 'multipart/form-data'
+                        },
+                        onUploadProgress: (progressEvent) => {
+                            commit('modal/update_progress', parseInt(Math.round((progressEvent.loaded / progressEvent.total) * 100)), { root: true })
+                        }
+                    })
+                } if (attachments.length > 0) {
+                    commit('modal/update_message', `uploading attachments`, { root: true })
+                    const formData = new FormData()
+                    for (const i in this.attachments) {
+                        formData.append("files[" + i + "]", attachments[i]);
+                    }
+                    apis.update('file/UpdateAttachments', state.selectedChapter, formData, {
+                        headers: {
+                            'Content-Type': 'multipart/form-data'
+                        },
+                        onUploadProgress: (progressEvent) => {
+                            commit('modal/update_progress', parseInt(Math.round((progressEvent.loaded / progressEvent.total) * 100)), { root: true })
+                        }
+                    })
+                }
+                setTimeout(() => {
+                    commit('modal/toogle_visibility', null, { root: true })
+                    commit('modal/reset_progress', null, { root: true })
+                    commit('modal/reset_message', null, { root: true })
+                    commit('modal/reset_title', null, { root: true })
+                }, 1000);
+
             })
 
         },

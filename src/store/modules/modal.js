@@ -10,14 +10,14 @@ export default {
         // the text to display
         message: '',
         // ability to close the modal
-        closable: true,
+        closable: false,
         // request status
         status: 200
     },
     mutations: {
         // show or hide the modal
-        update_visibility(state, value) {
-            state.visible = value
+        toogle_visibility(state) {
+            state.visible = !state.visible
         },
         // update the progress
         update_progress(state, value) {
@@ -30,7 +30,7 @@ export default {
         },
         // update the message
         update_message(state, value) {
-            state.progress = value
+            state.message = value
         },
         // reset the message
         reset_message(state) {
@@ -38,11 +38,11 @@ export default {
         },
         // update the title
         update_title(state, value) {
-            state.progress = value
+            state.title = value
         },
         // reset the title
         reset_title(state) {
-            state.message = ''
+            state.title = ''
         },
         // update the cloasability
         update_closability(state, value) {

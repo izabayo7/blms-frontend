@@ -1,0 +1,128 @@
+        .login-page {
+            height: 620px;
+            overflow-y: hidden;
+        }
+        
+        .headline {
+            font-weight: 900;
+        }
+        
+        .login-form {
+            margin: 4em 90px;
+            h1 {
+                font-size: 40px;
+                font-weight: 200;
+            }
+            h3 {
+                margin: 5px 13px 2em 0;
+                color: #8b8b8b;
+                font-weight: 200;
+                font-size: 25px;
+            }
+            .text-field {
+                width: 75%;
+            }
+            .v-text-field.v-text-field--solo:not(.v-text-field--solo-flat)>.v-input__control>.v-input__slot {
+                box-shadow: 0 9px 18px rgba(123, 123, 123, .16) !important;
+                height: 55px;
+                font-size: 16px;
+            }
+            .v-text-field.v-text-field--solo:not(.v-text-field--solo-flat)>.v-input__control>.v-input__slot:focus-within {
+                border-left: 8px solid #ffc100;
+            }
+            .forgot-pass {
+                text-decoration: none;
+                color: #ffc100;
+                display: block;
+                font-size: 20px;
+                margin-bottom: 1em;
+                // font-weight: bold;
+            }
+            .login-btn {
+                width: 75%;
+                background-color: #ffc100 !important;
+                color: #fff;
+                text-transform: none;
+                margin: 0px !important;
+            }
+            .v-btn--contained {
+                box-shadow: 0 9px 20px rgba(255, 193, 0, .44) !important;
+            }
+            .v-btn:not(.v-btn--round).v-size--default {
+                height: 50px;
+            }
+            .v-btn.v-size--default,
+            .v-btn.v-size--large {
+                font-size: 20px;
+            }
+        }
+        
+        @media (max-width: 1200px) {
+            .login-page .v-image__image--cover {
+                background-size: 100% 100%;
+                /* margin-top: -11em; */
+            }
+        }
+        
+        @media (max-width: 800px) {
+            @media (min-width: 700px) {
+                .login-page {
+                    height: 770px;
+                    overflow: hidden;
+                }
+                .login-page .v-image__image--cover {
+                    background-size: 70% 70%;
+                    margin-top: -10em;
+                }
+                .login-side {
+                    margin-top: 120px;
+                    margin-left: 215px;
+                }
+            }
+            .image-side {
+                height: 40px;
+                h2 {
+                    display: none;
+                }
+            }
+            .login-page .v-image__image--cover {
+                background-size: 182px 163px;
+                margin-top: -11em;
+            }
+            .login-form {
+                margin-top: 120px;
+                h1 {
+                    margin-left: -40px;
+                    width: 290px;
+                    font-size: 31px;
+                    font-weight: 600;
+                }
+                h3 {
+                    margin-left: -40px;
+                    margin-bottom: 2em;
+                    padding: 4px;
+                    width: 200px;
+                    color: #8b8b8b;
+                    font-weight: 400;
+                    font-size: 21px;
+                }
+                .v-text-field.v-text-field--solo:not(.v-text-field--solo-flat)>.v-input__control>.v-input__slot {
+                    box-shadow: 0 9px 18px rgba(123, 123, 123, 0.16) !important;
+                    width: 300px;
+                    height: 45px;
+                    margin-left: -70px;
+                    font-size: 16px;
+                }
+                .v-btn:not(.v-btn--round).v-size--default {
+                    height: 45px;
+                }
+                .forgot-pass {
+                    margin: 0 -3em 1em;
+                    width: 200px;
+                }
+                .login-btn {
+                    width: 300px;
+                    margin-left: -70px;
+                }
+            }
+        }

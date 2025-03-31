@@ -7,7 +7,7 @@
     <!--  if image not provided -->
     <div
       v-else
-      class="bg-color-one preview-media no-image text-center preview-image"
+      class="bg-color-one preview-media vertically--centered text-center preview-image"
       style="width: 100%"
     >
       <span class="text-h1 white--text">{{name | computeText}}</span>

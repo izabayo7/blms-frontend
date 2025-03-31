@@ -43,7 +43,7 @@
             class="course-image"
             style="height: 217px"
           ></v-img>
-          <div v-else class="bg-color-one no-image text-center pt-12">
+          <div v-else class="bg-color-one vertically--centered text-center pt-12">
             <span class="text-h1 white--text">{{course.name | computeText}}</span>
           </div>
         </v-col>
@@ -90,7 +90,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.bg-color-one.no-image.text-center {
+.bg-color-one.vertically--centered.text-center {
   height: 208px;
 }
 .course.completed {
