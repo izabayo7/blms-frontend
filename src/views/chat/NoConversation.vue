@@ -12,7 +12,14 @@
               Start conversation
             </button>
           </div>
-          <div><button class="group">Create new group</button></div>
+          <div>
+            <button
+              @click="toggleGroup"
+              class="group"
+            >
+              Create new group
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -20,8 +27,14 @@
 </template>
 
 <script>
+import { mapMutations } from "vuex";
 export default {
   name: "NoConversation",
+  methods: {
+    ...mapMutations("sidebar_navbar", {
+      toggleGroup: "TOGGLE_GROUP_MODEL_VISIBILITY",
+    }),
+  },
 };
 </script>
 

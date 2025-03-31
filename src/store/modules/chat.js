@@ -240,7 +240,6 @@ export default {
 
             // Get messages
             getters.socket.on('res/message/conversation', ({ conversation }) => {
-                console.log(conversation)
                 //check if returned conversation object has data
                 if (conversation.length > 0) {
                     commit('STORE_LOADED_MESSAGES', { username: id, conversation: conversation })

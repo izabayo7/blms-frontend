@@ -55,7 +55,7 @@ export default {
     }
   },
   methods:{
-    ...mapActions('users',['searchUser']),
+    ...mapActions('users',['searchNewGroupMembers']),
     closed(i) {
       this.group.members.splice(i, 1)
     },
