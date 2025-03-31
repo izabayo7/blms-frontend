@@ -14,7 +14,7 @@
             class="normal--text"
             to="/"
             >{{
-              returnCourseName(item.target)
+              item.tager.course.name
             }}</router-link
           >
         </template>
@@ -25,6 +25,14 @@
             >{{
               returnChapterName(item.target)
             }}</router-link
+          >
+        </template>
+        <template v-slot:item.total_submissions="{ item }">
+          <span
+            class="normal--text"
+            >{{
+              item.submissions.length
+            }}</span
           >
         </template>
         <template v-slot:item.total_submissions="{ item }">
@@ -85,7 +93,7 @@ export default {
           value: "total_marks",
           align: "center",
         },
-        { text: "Status", value: "marked", align: "center" },
+        { text: "Marking status", value: "marking_status", align: "center" },
         { text: "Grade", value: "grade", align: "center" },
       ];
     },
