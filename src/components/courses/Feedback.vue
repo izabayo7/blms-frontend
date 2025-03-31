@@ -152,6 +152,10 @@ export default {
       });
       console.log(response);
     },
+    async removeFeedback() {
+      const response = await Apis.delete("comment", this.feedbackId);
+      console.log(response);
+    },
   },
   mounted() {
     // this.computeFeedbackClass();
