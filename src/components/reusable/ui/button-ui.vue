@@ -1,5 +1,7 @@
+
+
 <template>
-<div class="my-button">
+<div class="my-button" :class="{rounded:rounded, fill:fill}">
   <div @click="clicked" class="button-container " :class="classList">
     <button :type="type">
       <slot name="content"></slot>
@@ -14,7 +16,9 @@ export default {
   props:{
     type:{default:"button"},
     classList:{default:"px-10 py-3"},
-    size:{type:Number,default:3}
+    size:{type:Number,default:3},
+    rounded:{default:false,type:Boolean},
+    fill:{default:false,type:Boolean}
   },
   methods:{
     clicked(e){
@@ -26,39 +30,45 @@ export default {
 
 <style lang="scss" scoped>
 .my-button{
+
+  &.rounded{
+    .button-container{
+      border-radius: 10rem;
+    }
+  }
+
+  &.fill{
+    .button-container{
+      background-color:$primary;
+      border:none;
+
+      button{
+        color:$main;
+      }
+    }
+  }
+
   .button-container{
+    border:2px solid $primary;
     border-radius:4.5px;
     cursor:pointer;
-    background-color:$primary;
     transition:.3s ease;
+    display:flex;
+    justify-content: center;
+    align-items: center;
 
-
-    &:hover{
-      background-color:lighten($primary,10)
-    }
-
-    &:active{
-      border:3px solid lighten($primary,40)
-    }
-    &:focus{
-      border:3px solid lighten($primary,40)
-    }
 
 
     button{
-      color:$main;
       display:flex;
       align-items:center;
-      font-weight:300 !important;
+      font-weight:400 ;
       font-size: .9rem;
-
+      color:$primary;
       *{
-        font-weight:300 !important;
+        font-weight:400 ;
       }
 
-      svg{
-        transform:scale(.7);
-      }
       span{
         margin:0 .3rem;
         display:flex;

@@ -2,6 +2,13 @@
 <div class="my-faculties bg-one d-flex justify-center">
   <div class="faculties-container  ">
       <div class="tabular-users">
+        <div id="user-profile-card">
+          <user-simple-card >
+            <template #name>Ntwari Clarance</template>
+            <template #type>Instructor</template>
+            <template #image><img src="https://i2.wp.com/worldbusinessfitness.com/wp-content/uploads/2018/01/opulent-profile-square-07.jpg?ssl=1" alt=" profile pic"></template>
+          </user-simple-card>
+        </div>
         <div class="table-wrapper mt-6">
           <div class="table-header">
             <table-header />
@@ -20,7 +27,7 @@
               <template #tableRows>
                 <table-row :selected="allSelected" @select="selectRow($event, user)" :data="user" v-for="user in usersOnFaculties" :key="user._id">
                   <template #cols>
-                    <td class="row--image"><img src="https://i2.wp.com/worldbusinessfitness.com/wp-content/uploads/2018/01/opulent-profile-square-07.jpg?ssl=1" alt=" profile pic"></td>
+                    <td class="row--image" @mouseenter="mouseOnPic($event,user._id)" @mouseleave="mouseOutPic"><img src="https://i2.wp.com/worldbusinessfitness.com/wp-content/uploads/2018/01/opulent-profile-square-07.jpg?ssl=1" alt=" profile pic"></td>
                     <td >{{user.sur_name}}</td>
                     <td>{{user.other_names}}</td>
                     <td>{{user.email}}</td>
@@ -42,11 +49,14 @@ import TableUi from "../../../components/reusable/table/TableUi";
 import {mapGetters} from "vuex";
 import TableHeadRow from "../../../components/reusable/table/TableHeadRow";
 import TableRow from "../../../components/reusable/table/TableRow";
+import UserSimpleCard from "../../../components/reusable/user-simple-card";
+import userSimpleCard from "../../../mixins/user-simple-card.mixin"
 
 export default {
   //TODO using dynamic students from backend
 name: "FacultyUsers",
-  components: {TableRow, TableHeadRow, TableUi, TableHeader,},
+  components: {UserSimpleCard, TableRow, TableHeadRow, TableUi, TableHeader,},
+  mixins:[userSimpleCard],
   data(){
     return{
       students:[],
@@ -56,7 +66,9 @@ name: "FacultyUsers",
         coloredRows:false,
         keysToShow:[" ", "sur_name",  "other_names",  "email",  "gender"]
       },
-      selectedUsers:[]
+      selectedUsers:[],
+      timeout:"",
+      card : document.getElementById("user-profile-card")
     }
   },
   computed:{
@@ -104,6 +116,11 @@ name: "FacultyUsers",
 
     .header{
       @include admin-page-header;
+    }
+
+    #user-profile-card{
+      position:absolute;
+      z-index:1;
     }
 
   }
