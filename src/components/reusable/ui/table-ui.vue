@@ -69,10 +69,13 @@ export default {
   },
   computed:{
     tabHeads(){
+      try{
 
-      const {keysToShow} = this.options;
-      console.log(keysToShow)
-      return keysToShow || Object.keys(this.data[0])
+        const {keysToShow} = this.options;
+        return keysToShow
+      }catch(e){
+        return Object.keys(this.data[0])
+      }
     }
   },
   methods:{
