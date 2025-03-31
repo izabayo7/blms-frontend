@@ -6,7 +6,7 @@
           <v-avatar :size="30" class="a_avatar">
             <img
               v-if="content.sender.profile"
-              :src="`${content.sender.profile}?width=50`"
+              :src="`${content.sender.profile}?width=30`"
               alt="profile picture"
             />
             <div v-else class="text">
