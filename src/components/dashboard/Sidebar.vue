@@ -4,37 +4,34 @@
       <ul ref="nav">
         <div class="active-link"></div>
         <li
-          v-if="userCategory === 'ADMIN'"
           @click="
             closeSidebar();
-            routeTo('/administration');
+            routeTo('/welcome');
           "
-          :class="{ active: activeRoute('administration') }"
+          :class="{ active: activeRoute('welcome') }"
         >
           <div class="link-icon">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="35"
-              height="23"
-              viewBox="0 0 35 23"
-            >
-              <path
-                id="Icon_material-people"
-                data-name="Icon material-people"
-                d="M25.364,17.357a4.833,4.833,0,0,0,4.757-4.929,4.767,4.767,0,1,0-9.53,0A4.846,4.846,0,0,0,25.364,17.357Zm-12.727,0a4.833,4.833,0,0,0,4.757-4.929A4.833,4.833,0,0,0,12.636,7.5a4.846,4.846,0,0,0-4.773,4.929A4.846,4.846,0,0,0,12.636,17.357Zm0,3.286C8.93,20.643,1.5,22.565,1.5,26.393V30.5H23.773V26.393C23.773,22.565,16.343,20.643,12.636,20.643Zm12.727,0c-.461,0-.986.033-1.543.082a6.982,6.982,0,0,1,3.134,5.668V30.5H36.5V26.393C36.5,22.565,29.07,20.643,25.364,20.643Z"
-                transform="translate(-1.5 -7.5)"
-              />
+            <svg width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <g clip-path="url(#clip0)">
+                <path d="M16.5412 7.39418C16.5408 7.39379 16.5404 7.3934 16.54 7.39301L9.60535 0.458618C9.30976 0.162903 8.91677 0 8.49875 0C8.08073 0 7.68774 0.162773 7.39202 0.458488L0.461001 7.38938C0.458666 7.39172 0.456331 7.39418 0.453997 7.39651C-0.152998 8.00701 -0.15196 8.99753 0.45698 9.60647C0.735186 9.8848 1.10263 10.046 1.49549 10.0629C1.51144 10.0644 1.52752 10.0652 1.54373 10.0652H1.82012V15.1685C1.82012 16.1784 2.64177 17 3.65187 17H6.36493C6.63989 17 6.86298 16.777 6.86298 16.502V12.501C6.86298 12.0402 7.23781 11.6653 7.69863 11.6653H9.29887C9.75969 11.6653 10.1345 12.0402 10.1345 12.501V16.502C10.1345 16.777 10.3575 17 10.6326 17H13.3456C14.3557 17 15.1774 16.1784 15.1774 15.1685V10.0652H15.4337C15.8516 10.0652 16.2445 9.90244 16.5404 9.60673C17.15 8.99675 17.1502 8.00455 16.5412 7.39418Z"/>
+              </g>
+              <defs>
+                <clipPath id="clip0">
+                  <rect width="17" height="17" fill="white"/>
+                </clipPath>
+              </defs>
             </svg>
+
           </div>
           <div
             class="link-name animate__animated animate__bounce"
             v-show="state"
           >
-            Administration
+            Home
           </div>
         </li>
         <li
-          v-if="userCategory === 'INSTRUCTOR'"
+          v-if="userCategory === 'ADMIN'"
           @click="
             closeSidebar();
             routeTo('/users');
@@ -95,7 +92,7 @@
           </div>
         </li>
         <li
-          v-if="userCategory === 'INSTRUCTOR'"
+          v-if="userCategory === 'ADMIN'"
           @click="$router.push('/faculties')"
           :class="{ active: activeRoute('faculties') }"
         >
