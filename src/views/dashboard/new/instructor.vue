@@ -9,7 +9,7 @@
         <div class="v-col col-12 col-md-6 pa-0">
           <div class="row">
             <div class="v-col col-12 col-md-6 pa-0">
-              <div class="college_info">
+              <div class="college_info hvr-icon-grow">
                 <div class="d-flex justify-center align-center">
                   <div class="icon">
                     <svg
@@ -25,13 +25,13 @@
                       />
                     </svg>
                   </div>
-                  <div class="number">{{ course_statistics.total_courses }}</div>
+                  <div class="number hvr-icon">{{ course_statistics.total_courses }}</div>
                 </div>
                 <div class="label">Number of courses</div>
               </div>
             </div>
             <div class="v-col col-12 col-md-6 pa-0">
-              <div class="college_info">
+              <div class="college_info hvr-icon-grow">
                 <div class="d-flex justify-center align-center">
                   <div class="icon">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -48,7 +48,7 @@
                     </svg>
 
                   </div>
-                  <div class="number">{{ course_statistics.total_students }}</div>
+                  <div class="number hvr-icon">{{ course_statistics.total_students }}</div>
                 </div>
                 <div class="label">Number of students</div>
               </div>
@@ -59,7 +59,8 @@
               </div>
               <div class="college_info long">
                 <div class="body">
-                  <div v-if="submission_statistics.submissions.length === 0" class="empty d-flex justify-center align-center">
+                  <div v-if="submission_statistics.submissions.length === 0"
+                       class="empty d-flex justify-center align-center">
                     <div>
                       <div class="title">No submission to show</div>
                       <div>Create a course to see more traffic here!</div>
@@ -71,7 +72,8 @@
                       <div class="course-name mx-auto">{{ data.quiz.name | trimString(20) }}</div>
                       <div class="time">{{
                           elapsedDuration(data.createdAt)
-                        }}</div>
+                        }}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -116,6 +118,7 @@
                   total: Math.round(submission_statistics.marking_status),
                   colors: ['#193074','rgba(25, 48, 116, 0.24)']
                 }"
+                  :labels="['Marking Status']"
                   template="INSTRUCTOR"
               />
             </v-col>
@@ -127,6 +130,7 @@
                   total: Math.round(submission_statistics.perfomance),
                   colors: ['#3CE970','rgba(25, 48, 116, 0.24)']
                 }"
+                  :labels="['Marking Status']"
                   template="INSTRUCTOR"
               />
             </v-col>
@@ -148,7 +152,8 @@
                       <div class="course-name mx-auto">{{ data.chapter | trimString(20) }}</div>
                       <div class="time">{{
                           elapsedDuration(data.createdAt)
-                        }}</div>
+                        }}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -188,6 +193,7 @@
                 }"
               :width="80"
               template="INSTRUCTOR"
+              :labels="['Marking Status']"
           />
         </div>
         <div class="col-6">
@@ -198,12 +204,13 @@
                   total: Math.round(submission_statistics.perfomance),
                   colors: ['#3CE970','rgba(25, 48, 116, 0.24)']
                 }"
+              :labels="['Marking Status']"
               template="INSTRUCTOR"
               :width="80"
           />
         </div>
         <div class="col-6">
-          <div class="college_info">
+          <div class="college_info hvr-icon-grow">
             <div class="d-flex justify-center align-center">
               <div class="icon">
                 <svg
@@ -219,13 +226,13 @@
                   />
                 </svg>
               </div>
-              <div class="number">{{ course_statistics.total_courses }}</div>
+              <div class="number hvr-icon">{{ course_statistics.total_courses }}</div>
             </div>
             <div class="label">Number of courses</div>
           </div>
         </div>
         <div class="col-6">
-          <div class="college_info">
+          <div class="college_info hvr-icon-grow">
             <div class="d-flex justify-center align-center">
               <div class="icon">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -242,7 +249,7 @@
                 </svg>
 
               </div>
-              <div class="number">{{ course_statistics.total_students }}</div>
+              <div class="number hvr-icon">{{ course_statistics.total_students }}</div>
             </div>
             <div class="label">Number of students</div>
           </div>
@@ -255,7 +262,8 @@
         <div class="col-12">
           <div class="college_info long">
             <div class="body">
-              <div v-if="submission_statistics.submissions.length === 0" class="empty d-flex justify-center align-center">
+              <div v-if="submission_statistics.submissions.length === 0"
+                   class="empty d-flex justify-center align-center">
                 <div>
                   <div class="title">No submission to show</div>
                   <div>Create a course to see more traffic here!</div>
@@ -269,7 +277,8 @@
                   </div>
                   <div class="time">{{
                       elapsedDuration(data.createdAt)
-                    }}</div>
+                    }}
+                  </div>
                 </div>
               </div>
             </div>
@@ -299,7 +308,8 @@
                     <div class="course-name">{{ data.chapter | trimString(20) }}</div>
                     <div class="time">{{
                         elapsedDuration(data.createdAt)
-                      }}</div>
+                      }}
+                    </div>
                   </div>
                 </div>
               </div>

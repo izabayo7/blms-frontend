@@ -1,7 +1,7 @@
 .dashboard_page {
   background-color: #f3f6ff;
   height: fit-content;
-
+  min-height: calc(100vh - 76px);
   .page_title {
     display: block;
 
@@ -358,7 +358,8 @@
 
       .d-flex {
         border-radius: 5px;
-        padding: 0px 25px;
+        padding: 4px 25px;
+        align-items: center;
 
         &:hover {
           background: rgba(25, 48, 116, 0.15);

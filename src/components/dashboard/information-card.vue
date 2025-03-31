@@ -171,9 +171,6 @@ export default {
         donut: {
           labels: {
             show: true,
-                name: {
-              show: true
-                },
             value: {
               show: true
             },
