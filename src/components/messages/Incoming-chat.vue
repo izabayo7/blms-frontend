@@ -26,7 +26,7 @@
           class="last_message_container"
           v-if="!typing"
         >
-          <div v-if="data.is_group || is_mine">
+          <div v-if="(data.is_group || is_mine) && data.last_message.sender">
             {{ data.last_message.sender.sur_name }} :
           </div>
           <div :class="{ 'pl-1': data.is_group || is_mine }">

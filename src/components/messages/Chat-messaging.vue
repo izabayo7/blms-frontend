@@ -33,7 +33,7 @@
         </div>
         <div>
           <div
-            v-if="!msgGoing(msgs.from) && currentDisplayedUser.is_group"
+            v-if="!msgGoing(msgs.from) && currentDisplayedUser.is_group && !systemMsg(msgs.from)"
             class="sender_name"
           >
             {{ msgs.from }} {{ msgs.messages[0].createdAt | getTimeDifference }}
