@@ -41,7 +41,7 @@
         <div class="video">
           <div class="video--wrapper">
             <div class="video-el"
-                 :class="`--${$vuetify.breakpoint.name} ${sidebarOpen ? 'viewer' : 'viewer'}`"
+                 :class="`--${$vuetify.breakpoint.name} ${sidebarOpen ? '' : 'viewer'}`"
                  @mouseenter="toggleMenu(true)"
                  @mouseleave="toggleMenu(false)">
               <div class="no-video" v-show="noVideo">
@@ -607,7 +607,7 @@ export default {
     this.ws = new WebSocket('wss://' + host + '/kurious_stream' + `?token=${this.$session.get("jwt")}`);
 
     this.ws.addEventListener('open', () => {
-      // self.register();
+      self.register();
     })
 
     this.ws.onerror = function (evt) {
@@ -1357,21 +1357,26 @@ export default {
 
             color: #484848;
           }
-          .inner-icon{
-            svg{
+
+          .inner-icon {
+            svg {
               height: 17.1243133544921875px;
               width: 18.311697959899902px;
             }
+
             padding-left: 0 !important;
             background-color: transparent !important;
           }
-          .reply-comment-container{
-            .right{
+
+          .reply-comment-container {
+            .right {
               margin-top: 6px;
             }
-            .comment .temp-flex{
+
+            .comment .temp-flex {
               display: flex;
-              .comment__time{
+
+              .comment__time {
                 margin-left: 12px;
                 margin-top: 4px;
               }
