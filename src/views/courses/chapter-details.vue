@@ -20,7 +20,7 @@
                         <v-icon class="mx-2">mdi-book-open-variant</v-icon>Chapter
                     </v-tab>
                     <v-tab>
-                        <v-icon class="mx-2">mdi-chat-outline</v-icon>Discussions (20000)
+                        <v-icon class="mx-2">mdi-chat-outline</v-icon>Discussions {{ totalComments}}
                     </v-tab>
                     <v-tab>
                         <v-icon class="mx-2">mdi-file-download-outline</v-icon>Downloads
@@ -231,7 +231,7 @@
             }
         },
         computed:{
-            ...mapGetters("courses", ["course"]),
+            ...mapGetters("courses", ["course","totalComments"]),
             ...mapGetters("quiz_submission", ["selected_quiz_submission"]),
 
             userCategory() {
@@ -259,7 +259,6 @@
             changeActiveChapter({index,id}) {
                 this.activeIndex = index;
                 this.$router.push(`/courses/${this.$route.params.name}/chapter/${index}/${id}`)
-                console.log(index,id)
 
             },
             async downloadAttachment(url) {
@@ -318,17 +317,11 @@
             }
         },
         beforeRouteUpdate(to,from,next) {
-            this.$store.commit('DELETE_TOTAL_COMMENTS_ON_A_CHAPTER') //delete comments number to make sure that next comments doesn't have previously chapter comments number
-            this.immediateFunction()
-            emit('routeUpdate',)
-
-            //set new number of total comments
-            const total = this.$store.getters('courses/totalComments')
-            this.$store.commit('SET_TOTAL_COMMENTS_ON_A_CHAPTER',total)
+            this.$store.commit('courses/DELETE_TOTAL_COMMENTS_ON_A_CHAPTER') //delete comments number to make sure that next comments doesn't have previously chapter comments number
+            emit('routeUpdate',to.params.id)
             next()
         },
         created() {
-
             this.immediateFunction()
         },
         mounted(){
