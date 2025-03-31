@@ -45,7 +45,6 @@
                 cols="50"
                 v-model="faculty.description"
               >
-              At w3schools.com you will learn how to make a website. They offer free tutorials in all web development technologies.
               </textarea>
             </div>
           </div>
@@ -239,6 +238,9 @@ export default {
   methods:{
     select_dean(name){
       console.log(name)
+    },
+    createFaculty() {
+
     }
   }
 };
