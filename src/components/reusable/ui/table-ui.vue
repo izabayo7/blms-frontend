@@ -70,6 +70,11 @@ export default {
     }
   },
   computed:{
+    /**
+     * formatted tab/column names that are inserted in table
+     *
+     * @returns {string[]} array
+     */
     tabHeads(){
       let tabHeadsCols = this.columnNames;
 
@@ -82,6 +87,11 @@ export default {
 
       return tabHeadsCols;
     },
+    /**
+     * pure / not formatted tab/column names
+     *
+     * @returns {string[]} array
+     */
     columnNames(){
       const {keysToShow} = this.options;
       return keysToShow || Object.keys(this.data[0]);
