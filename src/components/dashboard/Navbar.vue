@@ -48,7 +48,7 @@
         </button>
       </div>
       <div class="vertically--centered">
-        <img src="@/components/accountancy-logo 1.png" class="logo" />
+        <img :src="college_logo" class="logo" />
       </div>
     </div>
     <div
@@ -307,6 +307,11 @@ export default {
   .logo {
     max-width: 100%;
     max-height: 50px;
+  }
+  .toogle {
+    svg {
+      fill: $primary;
+    }
   }
 }
 </style>
