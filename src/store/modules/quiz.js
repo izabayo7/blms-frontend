@@ -34,10 +34,10 @@ export default {
     },
     actions: {
         //get quiz from backend
-        getQuizes({ state }, { userId }) {
+        getQuizes({ state }, { user_name }) {
             // when quiz is not loaded fetch quizes
             if (!state.quiz.loaded) {
-                apis.get(`quiz/user/${userId}`).then(d => {
+                apis.get(`quiz/user/${user_name}`).then(d => {
                     d.data = d.data.data
                     state.quiz.data = d.data
                     //announce that data have been loaded

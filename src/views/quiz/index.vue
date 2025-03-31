@@ -48,7 +48,7 @@
                 </v-row>
               </v-col>
               <v-col class="col-12 col-md-2 pa-md-0 px-4 pt-4">
-                <v-btn rounded to="/quiz/new-quiz">
+                <v-btn rounded to="/quiz/new">
                   <v-icon class="pr-2">mdi-plus</v-icon>Add new quiz
                 </v-btn>
               </v-col>
@@ -151,8 +151,7 @@ export default {
   created() {
     // load formated_quiz
     this.getQuizes({
-      userCategory: this.$store.state.user.user.category.name.toLowerCase(),
-      userId: this.$store.state.user.user._id,
+      user_name: this.$store.state.user.user.user_name,
     });
   },
 };
