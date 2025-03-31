@@ -31,7 +31,7 @@
             />
           </svg>
         </div>
-        <div class="remove" v-if="!IamTheOwner && IamAdmin">
+        <div class="remove" v-if="!IamTheOwner" @click="removeMember">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
@@ -60,9 +60,9 @@
       </div>
       <div class="admin">
         <div class="checkbox">
-          <checkbox v-model="member.data.isAdmin" />
+          <checkbox :disabled="IamAdmin" v-model="member.isAdmin" />
         </div>
-        <p>Admin {{member.data.isAdmin}}</p>
+        <p>Admin</p>
       </div>
     </div>
   </div>
@@ -71,11 +71,13 @@
 <script>
 import Checkbox from "@/components/reusable/ui/Checkbox";
 import { mapActions } from "vuex";
+import apis from "@/services/apis";
 export default {
   name: "Group-member",
   components: { Checkbox },
   props: {
     member: { required: true },
+    IamAdmin: { required: true },
   },
   data() {
     return {
@@ -88,12 +90,13 @@ export default {
         this.member.data.user_name === this.$store.state.user.user.user_name
       );
     },
-    IamAdmin() {
-      return this.member.data.isAdmin;
-    },
   },
   methods: {
     ...mapActions("chat", ["start_conversation"]),
+    async removeMember() {
+      await apis.update("chat_group", `${this.$route.params.id}/remove_member/${this.member.data.user_name}`);
+      this.$emit('removeMember', this.member)
+    },
   },
 };
 </script>

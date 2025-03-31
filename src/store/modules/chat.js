@@ -83,7 +83,6 @@ export default {
                         //else append to the current messages
                     } else {
                         //if the last sender is the same as new message sender
-                        console.log(lastMessage.sender, newMessage.sender._id, lastMessage.sender === newMessage.sender._id)
                         if (lastMessage.sender === newMessage.sender._id || lastMessage.sender._id === newMessage.sender._id) {
                             userMessages[userMessages.length - 1].messages.push(newMessage)
                         } else {
@@ -216,7 +215,6 @@ export default {
 
             // Get contacts new style
             getters.socket.on('res/message/contacts', ({ contacts }) => {
-                console.log(contacts)
                 state.incomingMessages = contacts
                 emit('incoming_message_initially_loaded')
             });
@@ -243,11 +241,9 @@ export default {
                 state.request.ongoing = true
                 state.request.id = id
             }
-console.log(id, typeof id)
 
             // Get messages
             getters.socket.on('res/message/conversation', ({ conversation }) => {
-                console.log(conversation)
                 //check if returned conversation object has data
                 if (conversation.length > 0) {
                     commit('STORE_LOADED_MESSAGES', { username: id, conversation: conversation })
@@ -259,13 +255,10 @@ console.log(id, typeof id)
                 state.request.id = null
                 state.request.ongoing = false
                 emit('conversation_loaded')
-                console.log('kbx')
-                // console.log(conversation)
             })
         },
         setUsername({ commit, state }, username) {
             commit('SET_USERNAME', username)
-console.log(username, typeof username)
             return new Promise((res, rej) => {
                 if (state.username === username) {
                     res(state.username)
@@ -313,7 +306,6 @@ console.log(username, typeof username)
 
             //get the user messages from store
             let messages = store.getters['chat/getLoadedMessagesBaseOnId'](state.username)
-            console.log(messages)
             let messagesFound = !!messages
 
             //if user messages are not in store load it from backend

@@ -25,7 +25,7 @@
           </div>
         </div>
         <div class="members-list">
-          <group-member v-for="(member,i) in group.members" :key="i" :member="member" />
+          <group-member v-for="(member,i) in group.members" :key="i" :member="member" :IamAdmin="IamAdmin" @removeMember="removeMember" />
         </div>
         <div class="action-btn">
           <button class="save">Save changes</button>
@@ -52,6 +52,10 @@ export default {
     }
   },
   computed:{
+    IamAdmin(){
+      const me = this.group.members.filter(m=>m.data.user_name == this.$store.state.user.user.user_name)
+      return me[0].isAdmin
+    }
   },
   methods:{
     goToAddMember(){
@@ -60,6 +64,9 @@ export default {
     async getGroupInfo(){
       const group = await a.get(`chat_group/${this.$route.params.id}`)
       this.group = group.data.data
+    },
+    removeMember(member){
+      this.group.members.splice(this.group.members.indexOf(member), 1)
     }
   },
   mounted() {
