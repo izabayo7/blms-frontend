@@ -347,24 +347,32 @@
                   </v-stepper-step>
 
                   <v-stepper-content step="5">
-                    <v-btn
-                      v-if="course.chapters[activeChapter]._id"
-                      class="mr-4 primary-button"
-                      @click="validate('update')"
-                      >update Chapter
-                    </v-btn>
-                    <v-btn
-                      v-else
-                      class="mr-4 primary-button"
-                      @click="validate('create')"
-                      >save Chapter
-                    </v-btn>
-                    <v-btn
-                      text
-                      class="py-6 mt-n3"
-                      @click="$router.push('/courses')"
-                      >Cancel
-                    </v-btn>
+                    <v-row>
+                      <v-btn
+                        v-if="course.chapters[activeChapter]._id"
+                        class="mr-4 primary-button"
+                        @click="validate('update')"
+                        >update Chapter
+                      </v-btn>
+                      <v-btn
+                        v-else
+                        class="mr-4 primary-button"
+                        @click="validate('create')"
+                        >save Chapter
+                      </v-btn>
+                      <v-btn text class="py-6" @click="$router.push('/courses')"
+                        >Cancel
+                      </v-btn>
+                    </v-row>
+                    <v-row>
+                      <span
+                        :class="`m${
+                          $vuetify.breakpoint.name == 'lg' ? 'l' : 'x'
+                        }-auto`"
+                      >
+                        {{ message }}
+                      </span>
+                    </v-row>
                   </v-stepper-content>
                 </v-stepper>
               </v-col>
@@ -396,6 +404,7 @@ export default {
     quizes: [],
     quizNames: [],
     attachments: [],
+    message: "",
     mode: "",
     content: "",
     error: "",
@@ -453,6 +462,13 @@ export default {
       }
       if (this.stepCounter == 4) {
         this.calculateQuizNames();
+      }
+    },
+    message() {
+      if (this.message != "") {
+        setTimeout(() => {
+          this.message = "";
+        }, 2000);
       }
     },
     error() {
@@ -568,7 +584,9 @@ export default {
       }).then(() => {
         this.chapterVideo = undefined;
         this.attachments = [];
-        this.updateActiveChapter();
+        // this.updateActiveChapter();
+        this.content = "";
+        this.message = "chapter was added updated";
       });
     },
     saveChapter() {
@@ -590,7 +608,9 @@ export default {
       }).then(() => {
         this.chapterVideo = undefined;
         this.attachments = [];
-        this.updateActiveChapter();
+        // this.updateActiveChapter();
+        this.content = "";
+        this.message = "chapter was added succesfully";
       });
     },
     findIcon(name) {
