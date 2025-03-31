@@ -101,7 +101,7 @@
       <div class="live-class--attendance--wrapper">
         <h3>ONLINE USERS : 60 </h3>
         <div class="online-users">
-          <online-user v-for="user in users" :user="user" :key="user"/>
+          <online-user v-for="user in users" :user="user" :key="`${(Date.now() * Math.random())}${user.name}`"/>
         </div>
       </div>
       <div class="live-class--actions">
