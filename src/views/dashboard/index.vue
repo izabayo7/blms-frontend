@@ -27,7 +27,7 @@ export default {
   async created() {
     await apis.create('user_logs', {online: true})
     apis.get('account_payments/status').then((res)=>{
-      this.TOOGLE_DISABLE_FUNCTIONALITIES(res.data.data.disabled)
+      this.TOOGLE_DISABLE_FUNCTIONALITIES(res.data.data)
     })
   },
   beforeMount() {

@@ -25,7 +25,7 @@
               fill="#FF4E4E"/>
         </svg>
         <span class="account_type">
-          Trial Account
+          {{ collegePlan ? collegePlan.plan : 'NA' }} Account
         </span>
       </div>
       <div class="col-12 col-md-10">
@@ -34,7 +34,7 @@
             <div class="label">Subscription type</div>
           </div>
           <div class="col-12 col-md-5">
-            <div class="current_value">Trial</div>
+            <div class="current_value">{{ collegePlan ? collegePlan.plan : 'NA' }}</div>
           </div>
           <div class="col-12 col-md-4">
             <div class="action">
@@ -45,13 +45,14 @@
             <div class="label">User limit</div>
           </div>
           <div class="col-12 col-md-9">
-            <div class="current_value">500 users</div>
+            <div class="current_value">{{ `${collegePlan ? collegePlan.college.maximum_users : 'NA'} users` }}</div>
           </div>
           <div class="col-12 col-md-3">
             <div class="label">Expiration date</div>
           </div>
           <div class="col-12 col-md-9">
-            <div class="current_value">Dec, 26 2021</div>
+            <div v-if="paymentStatus === undefined" class="current_value">NA</div>
+            <div class="current_value">{{ paymentStatus.endDate | formatDate }}</div>
           </div>
         </div>
         <div class="row">
@@ -71,9 +72,11 @@
                   <div class="card_number">xxxx-5895</div>
                   <div class="default">Default</div>
                 </div>
-                <div>Expires on 05/25  Added on 24 May 2020</div>
+                <div>Expires on 05/25 Added on 24 May 2020</div>
               </div>
-              <div class="d-flex justify-center align-center col-4"><button>Add card</button></div>
+              <div class="d-flex justify-center align-center col-4">
+                <button>Add card</button>
+              </div>
             </div>
           </div>
           <div class="col-12 col-md-3">
@@ -81,56 +84,17 @@
           </div>
           <div class="col-12 col-md-9">
             <div class="history customScroll">
-              <div class="record">
-                <div class="normal">14,500 $</div>
-                <div class="normal">july 22, 2021</div>
-                <div class="normal bold">visa</div>
-                <div class="normal">Yearly subscription</div>
+              <div v-for="(payment, i) in payments" class="record" :key="i">
+                <div class="normal">{{ payment.amount_paid }} FRW</div>
+                <div class="normal">{{ payment.createdAt | formatDate }}</div>
+                <div class="normal bold">{{ payment.method_used }}</div>
+                <div class="normal">{{ payment.periodType === 'MONTH' ? 'Monthly' : 'Yearly' }} subscription</div>
               </div>
-              <div class="record">
-                <div class="normal">14,500 $</div>
-                <div class="normal">july 22, 2021</div>
-                <div class="normal bold">visa</div>
-                <div class="normal">Yearly subscription</div>
+              <div v-if="!payments.length" class="d-flex justify-center align-center record no-payments">
+                <div class="normal bold">
+                  You have not yet made any payment
+                </div>
               </div>
-              <div class="record">
-                <div class="normal">14,500 $</div>
-                <div class="normal">july 22, 2021</div>
-                <div class="normal bold">visa</div>
-                <div class="normal">Yearly subscription</div>
-              </div>
-              <div class="record">
-                <div class="normal">14,500 $</div>
-                <div class="normal">july 22, 2021</div>
-                <div class="normal bold">visa</div>
-                <div class="normal">Yearly subscription</div>
-              </div>
-              <div class="record">
-                <div class="normal">14,500 $</div>
-                <div class="normal">july 22, 2021</div>
-                <div class="normal bold">visa</div>
-                <div class="normal">Yearly subscription</div>
-              </div>
-              <div class="record">
-                <div class="normal">14,500 $</div>
-                <div class="normal">july 22, 2021</div>
-                <div class="normal bold">visa</div>
-                <div class="normal">Yearly subscription</div>
-              </div>
-              <div class="record">
-                <div class="normal">14,500 $</div>
-                <div class="normal">july 22, 2021</div>
-                <div class="normal bold">visa</div>
-                <div class="normal">Yearly subscription</div>
-              </div>
-              <div class="record">
-                <div class="normal">14,500 $</div>
-                <div class="normal">july 22, 2021</div>
-                <div class="normal bold">visa</div>
-                <div class="normal">Yearly subscription</div>
-              </div>
-
-
             </div>
           </div>
         </div>
@@ -140,16 +104,33 @@
 </template>
 
 <script>
-// import {mapActions, mapGetters, mapState} from "vuex";
-// import Apis from "@/services/apis";
+import {mapGetters} from "vuex";
+import Apis from "@/services/apis";
 // import {elapsedDuration} from "../../../services/global_functions";
 
 export default {
   name: "PaymentsSettings",
-  data: () => ({}),
-  computed: {},
+  data: () => ({
+    collegePlan: undefined,
+    payments: []
+  }),
+  computed: {
+    ...mapGetters('user', ['paymentStatus'])
+  },
   components: {},
-  methods: {},
+  methods: {
+    fetchInfo() {
+      Apis.get('college_payment_plans/current').then((res) => {
+        this.collegePlan = res.data.data
+      })
+      Apis.get('account_payments').then((res) => {
+        this.payments = res.data.data
+      })
+    }
+  },
+  created() {
+    this.fetchInfo()
+  }
 };
 </script>
 
