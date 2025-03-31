@@ -36,7 +36,10 @@
                 @dblclick="enterFullScreen"
               ></div>
               <div :class="`controls ${playerHovered ? 'hovered' : ''}`">
-                <button :class="`round top_right ${state ? '' : 'expanded'}`">
+                <button
+                  id="toogleScreenShare"
+                  :class="`round top_right ${state ? '' : 'expanded'}`"
+                >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="24.056"
@@ -52,7 +55,10 @@
                     />
                   </svg>
                 </button>
-                <button @click="toogleVideo" :class="{ 'muted': !videoMuted && videoMuted !== undefined }">
+                <button
+                  @click="toogleVideo"
+                  :class="{ muted: !videoMuted && videoMuted !== undefined }"
+                >
                   <svg
                     v-if="!videoMuted"
                     xmlns="http://www.w3.org/2000/svg"
@@ -100,7 +106,10 @@
                     </g>
                   </svg>
                 </button>
-                <button @click="toogleSound" :class="{ 'muted': !muted && muted !== undefined }">
+                <button
+                  @click="toogleSound"
+                  :class="{ muted: !muted && muted !== undefined }"
+                >
                   <svg
                     v-if="!muted"
                     xmlns="http://www.w3.org/2000/svg"
@@ -212,6 +221,7 @@ import { mapState, mapMutations } from "vuex";
 import * as io from "socket.io-client";
 window.io = io;
 import * as RTCMultiConnection from "../../assets/js/RTCMultiConnection";
+import * as MultiStreamsMixer from "../../assets/js/MultiStreamsMixer.min.js";
 
 export default {
   name: "LiveClass",
@@ -222,6 +232,8 @@ export default {
     muted: undefined,
     videoMuted: undefined,
     localVideoStream: undefined,
+    screenSharingStream: undefined,
+    isScreenShared: false,
     playerHovered: false,
   }),
   computed: {
@@ -247,9 +259,14 @@ export default {
     // if broadcast is absent, simply create it. i.e. "start-broadcasting" event should be fired.
     toogleVideo() {
       let enabled = this.localVideoStream.getVideoTracks()[0].enabled;
-      console.log(enabled)
+      console.log(enabled);
       this.videoMuted = !enabled;
       this.localVideoStream.getVideoTracks()[0].enabled = this.videoMuted;
+    },
+
+    shareScreen() {
+      this.getMixedCameraAndScreen();
+      this.isScreenShared = true;
     },
 
     open_or_join_room() {
@@ -297,7 +314,7 @@ export default {
   },
   mounted() {
     const vm = this;
-
+    let mixer;
     // ......................................................
     // ..................RTCMultiConnection Code.............
     // ......................................................
@@ -407,65 +424,12 @@ export default {
         // "open" method here will capture media-stream
         // we can skip this function always; it is totally optional here.
         // we can use "connection.getUserMediaHandler" instead
-        console.log("ahoooooooooo");
         vm.connection.open(vm.connection.userid);
       });
     });
 
     let videoPreview = document.getElementById("video-preview");
-    /*
-    let localStream;
 
-    document.querySelector("#btn-get-mixed-stream").onclick = function () {
-      // if (mixerOptions.value === 'camera-screen') {
-      // updateMediaHTML('Capturing screen');
-      // getMixedCameraAndScreen();
-      // }
-    };
-
-    document.querySelector("#btn-get-video-stream").onclick = function () {
-      // connection.addStream('video');
-      localStream = vm.connection.streamEvents.selectFirst({
-        local: true,
-      }).stream;
-      localStream.unmute("video");
-    };
-
-    document.querySelector("#btn-get-audio-stream").onclick = function () {
-      // connection.addStream('audio');
-      localStream = vm.connection.streamEvents.selectFirst({
-        local: true,
-      }).stream;
-      localStream.unmute();
-    };
-
-    // remove screen
-    document.querySelector("#btn-remove-mixed-stream").onclick = function () {
-      // connection.removeStream(mixedStream.id);
-      localStream = vm.connection.streamEvents.selectFirst({
-        local: true,
-      }).stream;
-      localStream.mute("screen");
-    };
-
-    // remove video
-    document.querySelector("#btn-remove-video-stream").onclick = function () {
-      // connection.removeStream('video');
-      localStream = vm.connection.streamEvents.selectFirst({
-        local: true,
-      }).stream;
-      localStream.mute("video");
-    };
-
-    // remove video
-    document.querySelector("#btn-remove-audio-stream").onclick = function () {
-      // connection.removeStream('audio');
-      localStream = vm.connection.streamEvents.selectFirst({
-        local: true,
-      }).stream;
-      localStream.mute("audio");
-    };
-*/
     vm.connection.onstream = function (event) {
       if (vm.connection.isInitiator && event.type !== "local") {
         return;
@@ -546,7 +510,115 @@ export default {
         getFullName(pid);
       });
     };
+    /**
+     * codes for screen sharing
+     */
 
+    function getMixedCameraAndScreen() {
+      if (navigator.getDisplayMedia) {
+        navigator
+          .getDisplayMedia({
+            video: true,
+          })
+          .then((screenStream) => {
+            afterScreenCaptured(screenStream);
+          });
+      } else if (navigator.mediaDevices.getDisplayMedia) {
+        navigator.mediaDevices
+          .getDisplayMedia({
+            video: true,
+            audio: true,
+          })
+          .then((screenStream) => {
+            afterScreenCaptured(screenStream);
+          });
+      } else {
+        alert("getDisplayMedia API is not supported by this browser.");
+      }
+    }
+
+    document.querySelector("#toogleScreenShare").onclick = function () {
+      getMixedCameraAndScreen();
+      vm.isScreenShared = true;
+    };
+
+    function afterScreenCaptured(screenStream) {
+      navigator.mediaDevices
+        .getUserMedia({
+          video: true,
+        })
+        .then(function (cameraStream) {
+          screenStream.fullcanvas = true;
+          screenStream.width = screen.width; // or 3840
+          screenStream.height = screen.height; // or 2160
+
+          cameraStream.width = parseInt((30 / 100) * screenStream.width);
+          cameraStream.height = parseInt((30 / 100) * screenStream.height);
+          cameraStream.top = screenStream.height - cameraStream.height;
+          cameraStream.left = screenStream.width - cameraStream.width;
+
+          mixer = new MultiStreamsMixer([screenStream, cameraStream]);
+
+          mixer.frameInterval = 1;
+          mixer.startDrawingFrames();
+
+          videoPreview.srcObject = mixer.getMixedStream();
+          // videoPreview.id = event.stream.id;
+          videoPreview.play();
+
+          addStreamStopListener(screenStream, function () {
+            mixer.releaseStreams();
+            videoPreview.pause();
+            videoPreview.srcObject = cameraStream;
+            videoPreview.play();
+
+            // cameraStream.getTracks().forEach(function (track) {
+            //     track.stop();
+            // });
+          });
+          vm.screenSharingStream = mixer.getMixedStream();
+          vm.connection.addStream(vm.screenSharingStream);
+        });
+    }
+
+    function addStreamStopListener(stream, callback) {
+      stream.addEventListener(
+        "ended",
+        function () {
+          callback();
+          callback = function () {};
+        },
+        false
+      );
+      stream.addEventListener(
+        "inactive",
+        function () {
+          callback();
+          callback = function () {};
+        },
+        false
+      );
+      stream.getTracks().forEach(function (track) {
+        track.addEventListener(
+          "ended",
+          function () {
+            callback();
+            callback = function () {};
+          },
+          false
+        );
+        track.addEventListener(
+          "inactive",
+          function () {
+            callback();
+            callback = function () {};
+          },
+          false
+        );
+      });
+    }
+
+    /*******************************************************************/
     function getFullName(userid) {
       var _userFullName = userid,
         userProfile;
