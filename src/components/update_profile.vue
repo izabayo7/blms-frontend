@@ -37,7 +37,17 @@
               color="black"
               class="mt-6 px-6 py-5 profile_button"
               outlined
-              @click="removeProfilePicture()"
+              @click="
+                set_modal({
+                  template: 'action_confirmation',
+                  method: {
+                    action: 'user/removeProfilePicture',
+                  },
+                  title: 'Remove profile picture',
+                  message:
+                    'Are you sure you want to remove your profile picture?',
+                })
+              "
               >Remove photo</v-btn
             >
           </v-col>
@@ -137,7 +147,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import axios from "axios";
 import Apis from "@/services/apis";
-import { mapGetters, mapActions } from "vuex";
+import { mapGetters, mapActions, mapState } from "vuex";
 
 export default {
   name: "UserProfile",
@@ -160,15 +170,22 @@ export default {
     profile: undefined,
     confirmNewPassword: "",
   }),
+  watch: {
+    action_confirmation() {
+      console.log(this.action_confirmed);
+    },
+  },
   computed: {
     user() {
       const user = JSON.stringify(this.$store.state.user.user);
       return JSON.parse(user);
     },
     ...mapGetters("courses", ["started_courses"]),
+    ...mapState("user", ["action_confirmed"]),
   },
   methods: {
     ...mapActions("courses", ["getCourses"]),
+    ...mapActions("modal", ["set_modal"]),
     comparePassword() {
       this.passwordMatch = this.newPassword === this.confirmNewPassword;
     },
