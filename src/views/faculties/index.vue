@@ -54,7 +54,7 @@
 
 
       <!--    table of faculties-->
-      <div class="tabular-faculties" v-if="formatedFaculties.length < 0">
+      <div class="tabular-faculties" v-if="formatedFaculties.length > 0">
         <div class="table-wrapper">
 
           <!--          list of faculties in table-->
@@ -95,7 +95,7 @@
             </svg>
           </div>
           <div class="title">No faculty</div>
-          <div class="subtitle">Your school has no faculty for now
+          <div class="subtitle">Your school has no faculty for now <br>
             create one by clicking on
           </div>
           <button @click="showFacultyModal = true" class="action">
