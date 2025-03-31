@@ -101,7 +101,9 @@
                                 src: choice.src,
                               }
                             )
-                              ? 'to top right, rgba(100,115,201,.33), rgba(25,32,72,.7)'
+                              ? choice.right
+                                ? 'to top right, rgba(72,255,90,.52), rgba(72,255,90,.52)'
+                                : 'to top right, rgba(100,115,201,.33), rgba(25,32,72,.7)'
                               : undefined
                           "
                           class="vertically--centered text-center"
