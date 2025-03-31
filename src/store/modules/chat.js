@@ -18,7 +18,8 @@ const getDefaultState = () => ({
     socket: undefined,
     group: {
         error: ""
-    }
+    },
+    replyMsg: undefined
 })
 
 export default {
@@ -35,6 +36,9 @@ export default {
                     ) // toke n of the connected user
                 }
             })
+        },
+        setReplyMsg(state, obj) {
+            state.replyMsg = obj
         },
         //set the current user
         SET_USERNAME(state, username) {
@@ -57,7 +61,7 @@ export default {
 
         UPDATE_CONTACT_LAST_MSG(state, {id, msg}) {
             for (const i in state.incomingMessages) {
-                if (state.incomingMessages[i].id === id) {
+                if (state.incomingMessages[i].id === id ||(msg.group ? state.incomingMessages[i].id === msg.group : false)) {
                     state.incomingMessages[i].last_message.content = msg.content
                     state.incomingMessages[i].last_message.time = msg.createdAt
                     break
@@ -324,24 +328,41 @@ export default {
         start_conversation({state, getters}, user_name) {
 
             // search if conversation exist
-            const contact_found = state.incomingMessages.filter(c => c.id == user_name)
+            const contact_found = state.incomingMessages.filter(c => c.id === user_name)
 
             // if found go to it
-            if (contact_found.length) router.push(`/messages/${user_name}`);
-
+            if (contact_found.length) {
+                if (state.currentDisplayedUser.id !== user_name)
+                    router.push(`/messages/${user_name}`);
+            }
             // else initialise it
             else getters.socket.emit('message/start_conversation', {conversation_id: user_name});
+        },
+        deleteMsg({state}, {msgIndx, convIndx, username}) {
+            let exists = false
+            let i = 0
+            state.loadedMessages.map(loadedMsg => {
+                if (loadedMsg.username === username) {
+                    exists = true
+                } else {
+                    i++
+                }
+            })
+            if (!exists)
+                return
+            state.loadedMessages[i].conversation[convIndx].messages.splice(msgIndx, 1)
         },
         //load user messages
         loadMessages({getters, state, commit}, {id, lastMessage}) {
             // const group = user.is_group
-
             // get messages
             //first check if we have ongoing requested data with the same id as this
             if (state.request.id !== id) {
                 getters.socket.emit('message/conversation', {conversation_id: id, lastMessage});
-                state.request.ongoing = true
-                state.request.id = id
+                if (!lastMessage) {
+                    state.request.ongoing = true
+                    state.request.id = id
+                }
             }
 
             // Get messages
@@ -372,7 +393,6 @@ export default {
             })
 
         },
-
         //to get index of user in incoming/received contacts
         findIndexOfUserInIncomingMessages({state}, id) {
             let index = null;
@@ -389,7 +409,9 @@ export default {
         socket(state) {
             return state.socket
         },
-
+        replyMsg(state) {
+            return state.replyMsg
+        },
         groupError(state) {
             return state.group.error;
         },
