@@ -267,7 +267,7 @@
 
     <!--      teacher preview-->
     <div class="teacher" v-if="userCategory === 'INSTRUCTOR'">
-      <div class="teacher instructor_preview">
+      <div v-if="!isLive" class="teacher instructor_preview">
         <div class="tabs-container d-flex">
           <div class="item cursor-pointer" @click="panel1=true" :class="panel1? 'active' : ''">Course details</div>
           <div class="item cursor-pointer" @click="panel1=false" :class="panel1? '' : 'active'">Students list</div>
@@ -466,6 +466,127 @@
           </div>
         </div>
       </div>
+      <div v-else class="live_course">
+        <div class="d-lg-flex">
+        <div class="left-pane">
+          <div class="d-flex">
+            <div class="icon"><svg width="50" height="50" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="25" cy="25" r="25" fill="#FC6767"/>
+              <path d="M37 20L30 25L37 30V20Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M28 18H17C15.8954 18 15 18.8954 15 20V30C15 31.1046 15.8954 32 17 32H28C29.1046 32 30 31.1046 30 30V20C30 18.8954 29.1046 18 28 18Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            </div>
+            <div class="title">LIVE BROADCAST DETAILS</div>
+          </div>
+          <div class="d-flex detail">
+            <div class="subtitle">Course :</div>
+            <div class="sub-text">{{course.name}}</div>
+          </div>
+          <div class="d-flex detail">
+            <div class="subtitle">Chapter :</div>
+            <div class="sub-text"> 1.2.0 Introduction</div>
+          </div>
+          <div class="d-flex detail">
+            <div class="subtitle">Scheduled date :</div>
+            <div class="sub-text">{{nearestLiveSession.date | formatDate}}</div>
+          </div>
+          <div class="d-flex detail">
+            <div class="subtitle">Scheduled Time :</div>
+            <div class="sub-text">{{nearestLiveSession.time}} Local time</div>
+          </div>
+        </div>
+        <div class="right-pane ml-auto mx-auto">
+          <svg width="194" height="125" viewBox="0 0 194 125" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M139.582 30L124.996 45.0893C132.289 55.625 132.289 69.2857 124.996 79.8214L139.582 94.9107C157.119 76.875 157.119 49.6429 139.582 30ZM168.319 0L154.167 14.5536C178.216 41.5179 178.216 82.0536 154.167 110.446L168.319 125C202.178 90.2679 202.265 36.1607 168.319 0Z" fill="#FF4E4E"/>
+            <path d="M54.1644 30L68.75 45.0893C61.4572 55.625 61.4572 69.2857 68.75 79.8214L54.1644 94.9107C36.6269 76.875 36.6269 49.6429 54.1644 30ZM25.4272 0L39.5787 14.5536C15.5298 41.5179 15.5298 82.0536 39.5787 110.446L25.4272 125C-8.43231 90.2679 -8.51913 36.1607 25.4272 0Z" fill="#FF4E4E"/>
+            <circle cx="96.8711" cy="59.376" r="15.625" fill="#FF4E4E"/>
+          </svg>
+          <div class="mb-1">0 student watching</div>
+          <div>00:00:00</div>
+          <div>
+            <button @click="
+        $router.push(`/live/${nearestLiveSession._id}`)
+      ">GO LIVE</button>
+          </div>
+          <div class="actions">
+            <div class="tooltip" @click="
+                      course.chapters.length
+                        ? tooglePublishCourse().then(() => {
+                            $router.push('/courses');
+                          })
+                        : undefined
+                    ">
+              <svg width="51" height="51" viewBox="0 0 51 51" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path
+                    d="M25.1623 50.0345C38.895 50.0345 50.0276 38.9019 50.0276 25.1691C50.0276 11.4363 38.895 0.303711 25.1623 0.303711C11.4295 0.303711 0.296875 11.4363 0.296875 25.1691C0.296875 38.9019 11.4295 50.0345 25.1623 50.0345Z"
+                    fill="black"/>
+                <path
+                    d="M35.038 28.7744V33.0988C35.038 33.6723 34.8102 34.2222 34.4047 34.6277C33.9992 35.0332 33.4492 35.261 32.8758 35.261H17.7403C17.1669 35.261 16.6169 35.0332 16.2114 34.6277C15.8059 34.2222 15.5781 33.6723 15.5781 33.0988V28.7744"
+                    stroke="white" stroke-width="2.16221" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M30.7134 21.2063L25.3079 15.8008L19.9023 21.2063" stroke="white" stroke-width="2.16221"
+                      stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M25.3086 15.8008V28.774" stroke="white" stroke-width="2.16221" stroke-linecap="round"
+                      stroke-linejoin="round"/>
+              </svg>
+              <div class="tooltip-text">
+                {{ course.published ? "Unpublish" : "Publish" }} course
+              </div>
+            </div>
+            <div class="tooltip" @click="$router.push(`/courses/edit/${course.name}`)">
+              <svg width="51" height="51" viewBox="0 0 51 51" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path
+                    d="M25.7248 50.0345C39.4575 50.0345 50.5901 38.9019 50.5901 25.1691C50.5901 11.4363 39.4575 0.303711 25.7248 0.303711C11.992 0.303711 0.859375 11.4363 0.859375 25.1691C0.859375 38.9019 11.992 50.0345 25.7248 50.0345Z"
+                    fill="black"/>
+                <path
+                    d="M24.8042 16.5869H17.2364C16.663 16.5869 16.113 16.8147 15.7075 17.2202C15.302 17.6257 15.0742 18.1757 15.0742 18.7491V33.8846C15.0742 34.458 15.302 35.008 15.7075 35.4135C16.113 35.819 16.663 36.0468 17.2364 36.0468H32.3719C32.9453 36.0468 33.4953 35.819 33.9008 35.4135C34.3063 35.008 34.5341 34.458 34.5341 33.8846V26.3168"
+                    stroke="white" stroke-width="2.16221" stroke-linecap="round" stroke-linejoin="round"/>
+                <path
+                    d="M32.9102 14.9649C33.3408 14.5373 33.9233 14.2978 34.5302 14.2988C35.137 14.2999 35.7187 14.5414 36.1478 14.9705C36.5769 15.3997 36.8185 15.9813 36.8195 16.5882C36.8206 17.195 36.5811 17.7776 36.1535 18.2082L25.883 28.4787L21.5586 29.5598L22.6397 25.2354L32.9102 14.9649Z"
+                    stroke="white" stroke-width="2.16221" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <div class="tooltip-text">
+                Update course
+              </div>
+            </div>
+            <div class="tooltip" @click="
+                      set_modal({
+                        template: 'action_confirmation',
+                        method: { action: 'courses/delete_course' },
+                        title: 'Delete Course',
+                        message: 'Are you sure you want to delete this course?',
+                      })
+                    ">
+              <svg width="51" height="51" viewBox="0 0 51 51" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path
+                    d="M25.2834 50.0345C39.0161 50.0345 50.1487 38.9019 50.1487 25.1691C50.1487 11.4363 39.0161 0.303711 25.2834 0.303711C11.5506 0.303711 0.417969 11.4363 0.417969 25.1691C0.417969 38.9019 11.5506 50.0345 25.2834 50.0345Z"
+                    fill="black"/>
+                <path
+                    d="M18.7959 32.7371C18.7977 33.31 19.026 33.859 19.4311 34.2641C19.8363 34.6693 20.3852 34.8976 20.9582 34.8993H29.607C30.1799 34.8976 30.7289 34.6693 31.134 34.2641C31.5391 33.859 31.7675 33.31 31.7692 32.7371V19.7639H18.7959V32.7371ZM32.8503 16.5206H29.0664L27.9853 15.4395H22.5798L21.4987 16.5206H17.7148V18.6828H32.8503V16.5206Z"
+                    stroke="white" stroke-width="1.44147"/>
+              </svg>
+              <div class="tooltip-text">
+                Delete course
+              </div>
+            </div>
+          </div>
+        </div>
+        </div>
+        <div class="bottom-pane">
+          <div class="d-lg-flex">
+            <div>
+              <div class="title">Quiz attempt rate</div>
+              <div class="chart"></div>
+              <div class="text">00 out of 32 students attempted</div>
+            </div>
+            <div>
+              <div class="title">Attendance</div>
+              <div class="chart"></div>
+              <div class="text">00 out of 32 students attended</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
     <!--      end of teacher preview-->
   </section>
@@ -550,403 +671,5 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.my-container {
-  padding: 40px;
-}
-
-.back-container {
-  width: 100%;
-}
-
-button.back {
-  margin: 2rem;
-  padding: 0.2rem 2rem;
-  border-radius: 30px;
-  background-color: $main;
-  box-shadow: 0 0 10px lighten($secondary, 3);
-}
-.p-icon{
-  width: 40px;
-}
-.student {
-  background: white;
-  // width:100%;
-  height: 100%;
-  margin: 0;
-  padding: 2rem;
-  padding-top: 0rem;
-  //display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-
-  main {
-    overflow-wrap: anywhere;
-
-    &.description {
-      padding-left: 2rem;
-
-      h1 {
-        font-size: 2.3rem;
-        max-width: 30rem;
-      }
-
-      .owner {
-        padding-left: 1rem;
-        color: #717070;
-
-        p {
-          margin: 0;
-          padding: 0;
-          color: #717070;
-          font-size: 0.8rem;
-        }
-      }
-
-      .infos {
-        .content {
-          padding-left: 1rem;
-          color: #717070;
-          font-size: 1.1rem;
-        }
-        div{
-          display: flex;
-          place-items: center;
-        }
-      }
-
-      .desc {
-        color: #717070;
-        max-width: 25rem;
-      }
-
-      // style the instructor profile
-      .instructor-profile {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-
-        img {
-          width: 50px;
-          border-radius: 50%;
-          cursor: pointer;
-        }
-      }
-    }
-
-    &.preview {
-      //padding-right: 5rem;
-    }
-  }
-}
-
-.instructor_preview {
-  padding: 8px 30px 0;
-
-  .tabs-container {
-    max-width: 407px;
-
-    height: 56px;
-    left: 126px;
-    top: 127px;
-    margin-bottom: 16px;
-    background: #FFFFFF;
-
-    .item {
-      font-family: Inter;
-      font-style: normal;
-      font-weight: normal;
-      font-size: 18px;
-      line-height: 135.02%;
-      color: #343434;
-      padding: 16px 26px;
-      width: 50%;
-
-      &:hover {
-        background: #B0C2F9;
-      }
-
-      &.active {
-        font-weight: bold;
-        color: #193074;
-        border-bottom: 2px solid #193074;
-      }
-    }
-  }
-
-  .tabs-body {
-    .cover {
-      width: 329px;
-      height: 428px;
-      left: 126px;
-      top: 199px;
-      background-size: cover;
-      background-position: center;
-    }
-
-    .content {
-      max-width: 698px;
-      width: 100%;
-      min-height: 428px;
-      left: 455px;
-      top: 199px;
-      padding: 20px 69.17px 0;
-      background: #FFFFFF;
-
-      &.second {
-        padding: 31px 45px 0;
-      }
-
-      .course-title {
-        font-family: Poppins;
-        font-style: normal;
-        font-weight: normal;
-        font-size: 28.8294px;
-        line-height: 43px;
-        /* identical to box height */
-
-        margin-bottom: 10.14px;
-        color: #505050;
-      }
-
-      .course-description {
-        font-family: Poppins;
-        font-style: normal;
-        font-weight: normal;
-        font-size: 14px;
-        line-height: 32px;
-        margin-bottom: 34.1px;
-        color: #717171;
-      }
-
-      .details .col {
-        font-family: Poppins;
-        font-style: normal;
-        font-weight: 500;
-        font-size: 14.4147px;
-        line-height: 22px;
-        /* identical to box height */
-
-
-        color: #717171;
-
-        svg {
-          margin-right: 13.26px;
-        }
-      }
-
-      .actions {
-        margin-top: 30px;
-
-        .mx-auto {
-          width: fit-content;
-        }
-
-        svg {
-          margin: auto 15px;
-        }
-      }
-
-      .title {
-        font-family: Inter;
-        font-style: normal;
-        font-weight: bold;
-        font-size: 30px;
-        line-height: 36px;
-        display: flex;
-        align-items: center;
-        margin-bottom: 6px;
-        color: #000000;
-      }
-
-      .subtitle {
-        font-family: Inter;
-        font-style: normal;
-        font-weight: normal;
-        font-size: 15px;
-        line-height: 18px;
-        display: flex;
-        align-items: center;
-        margin-bottom: 16px;
-        color: #000000;
-      }
-
-      .students {
-        height: 300px;
-        overflow-y: auto;
-
-        .name {
-          font-family: Inter;
-          font-style: normal;
-          font-weight: 500;
-          font-size: 15px;
-          line-height: 18px;
-          display: flex;
-          align-items: center;
-
-          color: #3C3C3C;
-        }
-
-        .progress {
-          width: 103px;
-
-          progress {
-            width: 100%;
-            height: 10px;
-            border: none;
-          }
-
-          progress[value]::-webkit-progress-value {
-            background: #193074;
-
-            border-radius: 6px;
-          }
-
-          progress[value]::-webkit-progress-bar {
-            background-color: #DEDEDE;
-            border-radius: 6px;
-          }
-        }
-
-        .text {
-          font-family: Montserrat;
-          font-style: normal;
-          font-weight: bold;
-          font-size: 10px;
-          line-height: 12px;
-          width: 100%;
-          text-align: center;
-
-          color: #343434;
-        }
-
-        .joinedon {
-          font-family: Inter;
-          font-style: normal;
-          font-weight: 500;
-          font-size: 15px;
-          line-height: 18px;
-          display: flex;
-          align-items: center;
-
-          color: #000000;
-        }
-      }
-    }
-  }
-}
-
-.tooltip {
-  position: relative;
-  display: inline-block;
-}
-
-.tooltip-text {
-  visibility: hidden;
-  width: 120px;
-  background: #193074;
-  color: #fff;
-  text-align: center;
-  border-radius: 2px;
-  padding: 5px 0;
-  position: absolute;
-  z-index: 1;
-  bottom: 125%;
-  left: 50%;
-  margin-left: -60px;
-  opacity: 0;
-  transition: opacity 0.3s;
-
-  font-family: Poppins;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 10.0903px;
-  line-height: 15px;
-  /* identical to box height */
-
-
-  color: #FFFFFF;
-}
-
-.tooltip-text::after {
-  content: "";
-  position: absolute;
-  top: 100%;
-  left: 50%;
-  margin-left: -8px;
-  border-width: 8px;
-  border-style: solid;
-  border-color: #193074 transparent transparent transparent;
-}
-
-.tooltip:hover .tooltip-text {
-  visibility: visible;
-  opacity: 1;
-}
-
-/* Portrait phones and smaller */
-@media (max-width: 700px) {
-  .my-container {
-    padding: 20px;
-  }
-  .instructor_preview {
-    padding: 0 0 60px;
-
-    .tabs-body {
-
-      padding: 0;
-
-      .cover {
-        width: 100%;
-        height: 177px;
-      }
-
-      .content {
-        padding: 14px 33.4px;
-
-        .course-description {
-          font-size: 12px;
-        }
-
-        .course-title {
-          font-size: 21px;
-        }
-
-        .details .col {
-          font-size: 10px;
-        }
-
-        .actions {
-          margin-top: 20px;
-
-          svg {
-            margin: auto 10px;
-          }
-        }
-
-        .students {
-          height: fit-content;
-
-          .individual {
-            border-top: 1px solid #B8B8B8;
-            padding: 17px 0;
-          }
-        }
-      }
-    }
-  }
-  .student main {
-    margin-top: 22px;
-    margin-bottom: 32px;
-
-    &.description {
-      padding-left: 0;
-    }
-
-    &.preview {
-    }
-
-    padding-right: 0 !important;
-  }
-
-}
+@import '../../assets/sass/imports/preview-course';
 </style>
