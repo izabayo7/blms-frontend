@@ -167,12 +167,13 @@ export default {
     },
     selectAll() {
       //if selected all was currently true delete all selected elements to set them to false
-      if (this.selected_all)
+      if (this.selected_all) {
         this.selected = []
-
+        this.$emit('select', new Set([]))
+      } else
+        this.$emit('select', new Set([-1]))
       this.selected_all = !this.selected_all
 
-      this.$emit('select', new Set([-1]))
 
     },
     sort(tabHead) {

@@ -6,7 +6,8 @@
         <div class="lower">Anouncements</div>
       </div>
       <div class="col-8 col-md-6 text-right">
-        <button v-if="userCategory === 'ADMIN' || userCategory === 'INSTRUCTOR'" class="button" @click="$router.push('/announcements/new')">
+        <button v-if="userCategory === 'ADMIN' || userCategory === 'INSTRUCTOR'" class="button"
+                @click="$router.push('/announcements/new')">
           <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
             <g clip-path="url(#clip0)">
               <path
@@ -67,7 +68,9 @@
               </div>
               <div class="details">
                 <div class="time">{{ announcement.createdAt | formatDate }}</div>
-                <div class="targert">{{ announcement.target ? announcement.target.name : computeTarget(announcement.specific_receivers) | trimString(20)}}</div>
+                <div class="targert">
+                  {{ announcement.target ? announcement.target.name : computeTarget(announcement.specific_receivers) | trimString(20) }}
+                </div>
                 <div class="views vertically--centered">
                   <svg class="hidden-sm-and-down" width="17" height="17" viewBox="0 0 17 17" fill="none"
                        xmlns="http://www.w3.org/2000/svg">
@@ -125,18 +128,21 @@
 </template>
 
 <script>
-import {mapActions,mapGetters} from "vuex";
+import {mapActions, mapGetters} from "vuex";
 
 export default {
   name: "ViewAllAnnouncements",
   components: {},
   computed: {
     ...mapGetters("announcement", ["announcements"]),
+    userCategory() {
+      return this.$store.state.user.user.category.name
+    }
   },
   methods: {
     ...mapActions("announcement", ["getAnnouncements"]),
-    computeTarget(receivers){
-      let arr = receivers.map(x=>x.sur_name)
+    computeTarget(receivers) {
+      let arr = receivers.map(x => x.sur_name)
       return arr.join(',')
     }
   },

@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid class="dashboard_page px-6 pl-lg-14 pt-9">
+  <v-container fluid class="dashboard_page px-6 pl-lg-14 pr-md-2 pt-9">
     <v-row class="page_title">
       <div class="upper">Dashboard</div>
       <div class="lower">Overview</div>
