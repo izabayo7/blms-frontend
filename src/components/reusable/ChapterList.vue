@@ -28,8 +28,8 @@
             @click="$emit('changeChapter',i)"
             :class="activeIndex === i ? 'active--chapter' : ''"
           >
-            <v-list-item-content>
-              <v-list-item-title v-text="item.name"></v-list-item-title>
+            <v-list-item-content class="vertically--centered">
+              <p class="chapter_name">{{item.name}}</p>
             </v-list-item-content>
 
             <v-list-item-action>
@@ -120,5 +120,9 @@ export default {
 <style lang="scss">
 .active--chapter {
   background: #0000001a !important;
+}
+.chapter_name{
+  line-height: 25px !important;
+  margin-bottom: 0 !important;
 }
 </style>

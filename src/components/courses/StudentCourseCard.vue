@@ -52,7 +52,6 @@
             v-if="course.coverPicture"
             :src="'' + course.coverPicture"
             class="course-image"
-            style="height: 217px"
           ></v-img>
           <div
             v-else
@@ -64,18 +63,16 @@
           </div>
         </v-col>
         <v-col cols="12" class="completed-results">
-          <span class="title d-block text-truncate mb-2 mb-sm-1 pt-3">{{
-            course.name
-          }}</span>
+          <span class="title d-block mb-2 mb-sm-1 pt-3">{{ course.name }}</span>
           <span class="course-description text-caption d-block mb-6">{{
-            course.description | trimString(150)
+            course.description | trimString(50)
           }}</span>
           <h4>
             <v-avatar
               size="30"
               :class="`${
                 course.instructor.profile ? '' : 'bg-color-one'
-              } user-profile`"
+              } user-profile mr-2`"
             >
               <img
                 v-if="course.instructor.profile"
@@ -89,7 +86,24 @@
             </v-avatar>
             Instructor {{ course.instructor.surName }}
           </h4>
-          <h4><v-icon color="#ffd248">mdi-star-outline</v-icon>4.2</h4>
+          <div class="mt-4">
+            <div class="svg">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="27"
+              viewBox="0 0 24 27"
+            >
+              <path
+                id="Icon_material-date-range"
+                data-name="Icon material-date-range"
+                d="M12.5,15.15H9.833v2.7H12.5Zm5.333,0H15.167v2.7h2.667Zm5.333,0H20.5v2.7h2.667ZM25.833,5.7H24.5V3H21.833V5.7H11.167V3H8.5V5.7H7.167A2.672,2.672,0,0,0,4.513,8.4L4.5,27.3A2.683,2.683,0,0,0,7.167,30H25.833A2.691,2.691,0,0,0,28.5,27.3V8.4A2.691,2.691,0,0,0,25.833,5.7Zm0,21.6H7.167V12.45H25.833Z"
+                transform="translate(-4.5 -3)"
+              />
+            </svg>
+            </div>
+            <div class="ml-4 date_finished">completed on {{ course.progress.lastUpdated | formatDate }}</div>
+          </div>
         </v-col>
       </v-row>
     </v-card>
@@ -97,7 +111,7 @@
 </template>
 
 <script>
-import colors from '@/assets/sass/imports/_colors.scss'
+import colors from "@/assets/sass/imports/_colors.scss";
 export default {
   props: {
     course: {
@@ -109,9 +123,9 @@ export default {
       required: true,
     },
   },
-  data: ()=>({
-    primary: colors.primary
-  })
+  data: () => ({
+    primary: colors.primary,
+  }),
 };
 </script>
 
@@ -119,9 +133,18 @@ export default {
 .bg-color-one.vertically--centered.text-center {
   height: 208px;
 }
-.course.completed {
-  box-shadow: 0 38px 76px rgba(138, 138, 138, 0.18);
+.course-card:hover,.course.completed:hover {
+  box-shadow: 0px 5px 15px rgb(199, 199, 199, 1.6) !important;
+  margin-top: -10px;
 }
+
+// card animation
+/* Quick-zoom Container */
+.course-card,.course.completed {
+  margin-top: 0;
+  transition: margin 0.25s, visibility 0.25s ease-out;
+}
+
 .course-card.v-card.v-sheet {
   width: 560px;
   height: 189px;
@@ -133,7 +156,7 @@ export default {
       width: 125px;
       border: none !important;
       border-radius: 90px;
-      margin-left: 23px;
+      margin-left: 8%;
       border: 1px solid grey;
     }
   }
@@ -143,13 +166,13 @@ export default {
     }
     .course-title {
       line-height: 1;
-      color: #bbb;
       font-size: 16px;
       font-weight: bold;
     }
     .course-instructor {
       font-size: 12px;
       font-weight: 500;
+      color: #bbb;
       //   margin-top: -12px;
     }
     .course-description {
@@ -169,9 +192,13 @@ export default {
     }
   }
 }
+.date_finished{
+  margin: -31px 0 0 40px !important;
+}
 .course.completed {
-  min-height: 440px !important;
-  min-width: 352px;
+  box-shadow: none;
+  min-height: 380px !important;
+  max-width: 300px;
   border-radius: 0 !important;
 
   h4 {
@@ -187,7 +214,7 @@ export default {
   }
 
   .course-image {
-    height: 200.6px;
+    height: 160.6px;
     margin: -12px 0 0 0px;
     border-radius: 0;
   }

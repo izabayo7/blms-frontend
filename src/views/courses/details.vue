@@ -47,7 +47,7 @@
           <v-col class="col-12 title d-block pt-0">{{ course.name }}</v-col>
           <v-col
             v-if="course.chapters[activeIndex].mainVideo"
-            class="col-10 mx-auto pt-0"
+            class="col-8 pt-0"
             id="video"
           >
             <vue-plyr>
@@ -56,7 +56,7 @@
           </v-col>
         </v-row>
         <v-row>
-          <v-col>
+          <v-col class="col-8">
             <!-- <span v-if="course !== undefined">{{course.name}}</span> -->
             <v-tabs background-color="white" color="#ffd248" right>
               <v-tab id="content-tab">
@@ -74,12 +74,7 @@
                   <v-row v-if="course.chapters.length > 0 && n === 1">
                     <v-col class="col-12 title d-block"
                       >Chapter {{ activeIndex + 1 }}:
-                      {{ course.chapters[activeIndex].name }}</v-col
-                    >
-                    <v-col class="col-12 description">
-                      <p class="my-4">
-                        {{ course.chapters[activeIndex].description }}
-                      </p>
+                      {{ course.chapters[activeIndex].name }}
                     </v-col>
                     <v-col class="col-12">
                       <kurious-editor
@@ -89,7 +84,7 @@
                     </v-col>
                     <v-col
                       v-if="Math.round(maximumIndex) === activeIndex"
-                      class="col-6 col-md-4 mx-auto"
+                      class="col-6 mx-auto"
                     >
                       <v-btn
                         v-if="
@@ -103,7 +98,7 @@
                         >Take Quiz</v-btn
                       >
                       <v-btn
-                        v-else-if="userCategory === 'Student'"
+                        v-else-if="userCategory === 'Student' && course.progress.progress < 100"
                         color="green"
                         class="white--text"
                         @click="
@@ -275,6 +270,7 @@ export default {
     },
     activeIndex() {
       this.editorContent = "";
+      console.log(this.activeIndex);
       this.getChapterMainContent(
         this.course.chapters[this.activeIndex]._id
       ).then((data) => {
@@ -332,6 +328,9 @@ export default {
         this.maximumIndex = Math.round(
           (course.progress.progress * course.chapters.length) / 100
         );
+        if (this.maximumIndex > course.chapters.length - 1) {
+          this.maximumIndex = course.chapters.length - 1
+        }
       }
     });
   },

@@ -1071,7 +1071,7 @@
       <v-col cols="12">
         <h2 class="second-title course-group-title">Completed Courses</h2>
       </v-col>
-      <v-col class="col-12">
+      <v-col class="col-12 px-0">
         <v-row v-if="finishedCourses.length">
           <v-col
             v-for="(course, i) in finishedCourses"
@@ -1079,6 +1079,7 @@
             cols="12"
             sm="6"
             md="4"
+            class="px-0"
           >
             <student-course-card category="completed" :course="course" />
           </v-col>

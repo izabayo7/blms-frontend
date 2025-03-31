@@ -57,7 +57,7 @@
             <v-col class="col-8 pl-6">
               <h4>Users</h4>
               <p>
-                <strong>200</strong>
+                <strong>{{ users.length + 1 }}</strong>
               </p>
             </v-col>
           </v-row>

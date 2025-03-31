@@ -86,7 +86,7 @@
 </template>
 
 <script>
-import Apis from "@/services/apis";
+// import { mapActions, mapGetters } from "vuex";
 export default {
   components: {
     back: () => import("@/components/shared/back-button"),
@@ -109,29 +109,29 @@ export default {
   beforeMount() {
     this.getFaculties();
   },
-  methods: {
-    async getFaculties() {
-      try {
-        const response = await Apis.get(
-          `facility/college/${this.$store.state.user.college}`
-        );
-        for (const faculty of response.data) {
-          this.faculties.push({
-            name: faculty.name,
-            attendants: 250,
-            teacher: "Kankindi Marie",
-          });
-        }
-      } catch (error) {
-        if (error.request && !error.response) {
-          this.status = 503;
-          this.message = "Service Unavailable";
-          this.modal = false;
-          this.show = true;
-        }
-      }
-    },
-  },
+  // methods: {
+  //   async getFaculties() {
+  //     try {
+  //       const response = await Apis.get(
+  //         `facility/college/${this.$store.state.user.college}`
+  //       );
+  //       for (const faculty of response.data) {
+  //         this.faculties.push({
+  //           name: faculty.name,
+  //           attendants: 250,
+  //           teacher: "Kankindi Marie",
+  //         });
+  //       }
+  //     } catch (error) {
+  //       if (error.request && !error.response) {
+  //         this.status = 503;
+  //         this.message = "Service Unavailable";
+  //         this.modal = false;
+  //         this.show = true;
+  //       }
+  //     }
+  //   },
+  // },
 };
 </script>
 

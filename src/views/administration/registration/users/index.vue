@@ -234,9 +234,10 @@ export default {
   computed: {
     ...mapGetters("faculties", ["facultyCollegeYearNames"]),
     selectedFacultyCollegeYearCode() {
-      return this.$store.getters["faculties/facultyCollegeYear"](
+      const result = this.$store.getters["faculties/facultyCollegeYear"](
         this.selectedFacultyCollegeYearName
-      )._id;
+      );
+      return result ? result._id : undefined;
     },
   },
   methods: {
@@ -249,15 +250,17 @@ export default {
           otherNames: this.otherNames,
           phone: this.phone,
           gender: this.selectedGender,
-          DOB: this.DOB,
+          DOB: this.$store.state.user.user.category === 'Student' ? this.DOB : undefined,
           email: this.email,
           nationalId: this.nationalId,
           college: this.$store.state.user.user.college,
         },
-        category: this.$route.path.split('/')[this.$route.path.split('/').length -1],
-        facultyCollegeYear: this.selectedFacultyCollegeYearCode
+        category: this.$route.path.split("/")[
+          this.$route.path.split("/").length - 1
+        ],
+        facultyCollegeYear: this.selectedFacultyCollegeYearCode,
       }).then(() => {
-        this.$router.push('/administration')
+        this.$router.push("/administration");
       });
     },
     checkLength(index) {

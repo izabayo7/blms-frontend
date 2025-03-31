@@ -17,7 +17,7 @@ export default {
             if (!state.facultyCollegeYears.loaded) {
                 apis.get(`faculty-college-year/college/${collegeId}`).then(d => {
                     for (const i in d.data) {
-                        d.data[i].name = `${d.data[i].facultyCollege.faculty.name} ${d.data[i].collegeYear.digit}`
+                        d.data[i].name = `${d.data[i].facultyCollege.faculty.name} year ${d.data[i].collegeYear.digit}`
                     }
                     state.facultyCollegeYears.data = d.data
                     //announce that data have been loaded

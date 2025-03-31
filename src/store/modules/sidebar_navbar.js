@@ -2,7 +2,7 @@
 export default {
     namespaced:true,
     state:{
-        sidebar_expanded:false,
+        sidebar_expanded:true,
         group_model:false
     },
     mutations:{
