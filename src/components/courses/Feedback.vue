@@ -29,9 +29,12 @@
           class="col-3 col-md-1 vertically--centered pa-0"
       >
         <div v-if="content !== '' || showDelete" class="actions">
-          <svg @click="removeFeedback()" class="cursor-pointer" width="28" height="29" viewBox="0 0 28 29" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <svg @click="removeFeedback()" class="cursor-pointer" width="28" height="29" viewBox="0 0 28 29" fill="none"
+               xmlns="http://www.w3.org/2000/svg">
             <g clip-path="url(#clip0)">
-              <path d="M7.0026 22.2848C7.0026 23.5682 8.0526 24.6182 9.33594 24.6182H18.6693C19.9526 24.6182 21.0026 23.5682 21.0026 22.2848V8.28483H7.0026V22.2848ZM22.1693 4.78483H18.0859L16.9193 3.61816H11.0859L9.91927 4.78483H5.83594V7.11816H22.1693V4.78483Z" fill="#FF0808"/>
+              <path
+                  d="M7.0026 22.2848C7.0026 23.5682 8.0526 24.6182 9.33594 24.6182H18.6693C19.9526 24.6182 21.0026 23.5682 21.0026 22.2848V8.28483H7.0026V22.2848ZM22.1693 4.78483H18.0859L16.9193 3.61816H11.0859L9.91927 4.78483H5.83594V7.11816H22.1693V4.78483Z"
+                  fill="#FF0808"/>
             </g>
             <defs>
               <clipPath id="clip0">
@@ -126,6 +129,9 @@ export default {
       type: String,
       required: true,
     },
+    type: {
+      type: String
+    },
     feedback_name: {
       type: String
     },
@@ -198,7 +204,7 @@ export default {
         },
       }).then(() => {
         this.upload_status = 2
-        this.$emit("feedbackSent",this.index, true)
+        this.$emit("feedbackSent", this.index, true)
       })
     },
     saveChanges() {
@@ -248,14 +254,14 @@ export default {
     async addFeedback() {
       let content = this.removeNonBreakingSpace(this.feedbackContent());
 
-      if (content == "") {
+      if (content === "") {
         return;
       }
       const response = await Apis.create("comment", {
         sender: this.$store.state.user.user.user_name,
         target: {
-          type: "quiz_submission_answer",
-          id: this.answerId,
+          type: this.type === 'assignment' ? "assignment_submission" : "quiz_submission_answer",
+          id: this.type === 'assignment' ? this.submission_id : this.answerId,
         },
         content: content,
       });
@@ -303,7 +309,7 @@ export default {
       this.remove_answer_feedback({
         answer_id: this.answerId,
       });
-      this.$emit("feedbackSent",this.index , false)
+      this.$emit("feedbackSent", this.index, false)
     },
   },
   mounted() {

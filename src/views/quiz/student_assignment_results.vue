@@ -106,6 +106,19 @@
                 :defaultContent="assignment_submission.details || '<p>Type your answer here</p>'"
             />
           </div>
+          <Feedback
+              class="mt-4 feedback_container"
+              v-if="(assignment_submission.feedback && assignment.status === 'RELEASED') || userCategory === 'INSTRUCTOR'"
+              :submission_id="assignment_submission._id"
+              :feedbackId="
+                    assignment_submission.feedback
+                      ? assignment_submission.feedback._id
+                      : ''
+                  "
+              :content="assignment_submission.feedback ? assignment_submission.feedback.content : ''"
+              type="assignment"
+              :isFileUpload="assignment.submissionMode === 'fileUpload'"
+          />
           <div
               v-if="(assignment_submission.marked && assignment.status === 'RELEASED') || userCategory === 'INSTRUCTOR' "
               class="marks mt-6">
@@ -181,6 +194,7 @@ export default {
   },
   components: {
     Editor: () => import("@/components/reusable/Editor"),
+    Feedback: () => import("@/components/courses/Feedback"),
     FilePicker: () => import("@/components/reusable/FilePicker"),
   },
   computed: {
@@ -571,6 +585,10 @@ export default {
         background: #FC6767;
         max-width: 146px;
       }
+    }
+
+    .feedback_container {
+      max-width: 580px;
     }
 
     .text-input {
