@@ -210,19 +210,10 @@
             </div>
           </v-row>
           <button
-              v-if="$store.state.user.user.category.name == 'STUDENT'"
               class="radio-btn d-block mb-4 submitt-attempt"
               @click="validate"
           >Submit Answers
           </button
-          >
-          <v-btn
-              v-else
-              class="radio-btn d-block mb-4 submitt-attempt"
-              @click="$router.push('/quiz')"
-              rounded
-          >Back to quiz
-          </v-btn
           >
         </v-col>
         <v-col class="col-12 col-md-5 timer-side text-center">
@@ -316,11 +307,11 @@ export default {
   watch: {
     remaining_time() {
       if (this.remaining_time > 0) {
-        // setTimeout(() => {
-        //   this.remaining_time -= 1;
-        // }, 1000);
-        // if (this.remaining_time === this.exam.duration - 1)
-        //   this.initialiseQuiz();
+        setTimeout(() => {
+          this.remaining_time -= 1;
+        }, 1000);
+        if (this.remaining_time === this.exam.duration - 1)
+          this.initialiseQuiz();
 
         this.attempt.used_time = this.exam.duration - this.remaining_time;
       } else if (!this.done) {
@@ -360,6 +351,10 @@ export default {
         this.error = "You are offline, continue doing your quiz"
       }
     },
+  },
+  beforeRouteLeave(to, from, next) {
+    this.removeListeners()
+    next();
   },
   methods: {
     ...mapActions("modal", ["set_modal"]),
@@ -585,10 +580,12 @@ export default {
           questions: this.exam.questions,
           cheated
         })
-      else
+      else {
         this.set_modal({
           template: `exam_closed_${cheated ? 'failed' : 'successfull'}`,
         })
+        this.removeListeners()
+      }
     },
     goFullscreen() {
       var el = document.documentElement

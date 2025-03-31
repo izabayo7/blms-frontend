@@ -461,7 +461,7 @@ export default {
     ...mapActions("quiz", ["getQuizes", "getAssignments","getExams"]),
     ...mapActions("modal", ["set_modal"]),
     handleRowClick(value) {
-      this.$router.push(this.currentView === 'quiz' ? `/quiz/attempt/${value.name}` : `/assignments/${value._id}`)
+      this.$router.push(this.currentView === 'quiz' ? `/quiz/attempt/${value.name}` : this.currentView === 'exams' ? `exams/attempt/${value._id}` : `/assignments/${value._id}`)
     },
     setCurrentView() {
       if (this.$route.path.includes('/assessments/quiz'))
