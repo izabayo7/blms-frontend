@@ -2,14 +2,14 @@
   <v-container fluid class="py-0">
     <v-row id="user_profile">
       <cropper :img="img" @change="imageCropped" />
-      <v-col class="col-12 pa-md-16 py-md-6"><h2>General Info</h2> </v-col>
-      <v-col class="col-12 col-md-5 course-content px-md-6 py-md-0">
+      <v-col class="col-12 pa-md-16 py-md-6"><h2>General Info {{$vuetify.breakpoint.name}}</h2> </v-col>
+      <v-col class="col-12 col-md-6 course-content px-md-6 py-md-0">
         <v-row>
           <v-col class="col-7 mx-auto">
             <v-avatar
               v-if="profile || user.profile"
               width="auto"
-              height="245"
+              :height="largeDevices.includes($vuetify.breakpoint.name) ? 200 : 120"
               class="mt-4 d-block"
               id="user_pic"
             >
@@ -68,9 +68,9 @@
           @change="handleFileUpload"
         />
       </v-col>
-      <v-col class="col-12 col-md-7 text-center text-md-left">
+      <v-col class="col-12 col-md-6 text-center text-md-left">
         <div class="title text-h5">My Details</div>
-        <div class="user_info col-12 col-md-6">
+        <div class="user_info col-12 col-md-8">
           <p class="lable font-weight-medium mt-2">Sur name</p>
           <input v-model="user.sur_name" type="text" class="course_input" />
           <p class="lable font-weight-medium mt-2">Other names</p>
@@ -80,32 +80,32 @@
           <p class="lable font-weight-medium mt-5">Phone number</p>
           <input v-model="user.phone" type="text" class="course_input" />
         </div>
+      </v-col>
+      <div v-if="user.category.name == 'STUDENT'" class="col-12 px-6">
         <div v-if="user.category.name == 'STUDENT'" class="title text-h5 mt-5">
           Enrolled courses
         </div>
-        <div v-if="user.category.name == 'STUDENT'" class="enrolled_courses">
-          <v-row>
-            <v-col class="col-12 col-md-8">
-              <v-row>
-                <v-col
-                  class="col-6"
+        <v-row class="enrolled_courses">
+          <v-col class="col-12">
+            <v-row>
+              <v-col
+                  class="col-12 col-md-4"
                   v-for="(course, i) in started_courses"
                   :key="i"
-                >
-                  <v-btn
+              >
+                <button
                     width="100%"
-                    class="py-5"
-                    :to="`/courses/preview/${course.name}`"
+                    class="pa-5 course-button"
+                    @click="$router.push(`/courses/preview/${course.name}`)"
                     color="white"
-                  >
-                    {{ course.name }}
-                  </v-btn>
-                </v-col>
-              </v-row>
-            </v-col>
-          </v-row>
-        </div>
-      </v-col>
+                >
+                  {{ course.name }}
+                </button>
+              </v-col>
+            </v-row>
+          </v-col>
+        </v-row>
+      </div>
       <v-col class="col-12 col-md-5 text-center text-md-left">
         <v-btn
           color="black"
@@ -115,7 +115,7 @@
           >Change password</v-btn
         >
       </v-col>
-      <v-col class="col-12 col-md-7 text-center text-md-left">
+      <v-col class="col-12 col-md-7 text-center text-md-left mb-14">
         <v-row>
           <v-col class="col-6 col-md-4">
             <v-btn
@@ -157,6 +157,7 @@ export default {
     tab: null,
     error: "",
     primary: colors.primary,
+    largeDevices: ['md','lg','xl'],
     tabs: [
       { tab: "General Info", content: "Tab 1 Content" },
       { tab: "Security", content: "Tab 2 Content" },
