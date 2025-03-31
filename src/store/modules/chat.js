@@ -179,7 +179,7 @@ export default {
 
         // change conversation to first if new message is sent or received
         CHANGE_CONVERSATION_STAND(state, msg) {
-            let idx;
+            let idx = -1;
             console.log(msg)
             const id = msg.group ? msg.group : msg.sender.user_name;
             const message = {
@@ -194,12 +194,10 @@ export default {
             })
 
             console.log('id', idx)
-            console.log(state.incomingMessages.splice(idx, 1))
-            if (idx) {
+            // console.log(state.incomingMessages.splice(idx, 1))
+            if (idx > -1) {
                 state.incomingMessages.splice(0, 0, state.incomingMessages.splice(idx, 1)[0])
                 state.incomingMessages[0].last_message = message
-            } else {
-                state.incomingMessages.unshift(message)
             }
 
         }
