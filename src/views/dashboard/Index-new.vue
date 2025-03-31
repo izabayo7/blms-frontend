@@ -53,7 +53,7 @@ export default {
     .main-content {
       height: calc(100vh - 76px);
       overflow-y: auto;
-      // overflow-x: hidden;
+      overflow-x: hidden;
     }
   }
 }

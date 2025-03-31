@@ -2,6 +2,7 @@
 <template>
   <v-app>
     <router-view />
+    <kurious-dialog />
   </v-app>
 </template>
 

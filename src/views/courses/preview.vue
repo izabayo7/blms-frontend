@@ -19,7 +19,7 @@
           </article>
           <article class="owner">
             <h3>{{ `${course.instructor.surName} ${course.instructor.otherNames}`}}</h3>
-            <p class="facility">PHD, web development</p>
+            <p class="faculty">PHD, web development</p>
           </article>
         </div>
 
@@ -205,7 +205,7 @@
 
     <!--      teacher preview-->
     <div class="teacher" v-if="userCategory === 'Instructor'">
-      <button class="back">back</button>
+      <button @click="$router.go(-1)" class="back">back</button>
       <div class="preview-card row">
         <div class="preview-image col-sm-12 col-md-12 col-lg-4 col-xl-4">
           <img
@@ -214,7 +214,7 @@
             class="preview-media"
             :src="course.coverPicture"
           />
-          <div v-else class="bg-color-one no-image text-center preview-image" style="height: 100%">
+          <div v-else class="bg-color-one vertically--centered text-center preview-image" style="height: 100%">
             <span class="text-h1 white--text">{{course.name | computeText}}</span>
           </div>
         </div>
@@ -271,7 +271,7 @@
                     />
                   </svg>
                 </div>
-                <div class="text">{{course.facilityCollegeYear.facilityCollege.facility.name}}</div>
+                <div class="text">{{course.facultyCollegeYear.facultyCollege.faculty.name}}</div>
               </div>
               <div class="info-col col-sm-6 col-md-~4 col-lg-4 col-xl-4">
                 <div class="icon">
@@ -333,7 +333,7 @@
                     />
                   </svg>
                 </div>
-                <div class="text">year {{course.facilityCollegeYear.collegeYear.digit}}</div>
+                <div class="text">year {{course.facultyCollegeYear.collegeYear.digit}}</div>
               </div>
               <div class="info-col col-sm-6 col-md-~4 col-lg-4 col-xl-4">
                 <div class="icon">
@@ -396,7 +396,9 @@
                   </g>
                 </svg>
               </div>
-              <div @click="tooglePublishCourse" class="act-btn upload">
+              <div @click="tooglePublishCourse().then(()=>{
+                  $router.push('/courses')
+                })" class="act-btn upload">
                 <svg
                   v-if="course.published"
                   xmlns="http://www.w3.org/2000/svg"
@@ -543,23 +545,20 @@
   </section>
 </template>
 <script>
-import { mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 
 export default {
   name: "Course-details",
   components: {
     preview: () => import("@/components/courses/Preview"),
   },
-  data() {
-    return {
-      course: undefined,
-    };
-  },
   computed: {
     // get the userCategory
     userCategory() {
       return this.$store.state.user.category;
     },
+    // get the current course
+    ...mapGetters("courses", ["course"])
   },
   methods: {
     ...mapActions("courses", [
@@ -573,9 +572,7 @@ export default {
       userCategory: this.$store.state.user.category.toLowerCase(),
       userId: this.$store.state.user._id,
       courseName: this.$route.params.name,
-    }).then((course) => {
-      this.course = course;
-    });
+    })
   },
 };
 </script>

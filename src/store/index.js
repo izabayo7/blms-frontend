@@ -1,6 +1,9 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import courses from "@/store/modules/courses";
+import faculties from "@/store/modules/faculties";
+import modal from "@/store/modules/modal";
+import quiz from "@/store/modules/quiz";
 import chat from "@/store/modules/chat";
 import user from "@/store/modules/user";
 
@@ -17,8 +20,11 @@ export default new Vuex.Store({
     },
     actions: {
     },
-    modules:{
+    modules: {
         courses,
+        faculties,
+        modal,
+        quiz,
         chat,
         user
     }

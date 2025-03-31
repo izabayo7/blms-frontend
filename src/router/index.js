@@ -9,18 +9,18 @@ const routes = [
         path: '/',
         name: 'Home',
         component: () =>
-            import('@/views/pages/home')
-    },
-    {
-        path: '/test',
-        name: 'dash',
-        component: () =>
-            import('@/components/dashboard')
+            import('@/views/pages/home'),
+        meta: {
+            allowAnonymous: true
+        },
     },
     {
         path: '/kurious',
         component: () =>
             import('@/views/dashboard/Index-new'),
+        meta: {
+            allowAnonymous: false
+        },
         children: [{
             path: '/messages',
             component: () => import('@/views/Messages.vue'),
@@ -31,76 +31,75 @@ const routes = [
             path: '/courses',
             component: () => import('@/views/courses'),
         },
-            {
-                path: '/courses/preview/:name',
-                component: () => import('@/views/courses/preview')
-            },
-            {
-                path: '/courses/edit/:name',
-                name: 'Edit Course',
-                component: () =>
-                    import('@//views/courses/edit')
-            },
-            {
-                path: '/courses/:name',
-                component: () => import('@/views/courses/details')
-            }, {
-                path: '/courses/new-course',
-                name: 'New Course',
-                component: () =>
-                    import('@/components/newCourse.vue')
-            },  {
-                path: '/quiz/new-quiz',
-                name: 'Set Quiz',
-                component: () =>
-                    import('@/components/set-quiz.vue')
-            }, {
-                path: '/quiz/attempt/:id',
-                name: 'TakeQuiz',
-                component: () =>
-                    import('@/components/take-quiz.vue')
-            }, {
-                path: '/reports/submission/:id',
-                name: 'MarkQuiz',
-                component: () =>
-                    import('@/components/mark-quiz.vue')
-            }, {
-                path: '/reports',
-                name: 'Reports',
-                component: () =>
-                    import('@/components/reports.vue')
-            }, {
-                path: '/library',
-                name: 'Library',
-                component: () =>
-                    import('@/components/library.vue')
-            }, {
-                path: '/live-class',
-                name: 'liveClass',
-                component: () =>
-                    import('@/components/live-class.vue')
-            }, {
-                path: '/profile',
-                name: 'profile',
-                component: () =>
-                    import('@/components/profile.vue')
-            }, {
-                path: '/accounts/currentUser',
-                name: 'User Profile',
-                component: () =>
-                    import('@/components/profile.vue')
-            }, {
-                path: '/quiz',
-                name: 'Quiz',
-                component: () =>
-                    import('@/components/quiz/index.vue')
-            }, {
-                path: '/users',
-                name: 'Users',
-                component: () =>
-                    import('@/components/admin/users.vue')
-            },
-        ]
+        {
+            path: '/courses/preview/:name',
+            component: () => import('@/views/courses/preview')
+        },
+        {
+            path: '/courses/edit/:name',
+            name: 'Edit Course',
+            component: () =>
+                import('@//views/courses/edit')
+        },
+        {
+            path: '/courses/:name',
+            component: () => import('@/views/courses/details')
+        }, {
+            path: '/courses/new-course',
+            name: 'New Course',
+            component: () =>
+                import('@/components/newCourse.vue')
+        }, {
+            path: '/quiz/new-quiz',
+            name: 'Set Quiz',
+            component: () =>
+                import('@/components/set-quiz.vue')
+        }, {
+            path: '/quiz/attempt/:id',
+            name: 'TakeQuiz',
+            component: () =>
+                import('@/components/take-quiz.vue')
+        }, {
+            path: '/reports/submission/:id',
+            name: 'MarkQuiz',
+            component: () =>
+                import('@/components/mark-quiz.vue')
+        }, {
+            path: '/reports',
+            name: 'Reports',
+            component: () =>
+                import('@/components/reports.vue')
+        }, {
+            path: '/library',
+            name: 'Library',
+            component: () =>
+                import('@/components/library.vue')
+        }, {
+            path: '/live-class',
+            name: 'liveClass',
+            component: () =>
+                import('@/components/live-class.vue')
+        }, {
+            path: '/profile',
+            name: 'profile',
+            component: () =>
+                import('@/components/profile.vue')
+        }, {
+            path: '/accounts/currentUser',
+            name: 'User Profile',
+            component: () =>
+                import('@/components/profile.vue')
+        }, {
+            path: '/quiz',
+            name: 'Quiz',
+            component: () =>
+                import('@/components/quiz/index.vue')
+        }, {
+            path: '/users',
+            name: 'Users',
+            component: () =>
+                import('@/components/admin/users.vue')
+        },        ]
     },
     // the login page
     {

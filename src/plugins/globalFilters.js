@@ -10,8 +10,10 @@ const filters = [
         structure: (string, length) => {
             let trimedString = string.substring(0, length);
             trimedString = trimedString.split(" ");
-            trimedString.splice(trimedString.length - 1, 1);
-            trimedString = trimedString.join(" ") + " ...";
+            trimedString.splice(trimedString.length - 1, trimedString.length > 1 ? 1 : 0);
+            let arrlength = trimedString.length
+            trimedString = trimedString.join(" ");
+            trimedString += arrlength > 1 ? " ..." : ''
             return trimedString;
         },
     },

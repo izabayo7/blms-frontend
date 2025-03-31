@@ -14,15 +14,6 @@
         background-color: #fff;
         z-index: 4;
 
-        .attachment {
-            height: auto;
-            padding: 12px;
-            cursor: auto;
-            &-download {
-                margin-left: 10px;
-            }
-        }
-
     }
 
     .details-menu {
@@ -61,5 +52,18 @@
 
     button.hidden-md-and-up.mr-n8.white--text.v-btn.v-btn--bottom.v-btn--contained.v-btn--fixed.v-btn--right.v-btn--rounded.theme--light.v-size--default {
         z-index: 999;
+    }
+}
+// style downoadable attachments
+.downloadable_attachment {
+    background-color: #F8F8F8;
+    height: auto;
+    padding: 12px;
+    cursor: auto;
+    &-download {
+        margin-left: 10px;
+    }
+    button{
+        margin-left: 12px;
     }
 }

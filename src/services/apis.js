@@ -1,17 +1,22 @@
 import Api from './server'
 export default {
+    // users login
     login(userType, body) {
         return Api().post(`/${userType}/login`, body)
     },
+    // get requests
     get(url) {
         return Api().get(`/${url}`)
     },
-    create(category, body) {
-        return Api().post(`/${category}`, body)
+    // post requests
+    create(category, body, config) {
+        return Api().post(`/${category}`, body, config)
     },
-    update(category, id, body) {
-        return Api().put(`/${category}/${id}`, body)
+    // put requests
+    update(category, id, body, config) {
+        return Api().put(`/${category}/${id}`, body, config)
     },
+    // delete requests
     delete(category, id) {
         return Api().delete(`/${category}/${id}`)
     },
