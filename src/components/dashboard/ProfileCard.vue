@@ -96,7 +96,7 @@ export default {
             justify-content: center;
             align-items: center;
             padding-bottom: 1rem;
-            border-bottom: 2px solid lighten($font,30);
+            border-bottom: 2px solid lighten($font,45);
 
             .profile-pic{
                 .v-avatar{
