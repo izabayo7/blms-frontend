@@ -224,7 +224,8 @@
             margin-bottom: 10px;
             .details{
               textarea{
-                width: 347px;
+                max-width: 347px;
+                width: 100%;
               }
             }
             .status{

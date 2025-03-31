@@ -16,59 +16,79 @@
             <p class="question_details col-md-12 col-12">
               {{ `${i + 1}. ${question.details}` }}
             </p>
-            <div class="col-12 col-sm-6 col-md-4 pt-0">
-              <div class="indicator mb-2">
-                <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path
-                      d="M9 0C4.03763 0 0 4.03763 0 9C0 13.9624 4.03763 18 9 18C13.9624 18 18 13.9624 18 9C18 4.03763 13.9624 0 9 0ZM9 16.875C4.6575 16.875 1.125 13.3425 1.125 9C1.125 4.6575 4.6575 1.125 9 1.125C13.3425 1.125 16.875 4.6575 16.875 9C16.875 13.3425 13.3425 16.875 9 16.875Z"
-                      fill="#193074"/>
-                  <path d="M9 4.1543L9 10.1543" stroke="#193074" stroke-width="1.5" stroke-linecap="round"/>
-                  <circle cx="9" cy="13" r="1" fill="#193074"/>
-                </svg>
-                <span class="ml-1">no file chosen</span>
-              </div>
-              <div>
-                <button class="pick-file" @click="pickfile">
-                  Choose file
-                </button>
-              </div>
-              <div class="allowed-files">
-                Only
-                <span
-                    v-for="(type, x) in question.allowed_files"
-                    :key="x">
-                  {{ `${type} ${question.allowed_files.length > (x+1) ? ',' : ''}` }}
+            <div v-if="question.type === 'file_upload'" class="file-container d-flex">
+              <div class="col-4 pa-0">
+                <div class="indicator mb-2 d-none">
+                  <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M9 0C4.03763 0 0 4.03763 0 9C0 13.9624 4.03763 18 9 18C13.9624 18 18 13.9624 18 9C18 4.03763 13.9624 0 9 0ZM9 16.875C4.6575 16.875 1.125 13.3425 1.125 9C1.125 4.6575 4.6575 1.125 9 1.125C13.3425 1.125 16.875 4.6575 16.875 9C16.875 13.3425 13.3425 16.875 9 16.875Z"
+                        fill="#193074"/>
+                    <path d="M9 4.1543L9 10.1543" stroke="#193074" stroke-width="1.5" stroke-linecap="round"/>
+                    <circle cx="9" cy="13" r="1" fill="#193074"/>
+                  </svg>
+                  <span class="ml-1">no file chosen</span>
+                </div>
+                <div>
+                  <button class="pick-file file-picked" @click="pickfile">
+                    Choose file
+                  </button>
+                </div>
+                <div class="allowed-files">
+                  Only
+                  <span
+                      v-for="(type, x) in question.allowed_files"
+                      :key="x">
+                  {{ `${type} ${question.allowed_files.length > (x + 1) ? ',' : ''}` }}
                 </span>
-                accepted
+                  accepted
+                </div>
               </div>
-            </div>
-            <div class="col-12 col-sm-6 col-md-8 d-block d-sm-flex">
-              <div class="justify-center align-center d-none">
-                <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <g clip-path="url(#clip0)">
-                    <path d="M11.5 0C10.9477 0 10.5 0.447734 10.5 1.00001V5.00002C10.5 5.55229 10.9477 6.00003 11.5 6.00003C12.0523 6.00003 12.5 5.55229 12.5 5.00002V1.00001C12.5 0.447734 12.0523 0 11.5 0Z" fill="#2D50A7"/>
-                    <path d="M11.5 16C10.9477 16 10.5 16.4477 10.5 17V21C10.5 21.5523 10.9477 22 11.5 22C12.0523 22 12.5 21.5523 12.5 21V17C12.5 16.4477 12.0523 16 11.5 16Z" fill="#73A1FB"/>
-                    <path d="M7.96524 6.04919L5.13678 3.22064C4.74637 2.8301 4.11318 2.8301 3.72259 3.22064C3.33205 3.61118 3.33205 4.24433 3.72259 4.63483L6.55106 7.46338C6.74631 7.65863 7.00227 7.75629 7.25811 7.75629C7.51398 7.75629 7.76999 7.65863 7.96516 7.46338C8.35579 7.07283 8.35579 6.43973 7.96524 6.04919Z" fill="#355EC9"/>
-                    <path d="M20.5 10H18.5C17.9477 10 17.5 10.4477 17.5 11C17.5 11.5523 17.9477 12 18.5 12H20.5C21.0523 12 21.5 11.5523 21.5 11C21.5 10.4477 21.0523 10 20.5 10Z" fill="#C4D9FD"/>
-                    <path d="M16.4492 14.5351C16.0588 14.1445 15.4256 14.1446 15.0351 14.5351C14.6445 14.9256 14.6446 15.5587 15.0351 15.9492L17.8636 18.7777C18.0589 18.9729 18.3148 19.0705 18.5707 19.0705C18.8267 19.0705 19.0826 18.9729 19.2778 18.7777C19.6683 18.3871 19.6683 17.754 19.2778 17.3635L16.4492 14.5351Z" fill="#C4D9FD"/>
-                    <path d="M6.50003 11C6.50003 10.4477 6.05229 10 5.50002 10H1.50001C0.947734 10 0.5 10.4477 0.5 11C0.5 11.5523 0.947734 12 1.50001 12H5.50002C6.05229 12 6.50003 11.5523 6.50003 11Z" fill="#3D6DEB"/>
-                    <path d="M7.9652 14.5351C7.57474 14.1446 6.94151 14.1446 6.55101 14.5351L3.72259 17.3635C3.33205 17.754 3.33205 18.3872 3.72259 18.7777C3.91784 18.973 4.17381 19.0706 4.42973 19.0706C4.68565 19.0706 4.94162 18.973 5.13678 18.7777L7.9652 15.9493C8.35574 15.5588 8.35574 14.9256 7.9652 14.5351Z" fill="#5286FA"/>
-                  </g>
-                  <defs>
-                    <clipPath id="clip0">
-                      <rect width="22" height="22" fill="white"/>
-                    </clipPath>
-                  </defs>
-                </svg>
+              <div class="col-8 d-flex py-0">
+                <div class="justify-center align-center d-none">
+                  <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <g clip-path="url(#clip0)">
+                      <path
+                          d="M11.5 0C10.9477 0 10.5 0.447734 10.5 1.00001V5.00002C10.5 5.55229 10.9477 6.00003 11.5 6.00003C12.0523 6.00003 12.5 5.55229 12.5 5.00002V1.00001C12.5 0.447734 12.0523 0 11.5 0Z"
+                          fill="#2D50A7"/>
+                      <path
+                          d="M11.5 16C10.9477 16 10.5 16.4477 10.5 17V21C10.5 21.5523 10.9477 22 11.5 22C12.0523 22 12.5 21.5523 12.5 21V17C12.5 16.4477 12.0523 16 11.5 16Z"
+                          fill="#73A1FB"/>
+                      <path
+                          d="M7.96524 6.04919L5.13678 3.22064C4.74637 2.8301 4.11318 2.8301 3.72259 3.22064C3.33205 3.61118 3.33205 4.24433 3.72259 4.63483L6.55106 7.46338C6.74631 7.65863 7.00227 7.75629 7.25811 7.75629C7.51398 7.75629 7.76999 7.65863 7.96516 7.46338C8.35579 7.07283 8.35579 6.43973 7.96524 6.04919Z"
+                          fill="#355EC9"/>
+                      <path
+                          d="M20.5 10H18.5C17.9477 10 17.5 10.4477 17.5 11C17.5 11.5523 17.9477 12 18.5 12H20.5C21.0523 12 21.5 11.5523 21.5 11C21.5 10.4477 21.0523 10 20.5 10Z"
+                          fill="#C4D9FD"/>
+                      <path
+                          d="M16.4492 14.5351C16.0588 14.1445 15.4256 14.1446 15.0351 14.5351C14.6445 14.9256 14.6446 15.5587 15.0351 15.9492L17.8636 18.7777C18.0589 18.9729 18.3148 19.0705 18.5707 19.0705C18.8267 19.0705 19.0826 18.9729 19.2778 18.7777C19.6683 18.3871 19.6683 17.754 19.2778 17.3635L16.4492 14.5351Z"
+                          fill="#C4D9FD"/>
+                      <path
+                          d="M6.50003 11C6.50003 10.4477 6.05229 10 5.50002 10H1.50001C0.947734 10 0.5 10.4477 0.5 11C0.5 11.5523 0.947734 12 1.50001 12H5.50002C6.05229 12 6.50003 11.5523 6.50003 11Z"
+                          fill="#3D6DEB"/>
+                      <path
+                          d="M7.9652 14.5351C7.57474 14.1446 6.94151 14.1446 6.55101 14.5351L3.72259 17.3635C3.33205 17.754 3.33205 18.3872 3.72259 18.7777C3.91784 18.973 4.17381 19.0706 4.42973 19.0706C4.68565 19.0706 4.94162 18.973 5.13678 18.7777L7.9652 15.9493C8.35574 15.5588 8.35574 14.9256 7.9652 14.5351Z"
+                          fill="#5286FA"/>
+                    </g>
+                    <defs>
+                      <clipPath id="clip0">
+                        <rect width="22" height="22" fill="white"/>
+                      </clipPath>
+                    </defs>
+                  </svg>
 
+                </div>
+                <div class="file-name ">myessay.pdf</div>
+                <div class="file-size mx-auto mx-md-0">126kb</div>
+                <div class="file-type mx-auto mx-md-0">pdf</div>
+                <div class="save-status hidden-sm-and-down d-md-flex justify-sm-center align-center">
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M5.24909 9.45091L2.79909 7.00091L1.98242 7.81758L5.24909 11.0842L12.2491 4.08424L11.4324 3.26758L5.24909 9.45091Z"
+                        fill="#289448"/>
+                  </svg>
+                  Saved successfuly
+                </div>
               </div>
-              <div class="file-name ">myessay.pdf</div>
-              <div class="file-size mx-sm-auto">126kb</div>
-              <div class="file-type mx-sm-auto">pdf</div>
-              <div class="save-status d-flex justify-sm-center align-center"> <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M5.24909 9.45091L2.79909 7.00091L1.98242 7.81758L5.24909 11.0842L12.2491 4.08424L11.4324 3.26758L5.24909 9.45091Z" fill="#289448"/>
-              </svg>
-                Saved successfuly</div>
             </div>
             <input
                 v-if="question.type === 'file_upload'"
@@ -527,7 +547,7 @@ export default {
   justify-content: center;
 
   color: #3C3C3C;
-margin-bottom: 9px;
+  margin-bottom: 9px;
 }
 
 .indicator {
@@ -544,7 +564,8 @@ margin-bottom: 9px;
   color: #3C3C3C;
 
 }
-.allowed-files{
+
+.allowed-files {
   font-family: Inter;
   font-style: normal;
   font-weight: bold;
@@ -555,7 +576,8 @@ margin-bottom: 9px;
 
   color: #193074;
 }
-.file-name{
+
+.file-name {
   font-family: Inter;
   font-style: normal;
   font-weight: bold;
@@ -569,7 +591,7 @@ margin-bottom: 9px;
   color: #193074;
 }
 
-.file-size, .file-type{
+.file-size, .file-type {
   font-family: Inter;
   font-style: normal;
   font-weight: 500;
@@ -583,7 +605,7 @@ margin-bottom: 9px;
   color: #4A4A4A;
 }
 
-.save-status{
+.save-status {
   font-family: Inter;
   font-style: normal;
   font-weight: normal;
@@ -594,10 +616,23 @@ margin-bottom: 9px;
 
   color: #289448;
 }
+
 /* Portrait phones and smaller */
 @media (max-width: 700px) {
   .pick-file {
-    width: 308px;
+    &.file-not-picked{
+      width: 308px;
+    }
+    margin-bottom: 0px;
+  }
+  .file-container {
+    box-shadow: 0px 0px 10px 2px rgba(25, 48, 116, 0.25);
+    border-radius: 8px;
+    width: 100%;
+    .allowed-files{
+      position: absolute;
+      margin-top: 12px;
+    }
   }
 }
 </style>
