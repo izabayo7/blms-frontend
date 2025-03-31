@@ -3,7 +3,7 @@
     <div class="users-page-container d-flex flex-column">
       <div class="header">
         <div class="header-wrapper d-flex justify-space-between">
-          <div class="heading d-flex align-center">
+          <div class="heading col d-flex align-center">
             <div class="icon">
               <div class="icon-wrapper">
                 <svg xmlns="http://www.w3.org/2000/svg" width="22" height="25" viewBox="0 0 22 25" fill="none">
@@ -17,12 +17,12 @@
               <h2>Users List</h2>
             </div>
           </div>
-          <div class="search">
+          <div class="search col">
             <div class="search-wrapper">
               <search  placeholder="Search user"/>
             </div>
           </div>
-          <div class="add-user">
+          <div class="add-user col d-flex justify-end">
             <div class="add-user-button">
               <button-ui>
                 <template #content>Add user</template>
@@ -32,8 +32,13 @@
         </div>
       </div>
       <div class="tabular-users">
-        <div class="table-wrapper mt-10">
-          <table-ui :data="users"/>
+        <div class="table-wrapper mt-6">
+          <div class="table-header">
+            <table-header />
+          </div>
+          <div class="table">
+            <table-ui :data="users"/>
+          </div>
         </div>
       </div>
     </div>
@@ -44,35 +49,36 @@
 import buttonUi from '@/components/reusable/ui/button-ui'
 import Search from '@/components/reusable/Search2'
 import tableUi from '@/components/reusable/ui/table-ui'
+import TableHeader from "../../components/reusable/ui/table-header";
 export default {
   name: "Users",
-  components:{buttonUi,Search,tableUi},
+  components:{TableHeader, buttonUi,Search,tableUi},
   data(){
     return{
       users:[
         {username:"liberi",status:"pending", "User type":"Student",gender:"M",Faculty:"Economics","S group":"Year 2","Date added":"today","Date joined":"pending"},
-        {username:"liberi",status:"pending", "User type":"Student",gender:"M",Faculty:"Economics","S group":"Year 2","Date added":"today","Date joined":"pending"},
-        {username:"liberi",status:"pending", "User type":"Student",gender:"M",Faculty:"Economics","S group":"Year 2","Date added":"today","Date joined":"pending"},
-        {username:"liberi",status:"pending", "User type":"Student",gender:"M",Faculty:"Economics","S group":"Year 2","Date added":"today","Date joined":"pending"},
-        {username:"liberi",status:"pending", "User type":"Student",gender:"M",Faculty:"Economics","S group":"Year 2","Date added":"today","Date joined":"pending"},
-        {username:"liberi",status:"pending", "User type":"Student",gender:"M",Faculty:"Economics","S group":"Year 2","Date added":"today","Date joined":"pending"},
-        {username:"liberi",status:"pending", "User type":"Student",gender:"M",Faculty:"Economics","S group":"Year 2","Date added":"today","Date joined":"pending"},
-        {username:"liberi",status:"pending", "User type":"Student",gender:"M",Faculty:"Economics","S group":"Year 2","Date added":"today","Date joined":"pending"},
-        {username:"liberi",status:"pending", "User type":"Student",gender:"M",Faculty:"Economics","S group":"Year 2","Date added":"today","Date joined":"pending"},
-        {username:"liberi",status:"pending", "User type":"Student",gender:"M",Faculty:"Economics","S group":"Year 2","Date added":"today","Date joined":"pending"},
-        {username:"liberi",status:"pending", "User type":"Student",gender:"M",Faculty:"Economics","S group":"Year 2","Date added":"today","Date joined":"pending"},
-        {username:"liberi",status:"pending", "User type":"Student",gender:"M",Faculty:"Economics","S group":"Year 2","Date added":"today","Date joined":"pending"},
-        {username:"liberi",status:"pending", "User type":"Student",gender:"M",Faculty:"Economics","S group":"Year 2","Date added":"today","Date joined":"pending"},
-        {username:"liberi",status:"pending", "User type":"Student",gender:"M",Faculty:"Economics","S group":"Year 2","Date added":"today","Date joined":"pending"},
-        {username:"liberi",status:"pending", "User type":"Student",gender:"M",Faculty:"Economics","S group":"Year 2","Date added":"today","Date joined":"pending"},
-        {username:"liberi",status:"pending", "User type":"Student",gender:"M",Faculty:"Economics","S group":"Year 2","Date added":"today","Date joined":"pending"},
-        {username:"liberi",status:"pending", "User type":"Student",gender:"M",Faculty:"Economics","S group":"Year 2","Date added":"today","Date joined":"pending"},
-        {username:"liberi",status:"pending", "User type":"Student",gender:"M",Faculty:"Economics","S group":"Year 2","Date added":"today","Date joined":"pending"},
-        {username:"liberi",status:"pending", "User type":"Student",gender:"M",Faculty:"Economics","S group":"Year 2","Date added":"today","Date joined":"pending"},
-        {username:"liberi",status:"pending", "User type":"Student",gender:"M",Faculty:"Economics","S group":"Year 2","Date added":"today","Date joined":"pending"},
-        {username:"liberi",status:"pending", "User type":"Student",gender:"M",Faculty:"Economics","S group":"Year 2","Date added":"today","Date joined":"pending"},
-        {username:"liberi",status:"pending", "User type":"Student",gender:"M",Faculty:"Economics","S group":"Year 2","Date added":"today","Date joined":"pending"},
-        {username:"liberi",status:"pending", "User type":"Student",gender:"M",Faculty:"Economics","S group":"Year 2","Date added":"today","Date joined":"pending"},
+        {username:"ntwari",status:"registered", "User type":"Student",gender:"M",Faculty:"Economics","S group":"Year 1","Date added":"today","Date joined":"pending"},
+        {username:"clarance",status:"pending", "User type":"Student",gender:"M",Faculty:"Agriculture","S group":"Year 2","Date added":"today","Date joined":"pending"},
+        {username:"benon",status:"pending", "User type":"Student",gender:"F",Faculty:"Science","S group":"Year 2","Date added":"today","Date joined":"pending"},
+        {username:"jamapack",status:"pending", "User type":"Instructor",gender:"M",Faculty:"Telecommunic Systems","S group":"Year 2","Date added":"today","Date joined":"pending"},
+        {username:"olivier",status:"pending", "User type":"Student",gender:"M",Faculty:"Economics","S group":"Year 1","Date added":"today","Date joined":"pending"},
+        {username:"cedro",status:"pending", "User type":"Student",gender:"M",Faculty:"Economics","S group":"Year 2","Date added":"today","Date joined":"pending"},
+        {username:"umukura",status:"registered", "User type":"Instructor",gender:"M",Faculty:"Economics","S group":"Year 2","Date added":"today","Date joined":"pending"},
+        {username:"izabayo",status:"pending", "User type":"Instructor",gender:"F",Faculty:"Science","S group":"Year 2","Date added":"today","Date joined":"pending"},
+        {username:"clever",status:"pending", "User type":"Student",gender:"M",Faculty:"Economics","S group":"Year 2","Date added":"today","Date joined":"pending"},
+        {username:"anne",status:"pending", "User type":"Student",gender:"F",Faculty:"Electronics","S group":"Year 3","Date added":"today","Date joined":"pending"},
+        {username:"anitaMarie",status:"registered", "User type":"Student",gender:"M",Faculty:"Economics","S group":"Year 2","Date added":"today","Date joined":"pending"},
+        {username:"faustion",status:"pending", "User type":"Student",gender:"M",Faculty:"Science","S group":"Year 2","Date added":"today","Date joined":"pending"},
+        {username:"liberi",status:"pending", "User type":"Student",gender:"M",Faculty:"Economics","S group":"Year 3","Date added":"today","Date joined":"pending"},
+        {username:"liberi",status:"pending", "User type":"Instructor",gender:"F",Faculty:"Iot","S group":"Year 2","Date added":"today","Date joined":"pending"},
+        {username:"liberi",status:"pending", "User type":"Instructor",gender:"F",Faculty:"Economics","S group":"Year 3","Date added":"today","Date joined":"pending"},
+        {username:"liberi",status:"registered", "User type":"Instructor",gender:"M",Faculty:"Economics","S group":"Year 3","Date added":"today","Date joined":"pending"},
+        {username:"liberi",status:"pending", "User type":"Student",gender:"F",Faculty:"Ict","S group":"Year 1","Date added":"today","Date joined":"pending"},
+        {username:"liberi",status:"pending", "User type":"Student",gender:"F",Faculty:"Economics","S group":"Year 1","Date added":"today","Date joined":"pending"},
+        {username:"liberi",status:"pending", "User type":"Admin",gender:"M",Faculty:"Ict","S group":"Year 2","Date added":"today","Date joined":"pending"},
+        {username:"liberi",status:"registered", "User type":"Student",gender:"M",Faculty:"Economics","S group":"Year 2","Date added":"today","Date joined":"pending"},
+        {username:"liberi",status:"registered", "User type":"Student",gender:"F",Faculty:"Ict","S group":"Year 2","Date added":"today","Date joined":"pending"},
+        {username:"liberi",status:"registered", "User type":"Admin",gender:"M",Faculty:"Electronics","S group":"Year 2","Date added":"today","Date joined":"pending"},
         {username:"liberi",status:"pending", "User type":"Student",gender:"M",Faculty:"Economics","S group":"Year 2","Date added":"today","Date joined":"pending"},
       ]
     }
@@ -90,28 +96,7 @@ export default {
     width:90%;
 
     .header{
-      width:100%;
-
-      .header-wrapper{
-        margin-top:4rem;
-
-        .heading{
-          .icon{
-            margin-right:1.55rem;
-          }
-          .text-content{
-
-            h2,h4{
-              color:$font;
-            }
-          }
-        }
-        .search{
-          .search-wrapper{
-            width:20rem;
-          }
-        }
-      }
+      @include users-page-header;
 
     }
 
