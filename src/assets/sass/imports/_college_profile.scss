@@ -1,215 +1,466 @@
 #schoolProfile {
-    .header {
-      // background: rgba(0, 0, 0, 0.8);
+  .header {
+    // background: rgba(0, 0, 0, 0.8);
+    justify-content: center;
+    align-items: center;
+    min-height: 338px;
+    .logo {
+      width: 122px;
+      height: 122px;
+
+      background: #ffffff;
+      border: 1px solid #c4c4c4;
+      border-radius: 14px;
+
+      display: flex;
       justify-content: center;
       align-items: center;
-      min-height: 338px;
-      .logo {
-        width: 122px;
-        height: 122px;
-  
-        background: #ffffff;
-        border: 1px solid #c4c4c4;
-        border-radius: 14px;
-  
+      margin: auto;
+    }
+    &-content {
+      max-width: 445px;
+      &:nth-child(1) {
+        max-width: 193px;
+        margin-right: 179px;
+        text-align: center;
+      }
+      &.hidden-md-and-up {
+        margin-top: 29px;
+      }
+    }
+    .welcome {
+      font-family: "Montserrat";
+      font-style: normal;
+      font-weight: 700;
+      font-size: 35px;
+      line-height: 45px;
+
+      /* or 129% */
+      font-feature-settings: "liga" off;
+
+      color: #fcfcfc;
+    }
+    .motto {
+      font-family: "Montserrat";
+      font-style: normal;
+      font-weight: 500;
+      font-size: 18px;
+      line-height: 30px;
+
+      /* or 167% */
+
+      color: #d8d8d8;
+    }
+    .category {
+      font-family: "Montserrat";
+      font-style: normal;
+      font-weight: 500;
+      font-size: 18px;
+      line-height: 30px;
+
+      /* identical to box height, or 167% */
+
+      color: #d8d8d8;
+      margin-bottom: 21px;
+    }
+    .login {
+      font-family: "Montserrat";
+      font-style: normal;
+      font-weight: 500;
+      font-size: 18px;
+      line-height: 30px;
+
+      /* identical to box height, or 167% */
+
+      color: #ffffff;
+    }
+    .connect {
+      button {
+        width: 193px;
+        height: 48px;
         display: flex;
         justify-content: center;
         align-items: center;
-        margin: auto;
-      }
-      &-content {
-        max-width: 445px;
-        &:nth-child(1) {
-          max-width: 193px;
-          margin-right: 179px;
-          text-align: center;
-        }
-        &.hidden-md-and-up {
-          margin-top: 29px;
+        background: #3ce970;
+        border-radius: 9px;
+        font-family: "Montserrat";
+        font-style: normal;
+        font-weight: 500;
+        font-size: 18px;
+        line-height: 30px;
+        span {
+          color: #ffffff;
         }
       }
-      .welcome {
+    }
+  }
+
+  .courses-container {
+    &-content {
+      margin-left: auto;
+      margin-right: auto;
+      max-width: 80%;
+      width: 1090px;
+      padding-top: 100px;
+      .title {
         font-family: "Montserrat";
         font-style: normal;
         font-weight: 700;
-        font-size: 35px;
+        font-size: 35px !important;
         line-height: 45px;
-  
-        /* or 129% */
+
+        /* identical to box height, or 129% */
         font-feature-settings: "liga" off;
-  
-        color: #fcfcfc;
-      }
-      .motto {
-        font-family: "Montserrat";
-        font-style: normal;
-        font-weight: 500;
-        font-size: 18px;
-        line-height: 30px;
-  
-        /* or 167% */
-  
-        color: #d8d8d8;
+
+        color: #000000;
+        margin-bottom: 7px;
       }
       .category {
-        font-family: "Montserrat";
-        font-style: normal;
-        font-weight: 500;
-        font-size: 18px;
-        line-height: 30px;
-  
-        /* identical to box height, or 167% */
-  
-        color: #d8d8d8;
-        margin-bottom: 21px;
+        margin-bottom: 26px;
+        &-name {
+          font-family: "Montserrat";
+          font-style: normal;
+          font-weight: 500;
+          font-size: 25px;
+          line-height: 45px;
+
+          /* identical to box height, or 180% */
+          font-feature-settings: "liga" off;
+
+          color: #000000;
+          margin-bottom: 20px;
+        }
       }
-      .login {
-        font-family: "Montserrat";
-        font-style: normal;
-        font-weight: 500;
-        font-size: 18px;
-        line-height: 30px;
-  
-        /* identical to box height, or 167% */
-  
-        color: #ffffff;
+    }
+  }
+  .details {
+    .title {
+      max-width: 499px;
+      margin: auto;
+      font-family: "Inter";
+      font-style: normal;
+      font-weight: 700;
+      font-size: 35px !important;
+      line-height: 36px;
+
+      /* or 103% */
+      text-align: center;
+
+      color: #000000;
+      margin-bottom: 15px;
+    }
+    .subtitle {
+      font-family: "Inter";
+      font-style: normal;
+      font-weight: 500;
+      font-size: 16px;
+      line-height: 24px;
+
+      /* identical to box height, or 150% */
+      text-align: center;
+
+      color: #343434;
+      div {
+        margin-bottom: 15px;
       }
-      .connect {
-        button {
+    }
+  }
+  .testimonials .title {
+    font-family: "Inter";
+    font-style: normal;
+    font-weight: 700;
+    font-size: 35px;
+    line-height: 36px;
+
+    /* identical to box height, or 103% */
+    text-align: center;
+
+    color: #000000;
+
+    margin: 37px 27px;
+  }
+  .top {
+    max-width: 80%;
+    margin: auto;
+    margin-bottom: 47px;
+    .buttons {
+      display: flex;
+      button {
+        width: 193px;
+        height: 48px;
+
+        background: #000000;
+        border-radius: 9px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        svg {
+          margin-right: 16px;
+        }
+        div {
+          font-family: "Montserrat";
+          font-style: normal;
+          font-weight: 500;
+          font-size: 18px;
+          line-height: 30px;
+
+          /* identical to box height, or 167% */
+          text-align: center;
+
+          color: #ffffff;
+        }
+        &:last-child {
+          margin-left: auto;
+        }
+      }
+    }
+  }
+  .routeContent-container {
+    .routeContent {
+      .course-details {
+        max-width: 100%;
+        width: 80%;
+        height: 431px;
+        border-radius: 5.41262px;
+        background-repeat: no-repeat;
+        background-size: cover;
+        position: relative;
+        .absolute {
+          position: absolute;
+          top: 0;
+          width: 100%;
+          padding: 45px 77px 0px;
+          .details {
+            max-width: 368px;
+          }
+        }
+        .course-name {
+          font-family: "Montserrat";
+          font-style: normal;
+          font-weight: 500;
+          font-size: 25px;
+          line-height: 45px;
+          margin-bottom: 8px;
+          /* identical to box height, or 180% */
+          font-feature-settings: "liga" off;
+
+          color: #ffffff;
+        }
+        .language {
+          font-family: "Inter";
+          font-style: normal;
+          font-weight: 500;
+          font-size: 10.8252px;
+          line-height: 13px;
+
+          color: #ffffff;
+        }
+        .category {
+          font-family: "Montserrat";
+          font-style: normal;
+          font-weight: 700;
+          font-size: 30px;
+          line-height: 37px;
+
+          color: #ffffff;
+        }
+        .description {
+          font-family: "Inter";
+          font-style: normal;
+          font-weight: 400;
+          font-size: 15px;
+          line-height: 18px;
+          margin-bottom: 8px;
+          color: #ffffff;
+        }
+        .price div {
+          font-family: "Montserrat";
+          font-style: normal;
+          font-weight: 700;
+          font-size: 30px;
+          line-height: 37px;
+
+          color: #ffffff;
+          &:last-child {
+            margin-left: 12px;
+            font-family: "Inter";
+            font-style: normal;
+            font-weight: 500;
+            font-size: 7px;
+            line-height: 8px;
+            text-align: center;
+
+            color: #000000;
+
+            width: 66px;
+            height: 22px;
+
+            background: #ffffff;
+          }
+        }
+        .action button {
           width: 193px;
           height: 48px;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          background: #3ce970;
+          margin-top: 3px;
+          background: #3734d5;
           border-radius: 9px;
           font-family: "Montserrat";
           font-style: normal;
           font-weight: 500;
           font-size: 18px;
           line-height: 30px;
-          span {
-            color: #ffffff;
+
+          /* identical to box height, or 167% */
+          text-align: center;
+
+          color: #ffffff;
+        }
+        .certificate div {
+          font-family: "Inter";
+          font-style: normal;
+          font-weight: 500;
+          font-size: 10.8252px;
+          line-height: 13px;
+
+          color: #ffffff;
+        }
+        .information {
+          width: 503px;
+          height: 46px;
+          font-family: "Montserrat";
+          font-style: normal;
+          font-weight: 500;
+          font-size: 15px;
+          line-height: 36px;
+
+          /* identical to box height, or 240% */
+
+          color: #ffffff;
+          background: rgba(253, 253, 253, 0.25);
+        }
+        .video {
+          width: 529px;
+          height: 293px;
+          left: 659px;
+          top: 273px;
+
+          background: rgba(0, 0, 0, 0.5);
+          border: 1px solid #616161;
+          margin-bottom: 24px;
+          * {
+            width: 526px;
+            height: 290px;
           }
         }
       }
+      .bg-one {
+        height: 100%;
+        width: 100%;
+        background: linear-gradient(
+          90deg,
+          #0e0e0e 45.63%,
+          #0e0e0e 45.64%,
+          rgba(1, 1, 1, 0) 88.87%
+        );
+        transform: rotate(-180deg);
+      }
+      .bg-two {
+        height: 300px;
+        width: 100%;
+        bottom: 0;
+        background: linear-gradient(
+          180deg,
+          #2b2b2b 0%,
+          rgba(1, 1, 1, 0) 81.07%
+        );
+        border-radius: 5.41262px;
+        transform: rotate(-180deg);
+        position: absolute;
+      }
     }
-  
-    .courses-container {
+  }
+  .needed-materials {
+    margin-left: 260px;
+    .tittle {
+      font-family: "Montserrat";
+      font-style: normal;
+      font-weight: 700;
+      font-size: 28.9021px;
+      line-height: 35px;
+      margin: 27px 0px 3px;
+      color: #000000;
+    }
+    .contact div {
+      font-family: "Inter";
+      font-style: normal;
+      font-weight: 500;
+      font-size: 16px;
+      line-height: 24px;
+
+      /* identical to box height, or 150% */
+
+      color: #343434;
+      &:last-child {
+        font-family: "Inter";
+        font-style: normal;
+        font-weight: 700;
+        font-size: 20px;
+        line-height: 24px;
+
+        /* identical to box height, or 120% */
+        margin-left: 28px;
+        color: #343434;
+        margin-bottom: 92px;
+      }
+    }
+    .material {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 27px;
+      div {
+        margin-left: 6px;
+        max-width: 184px;
+        font-family: "Inter";
+        font-style: normal;
+        font-weight: 500;
+        font-size: 15px;
+        line-height: 18px;
+
+        color: #000000;
+      }
+    }
+  }
+}
+
+/* Portrait phones and smaller */
+@media (max-width: 1200px) {
+  #schoolProfile {
+    .header {
       &-content {
-        margin-left: auto;
-        margin-right: auto;
-        max-width: 80%;
-        width: 1090px;
-        padding-top: 100px;
-        .title {
-          font-family: "Montserrat";
-          font-style: normal;
-          font-weight: 700;
-          font-size: 35px !important;
-          line-height: 45px;
-  
-          /* identical to box height, or 129% */
-          font-feature-settings: "liga" off;
-  
-          color: #000000;
-          margin-bottom: 7px;
+        margin: auto !important;
+        max-width: 100%;
+        text-align: center;
+      }
+      .welcome {
+        font-size: 15px;
+      }
+      .motto {
+        font-size: 12px;
+      }
+      .connect {
+        button {
+          margin: 29px auto 14px;
         }
-        .category {
-          margin-bottom: 26px;
-          &-name {
-            font-family: "Montserrat";
-            font-style: normal;
-            font-weight: 500;
-            font-size: 25px;
-            line-height: 45px;
-  
-            /* identical to box height, or 180% */
-            font-feature-settings: "liga" off;
-  
-            color: #000000;
-            margin-bottom: 20px;
-          }
-  
-        }
+      }
+      .login {
+        padding-bottom: 27px;
       }
     }
     .details {
       .title {
-        max-width: 499px;
-        margin: auto;
-        font-family: "Inter";
-        font-style: normal;
-        font-weight: 700;
-        font-size: 35px !important;
-        line-height: 36px;
-  
-        /* or 103% */
-        text-align: center;
-  
-        color: #000000;
-        margin-bottom: 15px;
-      }
-      .subtitle {
-        font-family: "Inter";
-        font-style: normal;
-        font-weight: 500;
-        font-size: 16px;
-        line-height: 24px;
-  
-        /* identical to box height, or 150% */
-        text-align: center;
-  
-        color: #343434;
-        div {
-          margin-bottom: 15px;
-        }
-      }
-    }
-    .testimonials .title {
-      font-family: "Inter";
-      font-style: normal;
-      font-weight: 700;
-      font-size: 35px;
-      line-height: 36px;
-  
-      /* identical to box height, or 103% */
-      text-align: center;
-  
-      color: #000000;
-  
-      margin: 37px 27px;
-    }
-  }
-  
-  /* Portrait phones and smaller */
-  @media (max-width: 1200px) {
-    #schoolProfile {
-      .header {
-        &-content {
-          margin: auto !important;
-          max-width: 100%;
-          text-align: center;
-        }
-        .welcome {
-          font-size: 15px;
-        }
-        .motto {
-          font-size: 12px;
-        }
-        .connect {
-          button {
-            margin: 29px auto 14px;
-          }
-        }
-        .login {
-          padding-bottom: 27px;
-        }
-      }
-      .details {
-        .title {
-          font-size: 22px !important;
-        }
+        font-size: 22px !important;
       }
     }
   }
+}

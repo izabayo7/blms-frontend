@@ -11,7 +11,7 @@
       <div class="name">{{ course.name }}</div>
       <div class="language">{{ course.language }}</div>
     </div>
-    <div v-if="course" class="text-center ml-auto">
+    <div v-if="course.haveCertificate" class="text-center ml-auto">
       <svg
         width="46"
         height="46"
