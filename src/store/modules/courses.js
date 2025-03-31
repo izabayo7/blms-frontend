@@ -89,7 +89,7 @@ export default {
             return state.courses.data.filter(course => course.name == courseName)[0]
         },
         //update a course
-        updateCourse({ state, commit }, { course, coverPicture }) {
+        updateCourse({ state, commit, dispatch }, { course, coverPicture }) {
             let courseIndex
             for (const i in state.courses.data) {
                 if (state.courses.data[i]._id == state.selectedCourse) {
@@ -97,15 +97,9 @@ export default {
                     break
                 }
             }
-            commit('modal/update_title', "Updating course", { root: true })
-            commit('modal/update_message', "uploading changes", { root: true })
-            commit('modal/toogle_visibility', null, { root: true })
-            return apis.update('course', state.selectedCourse, course, {
-                onUploadProgress: (progressEvent) => {
-                    commit('modal/update_progress', parseInt(Math.round((progressEvent.loaded / progressEvent.total) * 100)), { root: true })
-                }
-            }).then(d => {
-
+            // set the dialog
+            dispatch('modal/set_modal', { template: 'display_information', title: 'Updating Course', message: 'Saving changes' }, { root: true })
+            return apis.update('course', state.selectedCourse, course).then(d => {
 
                 state.courses.data[courseIndex].name = d.data.name
                 state.courses.data[courseIndex].description = d.data.description
@@ -123,23 +117,21 @@ export default {
                             commit('modal/update_progress', parseInt(Math.round((progressEvent.loaded / progressEvent.total) * 100)), { root: true })
                         }
                     }).then(courseData => {
-                        state.courses.data[courseIndex].coverPicture = courseData
+                        state.courses.data[courseIndex].coverPicture = courseData.data.coverPicture
                     })
                 }
                 setTimeout(() => {
-                    commit('modal/toogle_visibility', null, { root: true })
-                    commit('modal/reset_progress', null, { root: true })
-                    commit('modal/reset_message', null, { root: true })
-                    commit('modal/reset_title', null, { root: true })
-                }, 1000);
+                    dispatch('modal/reset_modal', null, { root: true })
+                }, 3000);
 
             })
 
         },
         //update a chapter
-        updateChapter({ state, commit }, { chapter, content, video, attachments, quiz }) {
-            commit('modal/update_title', "Updating chapter", { root: true })
-            commit('modal/toogle_visibility', null, { root: true })
+        updateChapter({ state, commit, dispatch }, { chapter, content, video, attachments, quiz }) {
+
+            // set the dialog
+            dispatch('modal/set_modal', { template: 'display_information', title: 'Updating Chapter', message: 'Saving changes' }, { root: true })
             let courseIndex, chapterIndex
             for (const i in state.courses.data) {
                 if (state.courses.data[i]._id == state.selectedCourse) {
@@ -217,11 +209,8 @@ export default {
 
                 }
                 setTimeout(() => {
-                    commit('modal/toogle_visibility', null, { root: true })
-                    commit('modal/reset_progress', null, { root: true })
-                    commit('modal/reset_message', null, { root: true })
-                    commit('modal/reset_title', null, { root: true })
-                }, 1000);
+                    dispatch('modal/reset_modal', null, { root: true })
+                }, 3000);
 
             })
 
@@ -251,7 +240,7 @@ export default {
             })
         },
         //delete a course
-        delete_chapter({ state }, {id}) {
+        delete_chapter({ state }, { id }) {
             apis.delete('chapter', id).then(() => {
                 for (const i in state.courses.data) {
                     if (state.courses.data[i]._id == state.selectedCourse) {
@@ -312,9 +301,9 @@ export default {
             commit('initialise_new_chapter');
         },
         //save a new chapter
-        addChapter({ state, commit }, { chapter, content, video, attachments, quiz }) {
-            commit('modal/update_title', "Saving chapter", { root: true })
-            commit('modal/toogle_visibility', null, { root: true })
+        addChapter({ state, commit, dispatch }, { chapter, content, video, attachments, quiz }) {
+            // set the dialog
+            dispatch('modal/set_modal', { template: 'display_information', title: 'Saving Chapter', message: 'Saving content' }, { root: true })
             let courseIndex, chapterIndex
             for (const i in state.courses.data) {
                 if (state.courses.data[i]._id == state.selectedCourse) {
@@ -383,11 +372,8 @@ export default {
 
                 }
                 setTimeout(() => {
-                    commit('modal/toogle_visibility', null, { root: true })
-                    commit('modal/reset_progress', null, { root: true })
-                    commit('modal/reset_message', null, { root: true })
-                    commit('modal/reset_title', null, { root: true })
-                }, 1000);
+                    dispatch('modal/reset_modal', null, { root: true })
+                }, 3000);
 
             })
 

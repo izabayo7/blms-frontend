@@ -102,7 +102,7 @@
                 color="error"
                 class="ml-n2 mt-n2 remove--button"
                 slot="badge"
-                @click="ask_confirmation('DELETE_CHAPTER',{ id: chapter._id})"
+                @click="set_confirmation({ template: 'action_confirmation', method: { action: 'courses/delete_chapter', parameters: { id: chapter._id }}, title: 'Delete Chapter', message: 'Are you sure you want to delete this chapter?'})"
               >
                 <v-icon color="#fff">mdi-window-close</v-icon>
               </v-btn>
@@ -389,7 +389,7 @@
 
   <script>
 // import Apis from "@/services/apis";
-import { mapActions, mapGetters, mapMutations } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 export default {
   name: "editCourse",
 
@@ -483,14 +483,7 @@ export default {
     ]),
     ...mapActions("faculties", ["getFacultyCollegeYears"]),
     ...mapActions("quiz", ["getQuizes"]),
-    ...mapMutations("modal", [
-      "toogle_visibility",
-      "update_modal_template",
-      "update_confirmation_action",
-      "update_confirmation_method",
-      "update_title",
-      "update_message",
-    ]),
+    ...mapActions("modal", ["set_confirmation"]),
     // pick coverPicture
     pickfile() {
       document.getElementById("picture").click();
@@ -531,7 +524,7 @@ export default {
       this.updateCourse({
         course: {
           name: this.course.name,
-          instructor: this.$store.state.user._id,
+          instructor: this.$store.state.user.user._id,
           description: this.course.description,
           facultyCollegeYear: this.selectedFacultyCollegeYearCode,
         },
@@ -606,37 +599,19 @@ export default {
       this.selectedQuizName = "";
       this.course.chapters[this.activeChapter].quiz = [];
     },
-    // handle dialogs
-    ask_confirmation(action, credentials) {
-      if (action == "DELETE_CHAPTER") {
-        this.update_confirmation_action("delete_chapter");
-        this.update_confirmation_method({
-          action: "courses/delete_chapter",
-          parameters: { id: credentials.id },
-        });
-        this.update_modal_template("action_confirmation");
-        this.update_title("Delete Chapter");
-        this.update_message("Are you sure you want to delete this chapter?");
-        this.toogle_visibility();
-      }
-      console.log(credentials);
-    },
-    deleteChapter(chapterId) {
-      console.log(chapterId);
-    },
   },
   created() {
-    this.getFacultyCollegeYears(this.$store.state.user.college);
+    this.getFacultyCollegeYears(this.$store.state.user.user.college);
     this.findCourseByName({
-      userCategory: this.$store.state.user.category.toLowerCase(),
-      userId: this.$store.state.user._id,
+      userCategory: this.$store.state.user.user.category.toLowerCase(),
+      userId: this.$store.state.user.user._id,
       courseName: this.$route.params.name,
     }).then(() => {
       this.selectedFacultyCollegeYearName = `${this.course.facultyCollegeYear.facultyCollege.faculty.name} ${this.course.facultyCollegeYear.collegeYear.digit}`;
     });
     this.getQuizes({
-      userCategory: this.$store.state.user.category.toLowerCase(),
-      userId: this.$store.state.user._id,
+      userCategory: this.$store.state.user.user.category.toLowerCase(),
+      userId: this.$store.state.user.user._id,
     });
   },
 };
