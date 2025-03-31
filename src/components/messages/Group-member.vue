@@ -62,7 +62,7 @@
         <div class="checkbox">
           <checkbox v-model="member.data.isAdmin" />
         </div>
-        <p>Admin</p>
+        <p>Admin {{member.data.isAdmin}}</p>
       </div>
     </div>
   </div>

@@ -13,7 +13,7 @@
       </div>
       <div class="members">
         <div class="header">
-          <p>{{group.members.length+1}} members</p>
+          <p>{{group.members.length}} members</p>
           <div class="member-btn" @click="goToAddMember">
             <div class="icon">
               <svg id="user-add-line" xmlns="http://www.w3.org/2000/svg" width="33" height="33" viewBox="0 0 33 33">
