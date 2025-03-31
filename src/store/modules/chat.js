@@ -1,9 +1,9 @@
 import io from 'socket.io-client'
 import { emit } from '@/services/event_bus'
-import user from '@/store/modules/user'
 import store from '@/store'
 import router from '@/router'
 import apis from "@/services/apis";
+import Vue from 'vue'
 
 const getDefaultState = () => ({
     username: null,
@@ -330,7 +330,9 @@ export default {
 
             return io(process.env.VUE_APP_api_service_url, {
                 query: {
-                    user_name: user.state.user.user_name // username of the connected user
+                    token: Vue.prototype.$session.get(
+                        "jwt"
+                    ) // toke n of the connected user
                 }
             })
         },
