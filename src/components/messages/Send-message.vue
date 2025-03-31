@@ -1,5 +1,23 @@
 <template>
-  <main class="my-send-message">
+  <main class="my-send-message" :class="{replying : replyMsg}">
+    <div class="emoji-container">
+      <VEmojiPicker v-show="showEmojiPicker" @select="selectEmoji"/>
+    </div>
+    <div v-if="replyMsg" class="reply-message">
+      <div class="msg-cntnr">
+        <div class="sender">{{ replyMsg.sender }}</div>
+        <div class="msg">{{ replyMsg.msg.content || 'attachment' }}</div>
+      </div>
+      <div class="close">
+        <button @click="setReplyMsg(undefined)" class="canel">
+          <svg width="35" height="35" viewBox="0 0 35 35" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+                d="M19.6285 17.4998L27.7077 25.579V27.7082H25.5785L17.4993 19.629L9.42018 27.7082H7.29102V25.579L15.3702 17.4998L7.29102 9.42067V7.2915H9.42018L17.4993 15.3707L25.5785 7.2915H27.7077V9.42067L19.6285 17.4998Z"
+                fill="black"/>
+          </svg>
+        </button>
+      </div>
+    </div>
     <div v-show="files.length" class="files-area">
       <div class="header row">
         <div class="cursor-pointer col-6 col-md-4 py-0" @click="pickFile">
@@ -129,7 +147,7 @@
         </div>
         <div class="filePreview"></div>
       </div>
-      <div class="send">
+      <div v-if="msg.replace(/\s/g, '').length" class="send">
         <div class="icon" @click="sendMessage">
           <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -168,14 +186,19 @@
           </svg>
         </div>
       </div>
+      <div v-else class="emoji">
+        <emoji-button class="ml-3" @click="showEmojiPicker = true"/>
+      </div>
     </div>
   </main>
 </template>
 
 <script>
-import {mapGetters, mapState} from "vuex";
+import {mapGetters, mapMutations, mapState} from "vuex";
 import {emit} from "@/services/event_bus";
 import apis from "@/services/apis";
+import {VEmojiPicker} from 'v-emoji-picker';
+import EmojiButton from './EmojiButton.vue'
 
 export default {
   name: "Send-message",
@@ -185,6 +208,7 @@ export default {
       files: [],
       recording: false,
       recordingMode: false,
+      showEmojiPicker: false,
       headers: {
         'X-Custom-Header': 'some data'
       }
@@ -193,14 +217,39 @@ export default {
   components: {
     FilePicker: () => import("@/components/reusable/FilePicker"),
     AudioRecorder: () => import("@/components/recorder/components/recorder"),
+    VEmojiPicker,
+    EmojiButton
   },
   computed: {
-    ...mapGetters("chat", ["socket"]),
+    ...mapGetters("chat", ["socket", "replyMsg"]),
     ...mapState("chat", ["currentDisplayedUser"]),
   },
+  watch: {
+    showEmojiPicker() {
+      if (this.showEmojiPicker) {
+        setTimeout(()=>{
+          document.addEventListener('click', this.outsideClickDetector)
+        },500)
+      } else {
+        document.removeEventListener('click', this.outsideClickDetector)
+      }
+    }
+  },
   methods: {
+    outsideClickDetector(e) {
+      if (!document.querySelector('.emoji-container').contains(e.target)) {
+        this.showEmojiPicker = false
+      }
+    },
+    ...mapMutations("chat", ["setReplyMsg"]),
     callback(msg) {
       console.debug('Event: ', msg)
+    },
+    selectEmoji(emoji) {
+      const el = this.$refs.input
+      this.p("")
+      el.innerText += emoji.data
+      this.msg += emoji.data
     },
     pickFile() {
       this.$refs["picker"].clickButton()
@@ -227,12 +276,13 @@ export default {
       return res
     },
     uploadAudio(formData) {
-      apis.update('message', `voiceNote/${this.currentDisplayedUser.id}`, formData, {
+      apis.update('message', `voiceNote/${this.currentDisplayedUser.id}${this.replyMsg ? '?reply=' + this.replyMsg.msg._id : ''}`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         },
       }).then(() => {
         this.recordingMode = false
+        this.setReplyMsg(undefined)
       })
     },
     sendMessage() {
@@ -240,7 +290,7 @@ export default {
       const attachments = this.makeAttachments()
 
       if (this.msg.length <= 0 && !attachments.length) return;
-      if (!this.msg.replace(/\s/g, '').length)
+      if (!this.msg.replace(/\s/g, '').length && !attachments.length)
         return;
       if (attachments.length) {
         // set the dialog
@@ -256,6 +306,7 @@ export default {
         let str = ""
         if (this.msg.length)
           str = `content=${this.msg}`
+        str += this.replyMsg ? `${str.length ? '&' : ''}reply=${this.replyMsg.msg._id}` : ''
         str += attachments.length ? `${str.length ? '&' : ''}attachments=${attachments.join('&attachments=')}` : ''
 
         apis.update('message', `${this.currentDisplayedUser.id}/attachements?${str}`, formData, {
@@ -271,10 +322,11 @@ export default {
       } else {
         this.socket.emit("message/create", {
           receiver: this.currentDisplayedUser.id,
-          content: this.msg
+          content: this.msg,
+          reply: this.replyMsg ? this.replyMsg.msg._id : undefined
         });
       }
-
+      this.setReplyMsg(undefined)
       //after sending message let us make the div empty
       this.$refs["input"].textContent = "";
       this.p("Type something..");
@@ -309,10 +361,74 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .my-send-message {
   padding: 0.1rem;
   position: relative;
+
+  .emoji-container {
+    position: absolute;
+    bottom: 53px;
+    left: 12px;
+  }
+
+  &.replying {
+    position: absolute;
+    bottom: -53px;
+    width: 100%;
+    border: 6px solid white;
+    background: #f8f8f8;
+    z-index: 9;
+
+    .reply-message {
+      display: flex;
+      margin-top: 8px;
+
+      .msg-cntnr {
+        width: 86%;
+        margin-left: 24px;
+        height: 70px;
+        overflow: hidden;
+        background: #E7ECF0;
+        padding: 12px 31px;
+
+        .sender {
+          font-family: Roboto;
+          font-style: normal;
+          font-weight: bold;
+          font-size: 15px;
+          /* or 5% */
+
+          display: flex;
+          align-items: center;
+
+          /* Type color / Default */
+
+          color: #343434;
+
+        }
+
+        .msg {
+          font-family: Roboto;
+          font-style: normal;
+          font-weight: 500;
+          font-size: 13px;
+          /* or 5% */
+
+          display: flex;
+          align-items: center;
+
+          /* Type color / Default */
+
+          color: #343434;
+        }
+      }
+
+      .close {
+        margin: auto;
+      }
+    }
+  }
 
   .files-area {
     position: absolute;

@@ -748,7 +748,7 @@ export default {
         width: -webkit-fit-content;
         width: -moz-fit-content;
         width: fit-content;
-        font-size: 0.8rem;
+        font-size: 0.85rem;
         font-weight: 400;
         font-family: Poppins;
         word-break: break-word;
