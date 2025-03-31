@@ -91,8 +91,8 @@
           <router-link
             class="normal--text d-block"
             to="/"
-            >Economic basics{{
-              '' + item ? '' : 'nope'
+            >{{
+              item.name
             }}</router-link
           >
         </template>
@@ -100,8 +100,8 @@
           <router-link
             class="normal--text"
             to="/"
-            >CS Year 3{{
-              '' + item ? '' : 'nope'
+            >{{
+              `${item.faculty_college_year.faculty_college.faculty.name} year ${item.faculty_college_year.college_year.digit}`
             }}</router-link
           >
         </template>
@@ -109,8 +109,8 @@
           <span
             class="normal--text semi_bold_text"
             to="/"
-            >65{{
-              '' + item ? '' : 'nope'
+            >{{
+              item.attendedStudents
             }}</span
           >
         </template>
@@ -118,8 +118,8 @@
           <span
             class="normal--text semi_bold_text"
             to="/"
-            >October 15,  2020{{
-              '' + item ? '' : 'nope'
+            >{{
+              item.updatedAt | formatDate
             }}</span
           >
         </template>
