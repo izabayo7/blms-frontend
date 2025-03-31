@@ -614,6 +614,23 @@ export default {
     }
   },
   methods: {
+    goodbye(e) {
+      if (!e) e = window.event;
+      //e.cancelBubble is supported by IE - this will kill the bubbling process.
+      e.cancelBubble = true;
+      e.returnValue = 'You sure you want to leave?'; //This is displayed on the dialog
+
+      //e.stopPropagation works in Firefox.
+      if (e.stopPropagation) {
+        e.stopPropagation();
+        e.preventDefault();
+      } else {
+        this.sendMessage({
+          id: 'leaveRoom'
+        });
+        this.ws.close();
+      }
+    },
     create_videoElement(id) {
       let element = document.createElement('video')
       element.setAttribute('id', `video_feed${id}`)
@@ -629,16 +646,23 @@ export default {
       this.currentPresenter = undefined
       this.onViewerStopedPresenting()
     },
-    displaySrcVideo() {
-      if (this.me) {
-        const video = document.getElementById("video_feed");
-        if (video.className != '' && this.instructor)
-          video.className = ''
-        let displayedVid = document.querySelector('video.show')
-        if (displayedVid && !displayedVid.id.includes('_screen'))
-          displayedVid.className = '';
+    async hideVideos() {
+      const video = document.getElementById("video_feed");
+      if (video.className != '' && this.instructor)
+        video.className = ''
 
-        if ((this.currentPresenter ? this.currentPresenter._id == this.live_session.course.user : this.userCategory == "INSTRUCTOR") || this.isStudentPresenting) {
+      let displayedVideos = document.querySelectorAll('video.show')
+      for (const i in displayedVideos) {
+        if (displayedVideos[i].id ? !displayedVideos[i].id.includes('_screen') : false)
+          displayedVideos[i].className = '';
+      }
+    },
+    async displaySrcVideo() {
+      if (this.me) {
+
+        await this.hideVideos();
+
+        if ((this.currentPresenter ? this.currentPresenter._id == this.me.userInfo._id : this.me.userInfo._id == this.live_session.course.user) || this.isStudentPresenting) {
           console.log('\n\n\ninner\n\n\n')
           let video = this.me.getVideoElement()
           video.muted = true
@@ -666,6 +690,9 @@ export default {
           status: "info",
           uptime: 5000,
         })
+        if (this.isPresenting) {
+          this.shareScreen();
+        }
       }
       this.isPresenting = false;
       this.participationInfo.isOfferingCourse = false
@@ -677,6 +704,9 @@ export default {
       document.querySelector('video.show').className = ''
       if (this.me.userInfo._id == this.live_session.course.user) {
         this.me.rtcPeer.enabled = false
+        if (this.isPresenting) {
+          this.shareScreen();
+        }
       }
 
       for (let i in this.participants) {
@@ -748,6 +778,7 @@ export default {
     },
     start_presenting() {
       this.participationInfo.isOfferingCourse = true;
+      this.isPresenting = false
       // live/presenterChanged
       const session_id = this.live_session._id;
       const receivers = []
@@ -813,9 +844,10 @@ export default {
       this.participationInfo.room = this.$route.params.liveSessionId
 
       const host = 'stream.kurious.rw'
-      // const host = 'localhost:8080'
+      // const host = 'localhost:8081'
 
       this.ws = new WebSocket('wss://' + host + '/kurious_stream' + `?token=${this.$session.get("jwt")}`);
+      // this.ws = new WebSocket('ws://' + host + '/kurious_stream' + `?token=${this.$session.get("jwt")}`);
 
       this.ws.addEventListener('open', () => {
         self.register();
@@ -830,10 +862,15 @@ export default {
       };
 
 
-      window.onbeforeunload = () => {
-        this.ws.close();
-        // this.handleMediaTracks();
-      };
+      // window.onbeforeunload = () => {
+      //   this.sendMessage({
+      //     id: 'leaveRoom'
+      //   });
+      //   this.ws.close();
+      //   // this.handleMediaTracks();
+      // };
+
+      window.addEventListener('beforeunload', this.goodbye)
 
       this.ws.onmessage = (message) => {
         let parsedMessage = JSON.parse(message.data);
@@ -1373,8 +1410,12 @@ export default {
     }
   },
   beforeRouteLeave(to, from, next) {
-    if (this.ws)
+    if (this.ws) {
+      this.sendMessage({
+        id: 'leaveRoom'
+      });
       this.ws.close();
+    }
     this.handleMediaTracks();
     clearInterval(this.interval)
     next();
