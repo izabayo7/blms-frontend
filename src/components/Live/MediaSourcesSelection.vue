@@ -92,11 +92,21 @@ export default {
   //panel
     &--panel{
       display:flex;
+      margin-top: 1rem;
 
       &--selection{
         &--media{
-          .name-of-selection{}
-          .selection{}
+          margin:1rem 0;
+          display: flex;
+
+          .name-of-selection{
+            .media-icon{
+              margin:0 1rem;
+            }
+          }
+          .selection{
+            width:14.25rem;
+          }
         }
       }
     }
