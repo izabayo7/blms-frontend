@@ -46,7 +46,8 @@
               v-if="content.replies !== undefined && content.replies.length > 0"
           >
             <div class="show-replies" @click="reply_visible = !reply_visible">
-              <p v-if="!reply_visible">show {{ replyNumbers }}</p>
+              <p v-if="!reply_visible">show {{ this.content.replies.length +
+              `${this.content.replies.length > 1 ? " replies" : " reply"}` }}</p>
               <p v-else>hide replies</p>
             </div>
             <div class="comment-replies" v-if="reply_visible">
@@ -118,13 +119,6 @@ export default {
     },
     fullNames() {
       return `${this.content.sender.sur_name} ${this.content.sender.other_names}`;
-    },
-    replyNumbers() {
-      // const text =
-      return (
-          this.content.replies.length +
-          `${this.content.replies.length > 1 ? " replies" : " reply"}`
-      );
     },
   },
   data() {

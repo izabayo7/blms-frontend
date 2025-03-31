@@ -581,6 +581,9 @@ export default {
       if (result.reply) {
         const comments = self.comments.filter(e => e._id == result.reply)
         if (comments.length) {
+          if(comments[0].replies == undefined){
+            comments[0].replies = []
+          }
           const replies = comments[0].replies.filter(e=>e._id == result._id)
           if (!replies.length)
             self.replied({_id: result.reply, data: result});
