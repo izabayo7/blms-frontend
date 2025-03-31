@@ -268,9 +268,10 @@ export default {
     },
     changeActiveChapter({ index, id }) {
       this.activeIndex = index;
-      this.$router.push(
-        `/courses/${this.$route.params.name}/chapter/${index}/${id}`
-      );
+      const path = `/courses/${this.$route.params.name}/chapter/${index}/${id}`;
+      if (this.$route.fullPath != path) {
+        this.$router.push(path);
+      }
     },
     async downloadAttachment(url) {
       window.location.href = url;

@@ -84,9 +84,11 @@ export default {
         this.activeIndex = this.maximumIndex;
         //route to active index
         const id = this.course.chapters[this.maximumIndex]._id;
-        this.$router.push(
-          `/courses/${this.$route.params.name}/chapter/${this.maximumIndex}/${id}`
-        );
+
+        const path = `/courses/${this.$route.params.name}/chapter/${this.maximumIndex}/${id}`;
+        if (this.$route.fullPath != path) {
+          this.$router.push(path);
+        }
       }
     },
   },
@@ -118,9 +120,10 @@ export default {
     },
     changeActiveChapter({ index, id }) {
       this.activeIndex = index;
-      this.$router.push(
-        `/courses/${this.$route.params.name}/chapter/${index}/${id}`
-      );
+      const path = `/courses/${this.$route.params.name}/chapter/${index}/${id}`;
+      if (this.$route.fullPath != path) {
+        this.$router.push(path);
+      }
     },
   },
   created() {

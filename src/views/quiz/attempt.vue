@@ -130,7 +130,6 @@
             >Submit Answers</v-btn
           >
           <v-btn
-            v-else
             class="radio-btn d-block mb-4 submitt-attempt"
             @click="$router.push('/quiz')"
             rounded
@@ -139,11 +138,7 @@
         </v-col>
         <v-col class="col-12 col-md-5 timer-side">
           <div
-            :class="`timer ${
-              this.remaining_time > selected_quiz.duration / 2
-                ? 'greenish'
-                : 'redish'
-            }`"
+            :class="`timer ${remaining_time > 1000 ? 'greenish' : 'redish'}`"
           >
             <p>{{ formated_remaining_time }}</p>
           </div>
