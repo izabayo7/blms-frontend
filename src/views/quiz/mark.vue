@@ -357,7 +357,9 @@ export default {
           link: "/reports/" + "",
         },
         {
-          text: `${this.selected_quiz_submission.user.sur_name} ${this.selected_quiz_submission.user.other_names}`,
+          text: this.selected_quiz_submission.user.sur_name
+            ? `${this.selected_quiz_submission.user.sur_name} ${this.selected_quiz_submission.user.other_names}`
+            : `${this.$store.state.user.user.sur_name} ${this.$store.state.user.user.other_names}`,
           link: this.$route.fullPath,
         },
       ];
