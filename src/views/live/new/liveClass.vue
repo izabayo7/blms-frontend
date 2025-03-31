@@ -491,6 +491,13 @@ export default {
       if (sender != this.participationInfo.name) {
         this.participants.push(participant);
         this.addParticipant({id: participant.userInfo._id})
+        this.sendMessage({
+          id: "notifyUser",
+          receiver: participant.name,
+          videoStatus: this.videoEnabled,
+          audioStatus: this.audioEnabled,
+          screenStatus: this.isPresenting
+        })
       }
     },
 
@@ -551,6 +558,9 @@ export default {
           alert('Room Closed')
           this.onCloseRoom();
           break;
+        case 'initialScreenOff':
+          this.noVideo = true;
+          break;
         case 'existingParticipants':
           this.onExistingParticipants(parsedMessage);
           break;
@@ -562,6 +572,11 @@ export default {
           break;
         case 'toogleMedia':
           this.toogleMedia(parsedMessage);
+          break;
+        case 'notification':
+          this.isPresenting = parsedMessage.screenStatus;
+          this.videoEnabled = parsedMessage.videoStatus;
+          this.audioEnabled = parsedMessage.audioStatus;
           break;
         case 'receiveVideoAnswer':
           this.receiveVideoResponse(parsedMessage);
