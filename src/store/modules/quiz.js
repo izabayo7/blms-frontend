@@ -109,9 +109,7 @@ export default {
                             }
                         }).then((response) => {
                             quizObject = response.data
-                            setTimeout(() => {
-                                dispatch('modal/reset_modal', null, { root: true })
-                            }, 1000);
+                            dispatch('modal/reset_modal', null, { root: true })
                         })
                     }
                 }
@@ -172,7 +170,7 @@ export default {
         quizNames: state => {
             let quizNames = []
             for (const element of state.quiz.data) {
-                if (!element.target) {
+                if (element.target == undefined) {
                     quizNames.push(element.name)
                 }
             }

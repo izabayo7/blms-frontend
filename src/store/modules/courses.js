@@ -189,7 +189,16 @@ export default {
                     quiz.__v = undefined
                     quiz.createdAt = undefined
                     quiz.updatedAt = undefined
-
+                    for (const k in quiz.questions) {
+                        if (quiz.questions[k].options) {
+                            for (const j in quiz.questions[k].options.choices) {
+                                if (quiz.questions[k].options.choices[j].src.includes('http')) {
+                                    const mediapath = quiz.questions[k].options.choices[j].src
+                                    quiz.questions[k].options.choices[j].src = mediapath.split("/")[mediapath.split("/").length - 1]
+                                }
+                            }
+                        }
+                    }
                     apis.update('quiz', quizId, quiz).then((quizResponse) => {
                         state.courses.data[courseIndex].chapters[chapterIndex].quiz.push(quizResponse.data)
                         commit('quiz/add_quiz_target', { id: quizId, target: quiz.target }, { root: true })
@@ -373,7 +382,16 @@ export default {
                         id: d.data._id,
                         type: 'chapter'
                     }
-
+                    // for (const k in quiz.questions) {
+                    //     if (quiz.questions[k].options) {
+                    //         for (const j in quiz.questions[k].options.choices) {
+                    //             if (quiz.questions[k].options.choices[j].src.includes('http')) {
+                    //                 const mediapath = quiz.questions[k].options.choices[j].src
+                    //                 quiz.questions[k].options.choices[j].src = mediapath.split("/")[mediapath.split("/").length - 1]
+                    //             }
+                    //         }
+                    //     }
+                    // }
                     apis.update('quiz', quizId, quiz).then((quizResponse) => {
                         state.courses.data[courseIndex].chapters[chapterIndex].quiz.push(quizResponse.data)
                         commit('quiz/add_quiz_target', { id: quizId, target: quiz.target }, { root: true })
