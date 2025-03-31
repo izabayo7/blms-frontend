@@ -324,6 +324,7 @@ export default {
       }
     },
     async saveAttempt() {
+      this.attempt.used_time = this.selected_quiz.duration - this.remaining_time
       this.create_quiz_submission({
         submission: this.attempt,
         attachments: this.filesToUpload,
