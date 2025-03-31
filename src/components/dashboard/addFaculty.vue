@@ -247,7 +247,7 @@ export default {
       const dialog = document.querySelector(".v-dialog--active");
       dialog.style.maxWidth = "1078px";
       // dialog.style.setProperty("height", "538px", "important");
-      dialog.style.setProperty("min-height", "538px", "important");
+      // dialog.style.setProperty("min-height", "538px", "important");
     }, 0);
 
     // let res = await Apis.get(`user/college/${this.$store.state.user.user.college}/INSTRUCTOR`);
