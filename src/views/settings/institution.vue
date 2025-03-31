@@ -247,8 +247,10 @@ export default {
             status: "danger",
             uptime: 2000,
           });
-        else
+        else {
           this.set_college(res.data.data);
+          this.toogleEdit(index)
+        }
       })
 
     },
