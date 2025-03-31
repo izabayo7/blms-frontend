@@ -180,9 +180,7 @@ export default {
             return apis.update('chapter', state.selectedChapter, chapter).then(async () => {
 
                 if (content) {
-                    const formData = new FormData()
-                    formData.append("file", video)
-                    apis.update('file/updateChapterContent', state.selectedChapter, { content: content }).then(() => {
+                    apis.update(`chapter/${state.selectedChapter}`, 'document', { content: content }).then(() => {
                         state.courses.data[courseIndex].chapters[chapterIndex].documentContent = content
                     })
                 }
