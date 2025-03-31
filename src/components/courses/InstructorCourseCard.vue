@@ -139,6 +139,9 @@ export default {
     ...mapActions("courses", ["tooglePublishCourse", "deleteCourse"]),
   },
   watch: {
+    course(){
+      this.nearestLiveSession = calculateNearestLiveSession(this.course)
+    },
     nearestLiveSession() {
       console.log(this.nearestLiveSession)
       this.interval = setInterval(() => {
@@ -148,7 +151,6 @@ export default {
   },
   destroyed() {
     clearInterval(this.interval)
-    console.log("ndagiye")
   },
   mounted() {
     this.nearestLiveSession = calculateNearestLiveSession(this.course)
