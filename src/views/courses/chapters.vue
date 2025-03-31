@@ -462,13 +462,11 @@ export default {
     ...mapActions("modal", ["set_modal"]),
     calculateQuizNames() {
       let quizes = JSON.parse(JSON.stringify(this.all_quiz));
-      console.log("yuhuuuuuuuuu", quizes);
       let quizNames = [];
       if (quizes) {
         for (const i in quizes) {
           let addName = false;
           if (!quizes[i].target) {
-            console.log(quizes[i]);
             addName = true;
           } else if (this.course.chapters[this.activeChapter].quiz.length > 0) {
             if (

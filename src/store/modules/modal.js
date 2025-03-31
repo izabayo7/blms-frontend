@@ -62,7 +62,6 @@ export default {
     actions: {
         // set up the dialog
         set_modal({ state, commit }, { template, method, title, message, closable = false }) {
-            console.log({ template, method, title, message, closable })
             commit('update_modal_template', template)
             commit('update_confirmation_method', method)
             commit('update_title', title)
@@ -88,15 +87,11 @@ export default {
             commit('update_progress', value)
             // if the progress is full reset the modal
             if (value === 100) {
-                console.log('done kbx', getters.progress)
                 setTimeout(() => {
-                    console.log('love story', getters.progress)
                     if (getters.progress === 100) {
                         dispatch('reset_modal', null)
                     }
                 }, 1000);
-            } else {
-                console.log(value)
             }
         }
     },
