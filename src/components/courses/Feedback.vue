@@ -19,7 +19,7 @@
         <div
           ref="feedback_input"
           :class="`feedback_input ${content == '' ? 'empty_feedback' : ''}`"
-          contenteditable="true"
+          :contenteditable="$store.state.user.user.category.name === 'INSTRUCTOR'"
           @keyup="computeFeedbackClass()"
         >
           {{ content }}
