@@ -364,14 +364,14 @@
                                         <v-btn
                                                 v-if="course.chapters[activeChapter]._id"
                                                 class="mr-4 primary-button"
-                                                @click="validate()"
+                                                @click="validate('update')"
                                         >update Chapter
                                         </v-btn
                                         >
                                         <v-btn
                                                 v-else
                                                 class="mr-4 primary-button"
-                                                @click="saveChapter"
+                                                @click="validate('create')"
                                         >save Chapter
                                         </v-btn
                                         >
@@ -412,6 +412,7 @@
             attachments: [],
             mode: "",
             content: "",
+            error: "",
             chapterVideo: undefined,
             nameRules: [
                 (v) => !!v || "Name is required",
@@ -425,9 +426,9 @@
             // get all quizes
             ...mapGetters("quiz", ["all_quiz"]),
             selectedQuiz() {
-                return this.all_quiz.filter(
+                return this.all_quiz ? this.all_quiz.filter(
                     (quiz) => quiz.name == this.selectedQuizName
-                )[0];
+                )[0] : undefined;
             },
         },
         watch: {
@@ -468,6 +469,9 @@
                     this.calculateQuizNames();
                 }
             },
+            error() {
+                console.log(this.error)
+            }
         },
         methods: {
             ...mapActions("courses", [
@@ -479,7 +483,7 @@
             ]),
             ...mapActions("quiz", ["getQuizes"]),
             ...mapActions("modal", ["set_modal"]),
-            validate() {
+            validate(type) {
                 if (this.course.chapters[this.activeChapter].name === "") {
                     return this.error = 'name is required'
                 } else if (this.course.chapters[this.activeChapter].name.length < 3) {
@@ -490,7 +494,11 @@
                 } else if (this.course.chapters[this.activeChapter].description.length < 10) {
                     return this.error = 'description is too short'
                 }
-                this.saveChapterChanges()
+                if (type === 'update') {
+                    this.saveChapterChanges()
+                } else {
+                    this.saveChapter()
+                }
             },
             calculateQuizNames() {
                 let quizNames = [];
