@@ -247,7 +247,7 @@ export default {
     ...mapActions("courses", ["getCourses"]),
     ...mapActions("modal", ["set_modal"]),
     ...mapActions("quiz", ["getAssignment"]),
-    ...mapMutations("quiz", ["addAssignment"]),
+    ...mapMutations("quiz", ["editAssignment"]),
     async computeAssignment() {
       const res = await this.getAssignment({id: this.$route.params.id})
       this.assignment = {
@@ -256,7 +256,7 @@ export default {
           type: res.target.type,
           id: res.target.id,
         },
-        dueDate: res.dueDate.substring(0,16),
+        dueDate: res.dueDate.substring(0, 16),
         details: res.details,
         submissionMode: res.submissionMode,
         allowMultipleFilesSubmission: res.allowMultipleFilesSubmission,
@@ -293,8 +293,7 @@ export default {
         return this.error = "dueDate is required"
       if (this.assignment.submissionMode === 'fileUpload' && !this.allowed_submission_file_types.length)
         return this.error = "Please select allowed submission file types"
-      this.saveAssignment()
-
+      this.saveAssignmentChanges()
     },
     addAssignmentAttachment(file) {
       this.assignmentAttachments.push(file)
@@ -302,7 +301,7 @@ export default {
     removeAssignmentAttachment(index) {
       this.assignmentAttachments.splice(index, 1)
     },
-    async saveAssignment() {
+    async saveAssignmentChanges() {
 
       const editorContent = this.$refs.editor.getHTML();
       if (editorContent !== '<p>Type in your assignments information</p>')
@@ -313,6 +312,8 @@ export default {
             src: x.name
           }
         })
+      else this.assignment.attachments = []
+
       this.assignment.allowed_files = this.allowed_submission_file_types
       if (this.assignment.details === "")
         this.assignment.details = undefined
@@ -330,8 +331,8 @@ export default {
         }
       }
 
-      Apis.create('assignments', this.assignment).then(async (res) => {
-        if (res.data.status !== 201) {
+      Apis.update('assignments', this.$route.params.id, this.assignment).then(async (res) => {
+        if (res.data.status !== 200) {
           this.$store.dispatch("app_notification/SET_NOTIFICATION", {
             message: res.data.message,
             status: "danger",
@@ -340,7 +341,7 @@ export default {
             this.error = ""
           })
         } else {
-          if (this.assignmentAttachments.length) {
+          if (this.assignmentAttachments.filter(x => x.size).length) {
             const formData = new FormData()
             let index = 0;
             for (const i in this.assignmentAttachments) {
@@ -363,9 +364,9 @@ export default {
               }
             })
           }
-          this.addAssignment(res.data.data)
+          this.editAssignment({assignment: res.data.data, id: this.$route.params.id})
           this.$store.dispatch("app_notification/SET_NOTIFICATION", {
-            message: "Assignment creation succeded",
+            message: "Assignment was successfully updated",
             status: "success",
             uptime: 5000,
           })
