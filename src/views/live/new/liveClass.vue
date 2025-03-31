@@ -230,7 +230,7 @@ openQuiz">
       <div v-else class="live-class--attendance">
         <div class="live-class--attendance--wrapper long">
           <h3>DISCUSSION BOARD </h3>
-          <h3 class="hidden-md-and-up">ONLINE USERS : {{ participants.length }} </h3>
+          <h3>ONLINE USERS : {{ participants.length }} </h3>
           <div class="live-comments-container viewer">
             <discussion
                 v-for="(comment, i) in comments"
