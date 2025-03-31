@@ -109,7 +109,7 @@ export default {
                     dispatch('modal/set_modal', { template: 'display_information', title: 'Creating Course', message: `uploading ${coverPicture.name}` }, { root: true })
                     const formData = new FormData()
                     formData.append("file", coverPicture)
-                    apis.update('file/updateCourseCoverPicture', d.data._id, formData, {
+                    apis.update('course', `${d.data._id}/cover_picture`, formData, {
                         headers: {
                             'Content-Type': 'multipart/form-data'
                         },

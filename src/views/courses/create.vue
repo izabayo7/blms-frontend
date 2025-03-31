@@ -179,7 +179,7 @@
             },
         },
         created() {
-            this.getFacultyCollegeYears(this.$store.state.user.user.college);
+            this.getFacultyCollegeYears(this.$store.state.user.user.user_name);
         },
     };
 </script>
