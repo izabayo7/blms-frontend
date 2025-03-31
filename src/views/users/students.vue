@@ -109,12 +109,12 @@
                     </td>
                     <td @click="$router.push(`/users/${user.user_name}`)"
                         @mouseenter="mouseOnPic($event,user.user_name,'user-profile-card')"
-                        @mouseleave="mouseOutPic($event,'user-profile-card')">{{ user.sur_name }} {{ user.other_names }}
+                    >{{ user.sur_name }} {{ user.other_names }}
                     </td>
                     <td>{{ user.gender }}</td>
                     <td v-if="$store.state.sidebar_navbar.college.users_verification_link">
                       <div :class="`payment-status ${user.paid ? 'paid' : 'pending'}`">
-                        {{user.paid ? "Paid" : "Pending"}}
+                        {{ user.paid ? "Paid" : "Pending" }}
                       </div>
                     </td>
                     <td>
@@ -137,12 +137,24 @@
           <div class="icon">
             <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
               <g clip-path="url(#clip0_3622_440)">
-                <path d="M41.0715 25.6245H37.3594C37.7378 26.6605 37.9445 27.7784 37.9445 28.9436V42.9734C37.9445 43.4592 37.8599 43.9255 37.7061 44.3592H43.843C46.1355 44.3592 48.0005 42.4941 48.0005 40.2017V32.5535C48.0006 28.7329 44.8922 25.6245 41.0715 25.6245Z" fill="#3C3C3C" fill-opacity="0.51"/>
-                <path d="M10.0564 28.9436C10.0564 27.7783 10.2631 26.6605 10.6415 25.6245H6.92932C3.10863 25.6245 0.000244141 28.7329 0.000244141 32.5536V40.2018C0.000244141 42.4942 1.86522 44.3593 4.15769 44.3593H10.2948C10.1409 43.9254 10.0564 43.4592 10.0564 42.9734V28.9436Z" fill="#3C3C3C" fill-opacity="0.51"/>
-                <path d="M28.244 22.0132H19.7576C15.9369 22.0132 12.8285 25.1216 12.8285 28.9423V42.972C12.8285 43.7373 13.4489 44.3578 14.2143 44.3578H33.7873C34.5527 44.3578 35.1731 43.7373 35.1731 42.972V28.9423C35.1731 25.1216 32.0647 22.0132 28.244 22.0132Z" fill="#3C3C3C" fill-opacity="0.51"/>
-                <path d="M24.0001 3.6416C19.4052 3.6416 15.667 7.3798 15.667 11.9748C15.667 15.0915 17.3872 17.8135 19.9277 19.2427C21.1326 19.9205 22.5218 20.3079 24.0001 20.3079C25.4783 20.3079 26.8675 19.9205 28.0725 19.2427C30.613 17.8135 32.3331 15.0914 32.3331 11.9748C32.3331 7.37989 28.595 3.6416 24.0001 3.6416Z" fill="#3C3C3C" fill-opacity="0.51"/>
-                <path d="M9.36778 11.4087C5.93137 11.4087 3.13574 14.2043 3.13574 17.6407C3.13574 21.0771 5.93137 23.8728 9.36778 23.8728C10.2395 23.8728 11.0695 23.6922 11.8236 23.3677C13.1273 22.8064 14.2022 21.8128 14.8674 20.5683C15.3342 19.6948 15.5998 18.6983 15.5998 17.6407C15.5998 14.2044 12.8042 11.4087 9.36778 11.4087Z" fill="#3C3C3C" fill-opacity="0.51"/>
-                <path d="M38.6332 11.4087C35.1968 11.4087 32.4011 14.2043 32.4011 17.6407C32.4011 18.6984 32.6667 19.6949 33.1336 20.5683C33.7988 21.8129 34.8737 22.8065 36.1774 23.3677C36.9314 23.6922 37.7615 23.8728 38.6332 23.8728C42.0696 23.8728 44.8652 21.0771 44.8652 17.6407C44.8652 14.2043 42.0696 11.4087 38.6332 11.4087Z" fill="#3C3C3C" fill-opacity="0.51"/>
+                <path
+                    d="M41.0715 25.6245H37.3594C37.7378 26.6605 37.9445 27.7784 37.9445 28.9436V42.9734C37.9445 43.4592 37.8599 43.9255 37.7061 44.3592H43.843C46.1355 44.3592 48.0005 42.4941 48.0005 40.2017V32.5535C48.0006 28.7329 44.8922 25.6245 41.0715 25.6245Z"
+                    fill="#3C3C3C" fill-opacity="0.51"/>
+                <path
+                    d="M10.0564 28.9436C10.0564 27.7783 10.2631 26.6605 10.6415 25.6245H6.92932C3.10863 25.6245 0.000244141 28.7329 0.000244141 32.5536V40.2018C0.000244141 42.4942 1.86522 44.3593 4.15769 44.3593H10.2948C10.1409 43.9254 10.0564 43.4592 10.0564 42.9734V28.9436Z"
+                    fill="#3C3C3C" fill-opacity="0.51"/>
+                <path
+                    d="M28.244 22.0132H19.7576C15.9369 22.0132 12.8285 25.1216 12.8285 28.9423V42.972C12.8285 43.7373 13.4489 44.3578 14.2143 44.3578H33.7873C34.5527 44.3578 35.1731 43.7373 35.1731 42.972V28.9423C35.1731 25.1216 32.0647 22.0132 28.244 22.0132Z"
+                    fill="#3C3C3C" fill-opacity="0.51"/>
+                <path
+                    d="M24.0001 3.6416C19.4052 3.6416 15.667 7.3798 15.667 11.9748C15.667 15.0915 17.3872 17.8135 19.9277 19.2427C21.1326 19.9205 22.5218 20.3079 24.0001 20.3079C25.4783 20.3079 26.8675 19.9205 28.0725 19.2427C30.613 17.8135 32.3331 15.0914 32.3331 11.9748C32.3331 7.37989 28.595 3.6416 24.0001 3.6416Z"
+                    fill="#3C3C3C" fill-opacity="0.51"/>
+                <path
+                    d="M9.36778 11.4087C5.93137 11.4087 3.13574 14.2043 3.13574 17.6407C3.13574 21.0771 5.93137 23.8728 9.36778 23.8728C10.2395 23.8728 11.0695 23.6922 11.8236 23.3677C13.1273 22.8064 14.2022 21.8128 14.8674 20.5683C15.3342 19.6948 15.5998 18.6983 15.5998 17.6407C15.5998 14.2044 12.8042 11.4087 9.36778 11.4087Z"
+                    fill="#3C3C3C" fill-opacity="0.51"/>
+                <path
+                    d="M38.6332 11.4087C35.1968 11.4087 32.4011 14.2043 32.4011 17.6407C32.4011 18.6984 32.6667 19.6949 33.1336 20.5683C33.7988 21.8129 34.8737 22.8065 36.1774 23.3677C36.9314 23.6922 37.7615 23.8728 38.6332 23.8728C42.0696 23.8728 44.8652 21.0771 44.8652 17.6407C44.8652 14.2043 42.0696 11.4087 38.6332 11.4087Z"
+                    fill="#3C3C3C" fill-opacity="0.51"/>
               </g>
               <defs>
                 <clipPath id="clip0_3622_440">
@@ -177,25 +189,25 @@ export default {
   name: "Students",
   components: {TableRow, TableHeadRow, TableUi, TableHeader, SelectUi},
   computed: {
-    ...mapGetters("courses", ["courses", "loaded"]),
+    ...mapGetters("courses", {courses: "publishedCourses",loaded: "loaded"}),
     courseNames() {
       let res = [];
       for (const i in this.courses) {
-        res.push(this.courses[i].name);
+          res.push(this.courses[i].name);
       }
       return res;
     },
-    options(){
+    options() {
       const options = {
         coloredRows: false,
         link: {
           routeTo: '/users/{id}',
           paramPropertyName: 'user_name'
         },
-        keysToShow: this.$store.state.sidebar_navbar.college.users_verification_link ?  [" ", "User name", "Gender","Payment status", "Course progress", "Perfomance (%)", "Attendace"] :  [" ", "User name", "Gender", "Course progress", "Perfomance (%)", "Attendace"],
+        keysToShow: this.$store.state.sidebar_navbar.college.users_verification_link ? [" ", "User name", "Gender", "Payment status", "Course progress", "Perfomance (%)", "Attendace"] : [" ", "User name", "Gender", "Course progress", "Perfomance (%)", "Attendace"],
       }
 
-          // $store.state.sidebar_navbar.college.users_verification_link
+      // $store.state.sidebar_navbar.college.users_verification_link
       return options
     }
   },
@@ -281,6 +293,7 @@ export default {
 
 <style lang="scss">
 @import '../../assets/sass/imports/tableEmptyState';
+
 .students-page {
   height: 100%;
   width: 100%;
@@ -377,13 +390,15 @@ export default {
     }
   }
 }
+
 /* Portrait phones and smaller */
 @media (max-width: 700px) {
   .students-page {
     .users-page-container {
-      .students-table{
+      .students-table {
         overflow: auto;
-        .table-wrapper{
+
+        .table-wrapper {
           min-width: 808px;
           overflow: auto;
         }
