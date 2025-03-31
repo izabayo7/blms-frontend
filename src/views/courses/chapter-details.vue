@@ -273,17 +273,12 @@ export default {
       window.location.href = url;
     },
     nextChapter(idx) {
-      const index = this.chapters.indexOf(idx);
-
-      return index < this.chapter.length - 1
-        ? this.chapters[index + 1]
-        : index === this.chapter.length
-        ? this.chapters[index]
+      return idx < this.course.chapters.length
+        ? this.course.chapters[idx + 1]._id
         : null;
     },
     prevChapter(idx) {
-      const index = this.chapters.indexOf(idx);
-      return index > 0 ? this.chapters[index + 1] : index === 0 ? 0 : null;
+      return idx > 0 ? this.course.chapters[idx - 1]._id : idx === 0 ? 0 : null;
     },
     markAsCompleted() {
       this.finish_chapter(this.$store.state.user.user.user_name).then((d) => {
@@ -304,6 +299,7 @@ export default {
       });
     },
     immediateFunction() {
+      console.log("hhhhhhhhhhh");
       const { index, id } = this.$route.params;
       this.activeIndex = index;
 
@@ -334,6 +330,7 @@ export default {
 
       //getting chapter content
       this.getChapterMainContent(id).then((d) => {
+        console.log(d);
         this.editorContent = d;
       });
 
