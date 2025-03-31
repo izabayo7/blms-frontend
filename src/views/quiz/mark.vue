@@ -293,7 +293,7 @@
                     :index="i"
                     @feedbackDeleted="selected_quiz_submission.answers[i].feedback_src = undefined"
                     @feedbackUploaded="(name)=>{
-                selected_quiz_submission.answers[i].feedback_src = name
+                  selected_quiz_submission.answers[i].feedback_src = name
               }"
                 />
               </v-col>
