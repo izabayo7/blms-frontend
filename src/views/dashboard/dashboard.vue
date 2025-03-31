@@ -5,6 +5,21 @@
       <navbar v-if="!(isMobile && $route.name === 'chatingRoom' && state)"/>
     </div>
 
+    <transition name="fade">
+      <div id="user-profile-card">
+        <user-simple-card :loading="userByUsernameLoading" @close="mouseOutPic($event,'user-profile-card')">
+          <template #name>{{ userByUsername.other_names + " " + userByUsername.sur_name }}</template>
+          <template #type>Instructor</template>
+          <template #image>
+            <img v-if="userByUsername.profile" :src="userByUsername.profile + '?width=50'" alt=" profile pic">
+            <v-avatar v-else :size="30" class="profile-avatar">
+              {{ `${userByUsername.sur_name} ${userByUsername.other_names}` | computeText }}
+            </v-avatar>
+          </template>
+        </user-simple-card>
+      </div>
+    </transition>
+
     <!-- sidebar and dashboard content -->
     <main class="contents">
       <main class="sidebar">
@@ -26,7 +41,9 @@
 import sidebar from "@/components/dashboard/Sidebar";
 import MobileSidebar from "@/components/dashboard/MobileSidebar";
 import navbar from "@/components/dashboard/Navbar";
-import {mapState} from "vuex";
+import {mapGetters, mapState} from "vuex";
+import UserSimpleCard from "../../components/reusable/user-simple-card";
+import userSimpleCard from "../../mixins/user-simple-card.mixin";
 
 export default {
   name: "Dashboard",
@@ -34,10 +51,13 @@ export default {
     sidebar,
     MobileSidebar,
     navbar,
+    UserSimpleCard,
     Notification: () => import("@/components/shared/Notification"),
   },
+  mixins: [userSimpleCard],
   computed: {
     ...mapState("sidebar_navbar", {state: "showChatMobileNavbar"}),
+    ...mapGetters('users', ['userByUsername', 'userByUsernameLoading']),
     isMobile() {
       return this.$vuetify.breakpoint.width < 960
     }

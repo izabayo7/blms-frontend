@@ -1,20 +1,6 @@
 <template>
   <div class="my-users-page bg-one d-flex justify-center">
     <div class="users-page-container d-flex flex-column">
-      <transition name="fade">
-        <div id="user-profile-card">
-          <user-simple-card :loading="userByUsernameLoading" @close="mouseOutPic($event,'user-profile-card')">
-            <template #name>{{ userByUsername.other_names + " " + userByUsername.sur_name }}</template>
-            <template #type>Instructor</template>
-            <template #image>
-              <img v-if="userByUsername.profile" :src="userByUsername.profile + '?width=50'" alt=" profile pic">
-              <v-avatar v-else :size="30" class="profile-avatar">
-                {{ `${userByUsername.sur_name} ${userByUsername.other_names}` | computeText }}
-              </v-avatar>
-            </template>
-          </user-simple-card>
-        </div>
-      </transition>
       <div class="header">
         <div class="header-wrapper d-flex justify-space-between">
           <div class="heading col d-flex align-center">
@@ -170,8 +156,7 @@ import TableHeader from "../../components/reusable/ui/table-header";
 import apis from "../../services/apis"
 import tableActionBurner from '../../components/reusable/ui/table-action-burner'
 import moment from 'moment'
-import {mapActions, mapGetters, mapMutations} from "vuex";
-import UserSimpleCard from "../../components/reusable/user-simple-card";
+import {mapActions, mapMutations} from "vuex";
 import userSimpleCard from "../../mixins/user-simple-card.mixin";
 import TableRow from "../../components/reusable/table/TableRow";
 import TableHeadRow from "../../components/reusable/table/TableHeadRow";
@@ -180,7 +165,7 @@ import TableUi from "../../components/reusable/table/TableUi";
 export default {
   name: "Users",
   components: {
-    TableHeader, buttonUi, Search, tableActionBurner, UserSimpleCard, TableRow, TableHeadRow, TableUi,
+    TableHeader, buttonUi, Search, tableActionBurner, TableRow, TableHeadRow, TableUi,
     InviteUsersDialog: () => import("@/components/dashboard/InviteUsersDialog")
   },
   data() {
@@ -200,7 +185,6 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('users', ['userByUsername', 'userByUsernameLoading']),
   },
   mixins: [userSimpleCard],
   methods: {

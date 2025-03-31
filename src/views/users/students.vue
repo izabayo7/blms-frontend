@@ -1,20 +1,6 @@
 <template>
   <div v-if="selected_course" class="students-page bg-one d-flex justify-center">
     <div class="users-page-container d-flex flex-column">
-      <transition name="fade">
-        <div id="user-profile-card">
-          <user-simple-card :loading="userByUsernameLoading" @close="mouseOutPic($event,'user-profile-card')">
-            <template #name>{{ userByUsername.other_names + " " + userByUsername.sur_name }}</template>
-            <template #type>Instructor</template>
-            <template #image>
-              <img v-if="userByUsername.profile" :src="userByUsername.profile + '?width=50'" alt=" profile pic">
-              <v-avatar v-else :size="30" class="profile-avatar">
-                {{ `${userByUsername.sur_name} ${userByUsername.other_names}` | computeText }}
-              </v-avatar>
-            </template>
-          </user-simple-card>
-        </div>
-      </transition>
       <div class="header">
         <div class="header-wrapper row ">
           <div class="heading col-12 col-md-2 d-flex align-center">
@@ -153,15 +139,13 @@ import SelectUi from "@/components/reusable/ui/select-ui";
 import TableRow from "../../components/reusable/table/TableRow";
 import {mapActions, mapGetters, mapMutations} from "vuex";
 import Apis from '../../services/apis'
-import UserSimpleCard from "../../components/reusable/user-simple-card";
 import userSimpleCard from "../../mixins/user-simple-card.mixin";
 
 export default {
   name: "Students",
-  components: {TableRow, TableHeadRow, TableUi, TableHeader, SelectUi,UserSimpleCard},
+  components: {TableRow, TableHeadRow, TableUi, TableHeader, SelectUi},
   computed: {
     ...mapGetters("courses", ["courses", "loaded"]),
-    ...mapGetters('users', ['userByUsername', 'userByUsernameLoading']),
     courseNames() {
       let res = [];
       for (const i in this.courses) {

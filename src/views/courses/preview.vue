@@ -89,7 +89,8 @@
           <article class="desc pb-10">{{ course.description }}</article>
 
           <div class="instructor-profile">
-            <article>
+            <article @mouseenter="mouseOnPic($event,course.user.user_name,'user-profile-card')"
+                     @mouseleave="mouseOutPic($event,'user-profile-card')">
               <img
                   v-if="course.user.profile"
                   :src="`${course.user.profile}?width=50`"
@@ -102,7 +103,8 @@
                   }}</span>
               </v-avatar>
             </article>
-            <article class="owner">
+            <article @mouseenter="mouseOnPic($event,course.user.user_name,'user-profile-card')"
+                     @mouseleave="mouseOutPic($event,'user-profile-card')" class="owner">
               <h3>
                 {{ `${course.user.sur_name} ${course.user.other_names}` }}
               </h3>
@@ -627,6 +629,7 @@
 import {mapActions, mapGetters} from "vuex";
 import Api from "@/services/apis.js"
 import {calculateNearestLiveSession, convertUTCDateToLocalDate} from "@/services/global_functions"
+import userSimpleCard from "../../mixins/user-simple-card.mixin";
 
 export default {
   name: "preview_course",
@@ -641,6 +644,7 @@ export default {
     back: () => import("@/components/shared/back-button"),
     // verifiedBadge: () => import("@/components/reusable/ui/VerifiedBadge"),
   },
+  mixins: [userSimpleCard],
   computed: {
     // get the userCategory
     userCategory() {

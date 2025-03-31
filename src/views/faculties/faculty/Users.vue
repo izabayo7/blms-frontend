@@ -2,20 +2,6 @@
   <div class="my-faculties bg-one d-flex justify-center">
     <div class="faculties-container  ">
       <div class="tabular-users">
-        <transition name="fade">
-          <div id="user-profile-card">
-            <user-simple-card :loading="userByUsernameLoading" @close="mouseOutPic($event,'user-profile-card')">
-              <template #name>{{ userByUsername.other_names + " " + userByUsername.sur_name }}</template>
-              <template #type>Instructor</template>
-              <template #image>
-                <img v-if="userByUsername.profile" :src="userByUsername.profile + '?width=50'" alt=" profile pic">
-                <v-avatar v-else :size="30" class="profile-avatar">
-                  {{ `${userByUsername.sur_name} ${userByUsername.other_names}` | computeText }}
-                </v-avatar>
-              </template>
-            </user-simple-card>
-          </div>
-        </transition>
         <div class="table-wrapper mt-6">
           <div class="table-header">
             <table-header/>
@@ -61,13 +47,12 @@ import TableUi from "../../../components/reusable/table/TableUi";
 import {mapGetters} from "vuex";
 import TableHeadRow from "../../../components/reusable/table/TableHeadRow";
 import TableRow from "../../../components/reusable/table/TableRow";
-import UserSimpleCard from "../../../components/reusable/user-simple-card";
 import userSimpleCard from "../../../mixins/user-simple-card.mixin"
 
 export default {
   //TODO using dynamic students from backend
   name: "FacultyUsers",
-  components: {UserSimpleCard, TableRow, TableHeadRow, TableUi, TableHeader},
+  components: { TableRow, TableHeadRow, TableUi, TableHeader},
   mixins: [userSimpleCard],
   data() {
     return {
@@ -88,7 +73,7 @@ export default {
   },
   computed: {
     ...mapGetters('faculties', ['faculty']),
-    ...mapGetters('users', ['usersOnFaculties', 'userByUsername', 'userByUsernameLoading']),
+    ...mapGetters('users', ['usersOnFaculties']),
   },
   methods: {
     hovered() {
