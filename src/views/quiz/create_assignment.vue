@@ -288,6 +288,14 @@ export default {
     removeAssignmentAttachment(index) {
       this.assignmentAttachments.splice(index, 1)
     },
+    fileTypeClicked(type, index) {
+      if (index === -1) {
+        if (this.allowed_submission_file_types.includes(type))
+          this.allowed_submission_file_types.splice(this.allowed_submission_file_types.indexOf(type), 1)
+        else
+          this.allowed_submission_file_types.push(type)
+      }
+    },
     async saveAssignment() {
 
       const editorContent = this.$refs.editor.getHTML();
