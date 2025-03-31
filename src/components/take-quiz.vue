@@ -5,6 +5,24 @@
       <v-col v-if="quiz !== []" class="col-12 col-md-7 questions-side">
         <v-row v-for="(question, i) in quiz.questions" :key="i" class="col-12 col-md-12">
           <p class="question-details col-md-12 col-12">{{`${i+1}. ${question.details}`}}</p>
+          <v-btn
+            v-if="question.type === 'file-upload'"
+            rounded
+            color="#ffd248"
+            class="white--text course-image mt-4 mb-6 d-block"
+            @click="pickfile(i)"
+          >
+            <v-icon>mdi-arrow-expand-up</v-icon>
+            <span>{{attempt.answers[i].src === "" ? 'Upload file' : attempt.answers[i].src}}</span>
+          </v-btn>
+          <input
+            v-if="question.type === 'file-upload'"
+            type="file"
+            :id="`file${i}`"
+            hidden
+            @change="handleFileUpload(i)"
+          />
+
           <textarea
             v-model="attempt.answers[i].text"
             v-if="question.type === 'open-ended'"
@@ -16,21 +34,21 @@
           <div v-else class="options">
             <div v-if="question.type.includes('text')" class="d-block">
               <v-btn
-                v-for="(option, k) in question.options.options"
+                v-for="(choice, k) in question.options.choices"
                 :key="k"
                 @click="handleOptionClick(i,k)"
                 name="radio-btn"
                 class="radio-btn d-block mb-4"
                 rounded
                 outlined
-                :color="attempt.answers[i].choosedOptions.includes(k) ? 'green' : '' "
-              >B. {{option.text}}</v-btn>
+                :color="checkCoiceStatus(attempt.answers[i].choosedOptions, {text: choice.text}) ? 'green' : '' "
+              >{{`${alphabets[k]}. ${choice.text}`}}</v-btn>
             </div>
             <v-container v-else fluid>
               <v-row>
                 <v-col
-                  v-for="(choice, i) in question.options.choices"
-                  :key="i"
+                  v-for="(choice, k) in question.options.choices"
+                  :key="k"
                   class="d-flex child-flex"
                   cols="6"
                 >
@@ -38,14 +56,19 @@
                     <v-img
                       :src="`http://localhost:7070/kurious/file/quizAttachedFiles/${$route.params.id}/${choice.src}?format=png&width=200&height=200`"
                       :lazy-src="`http://localhost:7070/kurious/file/quizAttachedFiles/${$route.params.id}/${choice.src}?format=png&width=200&height=200`"
-                      aspect-ratio="1"
-                      class="grey lighten-2"
+                      :gradient="checkCoiceStatus(attempt.answers[i].choosedOptions, {src: choice.src}) ? 'to top right, rgba(100,115,201,.33), rgba(25,32,72,.7)' : undefined"
+                      @click="handleOptionClick(i,k)"
                     >
                       <template v-slot:placeholder>
                         <v-row class="fill-height ma-0" align="center" justify="center">
                           <v-progress-circular indeterminate color="grey lighten-5"></v-progress-circular>
                         </v-row>
                       </template>
+                      <v-icon
+                        v-if="checkCoiceStatus(attempt.answers[i].choosedOptions, {src: choice.src})"
+                        class="ma-16 white--text"
+                        size="50"
+                      >mdi-check</v-icon>
                     </v-img>
                   </v-card>
                 </v-col>
@@ -53,46 +76,6 @@
             </v-container>
           </div>
         </v-row>
-        <!-- <v-row class="col-12 col-md-12">
-          <p class="question-details col-md-12 col-12">2. {{questions.details[0]}}</p>
-          <div class="radio-btn1">
-            <v-btn name="radio-btn" class="radio-btn" color="transparent">A. Shantanu Kumar</v-btn>
-          </div>
-          <div class="d-block">
-            <v-btn name="radio-btn" class="radio-btn" color="transparent">B. Assam</v-btn>
-          </div>
-        </v-row>
-        <v-row class="col-12 col-md-12">
-          <p class="question-details col-md-12 col-12">3. {{questions.details[0]}}</p>
-          <v-btn rounded color="#ffd248" class="white--text">
-            <v-icon>mdi-arrow-expand-up</v-icon>Upload file
-          </v-btn>
-        </v-row>
-        <v-row class="col-12 col-md-12">
-          <p class="question-details col-md-12 col-12">4. {{questions.details[0]}}</p>
-          <v-card>
-            <v-container fluid>
-              <v-row>
-                <v-col v-for="n in 4" :key="n" class="d-flex child-flex" cols="6">
-                  <v-card flat tile class="d-flex">
-                    <v-img
-                      :src="`https://picsum.photos/500/300?image=${n * 5 + 10}`"
-                      :lazy-src="`https://picsum.photos/10/6?image=${n * 5 + 10}`"
-                      aspect-ratio="1"
-                      class="grey lighten-2"
-                    >
-                      <template v-slot:placeholder>
-                        <v-row class="fill-height ma-0" align="center" justify="center">
-                          <v-progress-circular indeterminate color="grey lighten-5"></v-progress-circular>
-                        </v-row>
-                      </template>
-                    </v-img>
-                  </v-card>
-                </v-col>
-              </v-row>
-            </v-container>
-          </v-card>
-        </v-row>-->
         <v-btn
           name="radio-btn"
           class="radio-btn d-block mb-4"
@@ -107,6 +90,17 @@
         </div>
       </v-col>
     </v-row>
+    <kurious-dialog :show="show" :message="message" :modal="modal" :status="status">
+      <!-- <v-icon slot="icon" size="55" dark>mdi-clipboard-text-multiple-outline</v-icon> -->
+      <v-icon slot="icon" size="55" dark>mdi-barley</v-icon>
+      <!-- <v-row slot="actions">
+        <v-col class="col-6 mx-auto my-0">
+          <v-btn color="mx-2" to="/quiz">Go to Quizes</v-btn>
+          <v-btn v-if="status !== 200" color="mx-2" @click="show = false">Edit Quiz</v-btn>
+          <v-btn v-else color="mx-2" @click="reset();show = false">Add Another Quiz</v-btn>
+        </v-col>
+      </v-row>-->
+    </kurious-dialog>
   </v-container>
 </template>
 
@@ -114,10 +108,39 @@
 import Apis from "@/services/apis";
 export default {
   data: () => ({
+    alphabets: [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+      "F",
+      "G",
+      "H",
+      "I",
+      "J",
+      "K",
+      "L",
+      "M",
+      "N",
+      "O",
+      "P",
+      "Q",
+      "R",
+      "S",
+      "T",
+      "U",
+      "V",
+      "W",
+      "X",
+      "Y",
+      "Z",
+    ],
     quiz: {},
     attempt: {},
     show: false,
     message: "",
+    filesToUpload: [],
     status: 200,
     modal: true,
   }),
@@ -125,26 +148,56 @@ export default {
     this.getQuiz();
   },
   methods: {
+    checkCoiceStatus(choosedOptions, choice) {
+      if (choice.src) {
+        for (const option of choosedOptions) {
+          if (option.src === choice.src) {
+            return true;
+          }
+        }
+      } else if (choice.text) {
+        for (const option of choosedOptions) {
+          if (option.text === choice.text) {
+            return true;
+          }
+        }
+      }
+      return false;
+    },
+    pickfile(index) {
+      document.getElementById(`file${index}`).click();
+    },
+    handleFileUpload(index) {
+      this.filesToUpload[index].file = document.getElementById(
+        `file${index}`
+      ).files[0];
+      this.attempt.answers[index].src = this.filesToUpload[index].file.name;
+    },
     handleOptionClick(questionIndex, optionIndex) {
-      if (this.quiz.questions[questionIndex].type === "single-select") {
-        this.attempt.answers[questionIndex].choosedOptions = [optionIndex];
+      const value = this.quiz.questions[questionIndex].type.includes("text")
+        ? {
+            text: this.quiz.questions[questionIndex].options.choices[
+              optionIndex
+            ].text,
+          }
+        : {
+            src: this.quiz.questions[questionIndex].options.choices[optionIndex]
+              .src,
+          };
+      if (this.quiz.questions[questionIndex].type.includes("single")) {
+        this.attempt.answers[questionIndex].choosedOptions = [value];
       } else {
         if (
-          this.attempt.answers[questionIndex].choosedOptions.includes(
-            optionIndex
-          )
+          this.attempt.answers[questionIndex].choosedOptions.includes(value)
         ) {
           this.attempt.answers[questionIndex].choosedOptions.splice(
-            this.attempt.answers[questionIndex].choosedOptions.inexOf(
-              optionIndex
-            ),
+            this.attempt.answers[questionIndex].choosedOptions.indexOf(value),
             1
           );
         } else {
-          this.attempt.answers[questionIndex].choosedOptions.push(optionIndex);
+          this.attempt.answers[questionIndex].choosedOptions.push(value);
         }
       }
-      console.log(this.attempt);
     },
     async getQuiz() {
       try {
@@ -152,13 +205,16 @@ export default {
         this.attempt = {
           quiz: response.data._id,
           student: this.$store.state.user._id,
-          autoSubbmitted: undefined,
+          autoSubmitted: false,
           usedTime: 0,
           answers: [],
         };
         for (const question of response.data.questions) {
           if (question.type === "open-ended") {
             this.attempt.answers.push({ text: "" });
+          } else if (question.type === "file-upload") {
+            this.attempt.answers.push({ src: "" });
+            this.filesToUpload.push({ file: undefined });
           } else {
             this.attempt.answers.push({ choosedOptions: [] });
           }
@@ -175,10 +231,13 @@ export default {
     },
     async saveAttempt() {
       try {
-        let response = await Apis.create("course", this.attempt);
-        this.message = "Course was saved successfuly";
+        await Apis.create("quizSubmission", this.attempt);
+        // upload the files
+        this.message = "Submission was saved successfuly";
         this.show = true;
-        this.course._id = response.data._id;
+        setTimeout(() => {
+          this.$router.push("/courses");
+        }, 1000);
       } catch (error) {
         if (error.response) {
           this.status = error.response.status;
@@ -195,5 +254,31 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss">
+.timer {
+  width: 290px;
+  height: 135px;
+  padding: 21px;
+  margin-top: 9%;
+  text-align: center;
+  font-size: 3.99rem;
+  position: fixed;
+  font-weight: bold;
+  border-radius: 33px;
+  color: #fc6767;
+  background: #fed6d6;
+}
+// show colors based on the remaining time
+.timer.green {
+  color: #fc6767;
+  background: #fed6d6;
+}
+.timer.orange {
+  color: #fc6767;
+  background: #fed6d6;
+}
+.timer.red {
+  color: #fc6767;
+  background: #fed6d6;
+}
 </style>
