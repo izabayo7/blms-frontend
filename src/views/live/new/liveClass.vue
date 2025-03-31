@@ -320,7 +320,7 @@ export default {
     }
   },
   beforeMount() {
-    Apis.get(`live_session/${this.$route.params.liveSessionId}`).then(d => {
+    Apis.get(`live_session/${this.$route.params.liveSessionId}`).then(async d => {
       if (d.data.status == 404) {
         this.error = d.data.message
       } else {
@@ -340,6 +340,9 @@ export default {
             this.error = remainingTime
             // }
           } else {
+
+            await Apis.create('user_logs',{live_session_id: d.data.data._id})
+
             this.live_session = d.data.data
             this.startCounting(d.data.data);
 
