@@ -15,7 +15,7 @@
                 </div>
               </div>
             </div></th>
-            <th class="" v-for="tabHead in tabHeads" :key="`${tabHead}${Date.now()}` ">
+            <th class="" v-for="tabHead in tabHeads" @click="sort(tabHead)" :key="`${tabHead}${Date.now()}` ">
               <div class="head-tab-wrapper d-flex justify-space-between">
                 <div class="content">{{tabHead}}</div>
                 <div class="icon">
@@ -58,6 +58,7 @@ export default {
     return{
       selected_all:false,
       selected:[],
+      tabularData:this.data,
     }
   },
   computed:{
@@ -79,6 +80,13 @@ export default {
 
       this.$emit('select',{index:-1})
 
+    },
+    sort(tabHead){
+            this.tabularData = this.tabularData.sort((first,second) => {
+              if(first[tabHead] < second[tabHead]) return -1
+              if(first[tabHead] > second[tabHead]) return 1
+              return 0
+            })
     },
     select(i){
       const selected = new Set(this.selected)
