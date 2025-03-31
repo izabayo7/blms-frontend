@@ -1,10 +1,15 @@
 <template>
   <v-app id="reports-page" class="pa-0 instructor_reports">
+
     <div class="table-one">
-      <h3>Submissions</h3>
+      <div class="d-flex">
+        <h3 class="mr-4" :class="{active : currentView === 'quiz'}" @click="currentView = 'quiz'">Quiz Submissions</h3>
+        <h3 :class="{active : currentView === 'assignments'}" @click="currentView = 'assignments'">Assignment
+          Submissions</h3>
+      </div>
       <v-data-table
           :headers="submissionHeaders"
-          :items="quiz_submissions"
+          :items="currentView === 'quiz' ? quiz_submissions : assignment_submissions"
           :items-per-page="5"
           sort-by="dateOfSubmission"
           class="data-table"
@@ -19,7 +24,7 @@
             }}</span>
         </template>
         <template v-slot:item.chapter_name="{ item }">
-          <span class="normal--text">{{
+          <span v-if="item.target.chapter" class="normal--text">{{
               item.target.chapter.name
             }}</span>
         </template>
@@ -99,20 +104,20 @@
           >65%{{ "" + item ? "" : "nope" }}</span
           >
         </template>
-<!--        <template v-slot:item.actions="{ item }">-->
-<!--          <v-row class="actions pa-0">-->
-<!--            <v-col class="pa-0 py-1">-->
-<!--              <v-btn-->
-<!--                  class="white&#45;&#45;text"-->
-<!--                  :color="primary"-->
-<!--                  :to="`/submissions/${item.name}`"-->
-<!--              >-->
-<!--                Make announcement-->
-<!--              </v-btn>-->
-<!--            </v-col-->
-<!--            >-->
-<!--          </v-row>-->
-<!--        </template>-->
+        <!--        <template v-slot:item.actions="{ item }">-->
+        <!--          <v-row class="actions pa-0">-->
+        <!--            <v-col class="pa-0 py-1">-->
+        <!--              <v-btn-->
+        <!--                  class="white&#45;&#45;text"-->
+        <!--                  :color="primary"-->
+        <!--                  :to="`/submissions/${item.name}`"-->
+        <!--              >-->
+        <!--                Make announcement-->
+        <!--              </v-btn>-->
+        <!--            </v-col-->
+        <!--            >-->
+        <!--          </v-row>-->
+        <!--        </template>-->
         <template v-slot:no-data>
           <span class="text-h6">Oops You have no submissions.</span>
         </template>
@@ -127,6 +132,7 @@ import colors from "@/assets/sass/imports/_colors.scss";
 export default {
   data: () => ({
     primary: colors.primary,
+    currentView: 'quiz',
   }),
   computed: {
     submissionHeaders() {
@@ -191,7 +197,7 @@ export default {
       return this.$store.state.user.user.category.name;
     },
     ...mapGetters("courses", ["courses"]),
-    ...mapGetters("quiz_submission", ["quiz_submissions"]),
+    ...mapGetters("quiz_submission", ["quiz_submissions", "assignment_submissions"]),
     // only display courses we started
     activeCourses() {
       return this.courses.filter((course) => course.progress);
