@@ -78,6 +78,49 @@
         </div>
       </div>
     </div>
+    <div
+        v-else-if="modal_template == 'payment_err'"
+        class="dialog-body dialog_t_1 payment_err"
+    >
+      <div class="close-dialog show">
+        <svg
+            @click="toogle_visibility"
+            xmlns="http://www.w3.org/2000/svg"
+            width="19.805"
+            height="19.8"
+            viewBox="0 0 19.805 19.8"
+        >
+          <path
+              id="Icon_ionic-ios-close"
+              data-name="Icon ionic-ios-close"
+              d="M23.534,21.189l7.074-7.074a1.657,1.657,0,0,0-2.344-2.344L21.19,18.845l-7.074-7.074a1.657,1.657,0,1,0-2.344,2.344l7.074,7.074-7.074,7.074a1.657,1.657,0,0,0,2.344,2.344l7.074-7.074,7.074,7.074a1.657,1.657,0,1,0,2.344-2.344Z"
+              transform="translate(-11.285 -11.289)"
+          />
+        </svg>
+      </div>
+      <!-- show confirmations according to the set action -->
+      <div class="content confirmation-dialog">
+        <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path
+              d="M48.6346 26.667L40.0013 35.3003L31.368 26.667L26.668 31.367L35.3013 40.0003L26.668 48.6337L31.368 53.3337L40.0013 44.7003L48.6346 53.3337L53.3346 48.6337L44.7013 40.0003L53.3346 31.367L48.6346 26.667ZM40.0013 6.66699C21.568 6.66699 6.66797 21.567 6.66797 40.0003C6.66797 58.4337 21.568 73.3337 40.0013 73.3337C58.4346 73.3337 73.3346 58.4337 73.3346 40.0003C73.3346 21.567 58.4346 6.66699 40.0013 6.66699ZM40.0013 66.667C25.3013 66.667 13.3346 54.7003 13.3346 40.0003C13.3346 25.3003 25.3013 13.3337 40.0013 13.3337C54.7013 13.3337 66.668 25.3003 66.668 40.0003C66.668 54.7003 54.7013 66.667 40.0013 66.667Z"
+              fill="#FC6767"/>
+        </svg>
+
+        <h4 class="title">Ineligible to attend ( Payment needed)</h4>
+        <span class="sub-title">It appears you have not paid partialy or completely fees associated
+with this course.
+If you believe you have, check with the director of finance or pay
+due fees.</span>
+        <div class="actions">
+          <v-btn
+              @click="toogle_visibility"
+              class="mx-2 white--text action-button"
+          >Okay
+          </v-btn
+          >
+        </div>
+      </div>
+    </div>
     <!-- view for action confirmation -->
     <div
         v-else-if="modal_template.includes('live_related')"
@@ -206,6 +249,10 @@ export default {
   padding: 18px;
   border-radius: 12px;
 
+  &.payment_err {
+    border-radius: 0px;
+  }
+
   .uploader {
     padding: 20px 50px 50px;
   }
@@ -239,6 +286,10 @@ export default {
     text-align: right;
     padding: 11px;
 
+    &.show {
+      visibility: visible;
+    }
+
     svg {
       cursor: pointer;
     }
@@ -264,6 +315,36 @@ export default {
   .action-button {
     background-color: $primary !important;
     border-color: $primary;
+  }
+}
+
+.payment_err {
+  max-width: 665px;
+  min-height: 340px;
+
+  .title {
+    font-family: Inter;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 24px;
+
+    color: #000000;
+  }
+
+  .message {
+    font-family: Inter;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 15px;
+    line-height: 18px;
+
+    color: #000000;
+  }
+
+  .action-button {
+    width: 138px;
+    height: 44px !important;
   }
 }
 

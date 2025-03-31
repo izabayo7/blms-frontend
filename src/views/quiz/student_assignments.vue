@@ -97,7 +97,6 @@
               :headers="exam_headers"
               :items="assignments"
               sort-by="title"
-              @click:row="handleRowClick"
           >
             <template v-slot:item.target="{  }">
               <div class="target">
@@ -135,7 +134,10 @@
               </div>
             </template>
             <template v-slot:item.action="{ }">
-              <button disabled class="attempt-exam disabled">
+              <button class="attempt-exam disabled" @click=" disabled ?
+                      set_modal({
+                        template: 'payment_err',
+                      }) : undefined">
                 Attempt
               </button>
             </template>
@@ -186,22 +188,10 @@ export default {
   computed: {
     // get the current course
     ...mapGetters("quiz", ["assignments"]),
-    // format the quiz to fit in the table
-    formated_quiz() {
-      let formated_quiz = [];
-      for (const quiz of this.all_quiz) {
-        formated_quiz.push({
-          _id: quiz._id,
-          name: quiz.name,
-          course: quiz.course ? quiz.course.name : "Not yet Attached",
-          usage: quiz.usage,
-          containedQuestions: quiz.questions.length,
-          duration: new Date(quiz.duration * 1000).toISOString().substr(11, 8),
-          date: quiz.createdAt.split("T")[0].split("-").reverse().join("/"),
-        });
-      }
-      return formated_quiz;
-    },
+    ...mapGetters("user", ["paymentStatus"]),
+    disabled() {
+      return this.paymentStatus.paid === false
+    }
   },
   methods: {
     ...mapActions("quiz", ["getAssignments"]),
