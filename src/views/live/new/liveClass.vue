@@ -41,7 +41,7 @@
         <div class="video">
           <div class="video--wrapper">
             <div class="video-el"
-                 :class="`--${$vuetify.breakpoint.name} ${participationInfo.isOfferingCourse? '': sidebarOpen ? '' : 'viewer'}`"
+                 :class="`--${$vuetify.breakpoint.name} ${sidebarOpen ? '' : 'viewer'}`"
                  @mouseenter="toggleMenu(true)"
                  @mouseleave="toggleMenu(false)">
               <div class="no-video" v-show="noVideo">
@@ -131,15 +131,18 @@
         </div>
         <div v-if="participationInfo.isOfferingCourse" class="live-comments">
           <div class="live-comments--wrapper">
+            <div class="_title">LIVE COMMENTS</div>
             <div class="student-new-comment">
               <student-new-comment-with-photo v-model="comment"/>
             </div>
             <div class="student-comments">
-              <!--            <discussion-->
-              <!--              :content="comment"-->
-              <!--              :verified="comment.sender.category !== 'STUDENT'"-->
-              <!--              @replied="replied"-->
-              <!--            />-->
+              <discussion
+                  v-for="(comment, i) in comments"
+                  :key="i"
+                  :content="comment"
+                  :verified="comment.sender.category !== 'STUDENT'"
+                  @replied="replied"
+              />
 
             </div>
           </div>
@@ -250,17 +253,109 @@
 import Participant from "../../../plugins/kurentoLive/participants";
 import {WebRtcPeer} from 'kurento-utils'
 import {mapGetters, mapState} from 'vuex'
+import Discussion from "../../../components/Live/Discussion";
 import OnlineUser from "../../../components/Live/OnlineUser";
 import StudentNewCommentWithPhoto from "../../../components/Live/StudentNewCommentWithPhoto";
 import Apis from '../../../services/apis'
 
 export default {
   name: "liveClass",
-  components: {StudentNewCommentWithPhoto, OnlineUser, back: () => import("@/components/shared/back-button"),},
+  components: {
+    Discussion,
+    StudentNewCommentWithPhoto,
+    OnlineUser,
+    back: () => import("@/components/shared/back-button"),
+  },
   data() {
     return {
       ws: null,
       participants: [],
+      comments: [{
+        "_id": "6034a4ce486da89738c1700c",
+        "sender": {
+          "email": "cedro@gmail.com",
+          "sur_name": "Cedric",
+          "other_names": "Izabayo",
+          "user_name": "user_238760",
+          "gender": "male",
+          "profile": "https://apis.kurious.rw/api/user/user_238760/profile/profile_1620119711766.png",
+          "category": "STUDENT"
+        },
+        "target": {"type": "chapter", "id": "600d9d6574bd7a7b60d7b4cd"},
+        "content": "olala",
+        "updatedAt": "2021-02-23T06:46:38.062Z",
+        "createdAt": "2021-02-23T06:46:38.062Z",
+        "__v": 0,
+        "replies": [{
+          "_id": "6034a4d8486da89738c1700d",
+          "sender": {
+            "email": "cedro@gmail.com",
+            "sur_name": "Cedric",
+            "other_names": "Izabayo",
+            "user_name": "user_238760",
+            "gender": "male",
+            "profile": "https://apis.kurious.rw/api/user/user_238760/profile/profile_1620119711766.png",
+            "category": "STUDENT"
+          },
+          "target": {"type": "chapter", "id": "600d9d6574bd7a7b60d7b4cd"},
+          "content": "ibintu numuti",
+          "reply": "6034a4ce486da89738c1700c",
+          "updatedAt": "2021-02-23T06:46:48.317Z",
+          "createdAt": "2021-02-23T06:46:48.317Z",
+          "__v": 0
+        }]
+      }, {
+        "_id": "601af4846725b4e249144313",
+        "sender": {
+          "email": "cedro@gmail.com",
+          "sur_name": "Cedric",
+          "other_names": "Izabayo",
+          "user_name": "user_238760",
+          "gender": "male",
+          "profile": "https://apis.kurious.rw/api/user/user_238760/profile/profile_1620119711766.png",
+          "category": "STUDENT"
+        },
+        "target": {"type": "chapter", "id": "600d9d6574bd7a7b60d7b4cd"},
+        "content": "hahiye koko",
+        "updatedAt": "2021-02-03T19:07:48.244Z",
+        "createdAt": "2021-02-03T19:07:48.244Z",
+        "__v": 0,
+        "replies": []
+      }, {
+        "_id": "60115efff29a011323d063ff",
+        "sender": {
+          "email": "cedro@gmail.com",
+          "sur_name": "Cedric",
+          "other_names": "Izabayo",
+          "user_name": "user_238760",
+          "gender": "male",
+          "profile": "https://apis.kurious.rw/api/user/user_238760/profile/profile_1620119711766.png",
+          "category": "STUDENT"
+        },
+        "target": {"type": "chapter", "id": "600d9d6574bd7a7b60d7b4cd"},
+        "content": "hello\n",
+        "updatedAt": "2021-01-27T12:39:27.036Z",
+        "createdAt": "2021-01-27T12:39:27.036Z",
+        "__v": 0,
+        "replies": []
+      }, {
+        "_id": "60115ef4f29a011323d063fe",
+        "sender": {
+          "email": "cedro@gmail.com",
+          "sur_name": "Cedric",
+          "other_names": "Izabayo",
+          "user_name": "user_238760",
+          "gender": "male",
+          "profile": "https://apis.kurious.rw/api/user/user_238760/profile/profile_1620119711766.png",
+          "category": "STUDENT"
+        },
+        "target": {"type": "chapter", "id": "600d9d6574bd7a7b60d7b4cd"},
+        "content": "hello\n",
+        "updatedAt": "2021-01-27T12:39:16.548Z",
+        "createdAt": "2021-01-27T12:39:16.548Z",
+        "__v": 0,
+        "replies": []
+      }],
       me: null,
       id: "",
       comment: "",
@@ -291,6 +386,11 @@ export default {
     },
   },
   methods: {
+    replied(data) {
+      this.comments.map((comment) => {
+        if (comment._id === data._id) comment.replies.push(data.data);
+      });
+    },
     async getUserInfo(id) {
       const response = await Apis.get(`user/byId/${id}`)
       return response.data.data
@@ -1190,8 +1290,100 @@ export default {
   }
 
   .live-comments {
+    background-color: white;
+    //margin-left: -1.2rem;
+    padding-left: 19.2px;
+    //margin-top: -26px;
+    padding-top: 11px;
+    //height: 24.6vh;
     &--wrapper {
-      margin-top: 1rem;
+      //margin-top: 1rem;
+      ._title {
+        font-family: Montserrat;
+        font-style: normal;
+        font-weight: bold;
+        font-size: 11.0057px;
+        line-height: 17px;
+        /* identical to box height, or 150% */
+
+        letter-spacing: -0.015em;
+
+        color: #3C3C3C;
+      }
+
+      .student-comments {
+        .comment {
+          .comment__name {
+            font-family: Poppins;
+            font-style: normal;
+            font-weight: normal;
+            font-size: 13.01px;
+            line-height: 17px;
+
+            color: #000000;
+
+          }
+
+          .comment__time {
+            font-family: Poppins;
+            font-style: normal;
+            font-weight: normal;
+            font-size: 9.12431px;
+            line-height: 11px;
+            /* identical to box height */
+
+
+            color: #484848;
+          }
+
+          .comment__text {
+            font-family: Poppins;
+            font-style: normal;
+            font-weight: normal;
+            font-size: 13.8739px;
+            line-height: 18px;
+
+            color: #484848;
+          }
+
+          .show-replies p {
+            font-family: Poppins;
+            font-style: normal;
+            font-weight: normal;
+            font-size: 9.12431px !important;
+            line-height: 11px;
+            /* identical to box height */
+
+
+            color: #484848;
+          }
+
+          .inner-icon {
+            svg {
+              height: 17.1243133544921875px;
+              width: 18.311697959899902px;
+            }
+
+            padding-left: 0 !important;
+            background-color: transparent !important;
+          }
+
+          .reply-comment-container {
+            .right {
+              margin-top: 6px;
+            }
+
+            .comment .temp-flex {
+              display: flex;
+
+              .comment__time {
+                margin-left: 12px;
+                margin-top: 4px;
+              }
+            }
+          }
+        }
+      }
     }
   }
 
@@ -1199,6 +1391,7 @@ export default {
     background-color: white;
     margin-left: -1.2rem;
     padding-left: 19.2px;
+    padding-right: 19.2px;
     margin-top: -2.6rem;
     padding-top: 36.6px;
     height: 24.6vh;

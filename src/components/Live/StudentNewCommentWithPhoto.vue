@@ -11,7 +11,7 @@
             <v-avatar size="30">
               <img
                 v-if="$store.state.user.user.profile"
-                :src="`${$store.state.user.user.profile}?width=30`"
+                :src="`${$store.state.user.user.profile}?width=100`"
                 alt="profile picture"
               />
               <div v-else class="text">{{ user_full_names | computeText }}</div>
