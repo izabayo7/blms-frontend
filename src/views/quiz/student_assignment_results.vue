@@ -9,6 +9,10 @@
               new Date(assignment.dueDate).toLocaleTimeString()
             }}
           </div>
+          <div v-if="assignment_submission._id">Submitted on {{ assignment_submission.updatedAt | formatDate }}, at {{
+              new Date(assignment_submission.updatedAt).toLocaleTimeString()
+            }}
+          </div>
         </div>
         <div class="lower">
           <div v-if="assignment.details" class="description">
@@ -38,9 +42,9 @@
                         class="file-name">
                       {{ attachment.src }}
                     </button>
-<!--                    <div class="file-size mx-auto">-->
-<!--                      26kb-->
-<!--                    </div>-->
+                    <!--                    <div class="file-size mx-auto">-->
+                    <!--                      26kb-->
+                    <!--                    </div>-->
                     <div class="file-type ml-auto">
                       {{ attachment.src.split('.')[attachment.src.split('.').length - 1] }}
                     </div>
@@ -83,6 +87,7 @@
                   template="attachment-files"
                   :allowedTypes="findAcceptedFiles()"
                   :multiple="assignment.allowMultipleFilesSubmission"
+                  :defaultFiles="assignment_submission.attachments"
                   @addFile="addAssignmentAttachment"
                   @removeFile="removeAssignmentAttachment"
               />
@@ -92,14 +97,16 @@
             <Editor
                 ref="editor"
                 mode="edit"
-                defaultContent="<p>Type your answer here</p>"
+                  :defaultContent="assignment_submission.details || '<p>Type your answer here</p>'"
             />
           </div>
           <div id="quiz-actions" class=" d-flex mb-12 mt-6">
             <button @click="$router.push('/quiz')" class="quiz-action cancel">
               Cancel
             </button>
-            <button v-if="$store.state.user.user.category.name === 'STUDENT'" class="quiz-action">Submitt assignment</button>
+            <button v-if="$store.state.user.user.category.name === 'STUDENT'" class="quiz-action" @click="validate">
+              Submit assignment
+            </button>
           </div>
         </div>
       </v-col>
@@ -110,12 +117,31 @@
 <script>
 import {mapActions, mapGetters} from "vuex";
 import {downloadAttachment} from "@/services/global_functions"
+import Apis from "@/services/apis";
 
 export default {
   data: () => ({
     assignment: undefined,
-    assignmentAttachments: [],
+    error: "",
+    submissionAttachments: [],
+    assignment_submission: {
+      assignment: "",
+      details: undefined,
+      attachments: []
+    },
   }),
+  watch: {
+    error() {
+      if (this.error != "")
+        this.$store.dispatch("app_notification/SET_NOTIFICATION", {
+          message: this.error,
+          status: "danger",
+          uptime: 2000,
+        }).then(() => {
+          this.error = ""
+        })
+    },
+  },
   components: {
     Editor: () => import("@/components/reusable/Editor"),
     FilePicker: () => import("@/components/reusable/FilePicker"),
@@ -146,11 +172,39 @@ export default {
   methods: {
     downloadAttachment,
     ...mapActions("quiz", ["getAssignment"]),
+    async getSubmission() {
+      const res = await Apis.get(`assignment_submission/user/${this.$store.state.user.user.user_name}/${this.$route.params.id}`, this.assignment_submission)
+      if (res.data.data) {
+        this.assignment_submission = res.data.data
+        this.submissionAttachments = res.data.data.attachments.map(x => {
+          return {name: x.src}
+        })
+      }
+
+      this.assignment = await this.getAssignment({id: this.$route.params.id})
+      if (this.assignment) {
+        let date = new Date(this.assignment.dueDate)
+        date.setMinutes(date.getUTCMinutes())
+        date.setHours(date.getUTCHours())
+        this.assignment.dueDate = new Date(date).toISOString()
+      }
+    },
+    validate() {
+      if (this.assignment.submissionMode === 'textInput') {
+        if (this.$refs.editor.getHTML() === "<p>Type your answer here</p>")
+          return this.error = "Please provide the requested details"
+      } else if (this.assignment.submissionMode === 'fileUpload')
+        if (this.submissionAttachments.length === 0)
+          return this.error = "Please upload the requested files"
+
+      this.saveAssignmentSubmission()
+
+    },
     addAssignmentAttachment(file) {
-      this.assignmentAttachments.push(file)
+      this.submissionAttachments.push(file)
     },
     removeAssignmentAttachment(index) {
-      this.assignmentAttachments.splice(index, 1)
+      this.submissionAttachments.splice(index, 1)
     },
     findAcceptedFiles() {
       if (!this.assignment.allowed_files)
@@ -181,15 +235,62 @@ export default {
       return allowed_types.join(',')
 
     },
-  },
-  async created() {
-    this.assignment = await this.getAssignment({id: this.$route.params.id})
-    if (this.assignment) {
-      let date = new Date(this.assignment.dueDate)
-      date.setMinutes(date.getUTCMinutes())
-      date.setHours(date.getUTCHours())
-      this.assignment.dueDate = new Date(date).toISOString()
+    saveAssignmentSubmission() {
+      this.assignment_submission.assignment = this.$route.params.id
+      if (this.assignment.submissionMode === 'textInput')
+        this.assignment_submission.details = this.$refs.editor.getHTML()
+      if (this.submissionAttachments.length)
+        this.assignment_submission.attachments = this.submissionAttachments.map(x => {
+          return {
+            src: x.name
+          }
+        })
+      Apis.create('assignment_submission', this.assignment_submission).then(async (res) => {
+        if (res.data.status !== 201) {
+          this.$store.dispatch("app_notification/SET_NOTIFICATION", {
+            message: res.data.message,
+            status: "danger",
+            uptime: 5000,
+          }).then(() => {
+            this.error = ""
+          })
+        } else {
+          if (this.submissionAttachments.length) {
+            const formData = new FormData()
+            let index = 0;
+            for (const i in this.submissionAttachments) {
+              formData.append("files[" + index + "]", this.submissionAttachments[i]);
+              index++
+            }
+            // set the dialog
+            this.$store.dispatch('modal/set_modal', {
+              template: 'display_information',
+              title: 'Creating assignment submission',
+              message: 'uploading attachments'
+            })
+
+            await Apis.create(`assignment_submission/${res.data.data._id}/attachment`, formData, {
+              headers: {
+                'Content-Type': 'multipart/form-data'
+              },
+              onUploadProgress: (progressEvent) => {
+                this.$store.dispatch('modal/set_progress', parseInt(Math.round((progressEvent.loaded / progressEvent.total) * 100)))
+              }
+            })
+          }
+          // this.addAssignment(res.data.data)
+          this.$store.dispatch("app_notification/SET_NOTIFICATION", {
+            message: "Assignment submission creation succeded",
+            status: "success",
+            uptime: 5000,
+          })
+          this.$router.push('/assignments')
+        }
+      })
     }
+  },
+  created() {
+    this.getSubmission()
   },
 };
 </script>
@@ -210,10 +311,14 @@ export default {
         color: #BABABC;
       }
 
-      &:last-child {
+      &:nth-child(3), &:nth-child(4) {
         font-weight: bold;
         font-size: 13px;
         color: #193074;
+      }
+
+      &:nth-child(4) {
+        color: #1cc83f;
       }
     }
   }
