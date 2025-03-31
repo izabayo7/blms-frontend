@@ -126,7 +126,7 @@
             <div class="description">Learn about the basics of compound interest, with examples of basic compound
               interest calculations. Created by professor Kubwimana Jean Damascene
             </div>
-            <div class="quiz ml-auto mr-4">
+            <div class="quiz ml-auto ">
               <button>
                 Take quiz
               </button>
@@ -633,7 +633,7 @@ export default {
     this.ws = new WebSocket('wss://' + host + '/kurious_stream' + `?token=${this.$session.get("jwt")}`);
 
     this.ws.addEventListener('open', () => {
-      // self.register();
+      self.register();
     })
 
     this.ws.onerror = function (evt) {
