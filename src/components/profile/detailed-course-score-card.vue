@@ -4,6 +4,7 @@
 
   <div class="dcsc">
     <div class="dcsc--wrapper d-flex justify-space-between">
+<!--      col 1 with tittle-->
       <div class="dcsc--col dcsc--col__1 dcsc--title">
         <div class="dcsc--title--name">
           <h3>Bookkeeping basics</h3>
@@ -12,6 +13,7 @@
           <p>Started on 27 jan 2021</p>
         </div>
       </div>
+<!--      col 2 with success rate-->
       <div class="dcsc--col dcsc--col__2 dcsc--success-rate">
         <div class="dcsc--success-rate--title">
           <p>Overall success rate</p>
@@ -20,6 +22,7 @@
           <h5>62 %</h5>
         </div>
       </div>
+<!--      col 3 with last attempted quiz infos-->
       <div class="dcsc--col dcsc--col__3 dcsc--last-quiz">
         <div class="dcsc--last-quiz--title">
           <p>Last quiz marks</p>

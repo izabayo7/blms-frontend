@@ -2,6 +2,7 @@
 <!--enrol course card-->
   <div class="ecc">
     <div class="ecc--wrapper d-flex">
+<!--      col 1 with course title-->
       <div class="ecc--col ecc--col__1 ecc--title">
         <div class="ecc--title--name">
           <h3>Bookkeeping basics</h3>
@@ -10,6 +11,8 @@
           <p>Started on 27 jan 2021</p>
         </div>
       </div>
+
+<!--      col 2 with course completion progress bar-->
       <div class="ecc--col ecc--col__2 ecc--completion">
         <div class="ecc--completion--text">
           <p>45 % Completion</p>
@@ -20,6 +23,8 @@
           </div>
         </div>
       </div>
+
+<!--      col 3 with last course access -->
       <div class="ecc--col ecc--col__3 ecc--last-access">
         <div class="ecc--last-access--chapter-name">
           <p>Last chapter accessed</p>
