@@ -305,4 +305,20 @@ export default {
     }
   }
 }
+
+/* Portrait phones and smaller */
+@media (max-width: 700px) {
+  .my-info {
+    .info-container {
+      .my-info {
+        min-width: 90%;
+        max-width: 100%;
+        .members {
+          align-self: start;
+          max-width: 100%;
+        }
+      }
+    }
+  }
+}
 </style>
