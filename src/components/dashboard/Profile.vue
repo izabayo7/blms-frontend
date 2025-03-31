@@ -1,13 +1,10 @@
 <template>
   <div class="profile">
-    <p class="name d-none d-md-flex">
-      <span>{{ $store.state.user.user.sur_name }}{{ $store.state.user.user.other_names }}</span>
-      <v-icon>mdi-chevron-down</v-icon>
-    </p>
     <img @click="logout" v-if="$store.state.user.user.profile" :src="$store.state.user.user.profile" alt="profile picture"/>
     <v-avatar @click="logout" v-else size="50" class="avatar">
       {{ `${$store.state.user.user.sur_name} ${$store.state.user.user.other_names}`| computeText }}
     </v-avatar>
+      <v-icon>mdi-chevron-down</v-icon>
   </div>
 </template>
 <script>
