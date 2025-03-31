@@ -16,3 +16,6 @@
 .plyr__controls__item.plyr__time--current.plyr__time {
     color: white;
 }
+.plyr:-webkit-full-screen video, .plyr:fullscreen video {
+    width: 100%;
+}

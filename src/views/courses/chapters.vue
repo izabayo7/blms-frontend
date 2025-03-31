@@ -199,17 +199,56 @@
                               v-if="mode !== ''"
                               ref="editor"
                               :mode="`${mode === 'edit' ? mode : 'preview'}`"
+                              @addmathlive="addSpecialInput"
                               :defaultContent="
                               course.chapters[activeChapter]._id
                                 ? content
                                 : undefined
                             "
                           />
+                          <div v-if="course.chapters[activeChapter].uploaded_content" class="relative">
+                            <vue-pdf-app class="pdf-viewer" :config="config"
+                                         :pdf="`${course.chapters[activeChapter].uploaded_content_url}?token=${$session.get('jwt')}`">
+                            </vue-pdf-app>
+                          </div>
                         </v-col>
+                        <div @click="clickButton" class="col-12 cursor-pointer">
+                          <svg width="22" height="22" viewBox="0 0 22 22" fill="none"
+                               xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M11.3346 17.6667C9.30797 17.6667 7.66797 16.0267 7.66797 14.0001L7.66797 7.00008C7.66797 5.52675 8.8613 4.33342 10.3346 4.33342C11.808 4.33342 13.0013 5.52675 13.0013 7.00008L13.0013 12.6667C13.0013 13.5867 12.2546 14.3334 11.3346 14.3334C10.4146 14.3334 9.66797 13.5867 9.66797 12.6667L9.66797 7.66675L11.0013 7.66675L11.0013 12.7267C11.0013 13.0934 11.668 13.0934 11.668 12.7267L11.668 7.00008C11.668 6.26675 11.068 5.66675 10.3346 5.66675C9.6013 5.66675 9.0013 6.26675 9.0013 7.00008L9.0013 14.0001C9.0013 15.2867 10.048 16.3334 11.3346 16.3334C12.6213 16.3334 13.668 15.2867 13.668 14.0001L13.668 7.66675L15.0013 7.66675L15.0013 14.0001C15.0013 16.0267 13.3613 17.6667 11.3346 17.6667Z"
+                                fill="#193074"/>
+                            <circle cx="11" cy="11" r="10.5" stroke="#193074"/>
+                          </svg>
+                          {{ (chapterContent ? chapterContent.name : null) || course.chapters[activeChapter].uploaded_content || 'Upload document' }} <span>(pdf only)</span>
+                          <input
+                              type="file"
+                              id="chapterContent"
+                              accept="application/pdf"
+                              hidden
+                              @change="handleFileUpload()"
+                          />
+                        </div>
                       </v-row>
                     </v-card>
-                    <v-btn class="mr-4 primary-button" @click="stepCounter = 4"
+
+                    <v-btn class="mr-4 mt-4 primary-button" @click="stepCounter = 4"
                     >Continue
+                    </v-btn>
+                    <v-btn v-if="course.chapters[activeChapter].uploaded_content"
+                           class="primary-button danger ml-4 mt-4"
+                           @click.prevent="
+                                    set_modal({
+                                      template: 'action_confirmation',
+                                      method: {
+                                        action: 'courses/deleteChapterDocument',
+                                      },
+                                      title: 'Delete Chapter Document',
+                                      message:
+                                        'Are you sure you want to remove this document?',
+                                    })
+                                  "
+                    >Remove document
                     </v-btn>
                   </v-stepper-content>
 
@@ -424,8 +463,57 @@
 
 <script>
 import {mapActions, mapGetters} from "vuex";
+import '@/assets/js/mathlive'
 import colors from "@/assets/sass/imports/_colors.scss";
 
+const getSidebar = () => ({
+  viewThumbnail: true,
+  viewOutline: true,
+  viewAttachments: true,
+});
+const getSecondaryToolbar = () => ({
+  secondaryPresentationMode: true,
+  secondaryOpenFile: true,
+  secondaryPrint: true,
+  secondaryDownload: true,
+  secondaryViewBookmark: true,
+  firstPage: true,
+  lastPage: true,
+  pageRotateCw: true,
+  pageRotateCcw: true,
+  cursorSelectTool: true,
+  cursorHandTool: true,
+  scrollVertical: true,
+  scrollHorizontal: true,
+  scrollWrapped: true,
+  spreadNone: true,
+  spreadOdd: true,
+  spreadEven: true,
+  documentProperties: true,
+});
+const getToolbarViewerLeft = () => ({
+  findbar: true,
+  previous: true,
+  next: true,
+  pageNumber: true,
+});
+const getToolbarViewerRight = () => ({
+  presentationMode: true,
+  openFile: false,
+  print: false,
+  download: false,
+  viewBookmark: false,
+});
+const getToolbarViewerMiddle = () => ({
+  zoomOut: true,
+  zoomIn: true,
+  scaleSelectContainer: true,
+});
+const getToolbar = () => ({
+  toolbarViewerLeft: getToolbarViewerLeft(),
+  toolbarViewerRight: getToolbarViewerRight(),
+  toolbarViewerMiddle: getToolbarViewerMiddle(),
+});
 export default {
   name: "edit_chapters",
   props: {
@@ -446,6 +534,7 @@ export default {
     message: "",
     mode: "",
     content: "",
+    chapterContent: undefined,
     error: "",
     chapterVideo: undefined,
     nameRules: [
@@ -453,10 +542,17 @@ export default {
       (v) => v.length > 2 || "Name is too short",
     ],
     simpleRules: [(v) => !!v || "This field is required"],
+    config: {
+      sidebar: getSidebar(),
+      secondaryToolbar: getSecondaryToolbar(),
+      toolbar: getToolbar(),
+      errorWrapper: true,
+    },
   }),
   components: {
     FilePicker: () => import("@/components/reusable/FilePicker"),
     Editor: () => import("@/components/reusable/Editor"),
+    // vuePdfApp: () => import("vue-pdf-app")
   },
   computed: {
     // get the current course
@@ -498,8 +594,22 @@ export default {
       this.attachments = [];
     },
     stepCounter() {
-      if (this.stepCounter === 3) {
+      const callback = (event) => {
+        const element = document.getElementById("vuePdfApp")
+        console.log(element)
+
+        if (element)
+          if (element.contains(event.target)) {
+            event.preventDefault()
+            // Chrome requires returnValue to be set.
+            event.returnValue = ""
+          }
+      }
+      if (this.stepCounter == 3) {
         document.querySelector(".ProseMirror").focus();
+        window.addEventListener("click", callback)
+      } else {
+        window.removeEventListener("click", callback)
       }
       if (this.stepCounter == 4) {
         this.calculateQuizNames();
@@ -525,6 +635,34 @@ export default {
     },
   },
   methods: {
+    addSpecialInput() {
+      const el = document.querySelector('.ProseMirror')
+      const newElement = document.createElement('math-field')
+      newElement.setAttribute('virtual-keyboard-mode', 'manual')
+      newElement.setAttribute('role', 'textbox')
+      newElement.setAttribute('tabindex', '0')
+      setTimeout(() => {
+        console.log('harahiye', newElement)
+        console.log(
+            newElement.addEventListener('input', (ev) => {
+              console.log(newElement.innerHTML, ev.target.value)
+              newElement.innerText = ev.target.value
+              console.log(newElement.innerHTML, ev.target.value)
+            })
+        )
+        console.log(newElement)
+        newElement.innerText = "x=\\frac{-b\\pm \\sqrt{b^2-4ac}}{2a}"
+      }, 10000)
+      const paragraphElement = document.createElement('p')
+      paragraphElement.appendChild(newElement)
+      el.appendChild(paragraphElement)
+    },
+    clickButton() {
+      document.getElementById('chapterContent').click();
+    },
+    handleFileUpload() {
+      this.chapterContent = document.getElementById('chapterContent').files[0];
+    },
     ...mapActions("courses", [
       "getChapterMainContent",
       "updateChapter",
@@ -537,7 +675,7 @@ export default {
     ...mapActions("modal", ["set_modal"]),
     changeLimit() {
       for (let i in this.course.chapters) {
-        i=parseInt(i)
+        i = parseInt(i)
         if (i === this.activeChapter) {
           this.course.chapters[i].status = this.course.chapters[i].status ? 0 : 1
         } else if (this.course.chapters[i].status === 0) {
@@ -646,6 +784,7 @@ export default {
         video: this.chapterVideo,
         attachments: this.attachments,
         quiz: this.selectedQuiz,
+        chapterContent: this.chapterContent
       }).then(() => {
         this.chapterVideo = undefined;
         this.attachments = [];
@@ -675,6 +814,7 @@ export default {
         video: this.chapterVideo,
         attachments: this.attachments,
         quiz: this.selectedQuiz,
+        chapterContent: this.chapterContent
       }).then(() => {
         this.chapterVideo = undefined;
         this.attachments = [];
@@ -730,7 +870,6 @@ export default {
   },
 };
 </script>
-
 <style lang="scss">
 .ProseMirror:focus {
   outline: none;
@@ -740,6 +879,10 @@ export default {
   background-color: #f5f5f5;
   width: 100%;
   height: 50px;
+}
+
+.pdf-viewer {
+  height: 200px;
 }
 
 .chapter-badges {

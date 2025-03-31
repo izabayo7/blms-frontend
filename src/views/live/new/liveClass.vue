@@ -574,6 +574,8 @@ export default {
     },
     async finishSession() {
       await Apis.put(`live_session/${this.$route.params.liveSessionId}/status/FINISHED`)
+      this.onCloseRoom()
+      this.$router.push('/courses')
     },
     addComment(comment) {
       this.comments.unshift(comment)

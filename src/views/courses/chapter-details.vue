@@ -4,7 +4,7 @@
       <v-col class="col-12 title d-block pt-0">{{ course.name }}</v-col>
       <v-col
           v-if="course.chapters[activeIndex].uploaded_video || recorded_video != ''"
-          class="col-12 col-md-8 pt-0"
+          class="col-12 pt-0 col-md-8"
           id="video"
       >
         <!--
@@ -20,7 +20,8 @@
       </v-col>
     </v-row>
     <v-row>
-      <v-col class="col-12 col-md-8">
+      <v-col class="col-12"
+             :class="{'col-md-8' : !course.chapters[activeIndex].uploaded_content}">
         <!-- <span v-if="course !== undefined">{{course.name}}</span> -->
         <v-tabs background-color="white" color="#ffd248" right v-model="selectedTab">
           <v-tab :key="0" id="content-tab">
@@ -55,6 +56,11 @@
                       v-if="editorContent !== '' && editorContent"
                       :defaultContent="editorContent"
                   />
+                  <div v-if="course.chapters[activeIndex].uploaded_content" class="relative">
+                    <vue-pdf-app class="pdf-viewer" :config="config" @pages-rendered="increasePdfHeight"
+                                 :pdf="`${course.chapters[activeIndex].uploaded_content_url}?token=${$session.get('jwt')}`">
+                    </vue-pdf-app>
+                  </div>
                 </v-col>
                 <v-col class="col-6 mx-auto text-center">
                   <v-btn
@@ -226,12 +232,61 @@ import colors from "@/assets/sass/imports/_colors.scss";
 import {emit} from "../../services/event_bus";
 import Apis from "../../services/apis";
 
+const getSidebar = () => ({
+  viewThumbnail: true,
+  viewOutline: true,
+  viewAttachments: true,
+});
+const getSecondaryToolbar = () => ({
+  secondaryPresentationMode: true,
+  secondaryOpenFile: true,
+  secondaryPrint: true,
+  secondaryDownload: true,
+  secondaryViewBookmark: true,
+  firstPage: true,
+  lastPage: true,
+  pageRotateCw: true,
+  pageRotateCcw: true,
+  cursorSelectTool: true,
+  cursorHandTool: true,
+  scrollVertical: true,
+  scrollHorizontal: true,
+  scrollWrapped: true,
+  spreadNone: true,
+  spreadOdd: true,
+  spreadEven: true,
+  documentProperties: true,
+});
+const getToolbarViewerLeft = () => ({
+  findbar: true,
+  previous: true,
+  next: true,
+  pageNumber: true,
+});
+const getToolbarViewerRight = () => ({
+  presentationMode: true,
+  openFile: false,
+  print: false,
+  download: false,
+  viewBookmark: false,
+});
+const getToolbarViewerMiddle = () => ({
+  zoomOut: true,
+  zoomIn: true,
+  scaleSelectContainer: true,
+});
+const getToolbar = () => ({
+  toolbarViewerLeft: getToolbarViewerLeft(),
+  toolbarViewerRight: getToolbarViewerRight(),
+  toolbarViewerMiddle: getToolbarViewerMiddle(),
+});
+
 export default {
   name: "chapter-details",
   components: {
     UnrealTimeDiscussionBoard,
     loader: () => import("@/components/loaders"),
-      Editor: () => import("@/components/reusable/Editor"),
+    Editor: () => import("@/components/reusable/Editor"),
   },
   data() {
     return {
@@ -241,7 +296,13 @@ export default {
       selectedTab: -1,
       primary: colors.primary,
       chapters: [],
-      recorded_video: ""
+      recorded_video: "",
+      config: {
+        sidebar: getSidebar(),
+        secondaryToolbar: getSecondaryToolbar(),
+        toolbar: getToolbar(),
+        errorWrapper: true,
+      },
     };
   },
   watch: {
@@ -267,6 +328,13 @@ export default {
   },
   methods: {
     downloadAttachment,
+    increasePdfHeight() {
+      const viewer = document.getElementById("viewer");
+
+      const container = document.getElementById("vuePdfApp")
+      container.style.height = viewer.clientHeight.toString()+"px";
+
+    },
     ...mapActions("courses", [
       "findCourseByName",
       "getChapterMainContent",
@@ -366,7 +434,7 @@ export default {
       this.findRecordedClass();
       // go to contents
       // document.getElementById("content-tab").click();
-      await Apis.create('user_logs',{course_id: this.course._id})
+      await Apis.create('user_logs', {course_id: this.course._id})
     },
   },
   beforeRouteUpdate(to, from, next) {
@@ -386,5 +454,43 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss">
+.pdf-viewer {
+  height: 100vh;
+  width: 100%;
+
+  .toolbar {
+    display: none;
+  }
+
+  //#viewerContainer {
+  //  top: 0px;
+  //  overflow-x: hidden;
+  //
+  //  &::-webkit-scrollbar {
+  //    width: 8px;
+  //  }
+  //
+  //  &::-webkit-scrollbar-track {
+  //    // background-color: #f8f8ff;
+  //  }
+  //
+  //  &::-webkit-scrollbar-track:hover {
+  //    background-color: lighten($secondary, 4);
+  //  }
+  //
+  //  &::-webkit-scrollbar-thumb {
+  //    background-color: lighten($font, 40);
+  //    border-radius: 10px;
+  //  }
+  //
+  //  &::-webkit-scrollbar-thumb:hover {
+  //    background-color: lighten($font, 30);
+  //  }
+  //}
+
+  .pdfViewer .page {
+    border: none;
+  }
+}
 </style>

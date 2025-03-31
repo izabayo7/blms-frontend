@@ -224,6 +224,9 @@
             >
               <p>{{ formated_remaining_time }}</p>
             </div>
+            <div class="webcam">
+              <video id="userStream" autoplay muted></video>
+            </div>
             <div class="subtitle">Do not :</div>
             <div class="content">
               <div> - Close exam window before submiting work.</div>
@@ -251,9 +254,16 @@
 import Apis from "@/services/apis";
 import {mapGetters, mapActions} from "vuex";
 import {assessmentMixins} from "../../services/mixins";
+import {load, SupportedPackages} from "@tensorflow-models/face-landmarks-detection";
+import {drawMesh} from "./utilities.js";
+// eslint-disable-next-line
+import * as tf from "@tensorflow/tfjs";
 
 export default {
   data: () => ({
+    recorder: undefined,
+    videoSaved: false,
+    tempVideoData: "",
     exam: undefined,
     alphabets: [
       "A",
@@ -578,7 +588,7 @@ export default {
       }
     },
     async saveAttempt(cheated) {
-      if (this.$store.state.user.user.category.name === 'STUDENT')
+      if (this.$store.state.user.user.category.name === 'STUDENT') {
         this.socket.emit('save-exam-progress', {
           submission_id: this.submission_id,
           attempt: this.attempt,
@@ -586,12 +596,25 @@ export default {
           questions: this.exam.questions,
           cheated
         })
-      else {
+        if (this.recorder)
+          this.stopRecorder()
+      } else {
         this.set_modal({
           template: `exam_closed_${cheated ? 'failed' : 'successfull'}`,
         })
         this.removeListeners()
       }
+    },
+    stopRecorder() {
+      const video = document.getElementById("userStream")
+      const stream = video.srcObject;
+      const tracks = stream.getTracks();
+
+      tracks.forEach(function (track) {
+        track.stop();
+      });
+      this.recorder.stop()
+      video.srcObject = null;
     },
     goFullscreen() {
       var el = document.documentElement
@@ -644,7 +667,127 @@ export default {
         e.preventDefault();
       }
     },
+    setDetector() {
+      const video = document.getElementById("userStream")
+      const canvas = document.createElement('canvas')
+      video.parentElement.append(canvas)
+
+      //  Load posenet
+      const runFacemesh = async () => {
+        // OLD MODEL
+        // const net = await facemesh.load({
+        //   inputResolution: { width: 640, height: 480 },
+        //   scale: 0.8,
+        // });
+        // NEW MODEL
+        const net = await load(SupportedPackages.mediapipeFacemesh);
+        setInterval(() => {
+          detect(net);
+        }, 10);
+      };
+
+      const detect = async (net) => {
+        if (
+            video.readyState === 4
+        ) {
+          // Get Video Properties
+          const videoWidth = video.videoWidth;
+          const videoHeight = video.videoHeight;
+
+          // Set video width
+          // webcamRef.current.video.width = videoWidth;
+          // webcamRef.current.video.height = videoHeight;
+
+          // Set canvas width
+          canvas.width = videoWidth;
+          canvas.height = videoHeight;
+
+          // Make Detections
+          // OLD MODEL
+          //       const face = await net.estimateFaces(video);
+          // NEW MODEL
+          const face = await net.estimateFaces({input: video});
+          // Get canvas context
+          const ctx = canvas.getContext("2d");
+          requestAnimationFrame(() => {
+            drawMesh(face, ctx)
+          });
+        }
+      };
+
+      runFacemesh()
+
+    },
+    postBlob(event) {
+      if (event.data && event.data.size > 0) {
+        this.sendBlobAsBase64(event.data);
+      }
+    },
+    sendBlobAsBase64(blob) {
+      const reader = new FileReader();
+
+      reader.addEventListener('load', () => {
+        const dataUrl = reader.result;
+        const base64EncodedData = dataUrl.split(',')[2];
+        this.sendDataToBackend(base64EncodedData);
+      });
+
+      reader.readAsDataURL(blob);
+    },
+    recordStream(stream) {
+      let options = {mimeType: 'video/webm;codecs="vp8,opus"'};
+      this.recorder = new MediaRecorder(stream, options);
+      this.recorder.ondataavailable = this.postBlob
+      // record for 1 min parts
+      this.recorder.start(60000)
+      // setTimeout(() => {
+      //   this.stopRecorder(
+      //   console.log('stopped recording')
+      // }, 120000)
+    },
+    sendDataToBackend(base64EncodedData) {
+
+      Apis.create(`exam_submission/${this.submission_id}/video`, {data: this.tempVideoData+base64EncodedData}).then((res) => {
+        if (res.data.saved) {
+          this.videoSaved = true
+          this.tempVideoData = ""
+        }
+      }).catch((err)=>{
+        console.error(err)
+        this.videoSaved = false
+        this.tempVideoData += base64EncodedData
+      })
+    },
+    setCamera() {
+      const video = document.getElementById("userStream")
+      const mediaSource = new MediaSource();
+      mediaSource.addEventListener('sourceopen', handleSourceOpen, false);
+
+      function handleSourceOpen() {
+        mediaSource.addSourceBuffer('video/webm; codecs="vp8"');
+      }
+
+      navigator.mediaDevices.getUserMedia(
+          {
+            video: true,
+            audio: {
+              echoCancellation: true
+            }
+          }
+      ).then((stream) => {
+        video.srcObject = stream
+        this.recordStream(stream)
+        // video.addEventListener('play', () => {
+        //   this.setDetector()
+        // })
+      }).catch(err => console.error(err))
+    },
     setUp() {
+      setTimeout(() => {
+        this.setCamera()
+      }, 1000)
+
+
       document.querySelector('body').addEventListener('click', this.goFullscreen)
       window.addEventListener('beforeunload', this.goodbye)
       // track if one leaves tab
