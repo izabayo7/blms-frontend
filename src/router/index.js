@@ -101,8 +101,8 @@ const routes = [
                         component: () => import('@/views/courses/details'),
                         children: [
                             {
-                                path:'/courses/:name/chapter/:index/:id',
-                                component:() => import('@/views/courses/chapter-details')
+                                path: '/courses/:name/chapter/:index/:id',
+                                component: () => import('@/views/courses/chapter-details')
                             }
                         ]
                     },
@@ -139,7 +139,13 @@ const routes = [
                         name: 'Reports',
                         component: () =>
                             import('@/views/reports')
-                    }, {
+                    },
+                    {
+                        path: '/reports/:target',
+                        component: () =>
+                            import('@/views/reports/student_reports')
+                    },
+                    {
                         path: '/library',
                         name: 'Library',
                         component: () =>
