@@ -20,10 +20,10 @@
         </svg>
       </div>
       <div class="content">
-        <h4 class="title">{{title}}....</h4>
-        <span class="sub-title">Please wait</span>
+        <h4 v-if="title" class="title">{{title}}....</h4>
+        <span v-if="title" class="sub-title">Please wait</span>
         <p class="unconfirmed">{{message}}</p>
-        <v-progress-linear :value="progress" color="#ffc100" class="request-progress" />
+        <v-progress-linear v-if="title" :value="progress" color="#ffc100" class="request-progress" />
       </div>
     </div>
     <!-- view for action confirmation -->
