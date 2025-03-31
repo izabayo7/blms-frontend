@@ -132,17 +132,25 @@ export default {
 
         },
         release_marks({dispatch, rootGetters}, {id, quizName, user_group}) {
-            apis.update('quiz/release_marks', id).then(() => {
-                rootGetters['chat/socket'].emit('marksReleased', {
-                    route: `/quiz/attempt/${quizName}`,
-                    user_group,
-                    content: `released marks for quiz ${quizName}`
-                })
-                dispatch("app_notification/SET_NOTIFICATION", {
-                    message: "Marks released",
-                    status: "success",
-                    uptime: 5000,
-                }, {root: true});
+            apis.update('quiz/release_marks', id).then((res) => {
+                if (res.data.status === 403) {
+                    dispatch("app_notification/SET_NOTIFICATION", {
+                        message: res.data.message,
+                        status: "danger",
+                        uptime: 5000,
+                    }, {root: true});
+                } else {
+                    rootGetters['chat/socket'].emit('marksReleased', {
+                        route: `/quiz/attempt/${quizName}`,
+                        user_group,
+                        content: `released marks for quiz ${quizName}`
+                    })
+                    dispatch("app_notification/SET_NOTIFICATION", {
+                        message: "Marks released",
+                        status: "success",
+                        uptime: 5000,
+                    }, {root: true});
+                }
             })
         },
         //update a quiz
@@ -248,24 +256,32 @@ export default {
             router.push('/assignments')
         },
         change_assignment_status({state, rootGetters, dispatch}, {id, status, user_group, name}) {
-            apis.update('assignments/changeStatus', id + '/' + status).then(() => {
-                if (status === 'RELEASED' || status === 'PUBLISHED')
-                    rootGetters['chat/socket'].emit('marksReleased', {
-                        route: `/assignments/${id}`,
-                        user_group,
-                        content: `${status === 'RELEASED' ? 'released marks for' : 'published a new '} assignment ${name}`
-                    })
-                if (status === 'RELEASED') {
+            apis.update('assignments/changeStatus', id + '/' + status).then((res) => {
+                if (res.data.status === 403) {
                     dispatch("app_notification/SET_NOTIFICATION", {
-                        message: "Marks released",
-                        status: "success",
+                        message: res.data.message,
+                        status: "danger",
                         uptime: 5000,
                     }, {root: true});
-                }
-                for (const i in state.quiz.data) {
-                    if (state.assignments.data[i]._id === id) {
-                        state.assignments.data[i].status = status
-                        break
+                } else {
+                    if (status === 'RELEASED' || status === 'PUBLISHED')
+                        rootGetters['chat/socket'].emit('marksReleased', {
+                            route: `/assignments/${id}`,
+                            user_group,
+                            content: `${status === 'RELEASED' ? 'released marks for' : 'published a new '} assignment ${name}`
+                        })
+                    if (status === 'RELEASED') {
+                        dispatch("app_notification/SET_NOTIFICATION", {
+                            message: "Marks released",
+                            status: "success",
+                            uptime: 5000,
+                        }, {root: true});
+                    }
+                    for (const i in state.quiz.data) {
+                        if (state.assignments.data[i]._id === id) {
+                            state.assignments.data[i].status = status
+                            break
+                        }
                     }
                 }
             })
