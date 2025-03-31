@@ -61,9 +61,13 @@
                         checkChoiceStatus(attempt.answers[i].choosed_options, {
                           text: choice.text,
                         })
-                          ? 'selected'
+                          ? choice.right
+                            ? ''
+                            : 'wrong_choice'
                           : ''
-                      }`"
+                      }
+                      ${choice.right ? 'right_choice' : ''}
+                      `"
                     >
                       {{ `${alphabets[k]}. ${choice.text}` }}
                     </div>
@@ -589,5 +593,15 @@ export default {
 }
 .student_name {
   font-size: 1.6rem;
+}
+.right_choice {
+  background: linear-gradient(#d9f1d8 0%, #85e97d 100%);
+}
+.wrong_choice {
+  background: linear-gradient(
+    rgba(255, 0, 0, 0.53) 0%,
+    rgba(249, 93, 93, 0.53) 100%
+  );
+  box-shadow: 0px 6px 3px rgba(0, 0, 0, 0.16);
 }
 </style>

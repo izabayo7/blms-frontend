@@ -53,10 +53,10 @@
             />
           </svg>
         </template>
-        <template v-slot:item.actions>
+        <template v-slot:item.actions="{item}">
           <v-btn
             color="warning"
-            :to="`/quiz/${course.name}/${$store.state.user.user.user_name}`"
+            :to="`/quiz/${item.quiz.name}/${$store.state.user.user.user_name}`"
             icon
           >
             <v-icon> mdi-eye </v-icon>
@@ -66,6 +66,7 @@
           <span class="text-h6">Oops You have no submissions.</span>
         </template>
       </v-data-table>
+      
     </div>
   </v-app>
 </template>
