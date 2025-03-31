@@ -857,27 +857,32 @@ export default {
             position: absolute;
             display: block;
             width: 100%;
+            bottom:0;
 
             &--wrapper{
               display: flex;
               justify-content: space-evenly;
-              background-color: transparentize(#000,.7);
+              background-color: transparentize(#000,.4);
               padding:.3rem 1rem;
+              padding-top: .5rem;
 
               button{
                 display: flex;
                 align-items: center;
-                padding:.4rem 1rem;
-                border:2px solid $main;
+                padding:.3rem .6rem;
                 border-radius: 5px;
-                &:focus{
-
+                box-sizing: border-box;
+                border:1.5px solid transparent;
+                &:hover{
+                  border:1.5px solid $main;
+                  background-color: transparentize($main,.8);
                 }
 
                 span{
                   padding:0 .2rem;
                   color:$main;
                   display: block;
+                  font-weight: 300;
                   text-transform: capitalize;
                   font-size: .9rem;
 
