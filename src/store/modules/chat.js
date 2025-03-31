@@ -9,7 +9,8 @@ export default {
         currentDisplayedUser:{},
         currentChatMessages:[],
         incomingMessages:[],
-        loadedMessages:[]
+        loadedMessages:[],
+        conversationLoading:true,
     },
     mutations:{
         //set the current user
@@ -19,7 +20,6 @@ export default {
 
         //set the user who is being displayed on the chat
         SET_DISPLAYED_USER(state,data){
-            console.log(data)
             state.currentDisplayedUser = data;
         },
 
@@ -45,7 +45,6 @@ export default {
         loadIncomingMessages({getters,state}){
             // get contacts new style
             getters.socket.emit('request_user_contacts');
-            console.log('we are in loading message')
 
             // Get contacts new style
             getters.socket.on('receive_user_contacts', ({contacts}) => {
@@ -62,8 +61,9 @@ export default {
 
             // Get messages new style
             getters.socket.on('receive_conversation', ({conversation}) => {
+                emit('conversation_loaded')
                 commit('STORE_LOADED_DATA',{username:id,messages:conversation})
-                state.currentChatMessages = conversation
+                state.currentChatMessages = conversation;
                 // console.log(conversation)
             })
         },
@@ -71,6 +71,7 @@ export default {
             commit('SET_USERNAME',username)
 
             return new Promise((res,rej) => {
+                console.log(`set ${username} and ${state.username}`)
                 if(state.username === username){
                     res(state.username)
                 }else {
@@ -84,7 +85,6 @@ export default {
     getters:{
         // connect to socket from sever side
         socket(){
-            console.log(user.state.user._id)
             return io('http://161.35.199.197:7070',{
                 query:{
                     id:user.state.user._id // username of the connected user

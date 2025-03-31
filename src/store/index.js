@@ -6,7 +6,7 @@ import user from "@/store/modules/user";
 
 Vue.use(Vuex)
 export default new Vuex.Store({
-    namespaceed: true,
+    namespaced: true,
     state: {
         sidebar: {
             visible: false,

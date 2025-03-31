@@ -9,7 +9,9 @@
       </chat-header>
     </div>
     <div ref="messages-list" class="messages-list" >
-      <chat-messaging :data="currentChatMessages"/>
+      <div class="messages-container" id="chat-holder">
+        <chat-messaging :data="currentChatMessages" id="scrollable-chat"/>
+      </div>
     </div>
     <div ref="send-message" class="send-message">
       <send-message></send-message>
@@ -22,6 +24,7 @@ import ChatHeader from '@/components/messages/Chat-header'
 import SendMessage from '@/components/messages/Send-message'
 import ChatMessaging from '@/components/messages/Chat-messaging'
 import {mapGetters, mapState, mapActions} from 'vuex'
+import {on} from "@/services/event_bus";
 
 export default {
   name: "Chat",
@@ -39,15 +42,14 @@ export default {
     ...mapGetters('chat',['socket']),
   },
   methods:{
-    ...mapActions('chat',['setUsername']),
-    loadNewCurrentMessages(username){
-      // to load new messages we need to make sure that the current user has changed
-      // and also make sure that there are no currently loaded messages
-      if(username !== this.$route.params.username || this.currentChatMessages.length <= 0 ){
-        this.$store.dispatch('chat/loadMessages',this.username); //load msgs
-      }
-    }
+    ...mapActions('chat',['setUsername','loadMessages']),
+    scrollChatToBottom(){
+      let el = document.getElementById('scrollable-chat')
+      console.log(el.scrollTop,el.scrollHeight)
+      el.scrollTop =el.scrollHeight
+      console.log(el.scrollTop,el.scrollHeight)
 
+    }
   },
   created() {
     console.log('created')
@@ -56,18 +58,21 @@ export default {
       this.$store.dispatch('chat/loadMessages')
     }
   },
+  mounted() {
+    on('conversation_loaded',()=>{
+      // this.scrollChatToBottom()
+      // console.log('loaded')
+    })
+  },
   beforeMount() {
     //load user since the route have changed
     this.setUsername(this.$route.params.username).then(username => {
-      this.loadNewCurrentMessages(username)
+      this.loadMessages(username)
     })
   },
   beforeRouteUpdate(to,from,next){
     //since username has changed let us also load new chat
-    this.setUsername(this.$route.params.username).then(username => {
-      this.loadNewCurrentMessages(username)
-
-    })
+    this.setUsername(to.params.username)
 
     next()
   }
@@ -82,16 +87,31 @@ export default {
   height: calc(100% - 1rem);
   display: flex;
   flex-direction: column;
+  flex-wrap: wrap;
 
 
   .chat-header {
     width: 100%;
+    align-self: flex-start;
+    justify-self: flex-start;
   }
 
   .messages-list {
     width: 100%;
-    height: 25rem;
-    overflow: auto;
+    position: relative;
+    overflow-y: scroll;
+    overscroll-behavior-y: contain;
+    flex-grow: 1;
+
+    .messages-container{
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+
+      width: 100%;
+    }
 
     &::-webkit-scrollbar {
       width: 8px;
@@ -114,10 +134,10 @@ export default {
     }
   }
 
-  .sender-message {
+  .send-message {
     width: 100%;
-    //align-self: flex-end;
-    //justify-self: flex-end;
+    align-self: flex-end;
+    justify-self: flex-end;
   }
 
 }

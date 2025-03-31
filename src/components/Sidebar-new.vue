@@ -119,7 +119,7 @@ export default {
       return this.$route.path;
     },
     userCategory() {
-      return this.$store.state.user.category;
+      return this.$store.state.user.user.category;
     },
   },
 };

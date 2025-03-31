@@ -1,7 +1,7 @@
 <template>
 <section class="my-messages">
     <h2>Chat</h2>
-  <div class="row messages-section">
+  <div class="row messages-section" id="messages-section">
     <div class="side incoming col-3">
     <div class="message-search"> <search bg="#ffffff" placeholder="search message" :width="100" :fontSize="12" /> </div>
     <div class="incoming-messages" v-if="incomingMessages.length > 0">
@@ -85,8 +85,12 @@ export default {
 </script>
 
 <style  lang="scss" scoped>
+#messages-section{
+  height: 90%;
+}
 .my-messages{
   background-color: $secondary;
+  height: 100%;
 
   h2{
     padding-left: 1rem;
@@ -94,8 +98,9 @@ export default {
     color:$primary;
   }
   .messages-section{
-
-  .incoming{
+    //height: 100%;
+    .incoming{
+        height: 90%;
 
       .message-search{
         padding:1rem 0;
@@ -103,15 +108,11 @@ export default {
         margin: auto;
       }
 
-      .incoming-messages{
-        //padding-top:2rem;
-
-      }
 
 
   }
     .chat{
-      height: auto;
+      //height: 100%;
     }
   }
 }

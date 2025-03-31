@@ -12,7 +12,9 @@ export default {
         },
     },
     actions:{
-
+        setUser({commit},user){
+            commit('SET_USER',user)
+        }
     },
     getters:{
 

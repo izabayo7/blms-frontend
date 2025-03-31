@@ -3,10 +3,7 @@ import VueRouter from 'vue-router'
 import store from '../store'
 import axios from 'axios'
 import jwt from "jsonwebtoken"
-
 Vue.use(VueRouter)
-
-
 const routes = [
     {
         path: '/',
@@ -24,7 +21,6 @@ const routes = [
         path: '/kurious',
         component: () =>
             import('@/views/dashboard/Index-new'),
-
         children: [{
             path: '/messages',
             component: () => import('@/views/Messages.vue'),
@@ -35,75 +31,75 @@ const routes = [
             path: '/courses',
             component: () => import('@/views/courses'),
         },
-        {
-            path: '/courses/preview/:name',
-            component: () => import('@/views/courses/preview')
-        },
-        {
-            path: '/courses/edit/:name',
-            name: 'Edit Course',
-            component: () =>
-                import('@//views/courses/edit')
-        },
-        {
-            path: '/courses/:name',
-            component: () => import('@/views/courses/details')
-        }, {
-            path: '/courses/new-course',
-            name: 'New Course',
-            component: () =>
-                import('@/components/newCourse.vue')
-        },  {
-            path: '/quiz/new-quiz',
-            name: 'Set Quiz',
-            component: () =>
-                import('@/components/set-quiz.vue')
-        }, {
-            path: '/quiz/attempt/:id',
-            name: 'TakeQuiz',
-            component: () =>
-                import('@/components/take-quiz.vue')
-        }, {
-            path: '/reports/submission/:id',
-            name: 'MarkQuiz',
-            component: () =>
-                import('@/components/mark-quiz.vue')
-        }, {
-            path: '/reports',
-            name: 'Reports',
-            component: () =>
-                import('@/components/reports.vue')
-        }, {
-            path: '/library',
-            name: 'Library',
-            component: () =>
-                import('@/components/library.vue')
-        }, {
-            path: '/live-class',
-            name: 'liveClass',
-            component: () =>
-                import('@/components/live-class.vue')
-        }, {
-            path: '/profile',
-            name: 'profile',
-            component: () =>
-                import('@/components/profile.vue')
-        }, {
-            path: '/accounts/currentUser',
-            name: 'User Profile',
-            component: () =>
-                import('@/components/profile.vue')
-        }, {
-            path: '/quiz',
-            name: 'Quiz',
-            component: () =>
-                import('@/components/quiz/index.vue')
-        }, {
-            path: '/users',
-            name: 'Users',
-            component: () =>
-                import('@/components/admin/users.vue')
-        },
+            {
+                path: '/courses/preview/:name',
+                component: () => import('@/views/courses/preview')
+            },
+            {
+                path: '/courses/edit/:name',
+                name: 'Edit Course',
+                component: () =>
+                    import('@//views/courses/edit')
+            },
+            {
+                path: '/courses/:name',
+                component: () => import('@/views/courses/details')
+            }, {
+                path: '/courses/new-course',
+                name: 'New Course',
+                component: () =>
+                    import('@/components/newCourse.vue')
+            },  {
+                path: '/quiz/new-quiz',
+                name: 'Set Quiz',
+                component: () =>
+                    import('@/components/set-quiz.vue')
+            }, {
+                path: '/quiz/attempt/:id',
+                name: 'TakeQuiz',
+                component: () =>
+                    import('@/components/take-quiz.vue')
+            }, {
+                path: '/reports/submission/:id',
+                name: 'MarkQuiz',
+                component: () =>
+                    import('@/components/mark-quiz.vue')
+            }, {
+                path: '/reports',
+                name: 'Reports',
+                component: () =>
+                    import('@/components/reports.vue')
+            }, {
+                path: '/library',
+                name: 'Library',
+                component: () =>
+                    import('@/components/library.vue')
+            }, {
+                path: '/live-class',
+                name: 'liveClass',
+                component: () =>
+                    import('@/components/live-class.vue')
+            }, {
+                path: '/profile',
+                name: 'profile',
+                component: () =>
+                    import('@/components/profile.vue')
+            }, {
+                path: '/accounts/currentUser',
+                name: 'User Profile',
+                component: () =>
+                    import('@/components/profile.vue')
+            }, {
+                path: '/quiz',
+                name: 'Quiz',
+                component: () =>
+                    import('@/components/quiz/index.vue')
+            }, {
+                path: '/users',
+                name: 'Users',
+                component: () =>
+                    import('@/components/admin/users.vue')
+            },
         ]
     },
     // the login page
@@ -204,7 +200,7 @@ const routes = [
     //         component: () =>
     //             import('@/components/admin/users.vue')
     //     },]
-    // }, 
+    // },
     {
         path: '/register/users',
         name: 'Register Users',
@@ -268,18 +264,14 @@ const routes = [
         component: () => import("@/views/pages/notFound.vue")
     }
 ]
-
 const router = new VueRouter({
     mode: 'history',
     hash: false,
     base: process.env.BASE_URL,
     routes
 })
-
-
 // before navigating to any route
 router.beforeEach((to, from, next) => {
-
     // if the session exist and the vuex store is not set
     if (Vue.prototype.$session.exists() && !store.state.isLoggedIn) {
         // get the token
@@ -289,11 +281,10 @@ router.beforeEach((to, from, next) => {
         // set the token in axios headers
         axios.defaults.headers.common.Authorization = `${token}`;
         // keep the decoded user in vuex store
-        store.dispatch("setUser", jwt.decode(token));
+        store.dispatch("user/setUser", jwt.decode(token));
     }
-
     // check if the destination route is protected
-    if (!to.meta.allowAnonymous && !store.state.isLoggedIn) {
+    if (!to.meta.allowAnonymous && !store.state.user.isLoggedIn) {
         // go to login
         next({
             path: '/login',
@@ -314,5 +305,4 @@ router.beforeEach((to, from, next) => {
         next()
     }
 })
-
 export default router

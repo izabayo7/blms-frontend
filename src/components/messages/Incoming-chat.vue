@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import {emit} from '@/services/event_bus'
+// import {emit} from '@/services/event_bus'
 export default {
   name: "Incoming-chat",
   props:{
@@ -36,11 +36,11 @@ export default {
   },
   methods:{
   handleClick(){
-    this.$store.commit('chat/SET_DISPLAYED_USER',this.data)
-    emit('chat_user_changed',this.data.id) //alert that user was changed so we need to fetch some new messages
-    this.$router.push({path:`/messages/${this.data.id}`,params:{username:this.data.id}})
     console.log(this.data.id)
-
+    this.$store.commit('chat/SET_DISPLAYED_USER',this.data)
+    this.$store.dispatch('chat/loadMessages',this.data.id)
+    // emit('chat_user_changed',this.data.id) //alert that user was changed so we need to fetch some new messages
+    this.$router.push({path:`/messages/${this.data.id}`,params:{username:this.data.id}})
   }
   },
   mounted() {
@@ -54,7 +54,7 @@ export default {
   display: flex;
   flex-direction: row;
   padding: .5rem;
-  margin-top: 1rem;
+  margin-top: .3rem;
   cursor: pointer;
   .pic{
     align-self: center;

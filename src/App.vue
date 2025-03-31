@@ -6,6 +6,9 @@
 </template>
 
 <script>
+import axios from 'axios'
+import jwt from 'jsonwebtoken'
+
 export default {
   name: "App",
   beforeCreate: async function () {
@@ -17,7 +20,7 @@ export default {
       axios.defaults.headers.common.Authorization = `${this.$session.get(
         "jwt"
       )}`;
-      this.$store.commit("user/SET_USER", jwt.decode(this.$session.get("jwt")));
+      this.$store.dispatch("user/setUser", jwt.decode(this.$session.get("jwt")));
       this.$store.state.user.isLoggedIn = true;
       // const response = await Services.otherGets('token')
       // if (response.data === 'Invalid Token') {
