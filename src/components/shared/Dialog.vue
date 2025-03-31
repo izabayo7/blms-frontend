@@ -78,13 +78,14 @@
     </div>
     <!-- view for action confirmation -->
     <div
-        v-else-if="modal_template == 'live_related'"
+        v-else-if="modal_template.includes('live_related')"
         class="dialog-body live"
+        :class="{ ended : modal_template.includes('ended')}"
     >
-      <div class="title">ATTENDANCE CHECK</div>
-      <div class="sub-title">Hey user, are you there ? Type the code bellow to confirm</div>
-      <div class="code">H8DJ95</div>
-      <div class="">
+      <div class="title">{{ title }}</div>
+      <div class="sub-title">{{ message }}</div>
+      <div v-if="!modal_template.includes('ended')" class="code">{{ code }}</div>
+      <div v-if="!modal_template.includes('ended')" class="">
         <input type="text">
       </div>
       <div class="action">
@@ -104,6 +105,7 @@ export default {
       "title",
       "progress",
       "message",
+      "code",
       "closable",
       "status",
       "modal_template",
@@ -211,6 +213,16 @@ export default {
   width: 651px;
   height: 315px !important;
   padding: 30px;
+
+  &.ended{
+    padding: 63px;
+    .title{
+      margin-bottom: 33px;
+    }
+    .sub-title{
+      margin-bottom: 44px;
+    }
+  }
 
   background: #FFFFFF;
   border-radius: 5px;
