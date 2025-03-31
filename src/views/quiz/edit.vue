@@ -68,6 +68,10 @@
                           v-model="option.text"
                           :placeholder="`Option ${k + 1}`"
                           class="question-options"
+                          @click:prepend="handleOptionClick(i, k)"
+                          :prepend-icon="
+                            option.right ? 'mdi-check' : 'mdi-close'
+                          "
                           solo
                           required
                         >
@@ -97,69 +101,103 @@
                           v-if="soltAttachments(i).length > 0"
                           class="attachments"
                         >
-                          <div
+                          <!-- <div
                             v-for="(choice, key) in soltAttachments(i)"
                             :key="key"
                             class="file-listing d-flex"
+                          > -->
+                          <div
+                            class="downloadable_attachment vertically--centered"
                           >
-                            <div
-                              class="downloadable_attachment vertically--centered"
-                            >
-                              <!-- <v-icon color="#000000" x-large
+                            <!-- <v-icon color="#000000" x-large
                                 >mdi-file{{
                                   findIcon(choice.src)
                                 }}-outline</v-icon
                               > -->
-                              <v-icon color="#000000" x-large
-                                >mdi-file-outline</v-icon
-                              >
-                              <span class="filename text-truncate">{{
+                            <!-- <v-icon color="#000000" x-large
+                              >mdi-file-outline</v-icon
+                            > -->
+                            <!-- <span class="filename text-truncate">{{
                                 choice.src.split("/")[
                                   choice.src.split("/").length - 1
                                 ]
-                              }}</span>
-                              <button
-                                @click.prevent="
-                                  remove_quiz_attached_file({
-                                    index: i,
-                                    file_name: choice.src,
-                                  })
-                                "
+                              }}</span> -->
+                            <div class="pictures-container">
+                              <v-card
+                                v-for="(choice,
+                                k) in question.options.choices.filter((_c) =>
+                                  _c.src.includes('http')
+                                )"
+                                :key="k"
+                                flat
+                                tile
+                                class="ma-1 d-flex"
+                                color="transparent"
                               >
-                                <svg
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  width="45"
-                                  height="45"
-                                  viewBox="0 0 69 69"
+                                <v-img
+                                  :src="`${choice.src}?format=png&width=200&height=200`"
+                                  :lazy-src="`${choice.src}?format=png&width=200&height=200`"
+                                  :gradient="
+                                    choice.right
+                                      ? 'to top right, rgba(100,115,201,.33), rgba(25,32,72,.7)'
+                                      : undefined
+                                  "
+                                  @click="handleOptionClick(i, k)"
+                                  class="vertically--centered text-center"
                                 >
-                                  <circle
-                                    id="Ellipse_225"
-                                    data-name="Ellipse 225"
-                                    cx="34.5"
-                                    cy="34.5"
-                                    r="34.5"
-                                    fill="#fc6767"
-                                  />
-                                  <path
-                                    id="Icon_material-delete"
-                                    data-name="Icon material-delete"
-                                    d="M9,28.5a3.009,3.009,0,0,0,3,3H24a3.009,3.009,0,0,0,3-3v-18H9ZM28.5,6H23.25l-1.5-1.5h-7.5L12.75,6H7.5V9h21V6Z"
-                                    transform="translate(16.5 16.5)"
-                                    fill="none"
-                                    stroke="#fff"
-                                    stroke-width="2"
-                                  />
-                                </svg>
-                              </button>
+                                  <v-icon
+                                    v-if="choice.right"
+                                    class="white--text"
+                                    size="50"
+                                    >mdi-check</v-icon
+                                  >
+                                </v-img>
+                                <button
+                                  @click.prevent="
+                                    remove_quiz_attached_file({
+                                      index: i,
+                                      file_name: choice.src,
+                                    })
+                                  "
+                                >
+                                  <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="45"
+                                    height="45"
+                                    viewBox="0 0 69 69"
+                                  >
+                                    <circle
+                                      id="Ellipse_225"
+                                      data-name="Ellipse 225"
+                                      cx="34.5"
+                                      cy="34.5"
+                                      r="34.5"
+                                      fill="#fc6767"
+                                    />
+                                    <path
+                                      id="Icon_material-delete"
+                                      data-name="Icon material-delete"
+                                      d="M9,28.5a3.009,3.009,0,0,0,3,3H24a3.009,3.009,0,0,0,3-3v-18H9ZM28.5,6H23.25l-1.5-1.5h-7.5L12.75,6H7.5V9h21V6Z"
+                                      transform="translate(16.5 16.5)"
+                                      fill="none"
+                                      stroke="#fff"
+                                      stroke-width="2"
+                                    />
+                                  </svg>
+                                </button>
+                              </v-card>
                             </div>
                           </div>
+                          <!-- </div> -->
                         </div>
                         <kurious-file-picker
+                          :ref="`picker${i}`"
                           :boundIndex="i"
                           :allowedTypes="['image']"
                           :multiple="true"
                           @addFile="addPicture"
                           @removeFile="removePicture"
+                          @fileClicked="handleOptionClick"
                         />
                       </v-col>
                     </v-row>
@@ -180,7 +218,12 @@
             </v-row>
           </v-col>
           <v-col class="col-1 px-0">
-            <v-btn class="mt-10" icon @click="removeQuestion(i)">
+            <v-btn
+              v-if="selected_quiz.questions.length > 1"
+              class="mt-10"
+              icon
+              @click="removeQuestion(i)"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="21"
@@ -207,7 +250,13 @@
       <v-btn class="white--text save-quiz" rounded @click="saveQuiz()"
         >Update quiz</v-btn
       >
-      <v-btn color="#707070" class="cancel-quiz" text @click="$router.push('/quiz')">Cancel</v-btn>
+      <v-btn
+        color="#707070"
+        class="cancel-quiz"
+        text
+        @click="$router.push('/quiz')"
+        >Cancel</v-btn
+      >
     </v-row>
   </v-app>
 </template>
@@ -243,6 +292,57 @@ export default {
   },
   methods: {
     ...mapActions("quiz", ["update_quiz", "findQuizByName"]),
+    handleOptionClick(questionIndex, optionIndex, fileName) {
+      let rightChoices = [],
+        calculatedIndex = optionIndex,
+        realIndex = optionIndex,
+        separatingIndex = 0;
+
+      if (fileName) {
+        for (const i in this.selected_quiz.questions[questionIndex].options
+          .choices) {
+          if (
+            !this.selected_quiz.questions[questionIndex].options.choices[
+              i
+            ].src.includes("http")
+          ) {
+            separatingIndex = i;
+            calculatedIndex = parseInt(i) + realIndex;
+            break;
+          }
+        }
+      }
+
+      for (const k in this.selected_quiz.questions[questionIndex].options
+        .choices) {
+        if (k == calculatedIndex) {
+          this.selected_quiz.questions[questionIndex].options.choices[
+            k
+          ].right = !this.selected_quiz.questions[questionIndex].options
+            .choices[k].right;
+        } else if (
+          this.selected_quiz.questions[questionIndex].type.includes("Single")
+        ) {
+          this.selected_quiz.questions[questionIndex].options.choices[
+            k
+          ].right = false;
+        }
+        if (
+          this.selected_quiz.questions[questionIndex].options.choices[k]
+            .right &&
+          calculatedIndex > separatingIndex - 1 &&
+          fileName
+        ) {
+          rightChoices.push(calculatedIndex - separatingIndex);
+        }
+      }
+      if (this.selected_quiz.questions[questionIndex].type.includes("file")) {
+        this.$refs[`picker${questionIndex}`][0].showRightFiles(
+          questionIndex,
+          rightChoices
+        );
+      }
+    },
     soltAttachments(index) {
       let attachments = [];
       for (const i in this.selected_quiz.questions[index].options.choices) {
@@ -274,6 +374,7 @@ export default {
       this.pictures[boundIndex].push(file);
       this.selected_quiz.questions[boundIndex].options.choices.push({
         src: file.name,
+        right: false,
       });
     },
     removePicture(index, boundIndex) {
@@ -283,7 +384,10 @@ export default {
     handleTypeChange(index) {
       if (this.selected_quiz.questions[index].type.includes("text")) {
         this.selected_quiz.questions[index].options = {
-          choices: [{ text: "" }, { text: "" }],
+          choices: [
+            { text: "", right: false },
+            { text: "", right: false },
+          ],
         };
       } else if (
         this.selected_quiz.questions[index].type.includes("file") &&
@@ -307,7 +411,10 @@ export default {
       this.pictures.push([]);
     },
     addOption(index) {
-      this.selected_quiz.questions[index].options.choices.push({ text: "" });
+      this.selected_quiz.questions[index].options.choices.push({
+        text: "",
+        right: false,
+      });
     },
     removeOption(index, index1) {
       this.selected_quiz.questions[index].options.choices.splice(index1, 1);
@@ -384,7 +491,7 @@ export default {
     formatQuestionType(value) {
       for (const index in this.questionTypes) {
         if (
-          value === this.questionTypes[index].toLowerCase().split(" ").join("-")
+          value == this.questionTypes[index].toLowerCase().split(" ").join("-")
         ) {
           return this.questionTypes[index];
         }
@@ -398,13 +505,15 @@ export default {
       userId: this.$store.state.user.user._id,
       quizName: this.$route.params.name,
     }).then((quiz) => {
-        this.duration = this.to_hh_mm_ss(quiz.duration);
-        for (const index in quiz.questions) {
-          quiz.questions[index].type = this.formatQuestionType(
-            quiz.questions[index].type
-          );
-          this.pictures.push([]);
-        }
+      this.duration = this.to_hh_mm_ss(quiz.duration);
+
+      for (let i = 0; i < quiz.questions.length; i++) {
+        this.selected_quiz.questions[i].type = this.formatQuestionType(
+          quiz.questions[i].type
+        );
+        console.log(this.selected_quiz.questions[i].type);
+        this.pictures.push([]);
+      }
     });
   },
 };
@@ -461,6 +570,11 @@ export default {
   .downloadable_attachment {
     width: 100%;
     margin-bottom: 18px;
+  }
+  .pictures-container {
+    display: flex;
+    flex-direction: row;
+    flex-flow: wrap;
   }
 }
 </style>

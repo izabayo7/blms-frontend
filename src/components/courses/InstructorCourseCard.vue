@@ -3,11 +3,11 @@
     <v-card :class="`class-card ${course.published ? '' : 'unpublished-card'}`">
       <v-row class="first-row">
         <v-col class="col-md-7 col-7 content-side">
-          <p class="instructor-course-title">{{course.name | trimString(20)}}</p>
+          <p class="instructor-course-title">{{course.name }}</p>
           <p class="course-chapters mt-0">{{course.chapters.length}} Chapters</p>
           <p
             :class="`instructor-course-description ${course.published ? 'hidden-md-and-down' : ''}`"
-          >{{course.description | trimString(50)}}</p>
+          >{{course.description}}</p>
           <p
             :class="`published-date ${course.published ? 'hidden-md-and-down' : ''}`"
             v-if="course.published"

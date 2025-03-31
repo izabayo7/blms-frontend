@@ -10,8 +10,7 @@ export default {
     },
     mutations: {
         addNotification(state, value) {
-            console.log(value)
-            state.notifications.data.push(value)
+            state.notifications.data.unshift(value)
         }
     },
     actions: {

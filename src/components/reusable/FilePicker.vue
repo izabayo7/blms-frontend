@@ -1,5 +1,5 @@
 <style lang="scss">
-.kurious--drag {
+.filePicker {
   text-align: center;
   border: 1px solid #d9d9d9;
   form {
@@ -73,7 +73,7 @@ div.remove-container a {
 </style>
 
 <template>
-  <form ref="fileform" class="kurious--drag">
+  <form ref="fileform" :class="`filePicker picker${boundIndex}`">
     <v-row>
       <v-col class="col-10">
         <div class="file-list-container">
@@ -93,7 +93,10 @@ div.remove-container a {
                 <v-icon color="#fff">mdi-window-close</v-icon>
               </v-btn>
 
-              <div class="attachment vertically--centered">
+              <div
+                @click="fileClicked(key)"
+                class="attachment vertically--centered"
+              >
                 <div class="file_figure">
                   <v-img
                     v-if="imageTypes.includes(file.type)"
@@ -183,7 +186,7 @@ export default {
   },
   computed: {
     inputId() {
-      return `file_input_${Math.floor(Math.random() * 100)}`
+      return `file_input_${this.boundIndex}`;
     },
   },
   mounted() {
@@ -247,6 +250,25 @@ export default {
   },
 
   methods: {
+    fileClicked(index) {
+      this.$emit(
+        "fileClicked",
+        this.boundIndex,
+        index,
+        this.$route.name === "Edit Quiz" ? this.files[index].name : undefined
+      );
+    },
+    showRightFiles(index, indices) {
+      if (index == this.boundIndex) {
+        let divs = document.querySelectorAll(`.picker${index} .attachment`);
+        for (const i in this.files) {
+          const indexFound = indices.filter(_i => _i == i)
+
+          if (indexFound.length > 0) divs[i].style.border = "1px solid green";
+          else divs[i].style.border = "none";
+        }
+      }
+    },
     clickButton() {
       document.getElementById(this.inputId).click();
     },
