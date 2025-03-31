@@ -35,6 +35,14 @@ const routes = [
             allowAnonymous: true
         }
     },
+    // {
+    //     path: '/admin_demo',
+    //     component: () =>
+    //         import('@/views/dashboard/new'),
+    //     meta: {
+    //         allowAnonymous: true
+    //     }
+    // },
     {
         /**
          * DASHBOARD Parent
@@ -61,6 +69,14 @@ const routes = [
                 },
                 // for chat
                 children: [
+                    {
+                        path: '/admin_demo',
+                        component: () =>
+                            import('@/views/dashboard/new'),
+                        meta: {
+                            allowAnonymous: true
+                        }
+                    },
                     {
                         path: '/messages/start-conversation',
                         component: () => import('@/views/chat/StartConversation.vue'),
