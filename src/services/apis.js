@@ -1,12 +1,11 @@
 import Api from './server'
 import {logout} from "./global_functions";
 
-//get token
-const {jwt:token} = JSON.parse(localStorage.getItem('vue-session-key'))
 
 
 /* interceptors */
 Api.interceptors.response.use(function (response) {
+
     const {data:{status,message}} = response
 
     if(status === 401){
@@ -22,6 +21,9 @@ Api.interceptors.response.use(function (response) {
 
 
 Api.interceptors.request.use((config) => {
+
+    //get token
+    const {jwt:token} = JSON.parse(localStorage.getItem('vue-session-key'))
 
     //add token to headers
     config.headers = {
