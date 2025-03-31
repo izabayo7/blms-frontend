@@ -35,7 +35,7 @@
 
 <!--        table body-->
         <tbody>
-          <tr class="table-body-row" @click="rowClicked(content[options.link.paramPropertyName] || null)" v-for="(content,i) in tabularData" :key="`${content}${Date.now()*Math.random()}`">
+          <tr class="table-body-row"  v-for="(content,i) in tabularData" :key="`${content}${Date.now()*Math.random()}`">
 <!--            select checkbox-->
             <td v-if="options.showSelect" class="select--wrapper">
               <div class="select select-one" >
@@ -51,7 +51,7 @@
             </td>
 
 <!--            table data-->
-            <td v-for="col in columnNames" :key="`${col}${Date.now()*Math.random()}` ">{{content[col]}}</td>
+            <td @click="rowClicked(content[options.link.paramPropertyName] || null)" v-for="col in columnNames" :key="`${col}${Date.now()*Math.random()}` ">{{content[col]}}</td>
           </tr>
         </tbody>
       </table>
