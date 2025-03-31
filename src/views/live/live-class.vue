@@ -52,8 +52,25 @@
                     />
                   </svg>
                 </button>
-                <button>
+                <button @click="toogleVideo" :class="{ 'muted': !videoMuted && videoMuted !== undefined }">
                   <svg
+                    v-if="!videoMuted"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="19.781"
+                    height="13.188"
+                    viewBox="0 0 19.781 13.188"
+                  >
+                    <path
+                      id="Icon_awesome-video"
+                      data-name="Icon awesome-video"
+                      d="M11.546,4.5h-9.9A1.642,1.642,0,0,0,0,6.142v9.9a1.642,1.642,0,0,0,1.642,1.642h9.9a1.642,1.642,0,0,0,1.642-1.642v-9.9A1.642,1.642,0,0,0,11.546,4.5Zm6.5,1.295-3.764,2.6V13.8l3.764,2.593a1.1,1.1,0,0,0,1.731-.886V6.681A1.1,1.1,0,0,0,18.05,5.795Z"
+                      transform="translate(0 -4.5)"
+                      fill="#fff"
+                    />
+                  </svg>
+
+                  <svg
+                    v-else
                     xmlns="http://www.w3.org/2000/svg"
                     width="23.022"
                     height="18.67"
@@ -83,8 +100,23 @@
                     </g>
                   </svg>
                 </button>
-                <button>
+                <button @click="toogleSound" :class="{ 'muted': !muted && muted !== undefined }">
                   <svg
+                    v-if="!muted"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16.778"
+                    height="24.404"
+                    viewBox="0 0 16.778 24.404"
+                  >
+                    <path
+                      id="Icon_awesome-microphone-alt"
+                      data-name="Icon awesome-microphone-alt"
+                      d="M16.015,9.152h-.763a.762.762,0,0,0-.763.763V12.2a6.108,6.108,0,0,1-6.711,6.072A6.286,6.286,0,0,1,2.288,11.93V9.914a.762.762,0,0,0-.763-.763H.763A.762.762,0,0,0,0,9.914v1.914a8.652,8.652,0,0,0,7.245,8.66v1.628H4.576a.762.762,0,0,0-.763.763v.763a.762.762,0,0,0,.763.763H12.2a.762.762,0,0,0,.763-.763v-.763a.762.762,0,0,0-.763-.763H9.533v-1.61a8.4,8.4,0,0,0,7.245-8.3V9.914A.762.762,0,0,0,16.015,9.152ZM8.389,16.778A4.576,4.576,0,0,0,12.965,12.2V4.576a4.576,4.576,0,0,0-9.152,0V12.2A4.576,4.576,0,0,0,8.389,16.778Z"
+                      fill="#fff"
+                    />
+                  </svg>
+                  <svg
+                    v-else
                     xmlns="http://www.w3.org/2000/svg"
                     width="20.757"
                     height="21.391"
@@ -187,6 +219,9 @@ export default {
     connection: new RTCMultiConnection(),
     courseName: "Economy Basics",
     sender: {},
+    muted: undefined,
+    videoMuted: undefined,
+    localVideoStream: undefined,
     playerHovered: false,
   }),
   computed: {
@@ -203,14 +238,20 @@ export default {
     },
 
     toogleSound() {
-      const staff = this.connection.streamEvents.selectFirst({
-        local: true,
-      }).stream;
-      console.log(staff);
+      const enabled = this.localVideoStream.getAudioTracks()[0].enabled;
+      this.muted = !enabled;
+      this.localVideoStream.getAudioTracks()[0].enabled = this.muted;
     },
     // ask node.js server to look for a broadcast
     // if broadcast is available, simply join it. i.e. "join-broadcaster" event should be emitted.
     // if broadcast is absent, simply create it. i.e. "start-broadcasting" event should be fired.
+    toogleVideo() {
+      let enabled = this.localVideoStream.getVideoTracks()[0].enabled;
+      console.log(enabled)
+      this.videoMuted = !enabled;
+      this.localVideoStream.getVideoTracks()[0].enabled = this.videoMuted;
+    },
+
     open_or_join_room() {
       var broadcastId = this.room.id;
       if (broadcastId.replace(/^\s+|\s+$/g, "").length <= 0) {
@@ -432,6 +473,7 @@ export default {
 
       vm.connection.isUpperUserLeft = false;
       videoPreview.srcObject = event.stream;
+      vm.localVideoStream = event.stream;
       videoPreview.play();
 
       videoPreview.userid = event.userid;
@@ -668,6 +710,9 @@ export default {
       height: 40px;
       border-radius: 7px;
       margin: 10px;
+      &.muted {
+        background-color: #9e0000;
+      }
       &.round {
         border-radius: 45px;
       }
@@ -680,6 +725,9 @@ export default {
     }
     button:hover {
       background-color: #ffffff59;
+    }
+    .muted:hover {
+      background-color: #9e0000;
     }
   }
   .overlay {
