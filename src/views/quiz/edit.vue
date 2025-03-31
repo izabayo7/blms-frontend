@@ -13,14 +13,16 @@
       v-if="mode !== ''"
       ref="editor"
       :mode="mode"
-      :defaultContent="selected_quiz.instructions"
+      :defaultContent="
+        selected_quiz.instructions &&
+        selected_quiz.instructions != '<p></p>'
+          ? selected_quiz.quiz
+          : '<ol><li><p>Write your custom instructions</p></li></ol>'
+      "
       template="small"
     />
     <span class="quiz_lable my-6">Quiz duration</span>
-    <time-picker
-      :duration="duration"
-      @updateTime="updateDutation"
-    />
+    <time-picker :duration="duration" @updateTime="updateDutation" />
     <span class="quiz_lable my-6">Questions</span>
     <v-row v-for="(question, i) in selected_quiz.questions" :key="i">
       <v-col class="col-12">
@@ -295,10 +297,10 @@ export default {
   },
   methods: {
     ...mapActions("quiz", ["update_quiz", "findQuizByName"]),
-    updateDutation(hh,mm,ss){
-      this.duration.hh = hh
-      this.duration.mm = mm
-      this.duration.ss = ss
+    updateDutation(hh, mm, ss) {
+      this.duration.hh = hh;
+      this.duration.mm = mm;
+      this.duration.ss = ss;
     },
     handleOptionClick(questionIndex, optionIndex, fileName) {
       let rightChoices = [],
@@ -439,7 +441,7 @@ export default {
       return result;
     },
     to_hh_mm_ss(seconds) {
-      let string = new Date(seconds * 100).toISOString().substr(11, 8);
+      let string = new Date(seconds * 1000).toISOString().substr(11, 8);
       string = string.split(":");
       return {
         hh: string[0],
@@ -482,11 +484,11 @@ export default {
       this.update_quiz({
         quiz: {
           name: this.selected_quiz.name,
-          instructions: editorContent.includes(
-            "Write Here You custom instructions"
-          )
-            ? undefined
-            : editorContent,
+          instructions:
+            editorContent ==
+            `<ol><li><p>Write your custom instructions</p></li></ol>`
+              ? undefined
+              : editorContent,
           duration: this.toSeconds(this.duration),
           instructor: this.$store.state.user.user._id,
           questions: questions,

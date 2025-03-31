@@ -115,10 +115,18 @@
             </div>
           </v-row>
           <v-btn
+            v-if="$store.state.user.user.category == 'Student'"
             class="radio-btn d-block mb-4 submitt-attempt"
             @click="saveAttempt"
             rounded
             >Submitt Answers</v-btn
+          >
+          <v-btn
+            v-else
+            class="radio-btn d-block mb-4 submitt-attempt"
+            @click="$router.push('/quiz')"
+            rounded
+            >Back to courses</v-btn
           >
         </v-col>
         <v-col class="col-12 col-md-5 timer-side">
@@ -179,7 +187,7 @@ export default {
     ...mapGetters("quiz", ["selected_quiz"]),
     ...mapGetters("quiz_submission", ["selected_quiz_submission"]),
     formated_remaining_time() {
-      return new Date(this.remaining_time * 100).toISOString().substr(11, 8);
+      return new Date(this.remaining_time * 1000).toISOString().substr(11, 8);
     },
   },
   watch: {
@@ -296,16 +304,17 @@ export default {
   },
   created() {
     this.mode = "edit";
-    this.findQuizSubmissionByStudentAndQuizNames({
-      studentName: `${this.$store.state.user.user.surName}_${this.$store.state.user.user.otherNames}`,
-      quizName: this.$route.params.name,
-    });
+    if (this.$store.state.user.user.category == "Student") {
+      this.findQuizSubmissionByStudentAndQuizNames({
+        studentName: `${this.$store.state.user.user.surName}_${this.$store.state.user.user.otherNames}`,
+        quizName: this.$route.params.name,
+      });
+    }
     this.findQuizByName({
       userCategory: this.$store.state.user.user.category.toLowerCase(),
       userId: this.$store.state.user.user._id,
       quizName: this.$route.params.name,
     }).then((quiz) => {
-      console.log(quiz)
       this.remaining_time = quiz.duration;
       this.attempt = {
         quiz: quiz._id,

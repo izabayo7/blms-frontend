@@ -44,10 +44,10 @@
       <!-- the course main content -->
       <v-col class="col-12 col-md-9 course-content customScroll pa-3">
         <v-row>
-          <v-col class="col-12 title d-block">{{ course.name }}</v-col>
+          <v-col class="col-12 title d-block pt-0">{{ course.name }}</v-col>
           <v-col
             v-if="course.chapters[activeIndex].mainVideo"
-            class="col-12"
+            class="col-10 mx-auto pt-0"
             id="video"
           >
             <vue-plyr>

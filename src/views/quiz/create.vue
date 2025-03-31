@@ -302,7 +302,8 @@ export default {
       const hours = duration.hh ? duration.hh : 0;
       const minutes = duration.mm ? duration.mm : 0;
       const seconds = duration.ss ? duration.ss : 0;
-      const result = seconds + minutes * 60 + hours * 3600;
+      const result =
+        parseInt(seconds) + parseInt(minutes) * 60 + parseInt(hours) * 3600;
       return result;
     },
     async saveQuiz() {
@@ -323,11 +324,11 @@ export default {
       this.create_quiz({
         quiz: {
           name: this.name,
-          instructions: editorContent.includes(
-            "Write Here You custom instructions"
-          )
-            ? undefined
-            : editorContent,
+          instructions:
+            editorContent ==
+              `<ol><li><p>Write your custom instructions</p></li></ol>`
+              ? undefined
+              : editorContent,
           duration: this.toSeconds(this.duration),
           instructor: this.$store.state.user.user._id,
           questions: questions,

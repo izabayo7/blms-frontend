@@ -154,7 +154,6 @@ div.remove-container a {
 </template>
 
 <script>
-import axios from "axios";
 export default {
   /*
       Variables used by the drag and drop component
@@ -186,7 +185,7 @@ export default {
   },
   computed: {
     inputId() {
-      return `file_input_${this.boundIndex}`;
+      return `file_input_${this.boundIndex + Math.random() * 10}`;
     },
   },
   mounted() {
@@ -262,7 +261,7 @@ export default {
       if (index == this.boundIndex) {
         let divs = document.querySelectorAll(`.picker${index} .attachment`);
         for (const i in this.files) {
-          const indexFound = indices.filter(_i => _i == i)
+          const indexFound = indices.filter((_i) => _i == i);
 
           if (indexFound.length > 0) divs[i].style.border = "1px solid green";
           else divs[i].style.border = "none";
@@ -274,8 +273,13 @@ export default {
     },
     addFile() {
       for (const file of document.getElementById(this.inputId).files) {
-        this.files.push(file);
-        this.$emit("addFile", file, this.boundIndex);
+        if (!this.files.includes(file)) {
+          if (this.files.length > 0 && !this.multiple) {
+            this.removeFile(0);
+          }
+          this.files.push(file);
+          this.$emit("addFile", file, this.boundIndex);
+        }
       }
       this.getImagePreviews();
     },
@@ -354,47 +358,6 @@ export default {
         }
       }
     },
-    /*
-        Submits the files to the server
-      */
-    submitFiles() {
-      /*
-          Initialize the form data
-        */
-      let formData = new FormData();
-
-      /*
-          Iteate over any file sent over appending the files
-          to the form data.
-        */
-      for (var i = 0; i < this.files.length; i++) {
-        let file = this.files[i];
-
-        formData.append("files[" + i + "]", file);
-      }
-
-      /*
-          Make the request to the POST /file-drag-drop URL
-        */
-      axios
-        .post("/file-drag-drop", formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-          onUploadProgress: function (progressEvent) {
-            this.uploadPercentage = parseInt(
-              Math.round((progressEvent.loaded * 100) / progressEvent.total)
-            );
-          }.bind(this),
-        })
-        .then(function () {
-          console.log("SUCCESS!!");
-        })
-        .catch(function () {
-          console.log("FAILURE!!");
-        });
-    },
-
     /*
         Removes a select file the user has uploaded
       */
