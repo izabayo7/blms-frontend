@@ -76,7 +76,8 @@
             this.get_comments()
         },
         created() {
-            on('routeUpdate',() => {
+            on('routeUpdate',(nextId) => {
+                this.$store.commit("courses/set_selected_chapter",nextId)
                 this.get_comments()
             })
         }
