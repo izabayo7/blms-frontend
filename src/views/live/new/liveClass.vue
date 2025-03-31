@@ -505,14 +505,16 @@ export default {
       })
 
       self.socket.on("res/live/studentAnswered", ({id}) => {
+
+        for (const i in self.participants) {
+          if (self.participants[i].userInfo._id == id)
+            self.participants[i].userInfo.attendance = 100
+        }
+
         self.participants.sort((a, b) => {
-              if (a._id == id)
-                return 1
-              else if (b._id == id)
-                return -1
+              return b.userInfo.attendance - a.userInfo.attendance
             }
         )
-        console.log("res/live/studentAnswered", id)
       })
 
       self.socket.on("comment/new", (result) => {
@@ -769,7 +771,7 @@ export default {
 
       // this.ws.close();
       // this.handleMediaTracks();
-      this.$router.push('/')
+      // this.$router.push('/')
     },
     async receiveVideo(sender) {
       console.log(`\n\n\n\n\n receiving video for ${sender} \n\n\n\n\n`)
@@ -867,8 +869,8 @@ export default {
       this.noVideo = !this.videoEnabled
       console.log(this.noVideo, this.videoEnabled)
     },
-    end_class(){
-      if(this.end_class)
+    end_class() {
+      if (this.end_class)
         this.leaveRoom()
     }
   }
