@@ -156,20 +156,61 @@
           <div v-if="question.type == 'File upload'" class="file-upload">
             <label>Max file size 2 MB</label>
             <div class="allowed-files">
-              <div class="type"><input type="radio"> Pdf</div>
-              <div class="type"><input type="radio">Word document</div>
-              <div class="type"><input type="radio">Powerpoint file</div>
-              <div class="type"><input type="radio">text</div>
-              <div class="type"><input type="radio">Zip</div>
-              <div class="type"><input type="radio">image</div>
-              <div class="type"><input type="radio">Video</div>
-              <div class="type"><input type="radio">All</div>
+              <div class="type">
+                <checkbox
+                    @check_it="fileTypeClicked('Pdf', i)"
+                    :check="question.allowed_files.includes('Pdf')"
+                />
+                Pdf
+              </div>
+              <div class="type">
+                <checkbox
+                    @check_it="fileTypeClicked('Word document', i)"
+                    :check="question.allowed_files.includes('Word document')"
+                />
+                Word document
+              </div>
+              <div class="type">
+                <checkbox
+                    @check_it="fileTypeClicked('Powerpoint file', i)"
+                    :check="question.allowed_files.includes('Powerpoint file')"
+                />
+                Powerpoint file
+              </div>
+              <div class="type">
+                <checkbox
+                    @check_it="fileTypeClicked('text', i)"
+                    :check="question.allowed_files.includes('text')"
+                />
+                text
+              </div>
+              <div class="type">
+                <checkbox
+                    @check_it="fileTypeClicked('Zip', i)"
+                    :check="question.allowed_files.includes('Zip')"
+                />
+                Zip
+              </div>
+              <div class="type">
+                <checkbox
+                    @check_it="fileTypeClicked('image', i)"
+                    :check="question.allowed_files.includes('image')"
+                />
+                image
+              </div>
+              <div class="type">
+                <checkbox
+                    @check_it="fileTypeClicked('Video', i)"
+                    :check="question.allowed_files.includes('Video')"
+                />
+                Video
+              </div>
             </div>
-<!--            <checkbox-->
-<!--                :disabled="false"-->
-<!--                @check_it="toogleIsAdminStatus"-->
-<!--                v-model=""-->
-<!--            />-->
+            <!--            <checkbox-->
+            <!--                :disabled="false"-->
+            <!--                @check_it="toogleIsAdminStatus"-->
+            <!--                v-model=""-->
+            <!--            />-->
           </div>
 
         </div>
@@ -197,7 +238,7 @@ import {mapActions} from "vuex";
 export default {
   name: "CreateQuiz",
   components: {
-    // Checkbox: () => import("@/components/reusable/ui/Checkbox"),
+    checkbox: () => import("@/components/reusable/ui/Checkbox"),
     FilePicker: () => import("@/components/reusable/FilePicker"),
     Editor: () => import("@/components/reusable/Editor"),
     SelectUi: () => import("@/components/reusable/ui/select-ui"),
@@ -233,6 +274,13 @@ export default {
     },
   },
   methods: {
+    fileTypeClicked(type, index){
+      if(this.questions[index].allowed_files.includes(type)){
+        this.questions[index].allowed_files.splice(this.questions[index].allowed_files.indexOf(type), 1)
+      } else{
+        this.questions[index].allowed_files.push(type)
+      }
+    },
     ...mapActions("modal", ["set_modal"]),
     validate() {
       if (this.title == "")
@@ -266,6 +314,11 @@ export default {
           if (this.questions[i].type.includes('image')) {
             if (this.questions[i].options.choices.length < 2)
               return this.error = `Question ${parseInt(i) + 1}, must have atleast options,pick files`
+          }
+
+          if (this.questions[i].type.includes('upload')) {
+            if (!this.questions[i].allowed_files.length)
+              return this.error = `Question ${parseInt(i) + 1}, must have atleast one file type allowed`
           }
 
           for (const k in this.questions[i].options.choices) {
@@ -354,8 +407,8 @@ export default {
           choices: [],
         };
       }
-      if(this.questions[index].type == "File upload"){
-        this.questions[index].allowed_files = ["All"]
+      if (this.questions[index].type == "File upload") {
+        this.questions[index].allowed_files = []
       }
       this.pictures[index] = [];
     },
