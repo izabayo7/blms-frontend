@@ -36,7 +36,7 @@
           </v-img>
           <v-avatar
               class="course-image white--text bg-color-one text-h2"
-              size="112"
+              size="90"
               v-else
           >{{ course.name | computeText }}
           </v-avatar>
