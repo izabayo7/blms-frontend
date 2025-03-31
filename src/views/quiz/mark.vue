@@ -22,7 +22,7 @@
                 <p class="question-details col-md-12 col-12 px-0">
                   {{ `${i + 1}. ${question.details}` }}
                 </p>
-                <div v-if="question.type === 'file_upload'" class="file-container row">
+                <div v-if="question.type === 'file_upload' && attempt.answers[i].src" class="file-container row">
                   <div class="indicator mb-2 col-12 pa-0">
                     <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path
@@ -42,7 +42,7 @@
                     <div class="file-size">
 
                     </div>
-                    <div class="file-type ml-auto">
+                    <div v-if="attempt.answers[i].src" class="file-type ml-auto">
                       {{ attempt.answers[i].src.split('.')[attempt.answers[i].src.split('.').length - 1] }}
                     </div>
 

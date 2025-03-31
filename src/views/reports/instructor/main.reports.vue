@@ -104,30 +104,6 @@
               item.updatedAt | formatDate
             }}</span>
         </template>
-        <template v-slot:item.evaluations="{ item }">
-          <span class="normal--text semi_bold_text"
-          >200 Marks{{ "" + item ? "" : "nope" }}</span
-          >
-        </template>
-        <template v-slot:item.success_rate="{ item }">
-          <span class="normal--text semi_bold_text"
-          >65%{{ "" + item ? "" : "nope" }}</span
-          >
-        </template>
-        <!--        <template v-slot:item.actions="{ item }">-->
-        <!--          <v-row class="actions pa-0">-->
-        <!--            <v-col class="pa-0 py-1">-->
-        <!--              <v-btn-->
-        <!--                  class="white&#45;&#45;text"-->
-        <!--                  :color="primary"-->
-        <!--                  :to="`/submissions/${item.name}`"-->
-        <!--              >-->
-        <!--                Make announcement-->
-        <!--              </v-btn>-->
-        <!--            </v-col-->
-        <!--            >-->
-        <!--          </v-row>-->
-        <!--        </template>-->
         <template v-slot:no-data>
           <span class="text-h6">Course list is empty</span>
         </template>
@@ -201,8 +177,6 @@ export default {
           text: "Last Updated",
           value: "last_updated",
         },
-        {text: "Evaluations", value: "evaluations", align: "center"},
-        {text: "Success rate", value: "success_rate", align: "center"},
         {text: "", value: "actions", align: "center", sortable: false},
       ];
     },
