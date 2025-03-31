@@ -1,6 +1,6 @@
 <template>
   <v-container id="view-assignments" class="px-6 pl-lg-14 pr-md-2 pt-6" fluid>
-    <v-row>
+    <v-row v-if="!(disabled && !assignment_submission._id)">
       <v-col v-if="assignment" class="col-12">
         <div class="upper">
           <div>Assignments</div>
@@ -193,6 +193,12 @@
         </div>
       </v-col>
     </v-row>
+    <div v-else>
+      <ErrorPage
+          title="You are not allowed to  do assignments"
+          subtitle="You must first pay your school fees to regain access"
+      />
+    </div>
   </v-container>
 </template>
 
@@ -229,8 +235,13 @@ export default {
     Editor: () => import("@/components/reusable/Editor"),
     Feedback: () => import("@/components/courses/Feedback"),
     FilePicker: () => import("@/components/reusable/FilePicker"),
+    ErrorPage: () => import("@/components/dashboard/error.vue"),
   },
   computed: {
+    ...mapGetters("user", ["paymentStatus"]),
+    disabled() {
+      return this.paymentStatus.paid === false
+    },
     isExpired(){
       return new Date() > new Date(this.assignment.dueDate)
     },

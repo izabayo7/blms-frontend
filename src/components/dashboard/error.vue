@@ -656,10 +656,10 @@
       </div>
     </div>
     <div class="col-12">
-      <div class="message">
+      <div class="title">
         {{ title || 'You are not allowed to access this page' }}
       </div>
-      <div class="sub-message">
+      <div class="sub-title">
         {{ subtitle || '' }}
       </div>
     </div>
@@ -687,11 +687,11 @@ export default {
     max-width: 100%;
   }
 
-  .message {
+  .title {
     font-family: Montserrat;
     font-style: normal;
     font-weight: bold;
-    font-size: 30px;
+    font-size: 30px !important;
     line-height: 37px;
     /* identical to box height */
 
@@ -699,7 +699,7 @@ export default {
     color: #364365;
   }
 
-  .sub-message {
+  .sub-title {
     font-family: Montserrat;
     font-style: normal;
     font-weight: bold;
