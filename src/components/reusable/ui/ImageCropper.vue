@@ -5,7 +5,7 @@
       <div class="img">
         <div class="cropper-holder">
           <h3 v-if="imgLoaded">Crop image</h3>
-          <cropper @change="changed" ref="cropper" class="cropper" :src="img" :stencil-props="{aspectRatio: 1}" ></cropper>
+          <cropper max-height="30vh" @change="changed" ref="cropper" class="cropper" :src="img" :stencil-props="{aspectRatio: 1}" ></cropper>
         </div>
         <div class="preview" v-show="imgLoaded">
           <h3>Image preview</h3>
@@ -130,8 +130,9 @@ export default {
       }
     }
     .inner-cropper{
-      height: 100%;
-      width: 100%;
+      max-height: 80vh;
+      height: 100% !important;
+      width: 100% !important;
       position: relative;
       display: flex;
       flex-direction: column;
@@ -159,6 +160,7 @@ export default {
           img{
             width: 100% !important;
             object-fit: contain;
+            max-height: 50vh !important;
           }
         }
 
@@ -182,6 +184,12 @@ export default {
           .vue-advanced-cropper__image{
             width:100%;
             object-fit: contain;
+
+            img{
+              width: 100% !important;
+              object-fit: contain;
+              max-height: 50vh !important;
+            }
           }
         }
       }
