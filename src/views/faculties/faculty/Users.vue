@@ -2,8 +2,8 @@
   <div class="my-faculties bg-one d-flex justify-center">
     <div class="faculties-container  ">
       <div class="tabular-users">
-        <div id="user-profile-card">
-          <transition name="fade" >
+        <transition name="fade">
+          <div id="user-profile-card">
             <user-simple-card :loading="userByUsernameLoading" @close="mouseOutPic($event,'user-profile-card')">
               <template #name>{{ userByUsername.other_names + " " + userByUsername.sur_name }}</template>
               <template #type>Instructor</template>
@@ -14,8 +14,8 @@
                 </v-avatar>
               </template>
             </user-simple-card>
-          </transition>
-        </div>
+          </div>
+        </transition>
         <div class="table-wrapper mt-6">
           <div class="table-header">
             <table-header/>
@@ -40,7 +40,8 @@
                       </v-avatar>
                     </td>
                     <td @mouseenter="mouseOnPic($event,user.user_name,'user-profile-card')"
-                        @mouseleave="mouseOutPic($event,'user-profile-card')">{{ user.sur_name }} {{ user.other_names }}</td>
+                        @mouseleave="mouseOutPic($event,'user-profile-card')">{{ user.sur_name }} {{ user.other_names }}
+                    </td>
                     <td>{{ user.email }}</td>
                     <td>{{ user.gender }}</td>
                   </template>
@@ -128,17 +129,6 @@ export default {
 
     .header {
       @include admin-page-header;
-    }
-    .fade-enter-active, .fade-leave-active {
-      transition: opacity .5s;
-    }
-    .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
-      opacity: 0;
-    }
-    #user-profile-card {
-      position: absolute;
-      display: none;
-      z-index: 1;
     }
 
   }

@@ -41,7 +41,6 @@ export default {
   methods:{
     select(e){
       this.$emit('select',e)
-      console.log('select row')
     },
     changeSelectedIndex() {
       this.selectSelected  = !this.selectSelected;
