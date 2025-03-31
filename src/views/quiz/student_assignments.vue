@@ -54,8 +54,8 @@
               </div>
             </template>
             <template v-slot:item.status="{ item }">
-              <div class="assignment_td">
-                {{ item.submission ? 'Done' : 'Not done' }}
+              <div :class="'assignment_td' + item.submissionMode ? `status ${computeClass(item)}` : ''">
+                {{ computeClass(item) === 'expired' ? 'Expired' : item.submission ? 'Submitted' : 'Not done' }}
               </div>
             </template>
             <template v-slot:item.grades="{ item }">
@@ -119,6 +119,16 @@ export default {
     handleRowClick(value) {
       this.$router.push(`/assignments/${value._id}`)
     },
+    computeClass(item){
+      if(new Date() > new Date(item.dueDate))
+        return 'expired'
+      if(!item.submission)
+        return 'not_done'
+      if(!item.marked)
+        return 'pending'
+      else
+        return 'marked'
+    },
     getTime(date) {
       date = new Date(date)
       date.setHours(date.getUTCHours())
@@ -164,6 +174,27 @@ export default {
   .tooltip:hover .tooltip-text {
     visibility: visible;
     opacity: 1;
+  }
+  .status{
+    width: 110px;
+    height: 36px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    &.expired{
+      background: #FC6767;
+      color: #FFFFFF;
+    }
+    &.not_done{
+      background: #BABABC;
+    }
+    &.pending{
+      background: #FFD248;
+    }
+    &.marked{
+      background: #3CE970;
+    }
   }
   .assignment_title{
     font-family: Inter;
