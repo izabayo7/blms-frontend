@@ -2,7 +2,7 @@
   <v-container class="live_video customScroll" fluid>
     <v-row id="liveClass">
       <v-btn
-        @click="toggle"
+        @click="showActions = true"
         class="hidden-md-and-up mr-n8 white--text"
         color="#FFC100"
         right
@@ -12,6 +12,8 @@
         ><v-icon>mdi-arrow-left</v-icon></v-btn
       >
       <kurious-page-actions
+        v-on:hideActions="showActions = false"
+        :visible="showActions"
         class="hidden-md-and-up"
       >
         <kurious-discussion-board v-if="$store.state.user.type === 'student'" />
@@ -21,7 +23,7 @@
         <v-row>
           <v-col class="col-12" id="video">
             <vue-plyr>
-              <video id="video-preview" controls loop></video>
+              <video ref="video-preview" controls loop></video>
             </vue-plyr>
           </v-col>
           <v-col class="col-12 course-title d-block">{{ courseName }}</v-col>
@@ -29,7 +31,6 @@
             v-if="$store.state.user.type === 'student'"
             class="col-12 description"
           >
-            <div id="broadcast-viewers-counter"></div>
             <p>
               JavaScript, often abbreviated as JS, is a programming language
               that conforms to the ECMAScript specification. JavaScript is
@@ -71,7 +72,6 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from "vuex";
 import * as io from "socket.io-client";
 window.io = io;
 import * as RTCMultiConnection from "../../assets/js/RTCMultiConnection";
@@ -81,65 +81,16 @@ export default {
   data: () => ({
     connection: new RTCMultiConnection(),
     courseName: "Economy Basics",
+    items: [
+      { finished: true, title: "Photos" },
+      { title: "Recipes" },
+      { title: "Work" },
+      { finished: true, title: "Photos" },
+      { title: "Recipes" },
+      { title: "Work" },
+    ],
+    showActions: true,
   }),
-  computed: {
-    ...mapState("live", ["room"]),
-  },
-  methods: {
-    ...mapMutations("sidebar_navbar", {
-      toggle: "TOGGLE_PAGE_ACTIONS_VISIBILITY",
-    }),
-
-    // ask node.js server to look for a broadcast
-    // if broadcast is available, simply join it. i.e. "join-broadcaster" event should be emitted.
-    // if broadcast is absent, simply create it. i.e. "start-broadcasting" event should be fired.
-    open_or_join_room() {
-      var broadcastId = this.room.id;
-      if (broadcastId.replace(/^\s+|\s+$/g, "").length <= 0) {
-        alert("Please enter broadcast-id");
-        return;
-      }
-
-      const vm = this;
-
-      vm.connection.extra.broadcastId = broadcastId;
-
-      vm.connection.session = {
-        audio: true,
-        video: true,
-        oneway: true,
-      };
-
-      vm.connection.getSocket(function (socket) {
-        // try {
-        console.log(broadcastId, socket, vm.connection.socketURL);
-        socket.emit("check-broadcast-presence", broadcastId, function (
-          isBroadcastExists
-        ) {
-          console.log("byibura", isBroadcastExists);
-          if (!isBroadcastExists) {
-            // the first person (i.e. real-broadcaster) MUST set his user-id
-            vm.connection.userid = broadcastId;
-          }
-
-          console.log(
-            "check-broadcast-presence",
-            broadcastId,
-            isBroadcastExists
-          );
-
-          socket.emit("join-broadcast", {
-            broadcastId: broadcastId,
-            userid: vm.connection.userid,
-            typeOfStreams: vm.connection.session,
-          });
-        });
-        // } catch (error) {
-        //   console.log(error);
-        // }
-      });
-    },
-  },
   mounted() {
     const vm = this;
 
@@ -149,9 +100,6 @@ export default {
 
     // by default, socket.io server is assumed to be deployed on your own URL
     vm.connection.socketURL = `${process.env.VUE_APP_api_service_url}/`;
-
-    // auto create or join default room
-    vm.open_or_join_room();
 
     // recording is disabled because it is resulting for browser-crash
     // if you enable below line, please also uncomment above "RecordRTC.js"
@@ -180,7 +128,12 @@ export default {
     // scalable-broadcast.js will handle stuff itself.
     vm.connection.autoCloseEntireSession = true;
 
+    // by default, socket.io server is assumed to be deployed on your own URL
+    vm.connection.socketURL = "/";
+
     vm.connection.socketMessageEvent = "scalable-media-broadcast-demo";
+
+    // document.getElementById('broadcast-id').value = vm.connection.userid;
 
     // user need to connect server, so that others can reach him.
     vm.connection.connectSocket(function (socket) {
@@ -250,6 +203,11 @@ export default {
         vm.connection.open(vm.connection.userid);
       });
     });
+
+    window.onbeforeunload = function () {
+      // Firefox is ugly.
+      document.getElementById("open-or-join").disabled = false;
+    };
 
     var videoPreview = document.getElementById("video-preview");
 
@@ -325,6 +283,51 @@ export default {
       );
     };
 
+    // ask node.js server to look for a broadcast
+    // if broadcast is available, simply join it. i.e. "join-broadcaster" event should be emitted.
+    // if broadcast is absent, simply create it. i.e. "start-broadcasting" event should be fired.
+    document.getElementById("open-or-join").onclick = function () {
+      var broadcastId = document.getElementById("broadcast-id").value;
+      if (broadcastId.replace(/^\s+|\s+$/g, "").length <= 0) {
+        alert("Please enter broadcast-id");
+        document.getElementById("broadcast-id").focus();
+        return;
+      }
+
+      document.getElementById("open-or-join").disabled = true;
+
+      vm.connection.extra.broadcastId = broadcastId;
+
+      vm.connection.session = {
+        audio: true,
+        video: true,
+        oneway: true,
+      };
+
+      vm.connection.getSocket(function (socket) {
+        socket.emit("check-broadcast-presence", broadcastId, function (
+          isBroadcastExists
+        ) {
+          if (!isBroadcastExists) {
+            // the first person (i.e. real-broadcaster) MUST set his user-id
+            vm.connection.userid = broadcastId;
+          }
+
+          console.log(
+            "check-broadcast-presence",
+            broadcastId,
+            isBroadcastExists
+          );
+
+          socket.emit("join-broadcast", {
+            broadcastId: broadcastId,
+            userid: vm.connection.userid,
+            typeOfStreams: vm.connection.session,
+          });
+        });
+      });
+    };
+
     vm.connection.onstreamended = function () {};
 
     vm.connection.onleave = function (event) {
@@ -390,9 +393,22 @@ export default {
     //   }, 30 * 1000); // 30-seconds
     // }
 
+
     // ......................................................
     // ......................Handling broadcast-id................
     // ......................................................
+
+    var broadcastId = "";
+    if (localStorage.getItem(vm.connection.socketMessageEvent)) {
+      broadcastId = localStorage.getItem(vm.connection.socketMessageEvent);
+    } else {
+      broadcastId = vm.connection.token();
+    }
+    var txtBroadcastId = document.getElementById("broadcast-id");
+    txtBroadcastId.value = broadcastId;
+    txtBroadcastId.onkeyup = txtBroadcastId.oninput = txtBroadcastId.onpaste = function () {
+      localStorage.setItem(vm.connection.socketMessageEvent, this.value);
+    };
 
     // below section detects how many users are viewing your broadcast
 

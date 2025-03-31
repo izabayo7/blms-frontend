@@ -9,7 +9,7 @@
           max-width="100%"
         >
           <v-list>
-            <v-list-item three-line :class="miniVariant && 'px-0'">
+            <v-list-item three-line class="px-0">
               <v-list-item-avatar>
                 <img
                   src="@/assets/images/instructor.png"

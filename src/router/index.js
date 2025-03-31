@@ -186,6 +186,12 @@ const routes = [
                         component: () =>
                             import('@/views/live')
                     },
+                    {
+                        path: '/live/room',
+                        name: 'Live Room',
+                        component: () =>
+                            import('@/views/live/live-class')
+                    },
                 ]
             },
             // administration functionalities

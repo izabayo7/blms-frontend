@@ -67,8 +67,6 @@ export default {
     // ..................RTCMultiConnection Code.............
     // ......................................................
 
-    // eslint-disable-next-line no-undef
-
     // by default, socket.io server is assumed to be deployed on your own URL
     this.connection.socketURL = `${process.env.VUE_APP_api_service_url}/`;
 
