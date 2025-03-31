@@ -38,7 +38,7 @@
           </div>
           <div class="col-12 col-md-4">
             <div class="action">
-              <button class="upgrade">Upgrade account</button>
+              <button class="upgrade" @click="showModal=true">Upgrade account</button>
             </div>
           </div>
           <div class="col-12 col-md-3">
@@ -100,6 +100,10 @@
         </div>
       </div>
     </v-row>
+    <payment-modal
+        v-if="showModal"
+        @closeModal="showModal = false"
+    />
   </v-container>
 </template>
 
@@ -112,12 +116,15 @@ export default {
   name: "PaymentsSettings",
   data: () => ({
     collegePlan: undefined,
+    showModal: false,
     payments: []
   }),
   computed: {
     ...mapGetters('user', ['paymentStatus'])
   },
-  components: {},
+  components: {
+    paymentModal: () => import("@/components/dashboard/paymentModal"),
+  },
   methods: {
     fetchInfo() {
       Apis.get('college_payment_plans/current').then((res) => {
