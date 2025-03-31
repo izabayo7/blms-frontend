@@ -6,7 +6,7 @@
         <template #pic>
           <img
             v-if="currentDisplayedUser.image"
-            :src="currentDisplayedUser.image"
+            :src="currentDisplayedUser.image+'?height=50'"
             :alt="`${currentDisplayedUser.name}'s profile picture`"
           />
           <v-avatar v-else size="50" class="avatar">
