@@ -36,6 +36,7 @@
  *          } => specifies where user will go when he click on a row
  *     - showSelect: Boolean, if you want to select feature
  *     - keysToShow: Array, list of properties that are in data to be shown in table
+ *     - selected_all: show if all elements are selected
  */
 export default {
   name: "TableUi",
@@ -46,7 +47,6 @@ export default {
   },
   data(){
     return{
-      selected_all:false,
       selected:[],
       tabularData:this.data,
       currentSortingTab:"",

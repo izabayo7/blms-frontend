@@ -60,11 +60,11 @@ name: "FacultyUsers",
   data(){
     return{
       students:[],
-      allSelected:false,
       facultyId:this.$route.params.facultyId,
+      allSelected:false,
       options:{
         coloredRows:false,
-        keysToShow:[" ", "sur_name",  "other_names",  "email",  "gender"]
+        keysToShow:[" ", "sur_name",  "other_names",  "email",  "gender"],
       },
       selectedUsers:[],
       timeout:"",
@@ -116,6 +116,7 @@ name: "FacultyUsers",
 
     #user-profile-card{
       position:absolute;
+      display:none;
       z-index:1;
     }
 
