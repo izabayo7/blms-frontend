@@ -109,18 +109,33 @@ export default {
       border-radius: 50%;
       cursor: pointer;
     }
-  }
-  .profile-names-email {
-    padding: 0.2rem 1.3rem;
-    p {
-      &.name {
-        font-weight: 600;
+    .profile-information {
+      justify-content: center;
+      align-items: center;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid lighten($font, 45);
+
+      .profile-pic {
+        .v-avatar {
+          background-color: $primary;
+          color: $main;
+        }
       }
-      &.email {
-        font-size: 0.85rem;
-        font-weight: 300;
+      .profile-names-email {
+        padding: 0.2rem 1.3rem;
+        p {
+          &.name {
+            font-weight: 600;
+          }
+          &.email {
+            font-size: 0.85rem;
+            font-weight: 300;
+          }
+          margin: 0;
+        }
       }
-      margin: 0;
+      .profile-badge {
+      }
     }
 
     .profile-actions {
