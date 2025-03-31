@@ -23,9 +23,6 @@
       </kurious-page-actions>
       <v-col class="col-12 px-2 px-md-12 col-md-8 pt-0">
         <v-row>
-          <h1></h1>
-        </v-row>
-        <v-row>
           <v-col class="col-12" id="video">
             <div class="player_container">
               <vue-plyr id="player">
@@ -305,6 +302,9 @@ export default {
     ...mapMutations("sidebar_navbar", {
       toggle: "TOGGLE_PAGE_ACTIONS_VISIBILITY",
     }),
+    ...mapMutations("live", {
+      setRoomId: "SET_ROOM_ID",
+    }),
     enterFullScreen() {
       const player = this.$refs.video_preview;
       player.plyr.fullscreen.enter();
@@ -373,6 +373,11 @@ export default {
       });
     },
   },
+  beforeMount() {
+    if (this.room.id != this.$route.params.id) {
+      this.setRoomId(this.$route.params.id);
+    }
+  },
   mounted() {
     const vm = this;
     let mixer;
@@ -423,14 +428,6 @@ export default {
 
     // user need to connect server, so that others can reach him.
     vm.connection.connectSocket(function (socket) {
-      socket.on("logs", function (log) {
-        document.querySelector("h1").innerHTML = log
-          .replace(/</g, "----")
-          .replace(/>/g, "___")
-          .replace(/----/g, '(<span style="color:red;">')
-          .replace(/___/g, "</span>)");
-      });
-
       // this event is emitted when a broadcast is already created.
       socket.on("join-broadcaster", function (hintsToJoinBroadcast) {
         console.log("join-broadcaster", hintsToJoinBroadcast);
@@ -869,7 +866,7 @@ export default {
       background-color: #9e0000;
     }
   }
-  
+
   .overlay {
     position: absolute;
     height: 100%;

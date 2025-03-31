@@ -187,7 +187,7 @@ const routes = [
                             import('@/views/live')
                     },
                     {
-                        path: '/live/room',
+                        path: '/live/room/:id',
                         name: 'Live Room',
                         component: () =>
                             import('@/views/live/live-class')

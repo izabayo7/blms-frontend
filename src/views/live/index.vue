@@ -3,7 +3,7 @@
     <v-row>
       <v-col class="col-6 text-center mx-auto">
         <v-text-field
-          v-model="name"
+          v-model="id"
           placeholder="Enter your name"
           class="text-field"
           solo
@@ -12,8 +12,9 @@
           :color="primary"
           class="white--text next-chapter px-12"
           rounded
-          @click="openOrJoinGroup"
-          >Open or join Default room</v-btn
+          :disabled="!id.length || id.length < 5"
+          @click="setRoomId(id);$router.push(`/live/room/${id}`)"
+          >Open or join room</v-btn
         ></v-col
       >
     </v-row>
@@ -23,16 +24,12 @@
 <script>
 import colors from "@/assets/sass/imports/_colors.scss";
 import { mapState, mapMutations } from "vuex";
-import * as io from "socket.io-client";
-window.io = io;
-import * as RTCMultiConnection from "../../assets/js/RTCMultiConnection";
 
 export default {
   name: "LiveClass",
   data: () => ({
-    connection: new RTCMultiConnection(),
     primary: colors.primary,
-    name: "",
+    id: "",
     videosList: [],
   }),
   computed: {
@@ -40,43 +37,8 @@ export default {
   },
   methods: {
     ...mapMutations("live", {
-      addParticipant: "ADD_PARTICIPANT",
+      setRoomId: "SET_ROOM_ID",
     }),
-    openOrJoinGroup() {
-      const vm = this;
-      if (this.name == "") alert("name is required");
-      this.connection.extra.userFullName = name;
-      // this.connection.openOrJoin(this.name);
-      vm.connection.checkPresence(this.room.id, function (isRoomExist) {
-        vm.connection.isInitiator = false;
-        vm.addParticipant({
-          name: vm.name,
-          isInitiator: !isRoomExist,
-        });
-        vm.$router.push("/live/room");
-      });
-    },
-  },
-  mounted() {
-    const vm = this;
-
-    // ......................................................
-    // ..................RTCMultiConnection Code.............
-    // ......................................................
-
-    // by default, socket.io server is assumed to be deployed on your own URL
-    vm.connection.socketURL = `${process.env.VUE_APP_api_service_url}/`;
-
-    vm.connection.socketMessageEvent = this.room.id;
-
-    // keep room opened even if owner leaves
-    vm.connection.autoCloseEntireSession = true;
-
-    vm.connection.connectSocket(function (socket) {
-      socket.on("disconnect", function () {
-        location.reload();
-      });
-    });
   },
 };
 </script>

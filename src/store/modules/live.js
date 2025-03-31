@@ -9,6 +9,9 @@ export default {
     namespaced: true,
     state: getDefaultState,
     mutations: {
+        SET_ROOM_ID(state, id) {
+            state.room.id = id
+        },
         ADD_PARTICIPANT(state, participant) {
             state.room.participants.push(participant)
         },
