@@ -104,7 +104,13 @@ export default {
     },
     // aha
     removeMember(member) {
-      this.group.members.splice(this.group.members.indexOf(member), 1);
+      for (const k in this.group.members) {
+        if (this.group.members[k].id == member.id) {
+          console.log(this.group.members[k], member)
+          this.group.members.splice(k, 1);
+          console.log(this.group.members)
+        }
+      }
       this.update_confirmation(false);
     },
     toogleMemberAdmin(member) {

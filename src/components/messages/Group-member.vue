@@ -35,6 +35,7 @@
           class="remove"
           v-if="!IamTheOwner"
           @click="
+            waitingConfirmation = true;
             set_modal({
               template: 'action_confirmation',
               method: {
@@ -43,7 +44,7 @@
               },
               title: 'Delete member',
               message: 'Are you sure you want to delete this member?',
-            })
+            });
           "
         >
           <svg
@@ -74,7 +75,11 @@
       </div>
       <div class="admin">
         <div class="checkbox">
-          <checkbox :disabled="IamAdmin" @check_it="toogleIsAdminStatus" v-model="member.isAdmin" />
+          <checkbox
+            :disabled="IamAdmin"
+            @check_it="toogleIsAdminStatus"
+            v-model="member.isAdmin"
+          />
         </div>
         <p>Admin</p>
       </div>
@@ -92,6 +97,9 @@ export default {
     member: { required: true },
     IamAdmin: { required: true },
   },
+  data: () => ({
+    waitingConfirmation: false,
+  }),
   computed: {
     ...mapState("modal", ["confirmed"]),
     IamTheOwner() {
@@ -102,19 +110,22 @@ export default {
   },
   watch: {
     confirmed() {
-      if (this.confirmed) {
+      if (this.confirmed && this.waitingConfirmation) {
         this.$emit("removeMember", this.member);
+        this.waitingConfirmation = false;
       }
     },
-
   },
   methods: {
     ...mapActions("chat", ["start_conversation", "toogleIsAdmin"]),
     ...mapActions("modal", ["set_modal"]),
-    toogleIsAdminStatus(){
-      this.toogleIsAdmin({groupId: this.$route.params.id, member: this.member})
+    toogleIsAdminStatus() {
+      this.toogleIsAdmin({
+        groupId: this.$route.params.id,
+        member: this.member,
+      });
       this.$emit("toogleMemberAdmin", this.member);
-    }
+    },
   },
 };
 </script>

@@ -64,7 +64,7 @@ export default {
   },
   methods: {
     ...mapActions("chat", ["setUsername", "loadMessages", "isUsertyping"]),
-    ...mapMutations("chat", ["ADD_TYPIST", "REMOVE_TYPIST"]),
+    ...mapMutations("chat", ["ADD_TYPIST", "REMOVE_TYPIST", "SET_DISPLAYED_USER"]),
     doneTyping() {
       this.typing.typist = "";
     },
