@@ -68,8 +68,8 @@ export default function Participant(name,vm) {
             sender: name,
             sdpOffer: offerSdp
         };
-        console.log(vm)
-        sendMessage(msg);
+
+        vm.sendMessage(msg);
     }
 
 
@@ -81,7 +81,7 @@ export default function Participant(name,vm) {
             candidate: candidate,
             name: name
         };
-        sendMessage(message);
+        vm.sendMessage(message);
     }
 
     Object.defineProperty(this, 'rtcPeer', {writable: true});
