@@ -510,6 +510,9 @@ export default {
       display: inline-flex;
       font-weight: bold;
       // border-radius: 13px;
+      .marks-input {
+        width: 80%;
+      }
       &.marks {
         // border: 2px solid #cbcbcb;
         box-shadow: 0px 3px 6px rgb(0, 0, 0, 0.16);
