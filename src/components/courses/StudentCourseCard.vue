@@ -110,10 +110,11 @@
                 alt="avatar"
               />
               <span class="white--text" v-else>{{
-                `${course.user.surName} ${course.user.otherNames}` | computeText
+                `${course.user.sur_name} ${course.user.other_names}`
+                  | computeText
               }}</span>
             </v-avatar>
-            Instructor {{ course.user.surName }}
+            Instructor {{ course.user.sur_name }}
           </h4>
           <div class="mt-4">
             <div class="svg">
