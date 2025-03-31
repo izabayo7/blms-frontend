@@ -105,6 +105,9 @@ export default {
     let timeout = undefined;
 
     this.socket.on("typing", (typist) => {
+        if(this.currentDisplayedUser.is_group){
+          const user = this.currentDisplayedUser.members.some(el => el._id === typist)
+        }
       //if the typist is the one we are chatting with
       if (this.currentDisplayedUser.id === typist) {
         this.typing = true;
