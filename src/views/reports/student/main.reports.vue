@@ -6,50 +6,46 @@
         :headers="submissionHeaders"
         :items="quiz_submissions"
         :items-per-page="5"
-        sort-by="dateOfSubmission"
+        sort-by="last_submitted"
         class="data-table"
       >
         <!-- display user name as a link to the submission -->
-        <template v-slot:item.name="{ item }">
-          <router-link
-            class="normal--text"
-            :to="
-              userCategory === 'STUDENT'
-                ? `/courses/preview/${returnCourseName(item.quiz)}`
-                : `/quiz/${item.quiz.name}/${item.user.user_name}`
-            "
-            >{{
-              userCategory === "STUDENT"
-                ? returnCourseName(item.quiz)
-                : item.user.sur_name + " " + item.user.other_names
-            }}</router-link
-          >
+        <template v-slot:item.course="{ item }">
+          {{ item.name }}
         </template>
         <!-- display the quiz name as alink to that quiz -->
-        <template v-slot:item.submissionName="{ item }">
-          <router-link
-            v-if="userCategory === 'STUDENT'"
-            class="normal--text"
-            :to="`/quiz/${item.quiz.name}/${$store.state.user.user.user_name}`"
-            >{{ item.quiz.name }}</router-link
-          >
-          <span v-else class="normal--text">{{ item.quiz.name }}</span>
+        <template v-slot:item.submission="{ item }">
+          {{ item.submissions.length }}
         </template>
         <!-- display the date of submission -->
-        <template v-slot:item.dateOfSubmission="{ item }">
+        <template v-slot:item.last_submitted="{ item }">
           <span class="normal--text">{{ item.createdAt | formatDate }}</span>
         </template>
-        <template v-slot:item.marked="{ item }">
-          <span
-            :class="`font-weight-bold ${item.marked ? 'green--text' : ''}`"
-            >{{ item.marked ? "Marked" : "Pending.." }}</span
-          >
+        <template v-slot:item.marking_satus="{ item }">
+          {{ item.marking_status }}
         </template>
         <!-- display the grades -->
-        <template v-slot:item.grade="{ item }">
-          <span class="normal--text">{{
-            (item.marked ? item.total_marks : "") + "/" + item.quiz.total_marks
-          }}</span>
+        <template v-slot:item.unread_results="{ item }">
+          <div class="unread_results">
+            <div class="number vertically--centered">
+              {{ item.unread_results }}
+            </div>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="vertically--centered"
+              width="29.91"
+              height="29.25"
+              viewBox="0 0 29.91 29.25"
+            >
+              <path
+                id="Icon_material-notifications-active"
+                data-name="Icon material-notifications-active"
+                d="M11.37,6.12,9.225,3.975A15.638,15.638,0,0,0,3.045,15.75h3A12.668,12.668,0,0,1,11.37,6.12Zm18.585,9.63h3a15.733,15.733,0,0,0-6.18-11.775L24.645,6.12a12.743,12.743,0,0,1,5.31,9.63ZM27,16.5c0-4.6-2.46-8.46-6.75-9.48V6a2.25,2.25,0,0,0-4.5,0V7.02C11.445,8.04,9,11.88,9,16.5V24L6,27v1.5H30V27l-3-3ZM18,33a2.628,2.628,0,0,0,.6-.06,3.044,3.044,0,0,0,2.16-1.77A3.012,3.012,0,0,0,20.985,30h-6A3.022,3.022,0,0,0,18,33Z"
+                transform="translate(-3.045 -3.75)"
+                fill="red"
+              />
+            </svg>
+          </div>
         </template>
         <template v-slot:no-data>
           <span class="text-h6">Oops You have no submissions.</span>
@@ -136,25 +132,23 @@ export default {
     submissionHeaders() {
       return [
         {
-          text: `${
-            this.userCategory === "STUDENT" ? "Course" : "STUDENT"
-          } Name`,
+          text: "Courses",
           align: "start",
           sortable: false,
-          value: "name",
+          value: "course",
         },
         {
-          text: "Name of submission",
-          value: "submissionName",
+          text: "Submissions",
+          value: "submission",
           align: "center",
         },
         {
-          text: "Date of submission",
-          value: "dateOfSubmission",
+          text: "Last submission date",
+          value: "last_submitted",
           align: "center",
         },
-        { text: "Status", value: "marked", align: "center" },
-        { text: "Grade", value: "grade", align: "center" },
+        { text: "Marking status", value: "marking_satus", align: "center" },
+        { text: "Unread results", value: "unread_results", align: "center" },
       ];
     },
     // get the userCategory
@@ -206,3 +200,17 @@ export default {
   },
 };
 </script>
+
+<style lang="scss">
+.unread_results {
+  display: flex;
+  svg {
+    height: 20px;
+  }
+  .number {
+    color: #ff0000;
+    font-weight: 700;
+    font-size: 1.1rem;
+  }
+}
+</style>

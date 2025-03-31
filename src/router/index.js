@@ -165,7 +165,7 @@ const routes = [
                     {
                         path: '/reports/:target',
                         component: () =>
-                            import('@/views/reports/student_reports')
+                            import('@/views/reports/deep')
                     },
                     {
                         path: '/reports/:target/:user_name',

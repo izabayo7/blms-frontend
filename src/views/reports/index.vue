@@ -8,8 +8,8 @@
 <script>
 export default {
   components: {
-    studentReports: () => import("@/views/reports/student.reports"),
-    instructorReports: () => import("@/views/reports/instructor.reports"),
+    studentReports: () => import("@/views/reports/student/main.reports"),
+    instructorReports: () => import("@/views/reports/instructor/main.reports"),
   },
   computed: {
     // get the userCategory
