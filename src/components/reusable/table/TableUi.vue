@@ -56,34 +56,6 @@ export default {
   },
   computed:{
 
-    /**
-     * formatted tab/column names that are inserted in table
-     *
-     * @returns {string[]} array
-     */
-    tabHeads(){
-      let tabHeadsCols = this.columnNames;
-
-      tabHeadsCols = tabHeadsCols.map(aTabHead => {
-        let s = S(aTabHead).humanize().s;
-        s = S(s).chompLeft("Total").s;
-
-        return S(s).humanize().s;
-      })
-
-      return tabHeadsCols;
-    },
-
-
-    /**
-     * pure / not formatted tab/column names
-     *
-     * @returns {string[]} array
-     */
-    columnNames(){
-      const {keysToShow} = this.options;
-      return keysToShow || Object.keys(this.data[0]);
-    },
 
     coloredRows(){
       console.log(this.options)
@@ -208,7 +180,7 @@ export default {
 
       tr{
         .select--wrapper{
-          background-color: red;
+
           width:2.5rem;
         }
 
@@ -220,51 +192,6 @@ export default {
           }
         }
 
-        .select{
-          display: flex;
-          justify-content: center;
-          align-content: center;
-          .icon{
-            cursor:pointer;
-            height: fit-content;
-            width:fit-content;
-            svg{
-              fill:lighten($font,30);
-            }
-          }
-        }
-
-        th{
-          text-align: start;
-
-          .head-tab-wrapper{
-            padding:.6rem .5rem;
-            cursor: pointer;
-
-            .icon{
-              svg{
-                transform:scale(.9);
-              }
-            }
-          }
-
-          //active/sorgin tab
-          .sorting{
-            height: 100%;
-            background-color:$bg-one;
-
-            .icon{
-              svg{
-                transform:rotate(180deg);
-              }
-            }
-          }
-        }
-        td{
-          padding:.6rem .5rem;
-          box-sizing:border-box;
-          min-width: fit-content;
-        }
       }
 
       &.colored-rows{

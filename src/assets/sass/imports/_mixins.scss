@@ -96,3 +96,60 @@
   }
 
 }
+
+
+@mixin table-row{
+
+  .select{
+    display: flex;
+    justify-content: center;
+    align-content: center;
+
+    &--wrapper{
+      width:2.5rem;
+    }
+
+    .icon{
+      cursor:pointer;
+      height: fit-content;
+      width:fit-content;
+      svg{
+        fill:lighten($font,30);
+      }
+    }
+  }
+
+
+    th{
+      text-align: start;
+
+      .head-tab-wrapper{
+        padding:.6rem .5rem;
+        cursor: pointer;
+
+        .icon{
+          svg{
+            transform:scale(.9);
+          }
+        }
+      }
+
+      //active/sorting tab
+      .sorting{
+        height: 100%;
+        background-color:$bg-one;
+
+        .icon{
+          svg{
+            transform:rotate(180deg);
+          }
+        }
+      }
+    }
+
+    td{
+      padding:.6rem .5rem;
+      box-sizing:border-box;
+      min-width: fit-content;
+    }
+}
