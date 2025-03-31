@@ -28,11 +28,11 @@
       <!--      </div>-->
       <!--    </div>-->
       <div class="live-class--video" :class="`--${$vuetify.breakpoint.name}`">
-        <back v-if="userCategory == 'STUDENT'" class="mt-6" />
+        <back v-if="!participationInfo.isOfferingCourse" class="mt-6"/>
         <div class="head">
           <div class="text">
             <h2>Economics Basics: Chapter 8 part II</h2>
-            <span class="live" v-if="userCategory == 'INSTRUCTOR'">Live</span>
+            <span class="live" v-if="participationInfo.isOfferingCourse">Live</span>
           </div>
           <div class="time">
             00 : 00 : 36
@@ -68,7 +68,7 @@
                 <!--                <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" >-->
               </video>
               <transition name="fade">
-                <div class="video-controls" v-if="(showMenu || noVideo) && participationInfo.isOfferingCourse">
+                <div class="video-controls" v-if="participationInfo.isOfferingCourse" v-show="(showMenu || noVideo)">
                   <div class="video-controls--wrapper">
                     <button @click="toogleVideo" class="start-mute-video">
                       <span class="icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24"
@@ -105,6 +105,19 @@
                                               height="24"><path fill="none" d="M0 0h24v24H0z"/><path
                           d="M2.213 14.06a9.945 9.945 0 0 1 0-4.12c1.11.13 2.08-.237 2.396-1.001.317-.765-.108-1.71-.986-2.403a9.945 9.945 0 0 1 2.913-2.913c.692.877 1.638 1.303 2.403.986.765-.317 1.132-1.286 1.001-2.396a9.945 9.945 0 0 1 4.12 0c-.13 1.11.237 2.08 1.001 2.396.765.317 1.71-.108 2.403-.986a9.945 9.945 0 0 1 2.913 2.913c-.877.692-1.303 1.638-.986 2.403.317.765 1.286 1.132 2.396 1.001a9.945 9.945 0 0 1 0 4.12c-1.11-.13-2.08.237-2.396 1.001-.317.765.108 1.71.986 2.403a9.945 9.945 0 0 1-2.913 2.913c-.692-.877-1.638-1.303-2.403-.986-.765.317-1.132 1.286-1.001 2.396a9.945 9.945 0 0 1-4.12 0c.13-1.11-.237-2.08-1.001-2.396-.765-.317-1.71.108-2.403.986a9.945 9.945 0 0 1-2.913-2.913c.877-.692 1.303-1.638.986-2.403-.317-.765-1.286-1.132-2.396-1.001zM4 12.21c1.1.305 2.007 1.002 2.457 2.086.449 1.085.3 2.22-.262 3.212.096.102.195.201.297.297.993-.562 2.127-.71 3.212-.262 1.084.45 1.781 1.357 2.086 2.457.14.004.28.004.42 0 .305-1.1 1.002-2.007 2.086-2.457 1.085-.449 2.22-.3 3.212.262.102-.096.201-.195.297-.297-.562-.993-.71-2.127-.262-3.212.45-1.084 1.357-1.781 2.457-2.086.004-.14.004-.28 0-.42-1.1-.305-2.007-1.002-2.457-2.086-.449-1.085-.3-2.22.262-3.212a7.935 7.935 0 0 0-.297-.297c-.993.562-2.127.71-3.212.262C13.212 6.007 12.515 5.1 12.21 4a7.935 7.935 0 0 0-.42 0c-.305 1.1-1.002 2.007-2.086 2.457-1.085.449-2.22.3-3.212-.262-.102.096-.201.195-.297.297.562.993.71 2.127.262 3.212C6.007 10.788 5.1 11.485 4 11.79c-.004.14-.004.28 0 .42zM12 15a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm0-2a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/></svg></span>
                       <span class="text">settings</span>
+                    </button>
+                  </div>
+                </div>
+                <div class="video-controls" v-else>
+                  <div class="video-controls--wrapper viewer">
+                    <span class="live">Live</span>
+                    <button @click="toogleAudio" class="ml-auto">
+<svg width="22" height="17" viewBox="0 0 22 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M6.72526 1H1.30859V6.41667" stroke="white" stroke-width="1.26923"/>
+<path d="M15.8906 1H21.3073V6.41667" stroke="white" stroke-width="1.26923"/>
+<path d="M21.3073 10.25V15.6667H15.8906" stroke="white" stroke-width="1.26923"/>
+<path d="M1.30859 10.25V15.6667H6.72526" stroke="white" stroke-width="1.26923"/>
+</svg>
                     </button>
                   </div>
                 </div>
@@ -1011,19 +1024,6 @@ export default {
           color: $main;
         }
 
-        .live {
-          width: 65.38px;
-          height: 18.97px;
-          font-family: Poppins;
-          font-style: normal;
-          font-weight: 500;
-          font-size: 13.7449px;
-          line-height: 21px;
-          text-align: center;
-
-          color: #FFFFFF;
-
-        }
       }
 
       .time {
@@ -1034,6 +1034,20 @@ export default {
         line-height: 21px;
 
         color: #343434;
+      }
+
+      .live {
+        width: 65.38px;
+        height: 18.97px;
+        font-family: Poppins;
+        font-style: normal;
+        font-weight: 500;
+        font-size: 13.7449px;
+        line-height: 21px;
+        text-align: center;
+
+        color: #FFFFFF;
+
       }
     }
 
@@ -1097,6 +1111,26 @@ export default {
               background-color: transparentize(#000, .4);
               padding: .3rem 1rem;
               padding-top: .5rem;
+
+              &.viewer {
+                justify-content: left;
+                backgound-color: transparent;
+              }
+
+              .live {
+                width: 68.12px;
+                height: 19.77px;
+                font-family: Poppins;
+                font-style: normal;
+                font-weight: 500;
+                font-size: 14.1905px;
+                font-size: 14.1905px;
+
+                color: #FFFFFF;
+                text-align: center;
+                border-radius: 10rem;
+                background-color: $danger;
+              }
 
               button {
                 display: flex;
