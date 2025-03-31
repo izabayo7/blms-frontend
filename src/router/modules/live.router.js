@@ -22,11 +22,6 @@ const routes =  [
         },
     },
     {
-        path:'/test/:courseId',
-        name:"liveClassCourseTest",
-        component:() => import( /* webpackChunkName: "live-test" */ "@/views/live/new/liveClass_test.vue")
-    },
-    {
         path:'/:liveSessionId',
         name:"liveClassCourse",
         component:() => import( /* webpackChunkName: "new-live" */ "@/views/live/new/liveClass.vue")

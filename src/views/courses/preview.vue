@@ -693,7 +693,7 @@ export default {
     ]),
     startCounting(live_session) {
       this.interval = setInterval(() => {
-        this.elapsed_time = elapsedDuration(new Date(live_session.started_at));
+        this.elapsed_time = elapsedDuration(convertUTCDateToLocalDate(new Date(live_session.date.replace("00:00", live_session.time))));
       }, 1000)
     },
     ...mapActions("modal", ["set_modal"]),
