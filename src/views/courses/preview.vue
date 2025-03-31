@@ -890,45 +890,52 @@ button.back {
 /* Portrait phones and smaller */
 @media (max-width: 700px) {
 
-  .instructor_preview .tabs-body {
-    padding: 68px 30px;
-    .cover {
-      width: 100%;
-      height: 177px;
-    }
+  .instructor_preview {
+    padding: 0 0 60px;
 
-    .content {
-      padding: 14px 33.4px;
+    .tabs-body {
 
-      .course-description {
-        font-size: 12px;
+      padding: 0;
+
+      .cover {
+        width: 100%;
+        height: 177px;
       }
 
-      .course-title {
-        font-size: 21px;
-      }
+      .content {
+        padding: 14px 33.4px;
 
-      .details .col {
-        font-size: 10px;
-      }
-
-      .actions {
-        margin-top: 20px;
-
-        svg {
-          margin: auto 10px;
+        .course-description {
+          font-size: 12px;
         }
-      }
 
-      .students {
-        height: fit-content;
+        .course-title {
+          font-size: 21px;
+        }
 
-        .individual {
-          border-top: 1px solid #B8B8B8;
-          padding: 17px 0;
+        .details .col {
+          font-size: 10px;
+        }
+
+        .actions {
+          margin-top: 20px;
+
+          svg {
+            margin: auto 10px;
+          }
+        }
+
+        .students {
+          height: fit-content;
+
+          .individual {
+            border-top: 1px solid #B8B8B8;
+            padding: 17px 0;
+          }
         }
       }
     }
   }
+
 }
 </style>

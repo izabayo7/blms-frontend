@@ -42,23 +42,6 @@ const routes = [
             allowAnonymous: true
         }
     },
-    // the loader
-    {
-        path: '/new_preview',
-        component: () =>
-            import('@/views/courses/new_preview'),
-        meta: {
-            allowAnonymous: true
-        }
-    },
-    // {
-    //     path: '/admin_demo',
-    //     component: () =>
-    //         import('@/views/dashboard/new'),
-    //     meta: {
-    //         allowAnonymous: true
-    //     }
-    // },
     {
         /**
          * DASHBOARD Parent
