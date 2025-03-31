@@ -122,6 +122,7 @@
                         ref="filePicker"
                         @change="readURL"
                         type="file"
+                        accept="image/*"
                         id="profile_img"
                     />
                   </div>
