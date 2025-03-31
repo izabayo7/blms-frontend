@@ -449,7 +449,7 @@ export default {
         @include scroll-bar;
 
         .incoming-contacts-move {
-          transition: transform 1s;
+          transition: transform .3s;
           //padding: 20rem;
         }
       }
