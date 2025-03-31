@@ -1,7 +1,7 @@
 <template>
   <div class="combined-statistics pt-6">
     <div class="row">
-      <div class="selection col-12 col-lg-5">
+      <div class="selection col-12 col-lg-5" :class="{'px-0': $vuetify.breakpoint.width < 700 }">
         <div class="title mb-6">Select data</div>
         <button
           v-for="(obj, i) in data_categories"
@@ -12,7 +12,7 @@
           {{ obj.name }}
         </button>
       </div>
-      <div class="result-view mb-3 col-12 col-lg-7">
+      <div class="result-view mb-3 col-12 col-lg-7" :class="{'px-8': $vuetify.breakpoint.width < 700 }">
         <div class="title">User join rate</div>
         <div class="chart">
           <chart

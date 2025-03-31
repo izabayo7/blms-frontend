@@ -172,7 +172,7 @@
               </div>
             </div>
           </div>
-          <v-col class="col-12 mt-5 pl-0">
+          <v-col class="col-12 mt-5 px-0">
             <div class="heading">Recently joined users</div>
             <div class="recent mt-5">
               <div class="record">
@@ -189,7 +189,7 @@
           </v-col>
           <v-col class="col-12 mt-5 pl-0">
             <div class="more">More ...</div>
-            <div class="mt-5">
+            <div class="mt-5 d-flex">
               <button
                 class="lower_buttons mr-2"
                 @click="showInviteUsers = true"
@@ -203,9 +203,9 @@
           </v-col>
         </div>
       </div>
-      <div class="v-col col-12 col-lg-8 py-0">
-        <v-row class="pa-0">
-          <v-col class="col-12 col-lg-6 pt-0">
+      <div class="v-col col-12 col-lg-8 py-0 " :class="{'px-0': $vuetify.breakpoint.width < 700 }">
+        <v-row class="pa-0 mt-6 mt-md-0" :class="{'px-0': $vuetify.breakpoint.width < 700 }">
+          <v-col class="col-12 col-lg-6 pt-0 mb-6 mb-md-0" :class="{'px-0': $vuetify.breakpoint.width < 700 }">
             <small-card
               :total="user_statistics.total_users"
               :series="computeUserSeries()"
@@ -238,7 +238,7 @@
               </template>
             </small-card>
           </v-col>
-          <v-col class="col-12 col-lg-6 pt-0">
+          <v-col class="col-12 col-lg-6 pa-0">
             <small-card
               :total="total_courses"
               :series="computeOtherSeries()"
@@ -273,7 +273,7 @@
               </template>
             </small-card>
           </v-col>
-          <v-col class="col-12">
+          <v-col class="col-12" :class="{'px-0': $vuetify.breakpoint.width < 700 }">
             <combined-statistics>
               <template v-slot:icon>
                 <svg

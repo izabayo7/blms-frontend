@@ -127,8 +127,9 @@ margin-bottom: 45px;
     color: #343434;
   }
   .recent {
-    width: 358px;
-    height: 77px;
+    max-width: 358px;
+    width: 100%;
+    min-height: 77px;
     background: #ffffff;
     box-shadow: 0px 5.9px 13.2px rgba(0, 0, 0, 0.1);
   }
@@ -192,5 +193,23 @@ margin-bottom: 45px;
   }
   .my-chart {
     max-width: 20%;
+  }
+}
+
+/* Portrait phones and smaller */
+@media (max-width: 700px) {
+  .dashboard_page {
+    .more_info {
+      width: 97px;
+      .total_number {
+        height: fit-content;
+        font-size: 25.0991px;
+        margin-top: -8px;
+      }
+      .description {
+        width: 85px;
+      }
+      margin-bottom: 12px ;
+    }
   }
 }
