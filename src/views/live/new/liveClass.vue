@@ -21,7 +21,8 @@
                  :class="`--${$vuetify.breakpoint.name} ${sidebarOpen ? '' : 'viewer'}`"
                  @mouseenter="toggleMenu(true)"
                  @mouseleave="toggleMenu(false)">
-              <div class="no-video" v-show="noVideo || (isPresenting && participationInfo.isOfferingCourse)">
+              <div class="no-video"
+                   v-show="(noVideo && !isPresenting) || (isPresenting && participationInfo.isOfferingCourse)">
                 <div class="no-video--wrapper" :class="{presenting:isPresenting}">
                   <div class="instructor-info">
                     <img
@@ -46,7 +47,7 @@
               <video v-show="!noVideo && !isPresenting" id="video_feed">
                 <!--                <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" >-->
               </video>
-              <video v-if="!participationInfo.isOfferingCourse" v-show="!noVideo && isPresenting"
+              <video v-if="!participationInfo.isOfferingCourse" v-show="isPresenting"
                      id="viewer_screen_feed">
                 <!--                <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" >-->
               </video>
@@ -110,21 +111,21 @@
                   </div>
                 </div>
               </transition>
-<!--              <div class="speaking-user">-->
-<!--                <div class="d-flex">-->
-<!--                  <div class="profile">-->
-<!--                    <img-->
-<!--                        :src="instructor ? instructor.profile + '?width=100' : ''"-->
-<!--                        alt="profile picture" class="picture">-->
-<!--                  </div>-->
-<!--                  <div class="user">-->
-<!--                    <div class="names">{{-->
-<!--                        participationInfo.isOfferingCourse ? "YOU" : `${instructor ? instructor.sur_name + ' ' + instructor.other_names : ''}`-->
-<!--                      }}</div>-->
-<!--                    <div class="vocal"></div>-->
-<!--                  </div>-->
-<!--                </div>-->
-<!--              </div>-->
+              <!--              <div class="speaking-user">-->
+              <!--                <div class="d-flex">-->
+              <!--                  <div class="profile">-->
+              <!--                    <img-->
+              <!--                        :src="instructor ? instructor.profile + '?width=100' : ''"-->
+              <!--                        alt="profile picture" class="picture">-->
+              <!--                  </div>-->
+              <!--                  <div class="user">-->
+              <!--                    <div class="names">{{-->
+              <!--                        participationInfo.isOfferingCourse ? "YOU" : `${instructor ? instructor.sur_name + ' ' + instructor.other_names : ''}`-->
+              <!--                      }}</div>-->
+              <!--                    <div class="vocal"></div>-->
+              <!--                  </div>-->
+              <!--                </div>-->
+              <!--              </div>-->
             </div>
           </div>
         </div>
@@ -374,10 +375,10 @@ export default {
       this.participationInfo.name = `${this.user.other_names} ${this.user.sur_name}`
       this.participationInfo.room = this.$route.params.liveSessionId
 
-      const host = 'stream.kurious.rw'
-      // const host = '169.254.107.40:8081'
+      // const host = 'stream.kurious.rw'
+      const host = 'localhost:8080'
 
-      this.ws = new WebSocket('wss://' + host + '/kurious_stream' + `?token=${this.$session.get("jwt")}`);
+      this.ws = new WebSocket('ws://' + host + '/kurious_stream' + `?token=${this.$session.get("jwt")}`);
 
       this.ws.addEventListener('open', () => {
         self.register();
@@ -425,6 +426,7 @@ export default {
             this.onParticipantLeft(parsedMessage);
             break;
           case 'toogleMedia':
+            console.log(this.audioEnabled, parsedMessage)
             this.toogleMedia(parsedMessage);
             break;
           case 'notification':
@@ -629,7 +631,8 @@ export default {
             if (error) {
               return console.error(error);
             }
-            self.me = participant;
+            if (self.me === null)
+              self.me = participant;
             this.generateOffer(participant.offerToReceiveVideo.bind(participant));
 
           }) : new WebRtcPeer.WebRtcPeerRecvonly(options,
@@ -637,7 +640,8 @@ export default {
             if (error) {
               return console.error(error);
             }
-            self.me = participant;
+            if (self.me === null)
+              self.me = participant;
             this.generateOffer(participant.offerToReceiveVideo.bind(participant));
 
           });
