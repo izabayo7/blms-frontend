@@ -20,18 +20,6 @@ import TableHeader from "../../../components/reusable/ui/table-header";
 import TableUi from "../../../components/reusable/ui/table-ui";
 import {mapGetters} from "vuex";
 
-// category: "5f8f50a5ad46f21ef33d1c75"
-// college: "5f8f38ad558d86f96186daf0"
-// createdAt: "2020-10-20T21:32:09.336Z"
-// email: "rich@gmail.com"
-// gender: "Male"
-// other_names: "Mike"
-// password: "$2a$10$H3jZMUEudL.LTC5GVeTp4.3zTBm00DOHUaSd5A3x/c6fyHqPRafFu"
-// status: Object
-// sur_name: "Manzi"
-// updatedAt: "2020-10-20T21:32:09.336Z"
-// user_name: "user_404485"
-
 export default {
   //TODO using dynamic students from backend
 name: "FacultyUsers",
@@ -57,9 +45,6 @@ name: "FacultyUsers",
   // if there is no faculty loaded load it based on this route id
     if(this.faculty.length <= 0)
       await this.$store.dispatch("faculties/getFaculties",this.facultyId)
-
-
-    console.log(this.faculty, !!this.faculty)
 
     await this.$store.dispatch('faculties/changeHeader',{head:this.faculty.name,title:"Users List"})
 
