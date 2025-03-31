@@ -25,10 +25,6 @@ Vue.use(VueSession, options)
 Vue.use(vuetify)
 Vue.use(VuePlyr)
 
-// const opts = {}
-
-// export default new Vuetify(opts)
-
 Vue.config.productionTip = false
 
 new Vue({

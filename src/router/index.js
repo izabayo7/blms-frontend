@@ -166,7 +166,7 @@ const routes = [
                     }, {
                         path: '/update/password',
                         component: () =>
-                            import('@/components/update_profile.vue')
+                            import('@/components/update_password.vue')
                     },
                     // administration functionalities
                     {
