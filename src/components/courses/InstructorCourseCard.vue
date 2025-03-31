@@ -153,6 +153,7 @@ export default {
   },
   destroyed() {
     clearInterval(this.interval)
+    console.log("ndagiye")
   },
   created() {
     this.nearestLiveSession = calculateNearestLiveSession(this.course)

@@ -1,157 +1,151 @@
-  <template>
+<template>
   <v-app>
     <v-row
-      v-if="course != undefined"
-      class="new-class-form ml-md-10 ml-2 mt-md-10 mt-4"
+        v-if="course != undefined"
+        class="new-class-form ml-md-10 ml-2 mt-md-10 mt-4"
     >
-      <v-col class="col-12">
+      <v-col v-if="$route.params.type == 'details' || $route.params.type == 'chapters'" class="col-12">
         <h1 class="d-block">EDIT COURSE</h1>
         <div class="new-class-btns mb-5">
           <v-btn
-            rounded
-            text
-            :class="`details-btn ${type == 'details' ? 'new-active-btn' : ''}`"
-            @click="type = 'details'"
-            >Course Details</v-btn
+              rounded
+              text
+              :class="`details-btn ${$route.params.type == 'details' ? 'new-active-btn' : ''}`"
+              :to="$route.params.type == 'chapters' ? `/courses/edit/${course.name}/details` : undefined"
+          >Course Details
+          </v-btn
           >
           <v-btn
-            rounded
-            text
-            :class="`chapters-btn ${
-              type == 'chapters' ? 'new-active-btn' : ''
+              rounded
+              text
+              :class="`chapters-btn ${
+              $route.params.type == 'chapters' ? 'new-active-btn' : ''
             }`"
-            @click="type = 'chapters'"
-            >Course Chapters</v-btn
+              :to="$route.params.type == 'details' ? `/courses/edit/${course.name}/chapters` : undefined"
+          >Course Chapters
+          </v-btn
           >
         </div>
       </v-col>
-      <v-col v-if="type == 'details'" class="col-12">
+      <v-col v-else class="col-12">
+        Invalid route
+      </v-col>
+      <v-col v-if="$route.params.type == 'details'" class="col-12">
         <v-form>
           <v-row>
             <v-col class="col-12 col-md-6">
               <h3>Course Name</h3>
               <input
-                v-model="course.name"
-                type="text"
-                class="course_input"
-                placeholder="Type course name..."
+                  v-model="course.name"
+                  type="text"
+                  class="course_input"
+                  placeholder="Type course name..."
               />
               <h3 class="input_lable">Course Maximum marks</h3>
               <input
-                v-model="course.maximum_marks"
-                type="text"
-                class="course_input"
-                placeholder="Type marks..."
+                  v-model="course.maximum_marks"
+                  type="text"
+                  class="course_input"
+                  placeholder="Type marks..."
               />
               <h3>Student Group</h3>
               <v-select
-                v-model="selectedFacultyCollegeYearName"
-                :items="facultyCollegeYearNames"
-                chips
-                :rules="simpleRules"
-                outlined
-                class="group-select"
+                  v-model="selectedFacultyCollegeYearName"
+                  :items="facultyCollegeYearNames"
+                  chips
+                  :rules="simpleRules"
+                  outlined
+                  class="group-select"
               ></v-select>
               <h3>Course Description</h3>
               <textarea
-                v-model="course.description"
-                class="kurious--textarea mb-4"
-                cols="60"
-                rows="8"
+                  v-model="course.description"
+                  class="kurious--textarea mb-4"
+                  cols="60"
+                  rows="8"
               ></textarea>
             </v-col>
             <v-col class="col-12 col-md-6" align="center">
               <v-avatar
-                v-if="course.cover_picture"
-                size="245"
-                :class="
+                  v-if="course.cover_picture"
+                  size="245"
+                  :class="
                   course.cover_picture
                     ? 'user-profile ml-2 mt-6 d-block'
                     : 'course-image white--text bg-color-one text-h2'
                 "
               >
                 <v-img
-                  :src="`${
+                    :src="`${
                     course.cover_picture
                   }?height=300&width=300&token=${$session.get('jwt')}`"
-                  :lazy-src="`${
-                    course.cover_picture
-                  }?height=300&width=300&token=${$session.get('jwt')}`"
-                  alt="avatar"
+                    alt="avatar"
                 >
-                  <template v-slot:placeholder>
-                    <v-row
-                      class="fill-height ma-0"
-                      align="center"
-                      justify="center"
-                    >
-                      <v-progress-circular
-                        indeterminate
-                        color="grey lighten-5"
-                      ></v-progress-circular>
-                    </v-row>
-                  </template>
                 </v-img>
               </v-avatar>
               <v-avatar
-                class="course-image white--text bg-color-one text-h2 vertically--centered"
-                size="245"
-                v-else
-                >{{ course.name | computeText }}</v-avatar
+                  class="course-image white--text bg-color-one text-h2 vertically--centered"
+                  size="245"
+                  v-else
+              >{{ course.name | computeText }}
+              </v-avatar
               >
               <v-btn
-                fab
-                small
-                text
-                class="new-active-btn course-image mt-4 mb-6 mr-4"
-                @click="pickfile()"
+                  fab
+                  small
+                  text
+                  class="new-active-btn course-image mt-4 mb-6 mr-4"
+                  @click="pickfile()"
               >
                 <v-icon>mdi-paperclip</v-icon>
               </v-btn>
               <span>{{
-                course.cover_picture === undefined
-                  ? "Upload Course CoverPicture"
-                  : coverPicture
-                  ? coverPicture.name
-                  : "Update Course CoverPicture"
-              }}</span>
+                  course.cover_picture === undefined
+                      ? "Upload Course CoverPicture"
+                      : coverPicture
+                      ? coverPicture.name
+                      : "Update Course CoverPicture"
+                }}</span>
               <input
-                ref="file"
-                type="file"
-                hidden
-                accept="image/*"
-                id="picture"
-                class="d-none my-6"
-                @change="handleFileUpload()"
+                  ref="file"
+                  type="file"
+                  hidden
+                  accept="image/*"
+                  id="picture"
+                  class="d-none my-6"
+                  @change="handleFileUpload()"
               />
             </v-col>
             <v-col class="col-12 text-center">
               <v-btn
-                rounded
-                text
-                class="new-active-btn mb-6"
-                @click="validate()"
-                >update Course</v-btn
+                  rounded
+                  text
+                  class="new-active-btn mb-6"
+                  @click="validate()"
+              >update Course
+              </v-btn
               >
               <v-btn
-                color="transparent"
-                class="cancel-quiz mt-n6 mx-2"
-                @click="$router.push('/courses')"
-                >Cancel</v-btn
+                  color="transparent"
+                  class="cancel-quiz mt-n6 mx-2"
+                  @click="$router.push('/courses')"
+              >Cancel
+              </v-btn
               >
             </v-col>
           </v-row>
         </v-form>
       </v-col>
-      <v-col v-else class="col-12 pr-12">
-        <chapters action="update" />
+      <v-col v-else-if="$route.params.type == 'chapters'" class="col-12 pr-12">
+        <chapters action="update"/>
       </v-col>
     </v-row>
   </v-app>
 </template>
 
-  <script>
-import { mapActions, mapGetters } from "vuex";
+<script>
+import {mapActions, mapGetters} from "vuex";
+
 export default {
   name: "edit_course",
   components: {
@@ -159,7 +153,6 @@ export default {
   },
   data: () => ({
     selectedFacultyCollegeYearName: "",
-    type: "details",
     coverPicture: undefined,
     nameRules: [
       (v) => !!v || "Name is required",
@@ -174,7 +167,7 @@ export default {
     ...mapGetters("faculties", ["facultyCollegeYearNames"]),
     selectedFacultyCollegeYearCode() {
       return this.$store.getters["faculties/facultyCollegeYear"](
-        this.selectedFacultyCollegeYearName
+          this.selectedFacultyCollegeYearName
       )._id;
     },
   },
@@ -220,9 +213,15 @@ export default {
         },
         coverPicture: this.coverPicture,
       }).then(() => {
-        this.course.name != this.$route.params.name
-          ? this.$router.push(`/courses/edit/${this.course.name}`)
-          : undefined;
+        this.$store.dispatch("app_notification/SET_NOTIFICATION", {
+          message: "Course successfully updated",
+          status: "success",
+          uptime: 3000,
+        });
+        setTimeout(() => {
+            this.$router.push(`/courses/edit/${this.course.name}/chapters`)
+        }, 3000);
+
       });
     },
   },

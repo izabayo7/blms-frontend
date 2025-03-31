@@ -275,7 +275,7 @@ import StudentNewCommentWithPhoto from "../../../components/Live/StudentNewComme
 import Apis from '../../../services/apis'
 import {convertUTCDateToLocalDate, playSound} from "../../../services/global_functions";
 
-const sound = require("../../../assets/audio/Comment.wav");
+const sound = require("../../../assets/audio/com.mp3");
 
 export default {
   name: "liveClass",
@@ -301,13 +301,6 @@ export default {
       showMenu: false,
       videoEnabled: true,
       audioEnabled: true,
-      users: [
-        {
-          img: 'https://s3.amazonaws.com/cms-assets.tutsplus.com/uploads/users/810/profiles/19338/profileImage/profile-square-extra-small.png',
-          name: 'Ntwari liberi',
-          attendance: 89,
-        },
-      ],
       live_session: null,
       error: null,
       loaded: false

@@ -315,12 +315,9 @@ export default {
     activeRoute(route) {
       const routeParts = this.$route.path.split("/");
 
-      console.log(route === routeParts[1]);
-
       return route === routeParts[1];
     },
     closeSidebar() {
-      // console.log(this.onPhone);
       if (this.onPhone) {
         this.toggle();
       }

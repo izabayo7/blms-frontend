@@ -128,7 +128,11 @@ export default {
   },
   watch: {
     error() {
-      console.log(this.error);
+      this.$store.dispatch("app_notification/SET_NOTIFICATION", {
+        message: this.error,
+        status: "danger",
+        uptime: 2000,
+      });
     },
   },
   methods: {
@@ -166,7 +170,14 @@ export default {
         },
         coverPicture: this.coverPicture,
       }).then(() => {
-        this.type = "chapters";
+        this.$store.dispatch("app_notification/SET_NOTIFICATION", {
+          message: "Course successfully created",
+          status: "success",
+          uptime: 2000,
+        });
+        setTimeout(() => {
+          this.type == 'chapters'
+        }, 2000);
       });
     },
   },
