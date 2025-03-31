@@ -20,11 +20,14 @@ export default {
   methods: {
     ...mapMutations("notification", ["addNotification"]),
     ...mapMutations("courses", ["addCourse"]),
-    ...mapMutations("chat", ["CHANGE_MESSAGE_READ_STATUS"]),
+    ...mapMutations("chat", ["CHANGE_MESSAGE_READ_STATUS","SET_SOCKET"]),
     ...mapMutations("sidebar_navbar", {update_unread: "SET_TOTAL_UNREAD"}),
   },
   async created() {
     await apis.create('user_logs', {online: true})
+  },
+  beforeMount() {
+    this.SET_SOCKET()
   },
   mounted() {
     // listen to new notifications
