@@ -5,7 +5,7 @@
         <slot name="icon" />
       </div>
       <div class="top-blocks">
-        <div v-for="item in headers" :key="item" class="inner">{{item}}</div>
+        <div v-for="item in headers" :key="item" class="inner">{{ item }}</div>
       </div>
     </div>
     <div class="statistics mt-3">
@@ -25,7 +25,7 @@
       <div class="details mt-4">
         <div class="element">
           <div class="label">
-            <div class="text">Instuctors:</div>
+            <div class="text">{{ headers[0] }}:</div>
             <div class="numb ml-2">{{ series[0] }}</div>
           </div>
           <div class="progress mt-n5 mb-4">
@@ -38,7 +38,7 @@
         </div>
         <div class="element">
           <div class="label">
-            <div class="text">Students:</div>
+            <div class="text">{{ headers[1] }}:</div>
             <div class="numb ml-2">{{ series[1] }}</div>
           </div>
           <div class="progress mt-n5 mb-4">
@@ -51,7 +51,7 @@
         </div>
         <div class="element">
           <div class="label">
-            <div class="text">Staff:</div>
+            <div class="text">{{ headers[2] }}:</div>
             <div class="numb ml-2">{{ series[2] }}</div>
           </div>
           <div class="progress mt-n5 mb-4">
@@ -82,10 +82,10 @@ export default {
     total: {
       type: Number,
     },
-    headers:{
+    headers: {
       type: Array,
-      required: true
-    }
+      required: true,
+    },
   },
   methods: {
     percent(value, valuer = this.total) {
@@ -101,6 +101,7 @@ export default {
       dataLabels: {
         enabled: false,
       },
+      colors:['#ffae34','#193074','#ff0808'],
       responsive: [
         {
           breakpoint: 480,

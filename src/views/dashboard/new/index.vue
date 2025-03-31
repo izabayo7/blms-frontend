@@ -23,7 +23,9 @@
               </svg>
               <div class="college_name">University of Kicukiro</div>
               <div class="lower_content">
-                <div class="number_of_users">{{user_statistics.total_users}} Users</div>
+                <div class="number_of_users">
+                  {{ user_statistics.total_users }} Users
+                </div>
                 <div class="account_type">
                   <svg
                     width="14"
@@ -202,7 +204,12 @@
       <div class="v-col col-12 col-lg-8 py-0">
         <v-row class="pa-0">
           <v-col class="col-12 col-lg-6 pt-0">
-            <small-card :total="user_statistics.total_users" :series="computeUserSeries()" type="users" :headers="['Instuctors', 'Students', 'Staff']">
+            <small-card
+              :total="user_statistics.total_users"
+              :series="computeUserSeries()"
+              type="users"
+              :headers="['Instuctors', 'Students', 'Staff']"
+            >
               <template v-slot:icon>
                 <svg
                   width="16"
@@ -230,7 +237,12 @@
             </small-card>
           </v-col>
           <v-col class="col-12 col-lg-6 pt-0">
-            <small-card :total="user_statistics.total_users" :series="computeOtherSeries()" type="users" :headers="['Faculties', 'Courses', 'Student groups']">
+            <small-card
+              :total="user_statistics.total_users"
+              :series="computeOtherSeries()"
+              type="users"
+              :headers="['Faculties', 'Courses', 'Student groups']"
+            >
               <template v-slot:icon>
                 <svg
                   width="21"
@@ -313,6 +325,8 @@ export default {
     showFacultyModal: false,
     user_statistics: {},
     total_faculties: 0,
+    total_courses: 0,
+    total_student_groups: 0,
   }),
   components: {
     InviteUsersDialog: () => import("@/components/dashboard/InviteUsersDialog"),
@@ -323,26 +337,34 @@ export default {
   },
   methods: {
     ...mapActions("modal", ["set_modal"]),
-    computeUserSeries(){
-      const res = []
-      res.push(this.user_statistics.total_instructors)
-      res.push(this.user_statistics.total_students)
-      res.push(this.user_statistics.total_staff)
-      return res
+    computeUserSeries() {
+      const res = [];
+      res.push(this.user_statistics.total_instructors);
+      res.push(this.user_statistics.total_students);
+      res.push(this.user_statistics.total_staff);
+      return res;
     },
-    computeOtherSeries(){
-      const res = []
-      res.push(this.total_faculties)
-      return res
-    }
+    computeOtherSeries() {
+      const res = [];
+      res.push(this.total_faculties);
+      res.push(this.total_courses);
+      res.push(this.total_student_groups);
+      return res;
+    },
   },
-  async beforeMount(){
+  async beforeMount() {
     let res = await Apis.get("user/statistics");
-    this.user_statistics = res.data.data
+    this.user_statistics = res.data.data;
 
     res = await Apis.get("faculty/statistics");
-    this.total_faculties = res.data.data.total_faculties
-  }
+    this.total_faculties = res.data.data.total_faculties;
+
+    res = await Apis.get("course/statistics");
+    this.total_courses = res.data.data.total_courses;
+
+    res = await Apis.get("faculty_college_year/statistics");
+    this.total_student_groups = res.data.data.total_student_groups;
+  },
 };
 </script>
 
