@@ -145,13 +145,14 @@ import colors from "@/assets/sass/imports/_colors.scss";
 import jwt from "jsonwebtoken";
 import Apis from "@/services/apis";
 import { mapGetters, mapActions } from "vuex";
-import { emit } from "../services/event_bus";
+import {cropperMixin} from "../services/mixins"
 
 export default {
   name: "UserProfile",
   components: {
     cropper: () => import("@/components/reusable/ui/ImageCropper"),
   },
+  mixins:[cropperMixin],
   data: () => ({
     tab: null,
     error: "",
@@ -187,30 +188,6 @@ export default {
     },
     pickfile() {
       document.getElementById("picture").click();
-    },
-    readURL(input) {
-      const self = this;
-      input = input.target;
-      if (input.files && input.files[0]) {
-        let reader = new FileReader();
-
-        reader.onload = function (e) {
-          self.img = e.target.result;
-          emit("new-image-loaded");
-          // document.getElementById('preview').setAttribute('src', e.target.result);
-        };
-
-        reader.readAsDataURL(input.files[0]); // convert to base64 string
-      }
-    },
-    imageCropped(img) {
-      const image = document.getElementById("preview");
-      image.src = img;
-      this.profile = img;
-    },
-    handleFileUpload(e) {
-      this.readURL(e);
-      this.profile = this.$refs.file.files[0];
     },
     validate() {
       if (this.user.sur_name === "") {

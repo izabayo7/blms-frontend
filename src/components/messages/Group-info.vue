@@ -1,11 +1,13 @@
 <template>
   <div v-if="group.name" class="my-info">
     <div class="info-container">
+      <cropper :img="img" @change="imageCropped" />
       <div class="my-info">
         <div class="profile">
           <div class="photo">
-            <input type="file" ref="img" />
-            <div class="icon" @click="$refs.img.click()">
+            <img v-if="image" :src="image" @change="image" :alt="`${group.name} group icon`">
+            <input type="file" @change="handleFileUpload" ref="file" />
+            <div class="icon" @click="$refs.file.click()">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
@@ -80,16 +82,25 @@
 import GroupMember from "@/components/messages/Group-member";
 import a from "@/services/apis";
 import { mapMutations } from "vuex";
+import {cropperMixin} from "../../services/mixins"
+import apis from "../../services/apis";
 
 export default {
   name: "Group-info",
-  components: { GroupMember },
+  components: {
+    GroupMember ,
+    cropper: () => import("@/components/reusable/ui/ImageCropper"),},
   data() {
     return {
       members: [],
       group: {},
+      profile:'',
+      profile_link:'',
+      img:'',
+      uploaded:false
     };
   },
+  mixins:[cropperMixin],
   computed: {
     IamAdmin() {
       const me = this.group.members.filter(
@@ -97,15 +108,49 @@ export default {
       );
       return me[0] ? me[0].isAdmin : undefined;
     },
+    // get image either base64 or profile image
+    image(){
+      return (this.profile_link.length > 0) ? this.profile_link : this.img.length > 0 ? this.img : false
+    }
   },
   methods: {
     ...mapMutations("modal", ["update_confirmation"]),
     goToAddMember() {
       this.$router.push(`${this.$route.path}/add-member`);
     },
+    async uploadImage(){
+
+      //profile may be assigned late because of the effect of image size
+      //as image have largest size the long it take for it to be assigned to our local variable profile
+      //so for the reason that we need to wait for profile to be cropped
+      //we have to use recursion loop so that we can wait until profile
+      //is filled with something
+
+       //to wait for profile to be filled with something and make sure that no image has been uploaded
+      //before
+        if(this.profile.length > 0 && !this.uploaded){
+          const {data} = await apis.put(`chat_group/${this.group.code}/profile`,{profile:this.profile})
+
+          this.uploaded = true;
+          this.profile_link = data.data.profile
+        }
+        //call the function again
+        else{
+          const self = this;
+
+          //at least await 30 microsecond so that the recursion can't go that faster
+          setTimeout(async ()=>{
+            await self.uploadImage()
+          },30)
+        }
+
+        return 0
+    },
     async getGroupInfo() {
       const group = await a.get(`chat_group/${this.$route.params.id}`);
       this.group = group.data.data;
+      if(group.data.data.profile)
+        this.profile_link = group.data.data.profile
     },
     // aha
     removeMember(member) {
@@ -128,6 +173,11 @@ export default {
   },
   mounted() {
     this.getGroupInfo();
+
+    //listen on cropped image
+    this.$on('image_cropped',()=>{
+      this.uploadImage()
+    })
   },
 };
 </script>
@@ -150,6 +200,12 @@ export default {
           border-radius: 50%;
           background-image: linear-gradient(#8456fe, #fe5bc8);
           position: relative;
+
+          img{
+            width: inherit;
+            height: inherit;
+            border-radius: 50%;
+          }
 
           input {
             display: none;
