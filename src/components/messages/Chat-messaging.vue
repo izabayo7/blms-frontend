@@ -54,7 +54,7 @@
             v-if="currentDisplayedUser.id === 'announcements'"
             class="sender_name"
           >
-            {{ msgs.sender.sur_name }} {{ msgs.createdAt | getTimeDifference }}
+            {{ msgs.sender.sur_name }} {{ msgs.sender.other_names }} {{ msgs.createdAt | getTimeDifference }}
           </div>
           <div
             v-else-if="
@@ -123,12 +123,17 @@
           </div>
           <div v-else class="msgs">
             <div class="announcement-container">
-              <div class="col-12 col-md-1">
-                <img
-                  :src="$store.state.sidebar_navbar.college.logo"
-                  alt=""
-                  class="college-logo"
-                />
+              <div class="d-flex">
+                <div class="col-12 col-md-2">
+                  <img
+                    :src="$store.state.sidebar_navbar.college.logo"
+                    alt=""
+                    class="college-logo"
+                  />
+                </div>
+                <div class="col-12 col-md-8 vertically--centered justify-start">
+                  {{ msgs.title }}
+                </div>
               </div>
               <div class="col-12">
                 <Editor
@@ -487,7 +492,7 @@ export default {
         }
       }
     }
-    .msg-block{
+    .msg-block {
       width: 100%;
     }
 

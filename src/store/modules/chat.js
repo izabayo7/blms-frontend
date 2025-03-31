@@ -73,9 +73,10 @@ export default {
         //add incoming message
         ADD_INCOMING_MESSAGE(state, newMessage) {
 
-            const id = newMessage.group ? newMessage.group : newMessage.sender.user_name
+            const id = newMessage.title ? 'announcements' : newMessage.group ? newMessage.group : newMessage.sender.user_name
             //get last message from stored conversation
             store.dispatch('chat/lastMessageInCertainChatMessages', id.toString()).then(({ lastMessage, groupIndex, userIndex }) => {
+
                 //if conversation was found and message not duplicated
                 if (userIndex === undefined || lastMessage._id === newMessage._id)
                     return
@@ -85,7 +86,7 @@ export default {
                 //user conversation between sender and receiver
                 let userMessages = state.loadedMessages[userIndex].conversation
                 //if conversation was found
-                if (userMessages) {
+                if (userMessages && id !== "announcements") {
                     // if the last sender is the receiver
                     if (userMessages[groupIndex].from.toLowerCase() === 'me') {
                         //store it as new set of message conversation
@@ -99,7 +100,10 @@ export default {
                             userMessages.push({ from: incomingName, messages: [newMessage] })
                         }
                     }
+                } else if(userMessages){
+                    userMessages.push(newMessage)
                 }
+
                 //increase unread message or read message
                 store.dispatch('chat/findIndexOfUserInIncomingMessages', id).then(idx => {
                     if (idx === null) {
@@ -208,8 +212,12 @@ export default {
             state.loadedMessages.map((conversation, index) => {
                 if (conversation.username === id) {
                     lastGroupedMessageIndex = state.loadedMessages[index].conversation.length - 1
-                    let lastIndividualMessageIndex = state.loadedMessages[index].conversation[lastGroupedMessageIndex].messages.length - 1
-                    lastMessage = state.loadedMessages[index].conversation[lastGroupedMessageIndex].messages[lastIndividualMessageIndex]
+                    if (id !== 'announcements') {
+                        let lastIndividualMessageIndex = state.loadedMessages[index].conversation[lastGroupedMessageIndex].messages.length - 1
+                        lastMessage = state.loadedMessages[index].conversation[lastGroupedMessageIndex].messages[lastIndividualMessageIndex]
+                    } else{
+                        lastMessage = state.loadedMessages[index].conversation[lastGroupedMessageIndex]
+                    }
                     userIndex = index
                 }
             })
@@ -229,7 +237,7 @@ export default {
             // Get new contact
             getters.socket.on('res/message/contacts/new', ({ contact, redirect }) => {
                 state.incomingMessages.unshift(contact)
-                if(redirect)
+                if (redirect)
                     router.push(`/messages/${contact.id}`)
             });
         },
