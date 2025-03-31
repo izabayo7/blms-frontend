@@ -11,38 +11,14 @@
             </div> -->
             <form @submit.prevent="login">
               <div class="label">Email</div>
-              <div class="input-container">
-                <div class="input-icon">
-                  <svg
-                    width="15"
-                    height="18"
-                    viewBox="0 0 15 18"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M13.8 16.1999V14.5999C13.8 13.7512 13.4629 12.9373 12.8627 12.3372C12.2626 11.737 11.4487 11.3999 10.6 11.3999H4.2C3.35131 11.3999 2.53737 11.737 1.93726 12.3372C1.33714 12.9373 1 13.7512 1 14.5999V16.1999"
-                      stroke="#BABABC"
-                      stroke-width="1.8"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    />
-                    <path
-                      d="M7.39995 8.1998C9.16726 8.1998 10.6 6.76712 10.6 4.9998C10.6 3.23249 9.16726 1.7998 7.39995 1.7998C5.63264 1.7998 4.19995 3.23249 4.19995 4.9998C4.19995 6.76712 5.63264 8.1998 7.39995 8.1998Z"
-                      stroke="#BABABC"
-                      stroke-width="1.8"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    />
-                  </svg>
-                </div>
+              <div class="input-container disabled">
                 <input
                   type="email"
                   placeholder="Email"
-                  v-model="email_user_name_or_phone"
+                  v-model="obj.email"
                   autocomplete="false"
+                  disabled
                   class="wide"
-                  @keyup="validate"
                   required
                 />
               </div>
@@ -159,6 +135,9 @@ export default {
     message: "Please login to continue",
     image: "https://apis.kurious.rw/assets/images/image%204.png",
     institution: "Kurious Learn",
+    obj: {
+      email: "cedricizabayo7@gmail.com",
+    },
   }),
   methods: {
     // validate the form
@@ -301,14 +280,13 @@ export default {
       font-family: Inter;
       font-style: normal;
       font-weight: 500;
-      font-size: 10px;
+      font-size: 11px;
       color: #6a6a6a;
       margin-left: 0.6rem;
     }
     .input {
       &-container {
         max-width: 299px;
-
         height: 36px;
         margin: 5px auto 24px;
         border: 1.34978px solid #bababc;
@@ -343,6 +321,18 @@ export default {
           &.wide {
             width: 70%;
           }
+        }
+        &.disabled {
+          background-color: #eeeeee;
+          input {
+            color: #6a6a6a;
+          }
+          border: none;
+          font-family: Inter;
+          font-style: normal;
+          padding-left: 14px;
+          font-weight: normal;
+          font-size: 11.3404px;
         }
       }
       &-icon {
