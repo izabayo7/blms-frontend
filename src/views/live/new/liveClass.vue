@@ -986,6 +986,7 @@ export default {
           background-color: #000;
 
           video {
+            object-fit: cover;
             height: 100%;
             max-height: 20rem;
             width: 100%;
