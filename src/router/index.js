@@ -91,7 +91,7 @@ const routes = [
                         component: () =>
                             import('@//views/courses/edit')
                     }, {
-                        path: '/courses/new-course',
+                        path: '/courses/new',
                         name: 'Create course',
                         component: () =>
                             import('@/views/courses/create')
@@ -107,7 +107,7 @@ const routes = [
                         component: () =>
                             import('@/views/quiz')
                     }, {
-                        path: '/quiz/new-quiz',
+                        path: '/quiz/new',
                         name: 'Set Quiz',
                         component: () =>
                             import('@/views/quiz/create')
@@ -259,11 +259,12 @@ const router = new VueRouter({
 // before navigating to any route
 router.beforeEach((to, from, next) => {
     // if the session exist and the vuex store is not set
-    if (Vue.prototype.$session.exists() && !store.state.user.isLoggedIn) {
+    if (Vue.prototype.$session.exists() && (!store.state.user.isLoggedIn || !axios.defaults.headers.common.Authorization)) {
         // get the token
         const token = Vue.prototype.$session.get(
             "jwt"
         )
+        console.log(token)
         // set the token in axios headers
         axios.defaults.headers.common.Authorization = `${token}`;
         // keep the decoded user in vuex store
@@ -288,10 +289,13 @@ router.beforeEach((to, from, next) => {
     // }
 
     else if ((to.path === '/login' || to.path === '/') && store.state.user.isLoggedIn) {
+        console.log(axios.defaults.headers.common.Authorization)
         next({
             path: `/${store.state.user.user.category.name === 'STUDENT' || store.state.user.user.category.name === 'INSTRUCTOR' ? 'courses' : 'administration'}`,
         })
     }
+    console.log(axios.defaults.headers.common.Authorization)
+    console.log(Vue.prototype.$session.exists(), !store.state.user.isLoggedIn || !axios.defaults.headers.common.Authorization, Vue.prototype.$session.exists() && (!store.state.user.isLoggedIn || !axios.defaults.headers.common.Authorization),axios.defaults.headers.common.Authorization)
 
     // go to the requested route
     // else {

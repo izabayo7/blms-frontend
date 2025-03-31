@@ -209,7 +209,7 @@
                 class="mt-3 active-btn px-12"
                 text
                 x-large
-                :to="type == 'published' ? undefined : '/courses/new-course'"
+                :to="type == 'published' ? undefined : '/courses/new'"
                 @click="type = 'unpublished'"
                 >{{
                   `${type == "published" ? "Publish one" : "Create one"}`
@@ -272,11 +272,13 @@ export default {
   },
   created() {
     if (!this.loaded) {
+      console.log(this.loaded)
       //get courses on page load
       this.getCourses({
         userCategory: this.userCategory.toLowerCase(),
         userId: this.$store.state.user.user.user_name,
       });
+      console.log(this.loaded)
     }
   },
 };

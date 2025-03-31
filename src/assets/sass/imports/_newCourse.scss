@@ -35,25 +35,11 @@
     }
 
     .v-application--is-ltr .v-textarea.v-text-field--enclosed .v-text-field__slot textarea {
-        height: 160px !important;
+        //height: 160px !important;
     }
 
     .v-input.course-description.v-textarea.theme--light.v-text-field.v-text-field--is-booted.v-text-field--enclosed.v-text-field--outlined {
         width: 430px;
-    }
-
-    .kurious--textarea {
-        padding: 10px;
-        resize: none;
-        display: block;
-        border-collapse: collapse;
-        border-color: currentColor;
-        border-top-color: currentcolor;
-        border-right-color: currentcolor;
-        border-bottom-color: currentcolor;
-        border-left-color: currentcolor;
-        border-style: solid;
-        border-width: 1px;
     }
 
     .course-description:focus {
