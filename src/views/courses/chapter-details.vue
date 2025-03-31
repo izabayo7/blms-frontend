@@ -89,7 +89,10 @@
                     </v-col>
                     <v-col class="text-right col-6">
                       <v-btn
-                        v-if="activeIndex < maximumIndex"
+                        v-if="
+                          activeIndex < maximumIndex ||
+                          userCategory == 'INSTRUCTOR'
+                        "
                         :color="primary"
                         class="white--text next-chapter"
                         @click="
