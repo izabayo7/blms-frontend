@@ -53,7 +53,7 @@
       </v-col>
       <v-col class="col-12 px-0">
         <v-row v-if="!loaded" class="loaders">
-          <v-col class="col-4" v-for="n in 3" :key="n">
+          <v-col class="col-12 col-md-4" v-for="n in 3" :key="n">
             <div class="ssc ssc-card student-card-skeleton finished">
               <div class="ssc-wrapper pa-0">
                 <div class="ssc-square w-100"></div>
@@ -346,7 +346,7 @@ export default {
     }
     &.finished {
       max-height: 400px !important;
-      width: 300px;
+      max-width: 260px;
       .ssc-square {
         height: 161px;
       }
