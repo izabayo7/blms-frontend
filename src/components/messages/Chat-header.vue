@@ -56,7 +56,7 @@
       </div>
       <div
         class="icon settings"
-        @click="$router.push(`/messages/group/${currentDisplayedUser.id}`)"
+        @click="$router.push(`/messages/group/${currentDisplayedUser._id}`)"
         v-if="currentDisplayedUser.is_group"
       >
         <svg
