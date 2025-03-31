@@ -6,7 +6,7 @@
           <div class="heading">
             <div class="welcome">Welcome to</div>
             <div class="college-name">{{ institution }}.</div>
-            <img :src="image" alt="" class="logo mx-auto"/>
+            <img v-if="!$route.query.institution || collegeHasLogo" :src="image" alt="" class="logo mx-auto"/>
             <div :class="`message ${valid ? '' : 'red--text'}`">
               {{ message }}
             </div>
@@ -126,6 +126,7 @@ export default {
     password: "",
     message: "Please login to continue",
     image: "https://apis.kurious.rw/assets/images/logo.png",
+    collegeHasLogo: false,
     institution: "Kurious Learn",
   }),
   methods: {
@@ -191,8 +192,12 @@ export default {
           `college/open/${this.$route.query.institution}`
       );
       if (res.data.status != 404) {
-        this.institution = res.data.data.name;
-        this.image = res.data.data.logo || this.image;
+        this.institution = res.data.data.name
+        if(res.data.data.logo)
+        {
+          this.collegeHasLogo = true
+          this.image = res.data.data.logo;
+        }
       } else {
         this.$router.push("/login");
       }

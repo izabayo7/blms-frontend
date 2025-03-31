@@ -49,7 +49,16 @@
               <div v-if="msg.attachments"
                    :class="`attachments-cotainer ${msg.content ? 'pushed' : ''} ${msg.attachments.length > 1 ? msg.attachments.length > 2 ? 'more':'two':''}`">
                 <div v-for="(attachment, k) in msg.attachments" :key="k" class="attachment">
-                  <img :src="attachment.src + `?token=${$session.get('jwt')}`" alt="">
+                  <img v-if="fileType(attachment) === 'image'" :src="attachment.src + `?token=${$session.get('jwt')}`" alt="">
+<!--                  <audio v-if="fileType(attachment) === 'audio'" :src="attachment.src+ `?token=${$session.get('jwt')}`"></audio>-->
+                  <vue-plyr v-if="fileType(attachment) === 'audio'">
+                    <audio controls crossorigin playsinline>
+                      <source
+                          :src="attachment.src+ `?token=${$session.get('jwt')}`"
+                          type="audio/mp3"
+                      />
+                    </audio>
+                  </vue-plyr>
                 </div>
               </div>
             </div>
@@ -116,6 +125,16 @@ export default {
     // is message going or coming
     msgGoing(owner) {
       return owner && owner.toLowerCase() === "me";
+    },
+    fileType(attachment){
+      if(attachment.src.match(/\.(jpg|JPG|jpeg|JPEG|png|PNG|gif|GIF)$/)){
+        return 'image'
+      }
+      else if(attachment.src.match(/\.(MP3|mp3|wav|WAV)$/)){
+        return 'audio'
+      } else{
+        return 'others'
+      }
     },
     systemMsg(owner) {
       return owner && owner === "SYSTEM";
@@ -349,7 +368,6 @@ export default {
         &.pushed {
           margin-top: .5rem
         }
-
         .attachment {
           width: fit-content;
           padding: 0;
