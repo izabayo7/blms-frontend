@@ -33,7 +33,7 @@
         </div>
         <div
           class="remove"
-          v-if="!IamTheOwner"
+          v-if="!IamTheOwner && IamAdmin"
           @click="
             waitingConfirmation = true;
             set_modal({
@@ -73,10 +73,10 @@
           </svg>
         </div>
       </div>
-      <div class="admin">
+      <div  :class="{disabled: !IamAdmin}" class="admin">
         <div class="checkbox">
           <checkbox
-            :disabled="IamAdmin"
+            :disabled="!IamAdmin"
             @check_it="toogleIsAdminStatus"
             v-model="member.isAdmin"
           />
