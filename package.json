@@ -16,6 +16,7 @@
     "core-js": "^3.6.5",
     "hls.js": "^0.14.17",
     "jsonwebtoken": "^8.5.1",
+    "kurento-utils": "^6.16.0",
     "lodash": "^4.17.20",
     "moment": "^2.29.1",
     "skeleton-screen-css": "^1.0.1",
