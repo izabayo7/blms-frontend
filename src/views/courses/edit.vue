@@ -53,9 +53,14 @@
               ></textarea>
             </v-col>
             <v-col class="col-12 col-md-4">
-              <v-avatar size="245" class="user-profile ml-2 mt-6 d-block">
-                <img v-if="displayPicture" :src="course.coverPicture" alt="avatar" />
+              <v-avatar v-if="course.coverPicture" size="245" :class="course.coverPicture ? 'user-profile ml-2 mt-6 d-block' : 'course-image white--text bg-color-one text-h2'">
+                <img :src="course.coverPicture" alt="avatar" />
               </v-avatar>
+              <v-avatar
+                class="course-image white--text bg-color-one text-h2 d-block vertically--centered"
+                size="245"
+                v-else
+              >{{course.name | computeText}}</v-avatar>
               <v-btn
                 fab
                 small
@@ -102,7 +107,7 @@
                 color="error"
                 class="ml-n2 mt-n2 remove--button"
                 slot="badge"
-                @click="set_confirmation({ template: 'action_confirmation', method: { action: 'courses/delete_chapter', parameters: { id: chapter._id }}, title: 'Delete Chapter', message: 'Are you sure you want to delete this chapter?'})"
+                @click="set_modal({ template: 'action_confirmation', method: { action: 'courses/delete_chapter', parameters: { id: chapter._id }}, title: 'Delete Chapter', message: 'Are you sure you want to delete this chapter?'})"
               >
                 <v-icon color="#fff">mdi-window-close</v-icon>
               </v-btn>
@@ -483,7 +488,7 @@ export default {
     ]),
     ...mapActions("faculties", ["getFacultyCollegeYears"]),
     ...mapActions("quiz", ["getQuizes"]),
-    ...mapActions("modal", ["set_confirmation"]),
+    ...mapActions("modal", ["set_modal"]),
     // pick coverPicture
     pickfile() {
       document.getElementById("picture").click();
@@ -592,7 +597,7 @@ export default {
     addNewChapter() {
       const len = this.course.chapters.length;
       this.initialise_new_chapter().then(() => {
-        this.activeChapter = len - 1;
+        this.activeChapter = len;
       });
     },
     removeQuiz() {

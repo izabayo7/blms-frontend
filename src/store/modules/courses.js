@@ -217,7 +217,6 @@ export default {
         },
         //publish a course
         tooglePublishCourse({ state }, courseId) {
-            console.log(state.selectedCourse || courseId)
             apis.update('course/tooglePublishment', state.selectedCourse || courseId).then(d => {
                 for (const i in state.courses.data) {
                     if (state.courses.data[i]._id == state.selectedCourse) {
@@ -276,7 +275,7 @@ export default {
         },
         //find a course by name
         findCourseByName({ commit, dispatch }, { userCategory, userId, courseName }) {
-            return dispatch('getCourse', {
+            dispatch('getCourse', {
                 userCategory: userCategory,
                 userId: userId,
                 courseName: courseName
@@ -294,6 +293,22 @@ export default {
                         break
                     }
                 }
+            })
+        },
+        // update student progress
+        finish_chapter({ state, commit }, studentId) {
+            let courseIndex
+            for (const i in state.courses.data) {
+                if (state.courses.data[i]._id == state.selectedCourse) {
+                    courseIndex = i
+                    break
+                }
+            }
+            apis.update(`studentProgress`, state.courses.data[courseIndex].progress.id , { student: studentId, course: state.selectedCourse, chapter: state.selectedChapter }).then(d => {
+                commit('set_student_progress', { courseId: state.selectedCourse, progress: d.data })
+
+                state.courses.data[courseIndex].progress = { id: d.data._id, progress: d.data.progress, dateStarted: d.data.createdAt }
+
             })
         },
         // initialise new chapter

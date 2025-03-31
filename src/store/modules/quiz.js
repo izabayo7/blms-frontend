@@ -15,6 +15,9 @@ export default {
                 if (state.quiz.data[i]._id === id) {
                     state.quiz.data[i].target = target
                 }
+                if (state.quiz.data[i].target == target) {
+                    state.quiz.data[i].target = undefined
+                }
             }
         },
     },

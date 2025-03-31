@@ -28,7 +28,7 @@
       <!-- preview button -->
     </div>
     <button
-      @click="progress ? handleCourseClick(name) : startCourse($store.state.user._id)"
+      @click="progress ? handleCourseClick(name) : startCourse($store.state.user.user._id)"
     >{{`${!progress ? 'start course' : progress.progress == 100 ? 'proceed to course' : 'continue course'}`}}</button>
   </div>
 </template>
