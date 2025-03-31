@@ -13,7 +13,7 @@
             :key="i"
             class="col-12 col-md-12"
           >
-            <p class="question-details col-md-12 col-12">
+            <p class="question_details col-md-12 col-12">
               {{ `${i + 1}. ${question.details}` }}
             </p>
             <v-btn
@@ -135,7 +135,13 @@
           >
         </v-col>
         <v-col class="col-12 col-md-5 timer-side">
-          <div class="timer">
+          <div
+            :class="`timer ${
+              this.remaining_time > selected_quiz.duration / 2
+                ? 'greenish'
+                : 'redish'
+            }`"
+          >
             <p>{{ formated_remaining_time }}</p>
           </div>
         </v-col>
@@ -367,7 +373,6 @@ export default {
             this.attempt.answers.push({ choosed_options: [] });
           }
         }
-        this.start_couter();
       });
     }
   },
@@ -388,14 +393,18 @@ export default {
   /* p {
      color: white;
    }*/
-  background-color: rgba(252, 103, 103, 0.27);
+  &.greenish {
+    p {
+      color: #46ae49;
+    }
+    background-color: rgba(103, 252, 103, 0.27);
+  }
+  &.redish {
+    background-color: rgba(252, 103, 103, 0.27);
+  }
 }
 // show colors based on the remaining time
-.timer.green {
-  color: #fc6767;
-  background: #fed6d6;
-}
-.timer.orange {
+.timer .timer.orange {
   color: #fc6767;
   background: #fed6d6;
 }
@@ -424,5 +433,10 @@ export default {
     /* border-color: green; */
     box-shadow: 8px 9px 11px rgb(199 199 199);
   }
+}
+.question_details {
+  font-weight: 700;
+  color: #6a6a6a;
+  font-size: 1.2rem;
 }
 </style>
