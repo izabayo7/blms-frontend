@@ -70,8 +70,8 @@
               </div>
               <div class="col-6">
                 <div class="text-right">
-                  <button class="create">
-                    Create assignment
+                  <button @click="$router.push('/quiz/new')" class="create">
+                    Create new
                   </button>
                 </div>
               </div>
