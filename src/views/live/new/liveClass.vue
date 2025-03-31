@@ -930,9 +930,20 @@ export default {
               display:flex;
               flex-direction: column;
               align-items: center;
+              padding-top: 5rem;
+              padding-bottom: 6.9rem;
 
               img{
-                
+                width:3.9rem;
+                height:3.9rem;
+                border-radius:50%;
+              }
+
+              h2{
+                color:$main;
+              }
+              span{
+                color:$main;
               }
             }
           }
