@@ -1,17 +1,18 @@
 import {emit} from "./event_bus";
 
 const chatMixins = {
-    methods:{
+    methods: {
         //scroll chat to button
-        scrollChatToBottom(){
+        scrollChatToBottom() {
             let el = document.getElementById('my-chat-messaging')
-            el.scrollTop = el.scrollHeight
+            if (el)
+                el.scrollTop = el.scrollHeight
         },
     }
 }
 
 const cropperMixin = {
-    methods:{
+    methods: {
         readURL(input) {
             const self = this;
             input = input.target;
@@ -46,4 +47,4 @@ const cropperMixin = {
     }
 }
 
-export {cropperMixin,chatMixins}
+export {cropperMixin, chatMixins}
