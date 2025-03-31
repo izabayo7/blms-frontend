@@ -8,15 +8,17 @@
             </div>
             <div class="right">
                 <div class="comment">
-                    <h4 class="name">Joshua Kingsley</h4>
-                    <div class="time"><span>10:29 PM</span></div>
-                    <div class="comment">Who can support you without having
+                    <h4 class="comment__name">Joshua Kingsley</h4>
+                    <div class="comment__time"><span>10:29 PM</span></div>
+                    <div class="comment__text">Who can support you without having
                         the idea ?
                     </div>
-                    <div class="reply-icon">
-                        <div class="icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0H24V24H0z"/><path d="M11 20L1 12l10-8v5c5.523 0 10 4.477 10 10 0 .273-.01.543-.032.81C19.46 16.95 16.458 15 13 15h-2v5z"/></svg>
-                        </div><div class="text"><span>reply</span></div>
+                    <div class="comment__reply-icon">
+                        <div class="inner-icon">
+                            <div class="icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0H24V24H0z"/><path d="M11 20L1 12l10-8v5c5.523 0 10 4.477 10 10 0 .273-.01.543-.032.81C19.46 16.95 16.458 15 13 15h-2v5z"/></svg>
+                            </div><div class="text"><span>reply</span></div>
+                        </div>
                     </div>
                     <div class="reply-comment">
                         <reply-comment />
@@ -63,10 +65,45 @@
         }
         .right{
             .comment{
-                .name{
+                &__name{
 
                 }
+                &__time{
+                    font-size: .7rem;
+                    color:lighten($font,50);
+                }
+                &__text{
+                    font-size: .9rem;
+                }
+                &__reply-icon{
+                    font-size: .8rem;
 
+                    .inner-icon{
+                        display: flex;
+                        background-color:$tertiary;
+                        @include fit-content;
+                        padding-right: .5rem;
+                        padding-left: .5rem;
+                        border-radius: 50px;
+                        cursor: pointer;
+
+                        &:hover{
+                            background-color: $secondary;
+                        }
+
+                        .icon{
+                            @include   fit-content;
+                            @include flex-center;
+                            svg{
+                                transform: scale(.75);
+                                fill:$font;
+                            }
+                        }
+                        .text{
+                            @include flex-center;
+                        }
+                    }
+                }
             }
         }
     }
