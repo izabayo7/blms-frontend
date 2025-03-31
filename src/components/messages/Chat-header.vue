@@ -19,7 +19,7 @@
 
       <div class="action-btn-header">
           <div class="action-icons">
-              <div class="icon add-member" v-if="currentDisplayedUser.is_group" @click="$router.push(`/messages/group/${currentDisplayedUser.id}/add-member`)">
+              <div class="icon add-member hidden-sm-and-down" v-if="currentDisplayedUser.is_group" @click="$router.push(`/messages/group/${currentDisplayedUser.id}/add-member`)">
                   <svg
                           id="user-add-line"
                           xmlns="http://www.w3.org/2000/svg"
@@ -41,7 +41,7 @@
                       />
                   </svg>
               </div>
-              <div class="icon video-chat">
+              <div class="icon video-chat hidden-sm-and-down">
                   <svg
                           id="video-chat-line-2"
                           xmlns="http://www.w3.org/2000/svg"
