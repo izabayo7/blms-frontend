@@ -258,6 +258,11 @@ export default {
   }
   ,
   methods: {
+      // getStudentGroups(){
+      //   Apis.get(`user_groups/college/`).then(d => {
+      //
+      //   })
+      // },
     select_dean(name) {
       console.log(name)
     }
