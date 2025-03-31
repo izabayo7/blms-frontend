@@ -5,6 +5,7 @@ import axios from 'axios'
 import jwt from "jsonwebtoken"
 
 import live from '@/router/modules/live.router'
+import course from '@/router/modules/course.router'
 
 Vue.use(VueRouter)
 
@@ -153,36 +154,7 @@ const routes = [
 
 
                     // for courses
-                    {
-                        path: '/courses',
-                        component: () => import('@/views/courses'),
-                    },
-                    {
-                        path: '/courses/preview/:name',
-                        component: () => import('@/views/courses/preview')
-                    },
-                    {
-                        path: '/courses/edit/:name',
-                        name: 'Edit Course',
-                        component: () =>
-                            import('@//views/courses/edit')
-                    },
-                    {
-                        path: '/courses/new',
-                        name: 'Create course',
-                        component: () =>
-                            import('@/views/courses/create')
-                    },
-                    {
-                        path: '/courses/:name',
-                        component: () => import('@/views/courses/details'),
-                        children: [
-                            {
-                                path: '/courses/:name/chapter/:index/:id',
-                                component: () => import('@/views/courses/chapter-details')
-                            }
-                        ]
-                    },
+
 
 
                     // for quiz
@@ -314,7 +286,10 @@ const routes = [
 
 
                     // live course
-                    ...live
+                    ...live,
+
+                    // course
+                    ...course
                 ]
             },
             // administration functionalities
