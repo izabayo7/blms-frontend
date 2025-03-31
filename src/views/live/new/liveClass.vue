@@ -836,7 +836,7 @@ export default {
     ...mapActions("modal", ["set_modal"]),
     downloadAttachment,
     openQuiz() {
-      let route = this.$router.resolve(`/quiz/preview/${this.quiz.name}`);
+      let route = this.$router.resolve(`/assessments/quiz/preview/${this.quiz.name}`);
       this.downloadAttachment(route.href)
     },
     ...mapActions("live_session", ["addParticipant"]),
@@ -1075,14 +1075,7 @@ export default {
       return response.data.data
     },
     toggleMenu(status) {
-      console.log(status)
-      // this.showMenu = status
-      // const self = this;
-      // if (status) {
-      //   setTimeout(() => {
-      //     self.showMenu = false
-      //   }, 4000)
-      // }
+      this.showMenu = status
     },
     shareScreen() {
       console.log('called !!!!!!!')
