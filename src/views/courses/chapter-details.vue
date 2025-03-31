@@ -16,6 +16,7 @@
         </vue-plyr>
       </v-col>
     </v-row>
+
     <v-row>
       <v-col class="col-8">
         <!-- <span v-if="course !== undefined">{{course.name}}</span> -->
@@ -334,7 +335,12 @@ export default {
   beforeRouteUpdate(to, from, next) {
     this.$store.commit("courses/DELETE_TOTAL_COMMENTS_ON_A_CHAPTER"); //delete comments number to make sure that next comments doesn't have previously chapter comments number
     emit("routeUpdate", to.params.id);
-    next();
+
+      try{
+        next();
+      }catch (e) {
+        console.log(e)
+      }
   },
   created() {
     this.immediateFunction();
