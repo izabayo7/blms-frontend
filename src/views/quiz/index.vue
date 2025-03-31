@@ -87,7 +87,20 @@
           >
             <template v-slot:item.actions="{ item }">
               <div class="d-flex">
-                <button @click.stop="
+                <div @click.stop="$router.push(`quiz/edit/${item.name}`)" class="tooltip">
+                  <svg width="39" height="39" viewBox="0 0 39 39" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="19.5" cy="19.5" r="19.5" fill="#DEDEDE"/>
+                    <circle cx="19.5" cy="19.5" r="19.5" stroke="#DEDEDE"/>
+                    <path
+                        d="M12.4453 24.0555V27.1111H15.5009L24.5127 18.0992L21.4572 15.0437L12.4453 24.0555ZM26.8757 15.7363C27.1935 15.4185 27.1935 14.9052 26.8757 14.5874L24.969 12.6807C24.6512 12.3629 24.1379 12.3629 23.8201 12.6807L22.329 14.1718L25.3846 17.2274L26.8757 15.7363Z"
+                        fill="black"/>
+                  </svg>
+
+                  <div class="tooltip-text">
+                    Edit
+                  </div>
+                </div>
+                <div @click.stop="
                   set_modal({
                     template: 'action_confirmation',
                     method: {
@@ -97,23 +110,18 @@
                     title: 'Delete Quiz',
                     message: 'Are you sure you want to delete this quiz?',
                   })
-                ">
-                  <svg
-                      xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
-                    <path fill="none" d="M0 0h24v24H0z"/>
+                " class="tooltip">
+                  <svg width="39" height="39" viewBox="0 0 39 39" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="19.5" cy="19.5" r="19.5" fill="#FC6767"/>
                     <path
-                        d="M7 6V3a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v3h5v2h-2v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V8H2V6h5zm2-2v2h6V4H9z"
-                        fill="rgba(231,76,60,1)"/>
+                        d="M13.8148 26.037C13.8148 26.9333 14.5481 27.6667 15.4444 27.6667H21.963C22.8593 27.6667 23.5926 26.9333 23.5926 26.037V16.2593H13.8148V26.037ZM15.4444 17.8889H21.963V26.037H15.4444V17.8889ZM21.5556 13.8148L20.7407 13H16.6667L15.8519 13.8148H13V15.4444H24.4074V13.8148H21.5556Z"
+                        fill="white"/>
                   </svg>
-                </button>
-                <button @click.stop="$router.push(`quiz/edit/${item.name}`)">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
-                    <path fill="none" d="M0 0h24v24H0z"/>
-                    <path
-                        d="M9.243 19H21v2H3v-4.243l9.9-9.9 4.242 4.244L9.242 19zm5.07-13.556l2.122-2.122a1 1 0 0 1 1.414 0l2.829 2.829a1 1 0 0 1 0 1.414l-2.122 2.121-4.242-4.242z"
-                        fill="rgba(47,204,113,1)"/>
-                  </svg>
-                </button>
+
+                  <div class="tooltip-text">
+                    Delete
+                  </div>
+                </div>
               </div>
             </template>
             <template v-slot:no-data>
@@ -222,7 +230,7 @@ import {mapActions, mapGetters} from "vuex";
 export default {
   data: () => ({
     search: "",
-    currentView: 'assignments',
+    currentView: 'quiz',
     headers: [
       {
         text: "Quiz name",
@@ -296,7 +304,8 @@ export default {
   .tooltip svg {
     margin-right: 17px;
   }
-  .tooltip-text{
+
+  .tooltip-text {
     visibility: hidden;
     width: fit-content;
     background: #1c1e23;
@@ -317,14 +326,17 @@ export default {
     line-height: 15px;
     color: #FFFFFF;
   }
+
   .tooltip-text::after {
     border: none;
   }
+
   .tooltip:hover .tooltip-text {
     visibility: visible;
     opacity: 1;
   }
-  .assignment_title{
+
+  .assignment_title {
     font-family: Inter;
     font-style: normal;
     font-weight: 500;
@@ -338,8 +350,9 @@ export default {
 
     color: #2D3E70;
   }
-  .target{
-    .title{
+
+  .target {
+    .title {
       font-family: Inter;
       font-style: normal;
       font-weight: bold;
@@ -353,7 +366,8 @@ export default {
 
       color: #2D3E70;
     }
-    .subtitle{
+
+    .subtitle {
       font-family: Inter;
       font-style: normal;
       font-weight: normal;
@@ -369,6 +383,7 @@ export default {
 
     }
   }
+
   table {
     tbody {
       tr {
@@ -442,6 +457,7 @@ export default {
     }
   }
 }
+
 .round {
   .v-card > *:first-child:not(.v-btn):not(.v-chip),
   .v-card > .v-card__progress + *:not(.v-btn):not(.v-chip) {
