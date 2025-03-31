@@ -6,7 +6,7 @@ const getDefaultState = () => ({
         loaded: false
     },
     active_participants: [],
-    end_class: false
+    live_session_confirmation: false
 })
 
 export default {
@@ -32,7 +32,7 @@ export default {
             })
         },
         change_confirmation({state}, {value}) {
-            state.end_class = value
+            state.live_session_confirmation = value
         },
         answerAttendance({rootGetters}, {user,session_id, attendance}) {
             rootGetters['chat/socket'].emit("res/live/checkAttendance",{
@@ -61,8 +61,8 @@ export default {
         participants: state => {
             return state.active_participants;
         },
-        end_class: state => {
-            return state.end_class;
+        live_session_confirmation: state => {
+            return state.live_session_confirmation;
         },
     }
 

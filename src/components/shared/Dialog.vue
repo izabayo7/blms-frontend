@@ -79,6 +79,49 @@
       </div>
     </div>
     <div
+        v-else-if="modal_template == 'presentation_request'"
+        class="dialog-body dialog_t_1"
+    >
+      <div class="close-dialog">
+        <svg
+            @click="toogle_visibility"
+            xmlns="http://www.w3.org/2000/svg"
+            width="19.805"
+            height="19.8"
+            viewBox="0 0 19.805 19.8"
+        >
+          <path
+              id="Icon_ionic-ios-close"
+              data-name="Icon ionic-ios-close"
+              d="M23.534,21.189l7.074-7.074a1.657,1.657,0,0,0-2.344-2.344L21.19,18.845l-7.074-7.074a1.657,1.657,0,1,0-2.344,2.344l7.074,7.074-7.074,7.074a1.657,1.657,0,0,0,2.344,2.344l7.074-7.074,7.074,7.074a1.657,1.657,0,1,0,2.344-2.344Z"
+              transform="translate(-11.285 -11.289)"
+          />
+        </svg>
+      </div>
+      <!-- show confirmations according to the set action -->
+      <div class="content confirmation-dialog spaced">
+        <span class="sub-title">The instructor would like you <br>
+to start presenting</span>
+        <div class="actions">
+          <v-btn
+              @click="performAction"
+              class="mx-2 white--text action-button"
+          >Accept
+          </v-btn
+          >
+          <v-btn
+              @click="
+            performAction(false)
+            "
+              outlined
+              class="mx-2 deny"
+          >Deny
+          </v-btn
+          >
+        </div>
+      </div>
+    </div>
+    <div
         v-else-if="modal_template == 'payment_err'"
         class="dialog-body dialog_t_1 payment_err"
     >
@@ -398,7 +441,7 @@ export default {
         this.performAction()
     },
     ...mapActions("modal", ['reset_modal']),
-    performAction() {
+    performAction(confirmed) {
       if (this.confirmation_method) {
         if (this.modal_template === "live_related") {
           this.confirmation_method.parameters.attendance = this.attendance > 0 ? this.attendance : 0
@@ -406,7 +449,7 @@ export default {
         this.$store
             .dispatch(
                 this.confirmation_method.action,
-                this.confirmation_method.parameters
+                confirmed == false ? {value: 'deny_presenting'} : this.confirmation_method.parameters
             )
             .then(() => {
               this.update_confirmation(true)
@@ -533,12 +576,15 @@ export default {
 
         .w-full {
           width: 100%;
-          button{
+
+          button {
             cursor: pointer;
-            svg{
+
+            svg {
               fill: #193074;
             }
-            &.disabled svg{
+
+            &.disabled svg {
               fill: black;
             }
           }
@@ -698,6 +744,23 @@ export default {
 
     h4.title {
       margin-bottom: 45px;
+    }
+
+    &.spaced {
+      padding: 30px 30px 0px;
+
+      .deny {
+        font-family: Montserrat;
+        font-style: normal;
+        font-weight: 500;
+        font-size: 18px;
+        line-height: 22px;
+        text-align: center;
+        background: #F1F1F1;
+        border-radius: 8px;
+        border: none;
+        color: #000000;
+      }
     }
   }
 
@@ -927,7 +990,7 @@ export default {
       }
     }
   }
-  .dialog_t_1.delete_msg{
+  .dialog_t_1.delete_msg {
     width: 100%;
   }
 }

@@ -269,6 +269,18 @@
 .more-details{
   position: absolute;
   padding: 15.08px 18px;
+  .presenter{
+    .text{
+      font-family: Poppins;
+      font-style: normal;
+      font-weight: 500;
+      font-size: 17.7338px;
+      line-height: 27px;
+      text-align: center;
+      margin-right: 20px;
+      color: #FFFFFF;
+    }
+  }
 }
     .video {
       width: 100%;
@@ -971,7 +983,7 @@
     &--wrapper {
       padding: .5rem;
       background-color: $main;
-      width: 303px;
+      width: 260px;
       height: 399px;
       border-radius: 4px;
       margin-top: 1rem;
@@ -1016,7 +1028,7 @@
   &--action {
     border-radius: 3px;
     margin: 1rem 0;
-    width: 291px;
+    width: 255px;
 
     button {
       display: flex;
