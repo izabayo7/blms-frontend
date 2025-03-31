@@ -66,21 +66,25 @@
       <div v-if="isFileUpload" class="d-flex file-feedback">
         <div>
           <div>
-            <button class="pick-file file-picked" @click="pickfile(i)">
+            <button class="pick-file file-picked" @click="pickfile(index)">
               Choose file
-            </button>\
+            </button>
             <input
                 type="file"
-                :id="`file${i}`"
+                :id="`file${index}`"
                 hidden
-                @change="handleFileUpload(i)"
+                @change="handleFileUpload(index)"
             />
           </div>
-          <div class="hint">Upload a file (optional )</div>
+          <div v-if="!feedback_name" class="hint">Upload a file (optional )</div>
+          <button v-else class="hint" @click="downloadAttachment(`${backend_url}/api/quiz_submission/${submission_id}/attachment/${feedback_name}/download?token=${$session.get('jwt')}`)">{{ feedback_name }}</button>
         </div>
-        <div>
-          <div class="file-name">myBeautifulydoneEssay.pdf</div>
-          <div class="status text-right">
+        <div v-if="file">
+          <div class="file-name">{{ file.name }}</div>
+          <div v-if="upload_status == 1" class="spining">
+            uploading
+          </div>
+          <div v-else-if="upload_status == 2" class="status text-right">
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path
                   d="M5.24909 9.45091L2.79909 7.00091L1.98242 7.81758L5.24909 11.0842L12.2491 4.08424L11.4324 3.26758L5.24909 9.45091Z"
@@ -92,7 +96,7 @@
       </div>
       <v-btn
           v-if="$store.state.user.user.category.name === 'INSTRUCTOR' && showSave"
-          @click="content != '' ? editFeedback() : addFeedback()"
+          @click="saveChanges"
           class="primary-bg px-6 py-4 mt-4 ml-auto"
           rounded
       >Save
@@ -111,12 +115,16 @@
 <script>
 import Apis from "@/services/apis";
 import {mapMutations} from "vuex";
+import {downloadAttachment} from "@/services/global_functions"
 
 export default {
   props: {
     content: {
       type: String,
       required: true,
+    },
+    feedback_name:{
+      type: String
     },
     answerId: {
       type: String,
@@ -126,6 +134,13 @@ export default {
       type: String,
       required: true,
     },
+    index: {
+      type: Number,
+      default: 0
+    },
+    submission_id:{
+      type: String
+    },
     isFileUpload: {
       type: Boolean
     }
@@ -134,9 +149,14 @@ export default {
     element: undefined,
     showSave: false,
     showDelete: false,
+    upload_status: 0,
     message: "",
+    file: null
   }),
   computed: {
+    backend_url() {
+      return process.env.VUE_APP_api_service_url
+    },
     refName() {
       return "feedback_" + Math.random() * 1000;
     },
@@ -166,6 +186,39 @@ export default {
     },
   },
   methods: {
+    downloadAttachment,
+    upoadFeedback(){
+      const formData = new FormData()
+      formData.append("file", this.file)
+      this.upload_status = 1;
+      Apis.create(`quiz_submission/feedback/${this.submission_id}/${this.answerId}`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        },
+      }).then(() => {
+        this.upload_status = 2
+      })
+    },
+    saveChanges() {
+      if (this.file) {
+        this.upoadFeedback()
+      }
+      if (this.content != '')
+        this.editFeedback()
+      else
+        this.addFeedback()
+    },
+    pickfile(index) {
+      document.getElementById(`file${index}`).click();
+    },
+    handleFileUpload(index) {
+      this.file = document.getElementById(
+          `file${index}`
+      ).files[0];
+      this.showSave = true;
+      // send feedback_src
+
+    },
     ...mapMutations("quiz_submission", [
       "add_answer_feedback",
       "remove_answer_feedback",
@@ -306,9 +359,11 @@ export default {
   .remove_feedback {
     cursor: pointer;
   }
-  .file-feedback{
+
+  .file-feedback {
     margin-top: 14px;
-    .status{
+
+    .status {
       font-family: Inter;
       font-style: normal;
       font-weight: normal;
@@ -319,7 +374,8 @@ export default {
 
       color: #289448;
     }
-    .file-name{
+
+    .file-name {
       font-family: Inter;
       font-style: normal;
       font-weight: bold;
@@ -334,14 +390,15 @@ export default {
 
     }
   }
-  .pick-file{
+
+  .pick-file {
     font-family: Inter;
     font-style: normal;
     font-weight: bold;
     font-size: 10.6667px;
     line-height: 35px;
     /* or 328% */
-margin-bottom: 7px;
+    margin-bottom: 7px;
     display: flex;
     align-items: center;
     justify-content: center;
