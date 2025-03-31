@@ -21,6 +21,16 @@ const routes = [
         path: '/login',
         name: 'Login',
         component: () =>
+            import('@/views/pages/login'),
+        meta: {
+            allowAnonymous: true
+        }
+    },
+        // the login page
+    {
+        path: '/college_login',
+        name: 'Login',
+        component: () =>
             import('@/views/pages/login_new'),
         meta: {
             allowAnonymous: true
@@ -97,12 +107,12 @@ const routes = [
                     //for users
                     {
                         path: '/users',
-                        name:"users",
+                        name: "users",
                         component: () => import('@/views/users/index.vue'),
                     },
                     {
                         path: '/users/students',
-                        name:"users",
+                        name: "users",
                         component: () => import('@/views/users/students.vue'),
                     },
                     // for courses
