@@ -42,7 +42,7 @@
                       append-icon="mdi-magnify"
                       label="Search"
                       single-line
-                      hide-details  
+                      hide-details
                     />
                   </v-col>
                 </v-row>
@@ -128,7 +128,6 @@ export default {
     formated_quiz() {
       let formated_quiz = [];
       for (const quiz of this.all_quiz) {
-        console.log(quiz);
         formated_quiz.push({
           _id: quiz._id,
           name: quiz.name,
@@ -139,7 +138,7 @@ export default {
           date: quiz.createdAt.split("T")[0].split("-").reverse().join("/"),
         });
       }
-      return formated_quiz.reverse();
+      return formated_quiz;
     },
     userCategory() {
       return this.$store.state.user.user.category.name;
