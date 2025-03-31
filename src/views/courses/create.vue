@@ -113,7 +113,7 @@ export default {
     course: {
       name: "",
       description: "",
-      maximum_marks: 0,
+      maximum_marks: 100,
     },
     error: "",
     coverPicture: undefined,
