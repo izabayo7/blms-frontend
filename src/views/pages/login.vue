@@ -264,13 +264,13 @@ export default {
 
     .input {
       &-container {
-        max-width: 299px;
+        max-width: 350px;
 
         height: 36px;
         margin: 24px auto;
         border: 1.34978px solid #bababc;
         box-sizing: border-box;
-        border-radius: 10px;
+        border-radius: 5px;
         display: flex;
 
         &.un_bordered {
@@ -283,7 +283,7 @@ export default {
             font-family: Inter;
             font-style: normal;
             font-weight: 500;
-            font-size: 15px;
+            font-size: 16px;
             line-height: 17px;
             text-align: center;
 
@@ -295,11 +295,11 @@ export default {
           font-family: Inter;
           font-style: normal;
           font-weight: normal;
-          font-size: 11.3404px;
+          font-size: 13px;
           line-height: 21px;
           text-align: left;
           padding-left: 10px;
-          color: #ababab;
+          color: black;
 
           &.wide {
             width: 70%;
