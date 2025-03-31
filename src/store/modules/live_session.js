@@ -23,6 +23,9 @@ export default {
         },
         createLiveSession({state}, {session}) {
             return apis.create('live_session', session).then(d => {
+                if(d.data.status != 200 && d.data.status != 201){
+                    throw d.data
+                }
                 d.data = d.data.data
                 state.live_sessions.data.push(d.data)
             })

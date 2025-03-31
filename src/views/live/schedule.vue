@@ -138,7 +138,7 @@
         </div>
         <div class="mx-auto">
           <button class="action" @click="showModal = false">Cancel</button>
-          <button class="action primary" @click="saveSession()">Approve</button>
+          <button class="action primary" @click="saveSession();showModal=false;">Approve</button>
         </div>
       </template>
       <template v-else v-slot:content>
@@ -289,7 +289,13 @@ export default {
         setTimeout(() => {
           this.$router.push('/courses')
         }, 3000);
-      });
+      }).catch((e) => {
+        this.$store.dispatch("app_notification/SET_NOTIFICATION", {
+          message: e.message,
+          status: "danger",
+          uptime: 5000,
+        })
+      })
     },
   },
   created() {

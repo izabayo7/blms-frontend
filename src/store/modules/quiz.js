@@ -92,10 +92,10 @@ export default {
         //update a quiz
         update_quiz({ state, dispatch }, { quiz, pictures }) {
             return apis.update('quiz', state.selected_quiz, quiz).then(d => {
-                d.data = d.data.data
                 if(d.data.status != 200 && d.data.status != 201){
                     throw d.data
                 }
+                d.data = d.data.data
                 let quizIndex
                 for (const i in state.quiz.data) {
                     if (state.quiz.data[i]._id === state.selected_quiz) {
