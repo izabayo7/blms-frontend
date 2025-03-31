@@ -8,7 +8,7 @@
     border-radius: 3.39104px;
     max-width: 347.58px;
     width: 100%;
-    height: 94.95px;
+    min-height: 94.95px;
     display: flex;
     align-items: center;
   }
@@ -230,7 +230,7 @@ div.remove-container a {
 
                 </div>
               </v-badge>
-              <v-badge v-if="template === 'chat-files'" overlap color="transparent">
+              <v-badge v-else-if="template === 'chat-files'" overlap color="transparent">
                 <v-btn
                     fab
                     color="error"
@@ -328,7 +328,7 @@ div.remove-container a {
           here!</span
         >
         </v-col>
-        <v-col v-if=" template === undefined" class="col-2">
+        <v-col v-if=" template === undefined || (template === 'quiz-files' && files.length)" class="col-2">
           <v-btn class="mt-n2" @click="clickButton()" large icon>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
               <path fill="none" d="M0 0h24v24H0z"/>
