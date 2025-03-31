@@ -268,7 +268,7 @@ export default {
     findRecordedClass() {
       const sessions = this.course.chapters[this.activeIndex].live_sessions.filter(e => e.status == 'FINISHED' && e.record_session)
       if (sessions.length)
-        this.recorded_video = `http://198.211.107.132:8081/video/stream/webm/${sessions[0].date.split('T')[0]}-${sessions[0]._id}`
+        this.recorded_video = `https://recordings.kurious.rw/video/stream/webm/${sessions[0].date.split('T')[0]}-${sessions[0]._id}`
       else this.recorded_video = ""
     },
     findIcon(name) {
