@@ -1,8 +1,8 @@
 import Api from './server'
 export default {
     // users login
-    login(userType, body) {
-        return Api().post(`/${userType}/login`, body)
+    login(body) {
+        return Api().post(`/user/login`, body)
     },
     // get requests
     get(url) {

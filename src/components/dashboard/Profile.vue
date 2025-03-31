@@ -44,6 +44,7 @@ export default {
 
       // redirect to login
       this.$router.push("/login");
+      console.log('ark koko')
     },
   },
 };

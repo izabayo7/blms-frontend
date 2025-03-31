@@ -220,7 +220,6 @@ export default {
     getters: {
         // connect to socket from sever side
         socket() {
-            console.log(io)
             // io.socket.removeAllListeners()
             return io(process.env.VUE_APP_api_service_url, {
                 query: {
