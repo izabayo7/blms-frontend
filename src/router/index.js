@@ -27,6 +27,14 @@ const routes = [
         }
     },
     {
+        path: '/test',
+        component: () =>
+            import('@/views/live/popup'),
+        meta: {
+            allowAnonymous: true
+        }
+    },
+    {
         path: '/reset_password',
         component: () =>
             import('@/views/pages/reset_password'),

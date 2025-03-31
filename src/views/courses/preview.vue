@@ -6,8 +6,8 @@
       <back class="ma-6 mb-1 ml-16" to="/courses"/>
       <v-col v-if="!loaded" class="col-12">
         <div class="ssc elevation-0 ssc-card student-card-skeleton ml mt-10">
-          <div class="ssc-wrapper flex justify-between ml">
-            <div class="w-60 mb-2 ml">
+          <div class="ssc-wrapper d-md-flex justify-between ml">
+            <div :class="`w-${$vuetify.breakpoint.mdAndUp ? 60 : 100} w-100 mb-2 ml`">
               <div class="ssc-head-line mb w-50"></div>
               <div class="ssc-line w-60 mb-2 mt-8"></div>
               <div class="ssc-line w-60 mb-2"></div>
@@ -42,7 +42,7 @@
                 </div>
               </div>
             </div>
-            <div class="w-40">
+            <div :class="`w-${$vuetify.breakpoint.mdAndUp ? 40 : 80}`">
               <div class="ssc ssc-card elevation-0">
                 <div class="ssc-wrapper pa-0">
                   <div class="ssc-square w-100" style="height: 20rem"></div>
@@ -70,7 +70,7 @@
           </div>
         </div>
       </v-col>
-      <v-col v-else class="col-12 student">
+      <v-col v-else class="col-12 student d-md-flex">
         <!-- <button class="back">back</button> -->
         <main class="description">
           <h1 class="pb-5">{{ course.name }}</h1>
@@ -583,7 +583,7 @@ button.back {
   margin: 0;
   padding: 2rem;
   padding-top: 0rem;
-  display: flex;
+  //display: flex;
   flex-direction: row;
   justify-content: space-between;
 
@@ -935,6 +935,14 @@ button.back {
         }
       }
     }
+  }
+  .student main {
+    margin-top: 22px;
+    margin-bottom: 32px;
+    &.preview {
+    }
+
+    padding-right: 0 !important;
   }
 
 }

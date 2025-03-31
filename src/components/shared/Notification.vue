@@ -7,11 +7,11 @@
             fill="white"/>
       </svg>
     </div>
-    <div class="message">{{ message }}</div>
+    <div v-if="show" class="message">{{ message }}</div>
   </div>
 </template>
 <script>
-import {mapGetters, mapMutations} from "vuex";
+import {mapGetters} from "vuex";
 
 export default {
   name: "Notification",
@@ -20,8 +20,13 @@ export default {
     visible() {
       return this.show;
     },
-    ...mapMutations({closeNotification: "notification/RESET_NOTIFICATION"}),
   },
+  watch:{
+    show(){
+      let message = this.$store.getters['app_notification/message']
+      console.log(message)
+    }
+  }
   // enum: ["success", "info", "danger", "warn"],
 };
 </script>

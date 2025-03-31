@@ -105,7 +105,7 @@ img {
     font-size: 1.2rem;
   }
   &-container {
-    width: 25rem;
+    width: 100%;
     max-width: 25rem;
     background-color: #f9f9f9;
     position: relative;
