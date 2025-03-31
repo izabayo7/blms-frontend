@@ -178,7 +178,15 @@ const routes = [
                         meta: {
                             allowAnonymous: false
                         }
-                    },]
+                    },
+                    // live related
+                    {
+                        path: '/live',
+                        name: 'Live',
+                        component: () =>
+                            import('@/views/live')
+                    },
+                ]
             },
             // administration functionalities
             {
