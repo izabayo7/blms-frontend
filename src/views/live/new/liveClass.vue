@@ -351,6 +351,7 @@ export default {
         room: this.participationInfo.room,
         offeringCourse: this.participationInfo.isOfferingCourse
       }
+
       this.sendMessage(message);
     },
     sendMessage(message) {
