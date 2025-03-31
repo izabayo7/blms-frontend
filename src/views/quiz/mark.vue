@@ -251,14 +251,14 @@
         </v-row>
       </v-col>
       <v-col class="col-12 col-md-4 fixed right-0 mt-16">
-        <v-row class="font-weight-black color-primary student_name mb-6">
+        <v-row class="font-weight-black color-primary student_name mb-8">
           {{ selected_quiz_submission.user.sur_name }}
           {{ selected_quiz_submission.user.other_names }}
         </v-row>
         <v-row class="mb-6">
           <div class="mr-3">Total marks:</div>
           <div>
-            <div class="cool-box marks grey-color mt-n1">
+            <div class="cool-box marks total grey-color mt-n1">
               <input
                 class="marks-input"
                 v-model="computedTotalMarks"
@@ -522,6 +522,9 @@ export default {
   &.marks {
     // border: 2px solid #cbcbcb;
     box-shadow: 0px 3px 6px rgb(0, 0, 0, 0.16);
+  }
+  &.total {
+    border-radius: 11px;
   }
   p {
     margin: 0;
