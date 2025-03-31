@@ -670,12 +670,12 @@ export default {
       if (exam.type === 'Closed-book examination')
         this.setUp()
 
-      this.exam = exam
       let date = new Date(exam.starting_time)
       const diff = (new Date() - date);
       if (diff > 0) {
         exam.duration -= (diff / 1000)
       }
+      this.exam = exam
 
       this.remaining_time = exam.duration;
       this.attempt = {
