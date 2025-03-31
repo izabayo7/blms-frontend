@@ -133,7 +133,7 @@ const routes = [
                     {
                         path: '/quiz/timeout',
                         component: () =>
-                            import('@/views/quiz/quiz_timeout')
+                            import('@/views/quiz/pre_submission')
                     },
                     {
                         path: '/quiz/attempt/:name',

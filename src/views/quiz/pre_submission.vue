@@ -1,5 +1,9 @@
 <template>
-  <v-container v-if="course" fluid class="quiz_timeout_page white px-lg-16">
+  <v-container
+    v-if="course || this.isInstructor"
+    fluid
+    class="quiz_timeout_page white px-lg-16"
+  >
     <back class="mt-0 mb-6 ml-lg-n6" />
     <v-row>
       <div class="title ml-2 mt-5">Automatic Submission ( Timed)</div>
@@ -37,6 +41,7 @@
         </div>
         <div class="actions mt-8">
           <button
+            v-if="course"
             class="start_quiz"
             @click="$router.push(`/courses/${course.name}`)"
           >
@@ -110,9 +115,12 @@ export default {
   },
   computed: {
     ...mapGetters("courses", ["course"]),
+    isInstructor() {
+      return this.$store.state.user.user.category.name == "INSTRUCTOR";
+    },
   },
   beforeMount() {
-    if (!this.course) this.$router.push("/");
+    if (!this.course && !this.isInstructor) this.$router.push("/");
   },
 };
 </script>
