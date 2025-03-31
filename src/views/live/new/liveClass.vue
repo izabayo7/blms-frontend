@@ -852,16 +852,21 @@ export default {
   &--actions{}
 
   &--action{
+    border-radius: 3px;
+    margin:1rem 0;
+    max-width: 18rem;
     button{
       display: flex;
+      align-items: center;
       padding-left: 1rem;
       span{
-        display: block;
+        display: flex;
+        align-items: center;
         font-size: .9rem;
         padding:.5rem 1rem;
         svg{
-          width:1rem;
-          height: 1rem;
+          width:1.3rem;
+          height: 1.3rem;
         }
       }
     }
@@ -880,6 +885,21 @@ export default {
 
     &.attendance{
       background-color: $warn;
+    }
+    &.release-quiz{
+      background-color: $success;
+    }
+    &.end-class{
+      background-color: $danger;
+
+      button{
+        span{
+          color:$main;
+          svg{
+            fill:$main;
+          }
+        }
+      }
     }
   }
 
