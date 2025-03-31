@@ -100,7 +100,7 @@
                 class="forgot-password mx-auto"
             >
               <router-link
-                  to="/forgot_password"
+                  :to="`/forgot_password${$route.query.institution ? '?institution='+$route.query.institution : ''}`"
               >
                 Forgot password
               </router-link>

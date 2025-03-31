@@ -5,7 +5,7 @@
         <div class="reset-password-box mx-auto text-center">
           <div class="heading">
             <img :src="image" alt="" class="logo mx-auto" />
-            <div class="college-name">{{ institution }}.</div>
+            <div class="college-name">{{ institution }}</div>
             <div class="welcome">Reset password</div>
             <form @submit.prevent="createPasswordReset">
               <div class="input-container">
