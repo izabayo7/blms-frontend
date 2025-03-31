@@ -33,6 +33,7 @@
             class="bold-border"
             name="role"
             :options="courseNames"
+            id="course"
             :label="selected_course == ''? 'Select course' : selected_course"
             @input="
             (e) => {
@@ -45,6 +46,7 @@
         <select-ui
             label="Select chapter"
             class="bold-border"
+            id="chapter"
             name="role"
             :options="chapterNames"
             @input="
@@ -76,6 +78,7 @@
           <v-date-picker
               class="date-picker"
               v-show="menu"
+              :disabled="startNow"
               v-model="date"
               no-title
               scrollable
@@ -85,14 +88,14 @@
           </v-date-picker>
         </div>
         <div class="start-now d-flex mb-4 my-margin ml-0 ml-md-7">
-          <input type="checkbox" :v-model="startNow"/>
+          <input type="checkbox" @change="startNow =!startNow"/>
           Start Live class now
         </div>
       </div>
       <div class="input-container my-margin">
         <div class="label mb-2">Select time</div>
         <div class="d-flex">
-          <input class="text-filed pa-4" v-model="time" type="time" />
+          <input :disabled="startNow" class="text-filed pa-4" v-model="time" type="time" />
         </div>
       </div>
       <div class="input-container my-margin">
@@ -100,6 +103,7 @@
         <select-ui
             class="bold-border"
             name="role"
+            id="quiz"
             :options="quizNames"
             @input="
             (e) => {
@@ -155,6 +159,7 @@
 import SelectUi from "@/components/reusable/ui/select-ui";
 import {mapActions, mapGetters} from "vuex";
 import Popup from "@/components/Live/Popup";
+import {getDateAndTime} from "../../services/global_functions";
 
 export default {
   components: {SelectUi, Popup},
@@ -177,6 +182,11 @@ export default {
   watch: {
     selected_course() {
       this.selected_chapter = ""
+    },
+    startNow(){
+      const obj = getDateAndTime();
+      this.date = obj.date
+      this.time= obj.time
     }
   },
   computed: {

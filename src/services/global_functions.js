@@ -57,6 +57,18 @@ function toLocal(date_time) {
 }
 
 /**
+ * returns local date and time
+ * @returns {Object}
+ */
+function getDateAndTime() {
+    let now = moment();
+    return {
+        date: now.format("YYYY-MM-DD"),
+        time: now.format("HH:mm")
+    }
+}
+
+/**
  * know if string is empty
  * @param string
  * @returns {boolean}
@@ -130,5 +142,6 @@ export {
     calculateNearestLiveSession,
     convertUTCDateToLocalDate,
     toLocal,
-    playSound
+    playSound,
+    getDateAndTime
 }
