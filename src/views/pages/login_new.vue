@@ -127,18 +127,18 @@ export default {
       this.valid = this.message == "Please login to continue";
     },
     async login() {
-      console.log("ahooooooooo");
-      return;
-      // eslint-disable-next-line no-unreachable
       try {
         const credentials = {
-          email_user_name_or_phone: this.email_user_name_or_phone.toLowerCase(),
+          email_user_name_or_phone: this.email_user_name_or_phone,
           password: this.password,
         };
         // call the login api
         let response = await Apis.login(credentials);
-
-        if (response.data.status == 200) {
+        console.log(response);
+        if (response.data.status != 200) {
+          this.message = response.data.message;
+          this.valid = false;
+        } else {
           // set the token in axios headers
           axios.defaults.headers.common.Authorization = `Bearer ${response.data.data}`;
           // start the session
@@ -163,31 +163,10 @@ export default {
               this.$router.push("/administration");
             }
           }
-        } else {
-          this.$store.dispatch("modal/set_modal", {
-            template: "display_information",
-            message: response.data.message,
-            closable: true,
-          });
         }
       } catch (error) {
-        // handle errors
-        // the server responded
-        if (error.response) {
-          this.$store.dispatch("modal/set_modal", {
-            template: "display_information",
-            message: error.response.data,
-            closable: true,
-          });
-        }
-        // the server didn't respond
-        else if (error.request) {
-          this.$store.dispatch("modal/set_modal", {
-            template: "display_information",
-            message: "Service Unavailable",
-            closable: true,
-          });
-        }
+        this.message = "Service Unavailable";
+        this.valid = false;
       }
     },
   },
