@@ -1,35 +1,35 @@
 <template>
   <v-container id="view-quiz" class="round smooth--background" fluid>
     <v-row v-if="userCategory === 'INSTRUCTOR'">
-      <v-col class="col-12">
-        <v-card
-            class="mx-auto elevation-0 pa-12 text-center smooth--card"
-            max-width="344"
-        >
-          <v-avatar class="svg_container" size="100">
-            <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="55"
-                height="55"
-                viewBox="0 0 57.711 57.711"
-            >
-              <path
-                  id="Icon_metro-question"
-                  data-name="Icon metro-question"
-                  d="M27.382,40.917H34.47v7.089H27.382ZM41.559,16.106A3.544,3.544,0,0,1,45.1,19.65V30.283L34.47,37.372H27.382V33.828l10.633-7.089V23.194H20.293V16.106H41.559ZM30.926,7.245a23.039,23.039,0,1,0,16.291,6.748A22.888,22.888,0,0,0,30.926,7.245Zm0-5.317A28.355,28.355,0,1,1,2.571,30.283,28.355,28.355,0,0,1,30.926,1.928Z"
-                  transform="translate(-2.071 -1.428)"
-                  fill="#fff"
-              />
-            </svg>
-          </v-avatar>
-          <v-card-subtitle class="pa-1 text-h6">Quizes</v-card-subtitle>
+<!--      <v-col class="col-12">-->
+<!--        <v-card-->
+<!--            class="mx-auto elevation-0 pa-12 text-center smooth&#45;&#45;card"-->
+<!--            max-width="344"-->
+<!--        >-->
+<!--          <v-avatar class="svg_container" size="100">-->
+<!--            <svg-->
+<!--                xmlns="http://www.w3.org/2000/svg"-->
+<!--                width="55"-->
+<!--                height="55"-->
+<!--                viewBox="0 0 57.711 57.711"-->
+<!--            >-->
+<!--              <path-->
+<!--                  id="Icon_metro-question"-->
+<!--                  data-name="Icon metro-question"-->
+<!--                  d="M27.382,40.917H34.47v7.089H27.382ZM41.559,16.106A3.544,3.544,0,0,1,45.1,19.65V30.283L34.47,37.372H27.382V33.828l10.633-7.089V23.194H20.293V16.106H41.559ZM30.926,7.245a23.039,23.039,0,1,0,16.291,6.748A22.888,22.888,0,0,0,30.926,7.245Zm0-5.317A28.355,28.355,0,1,1,2.571,30.283,28.355,28.355,0,0,1,30.926,1.928Z"-->
+<!--                  transform="translate(-2.071 -1.428)"-->
+<!--                  fill="#fff"-->
+<!--              />-->
+<!--            </svg>-->
+<!--          </v-avatar>-->
+<!--          <v-card-subtitle class="pa-1 text-h6">Quizes</v-card-subtitle>-->
 
-          <v-card-subtitle class="pa-1 text-h6">{{
-              formated_quiz.length
-            }}
-          </v-card-subtitle>
-        </v-card>
-      </v-col>
+<!--          <v-card-subtitle class="pa-1 text-h6">{{-->
+<!--              formated_quiz.length-->
+<!--            }}-->
+<!--          </v-card-subtitle>-->
+<!--        </v-card>-->
+<!--      </v-col>-->
       <v-col class="col-12 mt-4">
         <v-card class="users-table mx-auto pa-4">
           <v-card-title>

@@ -18,16 +18,52 @@
 
   }
 
+  .my-margin, #quiz-title, .quiz-instructions {
+    max-width: 531px;
+    width: 100%;
+  }
+
+  .my-margin {
+    margin-bottom: 20px;
+  }
+
   .input-group {
     label {
       font-family: Inter;
       font-style: normal;
       font-weight: 500;
-      font-size: 20px;
+      font-size: 17px;
       line-height: 15px;
       display: block;
-      color: #000000;
       margin-bottom: 11px;
+      color: #717171;
+    }
+
+    &.assesment_type {
+      button {
+        width: 124px;
+        height: 36px;
+        background: #DEDEDE;
+        border-radius: 10px;
+        margin-bottom: 17px;
+        margin-right: 10px;
+
+        font-family: Inter;
+        font-style: normal;
+        font-weight: 500;
+        font-size: 15px;
+        /* identical to box height, or 77% */
+
+        text-align: center;
+
+        color: #717171;
+
+
+        &.active {
+          background: #193074;
+          color: white;
+        }
+      }
     }
 
     input, .quiz-instructions, .duration-input {
@@ -59,11 +95,6 @@
       height: 35px;
     }
 
-    #quiz-title, .quiz-instructions {
-      max-width: 531px;
-      width: 100%;
-    }
-
     .quiz-instructions {
       min-height: 134px;
       height: fit-content;
@@ -79,6 +110,32 @@
       }
     }
   }
+
+  .pick-file {
+    width: 77px;
+    height: 24px;
+
+    background: #FFFFFF !important;
+    border: 1px solid #BABABC;
+    box-sizing: border-box;
+    box-shadow: 0px 4px 4px rgba(25, 48, 116, 0.25);
+    border-radius: 7px;
+
+    font-family: Inter;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 11px;
+    line-height: 26px;
+    /* or 328% */
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: #3C3C3C;
+    margin-bottom: 9px;
+  }
+
 
   .flex {
     display: flex;
@@ -99,7 +156,7 @@
   }
 
   .quiz-action {
-    width: 146.73px;
+    width: 237.16px;
     height: 42px;
     border-radius: 6.23641px;
     background: #193074;
@@ -110,8 +167,13 @@
       width: 100%;
     }
 
+    &.success {
+      background: #3CE970;
+    }
+
     &.cancel {
       background: #BABABC;
+      width: 146.73px;
     }
   }
 

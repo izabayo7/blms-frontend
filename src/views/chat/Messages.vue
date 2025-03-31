@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <v-container>
     <section :class="{focus: state}" class="my-messages">
       <div :class="`row ${state && isMobile ? 'mb-0' : isMobile ? 'mb-14' : ''} messages-section mb-md-0`"
            id="messages-section">
@@ -109,7 +109,7 @@
         </div>
       </div>
     </section>
-  </div>
+  </v-container>
 </template>
 
 <script>
