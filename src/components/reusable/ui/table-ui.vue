@@ -105,8 +105,46 @@ export default {
       table{
         width: 100%;
         border-collapse: collapse;
+        border-bottom: 2px solid $bg-one;
+
+        thead{
+          width:calc(100% - .6rem);
+          display:table;
+          table-layout:fixed;
+        }
+        tbody{
+          display: block;
+          max-height: 50vh;
+          overflow:auto;
+          height: fit-content;
+
+          &::-webkit-scrollbar{
+            width: .6rem;
+          }
+
+          &::-webkit-scrollbar-track{
+            box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+            border-radius: 1rem;
+          }
+
+          &::-webkit-scrollbar-thumb{
+            background-color: darken($bg-one,10);
+            border-radius: 1rem;
+            cursor:pointer;
+            //outline: 1px solid $bg-one;
+          }
+        }
+
+        tbody tr {
+          width:100%;
+          display:table;
+          table-layout:fixed;
+        }
 
         tr{
+          td:nth-child(1),th:nth-child(1){
+            width:2.5rem;
+          }
 
           &.table-body-row{
             border-bottom: .5px solid $bg-one;
