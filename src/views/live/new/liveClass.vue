@@ -79,9 +79,9 @@
                     </div>
                   </div>
                   <div class="more-details">
-                    <div v-if="currentPresenter != me.userInfo || (userCategory == 'STUDENT' && !isStudentPresenting && instructor)"
+                    <div v-if="(me ? currentPresenter != me.userInfo : false) || (userCategory == 'STUDENT' && !isStudentPresenting && instructor)"
                          class="speaking-user">
-                      <div class="d-flex">
+                      <div class="d-flex" v-if="currentPresenter || instructor">
                         <div class="profile">
                           <img
                               v-if="currentPresenter ? currentPresenter.profile : instructor.profile"
@@ -700,6 +700,13 @@ export default {
       console.log(force)
       if (this.me) {
         this.me.rtcPeer.enabled = true
+
+        if(!this.audioEnabled)
+          this.me.rtcPeer.audioEnabled = false
+
+        if(!this.videoEnabled)
+          this.me.rtcPeer.videoEnabled = false
+
         this.me.rtcPeer.showLocalVideo();
         const video = this.me.getVideoElement();
         video.muted = true
