@@ -8,6 +8,7 @@ const getDefaultState = () => ({
 })
 
 export default{
+    namespaced: true,
     state: getDefaultState,
     actions:{
         getLiveSessions({ state }) {
@@ -19,5 +20,21 @@ export default{
                 })
             }
         },
-    }
+        createLiveSession({state}, {session}){
+            return apis.create('live_session',session).then(d =>{
+                d.data = d.data.data
+                state.live_sessions.data.push(d.data)    
+            })
+        },
+        deleteLiveSession({state}, {id}){
+            return apis.delete('live_session',id).then(() => {
+                for (const i in state.live_sessions.data) {
+                    if (state.live_sessions.data[i]._id == id) {
+                        state.live_sessions.data.splice(i, 1)
+                        break
+                    }
+                }
+            })
+        }
+    },
 }
