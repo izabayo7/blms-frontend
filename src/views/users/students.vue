@@ -81,7 +81,7 @@
           </div>
         </div>
       </div>
-      <div v-if="statistics.students.length<0" class="tabular-users students-table mb-14">
+      <div v-if="statistics.students.length>0" class="tabular-users students-table mb-14">
         <div class="table-wrapper mt-6">
           <div class="table-header">
             <table-header/>
