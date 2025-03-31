@@ -1,11 +1,36 @@
 <template>
   <div id="schoolProfile">
-    <div :style="college.banner ? `background: linear-gradient( rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8) ), url(${college.banner});`:''" class="header d-flex">
-      <div class="header-content">
+    <div
+      :style="
+        college.banner
+          ? `background: linear-gradient( rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8) ), url(${college.banner});`
+          : ''
+      "
+      class="header d-md-flex"
+    >
+      <div class="header-content pt-10 pt-md-0">
         <div class="logo">
           <img :src="college.logo" alt="colege logo" />
         </div>
         <div class="category">{{ college.category }}</div>
+        <div class="connect hidden-sm-and-down">
+          <button>
+            <span>Whatsapp</span>
+          </button>
+        </div>
+        <div class="login hidden-sm-and-down">
+          <router-link to="/login">Login</router-link>
+        </div>
+      </div>
+      <div class="header-content">
+        <div class="welcome">
+          WELCOME TO <br class="hidden-sm-and-down" />{{ college.name }}
+        </div>
+        <div class="motto">
+          {{ college.motto }}
+        </div>
+      </div>
+      <div class="header-content hidden-md-and-up">
         <div class="connect">
           <button>
             <span>Whatsapp</span>
@@ -13,12 +38,6 @@
         </div>
         <div class="login">
           <router-link to="/login">Login</router-link>
-        </div>
-      </div>
-      <div class="header-content">
-        <div class="welcome">WELCOME TO <br />{{ college.name }}</div>
-        <div class="motto">
-          {{ college.motto }}
         </div>
       </div>
     </div>
@@ -57,7 +76,6 @@ export default {
 #schoolProfile {
   .header {
     // background: rgba(0, 0, 0, 0.8);
-    display: flex;
     justify-content: center;
     align-items: center;
     min-height: 338px;
@@ -80,6 +98,9 @@ export default {
         max-width: 193px;
         margin-right: 179px;
         text-align: center;
+      }
+      &.hidden-md-and-up {
+        margin-top: 29px;
       }
     }
     .welcome {
@@ -145,6 +166,33 @@ export default {
         span {
           color: #ffffff;
         }
+      }
+    }
+  }
+}
+
+/* Portrait phones and smaller */
+@media (max-width: 700px) {
+  #schoolProfile {
+    .header {
+      &-content {
+        margin: auto !important;
+        max-width: 100%;
+        text-align: center;
+      }
+      .welcome {
+        font-size: 15px;
+      }
+      .motto {
+        font-size: 12px;
+      }
+      .connect {
+        button {
+          margin: 29px auto 14px;
+        }
+      }
+      .login {
+        padding-bottom: 27px;
       }
     }
   }
