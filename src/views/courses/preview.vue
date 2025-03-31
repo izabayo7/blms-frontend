@@ -268,6 +268,7 @@
     <!--      teacher preview-->
     <div class="teacher" v-if="userCategory === 'INSTRUCTOR'">
       <div v-if="!isLive" class="teacher instructor_preview">
+        <back class="mb-6" to="/courses"/>
         <div class="tabs-container d-flex">
           <div class="item cursor-pointer" @click="panel1=true" :class="panel1? 'active' : ''">Course details</div>
           <div class="item cursor-pointer" @click="panel1=false" :class="panel1? '' : 'active'">Students list</div>
