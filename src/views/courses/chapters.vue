@@ -492,11 +492,15 @@ export default {
       }
     },
     error() {
-      this.$store.dispatch("app_notification/SET_NOTIFICATION", {
-        message: this.error,
-        status: "danger",
-        uptime: 2000,
-      });
+      if(this.error != "") {
+        this.$store.dispatch("app_notification/SET_NOTIFICATION", {
+          message: this.error,
+          status: "danger",
+          uptime: 2000,
+        }).then(() => {
+          this.error = ""
+        })
+      }
     },
   },
   methods: {
