@@ -33,7 +33,7 @@ export default {
     id: { required: true, type: String },
     name: { required: true, type: String },
     options: {},
-    label: String
+    label: String,
   },
   data() {
     return {

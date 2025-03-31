@@ -175,11 +175,9 @@ export default {
         const res = await Apis.create("user_invitations", {
           college: this.$store.state.user.user.college,
           category: this.selected_user_category,
-          // faculty_college_year: this.selected_user_group,
+          user_group: this.selected_user_group,
           emails: this.emails,
         });
-
-        console.log(res);
         for (const obj of res.data.data) {
           this.sent_emails.unshift(obj.email);
         }

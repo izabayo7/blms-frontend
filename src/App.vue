@@ -3,7 +3,7 @@
     <router-view />
     <app-dialog />
     <new-group />
-    <notification-tooltip class="" />
+    <notification-tooltip class="d-none" />
   </v-app>
 </template>
 
