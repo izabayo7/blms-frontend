@@ -22,7 +22,7 @@
     <v-row>
       <v-col class="col-12 col-md-8">
         <!-- <span v-if="course !== undefined">{{course.name}}</span> -->
-        <v-tabs v-if="selectedTab == 0 || selectedTab == 1" background-color="white" color="#ffd248" right v-model="selectedTab">
+        <v-tabs background-color="white" color="#ffd248" right v-model="selectedTab">
           <v-tab :key="0" id="content-tab">
             <v-icon class="mx-2">mdi-book-open-variant</v-icon>
             Chapter
