@@ -49,14 +49,8 @@
             </form>
             <div class="lower-message">
               <div class="message-row">
-                Don’t have an account contact us ?
-                <router-link to="/register">Register</router-link>
-              </div>
-              <div class="message-row">
-                Remembered your password ? <router-link to="/login" />
-              </div>
-              <div class="message-row">
-                Having trouble resseting your password ?
+                Remembered your password ?
+                <router-link to="/login">login</router-link>
               </div>
             </div>
           </div>
