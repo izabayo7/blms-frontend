@@ -527,6 +527,13 @@ export default {
       // let participant = this.participants[request.name];
       // participant.dispose();
       // delete this.participants[request.name];
+    },
+    toogleMedia(obj){
+      if(obj.isVideo){
+        if(obj.status == this.noVideo){
+          this.noVideo = !this.noVideo
+        }
+      }
     }
   },
   created() {
@@ -572,6 +579,9 @@ export default {
           break;
         case 'participantLeft':
           this.onParticipantLeft(parsedMessage);
+          break;
+        case 'toogleMedia':
+          this.toogleMedia(parsedMessage);
           break;
         case 'receiveVideoAnswer':
           this.receiveVideoResponse(parsedMessage);
