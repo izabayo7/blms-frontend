@@ -1,16 +1,75 @@
 <template>
   <v-container fluid id="student-regist" class="pa-0">
     <v-row>
-      <v-col class="col-3 col-md-3 pa-0 form--bg">
-        <div class="svg-side"></div>
+      <v-col class="col-3 col-md-3 pa-0 svg-side">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="491"
+          height="107vh"
+          viewBox="0 0 491 100vh"
+        >
+          <g id="Group_71" data-name="Group 71" transform="translate(98 41)">
+            <path
+              id="Path_1778"
+              data-name="Path 1778"
+              d="M0,0H393V1082H0Z"
+              fill="#6daefc"
+            />
+            <circle
+              id="Ellipse_144"
+              data-name="Ellipse 144"
+              cx="108.5"
+              cy="108.5"
+              r="108.5"
+              transform="translate(142 421)"
+              fill="#fff"
+              opacity="0.89"
+            />
+            <circle
+              id="Ellipse_145"
+              data-name="Ellipse 145"
+              cx="72"
+              cy="72"
+              r="72"
+              transform="translate(152 994)"
+              fill="#fff"
+              opacity="0.81"
+            />
+            <circle
+              id="Ellipse_146"
+              data-name="Ellipse 146"
+              cx="72"
+              cy="72"
+              r="72"
+              transform="translate(-98 396)"
+              fill="#fff"
+              opacity="0.81"
+            />
+            <circle
+              id="Ellipse_147"
+              data-name="Ellipse 147"
+              cx="72"
+              cy="72"
+              r="72"
+              transform="translate(125 -41)"
+              fill="#fff"
+              opacity="0.57"
+            />
+          </g>
+        </svg>
       </v-col>
-      <v-col class="col-9 col-md-9 form-side form--bg">
+      <v-col class="col-9 col-md-9 form-side customScroll">
         <v-form>
           <v-row>
             <v-col class="col-12">
-              <h1
-                class="font-weight-bold form-title pt-5"
-              >{{`${$route.name.includes('Student') ? 'Student' : 'Instructor'}`}} Registration</h1>
+              <h1 class="font-weight-bold form-title pt-5">
+                {{
+                  `${
+                    $route.name.includes("Student") ? "Student" : "Instructor"
+                  }`
+                }}
+                Registration
+              </h1>
             </v-col>
             <v-col class="col-12 col-md-6">
               <label>First Name</label>
@@ -32,7 +91,11 @@
                 <div class="v-input__control">
                   <div class="v-input__slot">
                     <div class="v-input__prepend-inner">
-                      <div class="v-input__icon v-input__icon--prepend-inner mx-2">+250</div>
+                      <div
+                        class="v-input__icon v-input__icon--prepend-inner mx-2"
+                      >
+                        +250
+                      </div>
                     </div>
                     <div class="v-text-field__slot">
                       <input v-model="phone" type="number" placeholder="xxxx" />
@@ -104,12 +167,17 @@
             <v-col class="col-12">
               <label>Gender</label>
               <v-row>
-                <v-col class="col-4" v-for="(gender,n) in genders" :key="n">
+                <v-col class="col-4" v-for="(gender, n) in genders" :key="n">
                   <v-icon
-                    :color="selectedGender === gender  ? '#FFD248' : '#B4B4B4'"
+                    :color="selectedGender === gender ? '#FFD248' : '#B4B4B4'"
                     @click="selectedGender = gender"
-                  >mdi-checkbox-{{selectedGender === gender ? 'marked' : 'blank'}}-circle{{selectedGender === gender ? '' : '-outline'}}</v-icon>
-                  {{gender}}
+                    >mdi-checkbox-{{
+                      selectedGender === gender ? "marked" : "blank"
+                    }}-circle{{
+                      selectedGender === gender ? "" : "-outline"
+                    }}</v-icon
+                  >
+                  {{ gender }}
                 </v-col>
               </v-row>
             </v-col>
@@ -130,20 +198,28 @@
                 x-large
                 class="yellow white--text px-16"
                 @click="saveStudent"
-              >Create account</v-btn>
+                >Create account</v-btn
+              >
               <v-btn
                 v-else
                 rounded
                 x-large
                 class="yellow white--text px-16"
                 @click="saveInstructor"
-              >Create account</v-btn>
+                >Create account</v-btn
+              >
             </v-col>
           </v-row>
         </v-form>
       </v-col>
     </v-row>
-    <kurious-dialog :show="show" :message="message" :modal="modal" color="#ffd248" :status="status">
+    <kurious-dialog
+      :show="show"
+      :message="message"
+      :modal="modal"
+      color="#ffd248"
+      :status="status"
+    >
       <!-- <v-icon slot="icon" size="55" dark>mdi-clipboard-text-multiple-outline</v-icon> -->
       <v-icon slot="icon" size="55" dark>mdi-check</v-icon>
       <v-row slot="actions">
@@ -153,8 +229,12 @@
             x-large
             color="#ffd248"
             class="white--text px-16 mx-2"
-            @click="resetFields();show = false"
-          >Add New Student</v-btn>
+            @click="
+              resetFields();
+              show = false;
+            "
+            >Add New Student</v-btn
+          >
           <v-btn
             id="panel--btn"
             rounded
@@ -162,7 +242,8 @@
             color="#ffd248"
             class="orange--text px-16 mx-2"
             to="/register/users"
-          >Back To Panel</v-btn>
+            >Back To Panel</v-btn
+          >
         </v-col>
       </v-row>
     </kurious-dialog>
@@ -320,14 +401,21 @@ export default {
     text-align: center !important;
   }
   .svg-side {
-    background-color: rgb(238, 238, 49);
-    width: 85% !important;
-    height: 100%;
-  }
-  .form--bg {
-    background-color: #f9faff;
+    height: 100vh;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    svg {
+      margin: -41px 0 0 -100px;
+    }
   }
   .form-side {
+    height: 100vh;
+    overflow-y: auto;
+    background-color: #f9faff;
+    label {
+      color: #6A6A6A;
+      font-size: 17px;
+    }
     form.v-form {
       max-width: 500px;
       margin-left: 135px;

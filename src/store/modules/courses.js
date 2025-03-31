@@ -309,13 +309,15 @@ export default {
         //find a course by name
         findCourseByName({ state, commit }, { userCategory, userId, courseName }) {
             if (state.courses.data.length < 1) {
-                apis.get(`course/${userCategory}/${userId}/${courseName}`).then(d => {
+               return apis.get(`course/${userCategory}/${userId}/${courseName}`).then(d => {
                     state.courses.data = [d.data]
                     commit('set_selected_course', d.data._id)
+                    return d.data
                 })
             } else {
                 let course = state.courses.data.filter(course => course.name == courseName)[0]
                 commit('set_selected_course', course._id)
+                return course
             }
 
 

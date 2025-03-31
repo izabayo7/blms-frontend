@@ -8,8 +8,8 @@
         <div class="active-link"></div>
         <li
           v-if="userCategory == 'Admin'"
-          @click="$router.push('/courses')"
-          :class="{ active: activeRoute.includes('/courses') }"
+          @click="$router.push('/administration')"
+          :class="{ active: activeRoute.includes('/administration') }"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"

@@ -14,31 +14,10 @@
         h4 {
             font-weight: 300;
             margin-bottom: 2px;
+            font-size: 16px;
         }
-        .mdi {
-            color: #fff;
-            font-size: 40px;
-            padding: 6px;
-            margin: -4px 13px 0;
-            border-radius: 10px;
-        }
-        .v-icon{
-            margin-left: 13px;
-        }
-        .mdi-account-outline {
-            background-color: #ff5858;
-        }
-        .mdi-account-supervisor-outline {
-            background-color: #4592ee;
-        }
-        .mdi-wallet-outline {
-            background-color: #72fb9b;
-        }
-        .mdi-table-chair {
-            background-color: #ffd24a;
-        }
-        .mdi-bookshelf {
-            background-color: #fe9438;
+        .small-icons {
+            margin: -4px 25px 0;
         }
     }
     .school-card {
@@ -50,7 +29,8 @@
             margin-left: 27%;
             text-align: center;
             font-size: 64px;
-            background-color: #FFD248;
+            background-color: $primary;
+            color: black;
             width: 100px;
             padding: 2px;
             height: 100px;
@@ -64,16 +44,10 @@
             font-size: 12px;
             height: 25px;
             margin-left: 17%;
-            /* background-color: coral; */
         }
-        .theme--light.v-btn:not(.v-btn--flat):not(.v-btn--text):not(.v-btn--outlined) {
-            background-color: #FFEBAE;
-        }
-    }
-    .v-input.v-input--hide-details.theme--light.v-text-field.v-text-field--single-line.v-text-field--is-booted {
-        margin-left: 440px;
-        .v-input__slot {
-            width: 340px;
+        .v-btn:not(.v-btn--flat):not(.v-btn--text):not(.v-btn--outlined) {
+            background-color: lighten($color: $primary, $amount: 15);
+            color: black;;
         }
     }
 }

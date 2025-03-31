@@ -105,8 +105,11 @@
                         @click="
                           finish_chapter($store.state.user.user._id).then(
                             (d) => {
-                              course.progress = d;
-                              activeIndex = maximumIndex;
+                              maximumIndex = Math.round(
+                                (d.progress *
+                                  course.chapters.length) /
+                                  100
+                              );
                             }
                           )
                         "
@@ -251,6 +254,7 @@ export default {
     activeIndex: -1,
     progress: -1,
     progressId: "",
+    maximumIndex: -1,
     attachments: [],
     showActions: false,
     editorContent: "",
@@ -258,15 +262,11 @@ export default {
   computed: {
     ...mapGetters("courses", ["course"]),
     ...mapGetters("quiz_submission", ["selected_quiz_submission"]),
-    maximumIndex() {
-      return this.course
-        ? Math.round(
-            (this.course.progress.progress * this.course.chapters.length) / 100
-          )
-        : 0;
-    },
   },
   watch: {
+    maximumIndex() {
+      this.activeIndex = this.maximumIndex;
+    },
     activeIndex() {
       this.editorContent = "";
       this.getChapterMainContent(
@@ -283,6 +283,9 @@ export default {
     },
   },
   methods: {
+    console(message) {
+      console.log(message, this.maximumIndex, this.course);
+    },
     ...mapActions("courses", [
       "findCourseByName",
       "getChapterMainContent",
@@ -318,13 +321,15 @@ export default {
       userCategory: this.$store.state.user.user.category.toLowerCase(),
       userId: this.$store.state.user.user._id,
       courseName: this.$route.params.name,
-    });
-    setTimeout(() => {
+    }).then((course) => {
+      this.maximumIndex = Math.round(
+        (course.progress.progress * course.chapters.length) / 100
+      );
       this.activeIndex =
         this.maximumIndex > this.course.chapters.length - 1
           ? this.course.chapters.length - 1
           : this.maximumIndex;
-    }, 1000);
+    });
   },
 };
 </script>

@@ -2,26 +2,90 @@
   <v-app id="school-page">
     <v-row>
       <v-col class="col-4 col-md-4 logo-side">
-        <v-btn @click="$router.push(`/users`)">
-          <v-icon>mdi-chevron-left</v-icon>Back
-        </v-btn>
-        <div class="school-logo">
+        <back class="ma-6" to="/administration" />
+        <div class="school-logo mt-12">
           <p>A</p>
-          <v-icon class="edit-logo">mdi-pencil</v-icon>
+          <svg
+            class="edit-logo"
+            xmlns="http://www.w3.org/2000/svg"
+            width="58"
+            height="58"
+            viewBox="0 0 58 58"
+          >
+            <g
+              id="Ellipse_207"
+              data-name="Ellipse 207"
+              fill="#fff"
+              stroke="#707070"
+              stroke-width="2"
+            >
+              <circle cx="29" cy="29" r="29" stroke="none" />
+              <circle cx="29" cy="29" r="28" fill="none" />
+            </g>
+            <g
+              id="Icon_feather-edit-3"
+              data-name="Icon feather-edit-3"
+              transform="translate(11.5 11.682)"
+            >
+              <path
+                id="Path_1915"
+                data-name="Path 1915"
+                d="M18,30H31.5"
+                fill="none"
+                stroke="#000"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="3"
+              />
+              <path
+                id="Path_1916"
+                data-name="Path 1916"
+                d="M24.75,5.25a3.182,3.182,0,0,1,4.5,4.5L10.5,28.5,4.5,30,6,24Z"
+                fill="none"
+                stroke="#000"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="3"
+              />
+            </g>
+          </svg>
         </div>
       </v-col>
       <v-col class="col-8 col-md-8 form-side">
-        <v-form>
-          <h2>School Details</h2>
+        <v-form class="mt-4">
+          <p class="page-heading">School Details</p>
           <label>School Name</label>
-          <v-text-field outlined solo dense readonly value="African Leadership University"></v-text-field>
+          <v-text-field
+            outlined
+            solo
+            class="input"
+            value="African Leadership University"
+          ></v-text-field>
           <label>Email</label>
-          <v-text-field outlined solo dense readonly value="alu@gmail.com"></v-text-field>
+          <v-text-field
+            outlined
+            solo
+            class="input"
+            value="alu@gmail.com"
+          ></v-text-field>
           <label>School Phone</label>
-          <v-text-field outlined solo dense readonly value="0788324571"></v-text-field>
+          <v-text-field
+            outlined
+            solo
+            class="input"
+            value="0788324571"
+          ></v-text-field>
           <label>School Location</label>
-          <v-text-field outlined solo dense readonly value="Kicukiro"></v-text-field>
-          <v-btn class="edit-btn" @click="$router.push(`/edit-school-info`)">Edit Info</v-btn>
+          <v-text-field
+            outlined
+            solo
+            class="input"
+            value="Kicukiro"
+          ></v-text-field>
+      <v-btn class="save--changes mx-2 px-8" @click="saveQuiz()"
+        >Save</v-btn
+      >
+      <v-btn color="transparent" class="cancel-quiz mx-2" @click="$router.push('/users')">Cancel</v-btn>
         </v-form>
       </v-col>
     </v-row>
@@ -29,25 +93,22 @@
 </template>
 
 <script>
-export default {};
+export default {
+    components: {
+    back: () => import("@/components/shared/back-button"),
+  },
+};
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 #school-page {
-  background-color: whitesmoke;
+  background-color: #f9faff;
   padding-top: 10px;
   height: 624px;
   overflow: hidden;
   .logo-side {
-    button.v-btn.v-btn--contained.theme--light.v-size--default {
-      background-color: transparent !important;
-      margin: 10px 40px 50px;
-      height: 25px;
-      border-radius: 20px;
-      font-size: 11px;
-    }
     .school-logo {
-      background-color: yellow;
+      background-color: $primary;
       width: 190px;
       height: 190px;
       margin-left: 50px;
@@ -56,11 +117,10 @@ export default {};
         text-align: center;
         font-size: 100px;
         padding-top: 12px;
+        color: #000;
         font-weight: 500;
       }
-      i.v-icon.notranslate.edit-logo.mdi.mdi-pencil.theme--light {
-        color: #000;
-        border: 1px solid;
+      .edit-logo {
         font-size: 24px;
         padding: 5px;
         border-radius: 22px;
@@ -70,18 +130,33 @@ export default {};
     }
   }
   .form-side {
-    h2 {
+    .page-heading {
       margin-bottom: 30px;
+      font-size: 22px;
+      font-weight: 500;
     }
-    .v-input--is-dirty.v-input--is-readonly.v-input--dense.theme--light.v-text-field.v-text-field--single-line.v-text-field--solo.v-text-field--is-booted.v-text-field--enclosed.v-text-field--outlined {
+    label {
+      font-size: 18px;
+      color: #747474;
+      font-weight: 500;
+    }
+    .input {
       width: 400px;
+      .v-input__control {
+        .v-input__slot {
+          box-shadow: none !important;
+          fieldset {
+            border: #d5d5d5 1px solid !important;
+          }
+        }
+      }
     }
-    button.edit-btn.v-btn.v-btn--contained.theme--light.v-size--default {
-      color: #fff;
-      background-color: lightgreen;
-      box-shadow: none;
-      width: 130px;
-      margin-left: 125px;
+    .input:focus {
+      outline: none;
+    }
+    .save--changes{
+      background-color: $primary !important;
+      color: white;
     }
   }
 }

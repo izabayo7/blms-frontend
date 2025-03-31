@@ -14,7 +14,7 @@ const routes = [
             allowAnonymous: true
         },
     },
-        // the login page
+    // the login page
     {
         path: '/login',
         name: 'Login',
@@ -121,69 +121,75 @@ const routes = [
             name: 'User Profile',
             component: () =>
                 import('@/components/profile.vue')
-        }, {
-            path: '/users',
+        }, 
+        // administration functionalities
+        {
+            path: '/administration',
             name: 'Users',
             component: () =>
                 import('@/components/admin/users.vue')
+        },
+        {
+            path: '/administration/faculties',
+            name: 'Faculties',
+            component: () =>
+                import('@/components/faculty'),
+            meta: {
+                allowAnonymous: false
+            }
+        },
+        {
+            path: '/administration/studentgroup',
+            name: 'Student Group',
+            component: () =>
+                import('@/components/studentGroup'),
+            meta: {
+                allowAnonymous: false
+            }
         },]
     },
+    // administration functionalities
     {
-        path: '/register/users',
+        path: '/administration/register/users',
         name: 'Register Users',
         component: () =>
-            import('@/components/registration/users/panel.vue')
+            import('@/views/administration/registration/users/panel')
     }, {
-        path: '/register/users/student',
+        path: '/administration/register/users/student',
         name: 'Register Student',
         component: () =>
-            import('@/components/registration/users/index.vue')
+            import('@/views/administration/registration/users')
     }, {
-        path: '/register/users/instructor',
+        path: '/administration/register/users/instructor',
         name: 'Register Instructor',
         component: () =>
-            import('@/components/registration/users/index.vue')
+            import('@/views/administration/registration/users')
     }, {
-        path: '/recover-password',
-        name: 'Recover-Password',
-        component: () =>
-            import('@/components/recover-password.vue')
-    },
-    {
-        path: '/register/users/admin',
+        path: '/administration/register/users/admin',
         name: 'Register Admin',
         component: () =>
-            import('@/components/registration/admin/admin.vue')
+            import('@/views/administration/registration/admin/admin')
     }, {
-        path: '/register/faculty',
+        path: '/administration/register/faculty',
         name: 'Register Faculty',
         component: () =>
-            import('@/components/registration/faculty/index.vue')
+            import('@/views/administration/registration/faculty')
     },
     {
-        path: '/classes',
-        name: 'Faculities',
-        component: () =>
-            import('@/components/faculty'),
-        meta: {
-            allowAnonymous: false
-        }
-    }, {
-        path: '/school-details',
+        path: '/administration/school-details',
         name: 'SchoolDetails',
         component: () =>
             import('@/components/school-details'),
         meta: {
             allowAnonymous: false
         }
-    }, {
-        path: '/edit-school-info',
-        name: 'EditSchoolDetails',
+    },
+    // recover password
+    {
+        path: '/recover-password',
+        name: 'Recover-Password',
         component: () =>
-            import('@/components/edit-school'),
-        meta: {
-            allowAnonymous: false
-        }
+            import('@/components/recover-password.vue')
     },
     {
         // catch all 404 - define at the very end

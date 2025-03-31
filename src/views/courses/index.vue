@@ -2155,8 +2155,6 @@
             <v-btn
               rounded
               text
-              color="#000"
-              dark
               :class="`unpublished-btn ${
                 type == 'unpublished' ? 'active-btn' : ''
               }`"
@@ -2166,8 +2164,6 @@
             <v-btn
               rounded
               text
-              color="#000"
-              dark
               :class="`published-btn ${
                 type == 'published' ? 'active-btn' : ''
               }`"

@@ -142,7 +142,7 @@
       <v-btn class="white--text save-quiz" rounded @click="saveQuiz()"
         >Save</v-btn
       >
-      <v-btn color="#707070" class="cancel-quiz" @click="$router.push('/quiz')">Cancel</v-btn>
+      <v-btn color="transparent" class="cancel-quiz" @click="$router.push('/quiz')">Cancel</v-btn>
     </v-row>
   </v-app>
 </template>
@@ -331,7 +331,7 @@ export default {
     background-color: $primary;
   }
 
-  button.cancel-quiz.v-btn.v-btn--flat.v-btn--text.theme--light.v-size--default {
+  .cancel-quiz {
     font-size: 18px;
     margin: 20px -10px;
   }

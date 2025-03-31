@@ -70,14 +70,13 @@ export default {
                             }
                         }).then((response) => {
                             quizObject = response.data
-                            state.quiz.data.push(quizObject)
                             setTimeout(() => {
                                 dispatch('modal/reset_modal', null, { root: true })
                             }, 1000);
                         })
                     }
                 }
-
+                state.quiz.data.push(quizObject)
             })
 
         },
@@ -112,14 +111,18 @@ export default {
                             }
                         }).then((response) => {
                             quizObject = response.data
-                            state.quiz.data.push(quizObject)
                             setTimeout(() => {
                                 dispatch('modal/reset_modal', null, { root: true })
                             }, 1000);
                         })
                     }
                 }
-                return
+
+                for (const i in state.quiz.data) {
+                    if (state.quiz.data[i]._id === state.selected_quiz) {
+                        state.quiz.data[i] = quizObject
+                    }
+                }
             })
 
         },
