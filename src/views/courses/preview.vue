@@ -435,7 +435,8 @@
                       {{ course.published ? "Unpublish" : "Publish" }} course
                     </div>
                   </div>
-                  <div v-if="userCategory === 'INSTRUCTOR'" class="tooltip" @click="$router.push(`/courses/edit/${course.name}/details`)">
+                  <div v-if="userCategory === 'INSTRUCTOR'" class="tooltip"
+                       @click="$router.push(`/courses/edit/${course.name}/details`)">
                     <svg width="51" height="51" viewBox="0 0 51 51" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path
                           d="M25.7248 50.0345C39.4575 50.0345 50.5901 38.9019 50.5901 25.1691C50.5901 11.4363 39.4575 0.303711 25.7248 0.303711C11.992 0.303711 0.859375 11.4363 0.859375 25.1691C0.859375 38.9019 11.992 50.0345 25.7248 50.0345Z"
@@ -513,7 +514,7 @@
             </div>
             <div class="d-flex detail">
               <div class="subtitle">Chapter :</div>
-              <div class="sub-text"> {{chapterIndex > -1 ? course.chapters[chapterIndex].name : ''}}</div>
+              <div class="sub-text"> {{ chapterIndex > -1 ? course.chapters[chapterIndex].name : '' }}</div>
             </div>
             <div class="d-flex detail">
               <div class="subtitle">Scheduled date :</div>
@@ -534,8 +535,8 @@
                   fill="#FF4E4E"/>
               <circle cx="96.8711" cy="59.376" r="15.625" fill="#FF4E4E"/>
             </svg>
-            <div class="mb-1">0 student watching</div>
-            <div>00:00:00</div>
+            <div class="mb-1">{{ nearestLiveSession.connected_users }} student watching</div>
+            <div>Started {{  elapsed_time }}</div>
             <div>
               <button @click="
         $router.push(`/live/${nearestLiveSession._id}`)
@@ -605,20 +606,20 @@
             </div>
           </div>
         </div>
-        <div class="bottom-pane">
-          <div class="d-lg-flex">
-            <div>
-              <div class="title">Quiz attempt rate</div>
-              <div class="chart"></div>
-              <div class="text">00 out of 32 students attempted</div>
-            </div>
-            <div>
-              <div class="title">Attendance</div>
-              <div class="chart"></div>
-              <div class="text">00 out of 32 students attended</div>
-            </div>
-          </div>
-        </div>
+        <!--        <div class="bottom-pane">-->
+        <!--          <div class="d-lg-flex">-->
+        <!--            <div>-->
+        <!--              <div class="title">Quiz attempt rate</div>-->
+        <!--              <div class="chart"></div>-->
+        <!--              <div class="text">00 out of 32 students attempted</div>-->
+        <!--            </div>-->
+        <!--            <div>-->
+        <!--              <div class="title">Attendance</div>-->
+        <!--              <div class="chart"></div>-->
+        <!--              <div class="text">00 out of 32 students attended</div>-->
+        <!--            </div>-->
+        <!--          </div>-->
+        <!--        </div>-->
       </div>
 
     </div>
@@ -628,7 +629,7 @@
 <script>
 import {mapActions, mapGetters} from "vuex";
 import Api from "@/services/apis.js"
-import {calculateNearestLiveSession, convertUTCDateToLocalDate} from "@/services/global_functions"
+import {calculateNearestLiveSession, elapsedDuration, convertUTCDateToLocalDate} from "@/services/global_functions"
 import userSimpleCard from "../../mixins/user-simple-card.mixin";
 
 export default {
@@ -637,7 +638,8 @@ export default {
     panel1: true,
     student_list: [],
     chapterIndex: -1,
-    nearestLiveSession: undefined
+    nearestLiveSession: undefined,
+    elapsed_time: "",
   }),
   components: {
     preview: () => import("@/components/courses/Preview"),
@@ -689,6 +691,11 @@ export default {
       "tooglePublishCourse",
       "deleteCourse",
     ]),
+    startCounting(live_session) {
+      this.interval = setInterval(() => {
+        this.elapsed_time = elapsedDuration(new Date(live_session.started_at));
+      }, 1000)
+    },
     ...mapActions("modal", ["set_modal"]),
     async loadStudents() {
       const {data} = await Api.get(`course/${this.course._id}/attendants`)
@@ -702,7 +709,9 @@ export default {
       courseName: this.$route.params.name,
     }).then(() => {
       this.nearestLiveSession = calculateNearestLiveSession(this.course)
-      if(this.nearestLiveSession) {
+      if (this.nearestLiveSession)
+        this.startCounting(this.nearestLiveSession);
+      if (this.nearestLiveSession) {
         for (const i in this.course.chapters) {
           if (this.course.chapters[i]._id == this.nearestLiveSession.target.id) {
             this.chapterIndex = i;
