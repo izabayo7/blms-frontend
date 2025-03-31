@@ -27,23 +27,11 @@
                   v-if="question.type === 'file_upload'"
                   rounded
                   color="#ffd248"
-                  disabled
                   class="white--text course-image mt-4 mb-6 d-block"
-                  @click="pickfile(i)"
+                  @click="downloadAttachment(`${backend_url}/api/quiz_submission/${selected_quiz_submission._id}/attachment/${attempt.answers[i].src}?token=${$session.get('jwt')}`)"
                 >
-                  <v-icon>mdi-arrow-expand-up</v-icon>
-                  <span>{{
-                    attempt.answers[i].src === ""
-                      ? "Upload file"
-                      : attempt.answers[i].src
-                  }}</span>
+                  {{ attempt.answers[i].src }}
                 </v-btn>
-                <input
-                  v-if="question.type === 'file_upload'"
-                  type="file"
-                  :id="`file${i}`"
-                  hidden
-                />
                 <textarea
                   v-if="question.type === 'open_ended'"
                   v-model="attempt.answers[i].text"
@@ -230,7 +218,7 @@
                       }`"
                       type="number"
                       v-model="attempt.answers[i].marks"
-                      :readonly="mode === 'view'"
+                      :readonly="mode === 'view' || question.type.includes('select')"
                       @keyup="computeTotalMarks()"
                     />
                     <span>{{ `/${question.marks}` }}</span>
@@ -333,6 +321,7 @@
 
 <script>
 import { mapGetters, mapActions } from "vuex";
+import {downloadAttachment} from "@/services/global_functions"
 import { omit } from "lodash";
 export default {
   data: () => ({
@@ -376,6 +365,9 @@ export default {
     navigation: () => import("@/components/shared/simple_navigation"),
   },
   computed: {
+    backend_url(){
+      return process.env.VUE_APP_api_service_url
+    },
     ...mapGetters("quiz_submission", ["selected_quiz_submission"]),
     userCategory() {
       return this.$store.state.user.user.category.name;
@@ -419,6 +411,7 @@ export default {
     },
   },
   methods: {
+    downloadAttachment,
     ...mapActions("quiz_submission", [
       "update_quiz_submission",
       "findQuizSubmissionByUserAndQuizNames",
@@ -459,9 +452,6 @@ export default {
     },
     removeMediaPath(url) {
       return url.split("/")[url.split("/").length - 1];
-    },
-    pickfile(index) {
-      document.getElementById(`file${index}`).click();
     },
     async updateSubmission() {
       this.update_quiz_submission({
