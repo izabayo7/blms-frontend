@@ -15,8 +15,9 @@ const PARTICIPANT_CLASS = 'participant';
  * @param {boolean} offeringCourse - if participant is the one who is offering course
  * @return
  */
-export default function Participant(name,vm,offeringCourse = false) {
+export default function Participant(name,vm,offeringCourse = false, userInfo) {
     this.name = name;
+    this.userInfo = userInfo;
     let container = document.createElement('div');
     container.className = isPresentMainParticipant() ? PARTICIPANT_CLASS : PARTICIPANT_MAIN_CLASS;
     container.id = name;
@@ -24,7 +25,7 @@ export default function Participant(name,vm,offeringCourse = false) {
     // let video = document.createElement('video');
     let video = document.getElementById("video_feed");
     let rtcPeer;
-    this.vm = vm;
+    // this.vm = vm;
     this.offeringCourse = offeringCourse
 
     // container.appendChild(video);

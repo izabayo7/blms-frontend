@@ -2,11 +2,11 @@
 <div class="online-user">
   <div class="online-user--pic">
     <figure class="online-user--pic--wrapper" >
-      <img :src="user.img" :class="status" :alt="`${user.name} profile picture`">
+      <img :src="user.profile+'?width=100'" :class="status" :alt="`${user.sur_name} ${user.other_names} profile picture`">
     </figure>
   </div>
   <div class="online-user--details">
-    <p class="online-user--details--name">{{user.name}}</p>
+    <p class="online-user--details--name">{{`${user.sur_name} ${user.other_names}`}}</p>
     <p class="online-user--details--attendance"> Attendance {{user.attendance}}%</p>
   </div>
 
