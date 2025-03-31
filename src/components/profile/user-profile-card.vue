@@ -47,9 +47,12 @@
 
 <script>
 import ButtonUi from "../reusable/ui/button-ui";
+import userCategoryMixin from '@/mixins/user-category.mixin.js'
+
 export default {
 name: "user-profile-card",
-  components: {ButtonUi}
+  components: {ButtonUi},
+  mixins:[userCategoryMixin]
 }
 </script>
 
