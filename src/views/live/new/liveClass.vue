@@ -28,7 +28,7 @@
       <!--      </div>-->
       <!--    </div>-->
       <div class="live-class--video" :class="`--${$vuetify.breakpoint.name}`">
-        <back class="mt-6" />
+        <back v-if="userCategory == 'STUDENT'" class="mt-6" />
         <div class="head">
           <div class="text">
             <h2>Economics Basics: Chapter 8 part II</h2>
@@ -339,7 +339,10 @@ export default {
     instructor() {
       const el = this.participants.filter(e => e.userInfo.category == "INSTRUCTOR")
       return el[0] ? el[0].userInfo : undefined
-    }
+    },
+    userCategory() {
+      return this.$store.state.user.user.category.name;
+    },
   },
   methods: {
     async getUserInfo(id) {
