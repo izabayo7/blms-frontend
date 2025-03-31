@@ -406,20 +406,25 @@ export default {
               this.selected_quiz_submission.quiz.questions[i].type.includes(
                 "file"
               ) &&
-              this.selected_quiz_submission.answers[i].choosed_options[0].length
+              this.selected_quiz_submission.answers[i].choosed_options[0]
             ) {
               if (
                 this.selected_quiz_submission.answers[i].choosed_options[0]
                   .src ==
-                rightChoices[0].src.split("/")[
-                  rightChoices[0].src.split("/").length - 1
-                ]
+                  rightChoices[0].src.split("/")[
+                    rightChoices[0].src.split("/").length - 1
+                  ] &&
+                this.selected_quiz_submission.answers[i].choosed_options[0]
+                  .length
               ) {
                 this.selected_quiz_submission.answers[
                   i
                 ].marks = this.selected_quiz_submission.quiz.questions[i].marks;
               }
-            } else {
+            } else if (
+              this.selected_quiz_submission.answers[i].choosed_options[0] &&
+              rightChoices[0]
+            ) {
               if (
                 this.selected_quiz_submission.answers[i].choosed_options[0]
                   .text == rightChoices[0].text
