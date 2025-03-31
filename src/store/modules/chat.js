@@ -89,21 +89,20 @@ export default {
                     state.incomingMessages[idx].last_message = newMessage
                 }
             })
+
+            //put conversation on the first place
+            store.commit('chat/CHANGE_CONVERSATION_STAND',newMessage.sender._id)
         },
         //store the message that we sent
         ADD_ONGOING_MESSAGE(state, newMessage) {
-            //
-            // newMessage = {
-            //     content: newMessage.content,
-            //     createdAt: new Date(),
-            //     _id: `${Math.random()}`
-            // }
+
             store.dispatch('chat/lastMessageInCertainChatMessages', state.username).then(({ lastMessage, groupIndex, userIndex }) => {
                 if (lastMessage._id !== newMessage._id) {
 
+                    //if we have not yet chatted with the user
                     if (userIndex === undefined) {
                         state.loadedMessages.push({ username: state.username, conversation: [{ from: 'me', messages: [newMessage] }] })
-                    } else {
+                    } else {//if we have been chatting
                         let userMessages = state.loadedMessages[userIndex].conversation
 
                         if (userMessages[groupIndex].from.toLowerCase() !== 'me') {
@@ -116,6 +115,7 @@ export default {
                     }
                 }
 
+
             })
 
             store.dispatch('chat/findIndexOfUserInIncomingMessages', state.currentDisplayedUser.id).then(idx => {
@@ -127,19 +127,40 @@ export default {
                 }
             })
 
+            //put conversation on the first place
+            store.commit('chat/CHANGE_CONVERSATION_STAND',state.currentDisplayedUser.id)
+
         },
         RESET_STATE(state) {
             Object.assign(state, getDefaultState())
         },
 
+        //chenge msg status on read
         CHANGE_MESSAGE_READ_STATUS(state){
             let idx ;
 
+            //find conversation of who wa are chatting with
             state.incomingMessages.map((val,i) =>{
                 if (val.id === state.currentDisplayedUser.id) idx = i;
             })
 
+            // if found then unread messages
             if(idx) state.incomingMessages[idx].unreadMessagesLength = 0;
+        },
+
+        // change conversation to first if new messeage is sent or received
+        CHANGE_CONVERSATION_STAND(state,id){
+            let idx
+            console.log(id)
+            // find the inde of the incoming message
+            state.incomingMessages.map((val,i) => {
+                if(val.id === id) idx = i
+            })
+
+            if(idx){
+                state.incomingMessages.splice(0,0,state.incomingMessages.splice(idx,1)[0])
+            }
+
         }
 
     },
