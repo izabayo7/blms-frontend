@@ -20,7 +20,7 @@
             </div>
             <div class="text-content">
               <h4>Dashboard</h4>
-              <h2>Students List</h2>
+              <h2>Faculties List</h2>
             </div>
           </div>
           <div class="search col">
@@ -43,7 +43,7 @@
             <table-header />
           </div>
           <div class="table">
-            <table-ui :data="faculties"/>
+            <table-ui :options="options"  :data="faculties"/>
           </div>
         </div>
       </div>
