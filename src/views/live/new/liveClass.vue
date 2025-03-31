@@ -302,7 +302,7 @@ export default {
           if (!comment.replies) {
             comment.replies = []
           }
-          comment.replies.push(data.data)
+          comment.replies.unshift(data.data)
         }
       });
     },
@@ -627,7 +627,7 @@ export default {
       } else {
         const comments = self.comments.filter(e => e._id == result._id)
         if (!comments.length)
-          self.comments.push(result);
+          self.comments.unshift(result);
       }
     });
     // this.socket.on("res/comment/new", (result) => {
