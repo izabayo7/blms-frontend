@@ -93,7 +93,7 @@
   font-family: Inter;
   font-style: normal;
   font-weight: bold;
-  font-size:11.47759px;
+  font-size: 11.47759px;
   line-height: 26px;
   /* or 309% */
 
@@ -407,7 +407,7 @@ export default {
     }
 
     if (this.defaultFiles.length && !this.files.length)
-      this.files = this.defaultFiles
+      this.files = this.defaultFiles.filter(e => e.src)
   },
   watch: {
     files() {
@@ -439,10 +439,9 @@ export default {
       }
     },
     clickButton() {
-      if(!(this.template == "quiz-files" && this.files.length > 3) || this.template != "quiz-files"){
+      if (!(this.template == "quiz-files" && this.files.length > 3) || this.template != "quiz-files") {
         document.getElementById(this.inputId).click();
-      }
-      else{
+      } else {
         this.$store.dispatch("app_notification/SET_NOTIFICATION", {
           message: "You reached the limit of files on this question",
           status: "info",
