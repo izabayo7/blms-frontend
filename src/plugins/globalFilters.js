@@ -42,7 +42,6 @@ const filters = [
                 month: "short",
                 day: "2-digit",
             }); // format to format the date
-            console.log(dateToFormat)
             const formatedDate = dateFormat.formatToParts(new Date(dateToFormat)); //lets format date
             const [
                 { value: month },

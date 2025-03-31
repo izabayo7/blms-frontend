@@ -1,4 +1,5 @@
 import apis from "@/services/apis";
+import user from '@/store/modules/user'
 const getDefaultState = () => ({
     // storage for all quiz_submissions 
     quiz_submission: {
@@ -24,6 +25,30 @@ export default {
                 }
             }
         },
+        // add feedback to answer
+        add_answer_feedback(state, { answer_id, feedback }) {
+            for (const i in state.quiz_submission.data) {
+                if (state.quiz_submission.data[i]._id === state.selected_quiz_submission) {
+                    for (const k in state.quiz_submission.data[i].answers) {
+                        if (state.quiz_submission.data[i].answers[k]._id == answer_id) {
+                            state.quiz_submission.data[i].answers[k].feedback = feedback
+                        }
+                    }
+                }
+            }
+        },
+        // remove feedback from answer
+        remove_answer_feedback(state, { answer_id }) {
+            for (const i in state.quiz_submission.data) {
+                if (state.quiz_submission.data[i]._id === state.selected_quiz_submission) {
+                    for (const k in state.quiz_submission.data[i].answers) {
+                        if (state.quiz_submission.data[i].answers[k]._id == answer_id) {
+                            state.quiz_submission.data[i].answers[k].feedback = undefined
+                        }
+                    }
+                }
+            }
+        },
         // update the selected_quiz_submission
         set_selected_quiz_submission(state, id) {
             state.selected_quiz_submission = id
@@ -34,16 +59,39 @@ export default {
     },
     actions: {
         //get quiz_submissions  from backend
-        getQuizSubmissions({ state }, { userId }) {
+        getQuizSubmissions({ state }, { user_name }) {
             // if submission not loaded fetch them
             if (!state.quiz_submission.loaded) {
-                apis.get(`quiz_submission/user/${userId}`).then(d => {
+                return apis.get(`quiz_submission/user/${user_name}`).then(d => {
                     d.data = d.data.data
                     state.quiz_submission.data = d.data
+                    for (const k in d.data) {
+                        state.quiz_submission.data.push(d.data[k])
+                    }
                     //announce that data have been loaded
                     state.quiz_submission.loaded = true
+
+                    return d.data
                 })
             }
+        },
+
+        //get quiz_submissions  in a quiz
+        async getQuizSubmissionsInQuiz({ state, dispatch }, { quiz_id }) {
+            let quiz_submissions = state.quiz_submission.data
+
+            // if submission not loaded fetch them
+            if (!quiz_submissions.length) {
+
+                // eslint-disable-next-line no-undef
+                quiz_submissions = await dispatch('getQuizSubmissions', { user_name: user.state.user.user_name })
+                console.log(quiz_submissions)
+            }
+
+            let result = quiz_submissions.filter(e => e._id == quiz_id)
+
+            return result[0]
+
         },
 
         //create a quiz_submission
@@ -109,12 +157,11 @@ export default {
                 }
             }
             if (!submissionFound) {
-                console.log(userName)
                 return apis.get(`quiz_submission/user/${userName}/${quizName}`).then(d => {
                     d.data = d.data.data
                     if (!d.data)
                         return d.data
-                        
+
                     if (state.quiz_submission.loaded) {
                         // const found = state.quiz_submission.data.filter(e=>e._id == d._id)
                         state.quiz_submission.data.push(d.data)
