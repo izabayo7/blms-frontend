@@ -289,7 +289,6 @@ div.remove-container a {
                         fill="rgba(255,255,255,1)"/>
                   </svg>
                 </v-btn>
-
                 <div
                     @click="fileClicked(key)"
                     class="attachment vertically--centered"
@@ -300,13 +299,13 @@ div.remove-container a {
                         class="preview"
                         v-bind:ref="'preview' +  parseInt(key)"
                     />
-                    <v-icon v-else color="#000000" x-large
+                    <v-icon v-else-if="file.type" color="#000000" x-large
                     >mdi-file{{ findIcon(file.type) }}-outline
                     </v-icon
                     >
                   </div>
                   <div class="file_name">
-                    <span>{{ file.name | trimString(12) }}</span>
+                    <span>{{ (file.name || file.src) | trimString(12) }}</span>
                   </div>
                 </div>
               </v-badge>
