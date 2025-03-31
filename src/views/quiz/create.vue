@@ -118,7 +118,17 @@
             </div>
             <button class="add-option">Add option</button>
           </div>
-          <div class="image-select"></div>
+          <div class="image-select">
+            <label>Maximum 4 images ( 1 Megabyte maximum size for each)</label>
+            <FilePicker
+                :ref="`picker${i}`"
+                :boundIndex="i"
+                template="quiz-files"
+                hint="Click on an image to designate it as the correct  choice"
+                :allowedTypes="['image']"
+                :multiple="true"
+            />
+          </div>
           <div class="file-upload"></div>
 
         </div>
@@ -136,6 +146,7 @@
 export default {
   name: "CreateQuiz",
   components: {
+    FilePicker: () => import("@/components/reusable/FilePicker"),
     Editor: () => import("@/components/reusable/Editor"),
     SelectUi: () => import("@/components/reusable/ui/select-ui"),
     SwitchUi: () => import("@/components/reusable/ui/switcher")

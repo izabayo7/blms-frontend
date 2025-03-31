@@ -2,9 +2,33 @@
 .filePicker {
   text-align: center;
   border: 1px solid #d9d9d9;
+
+  &.quiz-files {
+    background: rgba(25, 48, 116, 0.07);
+    border-radius: 3.39104px;
+    max-width: 347.58px;
+    width: 100%;
+    height: 94.95px;
+    display: flex;
+    align-items: center;
+  }
+
   form {
     border-radius: 4px;
     background: #ccc;
+  }
+
+  .quiz-details {
+    font-family: Inter;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 15px;
+    line-height: 26px;
+    /* identical to box height, or 175% */
+
+
+    color: #193074;
+    margin: auto;
   }
 
   div.file-listing {
@@ -14,6 +38,7 @@
   div.remove-container {
     text-align: center;
   }
+
   a.submit-button {
     display: block;
     margin: auto;
@@ -35,24 +60,49 @@
     margin-bottom: 20px;
   }
 }
+
 .attachment {
   background-color: #f8f8f8;
   padding: 10px;
   border-radius: 5px;
   width: 140px;
+
+  &.quiz-files {
+    width: 50.87px;
+    height: 50.87px;
+    box-shadow: 0px 6.78207px 6.78207px rgba(0, 0, 0, 0.25);
+    border-radius: 5.08655px;
+    object-fit: cover;
+  }
 }
+
+.hint {
+  font-family: Inter;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 8.47759px;
+  line-height: 26px;
+  /* or 309% */
+
+
+  color: #193074;
+}
+
 // style the attachment
 div.remove-container a {
   color: red;
   cursor: pointer;
 }
+
 .remove--button {
   .v-icon {
     font-size: 12px !important;
   }
+
   height: 21px !important;
   width: 21px !important;
 }
+
 .file_figure {
   .preview {
     height: 40px;
@@ -61,11 +111,13 @@ div.remove-container a {
     overflow: hidden;
   }
 }
+
 .file_name {
   font-size: 12px;
   padding-left: 11px;
   width: 79px;
 }
+
 .file-list-container {
   display: flex;
   flex-wrap: wrap;
@@ -73,70 +125,116 @@ div.remove-container a {
 </style>
 
 <template>
-  <form ref="fileform" :class="`filePicker picker${boundIndex}`">
-    <v-row>
-      <v-col class="col-10">
-        <div class="file-list-container">
-          <div
-            v-for="(file, key) in files"
-            :key="key"
-            class="file-listing d-flex"
-          >
-            <v-badge overlap color="transparent">
-              <v-btn
-                fab
-                color="error"
-                class="ml-n2 mt-n2 remove--button"
-                slot="badge"
-                @click="removeFile(key)"
-              >
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"/><path d="M12 10.586l4.95-4.95 1.414 1.414-4.95 4.95 4.95 4.95-1.414 1.414-4.95-4.95-4.95 4.95-1.414-1.414 4.95-4.95-4.95-4.95L7.05 5.636z" fill="rgba(255,255,255,1)"/></svg>
-              </v-btn>
+  <div>
+    <form ref="fileform" :class="`filePicker picker${boundIndex} ${template? template : ''}`">
+      <v-row>
+        <v-col v-if="files.length" class="col-10">
+          <div class="file-list-container">
+            <div
+                v-for="(file, key) in files"
+                :key="key"
+                class="file-listing d-flex"
+            >
+              <v-badge v-if="template == 'quiz-files'" overlap color="transparent">
+                <v-btn
+                    fab
+                    color="error"
+                    class="ml-n2 mt-n2 remove--button"
+                    slot="badge"
+                    @click="removeFile(key)"
+                >
+                  <svg width="8" height="10" viewBox="0 0 8 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M1.4789 8.05109C1.4789 8.59507 1.92397 9.04014 2.46795 9.04014H6.42416C6.96814 9.04014 7.41321 8.59507 7.41321 8.05109V2.11678H1.4789V8.05109ZM7.90774 0.633198H6.1769L5.68237 0.138672H3.20974L2.71522 0.633198H0.984375V1.62225H7.90774V0.633198Z"
+                        fill="white"/>
+                  </svg>
 
-              <div
-                @click="fileClicked(key)"
-                class="attachment vertically--centered"
-              >
-                <div class="file_figure">
-                  <v-img
+                </v-btn>
+
+                <v-img
                     v-if="imageTypes.includes(file.type)"
-                    class="preview"
+                    @click="fileClicked(key)"
+                    class="attachment vertically--centered"
+                    :class="template"
                     v-bind:ref="'preview' + parseInt(key)"
-                  />
-                  <v-icon v-else color="#000000" x-large
-                    >mdi-file{{ findIcon(file.type) }}-outline</v-icon
-                  >
+                />
+              </v-badge>
+              <v-badge v-else overlap color="transparent">
+                <v-btn
+                    fab
+                    color="error"
+                    class="ml-n2 mt-n2 remove--button"
+                    slot="badge"
+                    @click="removeFile(key)"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                    <path fill="none" d="M0 0h24v24H0z"/>
+                    <path
+                        d="M12 10.586l4.95-4.95 1.414 1.414-4.95 4.95 4.95 4.95-1.414 1.414-4.95-4.95-4.95 4.95-1.414-1.414 4.95-4.95-4.95-4.95L7.05 5.636z"
+                        fill="rgba(255,255,255,1)"/>
+                  </svg>
+                </v-btn>
+
+                <div
+                    @click="fileClicked(key)"
+                    class="attachment vertically--centered"
+                >
+                  <div class="file_figure">
+                    <v-img
+                        v-if="imageTypes.includes(file.type)"
+                        class="preview"
+                        v-bind:ref="'preview' + parseInt(key)"
+                    />
+                    <v-icon v-else color="#000000" x-large
+                    >mdi-file{{ findIcon(file.type) }}-outline
+                    </v-icon
+                    >
+                  </div>
+                  <div class="file_name">
+                    <span>{{ file.name | trimString(12) }}</span>
+                  </div>
                 </div>
-                <div class="file_name">
-                  <span>{{ file.name | trimString(12) }}</span>
-                </div>
-              </div>
-            </v-badge>
+              </v-badge>
+            </div>
           </div>
-        </div>
-      </v-col>
-      <v-col v-if="files.length === 0" class="col-10">
+        </v-col>
+        <v-col v-if="files.length === 0 && template == 'quiz-files'" class="col-12 quiz-details">
+          Upload you images here
+          <svg @click="clickButton()" class="cursor-pointer" width="22" height="22" viewBox="0 0 22 22" fill="none"
+               xmlns="http://www.w3.org/2000/svg">
+            <path
+                d="M21.0428 11.9339C20.4049 11.1356 19.5896 10.6182 18.5964 10.3814C18.9098 9.9078 19.0661 9.38069 19.0661 8.80017C19.0661 7.9904 18.7796 7.29915 18.2069 6.72617C17.634 6.15339 16.9427 5.86688 16.133 5.86688C15.4073 5.86688 14.7733 6.10371 14.2311 6.57736C13.7806 5.47731 13.0604 4.59506 12.0712 3.93058C11.0821 3.2659 9.99162 2.93359 8.79982 2.93359C7.18049 2.93359 5.79779 3.50665 4.65195 4.65249C3.50603 5.79805 2.93325 7.18084 2.93325 8.80029C2.93325 8.89958 2.94091 9.06384 2.95616 9.29292C2.05481 9.71308 1.33683 10.3432 0.80198 11.1834C0.267327 12.0239 0 12.9403 0 13.9336C0 15.3468 0.502346 16.5554 1.50676 17.5599C2.51121 18.5647 3.7201 19.0669 5.13326 19.0669H17.6C18.8144 19.0669 19.8514 18.637 20.7108 17.7778C21.5702 16.9186 22 15.8817 22 14.6668C21.9998 13.6432 21.6808 12.7324 21.0428 11.9339ZM14.5574 11.6247C14.4847 11.6971 14.399 11.7333 14.2998 11.7333H11.7331V15.7668C11.7331 15.866 11.6969 15.9519 11.6243 16.0244C11.5516 16.0972 11.4659 16.1332 11.3667 16.1332H9.16636C9.06707 16.1332 8.98114 16.0972 8.90858 16.0244C8.83618 15.9519 8.79974 15.866 8.79974 15.7668V11.7333H6.23307C6.12624 11.7333 6.0383 11.699 5.96968 11.6305C5.90093 11.5617 5.86662 11.4738 5.86662 11.367C5.86662 11.2752 5.90474 11.1835 5.98108 11.0918L10.0029 7.07011C10.0717 7.00132 10.1596 6.96697 10.2665 6.96697C10.3735 6.96697 10.4614 7.00132 10.53 7.07011L14.5634 11.1033C14.6322 11.172 14.6662 11.2598 14.6662 11.367C14.6662 11.4661 14.6299 11.5523 14.5574 11.6247Z"
+                fill="#193074"/>
+          </svg>
+
+        </v-col>
+        <v-col v-else-if="!template == 'quiz-files' && files.length === 0" class="col-10">
         <span
-          >Drop the
+        >Drop the
           {{
             allowedTypes === undefined
-              ? "files"
-              : allowedTypes.includes("image")
-              ? "images"
-              : "video"
+                ? "files"
+                : allowedTypes.includes("image")
+                ? "images"
+                : "video"
           }}
           here!</span
         >
-      </v-col>
-      <v-col class="col-2">
-        <v-btn class="mt-n2" @click="clickButton()" large icon>
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"/><path d="M14.828 7.757l-5.656 5.657a1 1 0 1 0 1.414 1.414l5.657-5.656A3 3 0 1 0 12 4.929l-5.657 5.657a5 5 0 1 0 7.071 7.07L19.071 12l1.414 1.414-5.657 5.657a7 7 0 1 1-9.9-9.9l5.658-5.656a5 5 0 0 1 7.07 7.07L12 16.244A3 3 0 1 1 7.757 12l5.657-5.657 1.414 1.414z" fill="rgba(149,164,166,1)"/></svg>
-        </v-btn>
-        <input
-          type="file"
-          :multiple="multiple"
-          :id="inputId"
-          :accept="
+        </v-col>
+        <v-col class="col-2">
+          <v-btn v-if="template != 'quiz-files' || files.length" class="mt-n2" @click="clickButton()" large icon>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+              <path fill="none" d="M0 0h24v24H0z"/>
+              <path
+                  d="M14.828 7.757l-5.656 5.657a1 1 0 1 0 1.414 1.414l5.657-5.656A3 3 0 1 0 12 4.929l-5.657 5.657a5 5 0 1 0 7.071 7.07L19.071 12l1.414 1.414-5.657 5.657a7 7 0 1 1-9.9-9.9l5.658-5.656a5 5 0 0 1 7.07 7.07L12 16.244A3 3 0 1 1 7.757 12l5.657-5.657 1.414 1.414z"
+                  fill="rgba(149,164,166,1)"/>
+            </svg>
+          </v-btn>
+          <input
+              type="file"
+              :multiple="multiple"
+              :id="inputId"
+              :accept="
             allowedTypes === undefined
               ? undefined
               : allowedTypes.includes('video')
@@ -145,12 +243,16 @@ div.remove-container a {
               ? 'image/*'
               : undefined
           "
-          hidden
-          @change="addFile()"
-        />
-      </v-col>
-    </v-row>
-  </form>
+              hidden
+              @change="addFile()"
+          />
+        </v-col>
+      </v-row>
+    </form>
+    <div v-if="hint" class="hint">
+      {{ hint }}
+    </div>
+  </div>
 </template>
 
 <script>
@@ -168,6 +270,12 @@ export default {
     multiple: {
       type: Boolean,
       default: false,
+    },
+    template: {
+      type: String,
+    },
+    hint: {
+      type: String,
     },
   },
   data() {
@@ -211,39 +319,39 @@ export default {
         "dragleave",
         "drop",
       ].forEach(
-        function (evt) {
-          /*
-            For each event add an event listener that prevents the default action
-            (opening the file in the browser) and stop the propagation of the event (so
-            no other elements open the file in the browser)
-          */
-          this.$refs.fileform.addEventListener(
-            evt,
-            function (e) {
-              e.preventDefault();
-              e.stopPropagation();
-            }.bind(this),
-            false
-          );
-        }.bind(this)
+          function (evt) {
+            /*
+              For each event add an event listener that prevents the default action
+              (opening the file in the browser) and stop the propagation of the event (so
+              no other elements open the file in the browser)
+            */
+            this.$refs.fileform.addEventListener(
+                evt,
+                function (e) {
+                  e.preventDefault();
+                  e.stopPropagation();
+                }.bind(this),
+                false
+            );
+          }.bind(this)
       );
 
       /*
           Add an event listener for drop to the form
         */
       this.$refs.fileform.addEventListener(
-        "drop",
-        function (e) {
-          /*
-            Capture the files from the drop event and add them to our local files
-            array.fileform
-          */
-          for (let i = 0; i < e.dataTransfer.files.length; i++) {
-            this.$emit("addFile", e.dataTransfer.files[i], this.boundIndex);
-            this.files.push(e.dataTransfer.files[i]);
-            this.getImagePreviews();
-          }
-        }.bind(this)
+          "drop",
+          function (e) {
+            /*
+              Capture the files from the drop event and add them to our local files
+              array.fileform
+            */
+            for (let i = 0; i < e.dataTransfer.files.length; i++) {
+              this.$emit("addFile", e.dataTransfer.files[i], this.boundIndex);
+              this.files.push(e.dataTransfer.files[i]);
+              this.getImagePreviews();
+            }
+          }.bind(this)
       );
     }
   },
@@ -251,10 +359,10 @@ export default {
   methods: {
     fileClicked(index) {
       this.$emit(
-        "fileClicked",
-        this.boundIndex,
-        index,
-        this.$route.name === "Edit Quiz" ? this.files[index].name : undefined
+          "fileClicked",
+          this.boundIndex,
+          index,
+          this.$route.name === "Edit Quiz" ? this.files[index].name : undefined
       );
     },
     showRightFiles(index, indices) {
@@ -314,9 +422,9 @@ export default {
           present so we can do our AJAX uploading
         */
       return (
-        ("draggable" in div || ("ondragstart" in div && "ondrop" in div)) &&
-        "FormData" in window &&
-        "FileReader" in window
+          ("draggable" in div || ("ondragstart" in div && "ondrop" in div)) &&
+          "FormData" in window &&
+          "FileReader" in window
       );
     },
 
@@ -342,11 +450,11 @@ export default {
               to update the src on the file preview.
             */
           reader.addEventListener(
-            "load",
-            function () {
-              this.$refs["preview" + parseInt(i)][0].src = reader.result;
-            }.bind(this),
-            false
+              "load",
+              function () {
+                this.$refs["preview" + parseInt(i)][0].src = reader.result;
+              }.bind(this),
+              false
           );
 
           /*
