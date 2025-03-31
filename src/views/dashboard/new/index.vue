@@ -23,7 +23,7 @@
               </svg>
               <div class="college_name">University of Kicukiro</div>
               <div class="lower_content">
-                <div class="number_of_users">268 Users</div>
+                <div class="number_of_users">{{user_statistics.total_users}} Users</div>
                 <div class="account_type">
                   <svg
                     width="14"
@@ -202,7 +202,7 @@
       <div class="v-col col-12 col-lg-8 py-0">
         <v-row class="pa-0">
           <v-col class="col-12 col-lg-6 pt-0">
-            <small-card>
+            <small-card :data="user_statistics" type="users">
               <template v-slot:icon>
                 <svg
                   width="16"
@@ -305,11 +305,13 @@
 
 <script>
 import { mapActions } from "vuex";
+import Apis from "@/services/apis";
 export default {
   name: "ApplicationDashboard",
   data: () => ({
     showInviteUsers: false,
-    showFacultyModal: true,
+    showFacultyModal: false,
+    user_statistics: {}
   }),
   components: {
     InviteUsersDialog: () => import("@/components/dashboard/InviteUsersDialog"),
@@ -321,6 +323,10 @@ export default {
   methods: {
     ...mapActions("modal", ["set_modal"]),
   },
+  async beforeMount(){
+    const res = await Apis.get("user/statistics");
+    this.user_statistics = res.data.data
+  }
 };
 </script>
 
