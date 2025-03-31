@@ -356,7 +356,7 @@ export default {
           background: transparent;
 
           img {
-            width: 402px;
+            max-width: 402px;
             object-fit: cover;
             max-height: 199px;
             border-radius: 10px;
@@ -365,13 +365,13 @@ export default {
         }
         &.two {
           img {
-            width: 201px;
+            max-width: 201px;
             margin: 0px 5px;
           }
         }
         &.more {
           .attachment img {
-            width: 130px;
+            max-width: 130px;
             height: 108px;
             margin: 0px 5px;
           }
@@ -417,6 +417,7 @@ export default {
             align-self: flex-end;
             .attachments-cotainer {
               right: 0;
+              justify-content: flex-end;
             }
           }
 
