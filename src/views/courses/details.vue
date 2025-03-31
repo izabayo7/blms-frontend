@@ -73,7 +73,6 @@ export default {
   }),
   computed: {
     ...mapGetters("courses", ["course", "selectedChapter"]),
-    ...mapGetters("quiz_submission", ["selected_quiz_submission"]),
     userCategory() {
       return this.$store.state.user.user.category.name;
     },
@@ -102,7 +101,6 @@ export default {
       if (index == this.course.chapters.length) this.$router.push("/courses");
       else this.maximumIndex = index;
     },
-    ...mapActions("quiz_submission", ["findQuizSubmissionByUserAndQuizNames"]),
     async downloadAttachment(url) {
       window.location.href = url;
     },
