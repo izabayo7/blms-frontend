@@ -84,7 +84,8 @@ export default {
                 if (state.courses.data[i]._id == state.selectedCourse) {
                     for (const k in state.courses.data[i].chapters) {
                         if (state.courses.data[i].chapters[k]._id == chapterId) {
-                            // if it is arleady loaded then retun it
+
+                            // if it is already loaded then return it
                             if (state.courses.data[i].chapters[k].documentContent) {
                                 return state.courses.data[i].chapters[k].documentContent
                             }
@@ -339,7 +340,7 @@ export default {
         findCourseByName({ state, commit }, { user_name, courseName }) {
             let courseFound = false
             if (state.courses.loaded) {
-                let courses = state.courses.data.filter(course => course.name == courseName)
+                let courses = state.courses.data.filter(course => course.name === courseName)
 
                 if (courses.length > 0) {
                     courseFound = true
@@ -367,7 +368,7 @@ export default {
                 d.data = d.data.data
                 commit('set_student_progress', { courseId: state.selectedCourse, progress: d.data })
                 for (const i in state.courses.data) {
-                    if (state.courses.data[i]._id == state.selectedCourse) {
+                    if (state.courses.data[i]._id === state.selectedCourse) {
                         router.push(`/courses/${state.courses.data[i].name}`)
                         break
                     }
