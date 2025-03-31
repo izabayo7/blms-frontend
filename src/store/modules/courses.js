@@ -29,6 +29,10 @@ export default {
         SET_TOTAL_COMMENTS_ON_A_CHAPTER(state,num){
             state.totalCommentsOnAChapter = num
         },
+        // update number of total comments
+        DELETE_TOTAL_COMMENTS_ON_A_CHAPTER(state,num){
+            state.totalCommentsOnAChapter = 0
+        },
         // initialise a new chapter
         initialise_new_chapter(state) {
             for (const i in state.courses.data) {
@@ -503,6 +507,9 @@ export default {
         //get unpublished courses (instructor)
         unpublishedCourses: state => {
             return state.courses.data.filter(course => !course.published)
+        },
+        totalComments: state => {
+            return state.totalCommentsOnAChapter;
         }
     },
 }
