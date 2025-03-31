@@ -110,21 +110,21 @@
                   </div>
                 </div>
               </transition>
-              <div class="speaking-user">
-                <div class="d-flex">
-                  <div class="profile">
-                    <img
-                        :src="instructor ? instructor.profile + '?width=100' : ''"
-                        alt="profile picture" class="picture">
-                  </div>
-                  <div class="user">
-                    <div class="names">{{
-                        participationInfo.isOfferingCourse ? "YOU" : `${instructor ? instructor.sur_name + ' ' + instructor.other_names : ''}`
-                      }}</div>
-                    <div class="vocal"></div>
-                  </div>
-                </div>
-              </div>
+<!--              <div class="speaking-user">-->
+<!--                <div class="d-flex">-->
+<!--                  <div class="profile">-->
+<!--                    <img-->
+<!--                        :src="instructor ? instructor.profile + '?width=100' : ''"-->
+<!--                        alt="profile picture" class="picture">-->
+<!--                  </div>-->
+<!--                  <div class="user">-->
+<!--                    <div class="names">{{-->
+<!--                        participationInfo.isOfferingCourse ? "YOU" : `${instructor ? instructor.sur_name + ' ' + instructor.other_names : ''}`-->
+<!--                      }}</div>-->
+<!--                    <div class="vocal"></div>-->
+<!--                  </div>-->
+<!--                </div>-->
+<!--              </div>-->
             </div>
           </div>
         </div>
