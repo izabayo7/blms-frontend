@@ -296,6 +296,7 @@ export default {
       const newGroup = await a.create("chat_group", body);
       console.log(newGroup)
       this.$router.push(`/messages/${newGroup.data.data.code}`);
+      this.toggleGroup()
     },
   },
   mounted() {
