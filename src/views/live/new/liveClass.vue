@@ -197,7 +197,12 @@ openQuiz">
             </button>
           </div>
           <div class="live-class--action end-class">
-            <button @click="leaveRoom">
+            <button @click="                      set_modal({
+                        template: 'action_confirmation',
+                        method: { action: 'live_session/change_confirmation',parameters: { value: true} },
+                        title: 'End live session',
+                        message: 'Are you sure you want to end this live session?'
+                      })">
             <span class="icon">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none"
                                                                                                        d="M0 0h24v24H0z"/><path
@@ -352,6 +357,7 @@ export default {
   computed: {
     ...mapGetters('user', ['user']),
     ...mapGetters("chat", ["socket"]),
+    ...mapGetters("live_session", ["end_class"]),
 
     ...mapState("sidebar_navbar", {sidebarOpen: "sidebar_expanded"}),
     instructor() {
@@ -415,9 +421,14 @@ export default {
             break;
           case 'roomClosed':
             if (!self.participationInfo.isOfferingCourse)
-              alert('Room Closed');
-            else
+              self.set_modal({
+                template: 'live_related_ended',
+                title: 'Live class ended',
+                message: 'Hey user, the class you were attending has ended.',
+              })
+            else {
               self.finishSession();
+            }
 
             this.onCloseRoom();
             break;
@@ -489,15 +500,16 @@ export default {
       })
 
       self.socket.on("res/live/studentAnswered", ({id}) => {
-        self.participants.sort((a, b)=>
-        {
-          if (a._id == id)
-            return 1
-          else if (b._id == id)
-            return -1
+
+        for (const i in self.participants) {
+          if (self.participants[i].userInfo._id == id)
+            self.participants[i].userInfo.attendance = 100
         }
-      )
-        console.log("res/live/studentAnswered", id)
+
+        self.participants.sort((a, b) => {
+              return b.userInfo.attendance - a.userInfo.attendance
+            }
+        )
       })
 
       self.socket.on("comment/new", (result) => {
@@ -740,7 +752,6 @@ export default {
       this.audioEnabled = !this.audioEnabled;
     },
     leaveRoom() {
-      alert('Are you sure you want to leave this class ?')
       this.sendMessage({
         id: this.participationInfo.isOfferingCourse ? 'closeRoom' : 'leaveRoom'
       });
@@ -755,7 +766,7 @@ export default {
 
       // this.ws.close();
       // this.handleMediaTracks();
-      this.$router.push('/')
+      // this.$router.push('/')
     },
     async receiveVideo(sender) {
       console.log(`\n\n\n\n\n receiving video for ${sender} \n\n\n\n\n`)
@@ -852,6 +863,10 @@ export default {
     videoEnabled() {
       this.noVideo = !this.videoEnabled
       console.log(this.noVideo, this.videoEnabled)
+    },
+    end_class() {
+      if (this.end_class)
+        this.leaveRoom()
     }
   }
 }

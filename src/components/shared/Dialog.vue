@@ -91,7 +91,8 @@
         <input v-model="userCode" type="text">
       </div>
       <div class="action">
-        <button @click="handleSubmit">Submit</button>
+        <button v-if="modal_template.includes('ended')" @click="performAction">Go to course</button>
+        <button v-else @click="handleSubmit">Submit</button>
       </div>
     </div>
   </v-dialog>
@@ -101,11 +102,12 @@
 import {mapGetters, mapMutations, mapState, mapActions} from "vuex";
 
 export default {
-  data:()=>({
+  data: () => ({
     userCode: ""
   }),
   computed: {
     ...mapState("modal", ["confirmed"]),
+    ...mapGetters("courses", ["course"]),
     ...mapGetters("modal", [
       "visible",
       "title",
@@ -126,8 +128,8 @@ export default {
       "toogle_visibility",
       "update_confirmation"
     ]),
-    handleSubmit(){
-      if(this.code != this.userCode)
+    handleSubmit() {
+      if (this.code != this.userCode)
         this.$store.dispatch("app_notification/SET_NOTIFICATION", {
           message: "please enter the given code",
           status: "info",
@@ -149,8 +151,13 @@ export default {
               this.reset_modal();
             })
       } else {
+        const template = this.modal_template
         this.reset_modal();
-        this.$router.go(-1)
+        if (template.includes('ended')) {
+          this.$router.push(`/courses${this.course ? '/' + this.course.name : ''}`)
+        } else {
+          this.$router.go(-1)
+        }
       }
     }
   },
@@ -209,6 +216,7 @@ export default {
   }
 
   .close-dialog {
+    visibility: hidden;
     text-align: right;
     padding: 11px;
 
