@@ -10,10 +10,10 @@
 
       <!--      block of messages -->
       <div
-          class="msgs-block"
-          v-for="(msgs, i) in data"
-          :key="i"
-          :class="{
+        class="msgs-block"
+        v-for="(msgs, i) in data"
+        :key="i"
+        :class="{
           sending: msgGoing(msgs.from),
           system_message: systemMsg(msgs.from),
           receiving: !msgGoing(msgs.from),
@@ -22,44 +22,122 @@
         <!--        <div class="unread-indicator"><hr /></div>-->
         <!--        picture of the message sender-->
         <div v-if="!systemMsg(msgs.from)" class="picture mt-4">
+          <div
+            v-if="currentDisplayedUser.id === 'announcements'"
+            class="announcement"
+          >
+            <svg
+              width="37"
+              height="37"
+              viewBox="0 0 37 37"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <circle cx="18.5" cy="18.5" r="18.5" fill="#FFD248" />
+              <path
+                d="M18.5012 26.5437C19.386 26.5437 20.1099 25.8198 20.1099 24.935H16.8925C16.8925 25.8198 17.6164 26.5437 18.5012 26.5437ZM23.3273 21.7176V17.6958C23.3273 15.2265 22.0162 13.1593 19.7077 12.6124V12.0654C19.7077 11.3978 19.1688 10.8589 18.5012 10.8589C17.8336 10.8589 17.2947 11.3978 17.2947 12.0654V12.6124C14.9942 13.1593 13.6751 15.2185 13.6751 17.6958V21.7176L12.0664 23.3263V24.1306H24.936V23.3263L23.3273 21.7176ZM21.7186 22.5219H15.2838V17.6958C15.2838 15.7011 16.4984 14.0763 18.5012 14.0763C20.504 14.0763 21.7186 15.7011 21.7186 17.6958V22.5219Z"
+                fill="#343434"
+              />
+            </svg>
+          </div>
           <img
-              v-if="msgs.image"
-              :src="msgs.image+'?height=50'"
-              :alt="`${msgs.from}'s profile picture`"
+            v-else-if="msgs.image"
+            :src="msgs.image + '?height=50'"
+            :alt="`${msgs.from}'s profile picture`"
           />
           <v-avatar min-width="40" min-height="40" v-else class="avatar">
             {{ msgs.from | computeText }}
           </v-avatar>
         </div>
         <div class="msg-block">
-          <div v-if="!msgGoing(msgs.from) && currentDisplayedUser.is_group && !systemMsg(msgs.from)"
-               class="sender_name">
+          <div
+            v-if="currentDisplayedUser.id === 'announcements'"
+            class="sender_name"
+          >
+            {{ msgs.sender.sur_name }} {{ msgs.createdAt | getTimeDifference }}
+          </div>
+          <div
+            v-else-if="
+              !msgGoing(msgs.from) &&
+              currentDisplayedUser.is_group &&
+              !systemMsg(msgs.from)
+            "
+            class="sender_name"
+          >
             {{ msgs.from }} {{ msgs.messages[0].createdAt | getTimeDifference }}
           </div>
-          <div v-else class="sender_name" :class="msgs.from.toLowerCase()">
+          <div
+            v-else
+            class="sender_name"
+            :class="msgs.from ? msgs.from.toLowerCase() : 'announcements'"
+          >
             <p>{{ msgs.messages[0].createdAt | getTimeDifference }}</p>
           </div>
           <!--        list of messages sent or received-->
-          <div class="msgs">
-            <div :class="`msg-cntnr ${!msg.content || msg.content === '' ? 'noBg' : ''}`"
-                 v-for="(msg, i) in msgs.messages"
-                 :key="i">
+          <div v-if="currentDisplayedUser.id !== 'announcements'" class="msgs">
+            <div
+              :class="`msg-cntnr ${
+                !msg.content || msg.content === '' ? 'noBg' : ''
+              }`"
+              v-for="(msg, i) in msgs.messages"
+              :key="i"
+            >
               <!--            //for better html elements readability-->
-              <div class="msg" v-if="msg.content" :inner-html.prop="msg.content | urlify"/>
-              <div v-if="msg.attachments"
-                   :class="`attachments-cotainer ${msg.content ? 'pushed' : ''} ${msg.attachments.length > 1 ? msg.attachments.length > 2 ? 'more':'two':''}`">
-                <div v-for="(attachment, k) in msg.attachments" :key="k" class="attachment">
-                  <img v-if="fileType(attachment) === 'image'" :src="attachment.src + `?token=${$session.get('jwt')}`" alt="">
-<!--                  <audio v-if="fileType(attachment) === 'audio'" :src="attachment.src+ `?token=${$session.get('jwt')}`"></audio>-->
+              <div
+                class="msg"
+                v-if="msg.content"
+                :inner-html.prop="msg.content | urlify"
+              />
+              <div
+                v-if="msg.attachments"
+                :class="`attachments-cotainer ${msg.content ? 'pushed' : ''} ${
+                  msg.attachments.length > 1
+                    ? msg.attachments.length > 2
+                      ? 'more'
+                      : 'two'
+                    : ''
+                }`"
+              >
+                <div
+                  v-for="(attachment, k) in msg.attachments"
+                  :key="k"
+                  class="attachment"
+                >
+                  <img
+                    v-if="fileType(attachment) === 'image'"
+                    :src="attachment.src + `?token=${$session.get('jwt')}`"
+                    alt=""
+                  />
+                  <!--                  <audio v-if="fileType(attachment) === 'audio'" :src="attachment.src+ `?token=${$session.get('jwt')}`"></audio>-->
                   <vue-plyr v-if="fileType(attachment) === 'audio'">
                     <audio controls crossorigin playsinline>
                       <source
-                          :src="attachment.src+ `?token=${$session.get('jwt')}`"
-                          type="audio/mp3"
+                        :src="attachment.src + `?token=${$session.get('jwt')}`"
+                        type="audio/mp3"
                       />
                     </audio>
                   </vue-plyr>
                 </div>
+              </div>
+            </div>
+          </div>
+          <div v-else class="msgs">
+            <div class="announcement-container">
+              <div class="col-12 col-md-1">
+                <img
+                  :src="$store.state.sidebar_navbar.college.logo"
+                  alt=""
+                  class="college-logo"
+                />
+              </div>
+              <div class="col-12">
+                <Editor
+                  ref="editor"
+                  mode="view"
+                  class="editor-container"
+                  :inverted="true"
+                  :defaultContent="msgs.content"
+                />
               </div>
             </div>
           </div>
@@ -68,11 +146,11 @@
       <div class="receiving" v-if="typing">
         <!-- <div class="receiving" v-if="1"> -->
         <div
-            v-if="currentDisplayedUser.is_group"
-            class="sender_name text-center"
+          v-if="currentDisplayedUser.is_group"
+          class="sender_name text-center"
         >
           <span v-for="(member, i) in typing_members" :key="i"
-          >{{ `${i > 0 ? "," : ""} ${member}` }}
+            >{{ `${i > 0 ? "," : ""} ${member}` }}
           </span>
           <span>{{ typing_members.length > 1 ? " are " : " is " }} typing</span>
         </div>
@@ -90,15 +168,18 @@
 </template>
 
 <script>
-import {mapState, mapGetters, mapMutations} from "vuex";
+import { mapState, mapGetters, mapMutations } from "vuex";
 // import {on} from "@/services/event_bus";
-import {chatMixins} from "@/services/mixins";
+import { chatMixins } from "@/services/mixins";
 
 export default {
   name: "Chat-messaging",
   mixins: [chatMixins],
+  components: {
+    Editor: () => import("@/components/reusable/Editor"),
+  },
   props: {
-    data: {type: [Array, Boolean], required: true},
+    data: { type: [Array, Boolean], required: true },
   },
   data() {
     return {
@@ -113,7 +194,7 @@ export default {
       let names = [];
       for (const i in this.typers) {
         const user = this.currentDisplayedUser.members.filter(
-            (m) => m.data.user_name == this.typers[i]
+          (m) => m.data.user_name == this.typers[i]
         );
         names.push(user[0].data.sur_name);
       }
@@ -126,14 +207,13 @@ export default {
     msgGoing(owner) {
       return owner && owner.toLowerCase() === "me";
     },
-    fileType(attachment){
-      if(attachment.src.match(/\.(jpg|JPG|jpeg|JPEG|png|PNG|gif|GIF)$/)){
-        return 'image'
-      }
-      else if(attachment.src.match(/\.(MP3|mp3|wav|WAV)$/)){
-        return 'audio'
-      } else{
-        return 'others'
+    fileType(attachment) {
+      if (attachment.src.match(/\.(jpg|JPG|jpeg|JPEG|png|PNG|gif|GIF)$/)) {
+        return "image";
+      } else if (attachment.src.match(/\.(MP3|mp3|wav|WAV)$/)) {
+        return "audio";
+      } else {
+        return "others";
       }
     },
     systemMsg(owner) {
@@ -163,9 +243,8 @@ export default {
     let timeout = undefined;
 
     this.socket.on("res/message/typing", (typist, group) => {
-      console.log(this.currentDisplayedUser)
-      if (!this.currentDisplayedUser)
-        return
+      console.log(this.currentDisplayedUser);
+      if (!this.currentDisplayedUser) return;
 
       if (this.currentDisplayedUser.is_group) {
         // const user = this.currentDisplayedUser.members.some(el => el._id === typist)
@@ -173,8 +252,8 @@ export default {
       if (!this.typers.includes(typist)) this.typers.push(typist);
       //if the typist is the one we are chatting with
       if (
-          this.currentDisplayedUser.id === typist ||
-          this.currentDisplayedUser.id === group
+        this.currentDisplayedUser.id === typist ||
+        this.currentDisplayedUser.id === group
       ) {
         this.typing = true;
 
@@ -340,6 +419,17 @@ export default {
           margin-right: 20px;
         }
       }
+      .announcement-container {
+        width: 486px;
+        margin-left: 18px;
+        padding: 21px 15px;
+        background: #e7ecf0;
+        border-radius: 10px;
+        img {
+          max-width: 225px;
+          max-height: 57px;
+        }
+      }
 
       //whole msg bar css
       .msg {
@@ -358,7 +448,6 @@ export default {
         &.noBg {
           background: transparent !important;
         }
-
       }
 
       .attachments-cotainer {
@@ -366,7 +455,7 @@ export default {
         display: flex;
         flex-wrap: wrap;
         &.pushed {
-          margin-top: .5rem
+          margin-top: 0.5rem;
         }
         .attachment {
           width: fit-content;
@@ -419,11 +508,10 @@ export default {
       }
 
       .msg-block {
-
         .sender_name {
           display: flex;
           justify-content: flex-end;
-          padding-right: .4rem;
+          padding-right: 0.4rem;
         }
 
         .msgs {
