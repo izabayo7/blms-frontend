@@ -410,9 +410,8 @@ export default {
           if (!right_choice_found)
             return this.error = `Question ${parseInt(i) + 1} must have a right choice`
         }
-
-        this.saveQuiz();
       }
+      this.saveQuiz();
     },
     ...mapActions("quiz", ["create_quiz"]),
     addPicture(file, boundIndex) {
