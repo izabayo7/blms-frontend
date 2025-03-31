@@ -10,22 +10,25 @@
         <article class="upc--information--picture px-5 pt-2">
 <!--          user profile picture-->
           <figure class="upc--information--picture--img">
-            <img src="https://i0.wp.com/www.mobileworldlive.com/wp-content/uploads/2015/10/Dorsey-iamge.png?w=150&ssl=1" alt="user profile picture">
+            <img v-if="user.profile" :src="user.profile" alt="user profile picture">
+            <v-avatar v-else :size="96" class="profile-avatar">
+              {{ `${user.sur_name} ${user.other_names}` | computeText }}
+            </v-avatar>
           </figure>
         </article>
 <!--        user information-->
         <article class="upc--information--data px-5 pt-2">
           <div class="upc--information--data--name">
-            <h2>Umuhoza solange</h2>
+            <h2>{{ user.sur_name + ' ' + user.other_names }}</h2>
           </div>
           <div class="upc--information--data--type">
-            <h5>Student profile</h5>
+            <h5>{{ user.category }} profile</h5>
           </div>
           <div class="upc--information--data--faculty">
             <h3>Accounting year 2</h3>
           </div>
           <div class="upc--information--data--email">
-            <p>solange87@gmail.com</p>
+            <p>{{ user.email }}</p>
           </div>
         </article>
       </article>
@@ -47,12 +50,16 @@
 
 <script>
 import ButtonUi from "../reusable/ui/button-ui";
-import userCategoryMixin from '@/mixins/user-category.mixin.js'
 
 export default {
 name: "user-profile-card",
   components: {ButtonUi},
-  mixins:[userCategoryMixin]
+  props:{
+    user:{
+      type:Object,
+      required: true
+    }
+  },
 }
 </script>
 
@@ -66,10 +73,12 @@ name: "user-profile-card",
   &--information{
     &--picture{
       &--img{
-        img{
+        img,.profile-avatar{
           border-radius: 50%;
           width:6rem;
           height:6rem;
+          margin: 0 !important;
+          padding: 0 !important;
           object-fit: cover;
           border:5px solid lighten($primary,60)
         }
