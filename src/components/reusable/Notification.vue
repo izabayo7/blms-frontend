@@ -46,6 +46,7 @@
 </template>
 <script>
 import { mapGetters, mapActions } from "vuex";
+import Apis from "@/services/apis";
 
 export default {
   name: "Notification",
@@ -54,6 +55,14 @@ export default {
       numberOfNewNotifications: 4,
       cardActive: false,
     };
+  },
+  watch: {
+    cardActive(){
+      if(this.cardActive)
+        Apis.update('user_notification','allSeen').then(()=>{
+          this.unReads = 0
+        })
+    }
   },
   computed: {
     number() {
@@ -80,7 +89,7 @@ export default {
     unReads() {
       let total = 0;
       for (const i in this.notifications) {
-        if (this.notifications[i].status > 1) {
+        if (this.notifications[i].status > 2) {
           total++;
         }
       }
