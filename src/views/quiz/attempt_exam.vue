@@ -254,10 +254,10 @@
 import Apis from "@/services/apis";
 import {mapGetters, mapActions} from "vuex";
 import {assessmentMixins} from "../../services/mixins";
-import {load, SupportedPackages} from "@tensorflow-models/face-landmarks-detection";
-import {drawMesh} from "./utilities.js";
-// eslint-disable-next-line
-import * as tf from "@tensorflow/tfjs";
+// import {load, SupportedPackages} from "@tensorflow-models/face-landmarks-detection";
+// import {drawMesh} from "./utilities.js";
+// // eslint-disable-next-line
+// import * as tf from "@tensorflow/tfjs";
 
 export default {
   data: () => ({
@@ -667,57 +667,57 @@ export default {
         e.preventDefault();
       }
     },
-    setDetector() {
-      const video = document.getElementById("userStream")
-      const canvas = document.createElement('canvas')
-      video.parentElement.append(canvas)
-
-      //  Load posenet
-      const runFacemesh = async () => {
-        // OLD MODEL
-        // const net = await facemesh.load({
-        //   inputResolution: { width: 640, height: 480 },
-        //   scale: 0.8,
-        // });
-        // NEW MODEL
-        const net = await load(SupportedPackages.mediapipeFacemesh);
-        setInterval(() => {
-          detect(net);
-        }, 10);
-      };
-
-      const detect = async (net) => {
-        if (
-            video.readyState === 4
-        ) {
-          // Get Video Properties
-          const videoWidth = video.videoWidth;
-          const videoHeight = video.videoHeight;
-
-          // Set video width
-          // webcamRef.current.video.width = videoWidth;
-          // webcamRef.current.video.height = videoHeight;
-
-          // Set canvas width
-          canvas.width = videoWidth;
-          canvas.height = videoHeight;
-
-          // Make Detections
-          // OLD MODEL
-          //       const face = await net.estimateFaces(video);
-          // NEW MODEL
-          const face = await net.estimateFaces({input: video});
-          // Get canvas context
-          const ctx = canvas.getContext("2d");
-          requestAnimationFrame(() => {
-            drawMesh(face, ctx)
-          });
-        }
-      };
-
-      runFacemesh()
-
-    },
+    // setDetector() {
+    //   const video = document.getElementById("userStream")
+    //   const canvas = document.createElement('canvas')
+    //   video.parentElement.append(canvas)
+    //
+    //   //  Load posenet
+    //   const runFacemesh = async () => {
+    //     // OLD MODEL
+    //     // const net = await facemesh.load({
+    //     //   inputResolution: { width: 640, height: 480 },
+    //     //   scale: 0.8,
+    //     // });
+    //     // NEW MODEL
+    //     const net = await load(SupportedPackages.mediapipeFacemesh);
+    //     setInterval(() => {
+    //       detect(net);
+    //     }, 10);
+    //   };
+    //
+    //   const detect = async (net) => {
+    //     if (
+    //         video.readyState === 4
+    //     ) {
+    //       // Get Video Properties
+    //       const videoWidth = video.videoWidth;
+    //       const videoHeight = video.videoHeight;
+    //
+    //       // Set video width
+    //       // webcamRef.current.video.width = videoWidth;
+    //       // webcamRef.current.video.height = videoHeight;
+    //
+    //       // Set canvas width
+    //       canvas.width = videoWidth;
+    //       canvas.height = videoHeight;
+    //
+    //       // Make Detections
+    //       // OLD MODEL
+    //       //       const face = await net.estimateFaces(video);
+    //       // NEW MODEL
+    //       const face = await net.estimateFaces({input: video});
+    //       // Get canvas context
+    //       const ctx = canvas.getContext("2d");
+    //       requestAnimationFrame(() => {
+    //         drawMesh(face, ctx)
+    //       });
+    //     }
+    //   };
+    //
+    //   runFacemesh()
+    //
+    // },
     postBlob(event) {
       if (event.data && event.data.size > 0) {
         this.sendBlobAsBase64(event.data);

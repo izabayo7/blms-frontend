@@ -11,8 +11,6 @@
   },
   "dependencies": {
     "@mdi/font": "5.9.55",
-    "@tensorflow-models/face-landmarks-detection": "0.0.2",
-    "@tensorflow/tfjs": "2.3.0",
     "animate.css": "^4.1.1",
     "apexcharts": "^3.24.0",
     "axios": "^0.21.1",
