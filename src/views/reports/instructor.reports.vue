@@ -1,5 +1,5 @@
 <template>
-  <v-app id="reports-page" class="pa-0">
+  <v-app id="reports-page" class="pa-0 instructor_reports">
     <div class="table-one">
       <h3>Submissions</h3>
       <v-data-table
@@ -11,10 +11,17 @@
       >
         <template v-slot:item.course_name="{ item }">
           <router-link
-            class="normal--text"
+            class="normal--text d-block"
             to="/"
             >{{
               item.target.course.name
+            }}</router-link
+          >
+          <router-link
+            class="normal--text small"
+            to="/"
+            >{{
+              `${item.target.faculty_college_year.faculty_college.faculty.name} year ${item.target.faculty_college_year.college_year.digit}`
             }}</router-link
           >
         </template>
@@ -27,6 +34,24 @@
             }}</router-link
           >
         </template>
+        <template v-slot:item.total_marks="{ item }">
+          <span
+            class="normal--text"
+            to="/"
+            >{{
+              item.total_marks
+            }}</span
+          >
+        </template>
+        <template v-slot:item.marking_status="{ item }">
+          <span
+            class="normal--text"
+            to="/"
+            >{{
+              item.marking_status
+            }}</span
+          >
+        </template>
         <template v-slot:item.total_submissions="{ item }">
           <span
             class="normal--text"
@@ -36,12 +61,12 @@
           >
         </template>
         <template v-slot:item.actions="{ item }">
-          <v-row class="actions">
-           <v-col>
+          <v-row class="actions pa-0">
+           <v-col class="pa-0 pr-1 py-1">
             <v-btn class="white--text" :color="primary" :to="`/submissions/${item.name}`">
               View submissions
             </v-btn></v-col>
-            <v-col>
+            <v-col class="pa-0 pl-1 py-1">
             <v-btn color="#3CE970" class="white--text" :to="`/submissions/${item.name}`">
               Release marks
             </v-btn>
@@ -117,3 +142,15 @@ export default {
   },
 };
 </script>
+<style lang="scss">
+.instructor_reports{
+  // font-family: Poppins;
+  .normal--text{
+    font-size: 18px;
+    font-weight: 500;
+    &.small{
+      font-size: 12px;
+    }
+  }
+}
+</style>
