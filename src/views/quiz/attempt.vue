@@ -518,7 +518,7 @@ export default {
             // notify instructor
             this.socket.emit('student-submitted', {
               userId: this.selected_quiz.user,
-              route: `/quiz/${this.$route.params.name}/${this.$store.state.user.user.user_name}`,
+              route: `/assessments/quiz/${this.$route.params.name}/${this.$store.state.user.user.user_name}`,
               content: 'submitted quiz ' + this.selected_quiz.name
             })
             if (is_selection_only) {
