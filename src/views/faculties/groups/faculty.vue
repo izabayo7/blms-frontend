@@ -43,7 +43,7 @@
             <table-header />
           </div>
           <div class="table">
-            <table-ui :data="faculties"/>
+            <table-ui :data="groups"/>
           </div>
         </div>
       </div>
@@ -58,17 +58,19 @@ import TableHeader from "../../../components/reusable/ui/table-header";
 import TableUi from "../../../components/reusable/ui/table-ui";
 
 export default {
-name: "Faculty",
+  //TODO add dynamic facalty groups
+name: "FacultyGroups",
   components: {TableUi, TableHeader, Search, buttonUi},
   data(){
     return{
-      faculties:[
+      groups:[
         {"Students groups":"COM DESIGN YEAR 1", "No students":124,"Assigned Instructors":4, "Courses served":12 ,"Created on":"today"},
         {"Students groups":"COM DESIGN YEAR 2 arts", "No students":64,"Assigned Instructors":9, "Courses served":4 ,"Created on":"12/12/2020"},
         {"Students groups":"COM DESIGN YEAR 3", "No students":13,"Assigned Instructors":3, "Courses served":16 ,"Created on":"12/5/2020"},
         {"Students groups":"COM DEVELOP YEAR 1", "No students":34,"Assigned Instructors":5, "Courses served":1 ,"Created on":"13/12/2021"},
         {"Students groups":"COM SETTING YEAR 1", "No students":76,"Assigned Instructors":1, "Courses served":20 ,"Created on":"3/10/2019"},
-      ]
+      ],
+      facultyId:this.$route.params.facultyId
     }
   }
 }
