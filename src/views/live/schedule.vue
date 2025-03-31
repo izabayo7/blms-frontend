@@ -94,26 +94,7 @@
       <div class="input-container my-margin">
         <div class="label mb-2">Select time</div>
         <div class="d-flex">
-          <div class="text-filed mr-5" @click="showTimePicker(false)">
-            {{ hours }}
-          </div>
-          <div class="text-filed" @click="showTimePicker(true)">
-            {{ minutes }}
-          </div>
-        </div>
-        <div ref="timepicker" class="time_pckr">
-          <TimePicker
-              @update="updateTime"
-              class="mt-4"
-              v-if="showPicker"
-              format="24hr"
-              scrollable
-              min="9:30"
-              :no-title="true"
-              :use-seconds="useSeconds"
-              max="22:15"
-              @close="showPicker = false"
-          ></TimePicker>
+          <input class="text-filed pa-4" v-model="time" type="time" />
         </div>
       </div>
       <div class="input-container my-margin">
@@ -172,20 +153,17 @@
 <script>
 import SelectUi from "@/components/reusable/ui/select-ui";
 import {mapActions, mapGetters} from "vuex";
-import TimePicker from "@/components/TimePicker";
 import Popup from "@/components/Live/Popup";
 
 export default {
-  components: {SelectUi, TimePicker, Popup},
+  components: {SelectUi, Popup},
   data() {
     return {
       user_group_names: ["Principal", "Instructor", "Student"],
       date: new Date().toISOString().substring(0, 10),
       menu: false,
       time: "00:00",
-      useSeconds: false,
       startNow: false,
-      showPicker: false,
       counter: 0,
       selected_course: "",
       selected_chapter: "",
@@ -202,13 +180,6 @@ export default {
   computed: {
     ...mapGetters("courses", ["courses", "loaded"]),
     ...mapGetters("quiz", ["all_quiz"]),
-    hours() {
-      return this.time.split(":")[0];
-    },
-    minutes() {
-      console.log(this.time.toString());
-      return this.time.split(":")[1];
-    },
     courseNames() {
       let res = [];
       for (const i in this.courses) {
@@ -246,20 +217,6 @@ export default {
     ...mapActions("live_session", ["createLiveSession"]),
     ...mapActions("courses", ["getCourses"]),
     ...mapActions("quiz", ["getQuizes"]),
-    updateTime(value) {
-      // console.log(value, this.counter);
-      if (value) {
-        this.time = value;
-        if (
-            this.hours &&
-            this.minutes &&
-            this.hours != "00" &&
-            this.minutes != "00"
-        ) {
-          this.showPicker = false;
-        }
-      }
-    },
     toogleMenu() {
       this.menu = true;
     },
@@ -280,10 +237,6 @@ export default {
         this.isConfirming = true;
         this.showModal = true
       }
-    },
-    showTimePicker(showSeconds) {
-      this.useSeconds = showSeconds;
-      this.showPicker = true;
     },
     studentGroup() {
       for (const i in this.courses) {
@@ -439,7 +392,7 @@ export default {
   }
 
   .text-filed {
-    width: 79px;
+    //width: 79px;
     height: 41px;
     border: 1.54684px solid #bababc;
     display: flex;
