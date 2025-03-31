@@ -172,13 +172,8 @@ export default {
     
     this.ws = new WebSocket('wss://' + host + '/groupcall');
 
-    this.onerror = function(er){
-      console.log("error ", er)
-    }
 
-    console.log(this.ws)
-
-    window.onbeforeunload = function() {
+    window.onbeforeunload = () => {
       this.ws.close();
     };
     
