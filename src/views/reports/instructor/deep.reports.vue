@@ -119,18 +119,18 @@ export default {
           text: "reports",
           link: "/reports",
         },
-        {
+      ]
+      if (this.quiz_submission.target) {
+        links.push({
           text: this.quiz_submission.target.course.name,
           link: "/reports/" + this.$route.params.target,
-        },
-
-      ]
-      if (this.quiz_submission.target.chapter)
-        links.push({
-          text: this.quiz_submission.target.chapter.name,
-          link: "/reports/" + this.$route.params.target,
         })
-
+        if (this.quiz_submission.target.chapter)
+          links.push({
+            text: this.quiz_submission.target.chapter.name,
+            link: "/reports/" + this.$route.params.target,
+          })
+      }
       return links;
     },
     // get the userCategory
@@ -151,7 +151,8 @@ export default {
     //get submissions on page load
     this.getQuizSubmissionsInQuiz({
       quiz_id: this.$route.params.target,
-      isAssignments: this.$route.path.includes('assignments')
+      isAssignments: this.$route.path.includes('assignments'),
+      isExam: this.$route.path.includes('exams')
     }).then((d) => {
       this.quiz_submission = d;
     });
