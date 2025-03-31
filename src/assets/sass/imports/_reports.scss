@@ -81,6 +81,10 @@
     border-radius: 20px !important;
     height: 11px !important;
     width: 87%;
+
+    &.reports {
+        height: 7px !important;
+    }
 }
 
 .ongoing-progress {

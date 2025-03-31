@@ -141,6 +141,11 @@ const routes = [
                             import('@/views/quiz/pre_submission')
                     },
                     {
+                        path: '/quiz/:name/results',
+                        component: () =>
+                            import('@/views/quiz/results')
+                    },
+                    {
                         path: '/quiz/attempt/:name',
                         name: 'TakeQuiz',
                         component: () =>

@@ -92,7 +92,7 @@
           <v-progress-linear
             :active="false"
             :value="item.progress.progress"
-            :class="`mt-6 kurious--progressbar ${
+            :class="`mt-6 kurious--progressbar reports ${
               item.progress.progress === 100
                 ? 'completed-progress'
                 : 'ongoing-progress'
