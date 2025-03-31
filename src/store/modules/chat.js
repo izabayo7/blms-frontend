@@ -205,12 +205,13 @@ export default {
 
             // Get contacts new style
             getters.socket.on('res/message/contacts', ({ contacts }) => {
+                console.log(contacts)
                 state.incomingMessages = contacts
                 emit('incoming_message_initially_loaded')
             });
         },
         start_conversation({ state, getters }, user_name) {
-
+// console.log(user_name)
             // search if conversation exist
             const contact_found = state.incomingMessages.filter(c => c.id == user_name)
 

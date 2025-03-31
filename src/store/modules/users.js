@@ -61,14 +61,22 @@ export default {
             })
         },
         searchUser({ state }, { query, page, limit }) {
-            return apis.get(`user/search?data=${query}&page=${page}&limit=${limit}`).then((d) => {
+            let url = `user/search?data=${query}`
+            url += page ? `&page=${page}` : ''
+            url += limit ? `&limit=${limit}` : '' 
+
+            return apis.get(url).then((d) => {
                 d.data = d.data.data
                 state.search_results.data = d.data.results
                 return d.data.results
             })
         },
         searchNewGroupMembers({ state }, { group_code, query, page, limit }) {
-            return apis.get(`chat_group/${group_code}/search_members?data=${query}&page=${page}&limit=${limit}`).then((d) => {
+            let url = `chat_group/${group_code}/search_members?data=${query}`
+            url += page ? `&page=${page}` : ''
+            url += limit ? `&limit=${limit}` : '' 
+            
+            return apis.get(url).then((d) => {
                 d.data = d.data.data
                 state.search_results.data = d.data.results
                 return d.data.results

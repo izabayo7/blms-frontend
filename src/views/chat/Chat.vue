@@ -11,7 +11,8 @@
           />
           <v-avatar v-else size="50" class="avatar">
             {{ currentDisplayedUser.name | computeText }}
-          </v-avatar></template>
+          </v-avatar></template
+        >
         <!--        name of the current chatter-->
         <template #name>{{ currentDisplayedUser.name }}</template>
       </chat-header>
@@ -53,7 +54,12 @@ export default {
     return {};
   },
   computed: {
-    ...mapState("chat", ["currentDisplayedUser", "username", "loadedMessages"]),
+    ...mapState("chat", [
+      "currentDisplayedUser",
+      "username",
+      "loadedMessages",
+      "incomingMessages",
+    ]),
     ...mapGetters("chat", ["socket", "conversationLoading", "currentMessages"]),
   },
   methods: {
@@ -61,7 +67,7 @@ export default {
     ...mapMutations("chat", ["ADD_TYPIST", "REMOVE_TYPIST"]),
     doneTyping() {
       this.typing.typist = "";
-    }
+    },
   },
   mounted() {
     on("message-received", () => {
@@ -73,14 +79,22 @@ export default {
     //load user since the route have changed
     this.setUsername(this.$route.params.username).then((username) => {
       this.loadMessages(username);
+      if (this.currentDisplayedUser.id == username) {
+        console.log(this.incomingMessages)
+        this.incomingMessages.map((d) => {
+          if (this.$route.params.username == d.id) {
+            this.SET_DISPLAYED_USER(d);
+          }
+        });
+      }
     });
   },
   beforeRouteUpdate(to, from, next) {
     //since username has changed let us also load new chat
-    this.setUsername(to.params.username)
-      //   .then((username) => {
-      // // console.log(username);
-      // });
+    this.setUsername(to.params.username);
+    //   .then((username) => {
+    // // console.log(username);
+    // });
 
     next();
   },
