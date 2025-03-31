@@ -48,11 +48,16 @@
                   </div>
                 </div>
               </div>
-                <video v-show="!noVideo && !isPresenting" id="video_feed">
+              <video v-show="!noVideo && !isPresenting" id="video_feed">
                 <!--                <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" >-->
               </video>
               <button @click="playVideo" class="play_button">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="64" height="64"><path fill="none" d="M0 0h24v24H0z"/><path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zM10.622 8.415a.4.4 0 0 0-.622.332v6.506a.4.4 0 0 0 .622.332l4.879-3.252a.4.4 0 0 0 0-.666l-4.88-3.252z" fill="rgba(255,255,255,1)"/></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="64" height="64">
+                  <path fill="none" d="M0 0h24v24H0z"/>
+                  <path
+                      d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zM10.622 8.415a.4.4 0 0 0-.622.332v6.506a.4.4 0 0 0 .622.332l4.879-3.252a.4.4 0 0 0 0-.666l-4.88-3.252z"
+                      fill="rgba(255,255,255,1)"/>
+                </svg>
               </button>
               <video v-if="!participationInfo.isOfferingCourse" v-show="isPresenting"
                      id="viewer_screen_feed">
@@ -347,7 +352,7 @@ export default {
             // }
           } else {
 
-            await Apis.create('user_logs',{live_session_id: d.data.data._id})
+            await Apis.create('user_logs', {live_session_id: d.data.data._id})
 
             this.live_session = d.data.data
             this.startCounting(d.data.data);
@@ -378,10 +383,10 @@ export default {
     },
   },
   methods: {
-    toogleFullScreen(){
+    toogleFullScreen() {
       document.getElementById("video_feed").requestFullscreen()
     },
-    playVideo(){
+    playVideo() {
       document.getElementById("video_feed").play()
       document.querySelector('.play_button').style.display = 'none'
     },
@@ -506,7 +511,10 @@ export default {
       self.socket.on("res/live/checkAttendance", ({code}) => {
         this.set_modal({
           template: 'live_related',
-          method: {action: 'live_session/answerAttendance', parameters: {user: {id: self.instructor._id}, session_id: self.$route.params.liveSessionId}},
+          method: {
+            action: 'live_session/answerAttendance',
+            parameters: {user: {id: self.instructor._id}, session_id: self.$route.params.liveSessionId}
+          },
           title: 'ATTENDANCE CHECK',
           message: 'Hey user, are you there ? Type the code bellow to confirm ',
           code: code,
@@ -583,6 +591,12 @@ export default {
       }
     },
     shareScreen() {
+      if (!this.isPresenting) {
+        setTimeout(() => {
+          document.getElementById("video_screen_feed").srcObject.getVideoTracks()[0].addEventListener('ended', () =>
+              this.shareScreen())
+        }, 5000)
+      }
       let message = {
         id: this.isPresenting ? 'stopSharingScreen' : 'shareScreen',
       }
