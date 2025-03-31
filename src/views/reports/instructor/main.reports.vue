@@ -49,7 +49,7 @@
                     template: 'action_confirmation',
                     method: item.submissionMode ? {
                       action: 'quiz/change_assignment_status',
-                      parameters: { id: item._id, status: 'RELEASED' },
+                      parameters: { id: item._id, status: 'RELEASED', user_group: item.target.course.user_group._id, name: item.title },
                     } :{
                       action: 'quiz/release_marks',
                       parameters: { id: item._id, quizName: item.name,user_group: item.target.course.user_group._id},

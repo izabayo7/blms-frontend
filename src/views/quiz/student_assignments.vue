@@ -55,7 +55,9 @@
             </template>
             <template v-slot:item.status="{ item }">
               <div :class="'assignment_td' + item.submissionMode ? `status ${computeClass(item)}` : ''">
-                {{ computeClass(item) === 'expired' ? 'Expired' : item.submission ? 'Submitted' : 'Not done' }}
+                {{
+                  computeClass(item) === 'expired' ? 'Expired' : item.submission ? computeClass(item) === 'marked' ? 'Marked' : 'Submitted' : 'Not done'
+                }}
               </div>
             </template>
             <template v-slot:item.grades="{ item }">
@@ -120,10 +122,11 @@ export default {
       this.$router.push(`/assignments/${value._id}`)
     },
     computeClass(item) {
-      if (new Date() > new Date(item.dueDate))
-        return 'expired'
       if (!item.submission)
-        return 'not_done'
+        if (new Date() > new Date(item.dueDate))
+          return 'expired'
+        else
+          return 'not_done'
       if (!(item.status === 'RELEASED' && item.submission.marked))
         return 'pending'
       else
