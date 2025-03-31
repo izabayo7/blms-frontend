@@ -6,7 +6,8 @@
         <div class="lower">Anouncements</div>
       </div>
       <div class="col-8 col-md-6 text-right">
-        <button class="button">
+        <button v-if="userCategory === 'ADMIN' || userCategory === 'INSTRUCTOR'" class="button"
+                @click="$router.push('/announcements/new')">
           <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
             <g clip-path="url(#clip0)">
               <path
@@ -68,7 +69,10 @@
               </div>
               <div class="details">
                 <div class="time">{{ announcement.createdAt | formatDate }}</div>
-                <div class="targert">{{ announcement.target ? announcement.target.name : computeTarget(announcement.specific_receivers) | trimString(20) }}</div>
+                <div class="targert">{{
+                    announcement.target ? announcement.target.name : computeTarget(announcement.specific_receivers) | trimString(20)
+                  }}
+                </div>
                 <div class="views vertically--centered">
                   <svg class="hidden-sm-and-down" width="17" height="17" viewBox="0 0 17 17" fill="none"
                        xmlns="http://www.w3.org/2000/svg">
@@ -132,7 +136,7 @@
               :defaultContent="announcement.content"
           />
         </div>
-        <div class="actions">
+        <div v-if="announcement.sender.user_name === $store.state.user.user.user_name" class="actions">
           <button class="button" @click="$router.push(`/announcements/edit/${$route.params.id}`)">Edit announcement
           </button>
           <button class="outlined button mx-auto" @click="
@@ -168,8 +172,8 @@ export default {
     ...mapActions("announcement", ["getAnnouncements", "deleteAnnouncement"]),
     ...mapMutations("announcement", ["set_selected_announcement"]),
     ...mapActions("modal", ["set_modal"]),
-    computeTarget(receivers){
-      let arr = receivers.map(x=>x.sur_name)
+    computeTarget(receivers) {
+      let arr = receivers.map(x => x.sur_name)
       return arr.join(',')
     }
   },

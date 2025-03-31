@@ -150,7 +150,6 @@
           <div class="link-name" v-show="state">Courses</div>
         </li>
         <li
-          v-if="userCategory === 'ADMIN' || userCategory === 'INSTRUCTOR'"
           @click="
             closeSidebar();
             routeTo('/announcements');
