@@ -238,7 +238,7 @@
 <script>
 import SelectUi from "@/components/reusable/ui/select-ui";
 import Apis from "@/services/apis";
-import {mapActions} from "vuex";
+import {mapActions, mapGetters} from "vuex";
 
 export default {
   name: "CreateAnnouncement",
@@ -248,7 +248,9 @@ export default {
     chip: () => import("@/components/reusable/ui/Chip"),
     SelectUi
   },
-  computed: {},
+  computed: {
+    ...mapGetters("users",["selected_users"])
+  },
   data: () => ({
     announcement: {
       title: "",
@@ -429,6 +431,14 @@ export default {
         })
     },
   },
+  mounted() {
+    if(this.$route.query.target === 'individual') {
+      this.target_type = 'individual'
+      if (this.selected_users.length) {
+        this.users = this.selected_users
+      }
+    }
+  }
 };
 </script>
 

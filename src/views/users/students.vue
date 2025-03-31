@@ -23,7 +23,7 @@
             />
           </div>
           <div class="col-12 hidden-sm-and-down col-md-3">
-            <button class="mx-auto">
+            <button class="mx-auto" @click="notifyStudents">
               <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <g clip-path="url(#clip0)">
                   <path
@@ -160,6 +160,10 @@ export default {
     }
   },
   methods: {
+    notifyStudents(){
+
+      this.$router.push('/announcements/new?mode=customUsers')
+    },
     ...mapActions("courses", ["getCourses"]),
     async loadStatistics() {
       let course_id
@@ -169,7 +173,6 @@ export default {
           break
         }
       }
-      console.log(course_id)
       const res = await Apis.get(`course/statistics/course/${course_id}`)
       this.statistics = res.data.data
     }
