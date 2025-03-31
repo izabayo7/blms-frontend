@@ -5,6 +5,7 @@
 <script>
 import { mapGetters, mapMutations, mapState } from "vuex";
 import { chatMixins } from "@/services/mixins";
+import apis from "@/services/apis";
 
 export default {
   name: "Index",
@@ -17,6 +18,9 @@ export default {
     ...mapMutations("notification", ["addNotification"]),
     ...mapMutations("courses", ["addCourse"]),
     ...mapMutations("chat", ["CHANGE_MESSAGE_READ_STATUS"]),
+  },
+  async created() {
+    await apis.create('user_logs',{online: true})
   },
   mounted() {
     // listen to new notifications
