@@ -95,9 +95,10 @@
                 {{ `${course.user.sur_name} ${course.user.other_names}` }}
               </h3>
               <p class="faculty">
-                {{
+                <!-- {{
                   `${course.faculty_college_year.faculty_college.faculty.name} year ${course.faculty_college_year.college_year.digit}`
-                }}
+                }} -->
+                Instructor
               </p>
             </article>
           </div>
