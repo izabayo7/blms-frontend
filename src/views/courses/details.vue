@@ -111,7 +111,6 @@ export default {
     changeActiveChapter({index,id}) {
       this.activeIndex = index;
       this.$router.push(`/courses/${this.$route.params.name}/chapter/${index}/${id}`)
-       console.log(index,id)
 
     },
   },
