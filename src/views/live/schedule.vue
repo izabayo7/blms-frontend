@@ -157,12 +157,12 @@ thanks</span></div>
       </template>
       <template v-else v-slot:content>
         <div class="subtitle">Live class successfly scheduled for :</div>
-        <div class="detail">course : <span>Mechanical engeneering</span></div>
-        <div class="detail"> user group: <span>ME Year 3</span></div>
-        <div class="detail"><span>APRIL 23 2021 at 18 : 45</span></div>
+        <div class="detail">course : <span>{{ selected_course }}</span></div>
+        <div class="detail"> user group: <span>{{ studentGroup() }}</span></div>
+        <div class="detail"><span>{{ date | formatDate }} at {{ time }}</span></div>
         <div class="detail">Student have already been notified</div>
         <div class="mx-auto">
-          <button @click="showModal = false">OKAY</button>
+          <button @click="showModal = false;this.$router.push('/courses')">OKAY</button>
         </div>
       </template>
     </Popup>

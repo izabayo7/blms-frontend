@@ -3,15 +3,15 @@
   <div class="preview-container pb-3">
     <!-- preview image -->
     <v-img
-      v-if="image"
-      class="preview-media"
-      :src="`${image}?token=${$session.get('jwt')}`"
+        v-if="image"
+        class="preview-media"
+        :src="`${image}?token=${$session.get('jwt')}`"
     >
       <template v-slot:placeholder>
         <v-row class="fill-height ma-0" align="center" justify="center">
           <v-progress-circular
-            indeterminate
-            color="grey lighten-5"
+              indeterminate
+              color="grey lighten-5"
           ></v-progress-circular>
         </v-row>
       </template>
@@ -19,9 +19,9 @@
 
     <!--  if image not provided -->
     <div
-      v-else
-      class="bg-color-one preview-media vertically--centered text-center preview-image"
-      style="width: 100%"
+        v-else
+        class="bg-color-one preview-media vertically--centered text-center preview-image"
+        style="width: 100%"
     >
       <span class="text-h1 white--text">{{ name | computeText }}</span>
     </div>
@@ -41,7 +41,8 @@
       <!-- preview button -->
     </div>
     <button
-      @click="
+        v-if="!isLive"
+        @click="
         progress
           ? handleCourseClick(name)
           : startCourse($store.state.user.user.user_name)
@@ -49,18 +50,28 @@
     >
       {{
         `${
-          !progress
-            ? "start course"
-            : progress.progress == 100
-            ? "proceed to course"
-            : "continue course"
+            !progress
+                ? "start course"
+                : progress.progress == 100
+                ? "proceed to course"
+                : "continue course"
         }`
       }}
+    </button>
+    <button
+        v-else
+        @click="
+        $router.push(`/live/class/course/:id`)
+      "
+        class="live"
+    >
+      open live class
     </button>
   </div>
 </template>
 <script>
-import { mapActions } from "vuex";
+import {mapActions} from "vuex";
+
 export default {
   props: {
     image: {
@@ -68,6 +79,9 @@ export default {
     },
     name: {
       type: String,
+    },
+    isLive: {
+      type: Boolean,
     },
     dateUploaded: {
       type: String,
@@ -96,14 +110,16 @@ img {
 
 .preview {
   .v-progress-circular__overlay {
-    stroke: #02A617!important;
+    stroke: #02A617 !important;
   }
+
   //centering the informations
   .center {
     width: fit-content;
     margin: auto;
     font-size: 1.2rem;
   }
+
   &-container {
     width: 100%;
     max-width: 25rem;
@@ -114,6 +130,7 @@ img {
     align-items: center;
     justify-content: center;
   }
+
   &-media {
     width: 100%;
     height: 20rem;
@@ -125,6 +142,7 @@ img {
     //  font-weight: bold;
     //}
   }
+
   //button
   button {
     background-color: $green;
@@ -137,6 +155,19 @@ img {
     // box-shadow: 0px 0px 2px lighten($green,10);
     &:hover {
       background-color: darken($green, 10);
+    }
+  }
+
+  .live {
+    width: 181px;
+    height: 54px;
+    left: 867px;
+    top: 621px;
+
+    background: #FF0808;
+    border-radius: 6px;
+    &:hover {
+      background-color: darken(#FF0808, 10);
     }
   }
 }

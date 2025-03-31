@@ -9,7 +9,7 @@
       </v-row>
       <v-col class="col-12 pa-0">
         <v-row v-if="!loaded" class="loaders ml-3">
-          <v-col class="col-4" v-for="n in 5" :key="n">
+          <v-col class="col-12 col-md-4" v-for="n in 5" :key="n">
             <div class="ssc ssc-card student-card-skeleton ongoing">
               <div class="ssc-wrapper flex justify-between">
                 <div class="w-40">
@@ -53,7 +53,7 @@
       </v-col>
       <v-col class="col-12 px-0">
         <v-row v-if="!loaded" class="loaders">
-          <v-col class="col-4" v-for="n in 3" :key="n">
+          <v-col class="col-12 col-md-4" v-for="n in 3" :key="n">
             <div class="ssc ssc-card student-card-skeleton finished">
               <div class="ssc-wrapper pa-0">
                 <div class="ssc-square w-100"></div>
@@ -334,7 +334,7 @@ export default {
   .student-card-skeleton {
     &.ongoing {
       max-height: 181px !important;
-      width: 349.891px;
+      max-width: 349.891px;
       .ssc-square {
         height: 20px;
       }
@@ -346,7 +346,7 @@ export default {
     }
     &.finished {
       max-height: 400px !important;
-      width: 300px;
+      max-width: 260px;
       .ssc-square {
         height: 161px;
       }
@@ -365,7 +365,7 @@ export default {
 /* Portrait phones and smaller */
 @media (max-width: 700px) {
   #courses {
-    padding: 25px 21px 45px 15px;
+    padding: 25px 0px 45px;
   }
 }
 </style>
