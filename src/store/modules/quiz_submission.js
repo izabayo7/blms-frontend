@@ -90,6 +90,7 @@ export default {
 
                 res = await apis.get(`exam_submission`)
                 state.quiz_submission.data = state.quiz_submission.data.concat(res.data.data)
+
                 //announce that data have been loaded
                 state.quiz_submission.loaded = true
 
@@ -168,16 +169,15 @@ export default {
             return apis.update(submission.exam ? 'exam_submission' : 'quiz_submission', state.selected_quiz_submission, submission).then(d => {
                 d.data = d.data.data
                 for (const i in state.quiz_submission.data) {
-                    if (state.quiz_submission.data[i]._id == state.selected_quiz_submission) {
                         for (const k in state.quiz_submission.data[i].submissions) {
                             if (state.quiz_submission.data[i].submissions[k]._id == d.data._id) {
                                 state.quiz_submission.data[i].submissions[k].answers = d.data.answers
                                 state.quiz_submission.data[i].submissions[k].total_marks = d.data.total_marks
                                 state.quiz_submission.data[i].submissions[k].updatedAt = d.data.updatedAt
                                 state.quiz_submission.data[i].submissions[k].marked = d.data.marked
+                                return
                             }
                         }
-                    }
                 }
 
             })
