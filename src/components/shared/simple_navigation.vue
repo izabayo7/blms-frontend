@@ -2,7 +2,7 @@
   <div>
     <div class="text-h4 font-weight-bold">{{title}}</div>
     <div class="links">
-      <a v-for="(link, i) in links" :key="i" :href="$route.path == link.link">
+      <a v-for="(link, i) in links" :key="i" :href="$route.path == link.link ? undefined : link.link">
         <span class="simple_link">{{ link.text }}</span>
         {{ notLast(i) ? " / " : "" }}
       </a>
