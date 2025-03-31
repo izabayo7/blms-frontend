@@ -8,9 +8,12 @@ const PARTICIPANT_CLASS = 'participant';
  * @param {String} name - the name of the new participant, to be used as tag
  *                        name of the video element.
  *                        The tag of the new element will be 'video<name>'
+ * @param {Object} vm -    vue instance that contains send message method
+ *
+ *
  * @return
  */
-export default function Participant(name) {
+export default function Participant(name,vm) {
     this.name = name;
     let container = document.createElement('div');
     container.className = isPresentMainParticipant() ? PARTICIPANT_CLASS : PARTICIPANT_MAIN_CLASS;
@@ -64,6 +67,7 @@ export default function Participant(name) {
             sender: name,
             sdpOffer: offerSdp
         };
+        console.log(vm)
         sendMessage(msg);
     }
 
