@@ -38,6 +38,32 @@
           <button
               type="button"
               class="menubar__button"
+              @click="$emit('addmathlive')"
+          >
+            <svg
+                id="bold"
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+            >
+              <path
+                  id="Path_1886"
+                  data-name="Path 1886"
+                  d="M0,0H24V24H0Z"
+                  fill="none"
+              />
+              <path
+                  id="Path_1887"
+                  data-name="Path 1887"
+                  d="M8,11h4.5a2.5,2.5,0,0,0,0-5H8Zm10,4.5A4.5,4.5,0,0,1,13.5,20H6V4h6.5a4.5,4.5,0,0,1,3.256,7.606A4.5,4.5,0,0,1,18,15.5ZM8,13v5h5.5a2.5,2.5,0,1,0,0-5Z"
+              />
+            </svg>
+          </button>
+
+          <button
+              type="button"
+              class="menubar__button"
               :class="{ 'is-active': isActive.italic() }"
               @click="commands.italic"
           >
@@ -447,7 +473,9 @@ import {
   TableHeader,
   TableCell,
   TableRow,
-} from "tiptap-extensions";
+} from "tiptap-extensions"
+
+import MathField from '@/components/tiptap-extensions/newNode'
 
 export default {
   props: {
@@ -502,6 +530,7 @@ export default {
           new TableHeader(),
           new TableCell(),
           new TableRow(),
+          new MathField()
         ],
         content: this.defaultContent,
       }),
@@ -570,8 +599,19 @@ export default {
     }
   }
 
-  .ProseMirror:focus {
-    outline: none !important;
+  .ProseMirror {
+    &:focus {
+      outline: none !important;
+    }
+
+    math-field {
+      border-radius: 8px;
+      padding: 8px;
+      border: 1px solid rgba(0, 0, 0, .2);
+      &:focus {
+        outline: none !important;
+      }
+    }
   }
 }
 </style>

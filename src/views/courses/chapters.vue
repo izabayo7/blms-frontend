@@ -199,6 +199,7 @@
                               v-if="mode !== ''"
                               ref="editor"
                               :mode="`${mode === 'edit' ? mode : 'preview'}`"
+                              @addmathlive="addSpecialInput"
                               :defaultContent="
                               course.chapters[activeChapter]._id
                                 ? content
@@ -499,14 +500,8 @@ export default {
       this.attachments = [];
     },
     stepCounter() {
-      console.log(this.stepCounter)
       if (this.stepCounter == 3) {
-        console.log('ngahoooooooo')
         document.querySelector(".ProseMirror").focus();
-        setTimeout(() => {
-          console.log('going to burn')
-          this.addSpecialInput()
-        }, 3000)
       }
       if (this.stepCounter == 4) {
         this.calculateQuizNames();
@@ -533,17 +528,14 @@ export default {
   },
   methods: {
     addSpecialInput() {
-      const el = document.querySelector('.editor__content')
+      const el = document.querySelector('.ProseMirror')
       const newElement = document.createElement('math-field')
       newElement.setAttribute('virtual-keyboard-mode', 'manual')
       newElement.setAttribute('role', 'textbox')
       newElement.setAttribute('tabindex', '0')
-      const div = document.createElement('p')
-      div.appendChild(newElement)
-
-      el.appendChild(div)
-      // const paragraph = document.createElement('p')
-      // el.appendChild(paragraph)
+      const paragraphElement = document.createElement('p')
+      paragraphElement.appendChild(newElement)
+      el.appendChild(paragraphElement)
     },
     ...mapActions("courses", [
       "getChapterMainContent",
