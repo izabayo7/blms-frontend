@@ -514,5 +514,15 @@ padding: 58px 62px 30px;
 
     padding-right: 0 !important;
   }
-
+.live_course{
+  padding: 58px 20px 30px;
+  .detail{
+    .subtitle {
+      font-size: 15px;
+    }
+    .sub-text {
+    font-size: 15.6px;
+    }
+  }
+}
 }
