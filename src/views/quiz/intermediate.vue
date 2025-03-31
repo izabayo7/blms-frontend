@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid class="quiz_intermediate_page white px-md-16">
+  <v-container v-if="selected_quiz != undefined" fluid class="quiz_intermediate_page white px-md-16">
     <back class="mt-0 mb-6 ml-lg-n6" />
     <v-row>
       <v-col class="col-12 col-md-6">
@@ -199,6 +199,7 @@ export default {
 
 <style lang="scss" scoped>
 .quiz_intermediate_page {
+  min-height: 100%j;
   .instructions {
     font-size: 1rem;
   }
