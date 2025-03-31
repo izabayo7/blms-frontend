@@ -275,6 +275,7 @@ export default {
   }),
   methods: {
     ...mapActions("users", ["searchUser"]),
+    ...mapActions("announcement",["addAnnouncement"]),
     addMember(user) {
       const membersNotAvailable = this.foundUsers.length <= 0;
       const disabled = this.disabled(user.email);
@@ -412,6 +413,7 @@ export default {
           status: "success",
           uptime: 2000,
         })
+        this.addAnnouncement(response.data.data)
         this.$router.push('/announcements')
       }
     }
