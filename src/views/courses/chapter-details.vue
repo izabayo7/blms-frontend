@@ -145,7 +145,7 @@ wrong date in recorder
                           attachment.src
                         }}</span>
                       <button
-                          @click="downloadAttachment(attachment.download_link)"
+                          @click="downloadAttachment(attachment.download_link+'?token='+$session.get('jwt'))"
                       >
                         <svg
                             class="attachment-download"
