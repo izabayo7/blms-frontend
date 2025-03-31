@@ -1,16 +1,27 @@
 <template>
   <v-container
-    v-if="course || this.isInstructor"
+    v-if="course || isInstructor"
     fluid
     class="quiz_timeout_page white px-lg-16"
   >
     <back class="mt-0 mb-6 ml-lg-n6" />
     <v-row>
-      <div class="title ml-2 mt-5">{{`${$route.fullPath == '/quiz/timeout' ? 'Automatic Submission ( Timed)' : 'Submission successful'}`}}</div>
+      <div class="title ml-2 mt-5">
+        {{
+          `${
+            $route.fullPath == "/quiz/timeout"
+              ? "Automatic Submission ( Timed)"
+              : "Submission successful"
+          }`
+        }}
+      </div>
       <v-col class="col-12 col-md-7">
-        <div class="mt-8 text_1">
+        <div v-if="$route.fullPath == '/quiz/timeout'" class="mt-8 text_1">
           Your assessment time is up , all your answers have been saved and
           submitted successfuly
+        </div>
+        <div v-else class="mt-8 text_1">
+          All your answers have been saved and submitted successfuly
         </div>
         <div class="mt-8 text_1">
           You may check your submission status in reports
@@ -48,7 +59,7 @@
             Continue course
           </button>
           <button
-            class="start_quiz grey ml-6"
+            :class="`start_quiz grey ${!isInstructor ? 'ml-6' : ''}`"
             @click="$router.push('/reports')"
           >
             Open reports
@@ -58,6 +69,7 @@
       <v-col class="col-12 col-md-5">
         <div class="head_icon">
           <svg
+            v-if="$route.fullPath == '/quiz/timeout'"
             xmlns="http://www.w3.org/2000/svg"
             width="299.333"
             height="339.442"
@@ -84,6 +96,21 @@
               data-name="Icon open-timer"
               d="M24.268,0V12.134H36.4V12.5A42.5,42.5,0,1,0,84.938,54.6,41.215,41.215,0,0,0,81.9,39.435L70.862,44.046A29.2,29.2,0,0,1,72.8,54.724,30.335,30.335,0,1,1,42.469,24.389a29.66,29.66,0,0,1,10.678,1.941l4.126-11.406a50.807,50.807,0,0,0-8.736-1.941v-.728H60.67V.121h-36.4Zm60.67,14.075s-44.289,34.1-46.594,36.4a5.932,5.932,0,0,0,0,8.372,5.724,5.724,0,0,0,8.372,0c2.427-2.427,38.343-44.774,38.343-44.774Z"
               transform="translate(206.708)"
+              fill="#14b52f"
+            />
+          </svg>
+          <svg
+            v-else
+            xmlns="http://www.w3.org/2000/svg"
+            width="299.333"
+            height="299.333"
+            viewBox="0 0 299.333 299.333"
+          >
+            <path
+              id="Icon_awesome-check-circle"
+              data-name="Icon awesome-check-circle"
+              d="M299.9,150.229A149.667,149.667,0,1,1,150.229.563,149.666,149.666,0,0,1,299.9,150.229ZM132.917,229.477,243.96,118.434a9.656,9.656,0,0,0,0-13.655L230.305,91.123a9.656,9.656,0,0,0-13.656,0l-90.56,90.559L83.809,139.4a9.657,9.657,0,0,0-13.656,0L56.5,153.057a9.656,9.656,0,0,0,0,13.655l62.764,62.763a9.656,9.656,0,0,0,13.656,0Z"
+              transform="translate(-0.563 -0.563)"
               fill="#14b52f"
             />
           </svg>
