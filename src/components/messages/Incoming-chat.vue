@@ -4,7 +4,7 @@
     <div class="pic col-xs-12 col-sm-2 col-md-3 col-lg-3">
       <img
         v-if="data.image"
-        :src="data.image"
+        :src="data.image+'?height=50'"
         :alt="`${data.name}'s profile picture`"
       />
       <v-avatar v-else size="37" class="avatar">
