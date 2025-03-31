@@ -20,7 +20,7 @@
           <span
             class="normal--text"
             >{{
-              item ? '03/July/2020' : ''
+              item.createdAt | formatDate
             }}</span>
         </template>
         <template v-slot:item.total_marks="{ item }">
