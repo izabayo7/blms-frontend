@@ -70,6 +70,7 @@ export default {
     }
   },
   computed:{
+
     /**
      * formatted tab/column names that are inserted in table
      *
@@ -87,6 +88,8 @@ export default {
 
       return tabHeadsCols;
     },
+
+
     /**
      * pure / not formatted tab/column names
      *
