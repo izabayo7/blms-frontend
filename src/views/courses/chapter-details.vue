@@ -292,7 +292,7 @@ export default {
             }`
           );
         else this.$router.push("/courses");
-        this.changeActiveChapter({
+        this.$emit("changeActiveChapter", {
           index: this.activeIndex + 1,
           id: this.nextChapter(this.activeIndex),
         });
