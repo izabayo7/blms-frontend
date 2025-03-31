@@ -16,7 +16,11 @@
               v-for="comment in comments"
               :key="comment._id"
             >
-              <discussion :content="comment" :verified="comment.sender.category !== 'STUDENT'" @replied="replied" />
+              <discussion
+                :content="comment"
+                :verified="comment.sender.category !== 'STUDENT'"
+                @replied="replied"
+              />
             </div>
           </div>
           <div v-else class="no-discussions-message">
