@@ -67,7 +67,7 @@
   </v-app>
 </template>
 <script>
-import {mapActions} from "vuex";
+import {mapActions, mapGetters} from "vuex";
 import colors from "@/assets/sass/imports/_colors.scss";
 
 export default {
@@ -80,6 +80,7 @@ export default {
     course: undefined,
   }),
   computed: {
+    ...mapGetters('user', ['username']),
     submissionHeaders() {
       const headers = [
         {
@@ -105,7 +106,7 @@ export default {
           sortable: false,
         },
       ]
-      headers.unshift(        {
+      headers.unshift({
         text: this.course.submissions[0].exam ? "Name" : "Chapter",
         align: "start",
         sortable: false,
@@ -138,7 +139,7 @@ export default {
   },
   methods: {
     handleRowClick(value) {
-      this.$router.push(value.quiz ? `/quiz/${value.quiz.name}/${this.$store.state.user.user.user_name}` : `/assignments/${value.assignment._id}`)
+      this.$router.push(value.quiz ? `/quiz/${value.quiz.name}/${this.$store.state.user.user.user_name}` : value.assignment ? `/assignments/${value.assignment._id}` : `/assessments/exams/${value.exam._id}/${this.username}`)
     },
     ...mapActions("quiz_submission", ["getQuizSubmissionsInQuiz"]),
     guess() {

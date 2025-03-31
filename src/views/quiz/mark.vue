@@ -437,7 +437,7 @@ export default {
           text: this.isExam ? this.selected_quiz_submission.exam.course.name : this.selected_quiz_submission.quiz.target.course.name,
           link:
               this.userCategory === "INSTRUCTOR"
-                  ? "/reports/" + this.isExam ? this.selected_quiz_submission.exam._id : this.selected_quiz_submission.quiz._id
+                  ? `/reports/${this.isExam ? this.selected_quiz_submission.exam._id : this.selected_quiz_submission.quiz._id}/${this.isExam ? 'exams' : ''}`
                   : "/reports",
         },
       ];
@@ -522,14 +522,14 @@ export default {
             if (this.questions_have_feedback[i]) {
               this.socket.emit('chapter-comment', {
                 userName: this.selected_quiz_submission.user.user_name,
-                route:  this.$route.path,
+                route: this.$route.path,
                 content: `gave feed back on your submission on ${this.isExam ? 'exam' : 'quiz'} ${this.selected_quiz_submission[this.isExam ? 'exam' : 'quiz'].name}`
               })
               break
             }
           }
         }
-        this.$router.push(`/reports/${this.selected_quiz_submission[this.isExam ? 'exam' : 'quiz']._id}/${this.isExam ? 'exams': ''}`);
+        this.$router.push(`/reports/${this.selected_quiz_submission[this.isExam ? 'exam' : 'quiz']._id}/${this.isExam ? 'exams' : ''}`);
       });
     },
   },
