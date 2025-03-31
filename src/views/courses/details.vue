@@ -97,7 +97,6 @@ export default {
       "finish_chapter",
     ]),
     changeMaximumIndex(index) {
-      console.log(index);
       if (index == this.course.chapters.length) this.$router.push("/courses");
       else this.maximumIndex = index;
     },
