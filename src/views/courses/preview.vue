@@ -294,7 +294,7 @@
           <div class="tab d-md-flex">
             <div v-if="course.cover_picture"
                  class="cover"
-                 :style="`background-image: url('`+`${course.cover_picture}?token=${$session.get('jwt')}');`">
+                 :style="`background-image: url('`+`${course.cover_picture}?width=300&token=${$session.get('jwt')}');`">
             </div>
             <div v-show="panel1" class="content">
               <div class="course-title">
