@@ -2,7 +2,7 @@
   <main class="my-send-message">
     <div v-show="files.length" class="files-area">
       <div class="header row">
-        <div class="cursor-pointer col-4 py-0" @click="pickFile">
+        <div class="cursor-pointer col-6 col-md-4 py-0" @click="pickFile">
           <svg width="7" height="14" viewBox="0 0 7 14" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path
                 d="M6.04545 3.18182V10.5C6.04545 11.9064 4.90636 13.0455 3.5 13.0455C2.09364 13.0455 0.954545 11.9064 0.954545 10.5V2.54545C0.954545 1.66727 1.66727 0.954545 2.54545 0.954545C3.42364 0.954545 4.13636 1.66727 4.13636 2.54545V9.22727C4.13636 9.57727 3.85 9.86364 3.5 9.86364C3.15 9.86364 2.86364 9.57727 2.86364 9.22727V3.18182H1.90909V9.22727C1.90909 10.1055 2.62182 10.8182 3.5 10.8182C4.37818 10.8182 5.09091 10.1055 5.09091 9.22727V2.54545C5.09091 1.13909 3.95182 0 2.54545 0C1.13909 0 0 1.13909 0 2.54545V10.5C0 12.4345 1.56545 14 3.5 14C5.43455 14 7 12.4345 7 10.5V3.18182H6.04545Z"
@@ -11,7 +11,8 @@
           Attachments
         </div>
         <div class="col-1 py-0 ml-auto">
-          <svg @click="clearFiles" class="cursor-pointer" width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <svg @click="clearFiles" class="cursor-pointer" width="25" height="25" viewBox="0 0 25 25" fill="none"
+               xmlns="http://www.w3.org/2000/svg">
             <path d="M21 4L3.99992 21.0001" stroke="#343434" stroke-width="5" stroke-linecap="round"/>
             <path d="M4 4.00024L21.0001 21.0003" stroke="#343434" stroke-width="5" stroke-linecap="round"/>
           </svg>
@@ -46,16 +47,73 @@
         </div>
       </div>
       <div class="msg-input" :class="{long:files.length}">
+        <div v-if="recordingMode" class="recorder">
+          <div class="d-none"></div>
+          <div id="closeRecording" class="text-right">
+            <svg @click="toogleRecorder" class="cursor-pointer" width="11" height="12" viewBox="0 0 11 12" fill="none"
+                 xmlns="http://www.w3.org/2000/svg">
+              <path d="M10 1.50024L1.00057 10.4997" stroke="#343434" stroke-width="2" stroke-linecap="round"/>
+              <path d="M1 1.50031L9.99943 10.4997" stroke="#343434" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="text-center no-edit" contenteditable="false">Record your one time audio message</div>
+          <div class="text-center">
+            <div class="before d-none">
+              <svg width="32" height="33" viewBox="0 0 32 33" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path
+                    d="M15.9994 20.4998C18.2127 20.4998 19.986 18.7131 19.986 16.4998L19.9994 8.49976C19.9994 6.28642 18.2127 4.49976 15.9994 4.49976C13.786 4.49976 11.9994 6.28642 11.9994 8.49976V16.4998C11.9994 18.7131 13.786 20.4998 15.9994 20.4998ZM23.066 16.4998C23.066 20.4998 19.6794 23.2998 15.9994 23.2998C12.3194 23.2998 8.93268 20.4998 8.93268 16.4998H6.66602C6.66602 21.0598 10.2927 24.8064 14.666 25.4598V29.8331H17.3327V25.4598C21.706 24.8198 25.3327 21.0598 25.3327 16.4998H23.066Z"
+                    fill="#BC7E7E"/>
+              </svg>
+
+            </div>
+            <div class="after d-flex justify-center align-center">
+              <div @click="toogleRecorder" class="close cursor-pointer">
+                <svg width="33" height="31" viewBox="0 0 33 31" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path
+                      d="M22.6647 10.8414L21.4897 9.66644L16.8314 14.3248L12.173 9.66644L10.998 10.8414L15.6564 15.4998L10.998 20.1581L12.173 21.3331L16.8314 16.6748L21.4897 21.3331L22.6647 20.1581L18.0064 15.4998L22.6647 10.8414Z"
+                      fill="#FC6767"/>
+                  <rect x="1.49805" y="0.999756" width="30.6667" height="29" rx="4.5" stroke="#FC6767"/>
+                </svg>
+
+              </div>
+              <div class="duration">
+                <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="9.69509" cy="9.49977" r="9.02907" fill="#FC6767"/>
+                </svg>
+
+                00:16
+              </div>
+              <div class="send cursor-pointer">
+                <svg width="33" height="31" viewBox="0 0 33 31" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path
+                      d="M20.62 11.5512L19.5284 10.4998L14.62 15.2276L15.7116 16.279L20.62 11.5512ZM23.9026 10.4998L15.7116 18.3894L12.4755 15.2798L11.3839 16.3312L15.7116 20.4998L25.002 11.5512L23.9026 10.4998ZM7.00195 16.3312L11.3297 20.4998L12.4213 19.4483L8.10131 15.2798L7.00195 16.3312Z"
+                      fill="#21833F"/>
+                  <rect x="0.501953" y="0.999756" width="31" height="29" rx="4.5" stroke="#21833F"/>
+                </svg>
+
+              </div>
+            </div>
+          </div>
+        </div>
         <div
-            class="input"
+            v-else
+            class="input d-flex"
             @click="inputClicked"
             @input="inputMsg"
             @keydown.prevent.enter="sendMessage"
         >
-          <div ref="placeholder" contenteditable="false" class="placeholder">
+          <div class="placeholder">
             Type something..
           </div>
-          <div ref="input" contenteditable="true" class="input-box"></div>
+          <div ref="input" contenteditable="true" class="input-box">
+          </div>
+          <div v-if="msg === ''" @click="toogleRecorder" class="start-recording">
+            <svg width="20" height="26" viewBox="0 0 20 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path
+                  d="M9.99935 16C12.2127 16 13.986 14.2133 13.986 12L13.9994 4C13.9994 1.78667 12.2127 0 9.99935 0C7.78602 0 5.99935 1.78667 5.99935 4V12C5.99935 14.2133 7.78602 16 9.99935 16ZM17.066 12C17.066 16 13.6794 18.8 9.99935 18.8C6.31935 18.8 2.93268 16 2.93268 12H0.666016C0.666016 16.56 4.29268 20.3067 8.66602 20.96V25.3333H11.3327V20.96C15.706 20.32 19.3327 16.56 19.3327 12H17.066Z"
+                  fill="#71757D"/>
+            </svg>
+          </div>
         </div>
         <div class="filePreview"></div>
       </div>
@@ -111,10 +169,12 @@ export default {
   data() {
     return {
       msg: "",
-      files: []
+      files: [],
+      recording: false,
+      recordingMode: true
     };
   },
-  components:{
+  components: {
     FilePicker: () => import("@/components/reusable/FilePicker"),
   },
   computed: {
@@ -122,11 +182,14 @@ export default {
     ...mapState("chat", ["currentDisplayedUser"]),
   },
   methods: {
-    pickFile(){
+    pickFile() {
       this.$refs["picker"].clickButton()
 
     },
-    clearFiles(){
+    toogleRecorder() {
+      this.recordingMode = !this.recordingMode
+    },
+    clearFiles() {
       this.$refs["picker"].clearFiles()
       this.files = []
     },
@@ -165,9 +228,10 @@ export default {
     },
     //function to set text content of placeholder
     p(t) {
-      this.$refs["placeholder"].textContent = t;
+      document.querySelector('.input .placeholder').innerHTML = t;
+      console.log(document.querySelector('.placeholder'))
     },
-    addFile(file){
+    addFile(file) {
       this.files.push(file)
     },
     removeFile(key) {
@@ -195,9 +259,10 @@ export default {
     border-bottom-right-radius: 20px;
 
     .header {
-      svg{
+      svg {
         margin-right: 6px;
       }
+
       font-family: Roboto;
       font-style: normal;
       font-weight: bold;
@@ -230,6 +295,53 @@ export default {
         width: 90%;
       }
 
+      .recorder {
+        background-color: $secondary;
+        width: 80%;
+        height: 106px;
+        position: absolute;
+        bottom: 0;
+        padding: 14px 51px;
+        font-family: Inter;
+        font-style: normal;
+        font-weight: 500;
+        font-size: 12px;
+        line-height: 17px;
+        /* identical to box height, or 138% */
+        border-radius: 20px;
+
+        #closeRecording:focus {
+          outline: none;
+        }
+
+        color: #ABABAB;
+
+        .after {
+          margin-top: 8px;
+
+          div {
+            &.duration {
+              font-family: Inter;
+              font-style: normal;
+              font-weight: 500;
+              font-size: 24.0775px;
+              line-height: 33px;
+              /* or 138% */
+
+              svg {
+                margin-right: 8px;
+              }
+
+              color: #ABABAB;
+            }
+
+            margin-right: 10px;
+            display: flex;
+            align-items: center;
+          }
+        }
+      }
+
       div.input {
         background-color: $secondary;
         position: relative;
@@ -249,6 +361,17 @@ export default {
           overflow-x: hidden;
 
           @include scroll-bar;
+        }
+
+        .start-recording {
+          position: absolute;
+          cursor: pointer;
+          right: 12px;
+          top: 2px;
+
+          svg {
+            width: 16px;
+          }
         }
 
         .placeholder {
@@ -305,6 +428,16 @@ export default {
           transform: rotate(-30deg);
         }
       }
+    }
+  }
+}
+
+/* Portrait phones and smaller */
+@media (max-width: 700px) {
+  .my-send-message {
+    .files-area {
+      padding: 17px;
+      margin: 0;
     }
   }
 }
