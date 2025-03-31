@@ -261,7 +261,7 @@
                       </span>
                         <span class="text">Share screen</span>
                       </button>
-                      <button class="start-settings">
+                      <button class="start-settings" @click="displaySettings = true">
                       <span class="icon">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path
@@ -495,6 +495,9 @@ openQuiz">
       <div v-if="!loaded" class="loading">Loading</div>
       <div v-else class="not-found">Sorry {{ error }}</div>
     </div>
+    <media-sources-selection :stream="me ? me.rtcPeer.getLocalStream():undefined"
+                             :peerConnection="me ?me.rtcPeer.peerConnection:false" :show="displaySettings"
+                             @closeSettings="displaySettings = false"/>
   </div>
 </template>
 
@@ -509,6 +512,7 @@ import OnlineUser from "../../../components/Live/OnlineUser";
 import StudentNewCommentWithPhoto from "../../../components/Live/StudentNewCommentWithPhoto";
 import Apis from '../../../services/apis'
 import {convertUTCDateToLocalDate, playSound} from "../../../services/global_functions";
+import MediaSourcesSelection from "@/components/Live/MediaSourcesSelection";
 
 const sound = require("../../../assets/audio/com.mp3");
 
@@ -518,10 +522,12 @@ export default {
     Discussion,
     StudentNewCommentWithPhoto,
     OnlineUser,
+    MediaSourcesSelection,
     back: () => import("@/components/shared/back-button"),
   },
   data() {
     return {
+      displaySettings: false,
       ws: null,
       isHandRaised: false,
       newCommentAvailable: false,
@@ -1368,6 +1374,7 @@ export default {
               receivers: [{id: participant.userInfo._id}]
             });
         } else if (participant.userInfo.category == 'INSTRUCTOR' && !this.isStudentPresenting) {
+          // this.me.rtcPeer.enabled = false
           this.displaySrcVideo()
         }
       }
