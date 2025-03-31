@@ -143,7 +143,7 @@ export default {
                     })
                 }
                 courseObject.chapters = []
-                state.courses.data.push(courseObject)
+                state.courses.data.unshift(courseObject)
                 commit('initialise_new_chapter')
             })
 
