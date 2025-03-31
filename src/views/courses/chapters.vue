@@ -461,6 +461,7 @@ export default {
         });
       } else {
         this.mode = "edit";
+        console.log(this.content)
       }
       if (this.course.chapters[this.activeChapter].quiz.length > 0) {
         this.selectedQuizName = this.course.chapters[
@@ -473,12 +474,6 @@ export default {
     stepCounter() {
       if (this.stepCounter === 3) {
         document.querySelector(".ProseMirror").focus();
-      } else if (
-          this.course.chapters[this.activeChapter].documentContent != this.content
-      ) {
-        this.course.chapters[
-            this.activeChapter
-            ].documentContent = this.$refs.editor.getHTML();
       }
       if (this.stepCounter == 4) {
         this.calculateQuizNames();
@@ -492,11 +487,15 @@ export default {
       }
     },
     error() {
-      this.$store.dispatch("app_notification/SET_NOTIFICATION", {
-        message: this.error,
-        status: "danger",
-        uptime: 2000,
-      });
+      if(this.error != "") {
+        this.$store.dispatch("app_notification/SET_NOTIFICATION", {
+          message: this.error,
+          status: "danger",
+          uptime: 2000,
+        }).then(() => {
+          this.error = ""
+        })
+      }
     },
   },
   methods: {
@@ -663,6 +662,8 @@ export default {
       }
     },
     addNewChapter() {
+      this.content = "";
+      this.mode = "";
       const len = this.course.chapters.length;
       this.initialise_new_chapter().then(() => {
         this.activeChapter = len;

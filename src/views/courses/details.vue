@@ -3,40 +3,38 @@
     <v-row v-if="course && activeIndex > -1" id="courseDetails">
       <!-- button to show chapters list in small devices -->
       <v-btn
-        @click="showActions = true"
-        class="hidden-md-and-up mr-n8 white--text"
-        :color="primary"
-        right
-        bottom
-        rounded
-        fixed
+          @click="$store.commit('sidebar_navbar/TOGGLE_PAGE_ACTIONS_VISIBILITY')"
+          class="hidden-md-and-up mr-n8 white--text"
+          :color="primary"
+          right
+          bottom
+          rounded
+          fixed
       >
         <v-icon>mdi-arrow-left</v-icon>
       </v-btn>
       <!-- the chapters list for big devices only -->
       <v-col class="col-3 hidden-sm-and-down pt-0 fill-height">
         <kurious-chapter-list
-          @change-chapter="changeActiveChapter"
-          :chapters="course.chapters"
-          :currentIndex="activeIndex"
-          :maximumIndex="maximumIndex"
-          :progress="
+            @change-chapter="changeActiveChapter"
+            :chapters="course.chapters"
+            :currentIndex="activeIndex"
+            :maximumIndex="maximumIndex"
+            :progress="
             userCategory === 'INSTRUCTOR' ? 0 : course.progress.progress
           "
         />
       </v-col>
       <!-- chapters list for small devices -->
       <kurious-page-actions
-        v-on:hideActions="showActions = false"
-        :visible="showActions"
-        class="hidden-md-and-up"
+          class="hidden-md-and-up"
       >
         <kurious-chapter-list
-          @changeChapter="changeActiveChapter"
-          :chapters="course.chapters"
-          :currentIndex="activeIndex"
-          :maximumIndex="maximumIndex"
-          :progress="
+            @change-chapter="changeActiveChapter"
+            :chapters="course.chapters"
+            :currentIndex="activeIndex"
+            :maximumIndex="maximumIndex"
+            :progress="
             userCategory === 'INSTRUCTOR' ? 0 : course.progress.progress
           "
         />
@@ -45,8 +43,8 @@
       <v-col class="col-12 col-md-9 course-content customScroll pa-3">
         <!--        <chapter-details :activeIndex="activeIndex" />-->
         <router-view
-          @changeActiveChapter="changeActiveChapter"
-          @changeMaximumIndex="changeMaximumIndex"
+            @changeActiveChapter="changeActiveChapter"
+            @changeMaximumIndex="changeMaximumIndex"
         />
       </v-col>
     </v-row>
@@ -55,7 +53,7 @@
 
 <script>
 import colors from "@/assets/sass/imports/_colors.scss";
-import { mapActions, mapGetters } from "vuex";
+import {mapActions, mapGetters} from "vuex";
 
 // import ChapterDetails from "./chapter-details";
 export default {
@@ -69,7 +67,6 @@ export default {
     progressId: "",
     maximumIndex: -1,
     attachments: [],
-    showActions: false,
   }),
   computed: {
     ...mapGetters("courses", ["course", "selectedChapter"]),
@@ -116,7 +113,8 @@ export default {
         return "";
       }
     },
-    changeActiveChapter({ index, id }) {
+    changeActiveChapter({index, id}) {
+      console.log(index, id)
       this.activeIndex = index;
       const path = `/courses/${this.$route.params.name}/chapter/${index}/${id}`;
       if (this.$route.fullPath != path) {
@@ -137,7 +135,7 @@ export default {
         this.activeIndex = 0;
       } else {
         this.maximumIndex = Math.round(
-          (course.progress.progress * total_chapters) / 100
+            (course.progress.progress * total_chapters) / 100
         );
         if (this.maximumIndex > total_chapters - 1) {
           this.maximumIndex = total_chapters - 1;
@@ -148,8 +146,8 @@ export default {
       const path = `/courses/${this.$route.params.name}/chapter/0/${course.chapters[index]._id}`;
       if (this.$route.fullPath !== path) this.$router.push(path);
       this.$store.commit(
-        "courses/set_selected_chapter",
-        course.chapters[index]._id
+          "courses/set_selected_chapter",
+          course.chapters[index]._id
       );
     });
   },

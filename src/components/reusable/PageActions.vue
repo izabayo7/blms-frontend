@@ -5,7 +5,6 @@
     app
     :right="true"
     mobile-breakpoint="960"
-    id="sidebar"
     :width="breakPoint === 'xs' ? '70%' : breakPoint === 'sm' ? '50%' : '15%'"
     height="100%"
     fixed
