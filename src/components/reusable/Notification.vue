@@ -28,7 +28,7 @@
             v-for="(no, i) in formatedNotifications"
             :key="i"
             class="item"
-            @click="$route.path === no.link ? undefined : $router.push(no.link)"
+            @click="$route.path === no.link || !no.link ? undefined : $router.push(no.link)"
             @click.stop="cardActive = false"
           >
             <!-- <img class="pic" src="@/assets/images/instructor.png" /> -->
