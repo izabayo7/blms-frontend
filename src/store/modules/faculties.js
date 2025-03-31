@@ -29,7 +29,7 @@ export default {
 
         //mutating page header
         SET_HEADER(state,header){
-            this.state.header = header;
+            state.header = header;
         }
     },
     actions: {
