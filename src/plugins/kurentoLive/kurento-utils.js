@@ -4371,7 +4371,6 @@
             handlers = this.callbacks[item];
             for (i = 0, len = handlers.length; i < len; i++) {
               if (handlers[i]._groupName === groupName) {
-                //console.log('removing');
                 // remove it and shorten the array we're looping through
                 handlers.splice(i, 1);
                 i--;

@@ -331,6 +331,7 @@ export default {
                 state.request.id = null
                 state.request.ongoing = false
                 emit('conversation_loaded')
+
             })
         },
         setUsername({commit, state}, username) {
