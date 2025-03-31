@@ -11,7 +11,8 @@
                 <!--                <div class="new-comment">-->
                 <!--                    <new-comment />-->
                 <!--                </div>-->
-                <div class="unreal-time-discussions">
+                <loader v-if="commentsLoading"/>
+                <div v-else class="unreal-time-discussions">
                     <div class="discussion" v-for="comment in comments" :key="comment._id">
                         <discussion :content="comment" @replied="replied"/>
                     </div>
@@ -30,13 +31,16 @@
     import StudentNewCommentWithPhoto from "./StudentNewCommentWithPhoto";
     import api from '@/services/apis'
     import {mapGetters} from 'vuex'
+    import {on} from "../../services/event_bus";
+    import Loader from "../loaders";
 
     export default {
         name: "UnrealTimeDiscussionBoard",
         props:{
-            head_visible:{default:false,type:Boolean,}
+            head_visible:{default:false,type:Boolean},
         },
         components:{
+            Loader,
             StudentNewCommentWithPhoto,
             // NewComment,
             Discussion,
@@ -44,7 +48,8 @@
         },
         data(){
             return {
-                comments:[]
+                comments:[],
+                commentsLoading:false,
             }
         },
         computed:{
@@ -52,9 +57,10 @@
         },
         methods:{
             async get_comments(){
+                this.commentsLoading = true
                 const comments = await api.get(`comment/chapter/${this.selectedChapter}`)
                 this.comments = comments.data.data
-                console.log(this.comments)
+                this.commentsLoading =false
             },
             sent(comment){
                 this.comments.unshift(comment)
@@ -68,6 +74,11 @@
         },
         mounted() {
             this.get_comments()
+        },
+        created() {
+            on('routeUpdate',() => {
+                this.get_comments()
+            })
         }
     }
 </script>
