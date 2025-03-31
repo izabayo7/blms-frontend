@@ -120,8 +120,7 @@
                            v-for="(user, i) in users" :key="user._id" :ref="`row${i}`">
                   <template #cols>
                     <td @click="$router.push(`/users/${user.user_name}`)" class="row--image"
-                        @mouseenter="mouseOnPic($event,user.user_name,'user-profile-card')"
-                        @mouseleave="mouseOutPic($event,'user-profile-card')">
+                        @mouseenter="mouseOnPic($event,user.user_name,'user-profile-card')">
                       <img v-if="user.profile" :src="user.profile + '?width=50'" class="img" alt=" profile pic">
                       <v-avatar v-else size="30" class="profile-avatar img">
                         {{ `${user.sur_name} ${user.other_names}` | computeText }}
