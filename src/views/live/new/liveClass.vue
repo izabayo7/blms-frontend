@@ -206,8 +206,13 @@
         <div class="live-class--attendance--wrapper long">
           <h3>DISCUSSION BOARD </h3>
           <div class="online-users">
-            <!--            <online-user v-for="user in participants" :user="user.userInfo"-->
-            <!--                         :key="`${(Date.now() * Math.random())}${user.name}`"/>-->
+            <discussion
+                v-for="(comment, i) in comments"
+                :key="i"
+                :content="comment"
+                :verified="comment.sender.category !== 'STUDENT'"
+                @replied="replied"
+            />
           </div>
         </div>
         <div v-if="participationInfo.isOfferingCourse" class="live-class--actions">
@@ -303,7 +308,25 @@ export default {
           "updatedAt": "2021-02-23T06:46:48.317Z",
           "createdAt": "2021-02-23T06:46:48.317Z",
           "__v": 0
-        }]
+        },
+          {
+            "_id": "6034a4d8486da89738c1700d",
+            "sender": {
+              "email": "cedro@gmail.com",
+              "sur_name": "Cedric",
+              "other_names": "Izabayo",
+              "user_name": "user_238760",
+              "gender": "male",
+              "profile": "https://apis.kurious.rw/api/user/user_238760/profile/profile_1620119711766.png",
+              "category": "STUDENT"
+            },
+            "target": {"type": "chapter", "id": "600d9d6574bd7a7b60d7b4cd"},
+            "content": "ibintu numuti",
+            "reply": "6034a4ce486da89738c1700c",
+            "updatedAt": "2021-02-23T06:46:48.317Z",
+            "createdAt": "2021-02-23T06:46:48.317Z",
+            "__v": 0
+          }]
       }, {
         "_id": "601af4846725b4e249144313",
         "sender": {
@@ -607,7 +630,7 @@ export default {
     this.ws = new WebSocket('wss://' + host + '/kurious_stream' + `?token=${this.$session.get("jwt")}`);
 
     this.ws.addEventListener('open', () => {
-      self.register();
+      // self.register();
     })
 
     this.ws.onerror = function (evt) {
@@ -1367,11 +1390,15 @@ export default {
             padding-left: 0 !important;
             background-color: transparent !important;
           }
-
+          .comment-replies {
+            padding-left: 0 !important;
+            border-left: none !important;
+          }
           .reply-comment-container {
             .right {
               margin-top: 6px;
             }
+
 
             .comment .temp-flex {
               display: flex;
@@ -1382,6 +1409,45 @@ export default {
               }
             }
           }
+
+          .my-reply-comment .my-reply-comment-container .reply-comment {
+            .input-holder[data-v-645d75c2] {
+              border-radius: 6px;
+              border: 0.56px solid #9A9A9A
+            }
+
+            input[type=text] {
+              border: none;
+              outline: none;
+              -webkit-box-shadow: none;
+              box-shadow: none;
+              font-family: Montserrat;
+              font-style: normal;
+              font-weight: normal;
+              font-size: 10.1571px;
+              line-height: 12px;
+              /* identical to box height */
+              margin: 0;
+
+              color: #ABABAB;
+
+            }
+
+            .send {
+              display: flex;
+              align-items: center;
+
+              svg {
+                width: 30px;
+                display: none;
+
+                &.live {
+                  display: initial;
+                }
+              }
+            }
+          }
+
         }
       }
     }
@@ -1389,7 +1455,7 @@ export default {
 
   .live-class-details {
     background-color: white;
-    margin-left: -1.2rem;
+    //margin-left: -1.2rem;
     padding-left: 19.2px;
     padding-right: 19.2px;
     margin-top: -2.6rem;
@@ -1445,6 +1511,9 @@ export default {
 
       &.long {
         height: 490px;
+        .online-users{
+          max-height: 94%;
+        }
       }
     }
 
