@@ -132,6 +132,7 @@ export default {
           const {data} = await apis.put(`chat_group/${this.group.code}/profile`,{profile:this.profile})
 
           this.uploaded = true;
+          this.profile_link = data.data.profile
           console.log(data)
         }
         //call the function again
