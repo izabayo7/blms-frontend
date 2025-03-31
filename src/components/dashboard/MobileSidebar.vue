@@ -1,14 +1,11 @@
 <template>
-  <div :class="`sidebar ${onPhone ? (state ? 'absolute' : 'd-none') : ''}`">
+  <div class="mobile-sidebar">
     <div class="routes">
-      <ul ref="nav">
+      <ul ref="nav" class="d-flex">
         <div class="active-link"></div>
         <li
           v-if="userCategory === 'ADMIN'"
-          @click="
-            closeSidebar();
-            $router.push('/administration');
-          "
+          @click="$router.push('/administration')"
           :class="{ active: activeRoute('administration') }"
         >
           <div class="link-icon">
@@ -26,19 +23,10 @@
               />
             </svg>
           </div>
-          <div
-            class="link-name animate__animated animate__bounce"
-            v-show="state"
-          >
-            Administration
-          </div>
         </li>
         <li
           v-if="userCategory === 'INSTRUCTOR'"
-          @click="
-            closeSidebar();
-            $router.push('/users');
-          "
+          @click="$router.push('/users')"
           :class="{ active: activeRoute('users') }"
         >
           <div class="link-icon">
@@ -87,12 +75,6 @@
               </defs>
             </svg>
           </div>
-          <div
-            class="link-name animate__animated animate__bounce"
-            v-show="state"
-          >
-            Users
-          </div>
         </li>
         <li
           v-if="userCategory === 'INSTRUCTOR'"
@@ -120,19 +102,10 @@
               />
             </svg>
           </div>
-          <div
-            class="link-name animate__animated animate__bounce"
-            v-show="state"
-          >
-            Faculties
-          </div>
         </li>
         <li
           v-if="userCategory === 'STUDENT' || userCategory === 'INSTRUCTOR'"
-          @click="
-            closeSidebar();
-            $router.push('/courses');
-          "
+          @click="$router.push('/courses')"
           :class="{ active: activeRoute('courses') }"
         >
           <div class="link-icon">
@@ -150,14 +123,10 @@
               />
             </svg>
           </div>
-          <div class="link-name" v-show="state">Courses</div>
         </li>
         <li
           v-if="userCategory === 'STUDENT' || userCategory === 'INSTRUCTOR'"
-          @click="
-            closeSidebar();
-            $router.push('/reports');
-          "
+          @click="$router.push('/reports')"
           :class="{ active: activeRoute('reports') }"
         >
           <div class="link-icon">
@@ -175,12 +144,11 @@
               />
             </svg>
           </div>
-          <div class="link-name" v-show="state">Reports</div>
         </li>
-        <li
+        <!-- <li
           v-if="userCategory === 'STUDENT' || userCategory === 'INSTRUCTOR'"
           @click="
-            closeSidebar();
+            
             $router.push('/library');
           "
           :class="{ active: activeRoute('library') }"
@@ -200,38 +168,46 @@
               />
             </svg>
           </div>
-          <div class="link-name" v-show="state">Library</div>
         </li>
+        -->
         <li
-          @click="
-            closeSidebar();
-            $router.push('/messages');
-          "
+          @click="$router.push('/messages')"
           :class="{ active: activeRoute('messages') }"
         >
           <div class="link-icon">
             <svg
+              width="26"
+              height="27"
+              viewBox="0 0 26 27"
+              fill="none"
               xmlns="http://www.w3.org/2000/svg"
-              width="100"
-              height="100"
-              viewBox="0 0 100 100"
             >
-              <path
-                id="Icon_material-message"
-                data-name="Icon material-message"
-                d="M93,3H13A9.987,9.987,0,0,0,3.05,13L3,103,23,83H93a10.029,10.029,0,0,0,10-10V13A10.029,10.029,0,0,0,93,3ZM83,63H23V53H83Zm0-15H23V38H83Zm0-15H23V23H83Z"
-                transform="translate(-3 -3)"
-              />
+              <g clip-path="url(#clip0)">
+                <path
+                  d="M17.5105 2.67578H2.86376C1.28449 2.67578 0 3.96027 0 5.53954V18.3745C0 18.9824 0.687451 19.3251 1.17271 18.9784L5.25171 16.0682C5.59398 15.8243 5.99658 15.6952 6.417 15.6952H15.3886C16.9679 15.6952 18.2524 14.4108 18.2524 12.8315V3.41769C18.2524 3.00816 17.92 2.67578 17.5105 2.67578ZM13.9068 11.6632H5.3348C4.92527 11.6632 4.5929 11.3314 4.5929 10.9213C4.5929 10.5118 4.92527 10.1794 5.3348 10.1794H13.9068C14.3163 10.1794 14.6487 10.5118 14.6487 10.9213C14.6487 11.3314 14.3163 11.6632 13.9068 11.6632ZM13.9068 8.20101H5.3348C4.92527 8.20101 4.5929 7.86913 4.5929 7.4591C4.5929 7.04957 4.92527 6.71719 5.3348 6.71719H13.9068C14.3163 6.71719 14.6487 7.04957 14.6487 7.4591C14.6487 7.86913 14.3163 8.20101 13.9068 8.20101Z"
+                  fill="#BABABC"
+                />
+                <path
+                  d="M25.3227 11.2939V24.1284C25.3227 24.7322 24.6387 25.0814 24.15 24.7323L20.071 21.8226C19.7287 21.5787 19.3261 21.4497 18.9057 21.4497H9.93407C8.3548 21.4497 7.07031 20.1647 7.07031 18.5854V17.1787H15.3876C17.7849 17.1787 19.7352 15.2285 19.7352 12.8312V8.42969H22.4589C24.0382 8.42969 25.3227 9.71467 25.3227 11.2939Z"
+                  fill="#BABABC"
+                />
+              </g>
+              <defs>
+                <clipPath id="clip0">
+                  <rect
+                    width="25.324"
+                    height="26.1957"
+                    fill="white"
+                    transform="translate(0 0.675781)"
+                  />
+                </clipPath>
+              </defs>
             </svg>
           </div>
-          <div class="link-name" v-show="state">Messages</div>
         </li>
         <li
           v-if="userCategory === 'INSTRUCTOR'"
-          @click="
-            closeSidebar();
-            $router.push('/quiz');
-          "
+          @click="$router.push('/quiz')"
           :class="{ active: activeRoute('quiz') }"
         >
           <div class="link-icon">
@@ -249,11 +225,10 @@
               />
             </svg>
           </div>
-          <div class="link-name" v-show="state">Quiz</div>
         </li>
         <!-- <li
           v-if="userCategory === 'STUDENT' || userCategory === 'INSTRUCTOR'"
-          @click="closeSidebar();$router.push('/settings')"
+          @click="$router.push('/settings')"
           :class="{ active: activeRoute('settings') }"
         >
           <div class="link-icon">
@@ -271,7 +246,6 @@
               />
             </svg>
           </div>
-          <div class="link-name" v-show="state">Settings</div>
         </li> -->
       </ul>
     </div>
@@ -286,12 +260,6 @@ export default {
     ...mapState("sidebar_navbar", { state: "sidebar_expanded" }),
     userCategory() {
       return this.$store.state.user.user.category.name;
-    },
-    onPhone() {
-      return (
-        this.$vuetify.breakpoint.name == "sm" ||
-        this.$vuetify.breakpoint.name == "xs"
-      );
     },
   },
   methods: {
@@ -313,28 +281,14 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.sidebar {
-  height: 100vh;
-  box-shadow: 0 11px 15px 0 $secondary;
-  transition: 0.4s ease-out;
-
-  &.absolute {
-    position: absolute;
-  }
-
-  .toggle-container {
-    border-bottom: 1px solid lighten($font, 65);
-
-    .toggle {
-      display: inline-flex;
-      align-self: flex-start;
-      padding: 1.2rem;
-      margin: auto;
-      width: fit-content;
-      cursor: pointer;
-    }
-  }
-
+.mobile-sidebar {
+  position: absolute;
+  width: 100%;
+  height: 70px;
+  right: 0;
+  bottom: 0;
+  background: #ffffff;
+  box-shadow: 5px 4px 20px rgba(0, 0, 0, 0.1);
   .routes {
     ul {
       list-style-type: none;
@@ -360,7 +314,9 @@ export default {
         flex-direction: row;
         align-content: center;
 
+        height: fit-content;
         .link-icon {
+          display: flex;
           svg {
             width: 27px;
             height: 27px;
