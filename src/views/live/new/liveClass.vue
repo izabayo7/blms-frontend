@@ -951,8 +951,9 @@
       <div v-else class="not-found">Sorry {{ error }}</div>
     </div>
     <media-sources-selection
+      v-if="me ? (me.rtcPeer.getLocalStream() !== undefined) : false"
       :videoEl="me ? me.getVideoElement() : undefined"
-      :stream="me ? me.rtcPeer.getLocalStream() : undefined"
+      :stream="me.rtcPeer.getLocalStream()"
       :peerConnection="me ? me.rtcPeer.peerConnection : undefined"
       :show="displaySettings"
       @closeSettings="displaySettings = false"
