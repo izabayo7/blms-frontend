@@ -12,6 +12,8 @@ name: "index.vue",
 }
 </script>
 
-<style scoped>
-
+<style lang="scss" scoped>
+div{
+  height: 100%;
+}
 </style>
