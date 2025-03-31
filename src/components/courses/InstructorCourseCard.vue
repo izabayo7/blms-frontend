@@ -142,7 +142,7 @@ export default {
         }
         .edit-btn {
           box-shadow: 0 7px 14px rgb(114, 114, 114, 0.16);
-          background: #ffd248;
+          background: $primary;
           color: #fff;
           font-size: 11px;
           height: 30px;

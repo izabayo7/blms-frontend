@@ -81,6 +81,7 @@ export default {
                         state.quiz_submission.data[i].answers = d.data.answers
                         state.quiz_submission.data[i].totalMarks = d.data.totalMarks
                         state.quiz_submission.data[i].updatedAt = d.data.updatedAt
+                        state.quiz_submission.data[i].marked = d.data.marked
                     }
                 }
 

@@ -65,7 +65,7 @@
                 <img :src="course.coverPicture" alt="avatar" />
               </v-avatar>
               <v-avatar
-                class="course-image white--text bg-color-one text-h2 d-block vertically--centered"
+                class="course-image white--text bg-color-one text-h2 vertically--centered"
                 size="245"
                 v-else
                 >{{ course.name | computeText }}</v-avatar

@@ -310,6 +310,11 @@ export default {
   },
   watch: {
     async selected_quiz_submission() {
+      if (!this.selected_quiz_submission.marked) {
+        for (const answer of this.selected_quiz_submission.answers) {
+          answer.marks = 0;
+        }
+      }
       await this.autoMarkChoiceQuestions();
     },
   },
@@ -435,12 +440,6 @@ export default {
       studentName: this.$route.params.student_name,
       quizName: this.$route.params.quiz_name,
     }).then(async () => {
-      if (!this.selected_quiz_submission.marked) {
-        for (const answer of this.selected_quiz_submission.answers) {
-          answer.marks = 0;
-        }
-      }
-      // await this.autoMarkChoiceQuestions();
       this.attempt = {
         quiz: this.selected_quiz_submission.quiz._id,
         student: this.selected_quiz_submission.student._id,

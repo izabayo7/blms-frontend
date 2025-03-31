@@ -10,7 +10,7 @@
         class="add_course mt-3 white--text"
         to="/courses/new-course"
       >
-        <v-icon>mdi-plus</v-icon>Create new class
+        <v-icon>mdi-plus</v-icon>Create new course
       </v-btn>
     </div>
     <div :class="`notification col-1 offset-${$store.state.user.user.category === 'Instructor' && $route.name !== 'Create course' ? 1 : 3}`">

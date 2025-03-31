@@ -51,7 +51,7 @@
           <div class="class-chapters">
             <v-row>
               <v-col class="col-12">
-                <v-stepper v-model="stepCounter" vertical>
+                <v-stepper color="#fff" v-model="stepCounter" vertical>
                   <v-stepper-step :complete="stepCounter > 1" step="1" editable
                     >Chapter {{ activeChapter + 1 }} -name &
                     description</v-stepper-step
@@ -75,7 +75,7 @@
                         placeholder="Enter Chapter Description"
                       ></textarea>
                     </v-card>
-                    <v-btn color="primary" @click="stepCounter = 2"
+                    <v-btn class="primary-button" @click="stepCounter = 2"
                       >Continue</v-btn
                     >
                   </v-stepper-content>
@@ -118,7 +118,7 @@
                         </v-col>
                       </v-row>
                     </v-card>
-                    <v-btn color="primary" @click="stepCounter = 3"
+                    <v-btn class="primary-button" @click="stepCounter = 3"
                       >Continue</v-btn
                     >
                   </v-stepper-content>
@@ -175,7 +175,7 @@
                         </v-col>
                       </v-row>
                     </v-card>
-                    <v-btn color="primary" class="mr-4" @click="stepCounter = 4"
+                    <v-btn class="mr-4 primary-button" @click="stepCounter = 4"
                       >Continue</v-btn
                     >
                   </v-stepper-content>
@@ -336,7 +336,7 @@
                         </v-col>
                       </v-row>
                     </v-card>
-                    <v-btn color="primary" class="mr-4" @click="stepCounter = 5"
+                    <v-btn class="mr-4 primary-button" @click="stepCounter = 5"
                       >Next</v-btn
                     >
                   </v-stepper-content>
@@ -348,15 +348,13 @@
                   <v-stepper-content step="5">
                     <v-btn
                       v-if="course.chapters[activeChapter]._id"
-                      color="primary"
-                      class="mr-4"
+                      class="mr-4 primary-button"
                       @click="saveChapterChanges"
                       >update Chapter</v-btn
                     >
                     <v-btn
                       v-else
-                      color="primary"
-                      class="mr-4"
+                      class="mr-4 primary-button"
                       @click="saveChapter"
                       >save Chapter</v-btn
                     >
@@ -376,6 +374,7 @@
 
   <script>
 import { mapActions, mapGetters } from "vuex";
+import colors from "@/assets/sass/imports/_colors.scss";
 export default {
   name: "edit_chapters",
   props: {
@@ -388,6 +387,7 @@ export default {
     stepCounter: 1,
     activeChapter: -1,
     selectedQuizName: "",
+    primary: colors.primary,
     quizes: [],
     quizNames: [],
     attachments: [],
@@ -627,5 +627,14 @@ export default {
 }
 .active-mode {
   background-color: $primary;
+}
+.v-stepper__step.v-stepper__step--active.v-stepper__step--editable {
+  span.v-stepper__step__step {
+    background-color: #6daefc !important;
+  }
+}
+.primary-button {
+  background-color: $primary !important;
+  color: white !important;
 }
 </style>
