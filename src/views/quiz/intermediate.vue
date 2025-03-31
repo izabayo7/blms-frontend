@@ -1,9 +1,9 @@
 <template>
-  <v-container fluid class="quiz_intermediate_page white px-lg-16">
+  <v-container fluid class="quiz_intermediate_page white px-md-16">
     <back class="mt-0 mb-6 ml-lg-n6" />
     <v-row>
       <v-col class="col-12 col-md-6">
-        <div class="title text-h3">{{ selected_quiz.name }}</div>
+        <div class="title text-h4">{{ selected_quiz.name }}</div>
         <div class="instructions mt-6">
           <!-- In this quiz, pay attention to the question number 4 as it has more
           marks than others. please notice it. -->
@@ -152,22 +152,7 @@
           </div>
           <div class="confirm_nocheat mt-4">
             <div class="content">
-              <v-btn icon>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="36.571"
-                  height="29.922"
-                  class="ml-2"
-                  viewBox="0 0 24.916 24.916"
-                >
-                  <path
-                    id="Icon_ionic-md-checkbox-outline"
-                    data-name="Icon ionic-md-checkbox-outline"
-                    d="M11.283,14.328,9.345,16.266l6.229,6.229L29.416,8.653,27.478,6.715,15.574,18.55ZM26.648,26.648H7.268V7.268H21.111V4.5H7.268A2.776,2.776,0,0,0,4.5,7.268V26.648a2.776,2.776,0,0,0,2.768,2.768H26.648a2.776,2.776,0,0,0,2.768-2.768V15.574H26.648Z"
-                    transform="translate(-4.5 -4.5)"
-                  />
-                </svg>
-              </v-btn>
+              <input type="checkbox" name="" id="">
               <div class="words">
                 I agree I will not use any cheating method if cough, I will
                 automatically fail this assessment
@@ -175,7 +160,7 @@
             </div>
           </div>
           <button
-            class="start_quiz mt-5"
+            class="start_quiz mt-5 mb-14 mb-md-0"
             @click="$router.push(`/quiz/attempt/${$route.params.name}`)"
           >
             Take Quiz
@@ -215,7 +200,7 @@ export default {
 <style lang="scss" scoped>
 .quiz_intermediate_page {
   .instructions {
-    font-size: 1.5rem;
+    font-size: 1rem;
   }
   .quiz_info {
     background-color: #d2d2d2;
@@ -253,6 +238,7 @@ export default {
     font-weight: 700;
     .item {
       width: 50%;
+      font-size: .7rem;
     }
     svg {
       height: 20px;
@@ -264,9 +250,17 @@ export default {
   .confirm_nocheat {
     .content {
       display: flex;
+      input{
+        width: 30px;
+        height: 30px;
+        margin-right: 12px;
+      }
     }
     svg {
       margin-right: 12px;
+    }
+    .words{
+      font-size: .8rem
     }
   }
   .start_quiz {

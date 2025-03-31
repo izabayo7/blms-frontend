@@ -288,6 +288,7 @@ export default {
                 if (d.data.published) {
                     rootGetters['chat/socket'].emit('course-published', { courseId: d.data._id })
                 }
+                router.push('/courses')
             })
         },
         //delete a course

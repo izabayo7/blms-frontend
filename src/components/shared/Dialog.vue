@@ -79,7 +79,7 @@
             "
             outlined
             class="mx-2 action-button-outlined"
-            >Delete</v-btn
+            >Continue</v-btn
           >
         </div>
       </div>
