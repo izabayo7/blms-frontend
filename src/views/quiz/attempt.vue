@@ -318,12 +318,15 @@ export default {
   },
   methods: {
     saveProgress(index) {
-      this.socket.emit('save-progress', {
-        index,
-        submission_id: this.submission_id,
-        attempt: this.attempt,
-        end: false
-      })
+      if (this.$store.state.user.user.category.name === 'STUDENT') {
+        console.log(this.$store.state.user.user.category.name)
+        this.socket.emit('save-progress', {
+          index,
+          submission_id: this.submission_id,
+          attempt: this.attempt,
+          end: false
+        })
+      }
     },
     async uploadFile(index) {
       const formData = new FormData()
@@ -492,35 +495,36 @@ export default {
       this.saveAttempt();
     },
     initialiseQuiz() {
-      this.socket.emit('start-quiz', {
-        quiz: this.selected_quiz._id
-      })
-      this.socket.on('start-quiz', (id) => {
-        this.submission_id = id;
-      })
-      this.socket.on('progress-saved', ({index, end, is_selection_only}) => {
-        if(end){
-          // notify instructor
-          this.socket.emit('student-submitted', {
-            userId: this.selected_quiz.user,
-            route: `/quiz/${this.$route.params.name}/${this.$store.state.user.user.user_name}`,
-            content: 'submitted quiz ' + this.selected_quiz.name
-          })
-          if (is_selection_only) {
-            this.$router.push(`/quiz/${this.selected_quiz.name}/results`);
-          } else {
-            this.$router.push(
-                `${
-                    this.attempt.auto_submitted ? "/quiz/timeout" : "/quiz/submitted"
-                }`
-            );
+      if (this.$store.state.user.user.category.name === 'STUDENT') {
+        this.socket.emit('start-quiz', {
+          quiz: this.selected_quiz._id
+        })
+        this.socket.on('start-quiz', (id) => {
+          this.submission_id = id;
+        })
+        this.socket.on('progress-saved', ({index, end, is_selection_only}) => {
+          if (end) {
+            // notify instructor
+            this.socket.emit('student-submitted', {
+              userId: this.selected_quiz.user,
+              route: `/quiz/${this.$route.params.name}/${this.$store.state.user.user.user_name}`,
+              content: 'submitted quiz ' + this.selected_quiz.name
+            })
+            if (is_selection_only) {
+              this.$router.push(`/quiz/${this.selected_quiz.name}/results`);
+            } else {
+              this.$router.push(
+                  `${
+                      this.attempt.auto_submitted ? "/quiz/timeout" : "/quiz/submitted"
+                  }`
+              );
+            }
+          } else if (index != undefined) {
+            if (this.filesToUpload[index].file != "")
+              this.uploadFile(index);
           }
-        }
-        else if (index != undefined) {
-          if (this.filesToUpload[index].file != "")
-            this.uploadFile(index);
-        }
-      })
+        })
+      }
     },
     async saveAttempt() {
 
