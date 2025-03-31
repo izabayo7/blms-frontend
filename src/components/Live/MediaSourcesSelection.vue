@@ -19,7 +19,7 @@
               </span>
             </div>
             <div class="selection">
-              <select-ui  id="mds-vid-input"  name="mds-vid-input" :options="['name']"/>
+              <select-ui  id="mds-vid-input"  name="mds-vid-input" :options="devices.video.map(device => device.label)"/>
             </div>
           </div>
 
@@ -34,7 +34,7 @@
               </span>
             </div>
             <div class="selection">
-              <select-ui  id="mds-audio-in"  name="mds-audio-in" :options="['name']"/>
+              <select-ui  id="mds-audio-in"  name="mds-audio-in" :options="devices.audioInput.map(device => device.label)"/>
             </div>
           </div>
 
@@ -49,7 +49,7 @@
               </span>
             </div>
             <div class="selection">
-              <select-ui  id="mds-audio-out"  name="mds-audio-out" :options="['name']"/>
+              <select-ui  id="mds-audio-out"  name="mds-audio-out" :options="devices.audioOutput.map(device => device.label)"/>
             </div>
           </div>
 
@@ -70,7 +70,33 @@
 import SelectUi from "../reusable/ui/select-ui";
 export default {
   name: "MediaSourcesSelection",
-  components: {SelectUi}
+  components: {SelectUi},
+  data(){
+    return{
+      devices:{
+        video:null,
+        audioInput:null,
+        audioOutput:null,
+      }
+    }
+  },
+  async created(){
+    const devices = await navigator.mediaDevices.enumerateDevices()
+    this.devices.video = devices.filter(dvc => dvc.kind === 'videoinput')
+    this.devices.audioInput = devices.filter(dvc => dvc.kind === 'audioinput')
+    this.devices.audioOutput = devices.filter(dvc => dvc.kind === 'audiooutput')
+    console.log(devices,this.devices)
+
+    const constratints = { audio: true, video: {width: 1280, height: 720} }
+
+    navigator.mediaDevices.getUserMedia(constratints)
+    .then(stream => {
+      console.log(stream)
+    })
+    .catch(err => {
+      console.log(err)
+    })
+  }
 }
 </script>
 
