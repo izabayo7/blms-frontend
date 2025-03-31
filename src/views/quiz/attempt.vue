@@ -71,7 +71,6 @@
                   tile
                   class="ma-1"
                 >
-                  aaaaaaaaakkkkaaa
                   <v-img
                     :src="`${choice.src}?format=png&width=200&height=200&token=${$session.get('jwt')}`"
                     :lazy-src="`${choice.src}?format=png&width=200&height=200&token=${$session.get('jwt')}`"

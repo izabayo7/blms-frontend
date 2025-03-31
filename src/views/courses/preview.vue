@@ -801,6 +801,7 @@ button.back {
     display: flex;
     flex-direction: row;
 
+    // remove card overflow
     .v-responsive__content {
       display: none;
     }
