@@ -73,10 +73,6 @@
                       <div class="second">Updated {{ faculty.updatedAt }}</div>
                     </td>
                     <td class="center">{{ faculty.total_student_groups }}</td>
-                    <td>
-                      <div class="first">{{ faculty.name }}</div>
-                      <div class="second">{{ faculty.updatedAt }}</div>
-                    </td>
                     <td>{{ faculty.createdAt }}</td>
                     <td class="center">{{ faculty.total_students }}</td>
                   </template>
@@ -137,7 +133,7 @@ export default {
       showFacultyModal: false,
       allSelected: false,
       options: {
-        keysToShow: ["Faculty", "Student groups", "Assigned dean", "Date created", "Students"],
+        keysToShow: ["Faculty", "Student groups", "Date created", "Students"],
         link: {
           routeTo: "/faculties/{id}/details",
           paramPropertyName: "_id",
