@@ -4,7 +4,7 @@
       <v-col class="col-12 title d-block pt-0">{{ course.name }}</v-col>
       <v-col
           v-if="course.chapters[activeIndex].uploaded_video || recorded_video != ''"
-          class="col-12 col-md-8 pt-0"
+          class="col-12 pt-0 col-md-8"
           id="video"
       >
         <!--
@@ -20,7 +20,8 @@
       </v-col>
     </v-row>
     <v-row>
-      <v-col class="col-12 col-md-8">
+      <v-col class="col-12"
+             :class="{'col-md-8' : !course.chapters[activeIndex].uploaded_content}">
         <!-- <span v-if="course !== undefined">{{course.name}}</span> -->
         <v-tabs background-color="white" color="#ffd248" right v-model="selectedTab">
           <v-tab :key="0" id="content-tab">
@@ -285,7 +286,7 @@ export default {
   components: {
     UnrealTimeDiscussionBoard,
     loader: () => import("@/components/loaders"),
-      Editor: () => import("@/components/reusable/Editor"),
+    Editor: () => import("@/components/reusable/Editor"),
   },
   data() {
     return {
@@ -426,7 +427,7 @@ export default {
       this.findRecordedClass();
       // go to contents
       // document.getElementById("content-tab").click();
-      await Apis.create('user_logs',{course_id: this.course._id})
+      await Apis.create('user_logs', {course_id: this.course._id})
     },
   },
   beforeRouteUpdate(to, from, next) {
@@ -446,8 +447,21 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss">
 .pdf-viewer {
   height: 540px;
+  width: 100%;
+
+  .toolbar {
+    display: none;
+  }
+
+  #viewerContainer {
+    top: 0px
+  }
+
+  .pdfViewer .page {
+    border: none;
+  }
 }
 </style>

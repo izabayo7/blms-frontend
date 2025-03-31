@@ -220,7 +220,7 @@
                                 fill="#193074"/>
                             <circle cx="11" cy="11" r="10.5" stroke="#193074"/>
                           </svg>
-                          {{ chapterContent ? chapterContent.name : 'Upload document' }} <span>(pdf only)</span>
+                          {{ (chapterContent ? chapterContent.name : null) || course.chapters[activeChapter].uploaded_content || 'Upload document' }} <span>(pdf only)</span>
                           <input
                               type="file"
                               id="chapterContent"
@@ -235,7 +235,8 @@
                     <v-btn class="mr-4 mt-4 primary-button" @click="stepCounter = 4"
                     >Continue
                     </v-btn>
-                    <v-btn v-if="course.chapters[activeChapter].uploaded_content" class="primary-button danger ml-4 mt-4"
+                    <v-btn v-if="course.chapters[activeChapter].uploaded_content"
+                           class="primary-button danger ml-4 mt-4"
                            @click.prevent="
                                     set_modal({
                                       template: 'action_confirmation',
@@ -464,6 +465,7 @@
 import {mapActions, mapGetters} from "vuex";
 import '@/assets/js/mathlive'
 import colors from "@/assets/sass/imports/_colors.scss";
+
 const getSidebar = () => ({
   viewThumbnail: true,
   viewOutline: true,
@@ -592,13 +594,22 @@ export default {
       this.attachments = [];
     },
     stepCounter() {
+      const callback = (event) => {
+        const element = document.getElementById("vuePdfApp")
+        console.log(element)
+
+        if (element)
+          if (element.contains(event.target)) {
+            event.preventDefault()
+            // Chrome requires returnValue to be set.
+            event.returnValue = ""
+          }
+      }
       if (this.stepCounter == 3) {
         document.querySelector(".ProseMirror").focus();
-        window.addEventListener("click", event => {
-          event.preventDefault()
-          // Chrome requires returnValue to be set.
-          event.returnValue = ""
-        })
+        window.addEventListener("click", callback)
+      } else {
+        window.removeEventListener("click", callback)
       }
       if (this.stepCounter == 4) {
         this.calculateQuizNames();
@@ -650,7 +661,7 @@ export default {
       document.getElementById('chapterContent').click();
     },
     handleFileUpload() {
-      this.chapterContent =  document.getElementById('chapterContent').files[0];
+      this.chapterContent = document.getElementById('chapterContent').files[0];
     },
     ...mapActions("courses", [
       "getChapterMainContent",
@@ -773,7 +784,7 @@ export default {
         video: this.chapterVideo,
         attachments: this.attachments,
         quiz: this.selectedQuiz,
-          chapterContent: this.chapterContent
+        chapterContent: this.chapterContent
       }).then(() => {
         this.chapterVideo = undefined;
         this.attachments = [];
