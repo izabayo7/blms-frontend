@@ -18,7 +18,7 @@
 
   }
 
-  .my-margin, #quiz-title, .quiz-instructions {
+  .my-margin, .quiz-title, .quiz-instructions {
     max-width: 531px;
     width: 100%;
   }
@@ -91,7 +91,7 @@
       display: flex;
     }
 
-    #quiz-title {
+    .quiz-title {
       height: 35px;
     }
 
@@ -357,42 +357,41 @@
             color: #3C3C3C;
           }
         }
+      }
+    }
+  }
+  .file-upload {
+    .allowed-files {
+      .type {
+        input {
+          margin-right: 5px;
 
-        .file-upload {
-          .allowed-files {
-            .type {
-              input {
-                margin-right: 5px;
-
-                &:checked:after {
-                  width: 15px;
-                  height: 15px;
-                  border-radius: 15px;
-                  top: -2px;
-                  left: -1px;
-                  position: relative;
-                  background-color: #193074;
-                  content: '';
-                  display: inline-block;
-                  visibility: visible;
-                  border: 2px solid white;
-                }
-              }
-
-              font-family: Inter;
-              font-style: normal;
-              font-weight: normal;
-              font-size: 14.6538px;
-              line-height: 25px;
-              /* or 309% */
-
-              display: flex;
-              align-items: center;
-
-              color: #193074;
-            }
+          &:checked:after {
+            width: 15px;
+            height: 15px;
+            border-radius: 15px;
+            top: -2px;
+            left: -1px;
+            position: relative;
+            background-color: #193074;
+            content: '';
+            display: inline-block;
+            visibility: visible;
+            border: 2px solid white;
           }
         }
+
+        font-family: Inter;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 14.6538px;
+        line-height: 25px;
+        /* or 309% */
+
+        display: flex;
+        align-items: center;
+
+        color: #193074;
       }
     }
   }

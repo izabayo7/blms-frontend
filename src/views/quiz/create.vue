@@ -12,8 +12,23 @@
         </div>
       </div>
       <div class="input-group assesment_type">
-        <label for="quiz-title">Title</label>
-        <input v-model="title" id="quiz-title" type="text">
+        <label>Title</label>
+        <input v-if="assessment_type === 'assignment'" v-model="assignment.title" class="quiz-title" type="text">
+        <input v-else v-model="title" class="quiz-title" type="text">
+      </div>
+      <div v-if="assessment_type === 'assignment'" class="input-group my-margin">
+        <select-ui
+            class="bold-border"
+            name="role"
+            :options="['course','chapter']"
+            id="target_type"
+            label="Select assignment target type"
+            @input="
+            (e) => {
+              assignment.target.type = e;
+            }
+          "
+        />
       </div>
       <div v-if="assessment_type === 'assignment'" class="input-group my-margin">
         <select-ui
@@ -29,7 +44,8 @@
           "
         />
       </div>
-      <div v-if="assessment_type === 'assignment'" class="input-group my-margin">
+      <div v-if="assessment_type === 'assignment' && assignment.target.type === 'chapter'"
+           class="input-group my-margin">
         <select-ui
             label="Select chapter"
             class="bold-border"
@@ -43,9 +59,19 @@
           "
         />
       </div>
+      <div v-if="assessment_type === 'assignment'" class="flex d-block d-md-flex">
+        <div class="input-group">
+          <label for="assignment-marks">Total-marks</label>
+          <input id="assignment-marks" v-model="assignment.totalMarks" type="number">
+        </div>
+        <div class="input-group ml-auto">
+          <label for="assignment-pass-marks">Pass-marks (%)</label>
+          <input id="assignment-pass-marks" v-model="assignment.passMarks" type="number">
+        </div>
+      </div>
       <div v-if="assessment_type === 'assignment'" class="input-group assesment_type">
         <label for="assessment-time">Expiration date & time</label>
-        <input id="assessment-time" type="datetime-local">
+        <input v-model="assignment.dueDate" id="assessment-time" type="datetime-local">
       </div>
       <div v-if="assessment_type === 'quiz'" class="input-group">
         <label>Instructions</label>
@@ -59,6 +85,7 @@
         </div>
       </div>
       <div v-else class="input-group">
+        <label class="assessment-label">Details (optional)</label>
         <div class="quiz-instructions">
           <Editor
               v-if="showEditor"
@@ -68,39 +95,47 @@
           />
         </div>
       </div>
-      <div v-if="assessment_type === 'assignment'" class="input-group assesment_type">
-        <label class="assessment-label">Upload a file with assigment tasks</label>
-        <div class="col-4 pa-0">
-          <div class="indicator mb-2">
-            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path
-                  d="M9 0C4.03763 0 0 4.03763 0 9C0 13.9624 4.03763 18 9 18C13.9624 18 18 13.9624 18 9C18 4.03763 13.9624 0 9 0ZM9 16.875C4.6575 16.875 1.125 13.3425 1.125 9C1.125 4.6575 4.6575 1.125 9 1.125C13.3425 1.125 16.875 4.6575 16.875 9C16.875 13.3425 13.3425 16.875 9 16.875Z"
-                  fill="#193074"/>
-              <path d="M9 4.1543L9 10.1543" stroke="#193074" stroke-width="1.5" stroke-linecap="round"/>
-              <circle cx="9" cy="13" r="1" fill="#193074"/>
-            </svg>
-            <span class="ml-1">no file chosen</span>
-          </div>
+      <div v-if="assessment_type === 'assignment'" class="input-group">
+        <label class="assessment-label">Upload a file with assigment tasks (optional)</label>
+        <div class="mb-6 pa-0">
           <div>
-            <button class="pick-file file-picked" @click="pickfile(i)">
-              Choose file
-            </button>
+            <FilePicker
+                :ref="`picker`"
+                template="attachment-files"
+                :multiple="true"
+                @addFile="addAssignmentAttachment"
+                @removeFile="removeAssignmentAttachment"
+            />
           </div>
         </div>
       </div>
-      <div v-if="assessment_type === 'assignment'" class="input-group mb-4">
+      <div v-if="assessment_type === 'assignment'" class="input-group mb-4 d-md-flex align-center">
+        <label for="assessment-time">Submission mode:</label>
+        <div class="type align-center d-flex align-center hint ml-md-4">
+          <input type="radio" v-model="assignment.submissionMode" name="submission_mode" class="mb-0 mr-2"
+                 value='textInput'/>
+          Text input
+        </div>
+        <div class="type align-center d-flex hint ml-md-4">
+          <input type="radio" v-model="assignment.submissionMode" class="mb-0 mr-2" name="submission_mode"
+                 value='fileUpload'/>
+          File upload
+        </div>
+      </div>
+      <div v-if="assessment_type === 'assignment' && assignment.submissionMode === 'fileUpload'"
+           class="input-group mb-4">
         <div class="type align-center d-flex hint">
           <checkbox
-              @check_it="fileTypeClicked('Word document', -1)"
-              :check="allowed_submission_file_types.includes('Word document')"
+              @check_it="assignment.allowMultipleFilesSubmission = !assignment.allowMultipleFilesSubmission"
+              :check="assignment.allowMultipleFilesSubmission"
           />
           allow student to submit multiple files
         </div>
       </div>
-      <div v-if="assessment_type === 'assignment'" class="input-group">
+      <div v-if="assessment_type === 'assignment' && assignment.submissionMode === 'fileUpload'" class="input-group">
         <div class="file-upload">
           <label>Choose file types that students can upload</label>
-          <div class="allowed-files">
+          <div class="allowed-files d-md-flex flex-wrap align-center">
             <div class="type">
               <checkbox
                   @check_it="fileTypeClicked('Pdf', -1)"
@@ -108,42 +143,42 @@
               />
               Pdf
             </div>
-            <div class="type">
+            <div class="type ml-md-4">
               <checkbox
                   @check_it="fileTypeClicked('Word document', -1)"
                   :check="allowed_submission_file_types.includes('Word document')"
               />
               Word document
             </div>
-            <div class="type">
+            <div class="type ml-md-4">
               <checkbox
                   @check_it="fileTypeClicked('Powerpoint file', -1)"
                   :check="allowed_submission_file_types.includes('Powerpoint file')"
               />
               Powerpoint file
             </div>
-            <div class="type">
+            <div class="type ml-md-4">
               <checkbox
                   @check_it="fileTypeClicked('text', -1)"
                   :check="allowed_submission_file_types.includes('text')"
               />
               text
             </div>
-            <div class="type">
+            <div class="type ml-md-4">
               <checkbox
                   @check_it="fileTypeClicked('Zip', -1)"
                   :check="allowed_submission_file_types.includes('Zip')"
               />
               Zip
             </div>
-            <div class="type">
+            <div class="type ml-md-4">
               <checkbox
                   @check_it="fileTypeClicked('image', -1)"
                   :check="allowed_submission_file_types.includes('image')"
               />
               image
             </div>
-            <div class="type">
+            <div class="type ml-md-4">
               <checkbox
                   @check_it="fileTypeClicked('Video', -1)"
                   :check="allowed_submission_file_types.includes('Video')"
@@ -353,7 +388,9 @@
         </div>
       </div>
     </div>
-    <button @click="addQuestion()" class="quiz-action full mt-4" v-if="questions.length && assessment_type === 'quiz'">Add question</button>
+    <button @click="addQuestion()" class="quiz-action full mt-4" v-if="questions.length && assessment_type === 'quiz'">
+      Add question
+    </button>
     <div id="quiz-actions" class=" d-flex mb-12 mt-6">
       <button class="quiz-action cancel" @click="
                       set_modal({
@@ -363,15 +400,19 @@
                       })
 ">Cancel
       </button>
-      <button class="quiz-action" v-if="!questions.length" @click="recreate">Add questions</button>
+      <button class="quiz-action" v-if="!questions.length && assessment_type === 'quiz'" @click="recreate">Add
+        questions
+      </button>
       <button class="quiz-action" v-else @click="validate">Save {{ assessment_type }}</button>
-      <button class="quiz-action success" v-if="assessment_type === 'assignment'" @click="validate">Publish assignment</button>
+      <!--      <button class="quiz-action success" v-if="assessment_type === 'assignment'" @click="validate">Publish assignment-->
+      <!--      </button>-->
     </div>
   </div>
 </template>
 
 <script>
 import {mapActions, mapGetters} from "vuex";
+import Apis from "@/services/apis";
 
 export default {
   name: "CreateQuiz",
@@ -394,6 +435,7 @@ export default {
     allowed_submission_file_types: [],
     pictures: [[], []],
     assessment_type: "quiz",
+    selected_chapter: "",
     hours: 0,
     selected_course: "",
     minutes: 0,
@@ -401,7 +443,23 @@ export default {
     questions: [],
     error: "",
     title: "",
-    passMarks: 0
+    passMarks: 0,
+    assignment: {
+      title: "",
+      target: {
+        type: "course",
+        id: "",
+      },
+      dueDate: "",
+      details: "",
+      submissionMode: "textInput",
+      allowMultipleFilesSubmission: false,
+      attachments: [],
+      passMarks: 50,
+      totalMarks: 100,
+      allowed_submission_file_types: []
+    },
+    assignmentAttachments: []
   }),
   watch: {
     assessment_type() {
@@ -415,7 +473,7 @@ export default {
         this.$store.dispatch("app_notification/SET_NOTIFICATION", {
           message: this.error,
           status: "danger",
-          uptime: 2000,
+          uptime: 20000,
         }).then(() => {
           this.error = ""
         })
@@ -444,6 +502,8 @@ export default {
   },
   created() {
     this.getCourses(!this.loaded);
+    if (this.$route.query.assignment)
+      this.assessment_type = 'assignment'
   },
   methods: {
     ...mapActions("courses", ["getCourses"]),
@@ -463,62 +523,85 @@ export default {
     },
     ...mapActions("modal", ["set_modal"]),
     validate() {
-      if (this.title == "")
-        return this.error = "Title is required"
+      if (this.assessment_type === 'quiz') {
+        if (this.title == "")
+          return this.error = "Title is required"
 
-      if (this.title.length < 3)
-        return this.error = "Title is too short"
+        if (this.title.length < 3)
+          return this.error = "Title is too short"
 
-      if (this.hours == 0 && this.minutes == 0)
-        return this.error = "Duration is required"
+        if (this.hours == 0 && this.minutes == 0)
+          return this.error = "Duration is required"
 
-      if (this.passMarks == 0)
-        return this.error = "PassMarks is required"
+        if (this.passMarks == 0)
+          return this.error = "PassMarks is required"
 
-      for (const i in this.questions) {
-        if (this.questions[i].details == "")
-          return this.error = `Question ${parseInt(i) + 1} must have question text`
+        for (const i in this.questions) {
+          if (this.questions[i].details == "")
+            return this.error = `Question ${parseInt(i) + 1} must have question text`
 
-        if (this.questions[i].details.length < 5)
-          return this.error = `Question ${parseInt(i) + 1} question text too short`
+          if (this.questions[i].details.length < 5)
+            return this.error = `Question ${parseInt(i) + 1} question text too short`
 
-        if (this.questions[i].type == "Select question type")
-          return this.error = `Question ${parseInt(i) + 1} type is required`
+          if (this.questions[i].type == "Select question type")
+            return this.error = `Question ${parseInt(i) + 1} type is required`
 
-        if (this.questions[i].marks == "")
-          return this.error = `Question ${parseInt(i) + 1} marks are required`
+          if (this.questions[i].marks == "")
+            return this.error = `Question ${parseInt(i) + 1} marks are required`
 
-        if (this.questions[i].type.includes('select')) {
-          let right_choice_found = false;
+          if (this.questions[i].type.includes('select')) {
+            let right_choice_found = false;
 
-          if (this.questions[i].type.includes('image')) {
-            if (this.questions[i].options.choices.length < 2)
-              return this.error = `Question ${parseInt(i) + 1}, must have atleast options,pick files`
-          }
-
-          if (this.questions[i].type.includes('upload')) {
-            if (!this.questions[i].allowed_files.length)
-              return this.error = `Question ${parseInt(i) + 1}, must have atleast one file type allowed`
-          }
-
-          for (const k in this.questions[i].options.choices) {
-
-            if (this.questions[i].options.choices[k].right)
-              right_choice_found = true;
-
-            if (this.questions[i].type.includes('text')) {
-              if (this.questions[i].options.choices[k].text == "")
-                return this.error = `Question ${parseInt(i) + 1}, option ${parseInt(k) + 1} text is required`
+            if (this.questions[i].type.includes('image')) {
+              if (this.questions[i].options.choices.length < 2)
+                return this.error = `Question ${parseInt(i) + 1}, must have atleast options,pick files`
             }
+
+            if (this.questions[i].type.includes('upload')) {
+              if (!this.questions[i].allowed_files.length)
+                return this.error = `Question ${parseInt(i) + 1}, must have atleast one file type allowed`
+            }
+
+            for (const k in this.questions[i].options.choices) {
+
+              if (this.questions[i].options.choices[k].right)
+                right_choice_found = true;
+
+              if (this.questions[i].type.includes('text')) {
+                if (this.questions[i].options.choices[k].text == "")
+                  return this.error = `Question ${parseInt(i) + 1}, option ${parseInt(k) + 1} text is required`
+              }
+            }
+            if (!right_choice_found)
+              return this.error = `Question ${parseInt(i) + 1} must have a right choice`
           }
-          if (!right_choice_found)
-            return this.error = `Question ${parseInt(i) + 1} must have a right choice`
+
+
         }
 
+        this.saveQuiz();
+      } else {
+        if (this.assignment.title === "")
+          return this.error = "Title is required"
 
+        if (this.assignment.title.length < 3)
+          return this.error = "Title is too short"
+        if (this.assignment.target.type === 'Select assignment target type')
+          return this.error = "Target type is required"
+        if (this.selected_course === 'Select course')
+          return this.error = "Course is required"
+        if (this.assignment.target.type === 'chapter' && this.selected_chapter === 'Select chapter')
+          return this.error = "Chapter is required"
+        if (this.assignment.totalMarks < 1)
+          return this.error = "Invalid total marks"
+        if (this.assignment.passMarks < 1)
+          return this.error = "Invalid pass marks"
+        if (this.assignment.dueDate === "")
+          return this.error = "dueDate is required"
+        if (this.assignment.submissionMode === 'fileUpload' && !this.allowed_submission_file_types.length)
+          return this.error = "Please select allowed submission file types"
+        this.saveAssignment()
       }
-
-      this.saveQuiz();
     },
     ...mapActions("quiz", ["create_quiz"]),
     addPicture(file, boundIndex) {
@@ -527,6 +610,12 @@ export default {
         src: file.name,
         right: false,
       });
+    },
+    addAssignmentAttachment(file) {
+      this.assignmentAttachments.push(file)
+    },
+    removeAssignmentAttachment(index) {
+      this.assignmentAttachments.splice(index, 1)
     },
     removePicture(index, boundIndex) {
       this.pictures[boundIndex].splice(index, 1);
@@ -651,6 +740,60 @@ export default {
         }).then(() => {
           this.error = ""
         })
+      })
+    },
+    async saveAssignment() {
+
+      const editorContent = this.$refs.editor.getHTML();
+      if (editorContent !== '<p>Type in your assignments information</p>')
+        this.assignment.details = editorContent
+      if (this.assignmentAttachments.length)
+        this.assignment.attachments = this.assignmentAttachments.map(x => {
+          return {
+            src: x.name
+          }
+        })
+      this.assignment.allowed_files = this.allowed_submission_file_types
+      Apis.create('assignment', this.assignment).then(async (res) => {
+        if (res.data.status !== 201) {
+          this.$store.dispatch("app_notification/SET_NOTIFICATION", {
+            message: res.data.message,
+            status: "danger",
+            uptime: 5000,
+          }).then(() => {
+            this.error = ""
+          })
+        } else {
+          if (this.assignmentAttachments.length) {
+            const formData = new FormData()
+            let index = 0;
+            for (const i in this.assignmentAttachments) {
+              formData.append("files[" + index + "]", this.assignmentAttachments[i]);
+              index++
+            }
+            // set the dialog
+            this.$store.dispatch('modal/set_modal', {
+              template: 'display_information',
+              title: 'Creating assignment',
+              message: 'uploading attachments'
+            })
+
+            await Apis.create(`assignment/${res.data.data._id}/attachment`, formData, {
+              headers: {
+                'Content-Type': 'multipart/form-data'
+              },
+              onUploadProgress: (progressEvent) => {
+                this.$store.dispatch('modal/set_progress', parseInt(Math.round((progressEvent.loaded / progressEvent.total) * 100)))
+              }
+            })
+          }
+          this.$store.dispatch("app_notification/SET_NOTIFICATION", {
+            message: "Assignment creation succeded",
+            status: "success",
+            uptime: 5000,
+          })
+          this.$router.push('/quiz')
+        }
       })
     },
   }
