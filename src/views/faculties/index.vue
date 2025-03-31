@@ -83,7 +83,12 @@ name: "Faculties",
     return{
       faculties:[],
       options:{
-        keysToShow:[ "name", "attendants", "total_courses", "total_student_groups", "total_students", "createdAt"]
+        keysToShow:[ "name", "attendants", "total_courses", "total_student_groups", "total_students", "createdAt"],
+        link:{
+          routeTo:"/faculties/{id}/details",
+          paramPropertyName:"_id",
+
+        }
       },
     }
   },
