@@ -27,15 +27,14 @@
         </v-row>
         <v-row>
           <v-col class="col-12" id="video">
-            <div
-              @mouseenter="toogleControlVisibility"
-              @mouseleave="toogleControlVisibility"
-              class="player_container"
-            >
-              <vue-plyr>
-                <video id="video-preview" loop></video>
+            <div class="player_container">
+              <vue-plyr id="player">
+                <video ref="video_preview" id="video-preview" loop></video>
               </vue-plyr>
-              <div :class="`overlay ${playerHovered ? 'hovered' : ''}`"></div>
+              <div
+                :class="`overlay ${playerHovered ? 'hovered' : ''}`"
+                @dblclick="enterFullScreen"
+              ></div>
               <div :class="`controls ${playerHovered ? 'hovered' : ''}`">
                 <button :class="`round top_right ${state ? '' : 'expanded'}`">
                   <svg
@@ -198,6 +197,10 @@ export default {
     ...mapMutations("sidebar_navbar", {
       toggle: "TOGGLE_PAGE_ACTIONS_VISIBILITY",
     }),
+    enterFullScreen() {
+      const player = this.$refs.video_preview;
+      player.plyr.fullscreen.enter();
+    },
 
     toogleSound() {
       const staff = this.connection.streamEvents.selectFirst({
@@ -205,11 +208,6 @@ export default {
       }).stream;
       console.log(staff);
     },
-
-    toogleControlVisibility() {
-      // this.playerHovered = !this.playerHovered;
-    },
-
     // ask node.js server to look for a broadcast
     // if broadcast is available, simply join it. i.e. "join-broadcaster" event should be emitted.
     // if broadcast is absent, simply create it. i.e. "start-broadcasting" event should be fired.
