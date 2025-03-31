@@ -90,7 +90,7 @@ export default {
     outsideClickDetector() {
       let self = this;
       document.addEventListener("click", function (e) {
-        if (self.$refs.notification.contains(e.target) == false) {
+        if (!self.$refs['notification'] || !self.$refs.notification.contains(e.target)) {
           self.cardActive = false;
         }
       });
