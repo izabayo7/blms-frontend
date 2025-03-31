@@ -208,7 +208,7 @@
               />
             </svg>
           </div>
-          <div class="link-name" v-show="state">grades</div>
+          <div class="link-name" v-show="state">Grades</div>
         </li>
         <li
             v-if="!disableFunctionalities&&(userCategory === 'STUDENT')"
