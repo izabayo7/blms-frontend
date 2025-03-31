@@ -104,7 +104,7 @@
                   <div v-if="!$vuetify.breakpoint.mobile" class="live-comments-container">
                     <div class="heading d-flex">
                       <button @click="toogleComments" class="toogle-comments">
-                        <svg v-if="newComments" width="26" height="31" viewBox="0 0 26 31" fill="none"
+                        <svg v-if="newCommentAvailable" width="26" height="31" viewBox="0 0 26 31" fill="none"
                              xmlns="http://www.w3.org/2000/svg">
                           <path
                               d="M21.0932 12.25H19.7911V14.3333H20.8328V22.6667H17.7078C17.4315 22.6667 17.1666 22.7764 16.9712 22.9718C16.7759 23.1671 16.6661 23.4321 16.6661 23.7083V25.3604L14.2776 22.9719C14.0823 22.7765 13.8174 22.6667 13.5411 22.6667H11.2786L9.19531 24.75H13.1099L16.9714 28.6115C17.117 28.7571 17.3026 28.8563 17.5047 28.8964C17.7067 28.9366 17.9161 28.916 18.1064 28.8372C18.2967 28.7583 18.4594 28.6249 18.5739 28.4536C18.6883 28.2823 18.7494 28.081 18.7495 27.875V24.75H21.0932C21.5765 24.7494 22.0399 24.5572 22.3816 24.2155C22.7234 23.8737 22.9156 23.4104 22.9161 22.9271V14.0729C22.9156 13.5896 22.7234 13.1263 22.3816 12.7845C22.0399 12.4428 21.5765 12.2506 21.0932 12.25Z"
@@ -144,7 +144,7 @@
                       </button>
                     </div>
                     <div :class="{'visible':showComments}" class="comments-area">
-                      <div class="inner-comments">
+                      <div v-if="showComments" class="inner-comments">
                         <discussion
                             v-for="(comment, i) in comments"
                             :key="i"
@@ -263,14 +263,14 @@
                       <div class="description">{{ live_session.chapter.description }}
                       </div>
                       <div class="d-flex">
-                        <div v-if="(displayQuiz && quiz) || 1" class="quiz ml-auto ">
+                        <div v-if="(displayQuiz && quiz)" class="quiz ml-auto ">
                           <button @click="
 openQuiz">
                             Take quiz
                           </button>
                         </div>
                         <button v-if="instructor" @click="requestPresenting(!isHandRaised,instructor._id)"
-                                class="raise-hand">
+                                class="raise-hand" :class="{'mt-2':!(displayQuiz && quiz)}">
                           <div class="icon d-flex justify-center">
                             <svg width="37" height="46" viewBox="0 0 37 46" fill="none"
                                  xmlns="http://www.w3.org/2000/svg">
@@ -333,17 +333,11 @@ openQuiz">
             <div class="description">{{ live_session.chapter.description }}
             </div>
             <div class="d-flex">
-              <div v-if="displayQuiz && quiz" class="quiz ml-auto ">
-                <button @click="
+              <div v-if="displayQuiz && quiz" class="quiz d-flex align-center">
+                <button class="mt-0" @click="
 openQuiz">
                   Take quiz
                 </button>
-              </div>
-              <div class="quiz d-flex align-center" v-else>
-                <button disabled class="disabled mt-0">
-                  Take quiz
-                </button>
-
               </div>
               <button v-if="instructor" @click="requestPresenting(!isHandRaised,instructor._id)" class="raise-hand">
                 <div class="icon d-flex justify-center">
@@ -500,6 +494,7 @@ export default {
     return {
       ws: null,
       isHandRaised: false,
+      newCommentAvailable: false,
       participants: [],
       comments: [],
       me: null,
@@ -510,7 +505,6 @@ export default {
       quiz: null,
       comment: "",
       noVideo: false,
-      newComments: false,
       showComments: false,
       isPresenting: false,
       participationInfo: {name: "", room: "", isOfferingCourse: false},
@@ -827,6 +821,9 @@ export default {
         //     "courses/SET_TOTAL_COMMENTS_ON_A_CHAPTER",
         //     this.totalComments == "" ? 1 : this.totalComments + 1
         // );
+        if(!self.showComments){
+          self.newCommentAvailable = true
+        }
         if (result.reply) {
           const comments = self.comments.filter(e => e._id == result.reply)
           if (comments.length) {
@@ -1163,6 +1160,11 @@ export default {
   watch: {
     videoEnabled() {
       this.noVideo = !this.videoEnabled
+    },
+    showComments(){
+      if(this.showComments && this.newCommentAvailable){
+        this.newCommentAvailable= false
+      }
     },
     live_session_confirmation() {
       if (this.live_session_confirmation == 'end_class')
