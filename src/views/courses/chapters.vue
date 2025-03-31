@@ -29,23 +29,29 @@
               })
             "
           >
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"/><path d="M12 10.586l4.95-4.95 1.414 1.414-4.95 4.95 4.95 4.95-1.414 1.414-4.95-4.95-4.95 4.95-1.414-1.414 4.95-4.95-4.95-4.95L7.05 5.636z" fill="rgba(255,255,255,1)"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+              <path fill="none" d="M0 0h24v24H0z"/>
+              <path
+                  d="M12 10.586l4.95-4.95 1.414 1.414-4.95 4.95 4.95 4.95-1.414 1.414-4.95-4.95-4.95 4.95-1.414-1.414 4.95-4.95-4.95-4.95L7.05 5.636z"
+                  fill="rgba(255,255,255,1)"/>
+            </svg>
           </v-btn>
 
           <button
               class="chapter-button"
               :class="`${
               activeChapter === i ? 'white--text active-chapter' : ''
-            }`"
+            } ${limit ? course.chapters[i]._id > limit ? 'disabled' : '' : ''}`"
               @click="activeChapter = i"
           >
             {{ course.chapters[i].name | trimString(20) }}
           </button>
         </v-badge>
-        <v-btn :disabled="course.chapters.length === 1 && !uploadedCourse && $route.path === '/courses/new'" width="90%" class="py-6" @click="addNewChapter">
+        <v-btn :disabled="course.chapters.length === 1 && !uploadedCourse && $route.path === '/courses/new'" width="90%"
+               class="py-6" @click="addNewChapter">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
             <path fill="none" d="M0 0h24v24H0z"/>
-            <path d="M11 11V5h2v6h6v2h-6v6h-2v-6H5v-2z" />
+            <path d="M11 11V5h2v6h6v2h-6v6h-2v-6H5v-2z"/>
           </svg>
           New Chapter
         </v-btn>
@@ -77,13 +83,22 @@
                           placeholder="Enter Chapter Description"
                       ></textarea>
                     </v-card>
-                    <v-btn class="primary-button"
-                           @click="validate(course.chapters[activeChapter]._id ? 'update' : 'create', true).then((res)=>{
+                    <div class="d-flex">
+                      <v-btn class="primary-button"
+                             @click="validate(course.chapters[activeChapter]._id ? 'update' : 'create', true).then((res)=>{
                              if(res == 'Passed')
                               stepCounter = 2;
                            })"
-                    >Continue
-                    </v-btn>
+                      >Continue
+                      </v-btn>
+                      <div class="d-flex">
+                        <v-btn class="primary-button ml-4" :class="{disabled:course.chapters[activeChapter].status}"
+                               @click="changeLimit"
+                        >{{ course.chapters[activeChapter].status ? 'Make' : 'Remove' }} limit
+                        </v-btn>
+                        <div class="hint px-4">If you limit students won't be able to view chapters below this</div>
+                      </div>
+                    </div>
                   </v-stepper-content>
 
                   <v-stepper-step :complete="stepCounter > 2" step="2" editable
@@ -449,6 +464,10 @@ export default {
           ? this.all_quiz.filter((quiz) => quiz.name == this.selectedQuizName)[0]
           : undefined;
     },
+    limit() {
+      const chapter = this.course.chapters.filter(x => x.status === 0)
+      return chapter.length ? chapter[chapter.length - 1]._id : undefined
+    }
   },
   watch: {
     activeChapter() {
@@ -490,7 +509,7 @@ export default {
       }
     },
     error() {
-      if(this.error != "") {
+      if (this.error != "") {
         this.$store.dispatch("app_notification/SET_NOTIFICATION", {
           message: this.error,
           status: "danger",
@@ -512,6 +531,16 @@ export default {
     ]),
     ...mapActions("quiz", ["getQuizes"]),
     ...mapActions("modal", ["set_modal"]),
+    changeLimit() {
+      for (let i in this.course.chapters) {
+        i=parseInt(i)
+        if (i === this.activeChapter) {
+          this.course.chapters[i].status = this.course.chapters[i].status ? 0 : 1
+        } else if (this.course.chapters[i].status === 0) {
+          this.course.chapters[i].status = 1
+        }
+      }
+    },
     async validate(type, validateOnly = false) {
       if (this.course.chapters[this.activeChapter].name === "") {
         return (this.error = "name is required");
@@ -604,6 +633,7 @@ export default {
           number: this.activeChapter + 1,
           course: this.course._id,
           description: this.course.chapters[this.activeChapter].description,
+          status: this.course.chapters[this.activeChapter].status
         },
         content:
             content === `<p>Type or paste your content here</p>` || content === ""
@@ -632,6 +662,7 @@ export default {
           number: this.activeChapter + 1,
           course: this.course._id,
           description: this.course.chapters[this.activeChapter].description,
+          status: this.course.chapters[this.activeChapter].status,
         },
         content:
             content === `<p>Type or paste your content here</p>` || content === ""
@@ -734,7 +765,8 @@ export default {
 .primary-button {
   background-color: $primary !important;
   color: white !important;
-  &.danger{
+
+  &.danger {
     background-color: red !important;
   }
 }
