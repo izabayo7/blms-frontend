@@ -5,10 +5,10 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "node --max_old_space_size=4096 node_modules/.bin/vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "ui": "vue ui"
   },
   "dependencies": {
-    "@mdi/font": "^5.5.55",
     "animate.css": "^4.1.0",
     "apexcharts": "^3.24.0",
     "axios": "^0.21.1",
