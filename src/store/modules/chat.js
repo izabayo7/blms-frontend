@@ -75,7 +75,36 @@ export default {
 
                 })
         },
+        //store the message that we sent
+        ADD_ONGOING_MESSAGE(state,newMessage){
 
+            newMessage = {
+                content:newMessage,
+                createdAt: new Date(),
+                _id:`${Math.random()}`
+            }
+
+            store.dispatch('chat/lastMessageInCertainChatMessages',state.username).then(({lastMessage,groupIndex,userIndex}) => {
+
+                if(lastMessage._id !== newMessage._id){
+
+                    if(userIndex === undefined){
+                        state.loadedMessages.push({username:state.username,conversation:[{from:'me',messages:[newMessage]}]})
+                    }else {
+                        let userMessages = state.loadedMessages[userIndex].conversation
+
+                        if(userMessages[groupIndex].from.toLowerCase() !== 'me'){
+                            userMessages.push(
+                                {from:'me',messages:[newMessage]}
+                            )
+                        } else{
+                            userMessages[userMessages.length-1].messages.push(newMessage)
+                        }
+                    }
+                }
+
+            })
+        }
 
     },
     actions:{
@@ -109,7 +138,6 @@ export default {
                 emit('incoming_message_initially_loaded')
             });
         },
-
         //load user messages
         loadMessages({getters,state,commit},id){
             // get messages

@@ -57,8 +57,10 @@ export default {
         group: undefined
       });
 
+      //adding sent message to store
+      this.$store.commit('chat/ADD_ONGOING_MESSAGE',this.msg)
+
       //after sending message let us make the div empty
-      console.log(this.msg)
       this.$refs['input'].textContent = ''
       this.p('Type something..')
     },
