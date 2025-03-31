@@ -304,6 +304,7 @@ export default {
 /* Portrait phones and smaller */
 @media (max-width: 700px) {
   .combined-statistics {
+    height: 345px;
     max-height: fit-content;
   }
 }

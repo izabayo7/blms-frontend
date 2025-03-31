@@ -2,6 +2,8 @@ export default {
     methods: {
         mouseOnPic(e, userName, cardId) {
             const card = document.getElementById(cardId)
+            if(!card)
+                return
             this.timeout = setTimeout(() => {
                 this.$store.dispatch('users/getUserByUsername', userName)
                 card.style.display = "block"
@@ -11,7 +13,7 @@ export default {
 
         },
         mouseOutPic(e, cardId) {
-            if (!e || e.toElement.className !== "user-card--wrapper") {
+            if (!e || e.toElement ? e.toElement.className !== "user-card--wrapper" : false) {
                 clearTimeout(this.timeout)
                 const card = document.getElementById(cardId)
                 setTimeout(() => {
