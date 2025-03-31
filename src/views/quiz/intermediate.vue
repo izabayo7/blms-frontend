@@ -3,10 +3,14 @@
     <back class="mt-0 mb-6 ml-lg-n6" />
     <v-row>
       <v-col class="col-12 col-md-6">
-        <div class="title text-h3">Quiz Name</div>
+        <div class="title text-h3">{{ selected_quiz.name }}</div>
         <div class="instructions mt-6">
-          In this quiz, pay attention to the question number 4 as it has more
-          marks than others. please notice it.
+          <!-- In this quiz, pay attention to the question number 4 as it has more
+          marks than others. please notice it. -->
+          <kurious-editor
+            v-if="selected_quiz.instructions"
+            :defaultContent="selected_quiz.instructions"
+          />
         </div>
         <div class="quiz_info mt-6">
           <div class="item">
@@ -27,7 +31,7 @@
 
               Number of questions
             </div>
-            <div class="value">16</div>
+            <div class="value">{{ selected_quiz.questions.length }}</div>
           </div>
           <div class="item">
             <div class="lable">
@@ -46,7 +50,13 @@
 
               Duration
             </div>
-            <div class="value">16</div>
+            <div class="value">
+              {{
+                new Date(selected_quiz.duration * 1000)
+                  .toISOString()
+                  .substr(11, 8)
+              }}
+            </div>
           </div>
           <div class="item">
             <div class="lable">
@@ -66,7 +76,7 @@
 
               Marks
             </div>
-            <div class="value">16</div>
+            <div class="value">{{ selected_quiz.total_marks }}</div>
           </div>
         </div>
       </v-col>
@@ -121,7 +131,7 @@
                   fill="#414141"
                 />
               </svg>
-              Course name
+              {{ selected_quiz.target.course.name }}
             </div>
             <div class="item">
               <svg
@@ -137,32 +147,39 @@
                   fill="#414141"
                 />
               </svg>
-              Chapter name
+              {{ selected_quiz.target.chapter.name }}
             </div>
           </div>
           <div class="confirm_nocheat mt-4">
             <div class="content">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="36.571"
-                height="29.922"
-                class="ml-2"
-                viewBox="0 0 24.916 24.916"
-              >
-                <path
-                  id="Icon_ionic-md-checkbox-outline"
-                  data-name="Icon ionic-md-checkbox-outline"
-                  d="M11.283,14.328,9.345,16.266l6.229,6.229L29.416,8.653,27.478,6.715,15.574,18.55ZM26.648,26.648H7.268V7.268H21.111V4.5H7.268A2.776,2.776,0,0,0,4.5,7.268V26.648a2.776,2.776,0,0,0,2.768,2.768H26.648a2.776,2.776,0,0,0,2.768-2.768V15.574H26.648Z"
-                  transform="translate(-4.5 -4.5)"
-                />
-              </svg>
+              <v-btn icon>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="36.571"
+                  height="29.922"
+                  class="ml-2"
+                  viewBox="0 0 24.916 24.916"
+                >
+                  <path
+                    id="Icon_ionic-md-checkbox-outline"
+                    data-name="Icon ionic-md-checkbox-outline"
+                    d="M11.283,14.328,9.345,16.266l6.229,6.229L29.416,8.653,27.478,6.715,15.574,18.55ZM26.648,26.648H7.268V7.268H21.111V4.5H7.268A2.776,2.776,0,0,0,4.5,7.268V26.648a2.776,2.776,0,0,0,2.768,2.768H26.648a2.776,2.776,0,0,0,2.768-2.768V15.574H26.648Z"
+                    transform="translate(-4.5 -4.5)"
+                  />
+                </svg>
+              </v-btn>
               <div class="words">
                 I agree I will not use any cheating method if cough, I will
                 automatically fail this assessment
               </div>
             </div>
           </div>
-          <button class="start_quiz mt-5">Take Quiz</button>
+          <button
+            class="start_quiz mt-5"
+            @click="$router.push(`/quiz/attempt/${$route.params.name}`)"
+          >
+            Take Quiz
+          </button>
         </div>
       </v-col>
     </v-row>
@@ -170,7 +187,7 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 export default {
   data: () => ({
     quiz: {},
@@ -180,27 +197,17 @@ export default {
   components: {
     back: () => import("@/components/shared/back-button"),
   },
+  computed: {
+    ...mapGetters("quiz", ["selected_quiz"]),
+  },
   methods: {
     ...mapActions("quiz", ["findQuizByName"]),
   },
   created() {
-    // this.findQuizSubmissionByUserAndQuizNames({
-    //   userName: this.$route.params.user_name,
-    //   quizName: this.$route.params.quiz_name,
-    // }).then(async () => {
-    //   this.attempt = {
-    //     quiz: this.selected_quiz_submission.quiz._id,
-    //     user: this.selected_quiz_submission.user.user_name,
-    //     auto_submitted: this.selected_quiz_submission.auto_submitted,
-    //     used_time: this.selected_quiz_submission.used_time,
-    //     answers: this.selected_quiz_submission.answers,
-    //     marked: this.selected_quiz_submission.marked,
-    //     total_marks: this.selected_quiz_submission.totalMarks,
-    //   };
-    //   if (!this.attempt.marked && this.userCategory === "Instructor") {
-    //     this.mode = "edit";
-    //   }
-    // });
+    this.findQuizByName({
+      user_name: this.$store.state.user.user.user_name,
+      quizName: this.$route.params.name,
+    });
   },
 };
 </script>

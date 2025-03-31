@@ -59,7 +59,7 @@
                     "
                     :color="primary"
                     class="white--text next-chapter"
-                    :to="`/quiz/attempt/${course.chapters[activeIndex].quiz[0].name}`"
+                    :to="`/quiz/preview/${course.chapters[activeIndex].quiz[0].name}`"
                     rounded
                     >Take Quiz</v-btn
                   >

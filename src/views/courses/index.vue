@@ -109,7 +109,7 @@
       class="courses-home"
       fluid
     >
-      <v-row> 
+      <v-row>
         <v-col cols="12" md="6" class="courses-header mt-5">
           <h2>
             Hey Mr{{
@@ -264,10 +264,19 @@ export default {
     ...mapGetters("courses", [
       "publishedCourses",
       "unpublishedCourses",
-      "ongoingCourses",
-      "finishedCourses",
+      "courses",
       "loaded",
     ]),
+    finishedCourses() {
+      return this.courses.filter((course) =>
+        course.progress ? course.progress.progress == 100 : false
+      );
+    },
+    ongoingCourses() {
+      return this.courses.filter((course) =>
+        course.progress ? course.progress.progress < 100 : !course.progress
+      );
+    },
   },
   methods: {
     ...mapActions("courses", ["getCourses"]),
