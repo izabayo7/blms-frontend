@@ -181,7 +181,7 @@
             </button>
           </div>
           <div v-if="live_session.quiz" class="live-class--action release-quiz">
-            <button @click="releaseQuiz">
+            <button v-if="!displayQuiz" @click="releaseQuiz">
             <span class="icon">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none"
                                                                                                        d="M0 0h24v24H0z"/><path
@@ -344,6 +344,7 @@ export default {
   computed: {
     ...mapGetters('user', ['user']),
     ...mapGetters("chat", ["socket"]),
+
     ...mapState("sidebar_navbar", {sidebarOpen: "sidebar_expanded"}),
     instructor() {
       const el = this.participants.filter(e => e.userInfo.category == "INSTRUCTOR")
@@ -661,7 +662,7 @@ export default {
     },
     releaseQuiz(){
       this.displayQuiz = true
-      this.socket.emit("live/releaseQuiz");
+      this.socket.emit("live/releaseQuiz", {quiz: this.live_session.quiz, receivers: this.$store.getters['live_session/participants']});
     },
     toogleVideo() {
       let message = {
