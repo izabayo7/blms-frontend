@@ -32,6 +32,33 @@
                 <video ref="video_preview" id="video-preview" loop></video>
               </vue-plyr>
               <div
+                v-if="!videoMuted && videoMuted !== undefined"
+                class="no_video"
+              >
+                <div class="content">
+                  <img
+                    class="profile"
+                    v-if="$store.state.user.user.profile"
+                    :src="$store.state.user.user.profile"
+                    alt="profile picture"
+                  />
+                  <v-avatar
+                    @click="logout"
+                    v-else
+                    size="100"
+                    class="avatar title"
+                  >
+                    {{
+                      `${$store.state.user.user.sur_name} ${$store.state.user.user.other_names}`
+                        | computeText
+                    }}
+                  </v-avatar>
+                  <span class="title mt-3">{{
+                    `${$store.state.user.user.sur_name} ${$store.state.user.user.other_names}`
+                  }}</span>
+                </div>
+              </div>
+              <div
                 :class="`overlay ${playerHovered ? 'hovered' : ''}`"
                 @dblclick="enterFullScreen"
               ></div>
@@ -78,23 +105,7 @@
                   :class="{ muted: !videoMuted && videoMuted !== undefined }"
                 >
                   <svg
-                    v-if="!videoMuted"
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="19.781"
-                    height="13.188"
-                    viewBox="0 0 19.781 13.188"
-                  >
-                    <path
-                      id="Icon_awesome-video"
-                      data-name="Icon awesome-video"
-                      d="M11.546,4.5h-9.9A1.642,1.642,0,0,0,0,6.142v9.9a1.642,1.642,0,0,0,1.642,1.642h9.9a1.642,1.642,0,0,0,1.642-1.642v-9.9A1.642,1.642,0,0,0,11.546,4.5Zm6.5,1.295-3.764,2.6V13.8l3.764,2.593a1.1,1.1,0,0,0,1.731-.886V6.681A1.1,1.1,0,0,0,18.05,5.795Z"
-                      transform="translate(0 -4.5)"
-                      fill="#fff"
-                    />
-                  </svg>
-
-                  <svg
-                    v-else
+                    v-if="!videoMuted && videoMuted !== undefined"
                     xmlns="http://www.w3.org/2000/svg"
                     width="23.022"
                     height="18.67"
@@ -123,27 +134,28 @@
                       />
                     </g>
                   </svg>
+                  <svg
+                    v-else
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="19.781"
+                    height="13.188"
+                    viewBox="0 0 19.781 13.188"
+                  >
+                    <path
+                      id="Icon_awesome-video"
+                      data-name="Icon awesome-video"
+                      d="M11.546,4.5h-9.9A1.642,1.642,0,0,0,0,6.142v9.9a1.642,1.642,0,0,0,1.642,1.642h9.9a1.642,1.642,0,0,0,1.642-1.642v-9.9A1.642,1.642,0,0,0,11.546,4.5Zm6.5,1.295-3.764,2.6V13.8l3.764,2.593a1.1,1.1,0,0,0,1.731-.886V6.681A1.1,1.1,0,0,0,18.05,5.795Z"
+                      transform="translate(0 -4.5)"
+                      fill="#fff"
+                    />
+                  </svg>
                 </button>
                 <button
                   @click="toogleSound"
                   :class="{ muted: !muted && muted !== undefined }"
                 >
                   <svg
-                    v-if="!muted"
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="16.778"
-                    height="24.404"
-                    viewBox="0 0 16.778 24.404"
-                  >
-                    <path
-                      id="Icon_awesome-microphone-alt"
-                      data-name="Icon awesome-microphone-alt"
-                      d="M16.015,9.152h-.763a.762.762,0,0,0-.763.763V12.2a6.108,6.108,0,0,1-6.711,6.072A6.286,6.286,0,0,1,2.288,11.93V9.914a.762.762,0,0,0-.763-.763H.763A.762.762,0,0,0,0,9.914v1.914a8.652,8.652,0,0,0,7.245,8.66v1.628H4.576a.762.762,0,0,0-.763.763v.763a.762.762,0,0,0,.763.763H12.2a.762.762,0,0,0,.763-.763v-.763a.762.762,0,0,0-.763-.763H9.533v-1.61a8.4,8.4,0,0,0,7.245-8.3V9.914A.762.762,0,0,0,16.015,9.152ZM8.389,16.778A4.576,4.576,0,0,0,12.965,12.2V4.576a4.576,4.576,0,0,0-9.152,0V12.2A4.576,4.576,0,0,0,8.389,16.778Z"
-                      fill="#fff"
-                    />
-                  </svg>
-                  <svg
-                    v-else
+                    v-if="!muted && muted !== undefined"
                     xmlns="http://www.w3.org/2000/svg"
                     width="20.757"
                     height="21.391"
@@ -171,6 +183,20 @@
                         fill="#fff"
                       />
                     </g>
+                  </svg>
+                  <svg
+                    v-else
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16.778"
+                    height="24.404"
+                    viewBox="0 0 16.778 24.404"
+                  >
+                    <path
+                      id="Icon_awesome-microphone-alt"
+                      data-name="Icon awesome-microphone-alt"
+                      d="M16.015,9.152h-.763a.762.762,0,0,0-.763.763V12.2a6.108,6.108,0,0,1-6.711,6.072A6.286,6.286,0,0,1,2.288,11.93V9.914a.762.762,0,0,0-.763-.763H.763A.762.762,0,0,0,0,9.914v1.914a8.652,8.652,0,0,0,7.245,8.66v1.628H4.576a.762.762,0,0,0-.763.763v.763a.762.762,0,0,0,.763.763H12.2a.762.762,0,0,0,.763-.763v-.763a.762.762,0,0,0-.763-.763H9.533v-1.61a8.4,8.4,0,0,0,7.245-8.3V9.914A.762.762,0,0,0,16.015,9.152ZM8.389,16.778A4.576,4.576,0,0,0,12.965,12.2V4.576a4.576,4.576,0,0,0-9.152,0V12.2A4.576,4.576,0,0,0,8.389,16.778Z"
+                      fill="#fff"
+                    />
                   </svg>
                 </button>
               </div>
@@ -253,6 +279,7 @@ export default {
     screenSharingStream: undefined,
     isScreenShared: undefined,
     playerHovered: false,
+    screenStream: undefined
   }),
   computed: {
     ...mapState("live", ["room"]),
@@ -556,14 +583,10 @@ export default {
     }
 
     document.querySelector("#toogleScreenShare").onclick = function () {
-      console.log(vm.screenSharingStream);
       if (vm.isScreenShared) {
-        vm.screenSharingStream.getTracks().forEach(function (track) {
-          console.log(track);
-          track.stop();
-        });
+        vm.screenStream.stop()
       } else {
-        getMixedCameraAndScreen(); // hello ladies vp abajama banjye
+        getMixedCameraAndScreen();
       }
     };
 
@@ -591,12 +614,13 @@ export default {
           // videoPreview.id = event.stream.id;
           videoPreview.play();
 
-          vm.isScreenShared = true
+          vm.isScreenShared = true;
+          vm.screenStream = screenStream
           addStreamStopListener(screenStream, function () {
             mixer.releaseStreams();
-            vm.isScreenShared = false
+            vm.isScreenShared = false;
             videoPreview.srcObject = vm.localVideoStream;
-            videoPreview.play()
+            videoPreview.play();
 
             cameraStream.getTracks().forEach(function (track) {
               track.stop();
@@ -786,6 +810,7 @@ export default {
       }
     }
   }
+
   .controls {
     width: inherit;
     bottom: 0;
@@ -843,6 +868,34 @@ export default {
     .overlay,
     .controls {
       opacity: 1;
+    }
+  }
+  // no video design
+  .no_video {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    place-items: center;
+    position: absolute;
+    .profile {
+      width: 100px;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+    .content {
+      display: flex;
+      flex-direction: column;
+      margin: auto auto;
+    }
+    * {
+      color: white;
+    }
+    .avatar {
+      margin: auto auto;
+      margin-top: 0px;
+      background-color: $primary;
+      // color: white;
+      cursor: pointer;
     }
   }
 }
