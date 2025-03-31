@@ -333,25 +333,29 @@
               background: none;
             }
           }
-          .speaking-user{
+
+          .speaking-user {
             display: none;
             height: 60px;
             width: 177px;
             position: absolute;
             top: 18px;
             right: 18px;
-            .profile{
+
+            .profile {
               margin-right: 7px;
               width: 59.89px;
               heigth: 59.89px;
             }
-            img{
+
+            img {
               width: 59.89px;
               heigth: 59.89px;
               border-radius: 50%;
               border: 2px solid #193074;
             }
-            .names{
+
+            .names {
               font-family: Segoe UI;
               font-style: normal;
               font-weight: bold;
@@ -809,6 +813,12 @@
         max-width: 360px;
       }
 
+      .disabled {
+        color: rgba(0, 0, 0, 0.26) !important;
+        background-color: rgba(0, 0, 0, 0.12) !important;
+        font-size: 14px !important;
+      }
+
       .quiz {
         button {
           background: #193074;
@@ -950,7 +960,7 @@
     }
   }
 
-  .no-live{
+  .no-live {
     display: flex;
     justify-content: center;
     align-content: center;
