@@ -473,7 +473,7 @@
                 </div>
                 <div class="text">
                   {{
-                    `${course.attendedStudents} Student${
+                    `${course.attendedStudents || 0} Student${
                       course.attendedStudents > 1 ? "s" : ""
                     }`
                   }}
