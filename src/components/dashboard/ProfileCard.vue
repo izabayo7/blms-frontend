@@ -17,7 +17,10 @@
           <p class="name">{{ `${user.sur_name} ${user.other_names}` }}</p>
           <p class="email">{{ `${user.email}` }}</p>
         </div>
-        <div class="profile-badge">
+        <div
+          v-if="$store.state.user.user.category.name !== 'STUDENT'"
+          class="profile-badge"
+        >
           <verified-badge />
         </div>
       </div>
