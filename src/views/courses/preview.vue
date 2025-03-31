@@ -73,7 +73,17 @@
         </div>
       </v-col>
       <v-col v-else class="col-12 student d-md-flex">
-        <!-- <button class="back">back</button> -->
+
+        <main class="preview mt-sm-4 hidden-md-and-up">
+          <preview
+              :image="course.cover_picture"
+              :name="course.name"
+              :dateUploaded="course.createdAt | formatDate"
+              :progress="course.progress"
+              :isLive="isLive"
+              :class_id="nearestLiveSession ? nearestLiveSession._id : undefined"
+          />
+        </main>
         <main class="description">
           <h1 class="pb-5">{{ course.name }}</h1>
           <article class="desc pb-10">{{ course.description }}</article>
@@ -251,7 +261,7 @@
             </div>
           </article>
         </main>
-        <main class="preview mt-sm-4">
+        <main class="preview mt-sm-4 hidden-sm-and-down">
           <preview
               :image="course.cover_picture"
               :name="course.name"
