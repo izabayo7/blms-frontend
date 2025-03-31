@@ -49,7 +49,6 @@ input[type=number] {
   }
   &::-webkit-scrollbar-track {
     // background-color: #f8f8ff;
-    border-radius: 10px;
   }
   &::-webkit-scrollbar-track:hover {
     background-color: lighten($secondary, 4);

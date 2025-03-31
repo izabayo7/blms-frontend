@@ -109,7 +109,7 @@ export default {
                     dispatch('modal/set_modal', { template: 'display_information', title: 'Creating Course', message: `uploading ${coverPicture.name}` }, { root: true })
                     const formData = new FormData()
                     formData.append("file", coverPicture)
-                    apis.update('file/updateCourseCoverPicture', d.data._id, formData, {
+                    apis.update('course', `${d.data._id}/cover_picture`, formData, {
                         headers: {
                             'Content-Type': 'multipart/form-data'
                         },
@@ -117,7 +117,7 @@ export default {
                             dispatch('modal/set_progress', parseInt(Math.round((progressEvent.loaded / progressEvent.total) * 100)), { root: true })
                         }
                     }).then(courseData => {
-                        courseObject.coverPicture = courseData.data.data.coverPicture
+                        courseObject.cover_picture = courseData.data.data.cover_picture
                     })
                 }
                 courseObject.chapters = []
@@ -147,7 +147,7 @@ export default {
                     dispatch('modal/set_modal', { template: 'display_information', title: 'Updating Course', message: `uploading ${coverPicture.name}` }, { root: true })
                     const formData = new FormData()
                     formData.append("file", coverPicture)
-                    apis.update('file/updateCourseCoverPicture', state.selectedCourse, formData, {
+                    apis.update('course', `${state.selectedCourse}/cover_picture`, formData, {
                         headers: {
                             'Content-Type': 'multipart/form-data'
                         },
@@ -350,7 +350,7 @@ export default {
             })
         },
         //find a course by name
-        findCourseByName({ state, commit }, { userId, courseName }) {
+        findCourseByName({ state, commit }, { user_name, courseName }) {
             let courseFound = false
             if (state.courses.loaded) {
                 let courses = state.courses.data.filter(course => course.name == courseName)
@@ -362,7 +362,7 @@ export default {
                 }
             }
             if (!courseFound) {
-                return apis.get(`course/user/${userId}/${courseName}`).then(d => {
+                return apis.get(`course/user/${user_name}/${courseName}`).then(d => {
                     d.data = d.data.data
                     if (state.courses.loaded) {
                         state.courses.data.push(d.data)

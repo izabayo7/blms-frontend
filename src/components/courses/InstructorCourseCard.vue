@@ -59,8 +59,8 @@
           </v-menu>
           <v-img
             v-if="course.cover_picture"
-            :src="course.cover_picture + '?height=300&width=300'"
-            :lazy-src="course.cover_picture + '?height=300&width=300'"
+            :src="`${course.cover_picture}?height=300&width=300&token=${$session.get('jwt')}`"
+            :lazy-src="`${course.cover_picture}?height=300&width=300&token=${$session.get('jwt')}`"
             class="course-image hidden-md-and-down"
           >
             <template v-slot:placeholder>
@@ -73,7 +73,7 @@
             </template>
           </v-img>
           <v-avatar
-            class="course-image white--text bg-color-one text-h2"
+            class="course-image white--text bg-color-one text-h2 hidden-md-and-down"
             size="106"
             v-else
           >{{ course.name | computeText }}</v-avatar
