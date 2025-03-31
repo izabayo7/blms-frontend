@@ -234,7 +234,7 @@ export default {
 
 <style lang="scss" scoped>
 #messages-section {
-  height: calc(100vh - 82px);
+  height: calc(100vh - 100px);
 
   &.mb-0 {
     height: 100vh;

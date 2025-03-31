@@ -325,13 +325,14 @@ export default {
         //load user messages
         loadMessages({getters, state, commit}, {id, lastMessage}) {
             // const group = user.is_group
-
             // get messages
             //first check if we have ongoing requested data with the same id as this
             if (state.request.id !== id) {
                 getters.socket.emit('message/conversation', {conversation_id: id, lastMessage});
-                state.request.ongoing = true
-                state.request.id = id
+                if(!lastMessage) {
+                    state.request.ongoing = true
+                    state.request.id = id
+                }
             }
 
             // Get messages

@@ -76,6 +76,7 @@
           <!--        list of messages sent or received-->
           <div v-if="currentDisplayedUser.id !== 'announcements'" class="msgs">
             <div
+                :id="msg._id"
                 :class="`msg-cntnr ${
                 !msg.content || msg.content === '' ? 'noBg' : ''
               }`"
@@ -199,6 +200,7 @@ export default {
     return {
       typing: false,
       typers: [],
+      topmsg: undefined
     };
   },
   computed: {
@@ -226,7 +228,7 @@ export default {
   methods: {
     ...mapMutations("chat", ["CHANGE_MESSAGE_READ_STATUS"]),
     ...mapActions("chat", ["loadMessages"]),
-    findTotalMessages(){
+    findTotalMessages() {
       let i = 0
       for (const k in this.data) {
         i += this.data[k].messages.length
@@ -236,8 +238,19 @@ export default {
     loadMoreMessages() {
       const el = document.querySelector('.msg-container');
       if (el.scrollTop === 0 && this.data[0].from !== "SYSTEM") {
+        const id = document.querySelector('.msg-cntnr').id
         this.loadMessages({id: this.$route.params.username, lastMessage: this.data[0].messages[0]._id})
+
+        setTimeout(() => {
+          const msg = document.getElementById(id)
+          const height = msg.parentElement.parentElement.parentElement.scrollHeight
+          if (height > 20)
+            msg.parentElement.parentElement.parentElement.parentElement.scrollTo({
+              top: height - 20
+            })
+        }, 50)
       }
+
     },
     // is message going or coming
     msgGoing(owner) {
@@ -330,7 +343,8 @@ export default {
 <style lang="scss" scoped>
 .my-chat-messaging {
   display: block;
-  overflow: auto;
+  overflow-x: hidden;
+  overflow-y: auto;
   position: relative;
   height: 100%;
   scrollbar-track-color: transparent;
