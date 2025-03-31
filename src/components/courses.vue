@@ -31,7 +31,7 @@
             <kurious-student-course-card
               category="ongoing"
               :course="course"
-              :image="course.coverPicture === undefined ? 'https://media.inmobalia.com/imgV1/B8vEv5Xh~OlgGrmOOeWCtYHtdv2TGtX20HosCpYxDmKApRO9fqu6aebRr_kOYwWZUUBuTZKwOZPzAYj7tZulyLOn1CMNcFuV2RqXoT28SJ2OnPhaGG~JUijtTYAgMuK~95K_MTLY7d8_mFzQgU5qCIR0acc49iB4a7RKlRbhA4L7nCLwQUoy~55Chgn65VnEfSbkn8wPAPU65wNYna0WPiwq3DO5FR3ZyC4GVH6cISHb5qeFj9bXdaLtSafxK6JAQUDjvlHmu11lcAZR0m_DzjaXII2SqzhJKqZGy8Wosxgange8oRKNfl1fRhzEUpEtTw8_MfQPTjpPx4wbxN_lreBfVwnD1tE-.jpg' : `http://localhost:7070/kurious/file/courseCover/${course._id}`"
+              :image="course.coverPicture === undefined ? 'https://media.inmobalia.com/imgV1/B8vEv5Xh~OlgGrmOOeWCtYHtdv2TGtX20HosCpYxDmKApRO9fqu6aebRr_kOYwWZUUBuTZKwOZPzAYj7tZulyLOn1CMNcFuV2RqXoT28SJ2OnPhaGG~JUijtTYAgMuK~95K_MTLY7d8_mFzQgU5qCIR0acc49iB4a7RKlRbhA4L7nCLwQUoy~55Chgn65VnEfSbkn8wPAPU65wNYna0WPiwq3DO5FR3ZyC4GVH6cISHb5qeFj9bXdaLtSafxK6JAQUDjvlHmu11lcAZR0m_DzjaXII2SqzhJKqZGy8Wosxgange8oRKNfl1fRhzEUpEtTw8_MfQPTjpPx4wbxN_lreBfVwnD1tE-.jpg' : `http://localhost:7070/kurious/file/courseCoverPicture/${course._id}`"
             />
           </v-col>
         </v-row>

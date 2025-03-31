@@ -1,6 +1,6 @@
 <template>
   <v-navigation-drawer
-    v-model="visible"
+    v-model="showActions"
     app
     :right="true"
     mobile-breakpoint="960"
@@ -37,9 +37,12 @@
       breakPoint () {
         return this.$vuetify.breakpoint.name
       },
+      showActions (){
+        return this.visible
+      }
     },
     watch: {
-      visible () {
+      showActions () {
         if (this.visible === false) {
           this.$emit('hideActions');
         }

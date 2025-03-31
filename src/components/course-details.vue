@@ -13,14 +13,24 @@
         <v-icon>mdi-arrow-left</v-icon>
       </v-btn>
       <v-col class="col-3 hidden-sm-and-down">
-        <kurious-chapter-list @changeChapter="changeActiveChapter" :chapters="chapters" />
+        <kurious-chapter-list
+          @changeChapter="changeActiveChapter"
+          :chapters="chapters"
+          :maximumIndex="maximumIndex"
+          :progress="progress"
+        />
       </v-col>
       <kurious-page-actions
         v-on:hideActions="showActions = false"
         :visible="showActions"
         class="hidden-md-and-up"
       >
-        <kurious-chapter-list :chapters="chapters" />
+        <kurious-chapter-list
+          @changeChapter="changeActiveChapter"
+          :chapters="chapters"
+          :maximumIndex="maximumIndex"
+          :progress="progress"
+        />
       </kurious-page-actions>
       <v-col class="col-12 col-md-9 course-content pa-md-10 pb-md-0">
         <v-row>
@@ -56,20 +66,22 @@
                     <v-col class="col-12">
                       <kurious-editor v-if="editorContent !== ''" :defaultContent="editorContent" />
                     </v-col>
-                    <v-col class="col-6 col-md-4 mx-auto">
-                      <v-btn color="green" class="white--text">Mark as complete</v-btn>
+                    <v-col v-if="maximumIndex === activeIndex" class="col-6 col-md-4 mx-auto">
+                      <v-btn color="green" class="white--text" @click="proceed">Mark as complete</v-btn>
                     </v-col>
                     <v-col class="col-12">
                       <v-row>
                         <v-col class="col-6">
-                          <v-btn rounded elevation="0">Previous chapter</v-btn>
+                          <v-btn v-if="activeIndex > 0" rounded @click="activeIndex--" elevation="0">Previous chapter</v-btn>
                         </v-col>
                         <v-col class="text-right col-6">
                           <v-btn
+                            v-if="activeIndex < maximumIndex"
                             color="#FFC100"
                             class="white--text next-chapter"
+                            @click="activeIndex++"
                             rounded
-                          >Previous chapter</v-btn>
+                          >Next chapter</v-btn>
                         </v-col>
                       </v-row>
                     </v-col>
@@ -105,6 +117,9 @@
                         </v-btn>
                       </div>
                     </div>
+                    <span v-else>
+                      {{message}}
+                    </span>
                   </v-row>
                 </v-container>
               </v-tab-item>
@@ -132,9 +147,12 @@ export default {
   name: "CourseDetails",
   data: () => ({
     power: 78,
-    activeIndex: 1,
+    activeIndex: 0,
+    maximumIndex: 0,
     show: false,
     message: "",
+    progress: -1,
+    progressId: "",
     modal: true,
     attachments: [],
     imageTypes: ["image/jpeg", "image/png"],
@@ -146,8 +164,68 @@ export default {
   }),
   beforeMount() {
     this.getEsssentials();
+    this.getStudentProgress();
+  },
+  watch: {
+    chapters() {
+      this.maximumIndex = (this.progress * this.chapters.length) / 100;
+      console.log(this.progress);
+      console.log(this.chapters.length);
+      console.log(this.maximumIndex);
+    },
   },
   methods: {
+    async getStudentProgress() {
+      try {
+        let response = await Apis.get(
+          `studentProgress/${this.$store.state.user._id}/${this.$route.params.id}`
+        );
+        this.progress = response.data.progress;
+        this.progressId = response.data._id;
+      } catch (error) {
+        if (error.response) {
+          this.maximumIndex = 0;
+          this.progress = 0;
+        } else if (error.request) {
+          this.status = 503;
+          this.message = "Service Unavailable";
+          this.modal = false;
+          this.show = true;
+        }
+      }
+    },
+    async proceed() {
+      try {
+        let response;
+        if (this.maximumIndex === 0) {
+          response = await Apis.create("studentProgress", {
+            student: this.$store.state.user._id,
+            course: this.$route.params.id,
+            chapter: this.chapters[this.activeIndex]._id,
+          });
+          this.progressId = response.data._id
+        } else {
+          response = await Apis.update("studentProgress", this.progressId, {
+            student: this.$store.state.user._id,
+            course: this.$route.params.id,
+            chapter: this.chapters[this.activeIndex]._id,
+          });
+        }
+        this.progress = response.data.progress;
+        this.maximumIndex++;
+        this.activeIndex++;
+      } catch (error) {
+        if (error.response) {
+          this.status = error.response.status;
+          this.message = error.response.data;
+        } else if (error.request) {
+          this.status = 503;
+          this.message = "Service Unavailable";
+        }
+        this.modal = false;
+        this.show = true;
+      }
+    },
     async downloadAttachment(id) {
       const url = `http://localhost:7070/kurious/file/downloadAttachment/${id}`;
       window.location.href = url;
@@ -179,15 +257,11 @@ export default {
         this.attachments = response.data;
       } catch (error) {
         if (error.response) {
-          this.status = error.response.status;
           this.message = error.response.data;
-        } else if (error.request) {
-          this.status = 503;
+        } else if (error.request) {                                           
           this.message = "Service Unavailable";
         }
-        this.modal = false
-        this.show = true;
-      }
+      }                           
     },
     findIcon(name) {
       const type = name.split(".")[name.split(".").length - 1];
@@ -202,9 +276,9 @@ export default {
       }
     },
     changeActiveChapter(index) {
+      console.log(index);
       this.activeIndex = index;
-      this.getChapterDocument(index);
-      console.log("sawa");
+      this.getChapterDocument();
       document.getElementById("content-tab").click();
     },
     async getChapterDocument() {
@@ -222,7 +296,7 @@ export default {
           this.status = 503;
           this.message = "Service Unavailable";
         }
-        this.modal = false
+        this.modal = false;
         this.show = true;
       }
     },
