@@ -148,7 +148,7 @@
     <div v-else>
       You arleady did this assignment, you can
       <router-link
-        :to="`/quiz/${$route.params.name}/${$store.state.user.user.surName}_${$store.state.user.user.otherNames}`"
+        :to="`/quiz/${$route.params.name}/${$store.state.user.user.user_name}`"
         >review your submission</router-link
       >
     </div>
@@ -351,7 +351,7 @@ export default {
     this.mode = "edit";
     if (!this.loaded) {
       if (this.$store.state.user.user.category.name == "STUDENT") {
-        console.log('aaaaaaaaaaaaaaa')  
+        console.log("aaaaaaaaaaaaaaa");
         this.findQuizSubmissionByUserAndQuizNames({
           userName: this.$store.state.user.user.user_name,
           quizName: this.$route.params.name,
