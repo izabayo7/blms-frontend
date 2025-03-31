@@ -154,9 +154,9 @@
 
                   <v-stepper-content step="3">
                     <v-card class="mb-12 elevation-0">
-                      <v-row>
+                      <v-row class="ma-0">
                         <v-col class="col-12 actions-container">
-                          <v-row>
+                          <v-row class="ma-0">
                             <v-col
                                 :class="`col-6 text-center ${
                                 mode == 'edit' ? 'active-mode white--text' : ''
@@ -370,7 +370,7 @@
                   </v-stepper-step>
 
                   <v-stepper-content step="5">
-                    <v-row>
+                    <v-row class="ma-0">
                       <v-btn
                           v-if="course.chapters[activeChapter]._id"
                           class="mr-4 primary-button"

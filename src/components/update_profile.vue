@@ -246,7 +246,7 @@ export default {
         // set the dialog
         this.$store.dispatch("modal/set_modal", {
           template: "display_information",
-          title: "Updating Course",
+          title: "Updating Profile",
           message: `uploading profile`,
         });
         response = await Apis.update_user_profile(
