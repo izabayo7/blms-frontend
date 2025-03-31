@@ -25,7 +25,7 @@
     </v-card>
     <v-card v-else :to="`courses/${course._id}`" class="course completed">
       <v-row>
-        <v-col class="col-12 py-0" id="cover-pic">
+        <v-col class="col-12 pa-0" id="cover-pic">
           <!-- <v-img class="course-image" :src="''+image" ></v-img> -->
           <v-img v-if="image" :src="''+image" class="course-image" style="height: 217px"></v-img>
           <div v-else class="bg-color-one no-image text-center pt-12">
@@ -72,7 +72,7 @@ export default {
   computed: {
     image() {
       return this.course.coverPicture !== undefined
-        ? `http://localhost:7070/kurious/file/courseCoverPicture/${this.course._id}`
+        ? `http://161.35.199.197:7070/kurious/file/courseCoverPicture/${this.course._id}`
         : undefined;
     },
   },
@@ -187,7 +187,7 @@ export default {
   }
 }
 .course.completed {
-  min-height: 420px !important;
+  min-height: 440px !important;
   min-width: 352px;
   border-radius: 0 !important;
 

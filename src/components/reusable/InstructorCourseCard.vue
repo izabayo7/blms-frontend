@@ -14,7 +14,7 @@
           >Published on 7th July</p>
           <v-btn class="edit-btn ml-0" :to="`/courses/edit/${course._id}`">
             Edit Course
-            <v-icon>mdi-arrow-right</v-icon>
+            <v-icon color="#fff">mdi-arrow-right</v-icon>
           </v-btn>
         </v-col>
         <v-col class="col-md-5 col-5 image-side">
@@ -99,7 +99,7 @@ export default {
     },
     imageSrc(courseId) {
       return this.course.coverPicture !== undefined
-        ? `http://localhost:7070/kurious/file/courseCoverPicture/${courseId}`
+        ? `http://161.35.199.197:7070/kurious/file/courseCoverPicture/${courseId}`
         : undefined;
     },
   },

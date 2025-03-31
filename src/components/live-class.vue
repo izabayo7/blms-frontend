@@ -15,7 +15,7 @@
               <v-col class="col-12" id="video">
                 <kurious-video
                   poster="http://127.0.0.1:5500/Kurious-Frontend/src/assets/images/live.png"
-                  src="http://localhost:7070/kurious/file/video/animals.mp4"
+                  src="http://161.35.199.197:7070/kurious/file/video/animals.mp4"
                 />
               </v-col>
               <v-col class=" col-12 course-title d-block">{{courseName}}</v-col>

@@ -235,9 +235,9 @@ export default {
               : "x/",
           });
         }
+        this.getStudentGrades();
         if (this.$store.state.user.category === "Instructor") {
           this.getStudentNames();
-          this.getStudentGrades();
         }
       } catch (error) {
         console.log(error);

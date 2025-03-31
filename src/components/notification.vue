@@ -25,7 +25,7 @@
                       >-->
                       <v-img
                         v-if="$store.state.user.profile"
-                        :src="`http://localhost:7070/kurious/file/${ userType === 'Admin' ? 'adminProfile' : userType === 'SuperAdmin' ? 'superAdminProfile' : userType === 'Instructor' ? 'instructorProfile' : userType === 'Student' ? 'studentProfile' : ''}/${$store.state.user._id}`"
+                        :src="`http://161.35.199.197:7070/kurious/file/${ userType === 'Admin' ? 'adminProfile' : userType === 'SuperAdmin' ? 'superAdminProfile' : userType === 'Instructor' ? 'instructorProfile' : userType === 'Student' ? 'studentProfile' : ''}/${$store.state.user._id}`"
                         alt="avatar"
                       />
                       <span
@@ -64,7 +64,7 @@
               >-->
               <v-img
                 v-if="$store.state.user.profile"
-                :src="`http://localhost:7070/kurious/file/${ userType === 'Admin' ? 'adminProfile' : userType === 'SuperAdmin' ? 'superAdminProfile' : userType === 'Instructor' ? 'instructorProfile' : userType === 'Student' ? 'studentProfile' : ''}/${$store.state.user._id}`"
+                :src="`http://161.35.199.197:7070/kurious/file/${ userType === 'Admin' ? 'adminProfile' : userType === 'SuperAdmin' ? 'superAdminProfile' : userType === 'Instructor' ? 'instructorProfile' : userType === 'Student' ? 'studentProfile' : ''}/${$store.state.user._id}`"
                 alt="avatar"
               />
               <span

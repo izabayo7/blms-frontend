@@ -415,7 +415,7 @@ export default {
           formData.append("file", this.course.coverPicture);
 
           response = await axios.put(
-            `http://localhost:7070/kurious/file/updateCourseCoverPicture/${this.course._id}`,
+            `http://161.35.199.197:7070/kurious/file/updateCourseCoverPicture/${this.course._id}`,
             formData,
             { headers: { "Content-Type": "multipart/form-data" } }
           );
@@ -498,7 +498,7 @@ export default {
             formData.append("files[" + i + "]", this.attachments[i]);
           }
           response = await axios.post(
-            `http://localhost:7070/kurious/file/AddAttachments/${this.chapter._id}`,
+            `http://161.35.199.197:7070/kurious/file/AddAttachments/${this.chapter._id}`,
             formData,
             { headers: { "Content-Type": "multipart/form-data" } }
           );
@@ -510,7 +510,7 @@ export default {
           const formData = new FormData();
           formData.append("file", this.chapter.video);
           response = await axios.post(
-            `http://localhost:7070/kurious/file/addMainVideo/${this.chapter._id}`,
+            `http://161.35.199.197:7070/kurious/file/addMainVideo/${this.chapter._id}`,
             formData,
             { headers: { "Content-Type": "multipart/form-data" } }
           );

@@ -55,7 +55,7 @@
             <v-col class="col-12 col-md-4">
               <v-avatar size="245" class="user-profile ml-2 mt-6 d-block">
                 <img
-                  :src="`http://localhost:7070/kurious/file/courseCoverPicture/${$route.params.id}`"
+                  :src="`http://161.35.199.197:7070/kurious/file/courseCoverPicture/${$route.params.id}`"
                   alt="avatar"
                 />
               </v-avatar>
@@ -150,7 +150,7 @@
                             <v-col v-if="chapters[activeIndex].mainVideo" class="col-12" id="video">
                               <vue-plyr>
                                 <video
-                                  :src="`http://localhost:7070/kurious/file/chapterMainVideo/${chapters[activeIndex]._id}`"
+                                  :src="`http://161.35.199.197:7070/kurious/file/chapterMainVideo/${chapters[activeIndex]._id}`"
                                 ></video>
                               </vue-plyr>
                             </v-col>
@@ -553,7 +553,7 @@ export default {
           formData.append("file", this.coverPicture);
 
           response = await axios.put(
-            `http://localhost:7070/kurious/file/updateCourseCoverPicture/${this.course._id}`,
+            `http://161.35.199.197:7070/kurious/file/updateCourseCoverPicture/${this.course._id}`,
             formData,
             { headers: { "Content-Type": "multipart/form-data" } }
           );
@@ -636,7 +636,7 @@ export default {
             formData.append("files[" + i + "]", this.attachments[i]);
           }
           response = await axios.post(
-            `http://localhost:7070/kurious/file/UpdateAttachments/${this.chapter._id}`,
+            `http://161.35.199.197:7070/kurious/file/UpdateAttachments/${this.chapter._id}`,
             formData,
             { headers: { "Content-Type": "multipart/form-data" } }
           );
@@ -648,7 +648,7 @@ export default {
           const formData = new FormData();
           formData.append("file", this.chapter.video);
           response = await axios.post(
-            `http://localhost:7070/kurious/file/updateMainVideo/${this.chapter._id}`,
+            `http://161.35.199.197:7070/kurious/file/updateMainVideo/${this.chapter._id}`,
             formData,
             { headers: { "Content-Type": "multipart/form-data" } }
           );

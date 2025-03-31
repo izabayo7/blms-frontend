@@ -66,8 +66,8 @@
                   >
                     <v-card flat tile class="d-flex">
                       <v-img
-                        :src="`http://localhost:7070/kurious/file/quizAttachedFiles/${attempt.quiz}/${choice.src}?format=png&width=200&height=200`"
-                        :lazy-src="`http://localhost:7070/kurious/file/quizAttachedFiles/${attempt.quiz}/${choice.src}?format=png&width=200&height=200`"
+                        :src="`http://161.35.199.197:7070/kurious/file/quizAttachedFiles/${attempt.quiz}/${choice.src}?format=png&width=200&height=200`"
+                        :lazy-src="`http://161.35.199.197:7070/kurious/file/quizAttachedFiles/${attempt.quiz}/${choice.src}?format=png&width=200&height=200`"
                         :gradient="checkCoiceStatus(attempt.answers[i].choosedOptions, {src: choice.src}) ? 'to top right, rgba(100,115,201,.33), rgba(25,32,72,.7)' : undefined"
                       >
                         <template v-slot:placeholder>

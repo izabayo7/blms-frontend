@@ -54,8 +54,8 @@
                 >
                   <v-card flat tile class="d-flex">
                     <v-img
-                      :src="`http://localhost:7070/kurious/file/quizAttachedFiles/${$route.params.id}/${choice.src}?format=png&width=200&height=200`"
-                      :lazy-src="`http://localhost:7070/kurious/file/quizAttachedFiles/${$route.params.id}/${choice.src}?format=png&width=200&height=200`"
+                      :src="`http://161.35.199.197:7070/kurious/file/quizAttachedFiles/${$route.params.id}/${choice.src}?format=png&width=200&height=200`"
+                      :lazy-src="`http://161.35.199.197:7070/kurious/file/quizAttachedFiles/${$route.params.id}/${choice.src}?format=png&width=200&height=200`"
                       :gradient="checkCoiceStatus(attempt.answers[i].choosedOptions, {src: choice.src}) ? 'to top right, rgba(100,115,201,.33), rgba(25,32,72,.7)' : undefined"
                       @click="handleOptionClick(i,k)"
                     >
@@ -259,7 +259,7 @@ export default {
           }
         }
         await axios.post(
-          `http://localhost:7070/kurious/file/submissionAttachedFiles/${submissionId}`,
+          `http://161.35.199.197:7070/kurious/file/submissionAttachedFiles/${submissionId}`,
           formData,
           { headers: { "Content-Type": "multipart/form-data" } }
         );

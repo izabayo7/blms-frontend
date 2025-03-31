@@ -201,7 +201,7 @@ export default {
           formData.append('profile', this.user.profile)
         }
         
-        const response = await axios.put(`http://localhost:7070/kurious/${category}/${this.$store.state.user._id}`, formData, { headers: { 'Content-Type': 'multipart/form-data' } })
+        const response = await axios.put(`http://161.35.199.197:7070/kurious/${category}/${this.$store.state.user._id}`, formData, { headers: { 'Content-Type': 'multipart/form-data' } })
         if (response.data._id) {
             // success message needed
           const updatedUser = {
