@@ -6,41 +6,32 @@
         action=""
         class="new-comment-with-photo"
       >
-        <div class="profile-pic">
-          <v-avatar size="30">
-            <img
-              v-if="$store.state.user.user.profile"
-              :src="`${$store.state.user.user.profile}?width=30`"
-              alt="profile picture"
-            />
-            <div v-else class="text">{{ user_full_names | computeText }}</div>
-          </v-avatar>
-        </div>
-        <div class="input mx-3 px-3 py-1">
-          <textarea
-            v-model="comment"
-            type="text"
-            placeholder="Add a comment ..."
-          >
-          </textarea>
-        </div>
-        <div
-          class="send"
-          :class="{ disabled: comment_empty }"
-          @click="send_comment"
-        >
-          <div class="icon">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              width="24"
-              height="24"
-            >
-              <path fill="none" d="M0 0h24v24H0z" />
-              <path
-                d="M1.946 9.315c-.522-.174-.527-.455.01-.634l19.087-6.362c.529-.176.832.12.684.638l-5.454 19.086c-.15.529-.455.547-.679.045L12 14l6-8-8 6-8.054-2.685z"
+        <div class="message-row">
+          <div class="profile-pic">
+            <v-avatar size="30">
+              <img
+                v-if="$store.state.user.user.profile"
+                :src="`${$store.state.user.user.profile}?width=30`"
+                alt="profile picture"
               />
-            </svg>
+              <div v-else class="text">{{ user_full_names | computeText }}</div>
+            </v-avatar>
+          </div>
+          <div class="input ml-3 pl-3 py-1">
+            <expandable-input v-model="comment"/>
+          </div>
+        </div>
+        <div class="action-btn" >
+
+          <div class="cancel">
+            <button-ui  class-list="px-5 py-1">
+              <template #content>CANCEL</template>
+            </button-ui>
+          </div>
+          <div class="send ml-4">
+            <button-ui fill class-list="px-5 py-1"  @click="send_comment">
+              <template #content>COMMENT</template>
+            </button-ui>
           </div>
         </div>
       </form>
@@ -52,9 +43,12 @@
 import { mapGetters } from "vuex";
 import api from "@/services/apis";
 import { empty } from "../../services/global_functions";
+import ExpandableInput from "../reusable/ui/ExpandableInput";
+import ButtonUi from "../reusable/ui/button-ui";
 
 export default {
   name: "StudentNewCommentWithPhoto",
+  components: {ButtonUi, ExpandableInput},
   data() {
     return {
       comment: "",
@@ -90,7 +84,7 @@ export default {
       } catch (err) {
         console.log(err);
       }
-    },
+    }
   },
 };
 </script>
@@ -99,62 +93,55 @@ export default {
 .my-student-new-comment-with-photo {
   .my-student-new-comment-container-with-photo {
     form {
-      display: flex;
-      justify-items: center;
       background-color: $main;
-      align-items: center;
       padding: 0.5rem;
 
       .disabled {
         opacity: 0.5;
       }
-
-      .profile-pic {
-        .v-avatar {
-          background-color: $primary;
-          .text {
-            color: $main;
-          }
-          width: 25px;
-          height: 25px;
-        }
-      }
-      .input {
-        width: 90%;
+      .message-row{
         display: flex;
         justify-items: center;
-        border-bottom: 3px solid $secondary;
+        align-items: center;
 
-        textarea {
+        .profile-pic {
+          .v-avatar {
+            background-color: $primary;
+            .text {
+              color: $main;
+            }
+            width: 25px;
+            height: 25px;
+          }
+        }
+        .input {
           width: 100%;
+          display: flex;
+          justify-items: center;
+
         }
       }
-      .send {
-        background-color: $primary;
+      .action-btn{
         display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 2rem;
-        height: 2rem;
-        border-radius: 50%;
-        cursor: pointer;
+        justify-content: flex-end;
+        margin-top:1rem;
+        button{
+          font-size: .8rem;
+          margin:.1rem .4rem;
+          padding:.2rem .8rem;
+          border-radius: 1px;
+        }
+        .send {
+          background-color: $primary;
+          color:$main;
+          &:hover {
+            background-color: darken($primary, 5);
+          }
 
-        &:hover {
-          background-color: darken($primary, 5);
         }
 
-        .icon {
-          width: fit-content;
-          height: fit-content;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          border-radius: 50%;
-
-          svg {
-            transform: scale(0.8);
-            fill: $main;
-          }
+        .cancel{
+          background-color: $secondary;
         }
       }
     }

@@ -27,6 +27,7 @@
 <!--        </div>-->
 <!--      </div>-->
 <!--    </div>-->
+
     <div class="live-class--video">
       <div class="head">
         <div class="text">
@@ -40,11 +41,29 @@
       <div class="video">
         <div class="video--wrapper" >
             <div class="video-el" @mouseenter="toggleMenu(true)" @mouseleave="toggleMenu(false)">
-              <video >
-                <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" autoplay>
+              <div class="no-video" v-if="noVideo">
+                <div class="no-video--wrapper" :class="{presenting:isPresenting}">
+                  <div class="instructor-info">
+                    <img src="https://s3.amazonaws.com/cms-assets.tutsplus.com/uploads/users/810/profiles/19338/profileImage/profile-square-extra-small.png" alt="profile picture" class="picture">
+                    <h2 class="course">Economics Basics: Chapter 8 part II</h2>
+                    <span class="source">by instuctor</span>
+                    <h2 class="name">Rubogora Emanuel</h2>
+                  </div>
+                  <div class="screen-sharing-video" v-if="isPresenting">
+                    <div class="screen-sharing-video--wrapper">
+                      <h4>You are presenting your screen</h4>
+                      <video autoplay>
+                        <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" >
+                      </video>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <video v-else autoplay>
+                <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" >
               </video>
               <transition name="fade">
-                <div class="video-controls" v-if="showMenu">
+                <div class="video-controls" v-if="showMenu || noVideo">
                   <div class="video-controls--wrapper">
                     <button class="start-mute-video">
                       <span class="icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"/><path d="M16 4a1 1 0 0 1 1 1v4.2l5.213-3.65a.5.5 0 0 1 .787.41v12.08a.5.5 0 0 1-.787.41L17 14.8V19a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h14zm-1 2H3v12h12V6zM7.4 8.829a.4.4 0 0 1 .215.062l4.355 2.772a.4.4 0 0 1 0 .674L7.615 15.11A.4.4 0 0 1 7 14.77V9.23c0-.221.18-.4.4-.4zM21 8.84l-4 2.8v.718l4 2.8V8.84z"/></svg></span>
@@ -74,7 +93,17 @@
       </div>
       <div class="live-comments">
         <div class="live-comments--wrapper">
-          <unreal-time-discussion-board />
+          <div class="student-new-comment">
+            <student-new-comment-with-photo v-model="comment"/>
+          </div>
+          <div class="student-comments">
+<!--            <discussion-->
+<!--              :content="comment"-->
+<!--              :verified="comment.sender.category !== 'STUDENT'"-->
+<!--              @replied="replied"-->
+<!--            />-->
+
+          </div>
         </div>
       </div>
     </div>
@@ -82,7 +111,7 @@
       <div class="live-class--attendance--wrapper">
         <h3>ONLINE USERS : 60 </h3>
         <div class="online-users">
-          <online-user v-for="user in users" :user="user" :key="user"/>
+          <online-user v-for="user in users" :user="user" :key="`${(Date.now() * Math.random())}${user.name}`"/>
         </div>
       </div>
       <div class="live-class--actions">
@@ -122,14 +151,18 @@
   import {WebRtcPeer} from 'kurento-utils'
   import {mapGetters} from 'vuex'
   import OnlineUser from "../../../components/Live/OnlineUser";
-  import UnrealTimeDiscussionBoard from "../../../components/Live/UnrealTimeDiscussionBoard";
-export default {
+  import StudentNewCommentWithPhoto from "../../../components/Live/StudentNewCommentWithPhoto";
+
+  export default {
   name: "liveClass",
-  components: {UnrealTimeDiscussionBoard, OnlineUser},
+  components: { StudentNewCommentWithPhoto, OnlineUser},
   data(){
     return{
       ws:null,
       participants:[],
+      comment:"",
+      noVideo:true,
+      isPresenting:false,
       participationInfo:{name:"",room:"",isOfferingCourse:false},
       showMenu:false,
       users:[
@@ -339,31 +372,29 @@ export default {
     } else {
         console.log('\n\n\n\n\n student joined \n\n\n\n\n')
         constraints = {audio:false,video:false}
-
       }
 
       console.log(this.participationInfo.name + " registered in room " + this.participationInfo.room);
 
-      //
 
-        let participant = new Participant(this.participationInfo.name,this,true);
-        this.participants[this.participationInfo.name] = participant;
+      let participant = new Participant(this.participationInfo.name,this,true);
+      this.participants[this.participationInfo.name] = participant;
 
 
-        let video = participant.getVideoElement();
+      let video = participant.getVideoElement();
 
-        let options = {
-              localVideo: video,
-              mediaConstraints: constraints,
-              onicecandidate: participant.onIceCandidate.bind(participant)
-            }
-        participant.rtcPeer = new WebRtcPeer.WebRtcPeerSendonly(options,
-          function (error) {
-            if(error) {
-              return console.error(error);
-            }
-            this.generateOffer (participant.offerToReceiveVideo.bind(participant));
-        });
+      let options = {
+            localVideo: video,
+            mediaConstraints: constraints,
+            onicecandidate: participant.onIceCandidate.bind(participant)
+          }
+      participant.rtcPeer = new WebRtcPeer.WebRtcPeerSendonly(options,
+        function (error) {
+          if(error) {
+            return console.error(error);
+          }
+          this.generateOffer (participant.offerToReceiveVideo.bind(participant));
+      });
 
 
       msg.data.forEach(console.log)
@@ -818,7 +849,7 @@ export default {
   }
 
   &--video{
-    flex-basis: 64%;
+    flex-basis: 70%;
     padding-left: 3rem;
     padding-right: 3rem;
     .head{
@@ -856,7 +887,7 @@ export default {
 
         .video-el{
           //width: fit-content;
-          max-height: 20rem;
+          max-height: 25rem;
           position: relative;
           background-color: #000;
           video{
@@ -917,6 +948,76 @@ export default {
             }
           }
 
+          //no video card
+          .no-video{
+            &--wrapper{
+
+              &.presenting{
+                display:flex;
+                align-items: center;
+                justify-content: space-evenly;
+
+              .instructor-info{
+                align-items: start;
+                img{
+                  border-radius:50%;
+                }
+
+                h2{
+                  font-size: 1rem;
+
+                  &.name{
+                    font-size:.8rem;
+                    margin:.2rem 0;
+                  }
+                }
+                span{
+                  font-size: .8rem;
+                }
+              }
+              }
+
+              .instructor-info{
+                display:flex;
+                flex-direction: column;
+                align-items: center;
+                padding-top: 5rem;
+                padding-bottom: 6.9rem;
+
+                img{
+                  width:3.9rem;
+                  height:3.9rem;
+                  border-radius:50%;
+                }
+
+                h2{
+                  color:$main;
+                  margin:.4rem 0;
+                }
+                span{
+                  color:$main;
+                }
+              }
+
+              .screen-sharing-video{
+                &--wrapper{
+                  display: grid;
+                  place-items: center;
+
+                  video{
+                    width:13.125rem;
+                    border:2px solid $main;
+                  }
+
+                  h4{
+                    color:$main;
+                    font-weight: 500;
+                    margin:.4rem 0;
+                  }
+                }
+              }
+            }
+          }
         }
       }
     }
@@ -929,7 +1030,7 @@ export default {
   }
 
   &--attendance{
-    flex-basis: 36%;
+    flex-basis: 30%;
 
     &--wrapper{
       padding:.5rem;

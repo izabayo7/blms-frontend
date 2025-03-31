@@ -1,5 +1,5 @@
 <template>
-<div class="my-button" :class="{rounded:rounded, fill:fill}">
+<div class="my-button" :class="{fill:fill}">
   <div @click="clicked" class="button-container " :class="classList +' ' + category " >
     <button :type="type">
       <slot name="content"></slot>
@@ -16,12 +16,8 @@ export default {
     type:{default:"button"},
     classList:{default:"px-10 py-3"},
     size:{type:Number,default:3},
-    rounded:{default:false,type:Boolean},
     fill:{default:false,type:Boolean},
     category:{default:""}
-  },
-  data(){
-
   },
   methods:{
     clicked(e){
@@ -34,40 +30,18 @@ export default {
 <style lang="scss" scoped>
 .my-button{
 
-  &.rounded{
-    .button-container{
-      border-radius: 10rem;
+    @mixin button-container{
+      border-radius:4.5px;
+      cursor:pointer;
+      transition:.3s ease;
+      display:flex;
+      justify-content: center;
+      align-items: center;
     }
-  }
-
-
-
-  &.fill{
-    .button-container{
-      background-color:$primary;
-      border:none;
-
-      button{
-        color:$main;
-      }
-    }
-
-    .warn{
-      background-color:$warn;
-    }
-
-  }
-
-
 
   .button-container{
     border:2px solid $primary;
-    border-radius:4.5px;
-    cursor:pointer;
-    transition:.3s ease;
-    display:flex;
-    justify-content: center;
-    align-items: center;
+    @include button-container;
 
     &.warn{
       border-color: $warn;
@@ -91,6 +65,24 @@ export default {
       }
 
     }
+  }
+
+  &.fill{
+    .button-container{
+      background-color:$primary;
+      border:none;
+      @include button-container;
+
+      button{
+        color:$main;
+
+      }
+    }
+
+    .warn{
+      background-color:$warn;
+    }
+
   }
 }
 </style>
