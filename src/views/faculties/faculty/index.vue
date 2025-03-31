@@ -77,14 +77,17 @@ name: "FacultyIndex",
     if(this.$route.path.split("/").length < 3){
       this.$router.replace({path:`/faculties/${this.facultyId}/details`})
     }
-  }
+  },
 }
 </script>
 
 <style lang="scss" scoped>
 .faculty{
+  height:100%;
+
   &--wrapper{
     background:$tertiary;
+    height:100%;
 
   }
 
