@@ -14,7 +14,7 @@
         <v-icon>mdi-arrow-left</v-icon>
       </v-btn>
       <!-- the chapters list for big devices only -->
-      <v-col class="col-3 hidden-sm-and-down pt-0">
+      <v-col class="col-3 hidden-sm-and-down pt-0 fill-height">
         <kurious-chapter-list
           @change-chapter="changeActiveChapter"
           :chapters="course.chapters"
@@ -63,7 +63,7 @@
                 <v-icon class="mx-2">mdi-book-open-variant</v-icon>Chapter
               </v-tab>
               <v-tab>
-                <v-icon class="mx-2">mdi-chat-outline</v-icon>Discussions
+                <v-icon class="mx-2">mdi-chat-outline</v-icon>Discussions (20000)
               </v-tab>
               <v-tab>
                 <v-icon class="mx-2">mdi-file-download-outline</v-icon>Downloads
@@ -154,7 +154,7 @@
                     >There are no chapters in {{ course.name }}</v-row
                   >
                   <v-row v-else-if="n === 2">
-                    <kurious-comments />
+                    <unreal-time-discussion-board />
                   </v-row>
                   <v-row v-else-if="n === 3">
                     <div
@@ -259,9 +259,11 @@
 <script>
 import colors from "@/assets/sass/imports/_colors.scss";
 import { mapActions, mapGetters } from "vuex";
+import UnrealTimeDiscussionBoard from "../../components/Live/UnrealTimeDiscussionBoard";
 export default {
   name: "course_details",
   components: {
+    UnrealTimeDiscussionBoard,
     loader: () => import("@/components/loaders"),
   },
   data: () => ({
