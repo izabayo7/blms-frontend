@@ -59,10 +59,10 @@ export default {
     },
     actions: {
         //get quiz_submissions  from backend
-        getQuizSubmissions({ state }, { user_name }) {
+        getQuizSubmissions({ state }) {
             // if submission not loaded fetch them
             // if (!state.quiz_submission.loaded) {
-            return apis.get(`quiz_submission/user/${user_name}`).then(d => {
+            return apis.get(`quiz_submission/user`).then(d => {
                 d.data = d.data.data
                 state.quiz_submission.data = d.data
 

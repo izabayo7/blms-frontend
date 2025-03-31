@@ -285,9 +285,7 @@ export default {
     if (!this.loaded) {
       console.log(this.loaded);
       //get courses on page load
-      this.getCourses({
-        user_name: this.$store.state.user.user.user_name,
-      });
+      this.getCourses();
       console.log(this.loaded);
     }
   },

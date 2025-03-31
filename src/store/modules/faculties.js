@@ -38,14 +38,14 @@ export default {
     },
     actions: {
         //get facultyCollegeYears from backend
-        getFacultyCollegeYears({ state }, user) {
+        getFacultyCollegeYears({ state }) {
             // when faculty college years not loaded fetch them
             if (!state.facultyCollegeYears.loaded) {
-                apis.get(`faculty_college_year/user/${user}`).then(d => {
+                apis.get(`user_groups/user`).then(d => {
                     d.data = d.data.data
-                    for (const i in d.data) {
-                        d.data[i].name = `${d.data[i].faculty_college.faculty.name} year ${d.data[i].college_year.digit}`
-                    }
+                    // for (const i in d.data) {
+                    //     d.data[i].name = `${d.data[i].faculty_college.faculty.name} year ${d.data[i].college_year.digit}`
+                    // }
                     state.facultyCollegeYears.data = d.data
                     //announce that data have been loaded
                     state.facultyCollegeYears.loaded = true

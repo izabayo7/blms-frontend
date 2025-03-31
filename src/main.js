@@ -11,7 +11,7 @@ import '@/assets/sass/styles.scss'
 import vuetify from './plugins/vuetify';
 import VueSession from 'vue-session'
 import VuePlyr from 'vue-plyr'
-import mdi from '@mdi/font/css/materialdesignicons.css'
+// import mdi from '@mdi/font/css/materialdesignicons.css'
 import "skeleton-screen-css";
 // import 'bootstrap'
 // import 'bootstrap/dist/css/bootstrap.min.css'
@@ -32,7 +32,7 @@ Vue.config.productionTip = false
 export default new Vue({
     store,
     router,
-    mdi,
+    // mdi,
     vuetify,
     render: h => h(App)
 }).$mount('#app')

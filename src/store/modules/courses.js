@@ -72,10 +72,10 @@ export default {
     },
     actions: {
         //get courses from backend
-        getCourses({ state }, { user_name }) {
+        getCourses({ state }) {
             // if courses not loaded fetch them
             if (!state.courses.loaded) {
-                apis.get(`course/user/${user_name}`).then(d => {
+                apis.get(`course/user`).then(d => {
                     d.data = d.data.data
                     state.courses.data = d.data
                     //announce that data have been loaded
@@ -122,7 +122,7 @@ export default {
             return apis.create('course', course).then(d => {
                 d.data = d.data.data
 
-                courseObject = pick(d.data, ['_id', 'name', 'description', 'faculty_college_year', 'updatedAt'])
+                courseObject = pick(d.data, ['_id', 'name', 'description', 'user_group', 'updatedAt'])
 
                 commit('set_selected_course', d.data._id)
 
@@ -162,7 +162,7 @@ export default {
                 d.data = d.data.data
                 state.courses.data[courseIndex].name = d.data.name
                 state.courses.data[courseIndex].description = d.data.description
-                state.courses.data[courseIndex].facultyCollegeYear = d.data.facultyCollegeYear
+                state.courses.data[courseIndex].user_group = d.data.user_group
 
                 if (coverPicture) {
                     // set the dialog

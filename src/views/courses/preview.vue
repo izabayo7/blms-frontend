@@ -378,7 +378,7 @@
                   </svg>
                 </div>
                 <div class="text">
-                  {{ course.faculty_college_year.faculty_college.faculty.name }}
+                  {{ course.user_group.name }}
                   <verified-badge />
                 </div>
               </div>
@@ -429,7 +429,7 @@
                   {{ course.assignmentsLength }} assignments
                 </div>
               </div>
-              <div class="info-col col-sm-6 col-md-~4 col-lg-4 col-xl-4">
+              <!-- <div class="info-col col-sm-6 col-md-~4 col-lg-4 col-xl-4">
                 <div class="icon">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -446,9 +446,9 @@
                   </svg>
                 </div>
                 <div class="text">
-                  year {{ course.faculty_college_year.college_year.digit }}
+                  year {{ course.user_group.name }}
                 </div>
-              </div>
+              </div> -->
               <div class="info-col col-sm-6 col-md-~4 col-lg-4 col-xl-4">
                 <div class="icon">
                   <svg

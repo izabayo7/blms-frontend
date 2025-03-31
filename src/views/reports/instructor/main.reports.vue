@@ -14,7 +14,7 @@
             item.target.course.name
           }}</router-link>
           <router-link class="normal--text small" to="/">{{
-            `${item.target.faculty_college_year.faculty_college.faculty.name} year ${item.target.faculty_college_year.college_year.digit}`
+            item.target.course.user_group.name
           }}</router-link>
         </template>
         <template v-slot:item.chapter_name="{ item }">
@@ -42,7 +42,7 @@
                 View submissions
               </v-btn></v-col
             >
-            <v-col class="pa-0 pl-1 py-1">
+            <v-col class="pa-0 px-1 py-1">
               <v-btn
                 color="#02A617"
                 class="white--text"
@@ -74,7 +74,7 @@
         </template>
         <template v-slot:item.student_group="{ item }">
           <router-link class="normal--text" to="/">{{
-            `${item.faculty_college_year.faculty_college.faculty.name} year ${item.faculty_college_year.college_year.digit}`
+            item.user_group.name
           }}</router-link>
         </template>
         <template v-slot:item.total_students="{ item }">
@@ -136,16 +136,24 @@ export default {
         {
           text: "Chapter",
           value: "chapter_name",
+          sortable: false,
         },
         {
           text: "Submissions",
           value: "total_submissions",
+          sortable: false,
         },
         {
           text: "Maximum Marks",
           value: "total_marks",
+          sortable: false,
         },
-        { text: "Marking status", value: "marking_status", align: "center" },
+        {
+          text: "Marking status",
+          value: "marking_status",
+          sortable: false,
+          align: "center",
+        },
         { text: "", value: "actions", align: "center", sortable: false },
       ];
     },
@@ -191,13 +199,9 @@ export default {
   },
   created() {
     //get courses on page load
-    this.getCourses({
-      user_name: this.$store.state.user.user.user_name,
-    });
+    this.getCourses();
     //get submissions on page load
-    this.getQuizSubmissions({
-      user_name: this.$store.state.user.user.user_name,
-    });
+    this.getQuizSubmissions();
   },
 };
 </script>
@@ -205,10 +209,11 @@ export default {
 .instructor_reports {
   // font-family: Poppins;
   .normal--text {
-    font-size: 18px;
+    font-size: 14px;
     font-weight: 500;
     &.small {
       font-size: 12px;
+      font-weight: 400;
     }
   }
   // .actions {
@@ -219,7 +224,7 @@ export default {
   .data-table {
     &.courses {
       .normal--text {
-        font-size: 14px;
+        font-size: 12px;
         font-weight: 500;
       }
       .semi_bold_text {

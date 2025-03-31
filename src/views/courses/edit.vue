@@ -36,6 +36,13 @@
                 class="course_input"
                 placeholder="Type course name..."
               />
+              <h3 class="input_lable">Course Maximum marks</h3>
+              <input
+                v-model="course.maximum_marks"
+                type="text"
+                class="course_input"
+                placeholder="Type marks..."
+              />
               <h3>Student Group</h3>
               <v-select
                 v-model="selectedFacultyCollegeYearName"
@@ -207,9 +214,9 @@ export default {
       this.updateCourse({
         course: {
           name: this.course.name,
-          user: this.$store.state.user.user.user_name,
           description: this.course.description,
-          faculty_college_year: this.selectedFacultyCollegeYearCode,
+          user_group: this.selectedFacultyCollegeYearCode,
+          maximum_marks: this.course.maximum_marks,
         },
         coverPicture: this.coverPicture,
       }).then(() => {
