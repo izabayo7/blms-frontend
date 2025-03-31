@@ -90,7 +90,7 @@
                     </v-col>
                     <v-col
                       v-if="Math.round(maximumIndex) === activeIndex"
-                      class="col-6 mx-auto"
+                      class="col-6 mx-auto text-center"
                     >
                       <v-btn
                         v-if="

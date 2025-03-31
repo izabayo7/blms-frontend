@@ -62,7 +62,6 @@
       <v-data-table
         :headers="coursesHeaders"
         :items="activeCourses"
-        sort-by="name"
         class="data-table"
       >
         <template v-slot:item.name="{ item }">

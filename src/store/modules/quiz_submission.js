@@ -130,7 +130,7 @@ export default {
         },
         //get all quiz submissions
         quiz_submissions: state => {
-            return state.quiz_submission.data
+            return state.quiz_submission.data.reverse()
         },
     },
 }
