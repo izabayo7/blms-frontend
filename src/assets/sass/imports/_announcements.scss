@@ -167,11 +167,22 @@ img{
       padding: 25px;
     }
   }
+  .view{
+    .editor-container{
+      border: none;
+      padding: 0px;
+      .editor__content{
+        padding-left: 0px;
+        padding-right: 0px;
+      }
+    }
+  }
   .announcement{
-    max-width: 463px;
+    //max-width: 463px;
     min-height: 395px;
     margin-bottom: 22px;
     background: rgba(243, 244, 248, 0.6);
+    padding: 16px 30px;
   }
   .input-group{
     label{
