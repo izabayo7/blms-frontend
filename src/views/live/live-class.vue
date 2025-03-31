@@ -280,7 +280,7 @@
 import { mapState, mapMutations } from "vuex";
 import * as io from "socket.io-client";
 window.io = io;
-import * as RTCMultiConnection from "../../assets/js/RTCMultiConnection";
+import * as RTCMultiConnection from "../../assets/js/RTCMultiConnection.min.js";
 import * as MultiStreamsMixer from "../../assets/js/MultiStreamsMixer.min.js";
 
 export default {
