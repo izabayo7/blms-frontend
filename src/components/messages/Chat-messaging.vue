@@ -112,7 +112,7 @@
                       Add reaction
                     </div>
                   </div>
-                  <div class="action tooltip">
+                  <div @click="setReplyMsg({msg,sender: msgs.from})" class="action tooltip cursor-pointer">
                     <div class="icon">
                       <svg width="18" height="15" viewBox="0 0 18 15" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path
@@ -343,7 +343,8 @@ export default {
   // },
   methods: {
     ...mapMutations("chat", ["CHANGE_MESSAGE_READ_STATUS"]),
-    ...mapActions("chat", ["loadMessages", "deleteMsg"]),
+    ...mapActions("chat", ["loadMessages", "deleteMsg", "setReplyMsg"]),
+    ...mapMutations("chat", ["setReplyMsg"]),
     findTotalMessages() {
       let i = 0
       for (const k in this.data) {

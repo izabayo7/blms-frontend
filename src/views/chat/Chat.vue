@@ -323,6 +323,7 @@ export default {
     width: 100%;
     align-self: flex-end;
     justify-self: flex-end;
+    position: relative;
   }
 }
 

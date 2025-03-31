@@ -1,5 +1,20 @@
 <template>
-  <main class="my-send-message">
+  <main class="my-send-message" :class="{replying : replyMsg}">
+    <div v-if="replyMsg" class="reply-message">
+      <div class="msg-cntnr">
+        <div class="sender">{{ replyMsg.sender }}</div>
+        <div class="msg">{{ replyMsg.msg.content || 'attachment' }}</div>
+      </div>
+      <div class="close">
+        <button @click="setReplyMsg(undefined)" class="canel">
+          <svg width="35" height="35" viewBox="0 0 35 35" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+                d="M19.6285 17.4998L27.7077 25.579V27.7082H25.5785L17.4993 19.629L9.42018 27.7082H7.29102V25.579L15.3702 17.4998L7.29102 9.42067V7.2915H9.42018L17.4993 15.3707L25.5785 7.2915H27.7077V9.42067L19.6285 17.4998Z"
+                fill="black"/>
+          </svg>
+        </button>
+      </div>
+    </div>
     <div v-show="files.length" class="files-area">
       <div class="header row">
         <div class="cursor-pointer col-6 col-md-4 py-0" @click="pickFile">
@@ -173,7 +188,7 @@
 </template>
 
 <script>
-import {mapGetters, mapState} from "vuex";
+import { mapGetters, mapMutations, mapState} from "vuex";
 import {emit} from "@/services/event_bus";
 import apis from "@/services/apis";
 
@@ -195,10 +210,11 @@ export default {
     AudioRecorder: () => import("@/components/recorder/components/recorder"),
   },
   computed: {
-    ...mapGetters("chat", ["socket"]),
+    ...mapGetters("chat", ["socket", "replyMsg"]),
     ...mapState("chat", ["currentDisplayedUser"]),
   },
   methods: {
+    ...mapMutations("chat", ["setReplyMsg"]),
     callback(msg) {
       console.debug('Event: ', msg)
     },
@@ -313,6 +329,64 @@ export default {
 .my-send-message {
   padding: 0.1rem;
   position: relative;
+
+  &.replying {
+    position: absolute;
+    bottom: -53px;
+    width: 100%;
+    border: 6px solid white;
+    background: #f8f8f8;
+    z-index: 9;
+
+    .reply-message {
+      display: flex;
+      margin-top: 8px;
+
+      .msg-cntnr {
+        width: 86%;
+        margin-left: 24px;
+        height: 70px;
+        overflow: auto;
+        background: #E7ECF0;
+        padding: 12px 31px;
+
+        .sender {
+          font-family: Roboto;
+          font-style: normal;
+          font-weight: bold;
+          font-size: 15px;
+          /* or 5% */
+
+          display: flex;
+          align-items: center;
+
+          /* Type color / Default */
+
+          color: #343434;
+
+        }
+
+        .msg {
+          font-family: Roboto;
+          font-style: normal;
+          font-weight: 500;
+          font-size: 15px;
+          /* or 5% */
+
+          display: flex;
+          align-items: center;
+
+          /* Type color / Default */
+
+          color: #343434;
+        }
+      }
+
+      .close {
+        margin: auto;
+      }
+    }
+  }
 
   .files-area {
     position: absolute;

@@ -18,7 +18,8 @@ const getDefaultState = () => ({
     socket: undefined,
     group: {
         error: ""
-    }
+    },
+    replyMsg: undefined
 })
 
 export default {
@@ -35,6 +36,9 @@ export default {
                     ) // toke n of the connected user
                 }
             })
+        },
+        setReplyMsg(state, obj) {
+            state.replyMsg = obj
         },
         //set the current user
         SET_USERNAME(state, username) {
@@ -322,9 +326,9 @@ export default {
             // else initialise it
             else getters.socket.emit('message/start_conversation', {conversation_id: user_name});
         },
-        deleteMsg({state}, {msgIndx,convIndx,username}){
+        deleteMsg({state}, {msgIndx, convIndx, username}) {
             let exists = false
-            let i =0
+            let i = 0
             state.loadedMessages.map(loadedMsg => {
                 if (loadedMsg.username === username) {
                     exists = true
@@ -343,7 +347,7 @@ export default {
             //first check if we have ongoing requested data with the same id as this
             if (state.request.id !== id) {
                 getters.socket.emit('message/conversation', {conversation_id: id, lastMessage});
-                if(!lastMessage) {
+                if (!lastMessage) {
                     state.request.ongoing = true
                     state.request.id = id
                 }
@@ -377,7 +381,6 @@ export default {
             })
 
         },
-
         //to get index of user in incoming/received contacts
         findIndexOfUserInIncomingMessages({state}, id) {
             let index = null;
@@ -394,7 +397,9 @@ export default {
         socket(state) {
             return state.socket
         },
-
+        replyMsg(state){
+            return state.replyMsg
+        },
         groupError(state) {
             return state.group.error;
         },
