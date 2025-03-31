@@ -7,8 +7,8 @@
     >
       <v-row class="card-content">
         <v-col cols="5" class="course-image-side">
-          <div class="live d-flex">
-            <div v-if="nearestLiveSession">
+          <div class="live">
+            <div v-if="nearestLiveSession" class="vertically--centered">
               <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path
                     d="M7.12364 14.6692C11.0579 14.6692 14.2473 11.4798 14.2473 7.54552C14.2473 3.61124 11.0579 0.421875 7.12364 0.421875C3.18936 0.421875 0 3.61124 0 7.54552C0 11.4798 3.18936 14.6692 7.12364 14.6692Z"
