@@ -4,8 +4,9 @@
 
 .quiz-page {
     padding: 40px;
-    background-color: #FFFFFF;
-min-height: 100%;
+    background: #F9F9F9;;
+    min-height: 100%;
+
     .answer-field {
         border: 1px solid #707070;
         border-radius: 5px;
@@ -37,11 +38,215 @@ min-height: 100%;
     .question-details{
         font-weight: 600
     }
+    .full-height {
+        min-height: 62vh;
+    }
+
+    .check-svg {
+        fill: #FFFFFF;
+        height: 50px;
+        width: 50px;
+    }
+
+    .timer {
+        width: 290px;
+        height: 135px;
+        padding: 21px;
+        margin-top: 9%;
+        text-align: center;
+        font-size: 3.99rem;
+        position: fixed;
+        font-weight: bold;
+        border-radius: 33px;
+        /* p {
+           color: white;
+         }*/
+        &.greenish {
+            p {
+                color: #46ae49;
+            }
+
+            background-color: rgba(103, 252, 103, 0.27);
+        }
+
+        &.redish {
+            background-color: rgba(252, 103, 103, 0.27);
+        }
+    }
+
+    // show colors based on the remaining time
+    .timer .timer.orange {
+        color: #fc6767;
+        background: #fed6d6;
+    }
+
+    .timer.red {
+        color: #fc6767;
+        background: #fed6d6;
+    }
+
+    .pictures-container {
+        display: flex;
+        flex-direction: row;
+        flex-flow: wrap;
+    }
+
+    .submitt-attempt {
+        width: 126px;
+        height: 47px;
+        border-radius: 10px;
+        background-color: $primary;
+        color: white;
+    }
+
+    .text-selection {
+        width: 75%;
+        border-radius: 20px;
+        padding: 16px;
+        box-shadow: 0px 4px 16px rgb(199 199 199);
+        margin-bottom: 12px;
+
+        &.selected {
+            font-weight: 600;
+            border: none;
+            /* border-color: green; */
+            box-shadow: 8px 9px 11px rgb(199 199 199);
+        }
+    }
+
+    .question_details {
+        font-family: Inter;
+        font-style: normal;
+        font-weight: bold;
+        font-size: 15px;
+        line-height: 26px;
+        /* or 175% */
+
+
+        color: #3C3C3C;
+
+    }
+
+    .pick-file {
+        width: 77px;
+        height: 24px;
+
+        background: #FFFFFF;
+        border: 1px solid #BABABC;
+        box-sizing: border-box;
+        box-shadow: 0px 4px 4px rgba(25, 48, 116, 0.25);
+        border-radius: 7px;
+
+        font-family: Inter;
+        font-style: normal;
+        font-weight: bold;
+        font-size: 11px;
+        line-height: 26px;
+        /* or 328% */
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        color: #3C3C3C;
+        margin-bottom: 9px;
+    }
+
+    .indicator {
+        font-family: Inter;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 11px;
+        line-height: 30px;
+        /* or 300% */
+
+        display: flex;
+        align-items: center;
+
+        color: #3C3C3C;
+
+    }
+
+    .allowed-files {
+        font-family: Inter;
+        font-style: normal;
+        font-weight: bold;
+        font-size: 10px;
+        line-height: 26px;
+        /* identical to box height, or 375% */
+
+
+        color: #193074;
+    }
+
+    .file-name {
+        font-family: Inter;
+        font-style: normal;
+        font-weight: bold;
+        font-size: 10px;
+        line-height: 26px;
+        /* or 262% */
+
+        display: flex;
+        align-items: center;
+
+        color: #193074;
+    }
+
+    .file-size, .file-type {
+        font-family: Inter;
+        font-style: normal;
+        font-weight: 500;
+        font-size: 11px;
+        line-height: 26px;
+        /* or 262% */
+
+        display: flex;
+        align-items: center;
+
+        color: #4A4A4A;
+    }
+
+    .save-status {
+        font-family: Inter;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 9px;
+        line-height: 26px;
+        /* identical to box height, or 375% */
+
+
+        color: #289448;
+    }
+
+    .file-container {
+        width: 100%;
+    }
 }
 
 /* Portrait phones and smaller */
 @media (max-width: 700px) {
     .quiz-page {
         padding: 10px;
+    }
+    .pick-file {
+        &.file-not-picked {
+            width: 308px;
+        }
+
+        margin-bottom: 0px;
+    }
+    .timer {
+        position: initial;
+    }
+    .file-container {
+        box-shadow: 0px 0px 10px 2px rgba(25, 48, 116, 0.25);
+        border-radius: 8px;
+        width: 100%;
+
+        .allowed-files {
+            position: absolute;
+            margin-top: 12px;
+        }
     }
 }

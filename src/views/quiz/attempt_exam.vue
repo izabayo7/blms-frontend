@@ -2,17 +2,34 @@
   <v-container
       v-if="selected_quiz && attempt !== {}"
       fluid
-      class="quiz-page px-4 px-md-16"
+      id="attempt"
+      class="attempt--exam"
   >
+    <div class="col-12 header d-flex justify-center align-center" @mousemove="moveTooltip">
+      <img :src="$store.state.sidebar_navbar.college.logo || 'https://apis.kurious.rw/assets/images/image%204.png'"
+           class="logo my-auto"/>
+      <div class="coupontooltip">
+        <div class="title">Any attempt to do the
+          following will lead to failure
+        </div>
+        <div class="content">
+          <div>- Close exam window before submiting work.</div>
+          <div>- Minimize the exam window.</div>
+          <div>- Open another browser tab</div>
+          <div>- Use a sepatate computer or phone.</div>
+        </div>
+      </div>
+    </div>
     <div
+        class="quiz-page px-4 px-md-16"
         v-if="(!selected_quiz_submission || $store.state.user.user.category.name ==  'INSTRUCTOR') && filesToUpload.length && !disabled">
-      <h2>{{ selected_quiz.name }}</h2>
+      <div class="title">{{ selected_quiz.name }}</div>
       <v-row>
         <v-col class="col-12 col-md-7 questions-side">
           <v-row
               v-for="(question, i) in selected_quiz.questions"
               :key="i"
-              class="col-12 col-md-12"
+              class="col-12 col-md-12 d-block"
           >
             <div class="d-flex align-center">
               <span>
@@ -196,7 +213,6 @@
               v-if="$store.state.user.user.category.name == 'STUDENT'"
               class="radio-btn d-block mb-4 submitt-attempt"
               @click="validate"
-              rounded
           >Submit Answers
           </button
           >
@@ -209,19 +225,29 @@
           </v-btn
           >
         </v-col>
-        <v-col class="col-12 col-md-5 timer-side">
-          <div
-              :class="`timer ${remaining_time > 1000 ? 'greenish' : 'redish'}`"
-          >
-            <p>{{ formated_remaining_time }}</p>
+        <v-col class="col-12 col-md-5 timer-side text-center">
+          <div class="timer-content">
+            <div class="title">Time left</div>
+            <div
+                :class="`timer ${remaining_time > 1000 ? 'greenish' : 'redish'}`"
+            >
+              <p>{{ formated_remaining_time }}</p>
+            </div>
+            <div class="subtitle">Do not :</div>
+            <div class="content">
+              <div> - Close exam window before submiting work.</div>
+              <div> - Minimize the exam window.</div>
+              <div> - Open another browser tab</div>
+              <div> - Use a sepatate computer or phone.</div>
+            </div>
           </div>
         </v-col>
       </v-row>
     </div>
-    <div v-else-if="disabled">
+    <div v-else-if="disabled" class="px-4 px-md-16">
       <ErrorPage
-        title="You are not allowed to  do a quiz "
-        subtitle="You must first pay your school fees to regain access"
+          title="You are not allowed to  do a quiz "
+          subtitle="You must first pay your school fees to regain access"
       />
     </div>
     <div class="d-flex justify-center align-center full-height" v-else>
@@ -271,7 +297,7 @@ export default {
     remaining_time: 0,
     submission_id: "",
   }),
-  components:{
+  components: {
     ErrorPage: () => import("@/components/dashboard/error.vue"),
   },
   computed: {
@@ -294,8 +320,8 @@ export default {
         // setTimeout(() => {
         //   this.remaining_time -= 1;
         // }, 1000);
-        if (this.remaining_time == this.selected_quiz.duration - 1)
-          this.initialiseQuiz();
+        // if (this.remaining_time == this.selected_quiz.duration - 1)
+        //   this.initialiseQuiz();
 
         this.attempt.used_time = this.selected_quiz.duration - this.remaining_time;
       } else if (!this.done) {
@@ -335,6 +361,12 @@ export default {
     },
   },
   methods: {
+    moveTooltip(e) {
+      let tooltip = document.querySelector('.coupontooltip');
+      tooltip.style.left = e.pageX + 'px';
+      tooltip.style.top = e.pageY + 'px';
+
+    },
     saveProgress(index) {
       if (this.$store.state.user.user.category.name === 'STUDENT') {
         this.socket.emit('save-progress', {
@@ -575,7 +607,28 @@ export default {
     },
   },
   created() {
+    function goodbye(e) {
+      if (!e) e = window.event;
+      //e.cancelBubble is supported by IE - this will kill the bubbling process.
+      e.cancelBubble = true;
+      e.returnValue = 'You sure you want to leave?'; //This is displayed on the dialog
 
+      //e.stopPropagation works in Firefox.
+      if (e.stopPropagation) {
+        e.stopPropagation();
+        e.preventDefault();
+      }
+    }
+
+    window.addEventListener('beforeunload', goodbye)
+    document.addEventListener("visibilitychange", () => {
+          if (document.visibilityState == "visible") {
+            console.log("tab is active")
+          } else {
+            console.log("tab is inactive")
+          }
+        }
+    )
     this.mode = "edit";
     if (this.$store.state.user.user.category.name === "STUDENT") {
       this.findQuizSubmissionByUserAndQuizNames({
@@ -618,3 +671,7 @@ export default {
   },
 };
 </script>
+
+<style lang="scss">
+@import '../../assets/sass/imports/attemptExam';
+</style>
