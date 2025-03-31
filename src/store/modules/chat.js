@@ -85,6 +85,7 @@ export default {
                 let incomingName = `${newMessage.sender.sur_name} ${newMessage.sender.other_names}`
                 //user conversation between sender and receiver
                 let userMessages = state.loadedMessages[userIndex].conversation
+                console.log(userMessages)
                 //if conversation was found
                 if (userMessages && id !== "announcements") {
                     // if the last sender is the receiver
@@ -118,7 +119,8 @@ export default {
                         state.incomingMessages[idx].last_message = newMessage
 
                         //put conversation on the first place
-                        store.commit('chat/CHANGE_CONVERSATION_STAND', newMessage)
+                        // store.commit('chat/CHANGE_CONVERSATION_STAND', newMessage)
+                        state.incomingMessages.splice(0, 0, state.incomingMessages.splice(idx, 1)[0])
                     }
                 })
 
