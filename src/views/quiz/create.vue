@@ -4,13 +4,12 @@
       <div class="label">Quiz creation wizzard</div>
       <div class="input-group">
         <label for="quiz-title">Title</label>
-        <input id="quiz-title" type="text">
+        <input v-model="title" id="quiz-title" type="text">
       </div>
       <div class="input-group">
         <label>Instructions</label>
         <div class="quiz-instructions">
           <Editor
-              v-if="mode !== ''"
               ref="editor"
               mode="edit"
               :defaultContent="'<ol><li><p>Write your custom instructions</p></li></ol>'"
@@ -21,17 +20,18 @@
         <div class="input-group">
           <label for="quiz-duration">Duration</label>
           <div class="duration-input" id="quiz-duration">
-            <input class="inner-input" type="number"> hrs : <input class="inner-input" type="number"> mins
+            <input class="inner-input" v-model="hours" type="number"> hrs : <input v-model="minutes" class="inner-input"
+                                                                                   type="number"> mins
           </div>
         </div>
         <div class="input-group ml-auto">
           <label for="quiz-pass-marks">Pass-marks (%)</label>
-          <input id="quiz-pass-marks" type="number">
+          <input id="quiz-pass-marks" v-model="passMarks" type="number">
         </div>
       </div>
     </div>
     <div id="quiz-questions">
-      <div class="question">
+      <div v-for="(question, i) in questions" :key="question.name" class="question">
         <div class="question-number">1</div>
         <div class="question-content">
           <div class="row">
@@ -44,7 +44,8 @@
                   :options="questions_types"
                   @input="
                 (e) => {
-                  console.log(e)
+                  question.type = e;
+                  handleTypeChange(i);
                 }
               "
               />
@@ -52,20 +53,26 @@
             <div class="col-12 col-md-2">
               <div class="required mb-15px d-flex">
                 <div class="text">Required</div>
-                <switch-ui :active="true"/>
+                <switch-ui :active="question.required"
+                           @input="
+                (e) => {
+                  question.required = e;
+                }
+              "
+                />
               </div>
             </div>
             <div class="col-12 col-md-3 text-md-right pt-0">
               <div class="marks mb-15px ml-auto">
                 <div class="input-group">
                   <label>Marks</label>
-                  <input class="question-marks" type="number">
+                  <input class="question-marks" v-model="question.marks" type="number">
                 </div>
               </div>
             </div>
             <div class="col-12 col-md-1">
-              <div class="delete-question mb-15px">
-                <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <div v-if="questions.length > 1" class="delete-question mb-15px">
+                <svg @click="removeQuestion(i)" class="cursor-pointer" width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <g clip-path="url(#clip0)">
                     <path
                         d="M7.0026 22.1657C7.0026 23.449 8.0526 24.499 9.33594 24.499H18.6693C19.9526 24.499 21.0026 23.449 21.0026 22.1657V8.16569H7.0026V22.1657ZM22.1693 4.66569H18.0859L16.9193 3.49902H11.0859L9.91927 4.66569H5.83594V6.99902H22.1693V4.66569Z"
@@ -85,40 +92,49 @@
             <div class="input-group">
               <label>Question text</label>
               <textarea
+                  v-model="question.details"
                   placeholder="Type your question here ..."
                   class="kurious--textarea mb-4 customScroll"
                   rows="8"
               ></textarea>
             </div>
           </div>
-          <div class="text-select">
-            <div class="option d-block d-md-flex">
+          <div v-if="question.type.includes('text')" class="text-select">
+            <div
+                v-for="(option, k) in question.options.choices"
+                :key="k"
+                class="option d-block d-md-flex">
               <div class="details">
                               <textarea
                                   placeholder="option 1"
+                                  v-model="option.text"
                                   class="kurious--textarea mb-4 customScroll"
                                   rows="8"
                               ></textarea>
               </div>
               <div class="status mx-auto">
                 <label>Correct</label>
-<!--                <transition name="fade" >-->
-                  <svg class="d-none" width="18" height="20" viewBox="0 0 18 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <rect x="0.613894" y="5.7721" width="13.5057" height="13.5057" rx="1.84168" stroke="#828282" stroke-width="1.22779"/>
-                    <path d="M3.68555 10.0695L7.36891 16.2084L16.5773 2.08887" stroke="#828282" stroke-width="2.45558" stroke-linecap="round" stroke-linejoin="round"/>
-                  </svg>
+                <!--                <transition name="fade" >-->
+                <svg class="d-none" width="18" height="20" viewBox="0 0 18 20" fill="none"
+                     xmlns="http://www.w3.org/2000/svg">
+                  <rect x="0.613894" y="5.7721" width="13.5057" height="13.5057" rx="1.84168" stroke="#828282"
+                        stroke-width="1.22779"/>
+                  <path d="M3.68555 10.0695L7.36891 16.2084L16.5773 2.08887" stroke="#828282" stroke-width="2.45558"
+                        stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
 
-                  <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <rect x="0.613894" y="0.72034" width="13.5057" height="13.5057" rx="1.84168" stroke="#828282" stroke-width="1.22779"/>
-                  </svg>
+                <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="0.613894" y="0.72034" width="13.5057" height="13.5057" rx="1.84168" stroke="#828282"
+                        stroke-width="1.22779"/>
+                </svg>
 
-<!--                </transition>-->
+                <!--                </transition>-->
               </div>
-              <button class="delete">Delete option</button>
+              <button v-if="question.options.choices.length > 2" class="delete" @click="removeOption(i, k)">Delete option</button>
             </div>
-            <button class="add-option">Add option</button>
+            <button class="add-option" @click="addOption(i)">Add option</button>
           </div>
-          <div class="image-select">
+          <div v-if="question.type.includes('image')" class="image-select">
             <label>Maximum 4 images ( 1 Megabyte maximum size for each)</label>
             <FilePicker
                 :ref="`picker${i}`"
@@ -127,9 +143,12 @@
                 hint="Click on an image to designate it as the correct  choice"
                 :allowedTypes="['image']"
                 :multiple="true"
+                @addFile="addPicture"
+                @removeFile="removePicture"
+                @fileClicked="handleOptionClick"
             />
           </div>
-          <div class="file-upload">
+          <div v-if="question.type.includes('file')" class="file-upload">
             <label>Max file size 2 MB</label>
             <div class="allowed-files">
               <div class="type"><input type="radio"> Pdf</div>
@@ -146,15 +165,18 @@
         </div>
       </div>
     </div>
-    <button class="quiz-action full d-none">Add question</button>
+    <button @click="addQuestion()" class="quiz-action full mt-4" v-if="questions.length">Add question</button>
     <div id="quiz-actions" class=" d-flex mb-12 mt-6">
       <button class="quiz-action cancel">Cancel</button>
-      <button class="quiz-action">Add questions</button>
+      <button class="quiz-action" v-if="!questions.length" @click="recreate">Add questions</button>
+      <button class="quiz-action" v-else>Save quiz</button>
     </div>
   </div>
 </template>
 
 <script>
+import {mapActions} from "vuex";
+
 export default {
   name: "CreateQuiz",
   components: {
@@ -164,9 +186,153 @@ export default {
     SwitchUi: () => import("@/components/reusable/ui/switcher")
   },
   data: () => ({
-    questions_types: [],
+    questions_types: [
+      "Open ended",
+      "Single text select",
+      "Multiple text select",
+      "Single image select",
+      "Multiple image select",
+      "File upload",
+    ],
+    pictures: [[], []],
+    hours: 0,
+    minutes: 0,
+    questions: [],
+    title: "",
+    passMarks: 0
+  }),
+  methods: {
+    ...mapActions("quiz", ["create_quiz"]),
+    addPicture(file, boundIndex) {
+      this.pictures[boundIndex].push(file);
+      this.questions[boundIndex].options.choices.push({
+        src: file.name,
+        right: false,
+      });
+    },
+    removePicture(index, boundIndex) {
+      this.pictures[boundIndex].splice(index, 1);
+      this.questions[boundIndex].options.choices.splice(index, 1);
+    },
+    recreate() {
+      this.questions = [
+        {
+          type: "",
+          marks: 0,
+          required: false,
+          details: "",
+          options: {
+            choices: [],
+          },
+        },
+      ];
+      this.hours = 0
+      this.minutes = 0
+      this.pictures = [[], []];
+    },
+    handleOptionClick(questionIndex, optionIndex) {
+      console.log(questionIndex, optionIndex)
+      let rightChoices = [];
 
-  })
+      for (const k in this.questions[questionIndex].options.choices) {
+        if (k == optionIndex) {
+          this.questions[questionIndex].options.choices[k].right = !this
+              .questions[questionIndex].options.choices[k].right;
+        } else if (this.questions[questionIndex].type.includes("Single")) {
+          this.questions[questionIndex].options.choices[k].right = false;
+        }
+        if (this.questions[questionIndex].options.choices[k].right) {
+          rightChoices.push(k);
+        }
+      }
+      if (this.questions[questionIndex].type.includes("file")) {
+        this.$refs[`picker${questionIndex}`][0].showRightFiles(
+            questionIndex,
+            rightChoices
+        );
+      }
+    },
+    handleTypeChange(index) {
+      console.log("ngahoooo",index)
+      if (this.questions[index].type.includes("text")) {
+        this.questions[index].options = {
+          choices: [
+            {text: "", right: false},
+            {text: "", right: false},
+          ],
+        };
+      } else if (
+          this.questions[index].type.includes("image") &&
+          this.questions[index].type.includes("select")
+      ) {
+        this.questions[index].options = {
+          choices: [],
+        };
+      }
+      this.pictures[index] = [];
+    },
+    addQuestion() {
+      this.questions.push({
+        type: "",
+        marks: 0,
+        details: "",
+        options: {
+          choices: [],
+        },
+      });
+      this.pictures.push([]);
+    },
+    addOption(index) {
+      this.questions[index].options.choices.push({text: "", right: false});
+    },
+    removeOption(index, index1) {
+      this.questions[index].options.choices.splice(index1, 1);
+    },
+    removeQuestion(index) {
+      this.questions.splice(index, 1);
+      this.pictures.splice(index, 1);
+    },
+    toSeconds(duration) {
+      const hours = duration.hh ? duration.hh : 0;
+      const minutes = duration.mm ? duration.mm : 0;
+      const seconds = duration.ss ? duration.ss : 0;
+      const result =
+          parseInt(seconds) + parseInt(minutes) * 60 + parseInt(hours) * 3600;
+      return result;
+    },
+    async saveQuiz() {
+      let questions = [];
+      for (const index in this.questions) {
+        this.questions[index].type = this.questions[index].type
+            .toLowerCase()
+            .split(" ")
+            .join("_");
+        if (!this.questions[index].type.includes("select")) {
+          this.questions[index].options = undefined;
+        }
+        questions.push(this.questions[index]);
+      }
+
+      const editorContent = this.$refs.editor.getHTML();
+
+      this.create_quiz({
+        quiz: {
+          name: this.name,
+          instructions:
+              editorContent ==
+              `<ol><li><p>Write your custom instructions</p></li></ol>`
+                  ? undefined
+                  : editorContent,
+          duration: this.toSeconds(this.duration),
+          user: this.$store.state.user.user.user_name,
+          questions: questions,
+        },
+        pictures: this.pictures,
+      }).then(() => {
+        this.$router.push("/quiz");
+      });
+    },
+  }
 };
 </script>
 <style lang="scss">

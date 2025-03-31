@@ -103,7 +103,9 @@
     background: #193074;
     margin-right: 28px;
     color: white;
-
+&.full{
+  width: 100%;
+}
     &.cancel {
       background: #BABABC;
     }
@@ -226,6 +228,16 @@
             .status{
               label{
                 display: block;
+                font-family: Inter;
+                font-style: normal;
+                font-weight: 500;
+                font-size: 10px;
+                line-height: 26px;
+                /* or 262% */
+
+
+                color: #000000;
+
               }
               text-align: center;
               svg{
