@@ -129,7 +129,7 @@
               </div>
             </div>
           </v-col>
-          <v-col class="col-2">
+          <v-col class="col-2" v-if="selected_quiz_submission.marked || userCategory === 'Instructor'">
             <div
               v-if="question.type === 'open-ended'"
               class="cool-box grey-bg ml-6 mt-n1"
@@ -139,20 +139,16 @@
                   attempt.answers[i].marks > question.marks ? 'red--text' : ''
                 }`"
                 v-model="attempt.answers[i].marks"
-                :readonly="attempt.marked"
+                :readonly="mode == 'view'"
                 type="text"
               />
               <span>{{ `/${question.marks}` }}</span>
             </div>
             <div v-else>
-              <!-- <v-checkbox
-                :input-value="attempt.answers[i].marks === question.marks"
-                
-                :disabled="attempt.marked"
-                label="True"
-              ></v-checkbox> -->
-              {{ attempt.answers[i].marks + " " + question.marks }}
               <button
+                v-if="
+                  attempt.answers[i].marks == question.marks || mode == 'view'
+                "
                 :class="`${
                   attempt.answers[i].marks != question.marks ? 'd-none' : ''
                 } svg-check-marks`"
@@ -225,6 +221,10 @@
                 </svg>
               </button>
               <button
+                v-if="
+                  (attempt.answers[i].marks == 0 && mode == 'view') ||
+                  mode == 'edit'
+                "
                 @click="attempt.answers[i].marks = 0"
                 class="svg-check-marks"
               >
@@ -255,7 +255,7 @@
           </v-col>
         </v-row>
         <v-btn
-          v-if="!attempt.marked"
+          v-if="!attempt.marked && userCategory === 'Instructor'"
           class="radio-btn d-block mb-4 submitt-attempt"
           @click="updateSubmission"
           rounded
@@ -303,8 +303,10 @@ export default {
     mode: "view",
   }),
   computed: {
-    // get the current course
     ...mapGetters("quiz_submission", ["selected_quiz_submission"]),
+    userCategory(){
+      return this.$store.state.user.user.category
+    }
   },
   methods: {
     ...mapActions("quiz_submission", [
@@ -342,7 +344,6 @@ export default {
     },
   },
   created() {
-    this.mode = "edit";
     this.findQuizSubmissionByStudentAndQuizNames({
       studentName: this.$route.params.student_name,
       quizName: this.$route.params.quiz_name,
@@ -366,6 +367,7 @@ export default {
         !this.attempt.marked &&
         this.$store.state.user.category === "Instructor"
       ) {
+        console.log(this.attempt.marked, this.$store.state.user.category)
         this.mode = "edit";
       }
     }, 1000);

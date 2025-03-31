@@ -88,7 +88,10 @@
                       class="col-6 col-md-4 mx-auto"
                     >
                       <v-btn
-                        v-if="course.chapters[activeIndex].quiz.length > 0"
+                        v-if="
+                          course.chapters[activeIndex].quiz.length > 0 &&
+                          !selected_quiz_submission
+                        "
                         color="#FFC100"
                         class="white--text next-chapter"
                         :to="`/quiz/attempt/${course.chapters[activeIndex].quiz[0].name}`"
@@ -254,6 +257,7 @@ export default {
   }),
   computed: {
     ...mapGetters("courses", ["course"]),
+    ...mapGetters("quiz_submission", ["selected_quiz_submission"]),
     maximumIndex() {
       return this.course
         ? Math.round(
@@ -270,6 +274,10 @@ export default {
       ).then((data) => {
         this.editorContent = data;
       });
+      this.findQuizSubmissionByStudentAndQuizNames({
+        studentName: `${this.$store.state.user.user.surName}_${this.$store.state.user.user.otherNames}`,
+        quizName: this.course.chapters[this.activeIndex].quiz[0].name
+      });
     },
   },
   methods: {
@@ -277,6 +285,9 @@ export default {
       "findCourseByName",
       "getChapterMainContent",
       "finish_chapter",
+    ]),
+    ...mapActions("quiz_submission", [
+      "findQuizSubmissionByStudentAndQuizNames",
     ]),
     async downloadAttachment(id) {
       const url = `http://localhost:7070/kurious/file/downloadAttachment/${id}`;

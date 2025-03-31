@@ -74,7 +74,7 @@ const routes = [
             component: () =>
                 import('@/views/quiz/attempt')
         }, {
-            path: '/quiz/mark/:quiz_name/:student_name',
+            path: '/quiz/:quiz_name/:student_name',
             name: 'MarkQuiz',
             component: () =>
                 import('@/views/quiz/mark')
@@ -84,7 +84,7 @@ const routes = [
             path: '/reports',
             name: 'Reports',
             component: () =>
-                import('@/components/reports.vue')
+                import('@/views/reports')
         }, {
             path: '/library',
             name: 'Library',

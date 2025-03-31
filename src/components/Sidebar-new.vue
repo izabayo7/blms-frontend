@@ -121,7 +121,7 @@
           </svg>
         </li>
         <li
-          v-if="userCategory == 'Instructor'"
+          v-if="userCategory == 'Instructor' || userCategory == 'Student'"
           @click="$router.push('/quiz')"
           :class="{ active: activeRoute.includes('/quiz') }"
         >

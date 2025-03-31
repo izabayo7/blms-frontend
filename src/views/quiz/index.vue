@@ -1,6 +1,6 @@
 <template>
   <v-container class="round smooth--background" fluid>
-    <v-row>
+    <v-row v-if="userCategory === 'Instructor'">
       <v-col class="col-12">
         <v-card
           class="mx-auto elevation-0 pa-12 text-center smooth--card"
@@ -94,6 +94,10 @@
         </v-card>
       </v-col>
     </v-row>
+    <v-row v-else>
+      Sorry this page is under construction, you can 
+      <router-link :to="`/reports`">view your reports</router-link>
+    </v-row>
   </v-container>
 </template>
 
@@ -135,6 +139,9 @@ export default {
         });
       }
       return formated_quiz;
+    },
+    userCategory() {
+      return this.$store.state.user.user.category;
     },
   },
   methods: {

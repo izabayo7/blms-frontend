@@ -46,13 +46,16 @@ export default {
         },
     },
     actions: {
-        //get courses from backend (mukanya)
+        //get courses from backend
         getCourses({ state }, { userCategory, userId }) {
-            apis.get(`course/${userCategory}/${userId}`).then(d => {
-                state.courses.data = d.data
-                //announce that data have been loaded
-                state.courses.loaded = true
-            })
+            // if courses not loaded fetch them
+            if (!state.courses.loaded) {
+                apis.get(`course/${userCategory}/${userId}`).then(d => {
+                    state.courses.data = d.data
+                    //announce that data have been loaded
+                    state.courses.loaded = true
+                })
+            }
         },
         //get chapterMainContent from backend
         getChapterMainContent({ state, commit }, chapterId) {
@@ -81,8 +84,6 @@ export default {
         //create a course
         createCourse({ state, commit, dispatch }, { course, coverPicture }) {
             let courseObject = {}
-            // set the dialog
-            dispatch('modal/set_modal', { template: 'display_information', title: 'Creating Course', message: 'Saving information' }, { root: true })
             return apis.create('course', course).then(d => {
 
                 courseObject._id = d.data._id
@@ -93,7 +94,8 @@ export default {
                 commit('set_selected_course', d.data._id)
 
                 if (coverPicture) {
-                    commit('modal/update_message', `uploading ${coverPicture.name}`, { root: true })
+                    // set the dialog
+                    dispatch('modal/set_modal', { template: 'display_information', title: 'Creating Course', message: `uploading ${coverPicture.name}` }, { root: true })
                     const formData = new FormData()
                     formData.append("file", coverPicture)
                     apis.update('file/updateCourseCoverPicture', d.data._id, formData, {
@@ -105,15 +107,14 @@ export default {
                         }
                     }).then(courseData => {
                         courseObject.coverPicture = courseData.data.coverPicture
+                        setTimeout(() => {
+                            dispatch('modal/reset_modal', null, { root: true })
+                        }, 1000);
                     })
                 }
                 courseObject.chapters = []
                 state.courses.data.push(courseObject)
                 commit('initialise_new_chapter')
-                setTimeout(() => {
-                    dispatch('modal/reset_modal', null, { root: true })
-                }, 3000);
-
             })
 
         },
@@ -126,8 +127,7 @@ export default {
                     break
                 }
             }
-            // set the dialog
-            dispatch('modal/set_modal', { template: 'display_information', title: 'Updating Course', message: 'Saving changes' }, { root: true })
+
             return apis.update('course', state.selectedCourse, course).then(d => {
 
                 state.courses.data[courseIndex].name = d.data.name
@@ -135,7 +135,8 @@ export default {
                 state.courses.data[courseIndex].facultyCollegeYear = d.data.facultyCollegeYear
 
                 if (coverPicture) {
-                    commit('modal/update_message', `uploading ${coverPicture.name}`, { root: true })
+                    // set the dialog
+                    dispatch('modal/set_modal', { template: 'display_information', title: 'Updating Course', message: `uploading ${coverPicture.name}` }, { root: true })
                     const formData = new FormData()
                     formData.append("file", coverPicture)
                     apis.update('file/updateCourseCoverPicture', state.selectedCourse, formData, {
@@ -147,20 +148,17 @@ export default {
                         }
                     }).then(courseData => {
                         state.courses.data[courseIndex].coverPicture = courseData.data.coverPicture
+                        setTimeout(() => {
+                            dispatch('modal/reset_modal', null, { root: true })
+                        }, 1000);
                     })
                 }
-                setTimeout(() => {
-                    dispatch('modal/reset_modal', null, { root: true })
-                }, 3000);
-
             })
 
         },
         //update a chapter
         updateChapter({ state, commit, dispatch }, { chapter, content, video, attachments, quiz }) {
 
-            // set the dialog
-            dispatch('modal/set_modal', { template: 'display_information', title: 'Updating Chapter', message: 'Saving changes' }, { root: true })
             let courseIndex, chapterIndex
             for (const i in state.courses.data) {
                 if (state.courses.data[i]._id == state.selectedCourse) {
@@ -203,8 +201,8 @@ export default {
 
                 }
                 if (video) {
-                    commit('modal/update_progress', 0, { root: true })
-                    commit('modal/update_message', `uploading ${video.name}`, { root: true })
+                    // set the dialog
+                    dispatch('modal/set_modal', { template: 'display_information', title: 'Updating Chapter', message: `uploading ${video.name}` }, { root: true })
                     const formData = new FormData()
                     formData.append("file", video)
                     apis.update('file/updateMainVideo', state.selectedChapter, formData, {
@@ -217,10 +215,12 @@ export default {
                         }
                     }).then((videoResponse) => {
                         state.courses.data[courseIndex].chapters[chapterIndex].mainVideo = videoResponse.data.filepath
+                        setTimeout(() => {
+                            dispatch('modal/reset_modal', null, { root: true })
+                        }, 1000);
                     })
                 } if (attachments.length > 0) {
-                    commit('modal/update_progress', 0, { root: true })
-                    commit('modal/update_message', `uploading attachments`, { root: true })
+                    dispatch('modal/set_modal', { template: 'display_information', title: 'Updating Chapter', message: `uploading attachments` }, { root: true })
                     const formData = new FormData()
                     for (const i in attachments) {
                         formData.append("files[" + i + "]", attachments[i]);
@@ -236,13 +236,12 @@ export default {
                         for (const i in chapterResponse.data) {
                             state.courses.data[courseIndex].chapters[chapterIndex].attachments.push(chapterResponse.data[i])
                         }
+                        setTimeout(() => {
+                            dispatch('modal/reset_modal', null, { root: true })
+                        }, 1000);
                     })
 
                 }
-                setTimeout(() => {
-                    dispatch('modal/reset_modal', null, { root: true })
-                }, 3000);
-
             })
 
         },
@@ -355,8 +354,7 @@ export default {
         },
         //create a new chapter
         createChapter({ state, commit, dispatch }, { chapter, content, video, attachments, quiz }) {
-            // set the dialog
-            dispatch('modal/set_modal', { template: 'display_information', title: 'Saving Chapter', message: 'Saving content' }, { root: true })
+
             let courseIndex, chapterIndex
             for (const i in state.courses.data) {
                 if (state.courses.data[i]._id == state.selectedCourse) {
@@ -389,8 +387,8 @@ export default {
 
                 }
                 if (video) {
-                    commit('modal/update_progress', 0, { root: true })
-                    commit('modal/update_message', `uploading ${video.name}`, { root: true })
+                    // set the dialog
+                    dispatch('modal/set_modal', { template: 'display_information', title: 'Saving Chapter', message: `uploading ${video.name}` }, { root: true })
                     const formData = new FormData()
                     formData.append("file", video)
                     apis.update('file/updateMainVideo', d.data._id, formData, {
@@ -402,10 +400,12 @@ export default {
                         }
                     }).then((videoResponse) => {
                         state.courses.data[courseIndex].chapters[chapterIndex].mainVideo = videoResponse.data.filepath
+                        setTimeout(() => {
+                            dispatch('modal/reset_modal', null, { root: true })
+                        }, 1000);
                     })
                 } if (attachments.length > 0) {
-                    commit('modal/update_progress', 0, { root: true })
-                    commit('modal/update_message', `uploading attachments`, { root: true })
+                    dispatch('modal/set_modal', { template: 'display_information', title: 'Saving Chapter', message: `uploading attachments` }, { root: true })
                     const formData = new FormData()
                     for (const i in attachments) {
                         formData.append("files[" + i + "]", attachments[i]);
@@ -421,13 +421,12 @@ export default {
                         for (const i in chapterResponse.data) {
                             state.courses.data[courseIndex].chapters[chapterIndex].attachments.push(chapterResponse.data[i])
                         }
+                        setTimeout(() => {
+                            dispatch('modal/reset_modal', null, { root: true })
+                        }, 1000);
                     })
 
                 }
-                setTimeout(() => {
-                    dispatch('modal/reset_modal', null, { root: true })
-                }, 3000);
-
             })
 
         },
@@ -440,6 +439,10 @@ export default {
         //get the selectedCourse
         selectedCourse: state => {
             return state.selectedCourse
+        },
+        //get all courses
+        courses: state => {
+            return state.courses.data
         },
         //get a specified courses
         course: state => {

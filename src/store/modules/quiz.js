@@ -30,18 +30,18 @@ export default {
     actions: {
         //get quiz from backend
         getQuizes({ state }, { userCategory, userId }) {
-            // try to load only new data when there is no available
-            apis.get(`quiz/${userCategory}/${userId}`).then(d => {
-                state.quiz.data = d.data
-                //announce that data have been loaded
-                state.quiz.loaded = true
-            })
+            // when quiz is not loaded fetch quizes
+            if (!state.quiz.loaded) {
+                apis.get(`quiz/${userCategory}/${userId}`).then(d => {
+                    state.quiz.data = d.data
+                    //announce that data have been loaded
+                    state.quiz.loaded = true
+                })
+            }
         },
         //create a quiz
         create_quiz({ state, commit, dispatch }, { quiz, pictures }) {
             let quizObject = {}
-            // set the dialog
-            dispatch('modal/set_modal', { template: 'display_information', title: 'Creating quiz', message: 'Saving information' }, { root: true })
             return apis.create('quiz', quiz).then(d => {
                 quizObject = d.data
                 if (pictures.length > 0) {
@@ -58,8 +58,8 @@ export default {
                         }
                     }
                     if (pictureFound) {
-                        commit('modal/update_progress', 0, { root: true })
-                        commit('modal/update_message', `uploading pictures`, { root: true })
+                        // set the dialog
+                        dispatch('modal/set_modal', { template: 'display_information', title: 'Creating quiz', message: 'uploading pictures' }, { root: true })
 
                         apis.create(`file/quizAttachedFiles/${d.data._id}`, formData, {
                             headers: {
@@ -70,13 +70,13 @@ export default {
                             }
                         }).then((response) => {
                             quizObject = response.data
+                            state.quiz.data.push(quizObject)
+                            setTimeout(() => {
+                                dispatch('modal/reset_modal', null, { root: true })
+                            }, 1000);
                         })
                     }
                 }
-                state.quiz.data.push(quizObject)
-                setTimeout(() => {
-                    dispatch('modal/reset_modal', null, { root: true })
-                }, 3000);
 
             })
 
@@ -159,10 +159,10 @@ export default {
         selected_quiz: state => {
             return state.quiz.data.filter(quiz => quiz._id == state.selected_quiz)[0]
         },
-        // //get a specified quiz by name
-        // quiz: state => (name) => {
-        //     return state.quiz.data.filter(quiz => quiz.name == name)[0]
-        // },
+        //get a specified quiz by name
+        quiz: state => (name) => {
+            return state.quiz.data.filter(quiz => quiz.name == name)[0]
+        },
         //get a specified quiz by name
         all_quiz: state => {
             return state.quiz.data
