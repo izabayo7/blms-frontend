@@ -63,15 +63,38 @@
                 </svg>
                 Search users or messages
               </div>
-              <input v-model="searchKey" type="text"/>
+              <input @input="searchIt" v-model="searchKey" type="text"/>
             </div>
-            <div class="search-results">
-              <div class="centered">
+            <div v-if="searchKey !== '' || this.incomingMessages.length < 1" class="search-results">
+              <ul class="searched-users" v-if="foundUsers.length > 0">
+                <li
+                    class="user d-flex align-center"
+                    v-for="(user, i) in foundUsers"
+                    :key="i"
+                    @click="start_conversation(foundUsers[i].user_name);this.searchKey = ''"
+                >
+                  <div class="d-flex justify-start">
+                    <img
+                        v-if="user.pic"
+                        :src="user.pic+'?height=50'"
+                        :alt="`${user.names} profile picture`"
+                    />
+                    <v-avatar size="36" v-else class="avatar">
+                      {{ user.names | computeText }}
+                    </v-avatar>
+                    <p class="ml-4 my-auto">{{ user.names }}</p>
+                    <span v-if="user.category.toLowerCase() === 'instructor'">{{
+                        user.category
+                      }}</span>
+                  </div>
+                </li>
+              </ul>
+              <div v-else class="centered">
                 search users above and start conversations
               </div>
             </div>
           </div>
-          <div class="incoming-messages" v-if="incomingMessages.length > 0">
+          <div v-show="searchKey === ''" class="incoming-messages" v-if="incomingMessages.length > 0">
             <transition-group name="incoming-contacts" tag="div">
               <incoming-chat
                   v-for="message in incomingMessages"
@@ -92,7 +115,7 @@
 <script>
 // import search from "@/components/reusable/Search";
 import incomingChat from "@/components/messages/Incoming-chat";
-import {mapMutations, mapGetters, mapState} from "vuex";
+import {mapMutations, mapGetters, mapState, mapActions} from "vuex";
 import {on} from "@/services/event_bus";
 
 export default {
@@ -101,15 +124,23 @@ export default {
     // search,
     incomingChat,
   },
-  watch:{
-    $route(){
+  watch: {
+    $route() {
       this.initialise()
+      this.searchKey = ""
+    },
+    searchKey() {
+      if (this.searchKey === '')
+        this.foundUsers = []
+      else
+        console.log(this.searchKey)
     }
   },
   data() {
     return {
       user: null,
-      searchKey: ""
+      searchKey: "",
+      foundUsers: [],
     };
   },
   computed: {
@@ -121,11 +152,32 @@ export default {
     }
   },
   methods: {
+    ...mapActions("users", ["searchUser"]),
+    ...mapActions("chat", ["start_conversation"]),
     ...mapMutations("chat", ["SET_USERNAME", "SET_DISPLAYED_USER"]),
     ...mapMutations("sidebar_navbar", {
       toggleGroup: "TOGGLE_GROUP_MODEL_VISIBILITY",
     }),
-
+    search(str) {
+      if (str === '')
+        return
+      this.foundUsers = [];
+      this.searchUser({query: str}).then((results) => {
+        this.foundUsers = [];
+        for (const i in results) {
+          this.foundUsers.push({
+            names: `${results[i].sur_name} ${results[i].other_names}`,
+            pic: results[i].profile,
+            category: results[i].category,
+            user_name: results[i].user_name,
+            selected: false,
+          });
+        }
+      });
+    },
+    searchIt() {
+      this.search(this.searchKey);
+    },
     //here we check if the current route has a selected chat if not we directly
     // select the latest contact in chat and we make it active
     goToMessages() {
@@ -136,17 +188,18 @@ export default {
 
       if (user_found.length) return;
 
-      if (!groupRouteFound && this.incomingMessages.length) {
-        this.SET_DISPLAYED_USER(this.incomingMessages[0]);
-        this.$router.push(`/messages/${this.incomingMessages[0].id}`);
-      }
+      if (this.$route.path === "/messages")
+        if (!groupRouteFound && this.incomingMessages.length) {
+          this.SET_DISPLAYED_USER(this.incomingMessages[0]);
+          this.$router.push(`/messages/${this.incomingMessages[0].id}`);
+        }
     },
     storeCurrentDisplayedUser() {
       //listen when the user contacts/incoming messages are loaded
       on("incoming_message_initially_loaded", () => {
         if (!this.incomingMessages.length) {
-          console.log(this.$route)
-          this.$router.push("/messages/no-conversation");
+          if (this.$route.path === "/messages")
+            this.$router.push("/messages/no-conversation");
         } else {
           this.incomingMessages.map((d) => {
             console.log(d)
@@ -164,8 +217,8 @@ export default {
         }
       });
     },
-    initialise(){
-      console.log('harashya')
+    initialise() {
+      this.start_conversation(this.$route.params.username)
       this.storeCurrentDisplayedUser();
 
       //listen if recent chat contact was loaded
@@ -249,7 +302,8 @@ export default {
       height: 90%;
 
       .message-search {
-        height: 100%;
+        //height: 100%;
+
         .placeholder {
           font-family: Inter;
           font-style: normal;
@@ -282,11 +336,15 @@ export default {
             padding: 6px 12px;
           }
         }
-        .search-results{
-          height: 100%;
-          .centered{
+
+        .search-results {
+          height: 94%;
+          position: absolute;
+          z-index: 7;
+
+          .centered {
             width: 100%;
-            height: 100%;
+            height: 68%;
             font-family: Inter;
             font-style: normal;
             font-weight: 500;
@@ -299,6 +357,85 @@ export default {
             text-align: center;
 
             color: #828282;
+          }
+
+          .searched-users {
+            max-width: 318px;
+            max-height: 90%;
+            overflow-y: auto;
+            left: 121px;
+            top: 180px;
+            margin-top: 9px;
+            background: #FFFFFF;
+            padding: 19px 8px !important;
+
+            li {
+              margin-bottom: 8px;
+              max-width: 303px;;
+              list-style-type: none;
+              height: 68px;
+              display: flex;
+              background: #FFFFFF;
+              box-shadow: 0px 4px 5px rgba(0, 0, 0, 0.1);
+              border-radius: 5px;
+              cursor: pointer;
+              padding: 16px;
+
+              &:hover {
+                background-color: lighten($font, 65);
+              }
+
+              .avatar {
+                background-color: $primary;
+                color: white;
+                cursor: pointer;
+                margin: 0.2rem 0.3rem;
+              }
+
+              img {
+                width: 36px;
+                height: 36px;
+                border-radius: 50%;
+              }
+
+              p {
+                font-family: Roboto;
+                font-style: normal;
+                font-weight: bold;
+                font-size: 15px;
+                /* or 5% */
+
+                display: flex;
+                align-items: center;
+
+                /* Type color / Default */
+
+                color: #343434;
+              }
+
+              span {
+                font-family: Roboto;
+                font-style: normal;
+                font-weight: bold;
+                font-size: 9px;
+                line-height: 1px;
+                /* identical to box height, or 8% */
+                width: fit-content;
+                padding: 4px;
+                height: 21px;
+
+                /* Alert colors / Success */
+
+                background: #3CE970;
+                border-radius: 14px;
+                display: flex;
+                align-items: center;
+
+                /* Type color / Default */
+
+                color: #343434;
+              }
+            }
           }
         }
       }
