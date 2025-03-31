@@ -1,6 +1,7 @@
 <template>
     <v-app>
-        <v-row class="new-class-form ml-10 mt-10">
+        <div class="feedback"></div>
+        <v-row class="new-class-form ml-2 ml-md-10 mt-5 mt-md-10">
             <v-col class="col-12">
                 <h1 class="d-block">CREATE NEW COURSE</h1>
                 <div class="new-class-btns mb-5">
@@ -22,40 +23,31 @@
                     >
                 </div>
             </v-col>
-            <v-col v-if="type == 'details'" class="col-12">
+            <v-col v-if="type == 'details'" class="col-12 col-md-6 mt-n4">
                 <v-form>
-                    <h3>Course Name</h3>
-                    <v-text-field
-                            v-model="course.name"
-                            required
-                            :rules="nameRules"
-                            placeholder="Type course name..."
-                            outlined
-                            class="course-input"
-                    ></v-text-field>
-                    <h3>Student Group</h3>
+                    <h3 class="input_lable">Course Name</h3>
+                    <input v-model="course.name" type="text" class="course_input" placeholder="Type course name..." />
+<!--                    <v-text-field-->
+<!--                            v-model="course.name"-->
+<!--                            required-->
+<!--                            placeholder="Type course name..."-->
+<!--                            outlined-->
+<!--                            class="course-input"-->
+<!--                    ></v-text-field>-->
+                    <h3 class="input_lable">Student Group</h3>
                     <v-select
                             v-model="selectedFacultyCollegeYearName"
                             :items="facultyCollegeYearNames"
                             chips
-                            :rules="simpleRules"
-                            outlined
-                            class="group-select"
-                    ></v-select>
-                    <h3>Course Description</h3>
-<!--                    <v-textarea-->
-<!--                            v-model="course.description"-->
-<!--                            class="kurious&#45;&#45;textarea mb-4"-->
-<!--                            cols="60"-->
-<!--                            rows="8"-->
-<!--                    ></v-textarea>-->
-                    <v-textarea
-                            v-model="course.description"
-                            placeholder="Type question details"
-                            class="field_shadow_1"
                             solo
-                            required
-                    ></v-textarea>
+                            class="group-select elevation-0"
+                    ></v-select>
+                    <h3 class="input_lable mt-0">Course Description</h3>
+                    <textarea
+                            v-model="course.description"
+                            class="kurious--textarea mb-4 customScroll"
+                            rows="8"
+                    ></textarea>
                     <h3>Course Cover Image</h3>
                     <v-btn
                             fab
@@ -85,7 +77,7 @@
                                 rounded
                                 text
                                 class="new-active-btn mb-6 mx-2"
-                                @click="saveCourse()"
+                                @click="validate()"
                         >Save Course
                         </v-btn
                         >
@@ -121,12 +113,8 @@
                 name: "",
                 description: "",
             },
+            error: "",
             coverPicture: undefined,
-            nameRules: [
-                (v) => !!v || "Name is required",
-                (v) => v.length > 2 || "Name is too short",
-            ],
-            simpleRules: [(v) => !!v || "This field is required"],
         }),
         computed: {
             ...mapGetters("faculties", ["facultyCollegeYearNames"]),
@@ -136,9 +124,30 @@
                 )._id;
             },
         },
+        watch: {
+            error() {
+                console.log(this.error)
+            }
+        },
         methods: {
             ...mapActions("courses", ["createCourse"]),
             ...mapActions("faculties", ["getFacultyCollegeYears"]),
+            validate() {
+                if (this.course.name === "") {
+                    return this.error = 'name is required'
+                } else if (this.course.name.length < 3) {
+                    return this.error = 'name is too short'
+                }
+                if (this.selectedFacultyCollegeYearName === "") {
+                    return this.error = 'student_group is required'
+                }
+                if (this.course.description === "") {
+                    return this.error = 'description is required'
+                } else if (this.course.description.length < 10) {
+                    return this.error = 'description is too short'
+                }
+                this.saveCourse()
+            },
             pickfile() {
                 document.getElementById("picture").click();
             },
@@ -149,7 +158,7 @@
                 this.createCourse({
                     course: {
                         name: this.course.name,
-                        user: this.$store.state.user.user._id,
+                        user: this.$store.state.user.user.user_name,
                         description: this.course.description,
                         faculty_college_year: this.selectedFacultyCollegeYearCode,
                     },
