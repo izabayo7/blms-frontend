@@ -117,17 +117,15 @@ name: "Faculty",
     }
   },
   computed:{
-    ...mapGetters('faculties',['faculties']),
-    faculty(){
-      return this.faculties
-    }
+    ...mapGetters('faculties',['faculty'])
   },
   methods:{
   },
   async mounted(){
-      await this.$store.dispatch("faculties/getFaculties",this.facultyId)
+      await this.$store.dispatch("faculties/getFaculty",this.facultyId)
       await this.$store.dispatch('faculties/changeHeader',{head:this.faculty.name,title:"Faculty Details"})
-  }
+
+}
 }
 </script>
 

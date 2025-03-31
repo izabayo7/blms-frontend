@@ -35,22 +35,23 @@
 
 <!--        table body-->
         <tbody>
-          <tr class="table-body-row" @click="rowClicked(content[options.link.paramPropertyName] || null)" v-for="(content,i) in tabularData" :key="`${content}${Date.now()*Math.random()}`">
+          <tr class="table-body-row"  v-for="(content,i) in tabularData" :key="`${content}${Date.now()*Math.random()}`">
 <!--            select checkbox-->
             <td v-if="options.showSelect" class="select--wrapper">
               <div class="select select-one" >
-              <div class="icon" @click="select(i)">
-                <div class="icon__checked" v-if="selected_all || inSelectedRows(i)">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"/><path d="M4 3h16a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zm7.003 13l7.07-7.071-1.414-1.414-5.656 5.657-2.829-2.829-1.414 1.414L11.003 16z"/></svg>
-                </div>
-                <div class="icon__unchecked" v-else>
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"/><path d="M4 3h16a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zm1 2v14h14V5H5z"/></svg>
+                <div class="icon" @click="select(i)">
+                  <div class="icon__checked" v-if="selected_all || inSelectedRows(i)">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"/><path d="M4 3h16a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zm7.003 13l7.07-7.071-1.414-1.414-5.656 5.657-2.829-2.829-1.414 1.414L11.003 16z"/></svg>
+                  </div>
+                  <div class="icon__unchecked" v-else>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"/><path d="M4 3h16a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zm1 2v14h14V5H5z"/></svg>
+                  </div>
                 </div>
               </div>
-            </div></td>
+            </td>
 
 <!--            table data-->
-            <td v-for="col in columnNames" :key="`${col}${Date.now()*Math.random()}` ">{{content[col]}}</td>
+            <td @click="rowClicked(content[options.link.paramPropertyName] || null)" v-for="col in columnNames" :key="`${col}${Date.now()*Math.random()}` ">{{content[col]}}</td>
           </tr>
         </tbody>
       </table>
@@ -67,6 +68,7 @@ import S from 'string'
 /**
  * Table ui
  *
+ * @deprecated
  * @props
  * - data:array of object elements to be displayed in table
  *

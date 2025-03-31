@@ -9,6 +9,10 @@ const getDefaultState = () => ({
         data: [],
         loaded: false
     },
+    faculty:{
+        data:[],
+        loaded:false,
+    },
     importable_faculties: {
         data: [],
         loaded: false
@@ -55,13 +59,22 @@ export default {
             })
         },
         //get faculties from backend
-        async getFaculties({ state }, collegeId) {
+        async getFaculties({ state }) {
             // when faculties not loaded fetch them
             if (!state.faculties.loaded) {
-                const {data:{data}} = await apis.get(`faculty/college/${collegeId}`)
+                const {data:{data}} = await apis.get(`faculty/college/ALL`)
                     state.faculties.data = data
                     //announce that data have been loaded
                     state.faculties.loaded = true
+            }
+        },
+        async getFaculty({state}, facultyId){
+            // when faculties not loaded fetch them
+            if (!state.faculty.loaded) {
+                const {data:{data}} = await apis.get(`faculty/college/${facultyId}`)
+                    state.faculty.data = data
+                    //announce that data have been loaded
+                    state.faculty.loaded = true
             }
         },
         //get faculties that a college can imoprt from backend
@@ -128,6 +141,10 @@ export default {
         faculties: state => {
 
             return state.faculties.data
+        },
+        // get faculty
+        faculty:state => {
+            return state.faculty.data
         },
         //get all specified importable_faculties
         importable_faculties: state => {

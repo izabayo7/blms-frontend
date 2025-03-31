@@ -11,6 +11,7 @@ $deepGreen: #02A617;
 $info:#2680eb;
 $success:#3ce970;
 $danger:#fc6767;
+$warn:#FF7700;
 $blue-gray:#F6F8FF;
 $disabled:#DADADA;
 
@@ -19,5 +20,6 @@ $grayish:#707070;
 
 :export {
     primary: $primary;
-    deep_green: $deepGreen
+    deep_green: $deepGreen;
+    warn:$warn
 }

@@ -43,6 +43,7 @@ name: "table-action-burner"
       .text{
         h6{
           font-size:.8rem;
+          color:$primary;
         }
       }
     }
