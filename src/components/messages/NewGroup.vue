@@ -7,6 +7,11 @@
         <div class="group-card row flex flex-column-reverse flex-md-row">
           <div class="infos flex col col-xs-12 col-sm-12 col-md-8">
             <div class="infos-holder justify-center align-center">
+              <transition name="fade">
+                <div class="row error-wrapper" v-if="groupError.length">
+                  <div class="an_error">{{groupError}}</div>
+                </div>
+              </transition>
               <div class="row group-name">
                 <label for="group_name_input">Group name</label>
                 <input type="text" id="group_name_input" v-model="group.name" />
@@ -175,7 +180,7 @@
 
 <script>
 import { emit, on } from "@/services/event_bus";
-import { mapMutations, mapState, mapActions } from "vuex";
+import { mapMutations, mapState, mapActions, mapGetters } from "vuex";
 import a from "@/services/apis";
 import Member from "@/components/messages/Member";
 
@@ -204,6 +209,7 @@ export default {
   },
   computed: {
     ...mapState("sidebar_navbar", ["group_model"]),
+    ...mapGetters("chat", ["groupError"]),
     btnDisabled() {
       const test_empty = /^\s+$/g;
       const is_name_empty =
@@ -213,9 +219,8 @@ export default {
     },
   },
   methods: {
-    ...mapMutations("sidebar_navbar", {
-      toggleGroup: "TOGGLE_GROUP_MODEL_VISIBILITY",
-    }),
+    ...mapMutations("sidebar_navbar", {toggleGroup: "TOGGLE_GROUP_MODEL_VISIBILITY"}),
+    ...mapMutations("chat", {setGroupError:"SET_GROUP_ERROR"}),
     ...mapActions("users", ["searchUser"]),
 
     closed(i) {
@@ -294,9 +299,15 @@ export default {
         college: this.$store.state.user.user.college,
       };
       const newGroup = await a.create("chat_group", body);
-      console.log(newGroup)
+      const {status, message} = newGroup.data
 
+      console.log(newGroup,status)
 
+      if(status === 200 || status === 201){
+        console.log('ee');
+      }else{
+        this.setGroupError(message)
+      }
 
       const {code, createdAt,members,name} = newGroup.data.data
 
@@ -358,12 +369,33 @@ export default {
       left: 50%;
       transform: translate(-50%, -50%);
 
+
       .infos {
         .infos-holder {
           align-self: center !important;
           justify-self: center !important;
           max-width: 25rem;
           margin: auto;
+
+          //animation
+          .fade-enter-active, .fade-leave-active{
+            transition: .4s ease-in;
+          }
+          .fade-enter, .fade-leave-to{
+            opacity: 0;
+          }
+
+          .error-wrapper{
+            width: 100%;
+
+            .an_error{
+              padding: 1rem .5rem;
+              width: 100%;
+              border-left: 3px solid lighten($danger,5);
+              background-color: lighten($danger,25);
+              color:lighten($danger,5);
+            }
+          }
 
           .group-members,
           .group-name {
