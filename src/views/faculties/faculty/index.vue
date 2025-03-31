@@ -49,7 +49,7 @@
       <!--    faculty page links/navbar-->
       <section class="faculty--links links">
         <section class="links--wrapper d-block d-md-flex align-center">
-          <back class="ml-16" to="/faculties"/>
+          <back class="ml-16" target="/faculties"/>
           <faculty-navbar/>
         </section>
       </section>
