@@ -165,10 +165,9 @@ export default {
       this.email = email;
     },
     async sendInvitations() {
-      // if (this.selected_user_group == "") {
-      //   console.log("user group is required");
-      // } else
-      if (this.selected_user_category == "") {
+      if (this.selected_user_group == "") {
+        console.log("user group is required");
+      } else if (this.selected_user_category == "") {
         console.log("user category is required");
       } else if (!this.emails.length) {
         console.log("you must atleast select one email");
@@ -190,9 +189,7 @@ export default {
   async beforeMount() {
     const category_res = await Apis.get("user_category/open");
     this.user_categories = category_res.data.data;
-    const user_groups_res = await Apis.get(
-      `faculty_college_year/college/${this.$store.state.user.user.college}`
-    );
+    const user_groups_res = await Apis.get(`user_groups/college/ALL`);
     this.user_groups = user_groups_res.data.data;
     setTimeout(() => {
       const dialog = document.querySelector(".v-dialog--active");
