@@ -1,56 +1,75 @@
 <template>
   <div>
     <section :class="{focus: state}" class="my-messages">
-      <div :class="`row ${state && isMobile ? 'mb-0' : isMobile ? 'mb-14' : ''} messages-section mb-md-0`" id="messages-section">
+      <div :class="`row ${state && isMobile ? 'mb-0' : isMobile ? 'mb-14' : ''} messages-section mb-md-0`"
+           id="messages-section">
         <div v-if="!isMobile || !state" class="side incoming col-12 col-md-3">
           <div class="header">
             <h2>Chat</h2>
             <div class="icons">
               <div class="add-chat icon px-1" @click="toggleGroup">
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="36"
-                    height="19.5"
-                    viewBox="0 0 36 19.5"
-                >
+                <svg width="14" height="12" viewBox="0 0 14 12" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path
-                      id="Icon_material-group-add"
-                      data-name="Icon material-group-add"
-                      d="M12,15H7.5V10.5h-3V15H0v3H4.5v4.5h3V18H12Zm15,1.5a4.5,4.5,0,1,0-1.365-8.79A7.4,7.4,0,0,1,26.985,12a7.547,7.547,0,0,1-1.35,4.29A4.485,4.485,0,0,0,27,16.5Zm-7.5,0A4.5,4.5,0,1,0,15,12,4.481,4.481,0,0,0,19.5,16.5Zm9.93,3.24A5.55,5.55,0,0,1,31.5,24v3H36V24C36,21.69,32.445,20.265,29.43,19.74ZM19.5,19.5c-3,0-9,1.5-9,4.5v3h18V24C28.5,21,22.5,19.5,19.5,19.5Z"
-                      transform="translate(0 -7.5)"
-                  />
+                      d="M11.9792 6.41162H10.8965C11.0068 6.71377 11.0671 7.03984 11.0671 7.3797V11.4717C11.0671 11.6134 11.0425 11.7494 10.9976 11.8759H12.7875C13.4562 11.8759 14.0001 11.3319 14.0001 10.6633V8.43257C14.0002 7.31823 13.0936 6.41162 11.9792 6.41162Z"
+                      fill="#193074"/>
+                  <path
+                      d="M2.93303 7.3797C2.93303 7.03982 2.99333 6.71377 3.10369 6.41162H2.02098C0.906611 6.41162 0 7.31823 0 8.4326V10.6633C0 11.3319 0.54395 11.8759 1.21259 11.8759H3.00257C2.9577 11.7494 2.93303 11.6134 2.93303 11.4717V7.3797Z"
+                      fill="#193074"/>
+                  <path
+                      d="M8.23838 5.35876H5.76317C4.6488 5.35876 3.74219 6.26538 3.74219 7.37974V11.4717C3.74219 11.6949 3.92315 11.8759 4.14638 11.8759H9.85516C10.0784 11.8759 10.2594 11.695 10.2594 11.4717V7.37974C10.2594 6.26538 9.35275 5.35876 8.23838 5.35876Z"
+                      fill="#193074"/>
+                  <path
+                      d="M7.00079 0C5.66062 0 4.57031 1.09031 4.57031 2.43051C4.57031 3.33955 5.07204 4.13348 5.81301 4.55031C6.16445 4.74801 6.56963 4.86099 7.00079 4.86099C7.43195 4.86099 7.83713 4.74801 8.18858 4.55031C8.92957 4.13348 9.43127 3.33953 9.43127 2.43051C9.43127 1.09033 8.34096 0 7.00079 0Z"
+                      fill="#193074"/>
+                  <path
+                      d="M2.73174 2.26544C1.72945 2.26544 0.914062 3.08083 0.914062 4.08312C0.914062 5.08541 1.72945 5.9008 2.73174 5.9008C2.98598 5.9008 3.22809 5.84814 3.44801 5.75347C3.82826 5.58977 4.14178 5.29998 4.33578 4.93699C4.47196 4.68222 4.54942 4.39159 4.54942 4.08312C4.54942 3.08086 3.73403 2.26544 2.73174 2.26544Z"
+                      fill="#193074"/>
+                  <path
+                      d="M11.2669 2.26544C10.2646 2.26544 9.44922 3.08083 9.44922 4.08312C9.44922 4.39161 9.52668 4.68225 9.66286 4.93699C9.85686 5.3 10.1704 5.58979 10.5506 5.75347C10.7706 5.84814 11.0127 5.9008 11.2669 5.9008C12.2692 5.9008 13.0846 5.08541 13.0846 4.08312C13.0846 3.08083 12.2692 2.26544 11.2669 2.26544Z"
+                      fill="#193074"/>
                 </svg>
+                Create group
               </div>
-              <div class="new-chat icon px-2" @click="$router.push('/messages/start-conversation')">
-                <svg
-                    id="chat-new-line"
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                >
-                  <path
-                      id="Path_2156"
-                      data-name="Path 2156"
-                      d="M0,0H24V24H0Z"
-                      fill="none"
-                  />
-                  <path
-                      id="Path_2157"
-                      data-name="Path 2157"
-                      d="M14,3V5H4V18.385L5.763,17H20V10h2v8a1,1,0,0,1-1,1H6.455L2,22.5V4A1,1,0,0,1,3,3Zm5,0V0h2V3h3V5H21V8H19V5H16V3Z"
-                  />
-                </svg>
-              </div>
+              <!--              <div class="new-chat icon px-2" @click="$router.push('/messages/start-conversation')">-->
+              <!--                <svg-->
+              <!--                    id="chat-new-line"-->
+              <!--                    xmlns="http://www.w3.org/2000/svg"-->
+              <!--                    width="24"-->
+              <!--                    height="24"-->
+              <!--                    viewBox="0 0 24 24"-->
+              <!--                >-->
+              <!--                  <path-->
+              <!--                      id="Path_2156"-->
+              <!--                      data-name="Path 2156"-->
+              <!--                      d="M0,0H24V24H0Z"-->
+              <!--                      fill="none"-->
+              <!--                  />-->
+              <!--                  <path-->
+              <!--                      id="Path_2157"-->
+              <!--                      data-name="Path 2157"-->
+              <!--                      d="M14,3V5H4V18.385L5.763,17H20V10h2v8a1,1,0,0,1-1,1H6.455L2,22.5V4A1,1,0,0,1,3,3Zm5,0V0h2V3h3V5H21V8H19V5H16V3Z"-->
+              <!--                  />-->
+              <!--                </svg>-->
+              <!--              </div>-->
             </div>
           </div>
           <div class="message-search">
-            <search
-                bg="#ffffff"
-                placeholder="search message"
-                :width="100"
-                :fontSize="12"
-            />
+            <div class="search-input">
+              <div v-if="searchKey === ''" class="placeholder vertically--centered">
+                <svg width="11" height="11" viewBox="0 0 11 11" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path
+                      d="M7.86164 6.91824H7.36478L7.18868 6.74843C7.80503 6.03145 8.1761 5.10063 8.1761 4.08805C8.1761 1.83019 6.34591 0 4.08805 0C1.83019 0 0 1.83019 0 4.08805C0 6.34591 1.83019 8.1761 4.08805 8.1761C5.10063 8.1761 6.03145 7.80503 6.74843 7.18868L6.91824 7.36478V7.86164L10.0629 11L11 10.0629L7.86164 6.91824ZM4.08805 6.91824C2.52201 6.91824 1.25786 5.65409 1.25786 4.08805C1.25786 2.52201 2.52201 1.25786 4.08805 1.25786C5.65409 1.25786 6.91824 2.52201 6.91824 4.08805C6.91824 5.65409 5.65409 6.91824 4.08805 6.91824Z"
+                      fill="#828282"/>
+                </svg>
+                Search users or messages
+              </div>
+              <input v-model="searchKey" type="text"/>
+            </div>
+            <div class="search-results">
+              <div class="centered">
+                search users above and start conversations
+              </div>
+            </div>
           </div>
           <div class="incoming-messages" v-if="incomingMessages.length > 0">
             <transition-group name="incoming-contacts" tag="div">
@@ -71,7 +90,7 @@
 </template>
 
 <script>
-import search from "@/components/reusable/Search";
+// import search from "@/components/reusable/Search";
 import incomingChat from "@/components/messages/Incoming-chat";
 import {mapMutations, mapGetters, mapState} from "vuex";
 import {on} from "@/services/event_bus";
@@ -79,12 +98,18 @@ import {on} from "@/services/event_bus";
 export default {
   name: "Messages",
   components: {
-    search,
+    // search,
     incomingChat,
+  },
+  watch:{
+    $route(){
+      this.initialise()
+    }
   },
   data() {
     return {
       user: null,
+      searchKey: ""
     };
   },
   computed: {
@@ -120,6 +145,7 @@ export default {
       //listen when the user contacts/incoming messages are loaded
       on("incoming_message_initially_loaded", () => {
         if (!this.incomingMessages.length) {
+          console.log(this.$route)
           this.$router.push("/messages/no-conversation");
         } else {
           this.incomingMessages.map((d) => {
@@ -138,16 +164,20 @@ export default {
         }
       });
     },
+    initialise(){
+      console.log('harashya')
+      this.storeCurrentDisplayedUser();
+
+      //listen if recent chat contact was loaded
+      on("incoming_message_initially_loaded", () => {
+        this.goToMessages();
+      });
+      this.$store.dispatch("chat/loadIncomingMessages");
+      // this.SET_USERNAME(this.$route.params.username).then(()=> this.goToMessages())
+    }
   },
   mounted() {
-    this.storeCurrentDisplayedUser();
-
-    //listen if recent chat contact was loaded
-    on("incoming_message_initially_loaded", () => {
-      this.goToMessages();
-    });
-    this.$store.dispatch("chat/loadIncomingMessages");
-    // this.SET_USERNAME(this.$route.params.username).then(()=> this.goToMessages())
+    this.initialise()
   },
 };
 </script>
@@ -155,7 +185,8 @@ export default {
 <style lang="scss" scoped>
 #messages-section {
   height: calc(100vh - 82px);
-  &.mb-0{
+
+  &.mb-0 {
     height: 100vh;
   }
 }
@@ -163,7 +194,20 @@ export default {
 .my-messages {
   background-color: #f8f8f8;
   height: 100%;
-  padding: 5px 10px 5px 20px;
+  padding: 20px 10px 0px 34px;
+
+  .add-chat {
+    font-family: Inter;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 15px;
+    line-height: 17px;
+    /* or 110% */
+
+
+    color: #193074;
+
+  }
 
   .side {
     .header {
@@ -205,9 +249,58 @@ export default {
       height: 90%;
 
       .message-search {
-        padding: 1rem 0;
-        width: 100%;
-        margin: auto;
+        height: 100%;
+        .placeholder {
+          font-family: Inter;
+          font-style: normal;
+          font-weight: 500;
+          font-size: 12px;
+          line-height: 17px;
+          /* or 138% */
+          svg {
+            margin-right: 6px;
+          }
+
+          height: 100%;
+          color: #828282;
+
+        }
+
+        .search-input {
+          max-width: 288px;
+          height: 35px;
+          margin-top: 16px;
+          background: #DEDEDE;
+          border-radius: 10px;
+          position: relative;
+
+          input {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            padding: 6px 12px;
+          }
+        }
+        .search-results{
+          height: 100%;
+          .centered{
+            width: 100%;
+            height: 100%;
+            font-family: Inter;
+            font-style: normal;
+            font-weight: 500;
+            font-size: 12px;
+            line-height: 17px;
+            /* or 138% */
+
+            display: flex;
+            align-items: center;
+            text-align: center;
+
+            color: #828282;
+          }
+        }
       }
 
       .incoming-messages {
