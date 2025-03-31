@@ -213,8 +213,9 @@
                   <div
                       v-if="msg.content"
                       class="msg"
-                      :inner-html.prop="msg.content | urlify "
-                  />
+                  >
+                    {{msg.content | urlify}}
+                  </div>
                   <div
                       v-if="msg.attachments"
                       :class="`attachments-cotainer ${msg.content ? 'pushed' : ''} ${
