@@ -20,3 +20,14 @@
   }
 
 }
+
+@mixin fit-content{
+  width: fit-content;
+  height: fit-content;
+}
+
+@mixin flex-center{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
