@@ -82,9 +82,10 @@ export default {
         if (!this.isLive) {
           let {data} = await api.create('comment', this.reply_comment_object)
 
-          this.socket.emit('comment-replied', {
+          this.socket.emit('chapter-comment', {
             userName: this.commenter,
-            route: this.$route.path + this.reply_id + '?tab=discussion'
+            route: this.$route.path + this.reply_id + '?tab=discussion',
+            content: 'replied your comment'
           })
           this.$emit('sent', {_id: this.reply_id, data: data.data})
           this.reply_comment = ""

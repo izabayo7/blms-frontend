@@ -63,6 +63,7 @@ export default {
   },
   computed: {
     ...mapGetters("chat", ["socket"]),
+    ...mapGetters("courses", ["course"]),
     ...mapGetters("live_session", ["participants"]),
     ...mapGetters("user", ["user_full_names", "username"]),
     ...mapGetters("courses", ["selectedChapter", "totalComments"]),
@@ -115,6 +116,11 @@ export default {
       try {
         if (!this.isLive) {
           let {data} = await api.create("comment", this.comment_object);
+          this.socket.emit('chapter-comment', {
+            userName: this.course.user.user_name,
+            route: this.$route.path + data.data._id + '?tab=discussion',
+            content: 'commentend on chapter ' + this.course.chapters[this.$route.params.index].name
+          })
           data.data.replies = [];
           this.$store.commit(
               "courses/SET_TOTAL_COMMENTS_ON_A_CHAPTER",
