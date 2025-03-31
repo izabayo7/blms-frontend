@@ -9,14 +9,8 @@
       <v-col cols="5">
         <v-text-field placeholder="Search Courses" append-icon="mdi-magnify" rounded dense filled />
       </v-col>
-      <v-btn
-        rounded
-        color="#ffd248"
-        class="mt-3 white--text"
-        to="/courses/new-course"
-        v-if="$route.name=='Courses' && $store.state.user.category === 'Instructor'"
-      >
-        <v-icon>mdi-plus</v-icon>Create new class
+      <v-btn rounded color="#ffd248" class="mt-3 white--text" to="/courses/new-course" v-if="$route.name=='Courses' && $store.state.user.category === 'Instructor'">
+        <v-icon>mdi-plus</v-icon> <div class="d-none">Create new class</div>
       </v-btn>
       <v-spacer></v-spacer>
       <v-col cols="auto" id="nav-icons">
