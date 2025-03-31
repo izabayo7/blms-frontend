@@ -93,7 +93,7 @@
   font-family: Inter;
   font-style: normal;
   font-weight: bold;
-  font-size: 8.47759px;
+  font-size:11.47759px;
   line-height: 26px;
   /* or 309% */
 

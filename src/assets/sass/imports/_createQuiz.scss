@@ -105,9 +105,11 @@
     background: #193074;
     margin-right: 28px;
     color: white;
-&.full{
-  width: 100%;
-}
+
+    &.full {
+      width: 100%;
+    }
+
     &.cancel {
       background: #BABABC;
     }
@@ -217,18 +219,21 @@
 
           }
         }
-        .text-select{
+
+        .text-select {
           .option {
             max-width: 610px;
             width: 100%;
             margin-bottom: 10px;
-            .details{
-              textarea{
+
+            .details {
+              textarea {
                 width: 347px;
               }
             }
-            .status{
-              label{
+
+            .status {
+              label {
                 display: block;
                 font-family: Inter;
                 font-style: normal;
@@ -241,11 +246,14 @@
                 color: #000000;
 
               }
+
               text-align: center;
-              svg{
+
+              svg {
                 margin: auto;
               }
             }
+
             .delete {
               font-family: Inter;
               font-style: normal;
@@ -258,7 +266,8 @@
               color: #3C3C3C;
             }
           }
-          .add-option{
+
+          .add-option {
             font-family: Inter;
             font-style: normal;
             font-weight: bold;
@@ -270,12 +279,13 @@
             color: #717171;
           }
         }
-        .image-select{
-          label{
+
+        .image-select {
+          label {
             font-family: Inter;
             font-style: normal;
             font-weight: 500;
-            font-size: 8.47759px;
+            font-size: 11.47759px;
             line-height: 26px;
             /* or 309% */
 
@@ -285,11 +295,13 @@
             color: #3C3C3C;
           }
         }
-        .file-upload{
-          .allowed-files{
-            .type{
-              input{
+
+        .file-upload {
+          .allowed-files {
+            .type {
+              input {
                 margin-right: 5px;
+
                 &:checked:after {
                   width: 15px;
                   height: 15px;
@@ -304,6 +316,7 @@
                   border: 2px solid white;
                 }
               }
+
               font-family: Inter;
               font-style: normal;
               font-weight: normal;
@@ -339,6 +352,10 @@
         input {
           margin-bottom: 0;
         }
+      }
+
+      .question-content .text-select .option .details textarea {
+        width: 100%;
       }
     }
   }

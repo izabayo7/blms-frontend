@@ -53,8 +53,6 @@ export default {
                     throw d.data
                 }
 
-                console.log('twakomeje')
-
                 d.data = d.data.data
                 d.data.usage = 0
                 if (pictures.length > 0) {
@@ -94,6 +92,9 @@ export default {
         //update a quiz
         update_quiz({ state, dispatch }, { quiz, pictures }) {
             return apis.update('quiz', state.selected_quiz, quiz).then(d => {
+                if(d.data.status != 200 && d.data.status != 201){
+                    throw d.data
+                }
                 d.data = d.data.data
                 let quizIndex
                 for (const i in state.quiz.data) {

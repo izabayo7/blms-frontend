@@ -1,44 +1,56 @@
 <template>
   <v-container
-    v-if="selected_quiz_submission"
-    fluid
-    class="quiz-page white pl-lg-16"
+      v-if="selected_quiz_submission"
+      fluid
+      class="quiz-page white pl-lg-16"
   >
-    <back class="mt-0 mb-6 ml-0 ml-md-n6" />
+    <back class="mt-0 mb-6 ml-0 ml-md-n6"/>
 
     <v-row class="relative">
       <v-col class="col-12 col-md-8 px-0">
-        <navigation title="Submissions" :links="navigation_links" />
+        <navigation title="Submissions" :links="navigation_links"/>
         <v-row
-          v-for="(question, i) in selected_quiz_submission.quiz.questions"
-          :key="i"
-          class="col-12 col-md-12 px-0"
+            v-for="(question, i) in selected_quiz_submission.quiz.questions"
+            :key="i"
+            class="col-12 col-md-12 px-0"
         >
           <v-col class="col-12">
             <v-row>
               <v-col
                   class="px-0"
-                :class="question.type.includes('select') ? 'col-11' : 'col-12'"
+                  :class="question.type.includes('select') ? 'col-11' : 'col-12'"
               >
                 <p class="question-details col-md-12 col-12 px-0">
                   {{ `${i + 1}. ${question.details}` }}
                 </p>
-                <v-btn
-                  v-if="question.type === 'file_upload'"
-                  rounded
-                  color="#ffd248"
-                  class="white--text course-image mt-4 mb-6 d-block"
-                  @click="downloadAttachment(`${backend_url}/api/quiz_submission/${selected_quiz_submission._id}/attachment/${attempt.answers[i].src}?token=${$session.get('jwt')}`)"
-                >
-                  {{ attempt.answers[i].src }}
-                </v-btn>
+                <div v-if="question.type === 'file_upload'" class="file-container row">
+                  <div class="pick-file file-picked col-12 col-md-8 d-flex px-4">
+                    <div class="file-name">
+                      {{ attempt.answers[i].src }}
+                    </div>
+                    <div class="file-size">
+
+                    </div>
+                    <div class="file-type ml-auto">
+                      {{ attempt.answers[i].src.split('.')[attempt.answers[i].src.split('.').length - 1] }}
+                    </div>
+
+                  </div>
+                  <div class="col-12 col-md-4 py-0">
+                    <button
+                        @click="downloadAttachment(`${backend_url}/api/quiz_submission/${selected_quiz_submission._id}/attachment/${attempt.answers[i].src}?token=${$session.get('jwt')}`)"
+                        class="download-attachment">
+                      Download
+                    </button>
+                  </div>
+                </div>
                 <textarea
-                  v-if="question.type === 'open_ended'"
-                  v-model="attempt.answers[i].text"
-                  disabled
-                  rows="5"
-                  placeholder="Type your answer here"
-                  class="answer-field"
+                    v-if="question.type === 'open_ended'"
+                    v-model="attempt.answers[i].text"
+                    disabled
+                    rows="5"
+                    placeholder="Type your answer here"
+                    class="answer-field"
                 ></textarea>
                 <div v-else class="d-block d-md-flex flex-row-reverse">
                   <div v-if="question.type.includes('select')" class="ml-4">
@@ -117,9 +129,9 @@
                   <div class="options">
                     <div v-if="question.type.includes('text')" class="d-block">
                       <div
-                        v-for="(choice, k) in question.options.choices"
-                        :key="k"
-                        :class="`text_selection ${
+                          v-for="(choice, k) in question.options.choices"
+                          :key="k"
+                          :class="`text_selection ${
                           checkChoiceStatus(
                             attempt.answers[i].choosed_options,
                             {
@@ -139,24 +151,24 @@
                     </div>
                     <div class="pictures-container" v-else>
                       <v-card
-                        v-for="(choice, k) in question.options.choices"
-                        :key="k"
-                        flat
-                        tile
-                        class="ma-1"
+                          v-for="(choice, k) in question.options.choices"
+                          :key="k"
+                          flat
+                          tile
+                          class="ma-1"
                       >
                         <v-img
-                          :src="`${
+                            :src="`${
                             choice.src
                           }?format=png&width=200&height=200&token=${$session.get(
                             'jwt'
                           )}`"
-                          :lazy-src="`${
+                            :lazy-src="`${
                             choice.src
                           }?format=png&width=200&height=200&token=${$session.get(
                             'jwt'
                           )}`"
-                          :gradient="
+                            :gradient="
                             checkChoiceStatus(
                               attempt.answers[i].choosed_options,
                               {
@@ -168,22 +180,22 @@
                                 : 'to top right, rgba(100,115,201,.33), rgba(25,32,72,.7)'
                               : undefined
                           "
-                          class="vertically--centered text-center"
+                            class="vertically--centered text-center"
                         >
                           <template v-slot:placeholder>
                             <v-row
-                              class="fill-height ma-0"
-                              align="center"
-                              justify="center"
+                                class="fill-height ma-0"
+                                align="center"
+                                justify="center"
                             >
                               <v-progress-circular
-                                indeterminate
-                                color="grey lighten-5"
+                                  indeterminate
+                                  color="grey lighten-5"
                               ></v-progress-circular>
                             </v-row>
                           </template>
                           <v-icon
-                            v-if="
+                              v-if="
                               checkChoiceStatus(
                                 attempt.answers[i].choosed_options,
                                 {
@@ -191,9 +203,10 @@
                                 }
                               )
                             "
-                            class="white--text"
-                            size="50"
-                            >mdi-{{ choice.right ? "check" : "close" }}</v-icon
+                              class="white--text"
+                              size="50"
+                          >mdi-{{ choice.right ? "check" : "close" }}
+                          </v-icon
                           >
                         </v-img>
                       </v-card>
@@ -205,22 +218,22 @@
               </v-col>
             </v-row>
             <v-row
-              v-if="
+                v-if="
                 selected_quiz_submission.marked || userCategory === 'INSTRUCTOR'
               "
             >
               <v-col class="col-12 col-md-6 d-flex pb-0">
-                <div class="mr-3">Awarded marks:</div>
-                <div>
+                <div class="mr-3 marks-label">Award marks:</div>
+                <div class="d-flex align-center">
                   <div class="cool-box marks grey-color mt-n1">
                     <input
-                      :class="`marks-input ${
+                        :class="`marks-input ${
                         question.type === 'open_ended' ? 'editable' : ''
                       }`"
-                      type="number"
-                      v-model="attempt.answers[i].marks"
-                      :readonly="mode === 'view' || question.type.includes('select')"
-                      @keyup="computeTotalMarks()"
+                        type="number"
+                        v-model="attempt.answers[i].marks"
+                        :readonly="mode === 'view' || question.type.includes('select')"
+                        @keyup="computeTotalMarks()"
                     />
                     <span>{{ `/${question.marks}` }}</span>
                   </div>
@@ -229,17 +242,17 @@
 
               <v-col class="col-12 pt-0">
                 <feedback
-                  v-if="
+                    v-if="
                     selected_quiz_submission.answers[i].feedback ||
                     userCategory === 'INSTRUCTOR'
                   "
-                  :content="
+                    :content="
                     selected_quiz_submission.answers[i].feedback
                       ? selected_quiz_submission.answers[i].feedback.content
                       : ''
                   "
-                  :answerId="selected_quiz_submission.answers[i]._id"
-                  :feedbackId="
+                    :answerId="selected_quiz_submission.answers[i]._id"
+                    :feedbackId="
                     selected_quiz_submission.answers[i].feedback
                       ? selected_quiz_submission.answers[i].feedback._id
                       : ''
@@ -251,7 +264,7 @@
         </v-row>
       </v-col>
       <v-col
-        :class="`col-12 col-md-4 mt-16 ${
+          :class="`col-12 col-md-4 mt-16 ${
           $vuetify.breakpoint.name == 'lg' ? 'fixed right-0' : ''
         }`"
       >
@@ -264,10 +277,10 @@
           <div>
             <div class="cool-box marks total grey-color mt-n1">
               <input
-                class="marks-input"
-                v-model="computedTotalMarks"
-                readonly
-                type="text"
+                  class="marks-input"
+                  v-model="computedTotalMarks"
+                  readonly
+                  type="text"
               />
               <span>{{ `/${selected_quiz_submission.quiz.total_marks}` }}</span>
             </div>
@@ -277,20 +290,20 @@
           <div class="submission_details">
             <span> Submission ID </span>
             <button
-              @click="copy(selected_quiz_submission._id)"
-              :class="`copy_code ml-2 ${coppied ? 'coppied' : ''}`"
+                @click="copy(selected_quiz_submission._id)"
+                :class="`copy_code ml-2 ${coppied ? 'coppied' : ''}`"
             >
               <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="20.17"
-                height="24.973"
-                viewBox="0 0 20.17 24.973"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20.17"
+                  height="24.973"
+                  viewBox="0 0 20.17 24.973"
               >
                 <path
-                  id="Icon_ionic-md-copy"
-                  data-name="Icon ionic-md-copy"
-                  d="M18.674,3.375H11.5A2.4,2.4,0,0,0,9.069,5.746v.51h-.45A2.4,2.4,0,0,0,6.188,8.628V25.916a2.452,2.452,0,0,0,2.431,2.431H21.105a2.4,2.4,0,0,0,2.371-2.431v-.45h.51a2.4,2.4,0,0,0,2.371-2.431V11.059Zm0,2.677,5.007,5.007H18.674Zm2.881,19.864a.485.485,0,0,1-.45.51H8.619a.535.535,0,0,1-.51-.51V8.628a.485.485,0,0,1,.51-.45h.45V23.515a1.7,1.7,0,0,0,1.951,1.951H21.555Zm2.881-2.881a.485.485,0,0,1-.45.51H11.5a.535.535,0,0,1-.51-.51V5.746a.485.485,0,0,1,.51-.45h5.253V12.98h7.684Z"
-                  transform="translate(-6.188 -3.375)"
+                    id="Icon_ionic-md-copy"
+                    data-name="Icon ionic-md-copy"
+                    d="M18.674,3.375H11.5A2.4,2.4,0,0,0,9.069,5.746v.51h-.45A2.4,2.4,0,0,0,6.188,8.628V25.916a2.452,2.452,0,0,0,2.431,2.431H21.105a2.4,2.4,0,0,0,2.371-2.431v-.45h.51a2.4,2.4,0,0,0,2.371-2.431V11.059Zm0,2.677,5.007,5.007H18.674Zm2.881,19.864a.485.485,0,0,1-.45.51H8.619a.535.535,0,0,1-.51-.51V8.628a.485.485,0,0,1,.51-.45h.45V23.515a1.7,1.7,0,0,0,1.951,1.951H21.555Zm2.881-2.881a.485.485,0,0,1-.45.51H11.5a.535.535,0,0,1-.51-.51V5.746a.485.485,0,0,1,.51-.45h5.253V12.98h7.684Z"
+                    transform="translate(-6.188 -3.375)"
                 />
               </svg>
               copy to clipboard
@@ -303,16 +316,18 @@
         </v-row>
         <v-row>
           <v-btn
-            v-if="userCategory === 'INSTRUCTOR'"
-            class="red-bg mr-3 px-8"
-            to="/reports"
-            >Cancel</v-btn
+              v-if="userCategory === 'INSTRUCTOR'"
+              class="red-bg mr-3 px-8"
+              to="/reports"
+          >Cancel
+          </v-btn
           >
           <v-btn
-            v-if="userCategory === 'INSTRUCTOR'"
-            class="primary-bg"
-            @click="updateSubmission"
-            >Save progress</v-btn
+              v-if="userCategory === 'INSTRUCTOR'"
+              class="primary-bg"
+              @click="updateSubmission"
+          >Save progress
+          </v-btn
           >
         </v-row>
       </v-col>
@@ -321,9 +336,10 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex";
+import {mapGetters, mapActions} from "vuex";
 import {downloadAttachment} from "@/services/global_functions"
-import { omit } from "lodash";
+import {omit} from "lodash";
+
 export default {
   data: () => ({
     alphabets: [
@@ -366,7 +382,7 @@ export default {
     navigation: () => import("@/components/shared/simple_navigation"),
   },
   computed: {
-    backend_url(){
+    backend_url() {
       return process.env.VUE_APP_api_service_url
     },
     ...mapGetters("quiz_submission", ["selected_quiz_submission"]),
@@ -382,21 +398,21 @@ export default {
         {
           text: this.selected_quiz_submission.quiz.target.course.name,
           link:
-            this.userCategory == "INSTRUCTOR"
-              ? "/reports/" + this.selected_quiz_submission.quiz._id
-              : "/reports",
+              this.userCategory == "INSTRUCTOR"
+                  ? "/reports/" + this.selected_quiz_submission.quiz._id
+                  : "/reports",
         },
         {
           text: this.selected_quiz_submission.quiz.name,
           link:
-            this.userCategory == "INSTRUCTOR"
-              ? "/reports/" + this.selected_quiz_submission.quiz._id
-              : "/reports",
+              this.userCategory == "INSTRUCTOR"
+                  ? "/reports/" + this.selected_quiz_submission.quiz._id
+                  : "/reports",
         },
         {
           text: this.selected_quiz_submission.user.sur_name
-            ? `${this.selected_quiz_submission.user.sur_name} ${this.selected_quiz_submission.user.other_names}`
-            : `${this.$store.state.user.user.sur_name} ${this.$store.state.user.user.other_names}`,
+              ? `${this.selected_quiz_submission.user.sur_name} ${this.selected_quiz_submission.user.other_names}`
+              : `${this.$store.state.user.user.sur_name} ${this.$store.state.user.user.other_names}`,
           link: this.$route.fullPath,
         },
       ];
@@ -430,7 +446,7 @@ export default {
       let result = 0;
       for (const i in this.selected_quiz_submission.answers) {
         result = parseInt(
-          result + parseInt(this.selected_quiz_submission.answers[i].marks || 0)
+            result + parseInt(this.selected_quiz_submission.answers[i].marks || 0)
         );
       }
       this.computedTotalMarks = result;
@@ -474,7 +490,7 @@ export default {
         auto_submitted: this.selected_quiz_submission.auto_submitted,
         used_time: this.selected_quiz_submission.used_time,
         answers: this.selected_quiz_submission.answers.map((x) =>
-          omit(x, ["feedback"])
+            omit(x, ["feedback"])
         ),
         marked: this.selected_quiz_submission.marked,
         total_marks: this.selected_quiz_submission.totalMarks,
@@ -499,9 +515,17 @@ export default {
   padding: 4px 12px;
   text-align: center;
   font-size: 1.3rem;
+  //width: 31.02px;
+  //height: 21.71px;
+
+  border: 0.775483px solid #717171;
+  box-sizing: border-box;
+  border-radius: 4.6529px;
+
   * {
     color: $primary;
   }
+
   display: inline-flex;
   font-weight: bold;
   // border-radius: 13px;
@@ -509,81 +533,101 @@ export default {
     // border: 2px solid #cbcbcb;
     box-shadow: 0px 3px 6px rgb(0, 0, 0, 0.16);
   }
+
   &.total {
     border-radius: 11px;
   }
+
   p {
     margin: 0;
   }
 }
+
 .copy_code {
   svg {
     height: 15px;
   }
 }
+
 .submission_details {
   span {
     color: #4a4a4a;
     font-weight: 500;
   }
 }
+
 .more_info {
   width: 80%;
 }
+
 .blue-bg {
   background-color: #6daefc;
   color: white;
 }
+
 .grey-color {
   color: #4a4a4a;
 }
+
 .marks-input {
   width: 50px;
+
   &.editable {
     border-bottom: 1px solid #d2d2d2;
     text-align: center;
   }
 }
+
 .marks-input:focus {
   outline: none;
 }
+
 .pictures-container {
   display: flex;
   flex-direction: row;
   flex-flow: wrap;
 }
+
 .primary-bg {
   background-color: $primary !important;
   color: white !important;
 }
+
 .red-bg {
   background-color: #fc6767 !important;
   color: white !important;
 }
+
 .svg-check-marks {
   display: block;
   margin: 16px;
 }
+
 .mode-type {
   width: 50%;
   padding: 12px;
 }
+
 .active {
   background-color: $primary;
   color: white;
 }
+
 .inactive {
   color: $primary;
   border: 1px solid $primary;
 }
+
 .options {
   width: 70%;
 }
+
 .text_selection {
   border-radius: 20px;
   padding: 16px;
   box-shadow: 0px 4px 16px rgb(199 199 199);
   margin-bottom: 12px;
+
   &.selected {
     font-weight: 600;
     border: none;
@@ -591,25 +635,32 @@ export default {
     box-shadow: 8px 9px 11px rgb(199 199 199);
   }
 }
+
 .relative {
   position: relative;
 }
+
 .fixed {
   position: fixed;
 }
+
 .right-0 {
   right: 0;
 }
+
 .color-primary {
   color: $primary;
 }
+
 .student_name {
   font-size: 1.6rem;
 }
+
 .right_choice {
   //background: linear-gradient(#d9f1d8 0%, #85e97d 100%);
   background-color: #85e97d;
 }
+
 .wrong_choice {
   //background: linear-gradient(
   //  rgba(255, 0, 0, 0.53) 0%,
@@ -618,19 +669,90 @@ export default {
   background-color: rgba(255, 0, 0, 0.53);
   box-shadow: 0px 6px 3px rgba(0, 0, 0, 0.16);
 }
+
 .marks {
   font-size: 1rem;
 }
+
 .coppied {
   color: $primary;
+
   svg {
     fill: $primary;
   }
 }
+
+.pick-file {
+  width: 473.85px;
+  height: 28.8px;
+
+  background: rgba(25, 48, 116, 0.1);
+  border-radius: 3.92697px;
+
+  .file-type {
+    margin-top: -11px
+  }
+
+  .file-name {
+    font-family: Inter;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 13.0899px;
+    line-height: 34px;
+    /* or 262% */
+
+    display: flex;
+    align-items: center;
+
+    color: #193074;
+
+  }
+}
+
+.download-attachment {
+  font-family: Inter;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 13.0899px;
+  line-height: 34px;
+  /* or 262% */
+
+  display: flex;
+  align-items: center;
+  text-align: center;
+
+  color: #193074;
+}
+
+.marks-label {
+  font-family: Inter;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 15.5097px;
+  line-height: 41px;
+  /* or 262% */
+
+  display: flex;
+  align-items: center;
+
+  color: #193074;
+}
+
 /* Portrait phones and smaller */
 @media (max-width: 700px) {
   .options {
     width: 100%;
+  }
+  .download-attachment {
+    width: 261px;
+    height: 34px;
+    color: #FFFFFF;
+    background: #193074;
+    border-radius: 9.94685px;
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    margin-top: 14px;
   }
 }
 </style>
