@@ -1,16 +1,14 @@
 <template>
-  <div class="sidebar hidden-sm-and-down">
-    <!-- <div class="toggle-container">
-      <div class="toggle">
-        <v-icon large @click="toggle">mdi-menu</v-icon>
-      </div>
-    </div> -->
+  <div :class="`sidebar ${onPhone ? (state ? 'absolute' : 'd-none') : ''}`">
     <div class="routes">
       <ul ref="nav">
         <div class="active-link"></div>
         <li
           v-if="userCategory === 'ADMIN'"
-          @click="$router.push('/administration')"
+          @click="
+            $router.push('/administration');
+            closeSidebar();
+          "
           class="vertically--centered"
           :class="{ active: activeRoute.includes('/administration') }"
         >
@@ -38,7 +36,10 @@
         </li>
         <li
           v-if="userCategory === 'INSTRUCTOR'"
-          @click="$router.push('/users')"
+          @click="
+            $router.push('/users');
+            closeSidebar();
+          "
           class="vertically--centered"
           :class="{ active: activeRoute.includes('/users') }"
         >
@@ -97,7 +98,10 @@
         </li>
         <li
           v-if="userCategory === 'STUDENT' || userCategory === 'INSTRUCTOR'"
-          @click="$router.push('/courses')"
+          @click="
+            $router.push('/courses');
+            closeSidebar();
+          "
           class="vertically--centered"
           :class="{ active: activeRoute.includes('/courses') }"
         >
@@ -120,7 +124,10 @@
         </li>
         <li
           v-if="userCategory === 'STUDENT' || userCategory === 'INSTRUCTOR'"
-          @click="$router.push('/reports')"
+          @click="
+            $router.push('/reports');
+            closeSidebar();
+          "
           class="vertically--centered"
           :class="{ active: activeRoute.includes('/reports') }"
         >
@@ -143,7 +150,10 @@
         </li>
         <li
           v-if="userCategory === 'STUDENT' || userCategory === 'INSTRUCTOR'"
-          @click="$router.push('/library')"
+          @click="
+            $router.push('/library');
+            closeSidebar();
+          "
           class="vertically--centered"
           :class="{ active: activeRoute.includes('/library') }"
         >
@@ -165,7 +175,10 @@
           <div class="link-name" v-show="state">Library</div>
         </li>
         <li
-          @click="$router.push('/messages')"
+          @click="
+            $router.push('/messages');
+            closeSidebar();
+          "
           class="vertically--centered"
           :class="{ active: activeRoute.includes('/messages') }"
         >
@@ -188,7 +201,10 @@
         </li>
         <li
           v-if="userCategory === 'INSTRUCTOR'"
-          @click="$router.push('/quiz')"
+          @click="
+            $router.push('/quiz');
+            closeSidebar();
+          "
           class="vertically--centered"
           :class="{ active: activeRoute.includes('/quiz') }"
         >
@@ -211,7 +227,10 @@
         </li>
         <li
           v-if="userCategory === 'STUDENT' || userCategory === 'INSTRUCTOR'"
-          @click="$router.push('/settings')"
+          @click="
+            $router.push('/settings');
+            closeSidebar();
+          "
           class="vertically--centered"
           :class="{ active: activeRoute.includes('/sinz kbx') }"
         >
@@ -249,9 +268,21 @@ export default {
     userCategory() {
       return this.$store.state.user.user.category.name;
     },
+    onPhone() {
+      return (
+        this.$vuetify.breakpoint.name == "sm" ||
+        this.$vuetify.breakpoint.name == "xs"
+      );
+    },
   },
   methods: {
     ...mapMutations("sidebar_navbar", { toggle: "TOGGLE_SIDEBAR_EXPANSION" }),
+    closeSidebar() {
+      console.log(this.onPhone)
+      if (this.onPhone) {
+        this.toggle();
+      }
+    },
   },
 };
 </script>
@@ -260,6 +291,10 @@ export default {
   height: 100vh;
   box-shadow: 0 11px 15px 0 $secondary;
   transition: 0.4s ease-out;
+
+  &.absolute {
+    position: absolute;
+  }
 
   .toggle-container {
     border-bottom: 1px solid lighten($font, 65);

@@ -52,7 +52,7 @@
       </div>
     </div>
     <div
-      :class="`my-search hidden-md-and-down col-${
+      :class="`my-search hidden-sm-and-down col-${
         showCreateCourseButton ? '4' : '5'
       }`"
     >
@@ -87,7 +87,7 @@
         <v-btn
           rounded
           dark
-          class="add_course mt-3 white--text hidden-md-and-down"
+          class="add_course mt-3 white--text hidden-lg-and-down"
           to="/courses/new"
         >
           <svg
