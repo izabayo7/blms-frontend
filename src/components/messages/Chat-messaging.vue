@@ -138,7 +138,7 @@
                       Delete message
                     </div>
                   </div>
-                  <div class="action tooltip cursor-pointer" @click="msg_to_forward=msg._id">
+                  <div class="action tooltip cursor-pointer" @click="setUpMsgForward(msg._id)">
                     <div class="icon">
                       <svg width="18" height="15" viewBox="0 0 18 15" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path
@@ -315,7 +315,7 @@
           </div>
           <input @input="searchIt" v-model="searchKey" type="text"/>
         </div>
-        <div v-if="searchKey !== '' || this.incomingMessages.length < 1" class="search-results">
+        <div class="search-results">
           <ul class="searched-users" v-if="foundUsers.length > 0">
             <li
                 class="user d-flex align-center"
@@ -342,9 +342,6 @@
               </div>
             </li>
           </ul>
-          <div v-else class="centered">
-            search users above and start conversations
-          </div>
         </div>
       </div>
     </Modal>
@@ -407,6 +404,18 @@ export default {
     ...mapMutations("chat", ["CHANGE_MESSAGE_READ_STATUS"]),
     ...mapActions("chat", ["loadMessages", "deleteMsg", "setReplyMsg"]),
     ...mapMutations("chat", ["setReplyMsg"]),
+    setUpMsgForward(id) {
+      this.incomingMessages.map(x => {
+        if (x.id !== 'announcements')
+          this.foundUsers.push({
+            names: x.name,
+            user_name: x.id,
+            pic: x.img
+          })
+      })
+
+      this.msg_to_forward = id
+    },
     forward_msg(username) {
       Apis.create(`message/${username}/forward/${this.msg_to_forward}`, {}).then((res) => {
         if (res.data.status === 200)
