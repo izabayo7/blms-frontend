@@ -61,7 +61,7 @@
     <button
         v-else
         @click="
-        $router.push(`/live/class/course/:id`)
+        $router.push(`/live/${class_id}`)
       "
         class="live"
     >
@@ -89,6 +89,9 @@ export default {
     },
     progress: {
       type: Object,
+    },
+    class_id: {
+      type: String,
     },
   },
   methods: {

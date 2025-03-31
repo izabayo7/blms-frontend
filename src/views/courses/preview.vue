@@ -258,6 +258,7 @@
               :dateUploaded="course.createdAt | formatDate"
               :progress="course.progress"
               :isLive="isLive"
+              :class_id="nearestLiveSession ? nearestLiveSession._id : undefined"
           />
         </main>
       </v-col>

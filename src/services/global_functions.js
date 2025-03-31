@@ -102,6 +102,7 @@ function calculateNearestLiveSession(course) {
             } else {
                 live_session = undefined
             }
+            break;
         }
     }
     return live_session;
