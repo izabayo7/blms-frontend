@@ -1,3 +1,4 @@
+<script src="../../../store/modules/faculties.js"></script>
 <template>
 <main class="faculty">
   <main class="faculty--wrapper">
@@ -116,16 +117,14 @@ name: "Faculty",
     }
   },
   computed:{
-    ...mapGetters('faculties',{
-      faculty:'faculties',
-    }),
-    // faculty(){
-    //   return this.faculties
-    // }
+    ...mapGetters('faculties',['faculties']),
+    faculty(){
+      return this.faculties[0]
+    }
   },
   methods:{
   },
-  async created(){
+  async mounted(){
       await this.$store.dispatch("faculties/getFaculties",this.facultyId)
   }
 }
@@ -182,7 +181,7 @@ name: "Faculty",
   }
 
   &--information-cards{
-    padding:0 5rem;
+    padding:0 2rem;
   }
 
 
@@ -225,7 +224,7 @@ name: "Faculty",
   }
 
   &--dean-information{
-    padding:0 5rem;
+    padding:0 2rem;
   }
 
 
