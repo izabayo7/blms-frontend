@@ -1,18 +1,35 @@
 <template>
   <v-container
-      v-if="selected_quiz && attempt !== {}"
+      v-if="exam && attempt !== {}"
       fluid
-      class="quiz-page px-4 px-md-16"
+      id="attempt"
+      class="attempt--exam"
   >
+    <div class="col-12 header d-flex justify-center align-center" @mousemove="moveTooltip">
+      <img :src="$store.state.sidebar_navbar.college.logo || 'https://apis.kurious.rw/assets/images/image%204.png'"
+           class="logo my-auto"/>
+      <div class="coupontooltip">
+        <div class="title">Any attempt to do the
+          following will lead to failure
+        </div>
+        <div class="content">
+          <div>- Close exam window before submiting work.</div>
+          <div>- Minimize the exam window.</div>
+          <div>- Open another browser tab</div>
+          <div>- Use a sepatate computer or phone.</div>
+        </div>
+      </div>
+    </div>
     <div
-        v-if="(!selected_quiz_submission || $store.state.user.user.category.name ==  'INSTRUCTOR') && filesToUpload.length && !disabled">
-      <h2>{{ selected_quiz.name }}</h2>
+        class="quiz-page px-4 px-md-16"
+        v-if="(!exam.submission || $store.state.user.user.category.name ==  'INSTRUCTOR') && filesToUpload.length && !disabled">
+      <div class="title">{{ exam.name }}</div>
       <v-row>
         <v-col class="col-12 col-md-7 questions-side">
           <v-row
-              v-for="(question, i) in selected_quiz.questions"
+              v-for="(question, i) in exam.questions"
               :key="i"
-              class="col-12 col-md-12"
+              class="col-12 col-md-12 d-block"
           >
             <div class="d-flex align-center">
               <span>
@@ -193,34 +210,35 @@
             </div>
           </v-row>
           <button
-              v-if="$store.state.user.user.category.name == 'STUDENT'"
               class="radio-btn d-block mb-4 submitt-attempt"
               @click="validate"
-              rounded
           >Submit Answers
           </button
           >
-          <button
-              v-else
-              class="radio-btn d-block mb-4 submitt-attempt"
-              @click="$router.push('/assessments/quiz')"
-          >Back to quiz
-          </button
-          >
         </v-col>
-        <v-col class="col-12 col-md-5 timer-side">
-          <div
-              :class="`timer ${remaining_time > 1000 ? 'greenish' : 'redish'}`"
-          >
-            <p>{{ formated_remaining_time }}</p>
+        <v-col class="col-12 col-md-5 timer-side text-center">
+          <div class="timer-content">
+            <div class="title">Time left</div>
+            <div
+                :class="`timer ${remaining_time > 1000 ? 'greenish' : 'redish'}`"
+            >
+              <p>{{ formated_remaining_time }}</p>
+            </div>
+            <div class="subtitle">Do not :</div>
+            <div class="content">
+              <div> - Close exam window before submiting work.</div>
+              <div> - Minimize the exam window.</div>
+              <div> - Open another browser tab</div>
+              <div> - Use a sepatate computer or phone.</div>
+            </div>
           </div>
         </v-col>
       </v-row>
     </div>
-    <div v-else-if="disabled">
+    <div v-else-if="disabled" class="px-4 px-md-16">
       <ErrorPage
-        title="You are not allowed to  do a quiz "
-        subtitle="You must first pay your school fees to regain access"
+          title="You are not allowed to  do exams "
+          subtitle="You must first pay your school fees to regain access"
       />
     </div>
     <div class="d-flex justify-center align-center full-height" v-else>
@@ -236,6 +254,8 @@ import {assessmentMixins} from "../../services/mixins";
 
 export default {
   data: () => ({
+    warned: false,
+    exam: undefined,
     alphabets: [
       "A",
       "B",
@@ -275,9 +295,6 @@ export default {
   computed: {
     ...mapGetters("chat", ["socket"]),
     ...mapGetters("network", ["onLine"]),
-    // get the current course
-    ...mapGetters("quiz", ["selected_quiz"]),
-    ...mapGetters("quiz_submission", ["selected_quiz_submission", "loaded"]),
     formated_remaining_time() {
       return new Date(this.remaining_time * 1000).toISOString().substr(11, 8);
     }
@@ -285,22 +302,25 @@ export default {
   watch: {
     remaining_time() {
       if (this.remaining_time > 0) {
-        setTimeout(() => {
-          this.remaining_time -= 1;
-        }, 1000);
-        if (this.remaining_time == this.selected_quiz.duration - 1)
-          this.initialiseQuiz();
-
-        this.attempt.used_time = this.selected_quiz.duration - this.remaining_time;
+        if (this.$store.state.user.user.category.name === 'STUDENT') {
+          setTimeout(() => {
+            this.remaining_time -= 1;
+          }, 1000);
+          if (this.remaining_time === this.exam.duration - 1)
+            this.initialiseQuiz();
+        }
+        this.attempt.used_time = this.x - this.remaining_time;
       } else if (!this.done) {
         this.done = true;
         const category = this.$store.state.user.user.category.name;
-        if (category == "INSTRUCTOR") {
-          this.$router.push("/quiz/timeout");
-        } else if (category == "STUDENT") {
+        this.attempt.auto_submitted = true;
+        if (category === "STUDENT") {
           this.markUndoneQuestions();
-          this.attempt.auto_submitted = true;
           this.saveAttempt();
+        } else {
+          this.set_modal({
+            template: `exam_closed_timeout`,
+          })
         }
       }
     },
@@ -328,10 +348,32 @@ export default {
       }
     },
   },
+  beforeRouteLeave(to, from, next) {
+    this.removeListeners()
+    next();
+  },
   methods: {
+    ...mapActions("modal", ["set_modal"]),
+    ...mapActions("quiz", ["getExam"]),
+    endExam() {
+      if (!this.warned) {
+        this.warned = true
+        this.set_modal({
+          template: `exam_constraints`,
+        })
+      } else {
+        this.saveAttempt(true)
+      }
+    },
+    moveTooltip(e) {
+      let tooltip = document.querySelector('.coupontooltip');
+      tooltip.style.left = e.pageX + 'px';
+      tooltip.style.top = e.pageY + 'px';
+
+    },
     saveProgress(index) {
       if (this.$store.state.user.user.category.name === 'STUDENT') {
-        this.socket.emit('save-progress', {
+        this.socket.emit('save-exam-progress', {
           index,
           submission_id: this.submission_id,
           attempt: this.attempt,
@@ -356,17 +398,17 @@ export default {
     ]),
     async markUndoneQuestions() {
       for (const i in this.attempt.answers) {
-        if (this.selected_quiz.questions[i].type.includes("select")) {
+        if (this.exam.questions[i].type.includes("select")) {
           this.attempt.answers[i].not_done =
               this.attempt.answers[i].choosed_options.length > 0
                   ? undefined
                   : true;
-        } else if (this.selected_quiz.questions[i].type === "open_ended") {
+        } else if (this.exam.questions[i].type === "open_ended") {
           if (this.attempt.answers[i].text == "") {
             this.attempt.answers[i].not_done = true;
             this.attempt.answers[i].text = undefined;
           }
-        } else if (this.selected_quiz.questions[i].type === "file_upload") {
+        } else if (this.exam.questions[i].type === "file_upload") {
           if (this.attempt.answers[i].src == "") {
             this.attempt.answers[i].not_done = true;
             this.attempt.answers[i].src = undefined;
@@ -394,29 +436,29 @@ export default {
       document.getElementById(`file${index}`).click();
     },
     findAcceptedFiles(index) {
-      if (!this.selected_quiz.questions[index].allowed_files)
+      if (!this.exam.questions[index].allowed_files)
         return "*"
 
       let allowed_types = []
-      if (this.selected_quiz.questions[index].allowed_files.includes('image'))
+      if (this.exam.questions[index].allowed_files.includes('image'))
         allowed_types.push('image/*')
 
-      if (this.selected_quiz.questions[index].allowed_files.includes('Pdf'))
+      if (this.exam.questions[index].allowed_files.includes('Pdf'))
         allowed_types.push('application/pdf')
 
-      if (this.selected_quiz.questions[index].allowed_files.includes('Word document'))
+      if (this.exam.questions[index].allowed_files.includes('Word document'))
         allowed_types.push('application/msword')
 
-      if (this.selected_quiz.questions[index].allowed_files.includes('Powerpoint file'))
+      if (this.exam.questions[index].allowed_files.includes('Powerpoint file'))
         allowed_types.push('application/vnd.ms-powerpoint')
 
-      if (this.selected_quiz.questions[index].allowed_files.includes('Zip'))
+      if (this.exam.questions[index].allowed_files.includes('Zip'))
         allowed_types.push('application/zip,application/x-zip,application/x-zip-compressed,application/octet-stream')
 
-      if (this.selected_quiz.questions[index].allowed_files.includes('image'))
+      if (this.exam.questions[index].allowed_files.includes('image'))
         allowed_types.push('.txt')
 
-      if (this.selected_quiz.questions[index].allowed_files.includes('Video'))
+      if (this.exam.questions[index].allowed_files.includes('Video'))
         allowed_types.push('video/*')
 
       return allowed_types.join(',')
@@ -433,17 +475,17 @@ export default {
       return url.split("/")[url.split("/").length - 1];
     },
     handleOptionClick(questionIndex, optionIndex) {
-      const value = this.selected_quiz.questions[questionIndex].type.includes(
+      const value = this.exam.questions[questionIndex].type.includes(
           "text"
       )
           ? {
-            text: this.selected_quiz.questions[questionIndex].options.choices[
+            text: this.exam.questions[questionIndex].options.choices[
                 optionIndex
                 ].text,
           }
           : {
             src: this.removeMediaPath(
-                this.selected_quiz.questions[questionIndex].options.choices[
+                this.exam.questions[questionIndex].options.choices[
                     optionIndex
                     ].src
             ),
@@ -455,7 +497,7 @@ export default {
           i < this.attempt.answers[questionIndex].choosed_options.length;
           i++
       ) {
-        if (this.selected_quiz.questions[questionIndex].type.includes("text")) {
+        if (this.exam.questions[questionIndex].type.includes("text")) {
           if (
               this.attempt.answers[questionIndex].choosed_options[i].text ===
               value.text
@@ -477,7 +519,7 @@ export default {
       }
       if (!deleted) {
         if (
-            this.selected_quiz.questions[questionIndex].type
+            this.exam.questions[questionIndex].type
                 .toLowerCase()
                 .includes("single")
         ) {
@@ -488,16 +530,16 @@ export default {
       }
     },
     validate() {
-      for (const i in this.selected_quiz.questions) {
+      for (const i in this.exam.questions) {
 
-        if (this.selected_quiz.questions[i].required) {
-          if (this.selected_quiz.questions[i].type.includes('select') && !this.attempt.answers[i].choosed_options.length)
+        if (this.exam.questions[i].required) {
+          if (this.exam.questions[i].type.includes('select') && !this.attempt.answers[i].choosed_options.length)
             return this.error = `Question ${parseInt(i) + 1} is required`
 
-          else if (this.selected_quiz.questions[i].type == 'open_ended' && !this.attempt.answers[i].text.length)
+          else if (this.exam.questions[i].type == 'open_ended' && !this.attempt.answers[i].text.length)
             return this.error = `Question ${parseInt(i) + 1} is required`
 
-          else if (this.selected_quiz.questions[i].type == 'file_upload' && !this.attempt.answers[i].src.length)
+          else if (this.exam.questions[i].type == 'file_upload' && !this.attempt.answers[i].src.length)
             return this.error = `Question ${parseInt(i) + 1} is required`
 
         }
@@ -507,93 +549,141 @@ export default {
     },
     initialiseQuiz() {
       if (this.$store.state.user.user.category.name === 'STUDENT') {
-        this.socket.emit('start-quiz', {
-          quiz: this.selected_quiz._id
+        this.socket.emit('start-exam', {
+          exam: this.exam._id
         })
-        this.socket.on('start-quiz', (id) => {
+        this.socket.on('start-exam', (id) => {
           this.submission_id = id;
         })
-        this.socket.on('progress-saved', ({index, end, is_selection_only}) => {
+        this.socket.on('exam-progress-saved', ({index, end, cheated}) => {
           if (end) {
             // notify instructor
             this.socket.emit('student-submitted', {
-              userId: this.selected_quiz.user,
-              route: `/quiz/${this.$route.params.name}/${this.$store.state.user.user.user_name}`,
-              content: 'submitted quiz ' + this.selected_quiz.name
+              userId: this.exam.user,
+              route: `/assessments/exams/${this.$route.params.id}/${this.$store.state.user.user.user_name}`,
+              content: 'submitted exam ' + this.exam.name
             })
-            if (is_selection_only) {
-              this.$router.push(`/quiz/${this.selected_quiz.name}/results`);
-            } else {
-              this.$router.push(
-                  `${
-                      this.attempt.auto_submitted ? "/quiz/timeout" : "/quiz/submitted"
-                  }`
-              );
-            }
-          } else if (index != undefined) {
-            if (this.filesToUpload[index].file != "")
+            this.set_modal({
+              template: `exam_closed_${this.attempt.auto_submitted ? 'timeout' : cheated ? 'failed' : 'successfull'}`,
+            })
+            this.removeListeners()
+          } else if (index !== undefined) {
+            if (this.filesToUpload[index].file !== "")
               this.uploadFile(index);
           }
         })
       }
     },
-    async saveAttempt() {
-
-      this.socket.emit('save-progress', {
-        submission_id: this.submission_id,
-        attempt: this.attempt,
-        end: true,
-        questions: this.selected_quiz.questions
-      })
-
-      // this.create_quiz_submission({
-      //   submission: this.attempt,
-      //   attachments: this.filesToUpload.filter(e => e.file != ""),
-      // }).then((is_selection_only) => {
-      //   // notify instructor
-      //   this.socket.emit('student-submitted', {
-      //     userId: this.selected_quiz.user,
-      //     route: `/quiz/${this.$route.params.name}/${this.$store.state.user.user.user_name}`,
-      //     content: 'submitted quiz ' + this.selected_quiz.name
-      //   })
-      //   if (is_selection_only) {
-      //     this.$router.push(`/quiz/${this.selected_quiz.name}/results`);
-      //   } else {
-      //     this.$router.push(
-      //         `${
-      //             this.attempt.auto_submitted ? "/quiz/timeout" : "/quiz/submitted"
-      //         }`
-      //     );
-      //   }
-      // });
+    async saveAttempt(cheated) {
+      if (this.$store.state.user.user.category.name === 'STUDENT')
+        this.socket.emit('save-exam-progress', {
+          submission_id: this.submission_id,
+          attempt: this.attempt,
+          end: true,
+          questions: this.exam.questions,
+          cheated
+        })
+      else {
+        this.set_modal({
+          template: `exam_closed_${cheated ? 'failed' : 'successfull'}`,
+        })
+        this.removeListeners()
+      }
     },
+    goFullscreen() {
+      var el = document.documentElement
+          , rfs = // for newer Webkit and Firefox
+          el.requestFullScreen
+          || el.webkitRequestFullScreen
+          || el.mozRequestFullScreen
+          || el.msRequestFullScreen
+      ;
+      if (typeof rfs != "undefined" && rfs) {
+        rfs.call(el);
+      } else if (typeof window.ActiveXObject != "undefined") {
+        // for Internet Explorer
+        // eslint-disable-next-line no-undef
+        var wscript = new ActiveXObject("WScript.Shell");
+        if (wscript != null) {
+          wscript.SendKeys("{F11}");
+        }
+      }
+      // this.set_modal({
+      //   template: 'exam_closed_successfull',
+      // })
+    },
+    removeListeners() {
+      document.querySelector('body').removeEventListener('click', this.goFullscreen)
+      window.removeEventListener('beforeunload', this.goodbye)
+      window.removeEventListener('resize', this.detectResize)
+      document.removeEventListener('visibilitychange', this.detectFocus)
+    },
+    detectResize() {
+      if ((!window.fullScreen) &&
+          (window.innerWidth !== screen.width || window.innerHeight !== screen.height)) {
+        this.endExam()
+      }
+    },
+    detectFocus() {
+      console.log(document.visibilityState)
+      if (document.visibilityState !== "visible") {
+        this.endExam()
+      }
+    },
+    goodbye(e) {
+      if (!e) e = window.event;
+      //e.cancelBubble is supported by IE - this will kill the bubbling process.
+      e.cancelBubble = true;
+      e.returnValue = 'You sure you want to leave?'; //This is displayed on the dialog
+
+      //e.stopPropagation works in Firefox.
+      if (e.stopPropagation) {
+        e.stopPropagation();
+        e.preventDefault();
+      }
+    },
+    setUp() {
+
+      document.querySelector('body').addEventListener('click', this.goFullscreen)
+      window.addEventListener('beforeunload', this.goodbye)
+      // track if one leaves tab
+      document.addEventListener("visibilitychange", this.detectFocus)
+      window.addEventListener("resize", this.detectResize)
+    }
   },
   created() {
+    this.getExam({id: this.$route.params.id}).then(({exam, msg}) => {
+      if (!exam) {
+        setTimeout(() => {
+          this.$router.push('/assessments')
+        }, 5000)
+        return this.error = msg
+      }
 
-    this.mode = "edit";
-    if (this.$store.state.user.user.category.name === "STUDENT") {
-      this.findQuizSubmissionByUserAndQuizNames({
-        userName: this.$store.state.user.user.user_name,
-        quizName: this.$route.params.name,
-      }).then(() => {
-        if (this.selected_quiz_submission != undefined)
-          this.$router.push(`/quiz/${this.$route.params.name}/${this.$store.state.user.user.user_name}`)
-      })
-    }
+      if (exam.submission)
+        return this.$router.push(`/assessments/exams/${this.$route.params.id}/${this.$store.state.user.user.user_name}`)
 
-    this.findQuizByName({
-      user_name: this.$store.state.user.user.user_name,
-      quizName: this.$route.params.name,
-    }).then((quiz) => {
-      this.remaining_time = quiz.duration;
+      if (exam.type === 'Closed-book examination')
+        this.setUp()
+      if (this.$store.state.user.user.category.name === 'STUDENT') {
+        let date = new Date(exam.starting_time)
+        date.setHours(date.getHours() - 2)
+        const diff = (new Date() - new Date(date));
+        if (diff > 0) {
+          exam.duration -= (diff / 1000)
+        }
+      }
+      this.exam = exam
+
+      this.remaining_time = exam.duration;
       this.attempt = {
-        quiz: quiz._id,
+        exam: exam._id,
         user: this.$store.state.user.user.user_name,
         auto_submitted: false,
         used_time: 0,
         answers: [],
       };
-      for (const question of quiz.questions) {
+      for (const question of exam.questions) {
         if (question.type === "open_ended") {
           this.attempt.answers.push({text: ""});
         } else if (question.type === "file_upload") {
@@ -605,10 +695,14 @@ export default {
       }
     });
     // } else if (this.$store.state.user.user.category.name == "INSTRUCTOR") {
-    //   for (let i = 0; i < this.selected_quiz.questions.length; i++) {
+    //   for (let i = 0; i < this.exam.questions.length; i++) {
     //     this.filesToUpload.push({file: ""});
     //   }
     // }
   },
 };
 </script>
+
+<style lang="scss">
+@import '../../assets/sass/imports/attemptExam';
+</style>

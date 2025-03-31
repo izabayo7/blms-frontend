@@ -15,7 +15,9 @@ const options = {
 }
 
 // global vue.js registration
-//never mind
+import Flutterwave from 'vue-flutterwave'
+
+Vue.use(Flutterwave, { publicKey: 'FLWPUBK_TEST-cadee1e97424c72cc1bd120ed498f55e-X' })
 Vue.use(VueSession, options)
 Vue.use(VuePlyr)
 

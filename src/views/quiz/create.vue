@@ -1,7 +1,7 @@
 <template>
   <div id="create-quiz">
     <div id="quiz-info">
-      <div class="label">Quiz creation wizzard</div>
+      <div class="label">{{ isExam ? 'Exam' : 'Quiz' }} creation wizzard</div>
       <div class="input-group assesment_type">
         <label>Title</label>
         <input v-model="title" class="quiz-title" type="text">
@@ -16,6 +16,40 @@
               defaultContent="<ol><li><p>Write your custom instructions</p></li></ol>"
           />
         </div>
+      </div>
+      <div v-if="isExam" class="input-group my-margin">
+        <label>Examination type</label>
+        <select-ui
+            class="bold-border"
+            name="role"
+            :options="['Open-book examination','Closed-book examination']"
+            id="exam_type"
+            label="Select exam type"
+            @input="
+            (e) => {
+              type = e;
+            }
+          "
+        />
+      </div>
+      <div v-if="isExam" class="input-group my-margin">
+        <label>Target course</label>
+        <select-ui
+            class="bold-border"
+            name="role"
+            :options="courseNames"
+            id="course"
+            label="Select course"
+            @input="
+            (e) => {
+              selected_course = e;
+            }
+          "
+        />
+      </div>
+      <div v-if="isExam" class="input-group assesment_type">
+        <label for="assessment-time">Expiration date & time</label>
+        <input v-model="starting_time" id="assessment-time" type="datetime-local">
       </div>
       <div class="flex d-block d-md-flex">
         <div class="input-group">
@@ -232,13 +266,14 @@
       <button class="quiz-action" v-if="!questions.length" @click="recreate">Add
         questions
       </button>
-      <button class="quiz-action" v-else @click="validate">Save Quiz</button>
+      <button class="quiz-action" v-else @click="validate">Save {{ isExam ? 'exam' : 'quiz' }}</button>
     </div>
   </div>
 </template>
 
 <script>
-import {mapActions} from "vuex";
+import {mapActions, mapGetters, mapMutations} from "vuex";
+import Apis from "@/services/apis";
 
 export default {
   name: "CreateQuiz",
@@ -249,7 +284,23 @@ export default {
     SelectUi: () => import("@/components/reusable/ui/select-ui"),
     SwitchUi: () => import("@/components/reusable/ui/switcher")
   },
+  computed: {
+    ...mapGetters("courses", ["courses", "loaded"]),
+    courseNames() {
+      let res = [];
+      for (const i in this.courses) {
+        res.push(this.courses[i].name);
+      }
+      return res;
+    },
+    isExam() {
+      return this.$route.path.includes('exams')
+    }
+  },
   data: () => ({
+    type: "",
+    starting_time:"",
+    selected_course: "",
     questions_types: [
       "Open ended",
       "Single text select",
@@ -284,6 +335,7 @@ export default {
     this.getCourses(!this.loaded);
   },
   methods: {
+    ...mapMutations("quiz",["addExam"]),
     ...mapActions("courses", ["getCourses"]),
     fileTypeClicked(type, index) {
       if (index === -1) {
@@ -306,6 +358,12 @@ export default {
 
       if (this.title.length < 3)
         return this.error = "Title is too short"
+
+      if (this.isExam && this.type === "Select exam type")
+        return this.error = "Type is required"
+
+      if (this.isExam && this.selected_course === 'Select course')
+        return this.error = "Course is required"
 
       if (this.hours == 0 && this.minutes == 0)
         return this.error = "Duration is required"
@@ -352,9 +410,8 @@ export default {
           if (!right_choice_found)
             return this.error = `Question ${parseInt(i) + 1} must have a right choice`
         }
-
-        this.saveQuiz();
       }
+      this.saveQuiz();
     },
     ...mapActions("quiz", ["create_quiz"]),
     addPicture(file, boundIndex) {
@@ -462,10 +519,17 @@ export default {
       }
 
       const editorContent = this.$refs.editor.getHTML();
+      if (this.isExam) {
+        for (const i in this.courses) {
+          if (this.courses[i].name === this.selected_course) {
+            this.selected_course = this.courses[i]._id
+            break
+          }
+        }
 
-      this.create_quiz({
-        quiz: {
+        Apis.create('exams', {
           name: this.title,
+          course: this.selected_course,
           instructions:
               editorContent ==
               `<ol><li><p>Write your custom instructions</p></li></ol>`
@@ -473,21 +537,85 @@ export default {
                   : editorContent,
           duration: this.calculateSeconds(),
           user: this.$store.state.user.user.user_name,
+          starting_time: this.starting_time,
           questions: questions,
           passMarks: this.passMarks
-        },
-        pictures: this.pictures,
-      }).then(() => {
-        this.$router.push("/quiz");
-      }).catch((e) => {
-        this.$store.dispatch("app_notification/SET_NOTIFICATION", {
-          message: e.message,
-          status: "danger",
-          uptime: 5000,
-        }).then(() => {
-          this.error = ""
+        }).then(async (res) => {
+          if (res.data.status !== 201) {
+            this.$store.dispatch("app_notification/SET_NOTIFICATION", {
+              message: res.data.message,
+              status: "danger",
+              uptime: 5000,
+            }).then(() => {
+              this.error = ""
+            })
+          } else {
+            let pictureFound = false
+            let index = 0
+            const formData = new FormData()
+            for (const i in this.pictures) {
+              for (const k in this.pictures[i]) {
+                if (this.pictures[i][k] !== []) {
+                  pictureFound = true
+                  formData.append("files[" + index + "]", this.pictures[i][k]);
+                  index++
+                }
+              }
+            }
+            if (pictureFound) {
+              // set the dialog
+              this.$store.dispatch('modal/set_modal', {
+                template: 'display_information',
+                title: 'Creating assignment',
+                message: 'uploading attachments'
+              })
+
+              await Apis.create(`exams/${res.data.data._id}/attachment`, formData, {
+                headers: {
+                  'Content-Type': 'multipart/form-data'
+                },
+                onUploadProgress: (progressEvent) => {
+                  this.$store.dispatch('modal/set_progress', parseInt(Math.round((progressEvent.loaded / progressEvent.total) * 100)))
+                }
+              })
+            }
+
+            this.addExam(res.data.data)
+            this.$store.dispatch("app_notification/SET_NOTIFICATION", {
+              message: "Exam creation succeded",
+              status: "success",
+              uptime: 5000,
+            })
+            this.$router.push('/assessments/exams')
+          }
         })
-      })
+      }
+      else
+        this.create_quiz({
+          quiz: {
+            name: this.title,
+            instructions:
+                editorContent ==
+                `<ol><li><p>Write your custom instructions</p></li></ol>`
+                    ? undefined
+                    : editorContent,
+            duration: this.calculateSeconds(),
+            user: this.$store.state.user.user.user_name,
+            questions: questions,
+            passMarks: this.passMarks
+          },
+          pictures: this.pictures,
+        }).then(() => {
+          this.$router.push("/quiz");
+        }).catch((e) => {
+          this.$store.dispatch("app_notification/SET_NOTIFICATION", {
+            message: e.message,
+            status: "danger",
+            uptime: 5000,
+          }).then(() => {
+            this.error = ""
+          })
+        })
     },
   }
 };

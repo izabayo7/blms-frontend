@@ -145,9 +145,9 @@ export default {
   },
   watch: {
     $route() {
-      setTimeout(()=>{
+      setTimeout(() => {
         this.scrollChatToBottom();
-      },10)
+      }, 10)
 
       if (this.currentDisplayedUser.unreadMessagesLength)
         this.socket.emit("message/all_messages_read", {
@@ -186,7 +186,7 @@ export default {
       if (username_valid) {
         //load user since the route have changed
         this.setUsername(this.$route.params.username).then((username) => {
-          this.loadMessages(username);
+          this.loadMessages({id: username});
           if (this.currentDisplayedUser.id == username) {
             this.incomingMessages.map((d) => {
               if (this.$route.params.username == d.id) {

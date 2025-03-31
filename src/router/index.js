@@ -6,8 +6,13 @@ import jwt from "jsonwebtoken"
 
 import live from '@/router/modules/live.router'
 import quiz from '@/router/modules/quiz.router'
+import exams from '@/router/modules/exams.router'
+import assignments from '@/router/modules/assignments.router'
 import chat from '@/router/modules/chat.router'
 import course from '@/router/modules/course.router'
+
+let assessmentRoutes = quiz.concat(exams)
+assessmentRoutes = assessmentRoutes.concat(assignments)
 
 Vue.use(VueRouter)
 
@@ -15,6 +20,15 @@ const routes = [
     {
         path: '/',
         name: 'Home',
+        meta: {
+            allowAnonymous: true
+        },
+    },
+    {
+        path: '/test',
+        name: 'TEST',
+        component: () =>
+            import( /* webpackPrefetch: true */ /* webpackChunkName: "test" */ '@/views/pages/test'),
         meta: {
             allowAnonymous: true
         },
@@ -33,6 +47,14 @@ const routes = [
         path: '/test',
         component: () =>
             import( /* webpackChunkName: "test" */ '@/views/live/popup'),
+        meta: {
+            allowAnonymous: true
+        }
+    },
+    {
+        path: '/unauthorized',
+        component: () =>
+            import( /* webpackChunkName: "error" */ '@/components/dashboard/error'),
         meta: {
             allowAnonymous: true
         }
@@ -90,45 +112,11 @@ const routes = [
                     },
 
                     {
-                        path: '/assignments',
+                        path: '/assessments',
                         name: "assignments",
                         component: () => import( /* webpackChunkName: "assignments" */ '@/views/quiz/student_assignments.vue'),
                         meta: {
                             allowedUsers: ["STUDENT"]
-                        },
-                    },
-
-                    {
-                        path: '/assignments/new',
-                        component: () => import( /* webpackChunkName: "assignments" */ '@/views/quiz/create_assignment.vue'),
-                        meta: {
-                            allowedUsers: ["INSTRUCTOR"]
-                        },
-                    },
-
-                    {
-                        path: '/assignments/edit/:id',
-                        component: () => import( /* webpackChunkName: "assignments" */ '@/views/quiz/edit_assignment.vue'),
-                        meta: {
-                            allowedUsers: ["INSTRUCTOR"]
-                        },
-                    },
-
-                    {
-                        path: '/assignments/:user_name/:id',
-                        name: "user_assignments",
-                        component: () => import( /* webpackChunkName: "assignments" */ '@/views/quiz/student_assignment_results.vue'),
-                        meta: {
-                            allowedUsers: ["STUDENT","INSTRUCTOR"]
-                        },
-                    },
-
-                    {
-                        path: '/assignments/:id',
-                        name: "assignment",
-                        component: () => import( /* webpackChunkName: "assignments" */ '@/views/quiz/student_assignment_results.vue'),
-                        meta: {
-                            allowedUsers: ["STUDENT","INSTRUCTOR"]
                         },
                     },
 
@@ -252,6 +240,14 @@ const routes = [
                         },
                     },
                     {
+                        path: '/reports/:target/exams',
+                        component: () =>
+                            import( /* webpackChunkName: "reports-by-target" */ '@/views/reports/deep'),
+                        meta: {
+                            allowedUsers: ["STUDENT","INSTRUCTOR"]
+                        },
+                    },
+                    {
                         path: '/reports/:target/:user_name',
                         component: () =>
                             import( /* webpackChunkName: "user-reports" */ '@/views/reports'),
@@ -288,8 +284,7 @@ const routes = [
                     // course routes
                     ...course,
 
-                    // quiz routes
-                    ...quiz,
+                    ...assessmentRoutes,
 
                     // chat routes
                     ...chat,

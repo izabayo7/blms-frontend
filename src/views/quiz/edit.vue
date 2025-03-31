@@ -1,7 +1,7 @@
 <template>
   <div v-if="questions.length" id="create-quiz">
     <div id="quiz-info">
-      <div class="label">Quiz editing wizzard</div>
+      <div class="label">{{ isExam ? 'Exam' : 'Quiz' }} editing wizzard</div>
       <div class="input-group">
         <label for="quiz-title">Title</label>
         <input v-model="title" id="quiz-title" type="text">
@@ -19,6 +19,40 @@
       "
           />
         </div>
+      </div>
+      <div v-if="isExam" class="input-group my-margin">
+        <label>Examination type</label>
+        <select-ui
+            class="bold-border"
+            name="role"
+            :options="['Open-book examination','Closed-book examination']"
+            id="exam_type"
+            :label="type"
+            @input="
+            (e) => {
+              type = e;
+            }
+          "
+        />
+      </div>
+      <div v-if="isExam" class="input-group my-margin">
+        <label>Target course</label>
+        <select-ui
+            class="bold-border"
+            name="role"
+            :options="courseNames"
+            id="course"
+            :label="selected_course"
+            @input="
+            (e) => {
+              selected_course = e;
+            }
+          "
+        />
+      </div>
+      <div v-if="isExam" class="input-group assesment_type">
+        <label for="assessment-time">Starting date & time</label>
+        <input v-model="starting_time" id="assessment-time" type="datetime-local">
       </div>
       <div class="flex d-block d-md-flex">
         <div class="input-group">
@@ -229,13 +263,15 @@
 ">Cancel
       </button>
       <button class="quiz-action" v-if="!questions.length" @click="recreate">Add questions</button>
-      <button class="quiz-action" v-else @click="validate">Save quiz</button>
+      <button class="quiz-action" v-else @click="validate">Save {{ isExam ? 'exam' : 'quiz' }}</button>
     </div>
   </div>
 </template>
 
 <script>
-import {mapActions} from "vuex";
+import {mapActions, mapGetters, mapMutations} from "vuex"
+import Apis from "@/services/apis";
+import {findLocalTime} from "../../services/global_functions";
 
 export default {
   name: "EditQuiz",
@@ -247,6 +283,9 @@ export default {
     SwitchUi: () => import("@/components/reusable/ui/switcher")
   },
   data: () => ({
+    type: "",
+    starting_time: "",
+    selected_course: "",
     questions_types: [
       "Open ended",
       "Single text select",
@@ -277,13 +316,27 @@ export default {
     },
   },
   computed: {
-    // get the current coursevestin na dorcas
+    ...mapGetters("courses", ["courses", "loaded"]),
+    courseNames() {
+      let res = [];
+      for (const i in this.courses) {
+        res.push(this.courses[i].name);
+      }
+      return res;
+    },
+    isExam() {
+      return this.$route.path.includes('assessments/exams/edit')
+    }
   },
   methods: {
-    fileTypeClicked(type, index){
-      if(this.questions[index].allowed_files.includes(type)){
+    findLocalTime,
+    ...mapActions('quiz', ['getExam']),
+    ...mapActions("courses", ["getCourses"]),
+    ...mapMutations("quiz", ["editExam"]),
+    fileTypeClicked(type, index) {
+      if (this.questions[index].allowed_files.includes(type)) {
         this.questions[index].allowed_files.splice(this.questions[index].allowed_files.indexOf(type), 1)
-      } else{
+      } else {
         this.questions[index].allowed_files.push(type)
       }
     },
@@ -307,6 +360,12 @@ export default {
 
       if (this.title.length < 3)
         return this.error = "Title is too short"
+
+      if (this.isExam && this.type === "Select exam type")
+        return this.error = "Type is required"
+
+      if (this.isExam && this.selected_course === 'Select course')
+        return this.error = "Course is required"
 
       if (this.hours == 0 && this.minutes == 0)
         return this.error = "Duration is required"
@@ -478,10 +537,21 @@ export default {
       }
 
       const editorContent = this.$refs.editor.getHTML();
+      if (this.isExam) {
+        for (const i in this.courses) {
+          if (this.courses[i].name === this.selected_course) {
+            this.selected_course = this.courses[i]._id
+            break
+          }
+        }
+        let str = new Date().toISOString()
+        str = str.split(".")
 
-      this.update_quiz({
-        quiz: {
+        this.starting_time += `:00.${str[1]}`
+        Apis.update('exams', this.$route.params.id, {
           name: this.title,
+          course: this.selected_course,
+          type: this.type,
           instructions:
               editorContent ==
               `<ol><li><p>Write your custom instructions</p></li></ol>`
@@ -489,37 +559,118 @@ export default {
                   : editorContent,
           duration: this.calculateSeconds(),
           user: this.$store.state.user.user.user_name,
+          starting_time: this.starting_time,
           questions: questions,
           passMarks: this.passMarks
-        },
-        pictures: this.pictures,
-      }).then(() => {
-        this.$router.push("/quiz");
-      }).catch((e) => {
-        this.$store.dispatch("app_notification/SET_NOTIFICATION", {
-          message: e.message,
-          status: "danger",
-          uptime: 5000,
-        }).then(() => {
-          this.error = ""
+        }).then(async (res) => {
+          if (res.data.status !== 200) {
+            this.$store.dispatch("app_notification/SET_NOTIFICATION", {
+              message: res.data.message,
+              status: "danger",
+              uptime: 5000,
+            }).then(() => {
+              this.error = ""
+            })
+          } else {
+            let pictureFound = false
+            let index = 0
+            const formData = new FormData()
+            for (const i in this.pictures) {
+              for (const k in this.pictures[i]) {
+                if (this.pictures[i][k] !== []) {
+                  pictureFound = true
+                  formData.append("files[" + index + "]", this.pictures[i][k]);
+                  index++
+                }
+              }
+            }
+            if (pictureFound) {
+              // set the dialog
+              this.$store.dispatch('modal/set_modal', {
+                template: 'display_information',
+                title: 'Creating assignment',
+                message: 'uploading attachments'
+              })
+
+              await Apis.create(`exams/${res.data.data._id}/attachment`, formData, {
+                headers: {
+                  'Content-Type': 'multipart/form-data'
+                },
+                onUploadProgress: (progressEvent) => {
+                  this.$store.dispatch('modal/set_progress', parseInt(Math.round((progressEvent.loaded / progressEvent.total) * 100)))
+                }
+              })
+            }
+
+            this.editExam({exam: res.data.data, id: this.$route.params.id})
+            this.$store.dispatch("app_notification/SET_NOTIFICATION", {
+              message: "Exam udpate succeded",
+              status: "success",
+              uptime: 5000,
+            })
+            this.$router.push('/assessments/exams')
+          }
         })
-      })
+      } else
+        this.update_quiz({
+          quiz: {
+            name: this.title,
+            instructions:
+                editorContent ==
+                `<ol><li><p>Write your custom instructions</p></li></ol>`
+                    ? undefined
+                    : editorContent,
+            duration: this.calculateSeconds(),
+            user: this.$store.state.user.user.user_name,
+            questions: questions,
+            passMarks: this.passMarks
+          },
+          pictures: this.pictures,
+        }).then(() => {
+          this.$router.push("/quiz");
+        }).catch((e) => {
+          this.$store.dispatch("app_notification/SET_NOTIFICATION", {
+            message: e.message,
+            status: "danger",
+            uptime: 5000,
+          }).then(() => {
+            this.error = ""
+          })
+        })
     },
   },
   created() {
-    this.findQuizByName({
-      user_name: this.$store.state.user.user.user_name,
-      quizName: this.$route.params.name,
-    }).then((quiz) => {
-      let duration = new Date(quiz.duration * 1000).toISOString().substr(11, 8);
-      duration = duration.split(":");
-      this.hours = duration[0]
-      this.minutes = duration[1]
-      this.passMarks = quiz.passMarks;
-      this.instructions = quiz.instructions;
-      this.title = quiz.name;
-      this.questions = this.formatQuestionTypes(quiz.questions);
-    });
+    if (this.isExam) {
+      this.getExam({
+        id: this.$route.params.id,
+      }).then(({exam}) => {
+        let duration = new Date(exam.duration * 1000).toISOString().substr(11, 8);
+        duration = duration.split(":");
+        this.hours = duration[0]
+        this.minutes = duration[1]
+        this.passMarks = exam.passMarks;
+        this.instructions = exam.instructions;
+        this.title = exam.name;
+        this.questions = this.formatQuestionTypes(exam.questions);
+        this.type = exam.type
+        this.selected_course = exam.course.name
+        this.starting_time = this.findLocalTime(exam.starting_time)
+      });
+      this.getCourses(!this.loaded)
+    } else
+      this.findQuizByName({
+        user_name: this.$store.state.user.user.user_name,
+        quizName: this.$route.params.name,
+      }).then((quiz) => {
+        let duration = new Date(quiz.duration * 1000).toISOString().substr(11, 8);
+        duration = duration.split(":");
+        this.hours = duration[0]
+        this.minutes = duration[1]
+        this.passMarks = quiz.passMarks;
+        this.instructions = quiz.instructions;
+        this.title = quiz.name;
+        this.questions = this.formatQuestionTypes(quiz.questions);
+      });
   },
 };
 </script>

@@ -2,7 +2,7 @@
   <v-container fluid :class="{'hfull': isMobile && $route.name === 'chatingRoom' && state}" class="dashboard pa-0">
     <!-- navbar -->
     <div class="my-navbar">
-      <navbar v-if="!(isMobile && $route.name === 'chatingRoom' && state)"/>
+      <navbar v-if="!(isMobile && $route.name === 'chatingRoom' && state)" :class="{'d-none' : hideNavigations}"/>
     </div>
 
     <transition name="fade">
@@ -24,10 +24,10 @@
     <main class="contents">
       <main class="sidebar">
         <div class="hidden-md-and-up row">
-          <mobile-sidebar v-if="$route.name !== 'chatingRoom' || !state"/>
+          <mobile-sidebar v-if="$route.name !== 'chatingRoom' || !state && !hideNavigations"/>
         </div>
         <div class="hidden-sm-and-down row">
-          <sidebar/>
+          <sidebar v-if="!hideNavigations"/>
         </div>
       </main>
       <div class="main-content customScroll">
@@ -66,6 +66,10 @@ export default {
     isMobile() {
       return this.$vuetify.breakpoint.width < 960
     },
+    hideNavigations(){
+      const routes = ["attempt-exam"]
+      return routes.includes(this.$route.name)
+    }
   },
   watch: {
     $route() {

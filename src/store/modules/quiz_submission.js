@@ -84,10 +84,12 @@ export default {
             return apis.get(`quiz_submission/user`).then(async (d) => {
                 d.data = d.data.data
 
-                const res = await apis.get(`assignment_submission`)
+                let res = await apis.get(`assignment_submission`)
 
                 state.quiz_submission.data = d.data.concat(res.data.data)
 
+                res = await apis.get(`exam_submission`)
+                state.quiz_submission.data = state.quiz_submission.data.concat(res.data.data)
                 //announce that data have been loaded
                 state.quiz_submission.loaded = true
 
@@ -97,15 +99,15 @@ export default {
         },
 
         //get quiz_submissions  in a quiz
-        async getQuizSubmissionsInQuiz({state, dispatch}, {quiz_id, isAssignments}) {
-            let result = isAssignments ? state.quiz_submission.data.filter(e => e._id === quiz_id && e.submissions[0].assignment) : state.quiz_submission.data.filter(e => e._id === quiz_id && e.submissions[0].quiz)
+        async getQuizSubmissionsInQuiz({state, dispatch}, {quiz_id, isAssignments, isExam}) {
+            let result = state.quiz_submission.data.filter(e => e._id === quiz_id && e.submissions[0][isExam ? 'exam' : isAssignments ? 'assignment' : 'quiz'])
 
             // if submission not loaded fetch them
             if (!result.length) {
 
                 // eslint-disable-next-line no-undef
                 result = await dispatch('getQuizSubmissions', {user_name: user.state.user.user_name})
-                result = isAssignments ? state.quiz_submission.data.filter(e => e._id === quiz_id && e.submissions[0].assignment) : state.quiz_submission.data.filter(e => e._id === quiz_id && e.submissions[0].quiz)
+                result = state.quiz_submission.data.filter(e => e._id === quiz_id && e.submissions[0][isExam ? 'exam' : isAssignments ? 'assignment' : 'quiz'])
             }
 
             return result[0]
@@ -163,10 +165,10 @@ export default {
         //create a quiz_submission
         update_quiz_submission({state}, {submission}) {
             submission.totalMarks = undefined
-            return apis.update('quiz_submission', state.selected_quiz_submission, submission).then(d => {
+            return apis.update(submission.exam ? 'exam_submission' : 'quiz_submission', state.selected_quiz_submission, submission).then(d => {
                 d.data = d.data.data
                 for (const i in state.quiz_submission.data) {
-                    if (state.quiz_submission.data[i]._id == d.data.quiz) {
+                    if (state.quiz_submission.data[i]._id == state.selected_quiz_submission) {
                         for (const k in state.quiz_submission.data[i].submissions) {
                             if (state.quiz_submission.data[i].submissions[k]._id == d.data._id) {
                                 state.quiz_submission.data[i].submissions[k].answers = d.data.answers
@@ -183,10 +185,10 @@ export default {
         },
 
         //find a quiz_submission by user name and submission name
-        findQuizSubmissionByUserAndQuizNames({state, commit}, {userName, quizName}) {
+        findQuizSubmissionByUserAndQuizNames({state, commit}, {userName, quizName, isExam}) {
             let submissionFound = false
             if (state.quiz_submission.loaded) {
-                let quiz_submission = state.quiz_submission.data.filter(quiz_submission => quiz_submission.user.user_name == userName && quiz_submission.quiz.name == quizName)
+                let quiz_submission = state.quiz_submission.data.filter(quiz_submission => quiz_submission.user.user_name === userName && (isExam ? quiz_submission._id === quizName : quiz_submission.quiz.name === quizName))
                 if (quiz_submission.length > 0) {
                     submissionFound = true
                     commit('set_selected_quiz_submission', quiz_submission[0]._id)
@@ -194,7 +196,34 @@ export default {
                 }
             }
             if (!submissionFound) {
-                return apis.get(`quiz_submission/user/${userName}/${quizName}`).then(d => {
+                return apis.get(`${isExam ? 'exam_submission' : 'quiz_submission'}/user/${userName}/${quizName}`).then(d => {
+                    d.data = d.data.data
+                    if (!d.data)
+                        return d.data
+
+                    if (state.quiz_submission.loaded) {
+                        // const found = state.quiz_submission.data.filter(e=>e._id == d._id)
+                        state.quiz_submission.data.push(d.data)
+                    } else {
+                        state.quiz_submission.data = [d.data]
+                    }
+                    commit('set_selected_quiz_submission', d.data._id)
+                    return d.data
+                })
+            }
+        },
+        findExamSubmissionByUserAndQuizNames({state, commit}, {userName, exam_id}) {
+            let submissionFound = false
+            if (state.quiz_submission.loaded) {
+                let quiz_submission = state.quiz_submission.data.filter(quiz_submission => quiz_submission.user.user_name === userName && quiz_submission._id === exam_id)
+                if (quiz_submission.length > 0) {
+                    submissionFound = true
+                    commit('set_selected_quiz_submission', quiz_submission[0]._id)
+                    return quiz_submission[0]
+                }
+            }
+            if (!submissionFound) {
+                return apis.get(`exam_submission/user/${userName}/${exam_id}`).then(d => {
                     d.data = d.data.data
                     if (!d.data)
                         return d.data
@@ -223,7 +252,15 @@ export default {
         //get all quiz submissions
         quiz_submissions: state => {
             try {
-                return state.quiz_submission.data.length ? state.quiz_submission.data.filter(x => !x.submissionMode && !x.submissions[0].assignment) : []
+                return state.quiz_submission.data.length ? state.quiz_submission.data.filter(x => !x.submissions[0].exam && !x.submissions[0].assignment) : []
+            } catch (e) {
+                return []
+            }
+
+        },
+        exam_submissions: state => {
+            try {
+                return state.quiz_submission.data.length ? state.quiz_submission.data.filter(x => !x.submissions[0].quiz && !x.submissions[0].assignment) : []
             } catch (e) {
                 return []
             }

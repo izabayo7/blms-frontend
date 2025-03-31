@@ -11,6 +11,10 @@ const getDefaultState = () => ({
         data: [],
         loaded: false
     },
+    exams: {
+        data: [],
+        loaded: false
+    },
     // keep the selected quiz
     selected_quiz: ''
 })
@@ -37,10 +41,21 @@ export default {
         addAssignment(state, assignment) {
             state.assignments.data.unshift(assignment)
         },
+        addExam(state, exam) {
+            state.exams.data.unshift(exam)
+        },
         editAssignment(state, {assignment, id}) {
             for (const i in state.assignments.data) {
                 if (state.assignments.data[i]._id === id) {
                     state.assignments.data[i] = assignment
+                    break
+                }
+            }
+        },
+        editExam(state, {exam, id}) {
+            for (const i in state.exams.data) {
+                if (state.exams.data[i]._id === id) {
+                    state.exams.data[i] = exam
                     break
                 }
             }
@@ -73,15 +88,31 @@ export default {
                 })
             }
         },
-        async getAssignment({state}, {id}) {
+        getExams({state}) {
             // when quiz is not loaded fetch quizes
             if (!state.quiz.loaded) {
+                apis.get(`exams`).then(d => {
+                    d.data = d.data.data
+                    state.exams.data = d.data
+                    //announce that data have been loaded
+                    state.exams.loaded = true
+                })
+            }
+        },
+        async getAssignment({state}, {id}) {
+            // when quiz is not loaded fetch quizes
+            if (!state.assignments.loaded) {
                 const d = await apis.get(`assignments/${id}`)
                 return d.data.data
             } else {
                 const res = state.assignments.data.filter(x => x._id === id)
                 return res[0]
             }
+        },
+        // eslint-disable-next-line no-empty-pattern
+        async getExam({}, {id}) {
+            const d = await apis.get(`exams/${id}`)
+            return {exam: d.data.data, msg: d.data.message}
         },
         //create a quiz
         create_quiz({state, dispatch}, {quiz, pictures}) {
@@ -286,6 +317,37 @@ export default {
                 }
             })
         },
+        change_exam_status({state, rootGetters, dispatch}, {id, status, user_group, name}) {
+            apis.update('exams/changeStatus', id + '/' + status).then((res) => {
+                if (res.data.status === 403) {
+                    dispatch("app_notification/SET_NOTIFICATION", {
+                        message: res.data.message,
+                        status: "danger",
+                        uptime: 5000,
+                    }, {root: true});
+                } else {
+                    if (status === 'RELEASED' || status === 'PUBLISHED')
+                        rootGetters['chat/socket'].emit('marksReleased', {
+                            route: `/assignments/${id}`,
+                            user_group,
+                            content: `${status === 'RELEASED' ? 'released marks for' : 'published a new '} exam ${name}`
+                        })
+                    if (status === 'RELEASED') {
+                        dispatch("app_notification/SET_NOTIFICATION", {
+                            message: "Marks released",
+                            status: "success",
+                            uptime: 5000,
+                        }, {root: true});
+                    }
+                    for (const i in state.quiz.data) {
+                        if (state.exams.data[i]._id === id) {
+                            state.exams.data[i].status = status
+                            break
+                        }
+                    }
+                }
+            })
+        },
     },
     getters: {
         //get a specified quiz
@@ -305,6 +367,9 @@ export default {
         },
         assignments: state => {
             return state.assignments.data
+        },
+        exams: state => {
+            return state.exams.data
         },
     },
 }

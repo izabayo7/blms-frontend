@@ -164,6 +164,26 @@ async function downloadAttachment(url) {
     window.open(url, "_blank");
 }
 
+function getTime(date) {
+    date = new Date(date)
+    date.setHours(date.getUTCHours())
+    date.setMinutes(date.getUTCMinutes())
+    return new Date(date).toLocaleTimeString()
+}
+function findLocalTime(date){
+    let date_copy = date
+    date = new Date(date)
+    date.setHours(date.getUTCHours())
+    date.setMinutes(date.getUTCMinutes())
+
+    let s = new Date(date)
+    let t =  s.toLocaleTimeString()
+    let hours = s.getHours()
+    if(hours < 10)
+        hours = `0${hours}`
+    return `${date_copy.substring(0, 11)}${hours}:${t.split(':')[1]}`
+}
+
 export {
     hasOwn,
     getImgFile,
@@ -176,5 +196,7 @@ export {
     playSound,
     getDateAndTime,
     downloadAttachment,
-    daysDifference
+    daysDifference,
+    getTime,
+    findLocalTime
 }

@@ -61,17 +61,20 @@
                 @change="handleFileUpload"
             />
             <img @click="pickfile()" class="college_logo cursor-pointer" :src="state.logo" alt="">
-            <div v-if="editStatus[1]" class="current_value lable"><span v-if="state.logo">Click on image to update the logo </span></div>
+            <div v-if="editStatus[1]" class="current_value lable"><span v-if="state.logo">Click on image to update the logo </span>
+            </div>
             <div v-else class="edit">
               <div class="actions">
                 <button class="save" @click="saveChanges(1)">Save</button>
-                <button class="cancel" @click="toogleEdit(1);profile=undefined;document.getElementById('picture').value = ''">Cancel</button>
+                <button class="cancel"
+                        @click="toogleEdit(1);profile=undefined;document.getElementById('picture').value = ''">Cancel
+                </button>
               </div>
             </div>
           </div>
           <div class="col-12 col-md-4">
             <div class="action">
-              <button     v-if="state.logo"          @click="
+              <button v-if="state.logo" @click="
                 set_modal({
                   template: 'action_confirmation',
                   method: {
@@ -81,7 +84,8 @@
                   message:
                     'Are you sure you want to delete the college logo?',
                 })
-              " class="delete profile">Remove logo</button>
+              " class="delete profile">Remove logo
+              </button>
               <button v-else @click="pickfile" class="upgrade">Upload logo</button>
             </div>
           </div>
@@ -119,6 +123,24 @@
           <div class="col-12 col-md-4">
             <div class="action">
               <button v-if="editStatus[3]" @click="toogleEdit(3)">Change</button>
+            </div>
+          </div>
+          <div class="col-12 col-md-3">
+            <div class="label">User verification link</div>
+          </div>
+          <div class="col-12 col-md-5">
+            <div v-if="editStatus[6]" class="current_value">{{ state.users_verification_link || "not yet set" }}</div>
+            <div v-else class="edit">
+              <input v-model="college.users_verification_link" type="text">
+              <div class="actions">
+                <button class="save" @click="saveChanges(6)">Save</button>
+                <button class="cancel" @click="toogleEdit(6)">Cancel</button>
+              </div>
+            </div>
+          </div>
+          <div class="col-12 col-md-4">
+            <div class="action">
+              <button v-if="editStatus[3]" @click="toogleEdit(6)">Change</button>
             </div>
           </div>
           <div class="col-12 col-md-3">
@@ -175,7 +197,8 @@
                   title: 'Delege college',
                   message:
                     'Are you sure you want to delete this college?',
-                })">Delete account</button>
+                })">Delete account
+              </button>
             </div>
           </div>
         </div>
@@ -192,7 +215,7 @@ import {mapActions, mapMutations, mapState} from "vuex";
 export default {
   name: "InstitutionSettings",
   data: () => ({
-    editStatus: [true, true, true, true, true, true, true],
+    editStatus: [true, true, true, true, true, true, true, true],
     img: "",
     logo: undefined,
     college: {
@@ -200,7 +223,8 @@ export default {
       motto: "",
       location: "",
       email: "",
-      phone: ""
+      phone: "",
+      users_verification_link: ""
     }
   }),
   beforeMount() {
@@ -212,12 +236,12 @@ export default {
   watch: {
     state() {
       if (this.state) {
-  this.constructCollege()
+        this.constructCollege()
       }
     }
   },
   methods: {
-    constructCollege(){
+    constructCollege() {
       this.college.name = this.state.name
       if (this.state.motto)
         this.college.motto = this.state.motto
@@ -295,6 +319,14 @@ export default {
               return
             else {
               obj = {phone: this.college.phone}
+              break
+            }
+          }
+          case 6: {
+            if (this.state.users_verification_link === this.college.users_verification_link)
+              return
+            else {
+              obj = {users_verification_link: this.college.users_verification_link}
               break
             }
           }

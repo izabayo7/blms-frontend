@@ -6,8 +6,8 @@
           <v-card-title>
             <v-row>
               <div class="col-12 d-flex justify-center">
-                <div class="nav">
-                  <div class="item cursor-pointer" @click="currentView = 'quiz'" :class="{active:currentView==='quiz'}">
+                <div class="nav d-block d-md-flex">
+                  <div class="item cursor-pointer" @click="$router.push('/assessments/quiz')" :class="{active:currentView==='quiz'}">
                     <div class="icon">
                       <svg width="26" height="27" viewBox="0 0 26 27" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path
@@ -32,7 +32,7 @@
                     </div>
                     <div>Quizzes {{ formated_quiz.length }}</div>
                   </div>
-                  <div class="item cursor-pointer" @click="currentView = 'assignments'"
+                  <div class="item cursor-pointer" @click="$router.push('/assessments/assignments')"
                        :class="{active:currentView==='assignments'}">
                     <div class="icon">
                       <svg width="27" height="27" viewBox="0 0 27 27" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -56,6 +56,55 @@
                     </div>
                     <div>Assignments {{ assignments.length }}</div>
                   </div>
+                  <div class="item cursor-pointer" @click="$router.push('/assessments/exams')"
+                       :class="{active:currentView==='exams'}">
+                    <div class="icon">
+                      <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <g clip-path="url(#clip0)">
+                          <path
+                              d="M18.307 0H0.761719C0.341047 0 0 0.341047 0 0.761719V25.1865C0 25.6072 0.341047 25.9483 0.761719 25.9483H18.307C18.7277 25.9483 19.0688 25.6072 19.0688 25.1865V0.761719C19.0688 0.341047 18.7277 0 18.307 0ZM17.5453 24.4248H1.52344V1.52344H17.5453V24.4248Z"
+                              fill="#193074"/>
+                          <path
+                              d="M4.01953 9.03017H7.3746C7.79527 9.03017 8.13632 8.68913 8.13632 8.26846V4.92187C8.13632 4.5012 7.79527 4.16016 7.3746 4.16016H4.01953C3.59886 4.16016 3.25781 4.5012 3.25781 4.92187V8.26846C3.25781 8.68913 3.59881 9.03017 4.01953 9.03017ZM4.78125 5.68359H6.61288V7.50674H4.78125V5.68359Z"
+                              fill="#193074"/>
+                          <path
+                              d="M4.01953 15.409H7.3746C7.79527 15.409 8.13632 15.068 8.13632 14.6473V11.3008C8.13632 10.8801 7.79527 10.5391 7.3746 10.5391H4.01953C3.59886 10.5391 3.25781 10.8801 3.25781 11.3008V14.6473C3.25781 15.068 3.59881 15.409 4.01953 15.409ZM4.78125 12.0625H6.61288V13.8856H4.78125V12.0625Z"
+                              fill="#193074"/>
+                          <path
+                              d="M4.01953 21.7879H7.3746C7.79527 21.7879 8.13632 21.4469 8.13632 21.0262V17.6797C8.13632 17.259 7.79527 16.918 7.3746 16.918H4.01953C3.59886 16.918 3.25781 17.259 3.25781 17.6797V21.0262C3.25781 21.4469 3.59881 21.7879 4.01953 21.7879ZM4.78125 18.4414H6.61288V20.2645H4.78125V18.4414Z"
+                              fill="#193074"/>
+                          <path
+                              d="M10.4219 5.68359H15.0455C15.4662 5.68359 15.8072 5.34255 15.8072 4.92188C15.8072 4.5012 15.4662 4.16016 15.0455 4.16016H10.4219C10.0012 4.16016 9.66016 4.5012 9.66016 4.92188C9.66016 5.34255 10.0012 5.68359 10.4219 5.68359Z"
+                              fill="#193074"/>
+                          <path
+                              d="M10.4219 9.03027H15.0455C15.4662 9.03027 15.8072 8.68923 15.8072 8.26855C15.8072 7.84788 15.4662 7.50684 15.0455 7.50684H10.4219C10.0012 7.50684 9.66016 7.84788 9.66016 8.26855C9.66016 8.68923 10.0012 9.03027 10.4219 9.03027Z"
+                              fill="#193074"/>
+                          <path
+                              d="M10.4219 12.0625H15.0455C15.4662 12.0625 15.8072 11.7215 15.8072 11.3008C15.8072 10.8801 15.4662 10.5391 15.0455 10.5391H10.4219C10.0012 10.5391 9.66016 10.8801 9.66016 11.3008C9.66016 11.7215 10.0012 12.0625 10.4219 12.0625Z"
+                              fill="#193074"/>
+                          <path
+                              d="M10.4219 15.4092H15.0455C15.4662 15.4092 15.8072 15.0681 15.8072 14.6475C15.8072 14.2268 15.4662 13.8857 15.0455 13.8857H10.4219C10.0012 13.8857 9.66016 14.2268 9.66016 14.6475C9.66016 15.0681 10.0012 15.4092 10.4219 15.4092Z"
+                              fill="#193074"/>
+                          <path
+                              d="M10.4219 18.4414H15.0455C15.4662 18.4414 15.8072 18.1004 15.8072 17.6797C15.8072 17.259 15.4662 16.918 15.0455 16.918H10.4219C10.0012 16.918 9.66016 17.259 9.66016 17.6797C9.66016 18.1004 10.0012 18.4414 10.4219 18.4414Z"
+                              fill="#193074"/>
+                          <path
+                              d="M10.4219 21.7881H15.0455C15.4662 21.7881 15.8072 21.447 15.8072 21.0264C15.8072 20.6057 15.4662 20.2646 15.0455 20.2646H10.4219C10.0012 20.2646 9.66016 20.6057 9.66016 21.0264C9.66016 21.447 10.0012 21.7881 10.4219 21.7881Z"
+                              fill="#193074"/>
+                          <path
+                              d="M23.4403 0.0517578C22.0301 0.0517578 20.8828 1.19906 20.8828 2.60925V21.5588C20.8828 21.6747 20.9093 21.7891 20.9602 21.8932L22.7582 25.5727C22.886 25.8342 23.1516 26 23.4426 26C23.7336 26 23.9992 25.8342 24.127 25.5727L25.925 21.8932C25.9759 21.7891 26.0024 21.6747 26.0024 21.5588V2.6092C26.0024 1.19901 24.8551 0.0517578 23.4403 0.0517578ZM22.4063 4.47435H24.4789V18.6148H22.4063V4.47435ZM23.4449 1.5752C24.0151 1.5752 24.4789 2.03908 24.4789 2.60925V2.95096H22.4063V2.60925C22.4063 2.03903 22.8701 1.5752 23.4449 1.5752ZM24.4789 21.3826L23.4426 23.5034L22.4063 21.3826V20.1383H24.4789V21.3826Z"
+                              fill="#193074"/>
+                        </g>
+                        <defs>
+                          <clipPath id="clip0">
+                            <rect width="26" height="26" fill="white"/>
+                          </clipPath>
+                        </defs>
+                      </svg>
+
+                    </div>
+                    <div>Exams {{ exams.length }}</div>
+                  </div>
                 </div>
               </div>
               <div class="col-6">
@@ -70,9 +119,9 @@
               </div>
               <div class="col-6">
                 <div class="text-right">
-                  <button @click="$router.push(`${currentView === 'quiz' ? '/quiz/new' : '/assignments/new'}`)"
+                  <button @click="$router.push(`${$route.path}/new`)"
                           class="create">
-                    Create new
+                    New {{currentView === 'quiz' ? 'quiz' : currentView === 'exams' ? 'exam' : 'assignment'}}
                   </button>
                 </div>
               </div>
@@ -130,6 +179,98 @@
             </template>
           </v-data-table>
           <v-data-table
+              v-else-if="currentView === 'exams'"
+              :search="search"
+              :headers="exam_headers"
+              :items="exams"
+              sort-by="name"
+              @click:row="handleRowClick"
+          >
+            <template v-slot:item.actions="{ item }">
+              <div class="d-flex">
+                <div v-if="item.status !== 'RELEASED'" @click.stop="
+                  set_modal({
+                    template: 'action_confirmation',
+                    method: {
+                      action: 'quiz/change_exam_status',
+                      parameters: { id: item._id, status: item.status === 'DRAFT' ? 'PUBLISHED' : 'DRAFT', user_group: item.course.user_group, name: item.name },
+                    },
+                    title: 'Change Exam Status',
+                    message: `Are you sure you want to ${item.status === 'DRAFT' ? 'Publish' : 'Un publish'} this exam?`,
+                  })
+                " class="tooltip">
+                  <svg width="39" height="39" viewBox="0 0 39 39" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="19.5" cy="19.5" r="19.5" fill="#193074"/>
+                    <path
+                        d="M19.0993 29.812C19.4642 29.812 19.7599 29.5163 19.7599 29.1552V17.1608L22.7403 20.1412C22.8671 20.2679 23.0361 20.3332 23.205 20.3332C23.374 20.3332 23.543 20.2679 23.6698 20.1412C23.9271 19.8838 23.9271 19.4652 23.6698 19.2079L19.5641 15.1022C19.3067 14.8448 18.8881 14.8448 18.6308 15.1022L14.5289 19.2079C14.2716 19.4652 14.2716 19.8838 14.5289 20.1412C14.7863 20.3985 15.2049 20.3985 15.4622 20.1412L18.4426 17.1608V29.1552C18.4426 29.5163 18.7345 29.812 19.0993 29.812Z"
+                        fill="white"/>
+                    <path
+                        d="M27.2 11.6606C27.2 11.2957 26.9043 11 26.5433 11H11.6568C11.2919 11 11 11.2957 11 11.6606C11 12.0255 11.2957 12.3212 11.6568 12.3212H26.5433C26.9081 12.3174 27.2 12.0216 27.2 11.6606Z"
+                        fill="white"/>
+                  </svg>
+                  <div class="tooltip-text">
+                    {{ item.status === 'DRAFT' ? 'Publish' : 'Un publish' }}
+                  </div>
+                </div>
+                <div @click.stop="$router.push(`exams/edit/${item._id.toString()}`)" class="tooltip">
+                  <svg width="39" height="39" viewBox="0 0 39 39" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="19.5" cy="19.5" r="19.5" fill="#DEDEDE"/>
+                    <circle cx="19.5" cy="19.5" r="19.5" stroke="#DEDEDE"/>
+                    <path
+                        d="M12.4453 24.0555V27.1111H15.5009L24.5127 18.0992L21.4572 15.0437L12.4453 24.0555ZM26.8757 15.7363C27.1935 15.4185 27.1935 14.9052 26.8757 14.5874L24.969 12.6807C24.6512 12.3629 24.1379 12.3629 23.8201 12.6807L22.329 14.1718L25.3846 17.2274L26.8757 15.7363Z"
+                        fill="black"/>
+                  </svg>
+
+                  <div class="tooltip-text">
+                    Edit
+                  </div>
+                </div>
+                <div @click.stop="
+                  set_modal({
+                    template: 'action_confirmation',
+                    method: {
+                      action: 'quiz/delete_quiz',
+                      parameters: { id: item._id },
+                    },
+                    title: 'Delete Quiz',
+                    message: 'Are you sure you want to delete this quiz?',
+                  })
+                " class="tooltip">
+                  <svg width="39" height="39" viewBox="0 0 39 39" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="19.5" cy="19.5" r="19.5" fill="#FC6767"/>
+                    <path
+                        d="M13.8148 26.037C13.8148 26.9333 14.5481 27.6667 15.4444 27.6667H21.963C22.8593 27.6667 23.5926 26.9333 23.5926 26.037V16.2593H13.8148V26.037ZM15.4444 17.8889H21.963V26.037H15.4444V17.8889ZM21.5556 13.8148L20.7407 13H16.6667L15.8519 13.8148H13V15.4444H24.4074V13.8148H21.5556Z"
+                        fill="white"/>
+                  </svg>
+
+                  <div class="tooltip-text">
+                    Delete
+                  </div>
+                </div>
+              </div>
+            </template>
+            <template v-slot:item.course="{ item }">
+              <div class="assignment_title">{{ item.course.name }}</div>
+            </template>
+            <template v-slot:item.marks="{ item }">
+              <div>{{ item.total_marks }}</div>
+            </template>
+            <template v-slot:item.date="{ item }">
+              <div class="assignment_td">
+                {{ item.starting_time | formatDate }}
+              </div>
+              <div class="assignment_td">
+                {{ getTime(item.starting_time) }}
+              </div>
+            </template>
+            <template v-slot:item.duration="{ item }">
+              <div>{{ new Date(item.duration * 1000).toISOString().substr(11, 8) }}</div>
+            </template>
+            <template v-slot:no-data>
+              <span class="text-h6">Exam list is empty</span>
+            </template>
+          </v-data-table>
+          <v-data-table
               v-else
               :search="search"
               :headers="assignments_headers"
@@ -155,7 +296,10 @@
             </template>
             <template v-slot:item.dueDate="{ item }">
               <div class="assignment_td">
-                {{ item.dueDate }}
+                {{ item.dueDate | formatDate }}
+              </div>
+              <div class="assignment_td">
+                {{ getTime(item.dueDate) }}
               </div>
             </template>
             <template v-slot:item.marks="{ item }">
@@ -194,7 +338,7 @@
                     {{ item.status === 'DRAFT' ? 'Publish' : 'Un publish' }}
                   </div>
                 </div>
-                <div @click.stop="$router.push(`/assignments/edit/${item._id}`)" class="tooltip">
+                <div @click.stop="$router.push(`/assessments/assignments/edit/${item._id.toString()}`)" class="tooltip">
                   <svg width="39" height="39" viewBox="0 0 39 39" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <circle cx="19.5" cy="19.5" r="19.5" fill="#DEDEDE"/>
                     <circle cx="19.5" cy="19.5" r="19.5" stroke="#DEDEDE"/>
@@ -247,6 +391,7 @@
 
 <script>
 import {mapActions, mapGetters} from "vuex";
+import {getTime} from "../../services/global_functions";
 
 export default {
   data: () => ({
@@ -266,6 +411,20 @@ export default {
       {text: "Date Added", value: "date"},
       {text: "Action", value: "actions", sortable: false, align: "center"},
     ],
+    exam_headers: [
+      {
+        text: "Name",
+        align: "start",
+        sortable: false,
+        value: "name",
+      },
+      {text: "Course", value: "course"},
+      {text: "Date & Time", value: "date"},
+      {text: "Duration", value: "duration"},
+      {text: "Marks", value: "marks"},
+      {text: "Status", value: "status"},
+      {text: "Action", value: "actions", sortable: false, align: "center"},
+    ],
     assignments_headers: [
       {
         text: "Target",
@@ -283,7 +442,7 @@ export default {
   }),
   computed: {
     // get the current course
-    ...mapGetters("quiz", ["all_quiz", "assignments"]),
+    ...mapGetters("quiz", ["all_quiz", "assignments","exams"]),
     // format the quiz to fit in the table
     formated_quiz() {
       let formated_quiz = [];
@@ -304,19 +463,35 @@ export default {
       return this.$store.state.user.user.category.name;
     },
   },
+  watch:{
+    $route(){
+      this.setCurrentView()
+    }
+  },
   methods: {
-    ...mapActions("quiz", ["getQuizes", "getAssignments"]),
+    ...mapActions("quiz", ["getQuizes", "getAssignments","getExams"]),
     ...mapActions("modal", ["set_modal"]),
+    getTime,
     handleRowClick(value) {
-      this.$router.push(this.currentView === 'quiz' ? `/quiz/attempt/${value.name}` : `/assignments/${value._id}`)
+      this.$router.push(this.currentView === 'quiz' ? `quiz/attempt/${value.name}` : this.currentView === 'exams' ? `exams/attempt/${value._id}` : `assignments/${value._id}`)
     },
+    setCurrentView() {
+      if (this.$route.path.includes('/assessments/quiz'))
+        this.currentView = 'quiz'
+      else if (this.$route.path.includes('/assessments/exams'))
+        this.currentView = 'exams'
+      else
+        this.currentView = 'assignments'
+    }
   },
   created() {
+    this.setCurrentView()
     // load formated_quiz
     this.getQuizes({
       user_name: this.$store.state.user.user.user_name,
     });
     this.getAssignments();
+    this.getExams();
   },
 };
 </script>
@@ -438,7 +613,6 @@ export default {
   }
 
   .nav {
-    display: flex;
 
     .item {
       margin-right: 38px;

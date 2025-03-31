@@ -5,12 +5,15 @@
       <div class="d-flex">
         <h3 class="mr-4" :class="{active : currentView === 'quiz'}" @click="currentView = 'quiz'">Quiz
           Submissions({{ quiz_submissions.length }})</h3>
-        <h3 :class="{active : currentView === 'assignments'}" @click="currentView = 'assignments'">Assignment
+        <h3 class="mr-4" :class="{active : currentView === 'assignments'}" @click="currentView = 'assignments'">
+          Assignment
           Submissions ({{ assignment_submissions.length }})</h3>
+        <h3 :class="{active : currentView === 'exams'}" @click="currentView = 'exams'">Exam
+          Submissions ({{ exam_submissions.length }})</h3>
       </div>
       <v-data-table
           :headers="submissionHeaders"
-          :items="currentView === 'quiz' ? quiz_submissions : assignment_submissions"
+          :items="currentView === 'quiz' ? quiz_submissions : currentView === 'assignments' ? assignment_submissions : exam_submissions"
           :items-per-page="5"
           sort-by="dateOfSubmission"
           class="data-table"
@@ -18,10 +21,10 @@
       >
         <template v-slot:item.course_name="{ item }">
           <span class="normal--text d-block">{{
-              item.target.course.name
+              currentView === 'exams' ? item.course.name : item.target.course.name
             }}</span>
           <span class="normal--text small">{{
-              item.target.course.user_group.name
+              item.target ? item.target.course.user_group.name : item.course.user_group.name
             }}</span>
         </template>
         <template v-slot:item.chapter_name="{ item }">
@@ -51,12 +54,15 @@
                     method: item.submissionMode ? {
                       action: 'quiz/change_assignment_status',
                       parameters: { id: item._id, status: 'RELEASED', user_group: item.target.course.user_group._id, name: item.title },
-                    } :{
+                    } : item.target ?{
                       action: 'quiz/release_marks',
                       parameters: { id: item._id, quizName: item.name,user_group: item.target.course.user_group._id},
+                    } : {
+                      action: 'quiz/change_exam_status',
+                      parameters: { id: item._id, status: 'RELEASED', user_group: item.course.user_group._id, name: item.title },
                     },
                     title: 'Release Marks',
-                    message: `Are you sure you want to release marks for this ${item.submissionMode ? 'assignment' : 'quiz'}?`,
+                    message: `Are you sure you want to release marks for this ${item.submissionMode ? 'assignment' : item.target ? 'quiz' : 'exam'}?`,
                   })
                 "
               >
@@ -98,30 +104,6 @@
               item.updatedAt | formatDate
             }}</span>
         </template>
-        <template v-slot:item.evaluations="{ item }">
-          <span class="normal--text semi_bold_text"
-          >200 Marks{{ "" + item ? "" : "nope" }}</span
-          >
-        </template>
-        <template v-slot:item.success_rate="{ item }">
-          <span class="normal--text semi_bold_text"
-          >65%{{ "" + item ? "" : "nope" }}</span
-          >
-        </template>
-        <!--        <template v-slot:item.actions="{ item }">-->
-        <!--          <v-row class="actions pa-0">-->
-        <!--            <v-col class="pa-0 py-1">-->
-        <!--              <v-btn-->
-        <!--                  class="white&#45;&#45;text"-->
-        <!--                  :color="primary"-->
-        <!--                  :to="`/submissions/${item.name}`"-->
-        <!--              >-->
-        <!--                Make announcement-->
-        <!--              </v-btn>-->
-        <!--            </v-col-->
-        <!--            >-->
-        <!--          </v-row>-->
-        <!--        </template>-->
         <template v-slot:no-data>
           <span class="text-h6">Course list is empty</span>
         </template>
@@ -140,18 +122,7 @@ export default {
   }),
   computed: {
     submissionHeaders() {
-      return [
-        {
-          text: "Courses",
-          align: "start",
-          sortable: false,
-          value: "course_name",
-        },
-        {
-          text: "Chapter",
-          value: "chapter_name",
-          sortable: false,
-        },
+      const headers = [
         {
           text: "Submissions",
           value: "total_submissions",
@@ -169,7 +140,22 @@ export default {
           align: "center",
         },
         {text: "", value: "actions", align: "center", sortable: false},
-      ];
+      ]
+      if (this.currentView === 'quiz')
+        headers.unshift({
+          text: "Chapter",
+          value: "chapter_name",
+          sortable: false,
+        })
+
+      headers.unshift({
+        text: "Courses",
+        align: "start",
+        sortable: false,
+        value: "course_name",
+      },)
+      return headers
+
     },
     courseHeaders() {
       return [
@@ -191,8 +177,6 @@ export default {
           text: "Last Updated",
           value: "last_updated",
         },
-        {text: "Evaluations", value: "evaluations", align: "center"},
-        {text: "Success rate", value: "success_rate", align: "center"},
         {text: "", value: "actions", align: "center", sortable: false},
       ];
     },
@@ -201,7 +185,7 @@ export default {
       return this.$store.state.user.user.category.name;
     },
     ...mapGetters("courses", ["courses"]),
-    ...mapGetters("quiz_submission", ["quiz_submissions", "assignment_submissions"]),
+    ...mapGetters("quiz_submission", ["quiz_submissions", "assignment_submissions", "exam_submissions"]),
     // only display courses we started
     activeCourses() {
       return this.courses.filter((course) => course.progress);
@@ -215,7 +199,7 @@ export default {
       if (value.attendedStudents)
         this.$router.push(`/courses/preview/${value.name}`)
       else
-        this.$router.push(`/reports/${value._id}${value.submissions[0].assignment ? '/assignments' : ''}`)
+        this.$router.push(`/reports/${value._id}${value.submissions[0].assignment ? '/assignments' : value.submissions[0].exam ? '/exams' : ''}`)
     },
   },
   created() {

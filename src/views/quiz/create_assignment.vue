@@ -363,7 +363,7 @@ export default {
             status: "success",
             uptime: 5000,
           })
-          this.$router.push('/quiz')
+          this.$router.push('/assessments/assignments')
         }
       })
     },

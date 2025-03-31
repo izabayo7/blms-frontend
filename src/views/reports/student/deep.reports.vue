@@ -12,7 +12,9 @@
       >
         <template v-slot:item.target="{ item }">
           <span class="d-block">{{
-              item.quiz ? item.quiz.target.chapter.name : item.assignment.target.chapter ? item.assignment.target.chapter.name : 'ALL'
+              item.quiz ? item.quiz.target.chapter.name :
+                  item.exam ? item.exam.name :
+                      item.assignment.target.chapter ? item.assignment.target.chapter.name : 'ALL'
             }}</span>
         </template>
         <template v-slot:item.date="{ item }">
@@ -20,7 +22,7 @@
         </template>
         <template v-slot:item.total_marks="{ item }">
           <span>{{
-              `${item.marked ? item.total_marks : ""} / ${item.quiz ? item.quiz.total_marks : item.assignment.total_marks}`
+              `${item.marked ? item.total_marks : ""} / ${item.quiz ? item.quiz.total_marks : item.exam ? item.exam.total_marks : item.assignment.total_marks}`
             }}</span>
         </template>
         <template v-slot:item.marking_status="{ item }">
@@ -60,12 +62,12 @@
     </div>
     <div v-else class="err text-center">
       sorry the given submission id is invalid
-       <back class="mt-0 mb-6 mx-auto" target="/reports" />
+      <back class="mt-0 mb-6 mx-auto" target="/reports"/>
     </div>
   </v-app>
 </template>
 <script>
-import {mapActions} from "vuex";
+import {mapActions, mapGetters} from "vuex";
 import colors from "@/assets/sass/imports/_colors.scss";
 
 export default {
@@ -78,14 +80,9 @@ export default {
     course: undefined,
   }),
   computed: {
+    ...mapGetters('user', ['username']),
     submissionHeaders() {
-      return [
-        {
-          text: "Chapter",
-          align: "start",
-          sortable: false,
-          value: "target",
-        },
+      const headers = [
         {
           text: "Date",
           value: "date",
@@ -108,7 +105,14 @@ export default {
           align: "center",
           sortable: false,
         },
-      ];
+      ]
+      headers.unshift({
+        text: this.course.submissions[0].exam ? "Name" : "Chapter",
+        align: "start",
+        sortable: false,
+        value: "target",
+      },)
+      return headers;
     },
     navigation_links() {
       let res = [
@@ -120,7 +124,10 @@ export default {
       ]
       if (this.course)
         res.push({
-          text: this.course.submissions[0].quiz ? this.course.submissions[0].quiz.target.course.name : this.course.submissions[0].assignment.target.course.name,
+          text: this.course.submissions[0].quiz ?
+              this.course.submissions[0].quiz.target.course.name :
+              this.course.submissions[0].exam ?
+                  this.course.submissions[0].exam.course.name : this.course.submissions[0].assignment.target.course.name,
           link: "/reports/" + this.$route.params.target,
         })
       return res;
@@ -132,7 +139,8 @@ export default {
   },
   methods: {
     handleRowClick(value) {
-      this.$router.push(value.quiz ? `/quiz/${value.quiz.name}/${this.$store.state.user.user.user_name}` : `/assignments/${value.assignment._id}`)
+      console.log(value)
+      this.$router.push(value.quiz ? `/assessments/quiz/${value.quiz.name}/${this.$store.state.user.user.user_name}` : value.assignment ? `/assessments/assignments/${value.assignment._id}` : `/assessments/exams/${value.exam._id}/${this.username}`)
     },
     ...mapActions("quiz_submission", ["getQuizSubmissionsInQuiz"]),
     guess() {
@@ -143,7 +151,8 @@ export default {
     //get submissions on page load
     this.getQuizSubmissionsInQuiz({
       quiz_id: this.$route.params.target,
-      isAssignments: this.$route.path.includes('assignments')
+      isAssignments: this.$route.path.includes('assignments'),
+      isExam: this.$route.path.includes('exams')
     }).then((d) => {
       this.course = d;
     });

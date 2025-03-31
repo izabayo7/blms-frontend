@@ -123,6 +123,24 @@
               <button v-if="editStatus[3]" @click="toogleEdit(3)">Change</button>
             </div>
           </div>
+          <div v-if="userCategory === 'STUDENT'" class="col-12 col-md-3">
+            <div class="label">Registration number</div>
+          </div>
+          <div v-if="userCategory === 'STUDENT'" class="col-12 col-md-5">
+            <div v-if="editStatus[6]" class="current_value">{{ user.registration_number || "not yet set" }}</div>
+            <div v-else class="edit">
+              <input v-model="user.registration_number" type="text">
+              <div class="actions">
+                <button class="save" @click="saveChanges(6)">Save</button>
+                <button class="cancel" @click="toogleEdit(6)">Cancel</button>
+              </div>
+            </div>
+          </div>
+          <div v-if="userCategory === 'STUDENT'" class="col-12 col-md-4">
+            <div class="action">
+              <button v-if="editStatus[3]" @click="toogleEdit(6)">Change</button>
+            </div>
+          </div>
           <div class="col-12 col-md-3">
             <div class="label">Email</div>
           </div>
@@ -195,14 +213,14 @@
 <script>
 
 import Apis from "@/services/apis";
-import {mapActions, mapMutations, mapState} from "vuex";
+import {mapActions, mapMutations, mapState,mapGetters} from "vuex";
 import jwt from "jsonwebtoken";
 import {cropperMixin} from "../../services/mixins";
 
 export default {
   name: "PersonalSettings",
   data: () => ({
-    editStatus: [true, true, true, true, true, true],
+    editStatus: [true, true, true, true, true, true, true],
     img: "",
     user: undefined,
     confirmation: undefined,
@@ -216,6 +234,7 @@ export default {
   },
   computed: {
     ...mapState("sidebar_navbar", {state: "college"}),
+    ...mapGetters("user", ["userCategory"]),
   },
   beforeMount() {
     this.user = this.getUser()
@@ -304,6 +323,14 @@ export default {
               return
             else {
               obj = {phone: this.user.phone}
+              break
+            }
+          }
+          case 6: {
+            if (this.user.registration_number === user.registration_number)
+              return
+            else {
+              obj = {registration_number: this.user.registration_number}
               break
             }
           }

@@ -71,12 +71,92 @@
           </v-data-table>
         </v-card>
       </v-col>
+      <v-col class="col-12 mt-4">
+        <v-card class="users-table mx-auto pa-4">
+          <v-card-title>
+            <v-row>
+              <div class="col-6">
+                <div class="title">Exams</div>
+              </div>
+              <div class="col-6">
+                <div class="text-right">
+                  <v-text-field
+                      v-model="search"
+                      append-icon="mdi-magnify"
+                      label="Search"
+                      id="searchQuiz"
+                      single-line
+                      hide-details
+                  />
+                </div>
+              </div>
+            </v-row>
+          </v-card-title>
+          <v-data-table
+              :search="search"
+              :headers="exam_headers"
+              :items="exams"
+              sort-by="title"
+          >
+            <template v-slot:item.course="{ item }">
+              <div class="assignment_title">
+                {{ item.course.name }}
+              </div>
+            </template>
+            <template v-slot:item.duration="{ item }">
+              <div>{{ new Date(item.duration * 1000).toISOString().substr(11, 8) }}</div>
+            </template>
+            <template v-slot:item.title="{ item }">
+              <div class="assignment_title">
+                {{ item.title }}
+              </div>
+            </template>
+            <template v-slot:item.dueDate="{ item }">
+              <div class="assignment_td">
+                {{ item.starting_time | formatDate }}
+              </div>
+              <div class="assignment_td">
+                {{ getTime(item.starting_time) }}
+              </div>
+            </template>
+            <template v-slot:item.marks="{ item }">
+              <div class="assignment_td">
+                {{ item.total_marks }} Marks
+              </div>
+            </template>
+            <template v-slot:item.status="{ item }">
+              <div :class="'assignment_td' + item.submissionMode ? `status ${computeClass(item)}` : ''">
+                {{
+                  computeClass(item) === 'expired' ? 'Expired' : item.submission ? computeClass(item) === 'marked' ? 'Marked' : 'Submitted' : 'Not done'
+                }}
+              </div>
+            </template>
+            <template v-slot:item.grades="{ item }">
+              <div class="assignment_td">
+                {{ item.status === 'RELEASED' ? item.submission ? item.submission.total_marks : 'N/A' : 'N / A' }}
+              </div>
+            </template>
+            <template v-slot:item.action="{ item }">
+              <button class="attempt-exam" :class="{disabled : disabled || item.submission}" :disabled="item.submission" @click=" disabled ?
+                      set_modal({
+                        template: 'payment_err',
+                      }) : $router.push('/assessments/exams/instructions?exam='+item._id)">
+                Attempt
+              </button>
+            </template>
+            <template v-slot:no-data>
+              <span class="text-h6">Exams list is empty</span>
+            </template>
+          </v-data-table>
+        </v-card>
+      </v-col>
     </v-row>
   </v-container>
 </template>
 
 <script>
 import {mapActions, mapGetters} from "vuex";
+import {getTime} from "../../services/global_functions";
 
 export default {
   data: () => ({
@@ -94,32 +174,34 @@ export default {
       {text: "Status", value: "status", sortable: true},
       {text: "My grade", value: "grades", sortable: false, align: "center"},
     ],
+    exam_headers: [
+      {
+        text: "Course",
+        align: "start",
+        sortable: false,
+        value: "course",
+      },
+      {text: "Date", value: "dueDate"},
+      {text: "Duration", value: "duration"},
+      {text: "Marks", value: "marks"},
+      {text: "Status", value: "status", sortable: true},
+      {text: "My grade", value: "grades", sortable: false, align: "center"},
+      {text: "Action", value: "action", sortable: false, align: "center"},
+    ],
   }),
   computed: {
     // get the current course
-    ...mapGetters("quiz", ["assignments"]),
-    // format the quiz to fit in the table
-    formated_quiz() {
-      let formated_quiz = [];
-      for (const quiz of this.all_quiz) {
-        formated_quiz.push({
-          _id: quiz._id,
-          name: quiz.name,
-          course: quiz.course ? quiz.course.name : "Not yet Attached",
-          usage: quiz.usage,
-          containedQuestions: quiz.questions.length,
-          duration: new Date(quiz.duration * 1000).toISOString().substr(11, 8),
-          date: quiz.createdAt.split("T")[0].split("-").reverse().join("/"),
-        });
-      }
-      return formated_quiz;
-    },
+    ...mapGetters("quiz", ["assignments", "exams"]),
+    ...mapGetters("user", ["paymentStatus"]),
+    disabled() {
+      return this.paymentStatus.paid === false
+    }
   },
   methods: {
-    ...mapActions("quiz", ["getAssignments"]),
+    ...mapActions("quiz", ["getAssignments", "getExams"]),
     ...mapActions("modal", ["set_modal"]),
     handleRowClick(value) {
-      this.$router.push(`/assignments/${value._id}`)
+      this.$router.push(`/assessments/assignments/${value._id}`)
     },
     computeClass(item) {
       if (!item.submission)
@@ -132,15 +214,11 @@ export default {
       else
         return 'marked'
     },
-    getTime(date) {
-      date = new Date(date)
-      date.setHours(date.getUTCHours())
-      date.setMinutes(date.getUTCMinutes())
-      return new Date(date).toLocaleTimeString()
-    }
+    getTime,
   },
   created() {
     this.getAssignments()
+    this.getExams()
   },
 };
 </script>
@@ -254,6 +332,14 @@ export default {
       color: #2D3E70;
 
     }
+  }
+
+  .attempt-exam {
+    width: 104px;
+    height: 34px;
+    background: #193074;
+    border-radius: 6px;
+    color: #FFFFFF;
   }
 
   table {

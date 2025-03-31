@@ -39,7 +39,7 @@
                 <input
                     type="text"
                     placeholder="Email or Username"
-                    v-model="email_user_name_or_phone"
+                    v-model="email_or_user_name"
                     autocomplete="false"
                     class="wide"
                     @keyup="validate"
@@ -121,7 +121,7 @@ export default {
   data: () => ({
     valid: true,
     userCategory: "",
-    email_user_name_or_phone: "",
+    email_or_user_name: "",
     showPassword: false,
     password: "",
     message: "Please login to continue",
@@ -133,7 +133,7 @@ export default {
     // validate the form
     validate() {
       this.message =
-          this.email_user_name_or_phone.length < 3
+          this.email_or_user_name.length < 3
               ? "username or email too short"
               : this.password.length == 0
               ? "Password is required"
@@ -145,7 +145,7 @@ export default {
     async login() {
       try {
         const credentials = {
-          email_user_name_or_phone: this.email_user_name_or_phone,
+          email_or_user_name: this.email_or_user_name,
           password: this.password,
         };
         // call the login api

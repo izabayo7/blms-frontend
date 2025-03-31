@@ -1,6 +1,12 @@
 <template>
   <v-container id="view-assignments" class="px-6 pl-lg-14 pr-md-2 pt-6" fluid>
-    <v-row>
+    <div v-if="disabled && !assignment_submission._id">
+      <ErrorPage
+          title="You are not allowed to  do assignments"
+          subtitle="You must first pay your school fees to regain access"
+      />
+    </div>
+    <v-row v-else>
       <v-col v-if="assignment" class="col-12">
         <div class="upper">
           <div>Assignments</div>
@@ -229,8 +235,13 @@ export default {
     Editor: () => import("@/components/reusable/Editor"),
     Feedback: () => import("@/components/courses/Feedback"),
     FilePicker: () => import("@/components/reusable/FilePicker"),
+    ErrorPage: () => import("@/components/dashboard/error.vue"),
   },
   computed: {
+    ...mapGetters("user", ["paymentStatus"]),
+    disabled() {
+      return this.paymentStatus.paid === false
+    },
     isExpired(){
       return new Date() > new Date(this.assignment.dueDate)
     },
@@ -380,7 +391,7 @@ export default {
             status: "success",
             uptime: 5000,
           })
-          this.$router.push('/assignments')
+          this.$router.push('/assessments')
         }
       })
     },
@@ -446,11 +457,11 @@ export default {
           }
           // this.addAssignment(res.data.data)
           this.$store.dispatch("app_notification/SET_NOTIFICATION", {
-            message: "Assignment submission creation succeded",
+            message: "Assignment submission update succeded",
             status: "success",
             uptime: 5000,
           })
-          this.$router.push('/assignments')
+          this.$router.push('/assessments')
         }
       })
     },

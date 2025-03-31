@@ -119,18 +119,18 @@ export default {
           text: "reports",
           link: "/reports",
         },
-        {
+      ]
+      if (this.quiz_submission.target) {
+        links.push({
           text: this.quiz_submission.target.course.name,
           link: "/reports/" + this.$route.params.target,
-        },
-
-      ]
-      if (this.quiz_submission.target.chapter)
-        links.push({
-          text: this.quiz_submission.target.chapter.name,
-          link: "/reports/" + this.$route.params.target,
         })
-
+        if (this.quiz_submission.target.chapter)
+          links.push({
+            text: this.quiz_submission.target.chapter.name,
+            link: "/reports/" + this.$route.params.target,
+          })
+      }
       return links;
     },
     // get the userCategory
@@ -142,16 +142,19 @@ export default {
     ...mapActions("quiz_submission", ["getQuizSubmissionsInQuiz"]),
     handleRowClick(value) {
       if (this.quiz_submission.submissionMode)
-        this.$router.push(`/assignments/${value.user.user_name}/${this.quiz_submission._id}`)
+        this.$router.push(`/assessments/assignments/${value.user.user_name}/${this.quiz_submission._id}`)
+      else  if (this.quiz_submission.target)
+        this.$router.push(`/assessments/quiz/${this.quiz_submission.name}/${value.user.user_name}`)
       else
-        this.$router.push(`/quiz/${this.quiz_submission.name}/${value.user.user_name}`)
+        this.$router.push(`/assessments/exams/${this.quiz_submission._id}/${value.user.user_name}`)
     },
   },
   created() {
     //get submissions on page load
     this.getQuizSubmissionsInQuiz({
       quiz_id: this.$route.params.target,
-      isAssignments: this.$route.path.includes('assignments')
+      isAssignments: this.$route.path.includes('assignments'),
+      isExam: this.$route.path.includes('exams')
     }).then((d) => {
       this.quiz_submission = d;
     });
