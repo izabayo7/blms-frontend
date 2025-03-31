@@ -3,7 +3,7 @@
   <div class="mds">
     <div class="mds--wrapper">
       <h4>Media Sources selection settings</h4>
-      <div class="mds--panel">
+      <div class="mds--panel" v-if="devices.video">
 
 <!--        media selection col-->
         <div class="mds--panel--selection">
@@ -19,7 +19,7 @@
               </span>
             </div>
             <div class="selection">
-              <select-ui  id="mds-vid-input"  name="mds-vid-input" :options="devices.video.map(device => device.label)"/>
+              <select-ui  id="mds-vid-input" v-model="selectedDevices.video"  name="mds-vid-input" :options="devices.video.map(device => device.label)"/>
             </div>
           </div>
 
@@ -34,7 +34,7 @@
               </span>
             </div>
             <div class="selection">
-              <select-ui  id="mds-audio-in"  name="mds-audio-in" :options="devices.audioInput.map(device => device.label)"/>
+              <select-ui  id="mds-audio-in" v-model="selectedDevices.audioInput"  name="mds-audio-in" :options="devices.audioInput.map(device => device.label)"/>
             </div>
           </div>
 
@@ -49,7 +49,7 @@
               </span>
             </div>
             <div class="selection">
-              <select-ui  id="mds-audio-out"  name="mds-audio-out" :options="devices.audioOutput.map(device => device.label)"/>
+              <select-ui  id="mds-audio-out"  name="mds-audio-out" v-model="selectedDevices.audioOutput" :options="devices.audioOutput.map(device => device.label)"/>
             </div>
           </div>
 
@@ -58,7 +58,7 @@
 <!--        preview col-->
         <div class="mds--panel--preview">
           <div class="mds--panel--preview--video">
-            <video src="ls"></video>
+            <video ref="md-video-preview" ></video>
           </div>
         </div>
       </div>
@@ -77,7 +77,59 @@ export default {
         video:null,
         audioInput:null,
         audioOutput:null,
+      },
+      selectedDevices:{
+        video:null,
+        audioInput:null,
+        audioOutput:null,
       }
+    }
+  },
+  methods:{
+    // handling stream on video element
+    handleStream(stream){
+      const videoEl = this.$refs['md-video-preview']
+      videoEl.srcObject = stream;
+      videoEl.play()
+      console.log(videoEl.srcObject,videoEl,stream)
+    },
+
+    // filter devices by name and return device id
+    filterDeviceId(name,type){
+      let device;
+
+      if(type === 'videoinput')
+        device = this.devices.video.filter(device => device.label === name)
+
+      if(type === 'audiooutput')
+        device = this.devices.audioOutput.filter(device => device.label === name)
+
+      if(type === 'audioinput')
+        device = this.devices.audioInput.filter(device => device.label === name)
+
+      //let us use first device since filter return array
+       device = device[0]
+
+      return device.deviceId
+    },
+
+    //initiate stream
+    async initiateStream(){
+      const constraints = {
+        audio: true,
+        video: {width: 315, height: 190},
+       deviceId: {
+          exact: this.filterDeviceId(this.selectedDevices.video,'videoinput')
+        }
+      }
+
+
+      navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia ||
+          navigator.msGetUserMedia || navigator.oGetUserMedia
+
+
+      const stream = await navigator.mediaDevices.getUserMedia(constraints)
+      this.handleStream(stream)
     }
   },
   async created(){
@@ -85,17 +137,14 @@ export default {
     this.devices.video = devices.filter(dvc => dvc.kind === 'videoinput')
     this.devices.audioInput = devices.filter(dvc => dvc.kind === 'audioinput')
     this.devices.audioOutput = devices.filter(dvc => dvc.kind === 'audiooutput')
-    console.log(devices,this.devices)
 
-    const constratints = { audio: true, video: {width: 1280, height: 720} }
 
-    navigator.mediaDevices.getUserMedia(constratints)
-    .then(stream => {
-      console.log(stream)
+    // wait for this instance to update again since
+    // selectedDevices values will be updated after other values have been assigned to values
+    this.$nextTick(()=>{
+      this.initiateStream()
     })
-    .catch(err => {
-      console.log(err)
-    })
+
   }
 }
 </script>
