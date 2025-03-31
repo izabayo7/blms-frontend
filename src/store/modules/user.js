@@ -27,6 +27,9 @@ export default {
     getters: {
         user(state){
             return state.user
+        },
+        user_full_names(state){
+            return `${state.user.sur_name} ${state.user.other_names}`
         }
     },
 }
