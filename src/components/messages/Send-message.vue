@@ -1,5 +1,8 @@
 <template>
   <main class="my-send-message" :class="{replying : replyMsg}">
+    <div class="emoji-container">
+      <VEmojiPicker v-show="showEmojiPicker" @select="selectEmoji"/>
+    </div>
     <div v-if="replyMsg" class="reply-message">
       <div class="msg-cntnr">
         <div class="sender">{{ replyMsg.sender }}</div>
@@ -144,7 +147,7 @@
         </div>
         <div class="filePreview"></div>
       </div>
-      <div class="send">
+      <div v-if="msg.replace(/\s/g, '').length" class="send">
         <div class="icon" @click="sendMessage">
           <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -183,14 +186,19 @@
           </svg>
         </div>
       </div>
+      <div v-else class="emoji">
+        <emoji-button class="ml-3" @click="showEmojiPicker = true"/>
+      </div>
     </div>
   </main>
 </template>
 
 <script>
-import { mapGetters, mapMutations, mapState} from "vuex";
+import {mapGetters, mapMutations, mapState} from "vuex";
 import {emit} from "@/services/event_bus";
 import apis from "@/services/apis";
+import {VEmojiPicker} from 'v-emoji-picker';
+import EmojiButton from './EmojiButton.vue'
 
 export default {
   name: "Send-message",
@@ -200,6 +208,7 @@ export default {
       files: [],
       recording: false,
       recordingMode: false,
+      showEmojiPicker: false,
       headers: {
         'X-Custom-Header': 'some data'
       }
@@ -208,15 +217,39 @@ export default {
   components: {
     FilePicker: () => import("@/components/reusable/FilePicker"),
     AudioRecorder: () => import("@/components/recorder/components/recorder"),
+    VEmojiPicker,
+    EmojiButton
   },
   computed: {
     ...mapGetters("chat", ["socket", "replyMsg"]),
     ...mapState("chat", ["currentDisplayedUser"]),
   },
+  watch: {
+    showEmojiPicker() {
+      if (this.showEmojiPicker) {
+        setTimeout(()=>{
+          document.addEventListener('click', this.outsideClickDetector)
+        },500)
+      } else {
+        document.removeEventListener('click', this.outsideClickDetector)
+      }
+    }
+  },
   methods: {
+    outsideClickDetector(e) {
+      if (!document.querySelector('.emoji-container').contains(e.target)) {
+        this.showEmojiPicker = false
+      }
+    },
     ...mapMutations("chat", ["setReplyMsg"]),
     callback(msg) {
       console.debug('Event: ', msg)
+    },
+    selectEmoji(emoji) {
+      const el = this.$refs.input
+      this.p("")
+      el.innerText += emoji.data
+      this.msg += emoji.data
     },
     pickFile() {
       this.$refs["picker"].clickButton()
@@ -243,7 +276,7 @@ export default {
       return res
     },
     uploadAudio(formData) {
-      apis.update('message', `voiceNote/${this.currentDisplayedUser.id}${this.replyMsg ? '?reply='+this.replyMsg.msg._id : ''}`, formData, {
+      apis.update('message', `voiceNote/${this.currentDisplayedUser.id}${this.replyMsg ? '?reply=' + this.replyMsg.msg._id : ''}`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         },
@@ -328,10 +361,16 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .my-send-message {
   padding: 0.1rem;
   position: relative;
+
+  .emoji-container {
+    position: absolute;
+    bottom: 53px;
+    left: 12px;
+  }
 
   &.replying {
     position: absolute;
