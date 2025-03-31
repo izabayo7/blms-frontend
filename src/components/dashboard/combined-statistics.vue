@@ -12,7 +12,7 @@
           {{ obj.name }}
         </button>
       </div>
-      <div class="result-view mb-3 col-12 col-lg-7" :class="{'px-8': $vuetify.breakpoint.width < 700 }">
+      <div class="result-view mb-3 col-12 col-lg-7">
         <div class="filters-containter">
           <div class="filters">
             <div class="cursor-pointer" @click="activeFilter = 1" :class="{'active': activeFilter === 1}">All time</div>
@@ -253,6 +253,12 @@ export default {
 
       }
     }
+  }
+}
+/* Portrait phones and smaller */
+@media (max-width: 700px) {
+  .combined-statistics {
+    max-height: fit-content;
   }
 }
 </style>

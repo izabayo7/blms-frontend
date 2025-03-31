@@ -7,7 +7,7 @@
     <v-row class="">
       <div class="v-col col-12 col-lg-7 py-0 mt-0 mt-md-n3" :class="{'px-0': $vuetify.breakpoint.width < 700 }">
         <v-row class="pa-0 mt-6 mt-md-0" :class="{'px-0': $vuetify.breakpoint.width < 700 }">
-          <v-col class="col-12 pa-0 mb-4" :class="{'px-0': $vuetify.breakpoint.width < 700 }">
+          <v-col class="col-12 pa-0 mb-4 recent-joined" :class="{'px-0': $vuetify.breakpoint.width < 700 }">
             <combined-statistics v-if="$store.state.sidebar_navbar.college">
               <template v-slot:icon>
                 <svg
@@ -153,7 +153,7 @@
               </div>
             </div>
           </div>
-          <div class="v-col col-12 pa-0 mt-5">
+          <div class="v-col col-12 pa-0 mt-5 more_info_container">
             <div @click="$router.push('/faculties')" class="row ml-0 more_info_container cursor-pointer">
               <div class="v-col col-4 pa-0">
                 <div class="more_info">
@@ -279,7 +279,7 @@
               </div>
             </div>
           </div>
-          <v-col class="col-12 mt-5 px-0">
+          <v-col class="col-12 mt-5 px-0 recent-joined">
             <div class="heading">Recently joined users</div>
             <div class="recent mt-5">
               <loader
@@ -294,7 +294,7 @@
               </div>
             </div>
           </v-col>
-          <v-col class="col-12 col-lg-10 pt-0 pl-0">
+          <v-col class="col-12 col-lg-10 pt-0 pl-0 recent-joined">
             <router-link class="more text-right" to="/users">More ...</router-link>
             <div class="mt-5 d-flex">
               <button

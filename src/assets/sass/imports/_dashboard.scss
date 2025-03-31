@@ -433,6 +433,21 @@
 /* Portrait phones and smaller */
 @media (max-width: 700px) {
   .dashboard_page {
+    .college_info {
+      max-width: 100%;
+      margin: 45px 18px 0px;
+    }
+    .more_info_container{
+      margin-left: 10px !important;
+      margin-right: 18px !important;
+    }
+    .lower_buttons{
+      margin-bottom: 60px;
+    }
+    .recent-joined{
+      max-width: 90%;
+      margin: auto;
+    }
     .more_info {
       width: 97px;
 

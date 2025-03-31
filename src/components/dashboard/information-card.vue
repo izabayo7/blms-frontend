@@ -358,6 +358,9 @@ export default {
     .chart {
       margin: 18px auto 45px;
     }
+    max-width: 90% !important;
+    margin: auto;
+    height: fit-content;
   }
 }
 </style>
