@@ -37,7 +37,7 @@ export default {
   height: fit-content;
   padding: 11px 21px;
   position: absolute;
-  z-index: 9;
+  z-index: 999;
   border-radius: 4.06375px;
   right: 17px;
   margin-top: 17px;

@@ -171,7 +171,7 @@ export default {
             }
             // others land to the dashboard
             else if (category === "ADMIN") {
-              this.$router.push("/administration");
+              this.$router.push("/welcome");
             }
           }
         }

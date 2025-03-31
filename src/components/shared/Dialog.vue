@@ -79,7 +79,7 @@
             "
             outlined
             class="mx-2 action-button-outlined"
-            >Continue</v-btn
+            >Yes</v-btn
           >
         </div>
       </div>
