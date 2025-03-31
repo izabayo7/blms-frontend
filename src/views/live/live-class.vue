@@ -21,28 +21,116 @@
           :participants="room.participants"
         />
       </kurious-page-actions>
-      <v-col class="col-12 col-md-8">
+      <v-col class="col-12 px-2 px-md-12 col-md-8 pt-0">
         <v-row>
           <h1></h1>
         </v-row>
         <v-row>
           <v-col class="col-12" id="video">
-            <vue-plyr>
-              <video id="video-preview" controls loop></video>
-            </vue-plyr>
+            <div
+              @mouseenter="toogleControlVisibility"
+              @mouseleave="toogleControlVisibility"
+              class="player_container"
+            >
+              <vue-plyr>
+                <video id="video-preview" loop></video>
+              </vue-plyr>
+              <div :class="`overlay ${playerHovered ? 'hovered' : ''}`"></div>
+              <div :class="`controls ${playerHovered ? 'hovered' : ''}`">
+                <button :class="`round top_right ${state ? '' : 'expanded'}`">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24.056"
+                    height="16.038"
+                    viewBox="0 0 24.056 16.038"
+                  >
+                    <path
+                      id="Icon_material-screen-share"
+                      data-name="Icon material-screen-share"
+                      d="M20.047,20.033a2,2,0,0,0,1.995-2L22.052,8a2,2,0,0,0-2-2H4.009A2,2,0,0,0,2,8V18.028a2,2,0,0,0,2,2H0v2H24.056v-2Zm-7.016-3.538V14.3c-2.787,0-4.621.852-6.014,2.726.561-2.676,2.115-5.343,6.014-5.884V9.007l4.009,3.739Z"
+                      transform="translate(0 -6)"
+                      fill="#fff"
+                    />
+                  </svg>
+                </button>
+                <button>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="23.022"
+                    height="18.67"
+                    viewBox="0 0 23.022 18.67"
+                  >
+                    <g
+                      id="Group_175"
+                      data-name="Group 175"
+                      transform="translate(-596.198 -253.075)"
+                    >
+                      <rect
+                        id="Rectangle_2705"
+                        data-name="Rectangle 2705"
+                        width="2.701"
+                        height="25.351"
+                        rx="1.351"
+                        transform="matrix(0.656, -0.755, 0.755, 0.656, 596.198, 255.113)"
+                        fill="#fff"
+                      />
+                      <path
+                        id="Subtraction_3"
+                        data-name="Subtraction 3"
+                        d="M12.215,13.951H1.736A1.738,1.738,0,0,1,0,12.215V2.361L13.072,13.725A1.735,1.735,0,0,1,12.215,13.951Zm7.544-1.164a1.166,1.166,0,0,1-.664-.209L15.114,9.835V4.117L19.1,1.37a1.166,1.166,0,0,1,1.831.937v9.334A1.16,1.16,0,0,1,19.759,12.787ZM13.951,9.257h0L3.3,0h8.914a1.739,1.739,0,0,1,1.736,1.737v7.52Z"
+                        transform="translate(598.293 255.399)"
+                        fill="#fff"
+                      />
+                    </g>
+                  </svg>
+                </button>
+                <button>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20.757"
+                    height="21.391"
+                    viewBox="0 0 20.757 21.391"
+                  >
+                    <g
+                      id="Group_174"
+                      data-name="Group 174"
+                      transform="translate(-356.198 -240.16)"
+                    >
+                      <path
+                        id="Subtraction_2"
+                        data-name="Subtraction 2"
+                        d="M10.7,21.391H4.01a.669.669,0,0,1-.668-.669v-.669a.669.669,0,0,1,.668-.668H6.35V17.959A7.565,7.565,0,0,1,0,10.368V8.69a.667.667,0,0,1,.3-.56l1.7,1.481v.846a5.524,5.524,0,0,0,4.813,5.56c.177.017.357.026.534.026a5.325,5.325,0,0,0,1.724-.285l1.672,1.453a7.3,7.3,0,0,1-2.392.763v1.411H10.7a.669.669,0,0,1,.669.668v.669A.669.669,0,0,1,10.7,21.391ZM13.4,14.87h0l-1.524-1.325A5.323,5.323,0,0,0,12.7,10.7V8.69a.669.669,0,0,1,.669-.669h.669a.669.669,0,0,1,.668.669V10.7a7.291,7.291,0,0,1-1.3,4.174Zm-6.048-.164a4.01,4.01,0,0,1-4.01-3.931l4.489,3.9A4.076,4.076,0,0,1,7.353,14.706Zm3.5-2.05h0L3.343,6.127V4.01a4.011,4.011,0,0,1,8.022,0V10.7a4.011,4.011,0,0,1-.51,1.959Z"
+                        transform="translate(359.228 240.16)"
+                        fill="#fff"
+                      />
+                      <rect
+                        id="Rectangle_2702"
+                        data-name="Rectangle 2702"
+                        width="2.682"
+                        height="25.171"
+                        rx="1.341"
+                        transform="matrix(0.656, -0.755, 0.755, 0.656, 356.198, 244.849)"
+                        fill="#fff"
+                      />
+                    </g>
+                  </svg>
+                </button>
+              </div>
+            </div>
           </v-col>
-          <v-col class="col-12 course-title d-block">{{ courseName }}</v-col>
-          <v-col
-            v-if="$store.state.user.type === 'student'"
-            class="col-12 description"
-          >
-            <div id="broadcast-viewers-counter"></div>
-            <div class="more_actions">
-              <button>Mute sound</button>
+          <v-col class="col-12">
+            <div class="more_actions d-none">
+              <button @click="toogleSound">Mute sound</button>
               <button>Mute video</button>
               <button>Share screen</button>
               <button>Exit</button>
             </div>
+          </v-col>
+          <v-col
+            v-if="$store.state.user.user.category.name === 'STUDENT'"
+            class="col-12 description"
+          >
+            <div id="broadcast-viewers-counter"></div>
             <p>
               JavaScript, often abbreviated as JS, is a programming language
               that conforms to the ECMAScript specification. JavaScript is
@@ -71,7 +159,10 @@
           </v-col>
         </v-row>
       </v-col>
-      <v-col class="col-4 hidden-sm-and-down pa-0">
+      <v-col class="col-4 hidden-sm-and-down px-12 pt-2">
+        <h4 v-if="$store.state.user.user.category.name === 'STUDENT'">
+          Discussion Board
+        </h4>
         <kurious-discussion-board
           v-if="$store.state.user.user.category.name === 'STUDENT'"
           :host="sender"
@@ -97,14 +188,27 @@ export default {
     connection: new RTCMultiConnection(),
     courseName: "Economy Basics",
     sender: {},
+    playerHovered: false,
   }),
   computed: {
     ...mapState("live", ["room"]),
+    ...mapState("sidebar_navbar", { state: "sidebar_expanded" }),
   },
   methods: {
     ...mapMutations("sidebar_navbar", {
       toggle: "TOGGLE_PAGE_ACTIONS_VISIBILITY",
     }),
+
+    toogleSound() {
+      const staff = this.connection.streamEvents.selectFirst({
+        local: true,
+      }).stream;
+      console.log(staff);
+    },
+
+    toogleControlVisibility() {
+      // this.playerHovered = !this.playerHovered;
+    },
 
     // ask node.js server to look for a broadcast
     // if broadcast is available, simply join it. i.e. "join-broadcaster" event should be emitted.
@@ -269,8 +373,9 @@ export default {
       });
     });
 
-    let videoPreview = document.getElementById("video-preview"),
-      localStream;
+    let videoPreview = document.getElementById("video-preview");
+    /*
+    let localStream;
 
     document.querySelector("#btn-get-mixed-stream").onclick = function () {
       // if (mixerOptions.value === 'camera-screen') {
@@ -321,7 +426,7 @@ export default {
       }).stream;
       localStream.mute("audio");
     };
-
+*/
     vm.connection.onstream = function (event) {
       if (vm.connection.isInitiator && event.type !== "local") {
         return;
@@ -517,13 +622,84 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .live_video {
   background-color: #f6f6f6;
   max-height: calc(100vh - 5rem);
   overflow-y: auto;
-  video {
-    max-height: 355px;
+  .player_container {
+    position: relative;
+    padding-bottom: 56.25%; /* 16:9, for an aspect ratio of 1:1 change to this value to 100% */
+  }
+  .plyr {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+  .plyr--video {
+    .plyr__controls,
+    .plyr__control {
+      opacity: 0;
+      & > * {
+        pointer-events: none;
+        cursor: auto;
+      }
+    }
+  }
+  .controls {
+    width: inherit;
+    bottom: 0;
+    color: #fff;
+    left: 0;
+    padding: 20px 5px 5px;
+    position: absolute;
+    right: 0;
+    z-index: 3;
+    align-items: left;
+    display: flex;
+    opacity: 0;
+    // &.hovered {
+    //   display: flex;
+    // }
+    transition: opacity 0.3s ease-in-out 0.3s;
+    button {
+      border: 1px solid white;
+      width: 40px;
+      height: 40px;
+      border-radius: 7px;
+      margin: 10px;
+      &.round {
+        border-radius: 45px;
+      }
+      &.top_right {
+        left: 91%;
+        position: absolute;
+        top: 46%;
+        transform: translate(-91%, -50%);
+      }
+    }
+    button:hover {
+      background-color: #ffffff59;
+    }
+  }
+  .overlay {
+    position: absolute;
+    height: 100%;
+    background-image: radial-gradient(#fff0, rgb(0 0 0 / 53%));
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out 0.3s;
+    width: 100%;
+    // &.hovered {
+    //   opacity: 1;
+    // }
+  }
+  .player_container:hover {
+    .overlay,
+    .controls {
+      opacity: 1;
+    }
   }
 }
 </style>
