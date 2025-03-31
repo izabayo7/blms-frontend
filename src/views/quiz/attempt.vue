@@ -4,7 +4,7 @@
       fluid
       class="quiz-page px-4 px-md-16"
   >
-    <div v-if="!selected_quiz_submission">
+    <div v-if="(!selected_quiz_submission || $store.state.user.user.category.name ==  'INSTRUCTOR') && filesToUpload.length">
       <h2>{{ selected_quiz.name }}</h2>
       <v-row>
         <v-col class="col-12 col-md-7 questions-side">
