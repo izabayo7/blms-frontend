@@ -3,7 +3,7 @@
     <div v-if="loaded && !error" class="live-class--wrapper">
       <div class="live-class--video" :class="`--${$vuetify.breakpoint.name}`">
         <back v-if="!participationInfo.isOfferingCourse" class="mt-6"/>
-        <div class="head">
+        <div class="head hidden-sm-and-down">
           <div class="text">
             <h2>{{ live_session.course.name }}: Chapter </h2>
             <span class="live" v-if="participationInfo.isOfferingCourse">Live</span>
@@ -15,7 +15,7 @@
             {{ participants.length }} watching
           </div>
         </div>
-        <div class="video">
+        <div class="video mt-6 mt-md-0">
           <div class="video--wrapper">
             <div class="video-el"
                  :class="`--${$vuetify.breakpoint.name} ${sidebarOpen ? '' : 'viewer'}`"
@@ -44,9 +44,12 @@
                   </div>
                 </div>
               </div>
-              <video v-show="!noVideo && !isPresenting" id="video_feed">
+                <video v-show="!noVideo && !isPresenting" id="video_feed">
                 <!--                <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" >-->
               </video>
+              <button @click="playVideo" class="play_button">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="64" height="64"><path fill="none" d="M0 0h24v24H0z"/><path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zM10.622 8.415a.4.4 0 0 0-.622.332v6.506a.4.4 0 0 0 .622.332l4.879-3.252a.4.4 0 0 0 0-.666l-4.88-3.252z" fill="rgba(255,255,255,1)"/></svg>
+              </button>
               <video v-if="!participationInfo.isOfferingCourse" v-show="isPresenting"
                      id="viewer_screen_feed">
                 <!--                <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" >-->
@@ -99,7 +102,7 @@
                       <div class="time">
                         {{ elapsed_time }}
                       </div>
-                      <button class="ml-auto">
+                      <button @click="toogleFullScreen" class="ml-auto">
                         <svg width="22" height="17" viewBox="0 0 22 17" fill="none" xmlns="http://www.w3.org/2000/svg">
                           <path d="M6.72526 1H1.30859V6.41667" stroke="white" stroke-width="1.26923"/>
                           <path d="M15.8906 1H21.3073V6.41667" stroke="white" stroke-width="1.26923"/>
@@ -277,7 +280,6 @@ openQuiz">
 import {WebRtcPeer} from "../../../plugins/kurentoLive/kurento-utils.js"
 import Participant from "../../../plugins/kurentoLive/participants";
 import {downloadAttachment} from "@/services/global_functions"
-// import {WebRtcPeer} from 'kurento-utils'
 import {mapActions, mapGetters, mapState} from 'vuex'
 import Discussion from "../../../components/Live/Discussion";
 import {elapsedDuration, toLocal} from "@/services/global_functions"
@@ -372,6 +374,13 @@ export default {
     },
   },
   methods: {
+    toogleFullScreen(){
+      document.getElementById("video_feed").requestFullscreen()
+    },
+    playVideo(){
+      document.getElementById("video_feed").play()
+      document.querySelector('.play_button').style.display = 'none'
+    },
     ...mapActions("modal", ["set_modal"]),
     downloadAttachment,
     openQuiz() {

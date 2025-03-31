@@ -277,6 +277,14 @@
         .video-el {
           position: relative;
 
+          .play_button {
+            position: absolute;
+            left: 43%;
+            top: 37%;
+            z-index: 9;
+            display: none;
+          }
+
           &.--lg, &.--md {
             height: 320px;
             width: 568.89px;

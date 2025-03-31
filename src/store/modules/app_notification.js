@@ -14,7 +14,6 @@ export default {
     },
     actions: {
         SET_NOTIFICATION({ state, commit }, { message, status, uptime }) {
-            console.log(message, status, uptime)
             state.message = message
             state.status = status
             state.show = true
