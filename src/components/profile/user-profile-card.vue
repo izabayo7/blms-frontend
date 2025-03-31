@@ -10,7 +10,7 @@
         <article class="upc--information--picture px-5 pt-2">
 <!--          user profile picture-->
           <figure class="upc--information--picture--img">
-            <img v-if="user.profile" :src="user.profile" alt="user profile picture">
+            <img v-if="user.profile" :src="user.profile +'?width=86'" alt="user profile picture">
             <v-avatar v-else :size="96" class="profile-avatar">
               {{ `${user.sur_name} ${user.other_names}` | computeText }}
             </v-avatar>
