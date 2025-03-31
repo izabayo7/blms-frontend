@@ -8,6 +8,7 @@
         :items-per-page="5"
         sort-by="last_submitted"
         class="data-table"
+        @click:row="handleRowClick"
       >
         <!-- display user name as a link to the submission -->
         <template v-slot:item.course="{ item }">
@@ -15,9 +16,7 @@
         </template>
         <!-- display the quiz name as alink to that quiz -->
         <template v-slot:item.submission="{ item }">
-          <router-link :to="`/reports/${item._id}`">
             {{ item.submissions.length }}
-          </router-link>
         </template>
         <!-- display the date of submission -->
         <template v-slot:item.last_submitted="{ item }">
@@ -67,13 +66,10 @@
         :headers="coursesHeaders"
         :items="activeCourses"
         class="data-table"
+        @click:row="handleRowClick"
       >
         <template v-slot:item.name="{ item }">
-          <router-link
-            class="normal--text"
-            :to="`/courses/preview/${item.name}`"
-            >{{ item.name }}</router-link
-          >
+            {{ item.name }}
         </template>
         <template v-slot:item.actions="{ item }">
           <v-icon
@@ -174,6 +170,12 @@ export default {
   methods: {
     ...mapActions("courses", ["getCourses"]),
     ...mapActions("quiz_submission", ["getQuizSubmissions"]),
+    handleRowClick(value){
+      if(value.progress)
+        this.$router.push(`/courses/preview/${value.name}`)
+        else
+      this.$router.push(`/reports/${value._id}`)
+    },
     returnCourseName(quiz) {
       if (quiz.target.type === "facultyCollegeyear") {
         return "No course";
