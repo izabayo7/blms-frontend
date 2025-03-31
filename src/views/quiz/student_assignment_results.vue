@@ -170,7 +170,7 @@ export default {
     backend_url() {
       return process.env.VUE_APP_api_service_url
     },
-    ...mapGetters("user", ["userCategory"]),
+    ...mapGetters("user", ["userCategory","username"]),
     // get the current course
     ...mapGetters("quiz", ["all_quiz"]),
     // format the quiz to fit in the table
@@ -195,7 +195,8 @@ export default {
     ...mapActions("quiz", ["getAssignment"]),
     ...mapActions("modal", ["set_modal"]),
     async getSubmission() {
-      const res = await Apis.get(`assignment_submission/user/${this.$store.state.user.user.user_name}/${this.$route.params.id}`, this.assignment_submission)
+      const res = await Apis.get(`assignment_submission/user/${this.userCategory === 'STUDENT' ? this.username : this.$route.params.user_name}/${this.$route.params.id}`, this.assignment_submission)
+      console.log(res)
       if (res.data.data) {
         this.assignment_submission = res.data.data
         this.submissionAttachments = res.data.data.attachments.map(x => {
@@ -204,6 +205,7 @@ export default {
       }
 
       this.assignment = await this.getAssignment({id: this.$route.params.id})
+      console.log(this.assignment)
       if (this.assignment) {
         let date = new Date(this.assignment.dueDate)
         date.setMinutes(date.getUTCMinutes())

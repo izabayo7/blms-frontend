@@ -137,7 +137,7 @@ export default {
     ...mapActions("quiz_submission", ["getQuizSubmissionsInQuiz"]),
     handleRowClick(value) {
       if (this.quiz_submission.submissionMode)
-        this.$router.push(`/assignments/${value.user.user_name}/${value._id}`)
+        this.$router.push(`/assignments/${value.user.user_name}/${this.quiz_submission._id}`)
       else
         this.$router.push(`/quiz/${this.quiz_submission.name}/${value.user.user_name}`)
     },
