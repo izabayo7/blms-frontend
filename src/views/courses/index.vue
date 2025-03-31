@@ -4,7 +4,7 @@
     <v-container v-if="userCategory == 'STUDENT'" id="courses" fluid>
       <v-row>
         <v-col cols="12">
-          <h2 class="mt-10 course-group-title">Ongoing Courses</h2>
+          <h2 class="course-group-title">Ongoing Courses</h2>
         </v-col>
       </v-row>
       <v-col class="col-12 pa-0">
@@ -293,11 +293,23 @@ export default {
 </script>
 <style lang="scss" scoped>
 #courses {
-  background-color: #f8f8f8;
+  background-color: #F3F6FF;
+  padding: 25px 0px 25px 35px;
   min-height: calc(100vh - 76px);
   .perfom-action {
     background-color: $primary !important;
     color: white;
+  }
+  .course-group-title{
+    font-family: Poppins;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 20.63px;
+    line-height: 31px;
+    /* identical to box height */
+
+
+    color: #6A6A6A;
   }
 }
 .courses-container {
