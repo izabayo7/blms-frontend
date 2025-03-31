@@ -16,7 +16,7 @@ const PARTICIPANT_MAIN_CLASS = 'participant main';
 export default function Participant(name, vm, offeringCourse = false, userInfo) {
     this.name = name;
     this.userInfo = userInfo;
-    let video = document.getElementById("video_feed");
+    let video = document.getElementById(name.includes("_screen") ? vm.participationInfo.isOfferingCourse ? "video_screen_feed" : "viewer_screen_feed" : "video_feed");
     let rtcPeer;
     this.vm = vm;
     this.offeringCourse = offeringCourse
