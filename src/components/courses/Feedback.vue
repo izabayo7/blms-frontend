@@ -36,7 +36,7 @@
               fill="#fc6767"
             />
           </svg>
-          <svg
+          <!-- <svg
             @click="editFeedback()"
             xmlns="http://www.w3.org/2000/svg"
             width="20.57"
@@ -50,14 +50,14 @@
               transform="translate(-4.5 -4.496)"
               fill="#3ce970"
             />
-          </svg>
+          </svg> -->
         </div>
       </div>
     </div>
     <div class="save_feedback d-flex">
       <v-btn
         v-if="$store.state.user.user.category.name === 'INSTRUCTOR' && showSave"
-        @click="addFeedback()"
+        @click="answerId ? editFeedback() : addFeedback()"
         class="primary-bg px-6 py-4 mt-4"
         rounded
         >Save</v-btn
@@ -111,6 +111,13 @@ export default {
       console.log("hahiyeeeeee");
       this.computeFeedbackClass();
     },
+    message() {
+      if (this.message != "") {
+        setTimeout(() => {
+          this.message = "";
+        }, 1000);
+      }
+    },
   },
   methods: {
     feedbackContent() {
@@ -144,6 +151,7 @@ export default {
         },
         content: content,
       });
+      this.message = "feedback successfuly saved";
       console.log(response);
     },
     async editFeedback() {
@@ -155,10 +163,12 @@ export default {
       const response = await Apis.update("comment", this.feedbackId, {
         content: content,
       });
+      this.message = "feedback successfuly updated";
       console.log(response);
     },
     async removeFeedback() {
       const response = await Apis.delete("comment", this.feedbackId);
+      this.message = "feedback successfuly removed";
       console.log(response);
     },
   },
