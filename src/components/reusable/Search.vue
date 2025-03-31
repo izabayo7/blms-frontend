@@ -26,7 +26,8 @@ export default {
         margin: auto;
         background-color: $secondary;
         position: relative;
-        width:25rem;
+        // width:25rem;
+        width:75%;
         display: flex;
         align-items: center;
         border-radius: 20px;

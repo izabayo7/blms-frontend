@@ -3,17 +3,38 @@
     <div class="my-search col-5">
       <search />
     </div>
-    <div v-if="$store.state.user.user.category === 'Instructor' && $route.name !== 'Create course'" class="create_course col-2">
+    <div
+      v-if="
+        $store.state.user.user.category === 'Instructor' &&
+        $route.name !== 'Create course'
+      "
+      class="create_course col-2"
+    >
       <v-btn
         rounded
         dark
-        class="add_course mt-3 white--text"
+        class="add_course mt-3 white--text hidden-md-and-down"
         to="/courses/new-course"
       >
         <v-icon>mdi-plus</v-icon>Create new course
       </v-btn>
+      <v-btn
+        dark
+        icon
+        class="add_course mt-3 white--text hidden-lg-and-up"
+        to="/courses/new-course"
+      >
+        <v-icon>mdi-plus</v-icon>
+      </v-btn>
     </div>
-    <div :class="`notification col-1 offset-${$store.state.user.user.category === 'Instructor' && $route.name !== 'Create course' ? 1 : 3}`">
+    <div
+      :class="`notification col-1 offset-1 offset-md-${
+        $store.state.user.user.category === 'Instructor' &&
+        $route.name !== 'Create course'
+          ? 1
+          : 2
+      }`"
+    >
       <notifications />
     </div>
     <div class="profile col-3">
@@ -49,9 +70,10 @@ export default {
 
   .my-search {
     // padding-left: 5rem;
-    margin: auto;
+    margin-top: auto;
+    margin-bottom: auto;
   }
-  .add_course{
+  .add_course {
     background-color: $primary !important;
   }
 }

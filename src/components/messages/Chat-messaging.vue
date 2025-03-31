@@ -139,7 +139,7 @@ export default {
 
 
     this.$store.getters['chat/socket'].on('message-sent',message => {
-      console.log(message)
+      console.log(message, new Date())
       this.$store.commit('chat/ADD_ONGOING_MESSAGE',message)
     })
     /*

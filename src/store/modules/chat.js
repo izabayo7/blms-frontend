@@ -92,7 +92,7 @@ export default {
         ADD_ONGOING_MESSAGE(state, newMessage){
 
             newMessage = {
-                content:newMessage,
+                content:newMessage.content,
                 createdAt: new Date(),
                 _id:`${Math.random()}`
             }

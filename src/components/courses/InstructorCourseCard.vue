@@ -194,7 +194,7 @@ export default {
     .class-card {
       width: 280px !important;
       .first-row {
-        height: 155px;
+        height: 180px;
         .menu-btn {
           margin-left: 85px;
         }
