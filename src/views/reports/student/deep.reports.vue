@@ -2,13 +2,14 @@
   <v-app v-if="course" id="reports-page" class="instructor_reports">
     <!-- <back class="mt-0 mb-6 ml-n6" to="/reports" /> -->
     <div class="table-one">
-      <navigation title="Submissions" class="mb-6" :links="navigation_links" />
+      <navigation title="Submissions" class="mb-6" :links="navigation_links"/>
       <v-data-table
-        :headers="submissionHeaders"
-        :items="course.submissions"
-        :items-per-page="5"
-        sort-by="dateOfSubmission"
-        class="data-table"
+          :headers="submissionHeaders"
+          :items="course.submissions"
+          :items-per-page="5"
+          sort-by="dateOfSubmission"
+          class="data-table"
+          @click:row="handleRowClick"
       >
         <template v-slot:item.target="{ item }">
           <span class="d-block">{{ item.quiz.target.chapter.name }}</span>
@@ -18,13 +19,13 @@
         </template>
         <template v-slot:item.total_marks="{ item }">
           <span>{{
-            `${item.marked ? item.total_marks : ""} / ${item.quiz.total_marks}`
-          }}</span>
+              `${item.marked ? item.total_marks : ""} / ${item.quiz.total_marks}`
+            }}</span>
         </template>
         <template v-slot:item.marking_status="{ item }">
           <span
-            :class="`normal--text ${item.marked ? 'marked' : 'not_marked'}`"
-            to="/"
+              :class="`normal--text ${item.marked ? 'marked' : 'not_marked'}`"
+              to="/"
           >
             {{ item.marked ? "Marked" : "Not marked" }}
           </span>
@@ -37,28 +38,19 @@
             {{ item.total_feedbacks }}
           </span>
           <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="21.214"
-            height="21.214"
-            viewBox="0 0 21.214 21.214"
+              xmlns="http://www.w3.org/2000/svg"
+              width="21.214"
+              height="21.214"
+              viewBox="0 0 21.214 21.214"
           >
             <path
-              id="Icon_material-feedback"
-              data-name="Icon material-feedback"
-              d="M22.092,3H5.121A2.119,2.119,0,0,0,3.011,5.121L3,24.214l4.243-4.243h14.85a2.128,2.128,0,0,0,2.121-2.121V5.121A2.128,2.128,0,0,0,22.092,3ZM14.668,15.728H12.546V13.607h2.121Zm0-4.243H12.546V7.243h2.121Z"
-              transform="translate(-3 -3)"
-              fill="#fc6767"
+                id="Icon_material-feedback"
+                data-name="Icon material-feedback"
+                d="M22.092,3H5.121A2.119,2.119,0,0,0,3.011,5.121L3,24.214l4.243-4.243h14.85a2.128,2.128,0,0,0,2.121-2.121V5.121A2.128,2.128,0,0,0,22.092,3ZM14.668,15.728H12.546V13.607h2.121Zm0-4.243H12.546V7.243h2.121Z"
+                transform="translate(-3 -3)"
+                fill="#fc6767"
             />
           </svg>
-        </template>
-        <template v-slot:item.actions="{ item }">
-          <v-btn
-            color="warning"
-            :to="`/quiz/${item.quiz.name}/${$store.state.user.user.user_name}`"
-            icon
-          >
-            <v-icon> mdi-eye </v-icon>
-          </v-btn>
         </template>
         <template v-slot:no-data>
           <span class="text-h6">Oops You have no submissions.</span>
@@ -68,8 +60,9 @@
   </v-app>
 </template>
 <script>
-import { mapActions } from "vuex";
+import {mapActions} from "vuex";
 import colors from "@/assets/sass/imports/_colors.scss";
+
 export default {
   components: {
     navigation: () => import("@/components/shared/simple_navigation"),
@@ -97,7 +90,7 @@ export default {
           value: "attachments",
           align: "center",
         },
-        { text: "Status", value: "marking_status", align: "center" },
+        {text: "Status", value: "marking_status", align: "center"},
         {
           text: "Marks",
           value: "total_marks",
@@ -109,7 +102,6 @@ export default {
           align: "center",
           sortable: false,
         },
-        { text: "Actions", value: "actions", align: "center", sortable: false },
       ];
     },
     navigation_links() {
@@ -130,6 +122,9 @@ export default {
     },
   },
   methods: {
+    handleRowClick(value) {
+      this.$router.push(`/quiz/${value.quiz.name}/${this.$store.state.user.user.user_name}`)
+    },
     ...mapActions("quiz_submission", ["getQuizSubmissionsInQuiz"]),
     guess() {
       return Math.random() > Math.random();
@@ -152,22 +147,27 @@ export default {
   .normal--text {
     font-size: 18px;
     font-weight: 500;
+
     &.small {
       font-size: 12px;
     }
+
     &.marked {
       color: #3ce970 !important;
     }
+
     &.not_marked {
       color: #fc6767 !important;
     }
   }
+
   .data-table {
     &.courses {
       .normal--text {
         font-size: 14px;
         font-weight: 500;
       }
+
       .semi_bold_text {
         font-weight: 700;
       }

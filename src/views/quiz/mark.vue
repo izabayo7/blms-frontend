@@ -40,7 +40,80 @@
                   placeholder="Type your answer here"
                   class="answer-field"
                 ></textarea>
-                <div v-else class="d-flex">
+                <div v-else class="">
+                  <div v-if="question.type.includes('select')" class="ml-4">
+                    <div class="choice_status vertically--centered">
+                      <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          v-if="attempt.answers[i].marks == question.marks"
+                          width="34.657"
+                          height="32.115"
+                          viewBox="0 0 34.657 32.115"
+                      >
+                        <g
+                            id="Icon_feather-check-square"
+                            data-name="Icon feather-check-square"
+                            transform="translate(2.5 2.5)"
+                        >
+                          <path
+                              id="Path_2256"
+                              data-name="Path 2256"
+                              d="M13.5,16.545l4.519,4.519L33.083,6"
+                              transform="translate(-4.462 -4.494)"
+                              fill="none"
+                              stroke="#3ce970"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="5"
+                          />
+                          <path
+                              id="Path_2257"
+                              data-name="Path 2257"
+                              d="M31.615,18.058V28.6A3.013,3.013,0,0,1,28.6,31.615H7.513A3.013,3.013,0,0,1,4.5,28.6V7.513A3.013,3.013,0,0,1,7.513,4.5h16.57"
+                              transform="translate(-4.5 -4.5)"
+                              fill="none"
+                              stroke="#3ce970"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="5"
+                          />
+                        </g>
+                      </svg>
+
+                      <svg
+                          v-else
+                          id="Icon_ionic-ios-checkbox-outline"
+                          data-name="Icon ionic-ios-checkbox-outline"
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="30.103"
+                          height="30.103"
+                          viewBox="0 0 30.103 30.103"
+                      >
+                        <path
+                            id="Path_2259"
+                            data-name="Path 2259"
+                            d="M32.094,4.5H7.009A2.506,2.506,0,0,0,4.5,7.009V32.094A2.506,2.506,0,0,0,7.009,34.6H32.094A2.506,2.506,0,0,0,34.6,32.094V7.009A2.506,2.506,0,0,0,32.094,4.5Zm.314,27.281a.629.629,0,0,1-.627.627H7.322a.629.629,0,0,1-.627-.627V7.322A.629.629,0,0,1,7.322,6.7H31.781a.629.629,0,0,1,.627.627Z"
+                            transform="translate(-4.5 -4.5)"
+                            fill="#fc6767"
+                        />
+                        <path
+                            id="Icon_metro-cross"
+                            data-name="Icon metro-cross"
+                            d="M19.112,15.339h0l-5.064-5.064L19.111,5.21h0a.523.523,0,0,0,0-.738L16.719,2.08a.523.523,0,0,0-.738,0h0L10.917,7.145,5.853,2.08h0a.523.523,0,0,0-.738,0L2.723,4.473a.523.523,0,0,0,0,.738h0l5.064,5.064L2.723,15.339h0a.523.523,0,0,0,0,.738l2.392,2.392a.523.523,0,0,0,.738,0h0L10.917,13.4l5.064,5.064h0a.523.523,0,0,0,.738,0l2.392-2.392a.523.523,0,0,0,0-.738Z"
+                            transform="translate(4.548 4.653)"
+                            fill="#fc6767"
+                        />
+                      </svg>
+
+                      <span class="ml-2 font-weight-bold">
+                        {{
+                          attempt.answers[i].marks == question.marks
+                              ? "Right answer"
+                              : "Wrong answer"
+                        }}
+                      </span>
+                    </div>
+                  </div>
                   <div class="options">
                     <div v-if="question.type.includes('text')" class="d-block">
                       <div
@@ -127,79 +200,7 @@
                     </div>
                   </div>
 
-                  <div v-if="question.type.includes('select')" class="ml-4">
-                    <div class="choice_status vertically--centered">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        v-if="attempt.answers[i].marks == question.marks"
-                        width="34.657"
-                        height="32.115"
-                        viewBox="0 0 34.657 32.115"
-                      >
-                        <g
-                          id="Icon_feather-check-square"
-                          data-name="Icon feather-check-square"
-                          transform="translate(2.5 2.5)"
-                        >
-                          <path
-                            id="Path_2256"
-                            data-name="Path 2256"
-                            d="M13.5,16.545l4.519,4.519L33.083,6"
-                            transform="translate(-4.462 -4.494)"
-                            fill="none"
-                            stroke="#3ce970"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="5"
-                          />
-                          <path
-                            id="Path_2257"
-                            data-name="Path 2257"
-                            d="M31.615,18.058V28.6A3.013,3.013,0,0,1,28.6,31.615H7.513A3.013,3.013,0,0,1,4.5,28.6V7.513A3.013,3.013,0,0,1,7.513,4.5h16.57"
-                            transform="translate(-4.5 -4.5)"
-                            fill="none"
-                            stroke="#3ce970"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="5"
-                          />
-                        </g>
-                      </svg>
 
-                      <svg
-                        v-else
-                        id="Icon_ionic-ios-checkbox-outline"
-                        data-name="Icon ionic-ios-checkbox-outline"
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="30.103"
-                        height="30.103"
-                        viewBox="0 0 30.103 30.103"
-                      >
-                        <path
-                          id="Path_2259"
-                          data-name="Path 2259"
-                          d="M32.094,4.5H7.009A2.506,2.506,0,0,0,4.5,7.009V32.094A2.506,2.506,0,0,0,7.009,34.6H32.094A2.506,2.506,0,0,0,34.6,32.094V7.009A2.506,2.506,0,0,0,32.094,4.5Zm.314,27.281a.629.629,0,0,1-.627.627H7.322a.629.629,0,0,1-.627-.627V7.322A.629.629,0,0,1,7.322,6.7H31.781a.629.629,0,0,1,.627.627Z"
-                          transform="translate(-4.5 -4.5)"
-                          fill="#fc6767"
-                        />
-                        <path
-                          id="Icon_metro-cross"
-                          data-name="Icon metro-cross"
-                          d="M19.112,15.339h0l-5.064-5.064L19.111,5.21h0a.523.523,0,0,0,0-.738L16.719,2.08a.523.523,0,0,0-.738,0h0L10.917,7.145,5.853,2.08h0a.523.523,0,0,0-.738,0L2.723,4.473a.523.523,0,0,0,0,.738h0l5.064,5.064L2.723,15.339h0a.523.523,0,0,0,0,.738l2.392,2.392a.523.523,0,0,0,.738,0h0L10.917,13.4l5.064,5.064h0a.523.523,0,0,0,.738,0l2.392-2.392a.523.523,0,0,0,0-.738Z"
-                          transform="translate(4.548 4.653)"
-                          fill="#fc6767"
-                        />
-                      </svg>
-
-                      <span class="ml-2 font-weight-bold">
-                        {{
-                          attempt.answers[i].marks == question.marks
-                            ? "Right answer"
-                            : "Wrong answer"
-                        }}
-                      </span>
-                    </div>
-                  </div>
                 </div>
               </v-col>
             </v-row>
