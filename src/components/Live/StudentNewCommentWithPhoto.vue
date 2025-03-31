@@ -17,13 +17,12 @@
               <div v-else class="text">{{ user_full_names | computeText }}</div>
             </v-avatar>
           </div>
-          <div class="input mx-3 px-3 py-1">
-            <textarea
-              v-model="comment"
+          <div class="input ml-3 pl-3 py-1">
+            <span role="textbox" contenteditable
+
               type="text"
-              placeholder="Add a comment ..."
             >
-            </textarea>
+            </span>
           </div>
         </div>
         <div class="action-btn" >
@@ -108,13 +107,18 @@ export default {
           }
         }
         .input {
-          width: 90%;
+          width: 100%;
           display: flex;
           justify-items: center;
-          border-bottom: 3px solid $secondary;
 
-          textarea {
+          span {
             width: 100%;
+            color:$font;
+            font-size: .8rem;
+            outline:none;
+            border:.5px solid $secondary;
+            border-radius: 3px;
+            padding:.5rem;
           }
         }
       }
