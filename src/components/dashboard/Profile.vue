@@ -15,7 +15,9 @@
             | computeText
         }}
       </v-avatar>
-      <v-icon>mdi-chevron-{{ profile_card_active ? "up" : "down" }}</v-icon>
+      <v-icon color="black"
+        >mdi-chevron-{{ profile_card_active ? "up" : "down" }}</v-icon
+      >
       <div class="profile-card">
         <div class="profile-card-wrapper" v-if="profile_card_active">
           <profile-card />
