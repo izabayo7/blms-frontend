@@ -56,7 +56,7 @@
           </div>
         </template>
         <template v-slot:no-data>
-          <span class="text-h6">Oops You have no submissions.</span>
+          <span class="text-h6">Submission list is empty</span>
         </template>
       </v-data-table>
     </div>
@@ -107,7 +107,7 @@
           <span>{{ Math.round(item.score) || 0 }}%</span>
         </template>
         <template v-slot:no-data>
-          <span class="text-h6">Oops You don't have a course.</span>
+          <span class="text-h6">Course list is empty</span>
         </template>
       </v-data-table>
     </div>

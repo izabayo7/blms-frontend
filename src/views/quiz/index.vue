@@ -126,7 +126,7 @@
               </div>
             </template>
             <template v-slot:no-data>
-              <span class="text-h6">Oops You have not yet created a quiz.</span>
+              <span class="text-h6">Quiz list is empty</span>
             </template>
           </v-data-table>
           <v-data-table

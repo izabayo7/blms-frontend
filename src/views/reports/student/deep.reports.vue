@@ -53,7 +53,7 @@
           </svg>
         </template>
         <template v-slot:no-data>
-          <span class="text-h6">Oops You have no submissions.</span>
+          <span class="text-h6">Submission list is empty</span>
         </template>
       </v-data-table>
     </div>
