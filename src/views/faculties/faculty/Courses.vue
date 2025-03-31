@@ -1,33 +1,36 @@
 <template>
 <div class="my-faculties bg-one d-flex justify-center">
-  <div class="faculties-container  ">
-      <div class="tabular-users">
-        <div class="table-wrapper mt-6" v-if="coursesByFaculty.length > 0">
+  <div class="faculties-container  row">
+<!--      <div class="tabular-users">-->
+<!--        <div class="table-wrapper mt-6" v-if="coursesByFaculty.length > 0">-->
 
-<!--          table header-->
-          <div class="table-header">
-            <table-header />
-          </div>
-<!--          list of courses in table form-->
-          <div class="table">
-            <table-ui :options="options" :data="coursesByFaculty"/>
-          </div>
-        </div>
-      </div>
+<!--&lt;!&ndash;          table header&ndash;&gt;-->
+<!--          <div class="table-header">-->
+<!--            <table-header />-->
+<!--          </div>-->
+<!--&lt;!&ndash;          list of courses in table form&ndash;&gt;-->
+<!--          <div class="table">-->
+<!--            <table-ui :options="options" :data="coursesByFaculty"/>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+    <div class="col-12 col-md-4"
+         v-for="(course, i) in coursesByFaculty"
+         :key="i">
+      <student-course-card category="ongoing" :course="course"/>
+    </div>
   </div>
 </div>
 </template>
 
 <script>
-import TableHeader from "../../../components/reusable/ui/table-header";
-import TableUi from "../../../components/reusable/ui/table-ui";
 import {mapGetters} from "vuex";
 
 
 export default {
   //TODO using dynamic students from backend
 name: "FacultyCourses",
-  components: {TableUi, TableHeader},
+  components: {StudentCourseCard: () => import("@/components/courses/StudentCourseCard"),},
   data(){
     return{
       courses:[],
@@ -45,11 +48,9 @@ name: "FacultyCourses",
 
   },
   async mounted(){
-
     await this.$store.dispatch('faculties/getFaculty', this.facultyId);
     await this.$store.dispatch('courses/getCourseByFaculty',{facultyId:this.facultyId})
     await this.$store.dispatch('faculties/changeHeader',{title:"Courses List"})
-
   }
 }
 </script>
