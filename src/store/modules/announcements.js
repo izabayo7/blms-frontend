@@ -1,0 +1,73 @@
+import apis from "@/services/apis";
+import router from '@/router'
+
+const getDefaultState = () => ({
+    announcements: {
+        data: [],
+        loaded: false
+    },
+    selected_announcement: ''
+})
+export default {
+    namespaced: true,
+    state: getDefaultState,
+    mutations: {
+        set_selected_announcement(state, id) {
+            state.selected_announcement = id
+        },
+        RESET_STATE(state) {
+            Object.assign(state, getDefaultState())
+        }
+    },
+    actions: {
+        //get announcement from backend
+        getAnnouncements({state}) {
+            // if announcements not loaded fetch them
+            if (!state.announcements.loaded) {
+                apis.get(`announcement/user`).then(d => {
+                    d.data = d.data.data
+                    state.announcements.data = d.data
+                    //announce that data have been loaded
+                    state.announcements.loaded = true
+                })
+            }
+        },
+        //create a announcement
+        createAnnouncement({state}, {announcement}) {
+            return apis.create('announcement', announcement).then(d => {
+                state.announcements.data.push(d.data.data)
+                router.push('/announcements')
+            })
+        },
+        //update a announcement
+        updateAnnouncement({state}, {content}) {
+            let announcementIndex
+            for (const i in state.announcements.data) {
+                if (state.announcements.data[i]._id == state.selected_announcement) {
+                    announcementIndex = i
+                    break
+                }
+            }
+
+            return apis.update('announcement', state.selected_announcement, {content}).then(d => {
+
+                state.announcements.data[announcementIndex].content = d.data.content
+            })
+
+        },
+    },
+    getters: {
+        //get the selected_announcement
+        selected_announcement: state => {
+            return state.selected_announcement
+        },
+        //get all announcements
+        announcements: state => {
+            return state.announcements.data
+        },
+        //get a specified announcements
+        announcement: state => {
+            return state.announcements.data.filter(announcement => announcement._id == state.selected_announcement)[0]
+        },
+    },
+}

@@ -17,6 +17,7 @@ import faculty_college_year from '@/store/modules/faculty_college_year'
 import live_session from '@/store/modules/live_session'
 import app_notification from '@/store/modules/app_notification'
 import network from '@/store/modules/network'
+import announcement from '@/store/modules/announcements'
 
 Vue.use(Vuex)
 export default new Vuex.Store({
@@ -43,6 +44,7 @@ export default new Vuex.Store({
         faculty_college_year,
         live_session,
         app_notification,
-        network
+        network,
+        announcement
     }
 })
