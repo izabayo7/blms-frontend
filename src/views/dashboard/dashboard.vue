@@ -66,6 +66,7 @@ export default {
       width: 100%;
       overflow-y: auto;
       overflow-x: hidden;
+      background: $tertiary;
     }
   }
 }
