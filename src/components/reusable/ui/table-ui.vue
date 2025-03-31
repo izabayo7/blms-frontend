@@ -172,7 +172,7 @@ export default {
 
       this.selected_all = !this.selected_all
 
-      this.$emit('select', {index: -1})
+      this.$emit('select', new Set([-1]))
 
     },
     sort(tabHead) {
@@ -196,8 +196,8 @@ export default {
         selected.delete(i)
       else {
         selected.add(i)
-        this.$emit('select', {index: i, data: this.data[i]})
       }
+      this.$emit('select', selected)
 
       this.selected = selected
     }
