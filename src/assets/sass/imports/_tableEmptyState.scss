@@ -1,0 +1,64 @@
+.empty-faculties{
+display: flex;
+  justify-content: center;
+  place-items: center;
+  text-align: center  ;
+  height: 60vh;
+  .icon{
+    width: 143px;
+    height: 143px;
+    left: 612px;
+    top: 266px;
+    margin: auto;
+    border-radius: 50%;
+    background: rgba(25, 48, 116, 0.03);
+    display: grid;
+    place-items: center;
+
+  }
+  .title{
+    margin-top: 14px;
+    font-family: Inter;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 24px;
+    line-height: 29px;
+
+    /* identical to box height */
+
+    color: rgba(25, 48, 116, 0.6);
+  }
+  .subtitle{
+    margin-top: 8px;
+    font-family: Inter;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 11px;
+    line-height: 15px;
+
+    /* or 138% */
+    text-align: center;
+
+    color: #000000;
+  }
+  button{
+    margin-top: 21px;
+    width: 184px;
+    height: 52.67px;
+    left: 591px;
+    top: 512px;
+
+    background: #193074;
+    border-radius: 4.75155px;
+
+    font-family: Inter;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 12.354px;
+    line-height: 15px;
+
+    /* identical to box height */
+
+    color: #FFFFFF;
+  }
+}
