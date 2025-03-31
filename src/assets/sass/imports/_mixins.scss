@@ -64,8 +64,9 @@
         }
       }
     }
-  
-  @mixin input-el {
+}
+
+@mixin input-el {
   position: relative;
 
   .focused {
