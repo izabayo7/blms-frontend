@@ -5,6 +5,10 @@ const getDefaultState = () => ({
         data: [],
         loaded: false
     },
+    assignments: {
+        data: [],
+        loaded: false
+    },
     // keep the selected quiz
     selected_quiz: ''
 })
@@ -42,6 +46,17 @@ export default {
                     state.quiz.data = d.data
                     //announce that data have been loaded
                     state.quiz.loaded = true
+                })
+            }
+        },
+        getAssignments({ state }) {
+            // when quiz is not loaded fetch quizes
+            if (!state.quiz.loaded) {
+                apis.get(`assignments`).then(d => {
+                    d.data = d.data.data
+                    state.assignments.data = d.data
+                    //announce that data have been loaded
+                    state.assignments.loaded = true
                 })
             }
         },
@@ -186,11 +201,24 @@ export default {
                 }
             })
         },
+        delete_assignment({ state }, { id }) {
+            apis.delete('assignments', id).then(() => {
+                for (const i in state.quiz.data) {
+                    if (state.assignments.data[i]._id === id) {
+                        state.assignments.data.splice(i, 1)
+                        break
+                    }
+                }
+            })
+        },
     },
     getters: {
         //get a specified quiz
         loaded: state => {
             return state.quiz.loaded
+        },
+        assignments_loaded: state => {
+            return state.assignments.loaded
         },
         //get the selected_quiz
         selected_quiz: state => {
@@ -199,6 +227,9 @@ export default {
         //get a specified quiz by name
         all_quiz: state => {
             return state.quiz.data
+        },
+        assignments: state => {
+            return state.assignments.data
         },
     },
 }
