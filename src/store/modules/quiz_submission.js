@@ -62,15 +62,15 @@ export default {
         getQuizSubmissions({ state }, { user_name }) {
             // if submission not loaded fetch them
             // if (!state.quiz_submission.loaded) {
-                return apis.get(`quiz_submission/user/${user_name}`).then(d => {
-                    d.data = d.data.data
-                    state.quiz_submission.data = d.data
+            return apis.get(`quiz_submission/user/${user_name}`).then(d => {
+                d.data = d.data.data
+                state.quiz_submission.data = d.data
 
-                    //announce that data have been loaded
-                    state.quiz_submission.loaded = true
+                //announce that data have been loaded
+                state.quiz_submission.loaded = true
 
-                    return d.data
-                })
+                return d.data
+            })
             // }
         },
 
@@ -182,7 +182,7 @@ export default {
         },
         //get all quiz submissions
         quiz_submissions: state => {
-            return state.quiz_submission.data.reverse()
+            return state.quiz_submission.data
         },
     },
 }
