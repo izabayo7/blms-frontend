@@ -192,9 +192,11 @@ export default {
                     for (const k in quiz.questions) {
                         if (quiz.questions[k].options) {
                             for (const j in quiz.questions[k].options.choices) {
-                                if (quiz.questions[k].options.choices[j].src.includes('http')) {
-                                    const mediapath = quiz.questions[k].options.choices[j].src
-                                    quiz.questions[k].options.choices[j].src = mediapath.split("/")[mediapath.split("/").length - 1]
+                                if (quiz.questions[k].options.choices[j].src) {
+                                    if (quiz.questions[k].options.choices[j].src.includes('http')) {
+                                        const mediapath = quiz.questions[k].options.choices[j].src
+                                        quiz.questions[k].options.choices[j].src = mediapath.split("/")[mediapath.split("/").length - 1]
+                                    }
                                 }
                             }
                         }
