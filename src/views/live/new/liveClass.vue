@@ -564,6 +564,7 @@ export default {
     };
 
     window.onbeforeunload = () => {
+      console.log("bibaye before unload")
       this.ws.close();
     };
 
@@ -609,7 +610,8 @@ export default {
     }
 
   },
-  beforeDestroy() {
+  destroyed() {
+    console.log("bibaye when destroyed")
     this.ws.close();
   },
   watch: {
