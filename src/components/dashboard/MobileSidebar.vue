@@ -25,12 +25,6 @@
             </svg>
 
           </div>
-          <div
-              class="link-name"
-              v-show="state"
-          >
-            Home
-          </div>
         </li>
         <li
             v-if="!disableFunctionalities&&(userCategory === 'ADMIN' || userCategory === 'INSTRUCTOR')"
@@ -86,12 +80,6 @@
               </defs>
             </svg>
           </div>
-          <div
-              class="link-name"
-              v-show="state"
-          >
-            {{ userCategory === 'ADMIN' ? 'Users' : 'Students' }}
-          </div>
         </li>
         <li
             v-if="userCategory === 'ADMIN'"
@@ -120,12 +108,6 @@
               />
             </svg>
           </div>
-          <div
-              class="link-name"
-              v-show="state"
-          >
-            Faculties
-          </div>
         </li>
         <li
             v-if="!disableFunctionalities&&(userCategory === 'STUDENT' || userCategory === 'INSTRUCTOR')"
@@ -150,7 +132,6 @@
               />
             </svg>
           </div>
-          <div class="link-name" v-show="state">Courses</div>
         </li>
         <li
             v-if="!disableFunctionalities&&(userCategory === 'ADMIN' || userCategory === 'INSTRUCTOR')"
@@ -183,7 +164,6 @@
             </svg>
 
           </div>
-          <div class="link-name" v-show="state">Announcements</div>
         </li>
         <li
             v-if="!disableFunctionalities&&(userCategory === 'STUDENT' || userCategory === 'INSTRUCTOR')"
@@ -208,7 +188,6 @@
               />
             </svg>
           </div>
-          <div class="link-name" v-show="state">Reports</div>
         </li>
         <!--        <li-->
         <!--          v-if="userCategory === 'STUDENT' || userCategory === 'INSTRUCTOR'"-->
@@ -233,7 +212,6 @@
         <!--              />-->
         <!--            </svg>-->
         <!--          </div>-->
-        <!--          <div class="link-name" v-show="state">Library</div>-->
         <!--        </li>-->
         <li
             @click="
@@ -273,7 +251,6 @@
               </defs>
             </svg>
           </div>
-          <div class="link-name" v-show="state">Messages</div>
         </li>
         <li
             v-if="!disableFunctionalities&&(userCategory === 'INSTRUCTOR')"
@@ -298,7 +275,6 @@
               />
             </svg>
           </div>
-          <div class="link-name" v-show="state">Quiz</div>
         </li>
       </ul>
     </div>
@@ -362,7 +338,7 @@ export default {
         box-shadow: 0 0 10px 0 lighten($color: $primary, $amount: 20);
       }
       li {
-        padding: 0.8rem;
+        padding: 0.8rem .4rem;
         // margin: 1.5rem 0.2rem;
         margin: 0.6rem 0.2rem;
         cursor: pointer;

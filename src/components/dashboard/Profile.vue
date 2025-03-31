@@ -1,26 +1,27 @@
 <template>
   <div class="profile" ref="profile">
     <div
-      class="profile-container"
-      @click="profile_card_active = !profile_card_active"
+        class="profile-container"
+        @click="profile_card_active = !profile_card_active"
     >
       <img
-        v-if="$store.state.user.user.profile"
-        :src="$store.state.user.user.profile + '?height=100'"
-        alt="profile picture"
+          v-if="$store.state.user.user.profile"
+          :src="$store.state.user.user.profile + '?height=100'"
+          alt="profile picture"
       />
       <v-avatar v-else size="50" class="avatar">
         {{
           `${$store.state.user.user.sur_name} ${$store.state.user.user.other_names}`
-            | computeText
+              | computeText
         }}
       </v-avatar>
       <v-icon color="black"
-        >mdi-chevron-{{ profile_card_active ? "up" : "down" }}</v-icon
+      >mdi-chevron-{{ profile_card_active ? "up" : "down" }}
+      </v-icon
       >
       <div class="profile-card">
         <div class="profile-card-wrapper" v-if="profile_card_active">
-          <profile-card />
+          <profile-card/>
         </div>
       </div>
     </div>
@@ -28,9 +29,10 @@
 </template>
 <script>
 import ProfileCard from "./ProfileCard";
+
 export default {
   name: "Profile",
-  components: { ProfileCard },
+  components: {ProfileCard},
   data() {
     return {
       profile_card_active: false,
@@ -41,8 +43,8 @@ export default {
       let self = this;
       document.addEventListener("click", function (e) {
         if (
-          !self.$refs["profile"] ||
-          !self.$refs["profile"].contains(e.target)
+            !self.$refs["profile"] ||
+            !self.$refs["profile"].contains(e.target)
         ) {
           self.profile_card_active = false;
         }
@@ -72,17 +74,20 @@ export default {
       right: -1.5rem;
       top: 4rem;
     }
+
     img {
       width: 50px;
       border-radius: 50%;
       cursor: pointer;
     }
+
     .avatar {
       margin-top: 0px;
       background-color: $primary;
       color: white;
       cursor: pointer;
     }
+
     .v-icon {
       padding-left: 1rem;
     }
@@ -97,8 +102,20 @@ export default {
       &:hover {
         color: darken($font, 10);
       }
+
       span {
         padding-right: 0.7rem;
+      }
+    }
+  }
+}
+
+/* Portrait phones and smaller */
+@media (max-width: 700px) {
+  .profile {
+    .profile-container {
+      .profile-card {
+        right: .5rem;
       }
     }
   }
