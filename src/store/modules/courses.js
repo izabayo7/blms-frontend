@@ -191,6 +191,8 @@ export default {
                         type: 'chapter'
                     }
                     //   remove unnecessary fields
+                    quiz._id = undefined
+                    quiz.__v = undefined
                     quiz.createdAt = undefined
                     quiz.updatedAt = undefined
 

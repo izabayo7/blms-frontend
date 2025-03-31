@@ -30,7 +30,7 @@ export default {
     actions: {
         //get quiz from backend
         getQuizes({ state }, { userCategory, userId }) {
-            // try to load only new data when there is some available
+            // try to load only new data when there is no available
             apis.get(`quiz/${userCategory}/${userId}`).then(d => {
                 state.quiz.data = d.data
                 //announce that data have been loaded
@@ -41,7 +41,7 @@ export default {
         create_quiz({ state, commit, dispatch }, { quiz, pictures }) {
             let quizObject = {}
             // set the dialog
-            dispatch('modal/set_modal', { template: 'display_information', title: 'Creating _quiz', message: 'Saving information' }, { root: true })
+            dispatch('modal/set_modal', { template: 'display_information', title: 'Creating quiz', message: 'Saving information' }, { root: true })
             return apis.create('quiz', quiz).then(d => {
                 quizObject = d.data
                 if (pictures.length > 0) {
@@ -84,8 +84,6 @@ export default {
         //update a quiz
         update_quiz({ state, commit, dispatch }, { quiz, pictures }) {
             let quizObject = {}
-            // set the dialog
-            dispatch('modal/set_modal', { template: 'display_information', title: 'Creating _quiz', message: 'Saving information' }, { root: true })
             return apis.update('quiz', state.selected_quiz, quiz).then(d => {
                 quizObject = d.data
                 if (pictures.length > 0) {
@@ -102,8 +100,8 @@ export default {
                         }
                     }
                     if (pictureFound) {
+                        dispatch('modal/set_modal', { template: 'display_information', title: 'Updating quiz', message: 'uploading pictures' }, { root: true })
                         commit('modal/update_progress', 0, { root: true })
-                        commit('modal/update_message', `uploading pictures`, { root: true })
 
                         apis.create(`file/quizAttachedFiles/${d.data._id}`, formData, {
                             headers: {
@@ -114,20 +112,21 @@ export default {
                             }
                         }).then((response) => {
                             quizObject = response.data
+                            state.quiz.data.push(quizObject)
+                            setTimeout(() => {
+                                dispatch('modal/reset_modal', null, { root: true })
+                            }, 1000);
                         })
                     }
                 }
-                state.quiz.data.push(quizObject)
-                setTimeout(() => {
-                    dispatch('modal/reset_modal', null, { root: true })
-                }, 3000);
-
+                return
             })
 
         },
+
         //find a quiz by name
         findQuizByName({ state, commit }, { userCategory, userId, quizName }) {
-            if (state.quiz.data.length < 1) {
+            if (!state.quiz.data.length) {
                 apis.get(`quiz/${userCategory}/${userId}/${quizName}`).then(d => {
                     state.quiz.data = [d.data]
                     commit('set_selected_quiz', d.data._id)
@@ -160,10 +159,10 @@ export default {
         selected_quiz: state => {
             return state.quiz.data.filter(quiz => quiz._id == state.selected_quiz)[0]
         },
-        //get a specified quiz by name
-        quiz: state => (name) => {
-            return state.quiz.data.filter(quiz => quiz.name == name)[0]
-        },
+        // //get a specified quiz by name
+        // quiz: state => (name) => {
+        //     return state.quiz.data.filter(quiz => quiz.name == name)[0]
+        // },
         //get a specified quiz by name
         all_quiz: state => {
             return state.quiz.data

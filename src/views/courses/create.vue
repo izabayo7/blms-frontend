@@ -7,17 +7,17 @@
           <v-btn
             rounded
             text
-            color="#000"
-            dark
-            :class="`details-btn ${type=='details' ? 'new-active-btn' : ''}`"
-          >Course Details</v-btn>
+            :class="`details-btn ${type == 'details' ? 'new-active-btn' : ''}`"
+            >Course Details</v-btn
+          >
           <v-btn
             rounded
             text
-            color="#000"
-            dark
-            :class="`chapters-btn ${type=='chapters' ? 'new-active-btn' : ''}`"
-          >Course Chapters</v-btn>
+            :class="`chapters-btn ${
+              type == 'chapters' ? 'new-active-btn' : ''
+            }`"
+            >Course Chapters</v-btn
+          >
         </div>
       </v-col>
       <v-col v-if="type=='details'" class="col-12">

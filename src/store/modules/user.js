@@ -21,6 +21,7 @@ export default {
         }, 
         unsetUser({ commit }) {
             commit('UNSET_USER')
+            // reset the whole store
         }
     },
     getters: {

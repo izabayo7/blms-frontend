@@ -100,7 +100,6 @@
                         </v-col>
                         <v-col class="col-12">
                           <kurious-file-picker
-                            v-if="mode !== ''"
                             :allowedTypes="['video']"
                             @addFile="updateVideo"
                             @removeFile="removeVideo"
@@ -124,14 +123,16 @@
                           <v-row>
                             <v-col
                               :class="`col-6 text-center ${
-                                mode == 'edit' ? 'yellow white--text' : ''
+                                mode == 'edit' ? 'active-mode white--text' : ''
                               }`"
                               @click="switchMode('edit')"
                               >Edit mode</v-col
                             >
                             <v-col
                               :class="`col-6 text-center ${
-                                mode == 'preview' ? 'yellow white--text' : ''
+                                mode == 'preview'
+                                  ? 'active-mode white--text'
+                                  : ''
                               }`"
                               @click="switchMode('preview')"
                               >View mode</v-col
@@ -142,14 +143,9 @@
                         <v-col v-if="mode === 'preview'" class="col-12 title">{{
                           course.chapters[activeChapter].name
                         }}</v-col>
-                        <v-col
-                          v-if="mode === 'preview'"
-                          class="col-12 subtitle"
-                          >{{ chapter.description }}</v-col
-                        >
                         <v-col class="col-12">
                           <kurious-editor
-                            v-if="mode !== ''"
+                          v-if="mode !== ''"
                             ref="editor"
                             :mode="`${mode === 'edit' ? mode : 'preview'}`"
                             :defaultContent="
@@ -240,7 +236,6 @@
                         </v-col>
                         <v-col class="col-12">
                           <kurious-file-picker
-                            v-if="mode !== ''"
                             multiple
                             @addFile="addAttachment"
                             @removeFile="removeAttachment"
@@ -288,28 +283,28 @@
                                 </svg>
                               </button>
                             </v-col>
-                            <v-col class="col-6">
+                            <v-col class="col-6 px-0">
                               Name
                               <span class="font-weight-bold caption">{{
                                 selectedQuiz.name
                               }}</span>
                             </v-col>
-                            <v-col class="col-6">
+                            <v-col class="col-6 px-0">
                               Number of questions
                               <span class="font-weight-bold">{{
                                 selectedQuiz.questions.length
                               }}</span>
                             </v-col>
-                            <v-col class="col-6">
+                            <v-col class="col-6 px-0">
                               Course
                               <span class="font-weight-bold caption">{{
                                 course.name
                               }}</span>
                             </v-col>
-                            <v-col class="col-6">
+                            <v-col class="col-6 px-0">
                               Duration
                               <span class="font-weight-bold caption">{{
-                                selectedQuiz.duration
+                                new Date(selectedQuiz.duration * 100).toISOString().substr(11, 8)
                               }}</span>
                             </v-col>
                           </v-row>
@@ -361,7 +356,7 @@
 // import Apis from "@/services/apis";
 import { mapActions, mapGetters } from "vuex";
 export default {
-  name: "edit_course",
+  name: "edit_chapters",
   props: {
     action: {
       type: String,
@@ -402,6 +397,7 @@ export default {
       this.mode = "";
       this.content = "";
       this.selectedQuizName = "";
+      this.e6 = 1
       if (this.course.chapters[this.activeChapter]._id) {
         this.getChapterMainContent(
           this.course.chapters[this.activeChapter]._id
@@ -468,11 +464,13 @@ export default {
     },
     switchMode(mode) {
       this.mode = "";
-      this.content = document.querySelector(".ProseMirror").innerHTML;
+      this.content = this.$refs.editor.getHTML();
       document
         .querySelector(".ProseMirror")
         .setAttribute("contenteditable", mode === "edit");
-      this.mode = mode;
+      this.$nextTick(function () {
+        this.mode = mode;
+      });
     },
     saveChapterChanges() {
       this.updateChapter({
@@ -576,5 +574,8 @@ export default {
   .active-chapter {
     background-color: $primary;
   }
+}
+.active-mode {
+  background-color: $primary;
 }
 </style>

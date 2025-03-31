@@ -91,7 +91,7 @@
                         v-if="course.chapters[activeIndex].quiz.length > 0"
                         color="#FFC100"
                         class="white--text next-chapter"
-                        @click="changeActiveChapter(activeIndex + 1)"
+                        :to="`/quiz/attempt/${course.chapters[activeIndex].quiz[0].name}`"
                         rounded
                         >Take Quiz</v-btn
                       >
@@ -103,7 +103,7 @@
                           finish_chapter($store.state.user.user._id).then(
                             (d) => {
                               course.progress = d;
-                              activeIndex = maximumIndex
+                              activeIndex = maximumIndex;
                             }
                           )
                         "
@@ -271,9 +271,6 @@ export default {
         this.editorContent = data;
       });
     },
-    course(){
-      this.activeIndex = this.maximumIndex
-    }
   },
   methods: {
     ...mapActions("courses", [
@@ -308,7 +305,10 @@ export default {
       userCategory: this.$store.state.user.user.category.toLowerCase(),
       userId: this.$store.state.user.user._id,
       courseName: this.$route.params.name,
-    })
+    });
+    setTimeout(() => {
+      this.activeIndex = this.maximumIndex;
+    }, 1000);
   },
 };
 </script>

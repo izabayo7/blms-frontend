@@ -7,8 +7,6 @@
           <v-btn
             rounded
             text
-            color="#000"
-            dark
             :class="`details-btn ${type == 'details' ? 'new-active-btn' : ''}`"
             @click="type = 'details'"
             >Course Details</v-btn
@@ -16,8 +14,6 @@
           <v-btn
             rounded
             text
-            color="#000"
-            dark
             :class="`chapters-btn ${
               type == 'chapters' ? 'new-active-btn' : ''
             }`"
@@ -146,13 +142,6 @@ export default {
       )._id;
     },
   },
-  watch: {
-    course() {
-      if (this.selectedFacultyCollegeYearName === "") {
-        this.selectedFacultyCollegeYearName = `${this.course.facultyCollegeYear.facultyCollege.faculty.name} ${this.course.facultyCollegeYear.collegeYear.digit}`;
-      }
-    },
-  },
   methods: {
     ...mapActions("courses", ["findCourseByName", "updateCourse"]),
     ...mapActions("faculties", ["getFacultyCollegeYears"]),
@@ -187,6 +176,9 @@ export default {
       userId: this.$store.state.user.user._id,
       courseName: this.$route.params.name,
     });
+    setTimeout(() => {
+      this.selectedFacultyCollegeYearName = `${this.course.facultyCollegeYear.facultyCollege.faculty.name} ${this.course.facultyCollegeYear.collegeYear.digit}`;
+    }, 1000);
   },
 };
 </script>

@@ -69,10 +69,15 @@ const routes = [
             component: () =>
                 import('@/views/quiz/edit')
         }, {
-            path: '/quiz/attempt/:id',
+            path: '/quiz/attempt/:name',
             name: 'TakeQuiz',
             component: () =>
-                import('@/components/take-quiz.vue')
+                import('@/views/quiz/attempt')
+        }, {
+            path: '/quiz/mark/:quiz_name/:student_name',
+            name: 'MarkQuiz',
+            component: () =>
+                import('@/views/quiz/mark')
         },
         // for reports
         {
@@ -80,11 +85,6 @@ const routes = [
             name: 'Reports',
             component: () =>
                 import('@/components/reports.vue')
-        }, {
-            path: '/reports/submission/:id',
-            name: 'MarkQuiz',
-            component: () =>
-                import('@/components/mark-quiz.vue')
         }, {
             path: '/library',
             name: 'Library',
