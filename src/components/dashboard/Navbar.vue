@@ -16,7 +16,7 @@
         dark
         icon
         class="add_course mt-3 white--text hidden-lg-and-up"
-        to="/courses/new-course"
+        to="/courses/new"
       >
         <v-icon>mdi-plus</v-icon>
       </v-btn>

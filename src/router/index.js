@@ -136,6 +136,7 @@ const routes = [
                     // for reports
                     {
                         path: '/reports',
+                        name: 'Reports',
                         component: () =>
                             import('@/views/reports')
                     },
@@ -143,11 +144,6 @@ const routes = [
                         path: '/reports/:target',
                         component: () =>
                             import('@/views/reports/student_reports')
-                    },
-                    {
-                        path: '/reports/:target/:user_name',
-                        component: () =>
-                            import('@/views/reports')
                     },
                     {
                         path: '/library',

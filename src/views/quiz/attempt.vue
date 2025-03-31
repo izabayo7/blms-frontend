@@ -209,7 +209,7 @@ export default {
           this.$router.push("/quiz");
         } else if (category == "STUDENT") {
           this.markUndoneQuestions();
-          this.attempt.auto_submitted = true
+          this.attempt.auto_submitted = true;
           this.saveAttempt();
         }
       }
@@ -325,7 +325,8 @@ export default {
       }
     },
     async saveAttempt() {
-      this.attempt.used_time = this.selected_quiz.duration - this.remaining_time
+      this.attempt.used_time =
+        this.selected_quiz.duration - this.remaining_time;
       this.create_quiz_submission({
         submission: this.attempt,
         attachments: this.filesToUpload,
