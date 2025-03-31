@@ -2145,8 +2145,8 @@
         <v-col cols="12" md="6" class="courses-header mt-5">
           <h2>
             Hey Mr{{
-              `${$store.state.user.gender === "Male" ? "" : "s"} ${
-                $store.state.user.surName
+              `${$store.state.user.user.gender === "Male" ? "" : "s"} ${
+                $store.state.user.user.surName
               }`
             }},
           </h2>

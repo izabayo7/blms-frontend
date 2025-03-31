@@ -142,7 +142,7 @@
       <v-btn class="white--text save-quiz" rounded @click="saveQuiz()"
         >Save</v-btn
       >
-      <v-btn color="#707070" class="cancel-quiz" text @click="recreate()">Cancel</v-btn>
+      <v-btn color="#707070" class="cancel-quiz" @click="$router.push('/quiz')">Cancel</v-btn>
     </v-row>
   </v-app>
 </template>

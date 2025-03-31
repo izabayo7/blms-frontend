@@ -207,9 +207,7 @@
       <v-btn class="white--text save-quiz" rounded @click="saveQuiz()"
         >Update quiz</v-btn
       >
-      <v-btn color="#707070" class="cancel-quiz" text @click="recreate()"
-        >Cancel</v-btn
-      >
+      <v-btn color="#707070" class="cancel-quiz" text @click="$router.push('/quiz')">Cancel</v-btn>
     </v-row>
   </v-app>
 </template>
@@ -281,28 +279,6 @@ export default {
     removePicture(index, boundIndex) {
       this.pictures[boundIndex].splice(index, 1);
       this.selected_quiz.questions[boundIndex].options.choices.splice(index, 1);
-    },
-    recreate() {
-      this.selected_quiz.questions = [
-        {
-          type: "",
-          marks: 0,
-          details: "",
-          options: {
-            choices: [],
-          },
-        },
-        {
-          type: "",
-          marks: 0,
-          details: "",
-          options: {
-            choices: [],
-          },
-        },
-      ];
-      this.duration = { hh: "00", mm: "05", ss: "00" };
-      this.pictures = [[], []];
     },
     handleTypeChange(index) {
       if (this.selected_quiz.questions[index].type.includes("text")) {
