@@ -71,7 +71,7 @@
                     "
                       :color="primary"
                       class="white--text next-chapter mb-8"
-                      :to="`/quiz/preview/${course.chapters[activeIndex].quiz[0].name}`"
+                      :to="`/assessments/quiz/preview/${course.chapters[activeIndex].quiz[0].name}`"
                       rounded
                   >Take Quiz
                   </v-btn

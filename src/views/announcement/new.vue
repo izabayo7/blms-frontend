@@ -197,7 +197,7 @@
             :defaultContent="'<ol><li><p>Write your content here</p></li></ol>'"
         />
         <div class="actions mb-12 mb-md-0">
-          <button class="button" @click="validate">Save</button>
+          <button class="button" @click="validate">Send</button>
           <button class="cancel button mx-auto" @click="$router.push('/announcements')">Cancel</button>
         </div>
       </div>
@@ -372,8 +372,17 @@ export default {
         }
       }
     },
+    ...mapActions("modal", ["set_modal"]),
     async saveAnnouncement() {
-
+    //   this.set_modal({
+    //     template: 'action_confirmation',
+    //     method: {
+    //       action: 'user/removeProfilePicture',
+    //     },
+    //     title: 'Send Announcement',
+    //     message:
+    //         `Are you sure you want to to send this announcement to ${this.target_type === 'individual' ? this.selected_users.length : ''} users ${this.target_type !== 'individual' ? ' in ' : ''}?`,
+    //   })
       const response = await Apis.create(`announcement/${this.target_type === 'groups' ? 'group' : 'specific_users'}`, this.announcement)
       if (response.data.status !== 201)
         this.error = response.data.message
