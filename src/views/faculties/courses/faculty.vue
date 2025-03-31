@@ -74,6 +74,9 @@ name: "FacultyCourses",
     }
   },
   methods:{
+    /**
+     * getting faculty information based on faculty id provided in query parameters
+     */
     getFacultyInformation(){
       const {facultyId} = this.$route.params;
 
@@ -81,7 +84,8 @@ name: "FacultyCourses",
         .then(({data}) => {
           this.faculty = data;
         })
-    }
+    },
+
   },
   created(){
     this.getFacultyInformation();
