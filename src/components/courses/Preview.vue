@@ -174,4 +174,12 @@ img {
     }
   }
 }
+/* Portrait phones and smaller */
+@media (max-width: 700px) {
+  .preview {
+    &-container {
+      max-width: 100%;
+    }
+    }
+}
 </style>

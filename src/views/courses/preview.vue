@@ -72,7 +72,7 @@
           </div>
         </div>
       </v-col>
-      <v-col v-else class="col-12 student d-md-flex">
+      <v-col v-else class="col-12 pa-0 pa-md-8 student d-md-flex">
 
         <main class="preview mt-sm-4 hidden-md-and-up">
           <preview
