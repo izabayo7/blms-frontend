@@ -96,7 +96,7 @@ export default {
     display: flex;
     // flex-direction: row;
     .main-content {
-      height: calc(100vh - 76px);
+      height: calc(100vh - 62px);
       width: 100%;
       overflow-y: auto;
       overflow-x: hidden;
