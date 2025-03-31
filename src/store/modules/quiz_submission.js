@@ -64,7 +64,9 @@ export default {
                 apis.get(`quiz_submission/user/${user_name}`).then(d => {
                     d.data = d.data.data
                     state.quiz_submission.data = d.data
-                    console.log(d.data)
+                    for (const k in d.data) {
+                        state.quiz_submission.data.push(d.data[k])
+                    }
                     //announce that data have been loaded
                     state.quiz_submission.loaded = true
                 })

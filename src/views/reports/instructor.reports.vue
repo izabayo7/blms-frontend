@@ -35,22 +35,19 @@
             }}</span
           >
         </template>
-        <!-- display the date of submission -->
-        <!-- <template v-slot:item.dateOfSubmission="{ item }">
-          <span class="normal--text">{{ item.createdAt | formatDate }}</span>
+        <template v-slot:item.actions="{ item }">
+          <v-row class="actions">
+           <v-col>
+            <v-btn class="white--text" :color="primary" :to="`/submissions/${item.name}`">
+              View submissions
+            </v-btn></v-col>
+            <v-col>
+            <v-btn color="#3CE970" class="white--text" :to="`/submissions/${item.name}`">
+              Release marks
+            </v-btn>
+            </v-col>
+          </v-row>
         </template>
-        <template v-slot:item.marked="{ item }">
-          <span
-            :class="`font-weight-bold ${item.marked ? 'green--text' : ''}`"
-            >{{ item.marked ? "Marked" : "Pending.." }}</span
-          >
-        </template> -->
-        <!-- display the grades -->
-        <!-- <template v-slot:item.grade="{ item }">
-          <span class="normal--text">{{
-            (item.marked ? item.total_marks : "") + "/" + item.quiz.total_marks
-          }}</span>
-        </template> -->
         <template v-slot:no-data>
           <span class="text-h6">Oops You have no submissions.</span>
         </template>
@@ -60,7 +57,11 @@
 </template>
 <script>
 import { mapGetters, mapActions } from "vuex";
+import colors from "@/assets/sass/imports/_colors.scss";
 export default {
+    data: () => ({
+    primary: colors.primary,
+  }),
   computed: {
     submissionHeaders() {
       return [
@@ -86,7 +87,7 @@ export default {
           align: "center",
         },
         { text: "Marking status", value: "marking_status", align: "center" },
-        { text: "Grade", value: "grade", align: "center" },
+        { text: "", value: "actions", align: "center" },
       ];
     },
     // get the userCategory
@@ -103,25 +104,6 @@ export default {
   methods: {
     ...mapActions("courses", ["getCourses"]),
     ...mapActions("quiz_submission", ["getQuizSubmissions"]),
-    returnCourseName(quiz_target) {
-      if (quiz_target.type === "faculty_college_year") {
-        return "No course";
-      }
-      else if(quiz_target.type == 'chapter'){
-        return quiz_target.chapter.course.name;
-      }
-      else if(quiz_target.type == 'course'){
-        return quiz_target.course.name;
-      }
-    },
-    returnChapterName(quiz_target) {
-      if(quiz_target.type == 'chapter'){
-        return quiz_target.chapter.name;
-      }
-      else {
-        return '-';
-      }
-    },
   },
   created() {
     //get courses on page load

@@ -483,27 +483,29 @@ export default {
 
 <style lang="scss">
 @import "../../assets/sass/editor/main.scss";
-.actions {
-  max-width: 30rem;
-  margin: 0 auto 2rem auto;
-}
-.export {
-  max-width: 30rem;
-  margin: 0 auto 2rem auto;
-  pre {
-    padding: 1rem;
-    border-radius: 5px;
-    font-size: 0.8rem;
-    font-weight: bold;
-    background: rgba($color-black, 0.05);
-    color: rgba($color-black, 0.8);
+.kurious-editor{
+  .actions {
+    max-width: 30rem;
+    margin: 0 auto 2rem auto;
   }
-  code {
-    display: block;
-    white-space: pre-wrap;
+  .export {
+    max-width: 30rem;
+    margin: 0 auto 2rem auto;
+    pre {
+      padding: 1rem;
+      border-radius: 5px;
+      font-size: 0.8rem;
+      font-weight: bold;
+      background: rgba($color-black, 0.05);
+      color: rgba($color-black, 0.8);
+    }
+    code {
+      display: block;
+      white-space: pre-wrap;
+    }
   }
-}
-.ProseMirror:focus {
-  outline: none !important;
+  .ProseMirror:focus {
+    outline: none !important;
+  }
 }
 </style>
