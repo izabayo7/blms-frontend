@@ -47,7 +47,7 @@ name: "detailed-course-score-card"
   max-width:28rem;
   &--wrapper{
     background-color:lighten($primary,60);
-    padding:1rem;
+    padding:.5rem 1rem;
     border-radius:6.5px;
   }
   &--col{
