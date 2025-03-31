@@ -38,78 +38,47 @@
 
 export default {
   name: "liveClass",
-  methods:{
-
-  },
-  created(){
-
-  const host = 'https://198.211.107.132:8443/'
-    
-    let ws = new WebSocket('wss://' + host + '/groupcall');
-    let participants = {};
-    let name;
-    
-    window.onbeforeunload = function() {
-      ws.close();
-    };
-    
-    ws.onmessage = function(message) {
-      let parsedMessage = JSON.parse(message.data);
-      console.info('Received message: ' + message.data);
-    
-      switch (parsedMessage.id) {
-      case 'existingParticipants':
-        onExistingParticipants(parsedMessage);
-        break;
-      case 'newParticipantArrived':
-        onNewParticipant(parsedMessage);
-        break;
-      case 'participantLeft':
-        onParticipantLeft(parsedMessage);
-        break;
-      case 'receiveVideoAnswer':
-        receiveVideoResponse(parsedMessage);
-        break;
-      case 'iceCandidate':
-        participants[parsedMessage.name].rtcPeer.addIceCandidate(parsedMessage.candidate, function (error) {
-              if (error) {
-              console.error("Error adding candidate: " + error);
-              return;
-              }
-          });
-          break;
-      default:
-        console.error('Unrecognized message', parsedMessage);
-      }
+  data(){
+    return{
+      ws:null,
+      name:"",
+      room:"",
+      participants:[],
     }
-    
-    function register() {
-      name = document.getElementById('name').value;
+  },
+  methods:{
+     register() {
+      this.name = document.getElementById('name').value;
       let room = document.getElementById('roomName').value;
-    
+
       document.getElementById('room-header').innerText = 'ROOM ' + room;
       document.getElementById('join').style.display = 'none';
       document.getElementById('room').style.display = 'block';
-    
+
       let message = {
         id : 'joinRoom',
-        name : name,
+        name : this.name,
         room : room,
       }
-      sendMessage(message);
-    }
-    
-    function onNewParticipant(request) {
-      receiveVideo(request.name);
-    }
-    
-    function receiveVideoResponse(result) {
-      participants[result.name].rtcPeer.processAnswer (result.sdpAnswer, function (error) {
+      this.sendMessage(message);
+    },
+    sendMessage(message) {
+      let jsonMessage = JSON.stringify(message);
+      console.log('Sending message: ' + jsonMessage);
+      this.this.ws.send(jsonMessage);
+    },
+
+    onNewParticipant(request) {
+      this.receiveVideo(request.name);
+    },
+
+    receiveVideoResponse(result) {
+      this.participants[result.name].rtcPeer.processAnswer (result.sdpAnswer, function (error) {
         if (error) return console.error (error);
       });
-    }
-    
-    function callResponse(message) {
+    },
+
+    callResponse(message) {
       if (message.response != 'accepted') {
         console.info('Call not accepted by peer. Closing call');
         stop();
@@ -118,9 +87,9 @@ export default {
           if (error) return console.error (error);
         });
       }
-    }
-    
-    function onExistingParticipants(msg) {
+    },
+
+    onExistingParticipants(msg) {
       let constraints = {
         audio : true,
         video : {
@@ -131,11 +100,12 @@ export default {
           }
         }
       };
-      console.log(name + " registered in room " + room);
-      let participant = new Participant(name);
-      participants[name] = participant;
+
+      console.log(this.name + " registered in room " + room);
+      let participant = new Participant(this.name);
+      this.participants[this.name] = participant;
       let video = participant.getVideoElement();
-    
+
       let options = {
             localVideo: video,
             mediaConstraints: constraints,
@@ -148,56 +118,92 @@ export default {
           }
           this.generateOffer (participant.offerToReceiveVideo.bind(participant));
       });
-    
-      msg.data.forEach(receiveVideo);
-    }
-    
-    function leaveRoom() {
-      sendMessage({
+
+      msg.data.forEach(this.receiveVideo);
+    },
+
+    leaveRoom() {
+      this.sendMessage({
         id : 'leaveRoom'
       });
-    
-      for ( let key in participants) {
-        participants[key].dispose();
+
+      for ( let key in this.participants) {
+        this.participants[key].dispose();
       }
-    
+
       document.getElementById('join').style.display = 'block';
       document.getElementById('room').style.display = 'none';
-    
-      ws.close();
-    }
-    
-    function receiveVideo(sender) {
+
+      this.ws.close();
+    },
+
+    receiveVideo(sender) {
       let participant = new Participant(sender);
-      participants[sender] = participant;
+      this.participants[sender] = participant;
       let video = participant.getVideoElement();
-    
+
       let options = {
           remoteVideo: video,
           onicecandidate: participant.onIceCandidate.bind(participant)
         }
-    
+
       participant.rtcPeer = new kurentoUtils.WebRtcPeer.WebRtcPeerRecvonly(options,
           function (error) {
             if(error) {
               return console.error(error);
             }
             this.generateOffer (participant.offerToReceiveVideo.bind(participant));
-      });;
-    }
-    
-    function onParticipantLeft(request) {
+      })
+
+    },
+
+    onParticipantLeft(request) {
       console.log('Participant ' + request.name + ' left');
-      let participant = participants[request.name];
+      let participant = this.participants[request.name];
       participant.dispose();
-      delete participants[request.name];
+      delete this.participants[request.name];
+    }
+  },
+  created(){
+
+  const host = 'https://198.211.107.132:8443/'
+    
+    this.ws = new WebSocket('wss://' + host + '/groupcall');
+    
+    window.onbeforeunload = function() {
+      this.ws.close();
+    };
+    
+    this.ws.onmessage = function(message) {
+      let parsedMessage = JSON.parse(message.data);
+      console.info('Received message: ' + message.data);
+    
+      switch (parsedMessage.id) {
+      case 'existingParticipants':
+        this.onExistingParticipants(parsedMessage);
+        break;
+      case 'newParticipantArrived':
+        this.onNewParticipant(parsedMessage);
+        break;
+      case 'participantLeft':
+        this.onParticipantLeft(parsedMessage);
+        break;
+      case 'receiveVideoAnswer':
+        this.receiveVideoResponse(parsedMessage);
+        break;
+      case 'iceCandidate':
+        this.participants[parsedMessage.name].rtcPeer.addIceCandidate(parsedMessage.candidate, function (error) {
+              if (error) {
+              console.error("Error adding candidate: " + error);
+              return null;
+              }
+          });
+          break;
+      default:
+        console.error('Unrecognized message', parsedMessage);
+      }
     }
     
-    function sendMessage(message) {
-      let jsonMessage = JSON.stringify(message);
-      console.log('Sending message: ' + jsonMessage);
-      ws.send(jsonMessage);
-    }
 
   }
 }
