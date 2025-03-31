@@ -25,7 +25,7 @@
             <h5>{{ user.category }} profile</h5>
           </div>
           <div class="upc--information--data--faculty">
-            <h3>Accounting year 2</h3>
+            <h3>{{ user.user_groups }}</h3>
           </div>
           <div class="upc--information--data--email">
             <p>{{ user.email }}</p>
