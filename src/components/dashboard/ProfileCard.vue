@@ -39,7 +39,7 @@ export default {
     name: "ProfileCard",
     components: {VerifiedBadge},
     computed:{
-        ...mapGetters('user',['user'])
+        ...mapGetters('user',['user']),
     },
     methods: {
         logout() {
@@ -64,7 +64,7 @@ export default {
             this.$router.push("/login");
             console.log('ark koko')
         },
-    },
+    }
 }
 </script>
 
