@@ -44,9 +44,9 @@ const routes = [
     },
     // the loader
     {
-        path: '/loading',
+        path: '/new_preview',
         component: () =>
-            import('@/components/loaders'),
+            import('@/views/courses/new_preview'),
         meta: {
             allowAnonymous: true
         }
