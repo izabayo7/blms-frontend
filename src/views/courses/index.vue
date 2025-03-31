@@ -2186,13 +2186,13 @@
               :course="course"
             />
           </div>
-          <div v-else>
-            <v-img
+          <div class="text-center" v-else>
+            <img
               src="@/assets/images/Blank canvas-rafiki.svg"
-              class="courses-not-found-image mt-4"
-            ></v-img>
+              class="courses-not-found-image mt-4 mx-auto"
+            />
             <div
-              class="text-h5 text-center courses-not-found-image pa-12 ml-n4"
+              class="text-h5 text-center courses-not-found-image pa-2 ml-n4"
             >
               <span class="d-block ml-n-12"
                 >Oops You
@@ -2206,8 +2206,8 @@
               >
               <v-btn
                 rounded
-                color="#ffd248"
-                class="mt-3 white--text px-12"
+                class="mt-3 active-btn px-12"
+                text
                 x-large
                 :to="type == 'published' ? undefined : '/courses/new-course'"
                 @click="type = 'unpublished'"
@@ -2285,5 +2285,9 @@ export default {
 #courses {
   background-color: #f8f8f8;
   min-height: calc(100vh - 76px);
+  .perfom-action {
+    background-color: $primary !important;
+    color: white;
+  }
 }
 </style>

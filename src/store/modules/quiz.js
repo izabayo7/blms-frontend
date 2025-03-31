@@ -127,8 +127,7 @@ export default {
         findQuizByName({ state, commit }, { userCategory, userId, quizName }) {
             let quizFound = false
             if (state.quiz.loaded) {
-                let quiz = state.quiz.data.filter(quiz => quiz.name == quizName)[0]
-
+                let quiz = state.quiz.data.filter(quiz => quiz.name == quizName)
                 if (quiz.length > 0) {
                     quizFound = true
                     commit('set_selected_quiz', quiz[0]._id)

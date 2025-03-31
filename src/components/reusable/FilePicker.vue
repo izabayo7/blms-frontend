@@ -251,13 +251,20 @@ export default {
 
   methods: {
     fileClicked(index) {
-      this.$emit("fileClicked", this.boundIndex, index);
+      this.$emit(
+        "fileClicked",
+        this.boundIndex,
+        index,
+        this.$route.name === "Edit Quiz" ? this.files[index].name : undefined
+      );
     },
     showRightFiles(index, indices) {
       if (index == this.boundIndex) {
         let divs = document.querySelectorAll(`.picker${index} .attachment`);
         for (const i in this.files) {
-          if (indices.includes(i)) divs[i].style.border = "1px solid green";
+          const indexFound = indices.filter(_i => _i == i)
+
+          if (indexFound.length > 0) divs[i].style.border = "1px solid green";
           else divs[i].style.border = "none";
         }
       }

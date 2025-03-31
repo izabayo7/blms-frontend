@@ -121,7 +121,7 @@
             </v-row>
           </v-col>
           <v-col class="col-1 px-0">
-            <v-btn class="mt-10" icon @click="removeQuestion(i)">
+            <v-btn v-if="questions.length > 1" class="mt-10" icon @click="removeQuestion(i)">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="21"

@@ -124,7 +124,10 @@
                               }}</span> -->
                             <div class="pictures-container">
                               <v-card
-                                v-for="(choice, k) in question.options.choices"
+                                v-for="(choice,
+                                k) in question.options.choices.filter((_c) =>
+                                  _c.src.includes('http')
+                                )"
                                 :key="k"
                                 flat
                                 tile
@@ -215,7 +218,12 @@
             </v-row>
           </v-col>
           <v-col class="col-1 px-0">
-            <v-btn class="mt-10" icon @click="removeQuestion(i)">
+            <v-btn
+              v-if="selected_quiz.questions.length > 1"
+              class="mt-10"
+              icon
+              @click="removeQuestion(i)"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="21"
@@ -284,12 +292,30 @@ export default {
   },
   methods: {
     ...mapActions("quiz", ["update_quiz", "findQuizByName"]),
-    handleOptionClick(questionIndex, optionIndex) {
-      let rightChoices = [];
+    handleOptionClick(questionIndex, optionIndex, fileName) {
+      let rightChoices = [],
+        calculatedIndex = optionIndex,
+        realIndex = optionIndex,
+        separatingIndex = 0;
+
+      if (fileName) {
+        for (const i in this.selected_quiz.questions[questionIndex].options
+          .choices) {
+          if (
+            !this.selected_quiz.questions[questionIndex].options.choices[
+              i
+            ].src.includes("http")
+          ) {
+            separatingIndex = i;
+            calculatedIndex = parseInt(i) + realIndex;
+            break;
+          }
+        }
+      }
 
       for (const k in this.selected_quiz.questions[questionIndex].options
         .choices) {
-        if (k == optionIndex) {
+        if (k == calculatedIndex) {
           this.selected_quiz.questions[questionIndex].options.choices[
             k
           ].right = !this.selected_quiz.questions[questionIndex].options
@@ -302,9 +328,12 @@ export default {
           ].right = false;
         }
         if (
-          this.selected_quiz.questions[questionIndex].options.choices[k].right
+          this.selected_quiz.questions[questionIndex].options.choices[k]
+            .right &&
+          calculatedIndex > separatingIndex - 1 &&
+          fileName
         ) {
-          rightChoices.push(k);
+          rightChoices.push(calculatedIndex - separatingIndex);
         }
       }
       if (this.selected_quiz.questions[questionIndex].type.includes("file")) {
@@ -344,7 +373,8 @@ export default {
     addPicture(file, boundIndex) {
       this.pictures[boundIndex].push(file);
       this.selected_quiz.questions[boundIndex].options.choices.push({
-        src: file.name, right: false
+        src: file.name,
+        right: false,
       });
     },
     removePicture(index, boundIndex) {
@@ -354,7 +384,10 @@ export default {
     handleTypeChange(index) {
       if (this.selected_quiz.questions[index].type.includes("text")) {
         this.selected_quiz.questions[index].options = {
-          choices: [{ text: "", right: false }, { text: "", right: false }],
+          choices: [
+            { text: "", right: false },
+            { text: "", right: false },
+          ],
         };
       } else if (
         this.selected_quiz.questions[index].type.includes("file") &&
@@ -378,7 +411,10 @@ export default {
       this.pictures.push([]);
     },
     addOption(index) {
-      this.selected_quiz.questions[index].options.choices.push({ text: "", right: false });
+      this.selected_quiz.questions[index].options.choices.push({
+        text: "",
+        right: false,
+      });
     },
     removeOption(index, index1) {
       this.selected_quiz.questions[index].options.choices.splice(index1, 1);
@@ -455,7 +491,7 @@ export default {
     formatQuestionType(value) {
       for (const index in this.questionTypes) {
         if (
-          value === this.questionTypes[index].toLowerCase().split(" ").join("-")
+          value == this.questionTypes[index].toLowerCase().split(" ").join("-")
         ) {
           return this.questionTypes[index];
         }
@@ -469,12 +505,13 @@ export default {
       userId: this.$store.state.user.user._id,
       quizName: this.$route.params.name,
     }).then((quiz) => {
-      console.log(quiz);
       this.duration = this.to_hh_mm_ss(quiz.duration);
-      for (const index in quiz.questions) {
-        quiz.questions[index].type = this.formatQuestionType(
-          quiz.questions[index].type
+
+      for (let i = 0; i < quiz.questions.length; i++) {
+        this.selected_quiz.questions[i].type = this.formatQuestionType(
+          quiz.questions[i].type
         );
+        console.log(this.selected_quiz.questions[i].type);
         this.pictures.push([]);
       }
     });
