@@ -137,7 +137,8 @@
               </div>
             </template>
             <template v-slot:item.action="{ item }">
-              <button class="attempt-exam" :class="{disabled : disabled || item.submission}" :disabled="item.submission"
+              <button class="attempt-exam" :class="{disabled : disabled || isExamDisabled(item) }"
+                      :disabled="isExamDisabled(item)"
                       @click=" disabled ?
                       set_modal({
                         template: 'payment_err',
@@ -203,6 +204,22 @@ export default {
     ...mapActions("modal", ["set_modal"]),
     handleRowClick(value) {
       this.$router.push(`/assessments/assignments/${value._id}`)
+    },
+    isExamDisabled(item) {
+      if (item.submission)
+        return true
+      let date = new Date(item.starting_time)
+      date.setHours(date.getHours() - 2)
+
+      if (new Date() < endDate)
+        return true
+
+      let endDate = new Date(date)
+      endDate.setTime(endDate.getTime() + (item.duration * 1000))
+
+      if (new Date() > endDate)
+        return true
+      return false
     },
     computeClass(item) {
       if (!item.submission) {
