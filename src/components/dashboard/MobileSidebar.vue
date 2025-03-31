@@ -193,7 +193,7 @@
             v-if="!disableFunctionalities&&(userCategory === 'STUDENT')"
             @click="
             closeSidebar();
-            routeTo('/assignments');
+            routeTo('/assessments/assignments');
           "
             :class="{ active: activeRoute('assignments') }"
         >
@@ -269,6 +269,27 @@
           </div>
         </li>
         <li
+            v-if="!disableFunctionalities&&(userCategory === 'STUDENT')"
+            @click="
+            closeSidebar();
+            routeTo('/assessments');
+          "
+            :class="{ active: activeRoute('assessments') }"
+        >
+          <div v-if="!activeRoute('assessments') && assignments" class="number">{{ assignments }}</div>
+          <div class="link-icon">
+            <svg width="24" height="32" viewBox="0 0 24 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path
+                  d="M9.46954 5.93555C10.1599 5.93555 10.7195 5.3759 10.7195 4.68555C10.7195 3.99519 10.1599 3.43555 9.46954 3.43555V5.93555ZM14.894 3.43555C14.2036 3.43555 13.644 3.99519 13.644 4.68555C13.644 5.3759 14.2036 5.93555 14.894 5.93555V3.43555ZM21.2382 7.68555V26.9997H23.7382V7.68555H21.2382ZM19.4882 28.7497H4.51367V31.2497H19.4882V28.7497ZM2.76367 26.9997V7.68554H0.263672V26.9997H2.76367ZM4.51367 5.93555H9.46954V3.43555H4.51367V5.93555ZM14.894 5.93555H19.4882V3.43555H14.894V5.93555ZM4.51367 28.7497C3.54717 28.7497 2.76367 27.9662 2.76367 26.9997H0.263672C0.263672 29.3469 2.16646 31.2497 4.51367 31.2497V28.7497ZM21.2382 26.9997C21.2382 27.9662 20.4547 28.7497 19.4882 28.7497V31.2497C21.8354 31.2497 23.7382 29.3469 23.7382 26.9997H21.2382ZM23.7382 7.68555C23.7382 5.33834 21.8354 3.43555 19.4882 3.43555V5.93555C20.4547 5.93555 21.2382 6.71905 21.2382 7.68555H23.7382ZM2.76367 7.68554C2.76367 6.71905 3.54717 5.93555 4.51367 5.93555V3.43555C2.16646 3.43555 0.263672 5.33833 0.263672 7.68554H2.76367Z"/>
+              <path
+                  d="M9.47312 4.68601C9.47312 4.68601 9.29862 1.79297 11.9161 1.79297C14.5335 1.79297 14.5335 4.68601 14.5335 4.68601"
+                  stroke="#BABABC" stroke-width="2.5" stroke-linecap="round"/>
+              <path d="M5.85352 4.3252V8.30313H18.1489V4.3252" stroke-width="2.5"/>
+            </svg>
+
+          </div>
+        </li>
+        <li
             v-if="!disableFunctionalities&&(userCategory === 'INSTRUCTOR')"
             @click="
             closeSidebar();
@@ -304,7 +325,7 @@ export default {
     userCategory() {
       return this.$store.state.user.user.category.name;
     },
-    ...mapState("sidebar_navbar", {state: "sidebar_expanded", unreads: "total_unread_messages"}),
+    ...mapState("sidebar_navbar", {state: "sidebar_expanded", unreads: "total_unread_messages",assignments: "total_undone_assignments"}),
   },
   mixins: [userPayment],
   methods: {
