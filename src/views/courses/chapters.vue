@@ -42,7 +42,7 @@
             {{ course.chapters[i].name | trimString(20) }}
           </button>
         </v-badge>
-        <v-btn width="90%" class="py-6" @click="addNewChapter">
+        <v-btn v-if="course.chapters.length !==1 || $route.path !== '/courses/new'" width="90%" class="py-6" @click="addNewChapter">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
             <path fill="none" d="M0 0h24v24H0z"/>
             <path d="M11 11V5h2v6h6v2h-6v6h-2v-6H5v-2z" />
@@ -154,9 +154,9 @@
 
                   <v-stepper-content step="3">
                     <v-card class="mb-12 elevation-0">
-                      <v-row>
+                      <v-row class="ma-0">
                         <v-col class="col-12 actions-container">
-                          <v-row>
+                          <v-row class="ma-0">
                             <v-col
                                 :class="`col-6 text-center ${
                                 mode == 'edit' ? 'active-mode white--text' : ''
@@ -370,7 +370,7 @@
                   </v-stepper-step>
 
                   <v-stepper-content step="5">
-                    <v-row>
+                    <v-row class="ma-0">
                       <v-btn
                           v-if="course.chapters[activeChapter]._id"
                           class="mr-4 primary-button"

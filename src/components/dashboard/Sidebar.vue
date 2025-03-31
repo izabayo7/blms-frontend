@@ -1,5 +1,5 @@
 <template>
-  <div :class="`sidebar ${onPhone ? (state ? 'absolute' : 'd-none') : ''} mt-n4 pt-6`">
+  <div :class="`sidebar ${onPhone ? (state ? 'absolute' : 'd-none') : ''} ${state?'open':''} mt-n4 pt-6`">
     <div class="routes">
       <ul ref="nav">
         <div class="active-link"></div>
@@ -25,7 +25,7 @@
 
           </div>
           <div
-              class="link-name animate__animated animate__bounce"
+              class="link-name"
               v-show="state"
           >
             Home
@@ -86,7 +86,7 @@
             </svg>
           </div>
           <div
-              class="link-name animate__animated animate__bounce"
+              class="link-name"
               v-show="state"
           >
             {{ userCategory === 'ADMIN' ? 'Users' : 'Students' }}
@@ -120,7 +120,7 @@
             </svg>
           </div>
           <div
-              class="link-name animate__animated animate__bounce"
+              class="link-name"
               v-show="state"
           >
             Faculties
@@ -329,8 +329,8 @@ import {mapGetters, mapMutations, mapState} from "vuex";
 
 export default {
   name: "Sidebar",
-  watch:{
-    $route(){
+  watch: {
+    $route() {
       this.socket.emit("messages/unread");
     }
   },
@@ -370,7 +370,14 @@ export default {
 .sidebar {
   height: 100vh;
   box-shadow: 0 11px 15px 0 $secondary;
-  transition: 0.4s ease-out;
+
+  transition: .5s;
+
+  width: 101px !important;
+
+  &.open {
+    width: 282px !important;
+  }
 
   &.absolute {
     position: absolute;

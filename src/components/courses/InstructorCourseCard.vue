@@ -176,6 +176,7 @@ export default {
     }
 
     .instructor-course-description {
+      overflow-wrap: anywhere;
       color: #1d1d1d;
     }
 
