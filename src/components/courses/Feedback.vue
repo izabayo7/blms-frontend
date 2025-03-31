@@ -26,7 +26,7 @@
             width="20.57"
             height="20.57"
             viewBox="0 0 20.57 20.57"
-            class="mr-3"
+            class="mr-3 remove_feedback"
           >
             <path
               id="Icon_ionic-ios-close-circle"
@@ -197,7 +197,7 @@ export default {
     max-width: 100%;
     &.empty_feedback {
       border: 2px solid #d2d2d2;
-      colo: black;
+      color: black;
     }
   }
   .feedback_input:focus {
@@ -212,6 +212,9 @@ export default {
   }
   .message_place {
     color: $primary;
+  }
+  .remove_feedback {
+    cursor: pointer;
   }
 }
 </style>
