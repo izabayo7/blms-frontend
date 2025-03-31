@@ -49,7 +49,6 @@ export default {
 
     // listen if the new message was sent
     this.socket.on("res/message/sent", (message) => {
-      console.log(message)
       if (message.forwarded) {
         this.UPDATE_CONTACT_LAST_MSG({id: message.receiver, msg: message})
       } else {
