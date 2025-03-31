@@ -1,0 +1,16 @@
+version: '3.7'
+
+services:
+
+  kurious-frontend:
+    container_name: my-app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - '.:/app'
+      - '/app/node_modules'
+    ports:
+      - '5000:8080'
+    environment:
+      - PORT:3000
