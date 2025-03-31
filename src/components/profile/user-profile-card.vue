@@ -7,14 +7,14 @@
 
 <!--      user picture card information row-->
       <article class="upc--information d-flex ">
-        <article class="upc--information--picture px-5 py-5">
+        <article class="upc--information--picture px-5 pt-2">
 <!--          user profile picture-->
           <figure class="upc--information--picture--img">
             <img src="https://i0.wp.com/www.mobileworldlive.com/wp-content/uploads/2015/10/Dorsey-iamge.png?w=150&ssl=1" alt="user profile picture">
           </figure>
         </article>
 <!--        user information-->
-        <article class="upc--information--data px-5 py-5">
+        <article class="upc--information--data px-5 pt-2">
           <div class="upc--information--data--name">
             <h2>Umuhoza solange</h2>
           </div>
@@ -88,7 +88,7 @@ name: "user-profile-card",
       }
 
       &--faculty{
-        margin-top: 1rem;
+        margin-top: .5rem;
         h3{
           color:$color-one;
         }
