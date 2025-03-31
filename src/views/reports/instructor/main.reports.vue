@@ -99,20 +99,20 @@
           >65%{{ "" + item ? "" : "nope" }}</span
           >
         </template>
-        <template v-slot:item.actions="{ item }">
-          <v-row class="actions pa-0">
-            <v-col class="pa-0 py-1">
-              <v-btn
-                  class="white--text"
-                  :color="primary"
-                  :to="`/submissions/${item.name}`"
-              >
-                Make announcement
-              </v-btn>
-            </v-col
-            >
-          </v-row>
-        </template>
+<!--        <template v-slot:item.actions="{ item }">-->
+<!--          <v-row class="actions pa-0">-->
+<!--            <v-col class="pa-0 py-1">-->
+<!--              <v-btn-->
+<!--                  class="white&#45;&#45;text"-->
+<!--                  :color="primary"-->
+<!--                  :to="`/submissions/${item.name}`"-->
+<!--              >-->
+<!--                Make announcement-->
+<!--              </v-btn>-->
+<!--            </v-col-->
+<!--            >-->
+<!--          </v-row>-->
+<!--        </template>-->
         <template v-slot:no-data>
           <span class="text-h6">Oops You have no submissions.</span>
         </template>
