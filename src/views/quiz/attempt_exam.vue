@@ -225,7 +225,7 @@
               <p>{{ formated_remaining_time }}</p>
             </div>
             <div class="webcam">
-              <video id="userStream" autoplay></video>
+              <video id="userStream" autoplay muted></video>
             </div>
             <div class="subtitle">Do not :</div>
             <div class="content">
@@ -261,6 +261,8 @@ import * as tf from "@tensorflow/tfjs";
 
 export default {
   data: () => ({
+    recorder: undefined,
+    videoSaved: false,
     warned: false,
     exam: undefined,
     alphabets: [
@@ -310,12 +312,12 @@ export default {
     remaining_time() {
       if (this.remaining_time > 0) {
         if (this.$store.state.user.user.category.name === 'STUDENT') {
-          // setTimeout(() => {
-          //   this.remaining_time -= 1;
-          //   this.attempt.used_time += 1;
-          // }, 1000);
-          // if (this.remaining_time === this.exam.duration - 1)
-          //   this.initialiseQuiz();
+          setTimeout(() => {
+            this.remaining_time -= 1;
+            this.attempt.used_time += 1;
+          }, 1000);
+          if (this.remaining_time === this.exam.duration - 1)
+            this.initialiseQuiz();
         }
       } else if (!this.done) {
         this.done = true;
@@ -582,7 +584,7 @@ export default {
       }
     },
     async saveAttempt(cheated) {
-      if (this.$store.state.user.user.category.name === 'STUDENT')
+      if (this.$store.state.user.user.category.name === 'STUDENT') {
         this.socket.emit('save-exam-progress', {
           submission_id: this.submission_id,
           attempt: this.attempt,
@@ -590,7 +592,9 @@ export default {
           questions: this.exam.questions,
           cheated
         })
-      else {
+        if (this.recorder)
+          this.recorder.stop()
+      } else {
         this.set_modal({
           template: `exam_closed_${cheated ? 'failed' : 'successfull'}`,
         })
@@ -632,7 +636,6 @@ export default {
       }
     },
     detectFocus() {
-      console.log(document.visibilityState)
       if (document.visibilityState !== "visible") {
         this.endExam()
       }
@@ -689,7 +692,6 @@ export default {
           //       const face = await net.estimateFaces(video);
           // NEW MODEL
           const face = await net.estimateFaces({input: video});
-          console.log(face);
           // Get canvas context
           const ctx = canvas.getContext("2d");
           requestAnimationFrame(() => {
@@ -701,13 +703,60 @@ export default {
       runFacemesh()
 
     },
+    postBlob(event) {
+      if (event.data && event.data.size > 0) {
+        this.sendBlobAsBase64(event.data);
+      }
+    },
+    sendBlobAsBase64(blob) {
+      const reader = new FileReader();
+
+      reader.addEventListener('load', () => {
+        const dataUrl = reader.result;
+        const base64EncodedData = dataUrl.split(',')[2];
+        this.sendDataToBackend(base64EncodedData);
+      });
+
+      reader.readAsDataURL(blob);
+    },
+    recordStream(stream) {
+      let options = {mimeType: 'video/webm;codecs=vp9'};
+      this.recorder = new MediaRecorder(stream, options);
+      this.recorder.ondataavailable = this.postBlob
+      // record for 1 min parts
+      this.recorder.start(60000)
+    },
+    sendDataToBackend(base64EncodedData) {
+      this.socket.emit('save-exam-video', {
+        exam_id: this.exam._id,
+        data: base64EncodedData,
+        saved: this.videoSaved,
+        submission_id: this.submission_id
+      })
+
+      // TODO handle data loss
+      this.socket.on('exam-video-saved', ({saved}) => {
+        if (saved && !this.videoSaved)
+          this.videoSaved = true
+      })
+    },
     setCamera() {
       const video = document.getElementById("userStream")
-      console.log(video)
+      const mediaSource = new MediaSource();
+      mediaSource.addEventListener('sourceopen', handleSourceOpen, false);
+
+      function handleSourceOpen() {
+        mediaSource.addSourceBuffer('video/webm; codecs="vp8"');
+      }
+
       navigator.getUserMedia(
-          {video: {}},
+          {
+            video: true,
+            audio: true
+          },
           stream => {
             video.srcObject = stream
+            this.recordStream(stream)
             video.addEventListener('play', () => {
               this.setDetector()
             })
