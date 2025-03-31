@@ -454,7 +454,15 @@
           //no video card
           .no-video {
             &--wrapper {
-
+              .avatar {
+                width: 3.9rem !important;
+                height: 3.9rem !important;
+                margin-right: 20px;
+                margin-top: 1px;
+                background-color: $primary !important;
+                color: white;
+                cursor: pointer;
+              }
               &.presenting {
                 display: flex;
                 align-items: center;
@@ -466,6 +474,7 @@
                   img {
                     border-radius: 50%;
                   }
+
 
                   h2 {
                     font-size: 1rem;
