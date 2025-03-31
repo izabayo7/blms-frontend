@@ -60,7 +60,7 @@
         </template>
       </v-data-table>
     </div>
-    <div v-else class="err text-center">
+    <div v-else-if="loaded"  class="err text-center">
       sorry the given submission id is invalid
       <back class="mt-0 mb-6 mx-auto" target="/reports"/>
     </div>
@@ -78,6 +78,7 @@ export default {
   data: () => ({
     primary: colors.primary,
     course: undefined,
+    loaded: false
   }),
   computed: {
     ...mapGetters('user', ['username']),
@@ -155,6 +156,7 @@ export default {
       isExam: this.$route.path.includes('exams')
     }).then((d) => {
       this.course = d;
+      this.loaded = true
     });
   },
 };

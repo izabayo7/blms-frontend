@@ -3,7 +3,7 @@
       fluid
       class="quiz-page white pl-lg-16"
   >
-    <back :target="userCategory == 'STUDENT' ? '/reports' : `/reports/${selected_quiz_submission[isExam?'exam':'quiz']._id}${isExam?'/exams':''}`" class="mt-0 mb-6 ml-0 ml-md-n6"/>
+    <back :target="userCategory == 'STUDENT' ? '/reports' : `/reports/${selected_quiz_submission.answers ? selected_quiz_submission.quiz._id :  selected_quiz_submission[isExam?'exam':'quiz']._id}${isExam?'/exams':''}`" class="mt-0 mb-6 ml-0 ml-md-n6"/>
 
     <v-row v-if="selected_quiz_submission && (attempt.quiz || attempt.exam)" class="relative mx-0">
       <v-col class="col-12 col-md-8 px-0">
@@ -267,6 +267,7 @@
               </v-col>
 
               <v-col class="col-12 pt-0">
+
                 <feedback
                     v-if="(
                     selected_quiz_submission.answers[i].feedback_src ||
@@ -572,7 +573,7 @@ export default {
             }
           }
         }
-        this.$router.push(`/reports/${this.selected_quiz_submission[this.isExam ? 'exam' : 'quiz']._id}/${this.isExam ? 'exams' : ''}`);
+        this.$router.push(`/reports/${this.selected_quiz_submission.answers ? this.selected_quiz_submission.quiz._id : this.selected_quiz_submission[this.isExam ? 'exam' : 'quiz']._id}/${this.isExam ? 'exams' : ''}`);
       });
     },
   },
