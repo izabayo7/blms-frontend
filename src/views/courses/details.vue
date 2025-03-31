@@ -290,7 +290,7 @@ export default {
       "findQuizSubmissionByStudentAndQuizNames",
     ]),
     async downloadAttachment(id) {
-      const url = `http://localhost:7070/kurious/file/downloadAttachment/${id}`;
+      const url = `${process.env.VUE_APP_api_service_url}/file/downloadAttachment/${id}`;
       window.location.href = url;
     },
     findIcon(name) {
@@ -318,7 +318,7 @@ export default {
       courseName: this.$route.params.name,
     });
     setTimeout(() => {
-      this.activeIndex = this.maximumIndex;
+      this.activeIndex = this.maximumIndex > this.course.chapters.length - 1 ? this.course.chapters.length - 1 : this.maximumIndex;
     }, 1000);
   },
 };
