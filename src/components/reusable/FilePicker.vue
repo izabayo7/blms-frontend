@@ -61,13 +61,14 @@
   }
 }
 
-.absolute{
+.absolute {
   margin-top: -40px;
   z-index: 999;
   position: absolute;
   margin-left: 7px;
   display: none;
 }
+
 .attachment {
   background-color: #f8f8f8;
   padding: 10px;
@@ -80,7 +81,8 @@
     box-shadow: 0px 6.78207px 6.78207px rgba(0, 0, 0, 0.25);
     border-radius: 5.08655px;
     object-fit: cover;
-    &.rightChoice{
+
+    &.rightChoice {
       border: 2px solid #42CB6B;
       box-shadow: none;
     }
@@ -163,7 +165,16 @@ div.remove-container a {
                 </v-btn>
 
                 <v-img
-                    v-if="imageTypes.includes(file.type)"
+                    v-if="files[key].src"
+                    @click="fileClicked(key)"
+                    class="attachment vertically--centered"
+                    :class="template"
+                    :src="`${files[key].src}?width=100&token=${$session.get('jwt')}`"
+                    v-bind:ref="'preview' + parseInt(key)"
+                />
+
+                <v-img
+                    v-else
                     @click="fileClicked(key)"
                     class="attachment vertically--centered"
                     :class="template"
@@ -175,11 +186,14 @@ div.remove-container a {
                       <circle cx="19.1714" cy="12.7837" r="11.8686" fill="white" fill-opacity="0.5"/>
                       <circle cx="19.1714" cy="12.7837" r="11.4447" stroke="#3CE970" stroke-width="0.847759"/>
                     </g>
-                    <path d="M16.2031 10.24L19.3822 15.5385C22.9145 10.24 25.7404 7.06093 31.0389 3.88184" stroke="black" stroke-width="1.81663" stroke-linecap="round"/>
+                    <path d="M16.2031 10.24L19.3822 15.5385C22.9145 10.24 25.7404 7.06093 31.0389 3.88184"
+                          stroke="black" stroke-width="1.81663" stroke-linecap="round"/>
                     <defs>
-                      <filter id="filter0_d" x="0.520663" y="0.915039" width="37.3014" height="37.3014" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                      <filter id="filter0_d" x="0.520663" y="0.915039" width="37.3014" height="37.3014"
+                              filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
                         <feFlood flood-opacity="0" result="BackgroundImageFix"/>
-                        <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"/>
+                        <feColorMatrix in="SourceAlpha" type="matrix"
+                                       values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"/>
                         <feOffset dy="6.78207"/>
                         <feGaussianBlur stdDeviation="3.39104"/>
                         <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"/>
@@ -215,7 +229,7 @@ div.remove-container a {
                     <v-img
                         v-if="imageTypes.includes(file.type)"
                         class="preview"
-                        v-bind:ref="'preview' + parseInt(key)"
+                        v-bind:ref="'preview' +  parseInt(key)"
                     />
                     <v-icon v-else color="#000000" x-large
                     >mdi-file{{ findIcon(file.type) }}-outline
@@ -230,7 +244,8 @@ div.remove-container a {
             </div>
           </div>
         </v-col>
-        <v-col v-if="files.length === 0 && template == 'quiz-files'" class="col-12 quiz-details">
+        <v-col v-if="files.length === 0 && template == 'quiz-files' && !defaultFiles.length"
+               class="col-12 quiz-details">
           Upload you images here
           <svg @click="clickButton()" class="cursor-pointer" width="22" height="22" viewBox="0 0 22 22" fill="none"
                xmlns="http://www.w3.org/2000/svg">
@@ -253,7 +268,7 @@ div.remove-container a {
           here!</span
         >
         </v-col>
-        <v-col v-if="template != 'quiz-files' || files.length" class="col-2">
+        <v-col v-if="template != 'quiz-files' || files.length || defaultFiles.length" class="col-2">
           <v-btn class="mt-n2" @click="clickButton()" large icon>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
               <path fill="none" d="M0 0h24v24H0z"/>
@@ -298,6 +313,10 @@ export default {
     },
     boundIndex: {
       type: Number,
+    },
+    defaultFiles: {
+      type: Array,
+      default: () => []
     },
     multiple: {
       type: Boolean,
@@ -386,8 +405,15 @@ export default {
           }.bind(this)
       );
     }
-  },
 
+    if (this.defaultFiles.length && !this.files.length)
+      this.files = this.defaultFiles
+  },
+  watch: {
+    files() {
+      console.log(this.files)
+    }
+  },
   methods: {
     fileClicked(index) {
       this.$emit(
@@ -404,17 +430,25 @@ export default {
           const indexFound = indices.filter((_i) => _i == i);
           if (indexFound.length > 0) {
             divs[i].className += " rightChoice";
-            document.querySelectorAll(`.picker${index} .absolute`)[i].style.display='flex'
-          }
-          else{
-            divs[i].className = divs[i].className.replace(" rightChoice","");
-            document.querySelectorAll(`.picker${index} .absolute`)[i].style.display='none'
+            document.querySelectorAll(`.picker${index} .absolute`)[i].style.display = 'flex'
+          } else {
+            divs[i].className = divs[i].className.replace(" rightChoice", "");
+            document.querySelectorAll(`.picker${index} .absolute`)[i].style.display = 'none'
           }
         }
       }
     },
     clickButton() {
-      document.getElementById(this.inputId).click();
+      if(!(this.template == "quiz-files" && this.files.length > 3) || this.template != "quiz-files"){
+        document.getElementById(this.inputId).click();
+      }
+      else{
+        this.$store.dispatch("app_notification/SET_NOTIFICATION", {
+          message: "You reached the limit of files on this question",
+          status: "info",
+          uptime: 2000,
+        })
+      }
     },
     addFile() {
       for (const file of document.getElementById(this.inputId).files) {

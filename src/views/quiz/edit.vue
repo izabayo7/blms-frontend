@@ -48,8 +48,10 @@
                   :options="questions_types"
                   @input="
                 (e) => {
-                  question.type = e;
-                  handleTypeChange(i);
+                  if(question.type != e){
+                    question.type = e;
+                    handleTypeChange(i);
+                  }
                 }
               "
               />
@@ -152,6 +154,7 @@
                 hint="Click on an image to designate it as the correct  choice"
                 :allowedTypes="['image']"
                 :multiple="true"
+                :defaultFiles="question.options.choices"
                 @addFile="addPicture"
                 @removeFile="removePicture"
                 @fileClicked="handleOptionClick"
@@ -338,7 +341,6 @@ export default {
       this.pictures = [[], []];
     },
     handleOptionClick(questionIndex, optionIndex) {
-      console.log(questionIndex, optionIndex)
       let rightChoices = [];
 
       for (const k in this.questions[questionIndex].options.choices) {
@@ -419,7 +421,7 @@ export default {
 
       const editorContent = this.$refs.editor.getHTML();
 
-      this.create_quiz({
+      this.update_quiz({
         quiz: {
           name: this.title,
           instructions:
@@ -458,7 +460,6 @@ export default {
       this.passMarks = quiz.passMarks;
       this.instructions = quiz.instructions;
       this.title = quiz.name;
-
       this.questions = this.formatQuestionTypes(quiz.questions);
     });
   },
