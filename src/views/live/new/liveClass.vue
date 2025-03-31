@@ -754,10 +754,11 @@ export default {
           })
 
           // notify new user if quiz was released
-          this.socket.emit("live/releaseQuiz", {
-            quiz: this.live_session.quiz,
-            receivers: [{id: participant.userInfo._id}]
-          });
+          if (this.displayQuiz)
+            this.socket.emit("live/releaseQuiz", {
+              quiz: this.live_session.quiz,
+              receivers: [{id: participant.userInfo._id}]
+            });
         }
       }
     },
