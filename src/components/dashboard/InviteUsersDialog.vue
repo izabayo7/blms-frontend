@@ -151,9 +151,10 @@ export default {
       this.email = email;
     },
     async sendInvitations() {
-      if (this.selected_user_group == "") {
-        console.log("user group is required");
-      } else if (this.selected_user_category == "") {
+      // if (this.selected_user_group == "") {
+      //   console.log("user group is required");
+      // } else 
+      if (this.selected_user_category == "") {
         console.log("user category is required");
       } else if (!this.emails.length) {
         console.log("you must atleast select one email");

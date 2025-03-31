@@ -1,15 +1,15 @@
 <template>
   <section class="dashboard">
-    <!-- sidebar -->
-    <main class="sidebar">
-      <sidebar />
-    </main>
+    <!-- navbar -->
+    <div class="my-navbar">
+      <navbar />
+    </div>
 
-    <!-- navbar and dashboard content -->
+    <!-- sidebar and dashboard content -->
     <main class="contents">
-      <div class="my-navbar">
-        <navbar />
-      </div>
+      <main class="sidebar">
+        <sidebar />
+      </main>
       <div class="main-content customScroll">
         <router-view />
       </div>
@@ -28,19 +28,19 @@ export default {
   components: {
     sidebar,
     navbar,
-    ErrorTooltip:() => import('@/components/reusable/ErrorTooltip')
+    ErrorTooltip: () => import("@/components/reusable/ErrorTooltip"),
   },
-  data(){
-    return{
-      error:false
-    }
-  }
+  data() {
+    return {
+      error: false,
+    };
+  },
 };
 </script>
 <style lang="scss">
 .dashboard {
-  display: flex;
-  flex-direction: row;
+  // display: flex;
+  // flex-direction: row;
   width: 100%;
   height: 100vh;
 
@@ -49,6 +49,7 @@ export default {
     z-index: 50;
     position: static;
     background: $main;
+    box-shadow: 10px 0 10px 0 $secondary;
   }
   .sidebar {
     width: fit-content;
@@ -59,19 +60,22 @@ export default {
   .contents {
     width: 100%;
     display: flex;
-    flex-direction: column;
+    // flex-direction: row;
     .main-content {
       height: calc(100vh - 76px);
+      width: 100%;
       overflow-y: auto;
       overflow-x: hidden;
     }
   }
 }
-.error-enter-active, .error-leave-active{
-  transition:.3s ease-in-out;
+.error-enter-active,
+.error-leave-active {
+  transition: 0.3s ease-in-out;
 }
 
-.error-enter, .error-leave-to{
+.error-enter,
+.error-leave-to {
   opacity: 0;
   transform: translateY(100px);
 }
