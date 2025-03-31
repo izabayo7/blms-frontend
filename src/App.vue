@@ -13,6 +13,13 @@ export default {
     appDialog: () => import("@/components/shared/Dialog"),
     NewGroup: () => import("@/components/messages/NewGroup"),
   },
+  created(){
+    this.$store.dispatch("app_notification/SET_NOTIFICATION", {
+      message: "Welcome msz ...",
+      status: "info",
+      uptime: 10000,
+    });
+  }
 };
 </script>
 <style lang="scss">

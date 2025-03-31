@@ -16,7 +16,7 @@
         </div>
       </main>
       <div class="main-content customScroll">
-        <notification :message="'Advanced aerobics course just went live'" :status="'warn'" />
+        <notification />
         <router-view />
       </div>
     </main>
