@@ -6,15 +6,10 @@
 <script>
 export default {
   name: "ExpandableInput",
-  props: {
-    value: {
-      type: String,
-      default: '',
-    },
-  },
-  method:{
+  props: ['value'],
+  methods:{
     input(e){
-      this.$emit('input',e.target.value)
+      this.$emit('input',e.target.innerText)
     }
   },
   mounted(){
@@ -23,6 +18,14 @@ export default {
 }
 </script>
 
-<style scoped>
-
+<style lang="scss" scoped>
+  span {
+    width: 100%;
+    color:$font;
+    font-size: .8rem;
+    outline:none;
+    border:.5px solid $secondary;
+    border-radius: 3px;
+    padding:.5rem;
+  }
 </style>
