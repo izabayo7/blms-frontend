@@ -68,7 +68,7 @@
               </div>
               <div class="details">
                 <div class="time">{{ announcement.createdAt | formatDate }}</div>
-                <div class="targert">{{ announcement.target ? announcement.target.name : computeTarget(announcement.specific_receivers) }}</div>
+                <div class="targert">{{ announcement.target ? announcement.target.name : computeTarget(announcement.specific_receivers) | trimString(20) }}</div>
                 <div class="views vertically--centered">
                   <svg class="hidden-sm-and-down" width="17" height="17" viewBox="0 0 17 17" fill="none"
                        xmlns="http://www.w3.org/2000/svg">
