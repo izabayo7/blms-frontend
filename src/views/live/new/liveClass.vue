@@ -65,7 +65,7 @@
                 <!--                <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" >-->
               </video>
               <transition name="fade">
-                <div class="video-controls" v-if="showMenu || noVideo && participationInfo.isOfferingCourse">
+                <div class="video-controls" v-if="(showMenu || noVideo) && participationInfo.isOfferingCourse">
                   <div class="video-controls--wrapper">
                     <button @click="toogleVideo" class="start-mute-video">
                       <span class="icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24"
