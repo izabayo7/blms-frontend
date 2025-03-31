@@ -91,7 +91,7 @@ export default {
             })
 
             //put conversation on the first place
-            store.commit('chat/CHANGE_CONVERSATION_STAND',newMessage.sender._id)
+            store.commit('chat/CHANGE_CONVERSATION_STAND',newMessage)
         },
         //store the message that we sent
         ADD_ONGOING_MESSAGE(state, newMessage) {
@@ -128,7 +128,7 @@ export default {
             })
 
             //put conversation on the first place
-            store.commit('chat/CHANGE_CONVERSATION_STAND',state.currentDisplayedUser.id)
+            store.commit('chat/CHANGE_CONVERSATION_STAND',newMessage)
 
         },
         RESET_STATE(state) {
@@ -149,16 +149,24 @@ export default {
         },
 
         // change conversation to first if new messeage is sent or received
-        CHANGE_CONVERSATION_STAND(state,id){
-            let idx
-            console.log(id)
-            // find the inde of the incoming message
+        CHANGE_CONVERSATION_STAND(state,msg){
+            let idx;
+            let id = msg.sender._id;
+
+            let message = {
+                content:msg.content,
+                sender:msg.sender._id,
+                time:msg.createdAt
+            }
+
+            // find the index of the incoming message
             state.incomingMessages.map((val,i) => {
                 if(val.id === id) idx = i
             })
 
             if(idx){
                 state.incomingMessages.splice(0,0,state.incomingMessages.splice(idx,1)[0])
+                state.incomingMessages[0].last_message = message
             }
 
         }
