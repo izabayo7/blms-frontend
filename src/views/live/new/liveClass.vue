@@ -1229,11 +1229,10 @@ export default {
 
   &--attendance {
     flex-basis: 30%;
-
     &--wrapper {
       padding: .5rem;
       background-color: $main;
-      width: 20rem;
+      width: 303px;
       border-radius: 4px;
       margin-top: 1rem;
 
@@ -1267,7 +1266,7 @@ export default {
   &--action {
     border-radius: 3px;
     margin: 1rem 0;
-    max-width: 18rem;
+    width: 291px;
 
     button {
       display: flex;
@@ -1293,6 +1292,12 @@ export default {
       button {
         span {
           color: $primary;
+          font-family: Montserrat;
+          font-style: normal;
+          font-weight: 500;
+          font-size: 9.74576px;
+          line-height: 12px;
+          text-align: center;
 
           svg {
             fill: $primary;
@@ -1315,7 +1320,12 @@ export default {
       button {
         span {
           color: $main;
-
+          font-family: Montserrat;
+          font-style: normal;
+          font-weight: 500;
+          font-size: 9.74576px;
+          line-height: 12px;
+          text-align: center;
           svg {
             fill: $main;
           }
