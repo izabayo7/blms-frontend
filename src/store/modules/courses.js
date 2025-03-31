@@ -117,7 +117,7 @@ export default {
                             dispatch('modal/set_progress', parseInt(Math.round((progressEvent.loaded / progressEvent.total) * 100)), { root: true })
                         }
                     }).then(courseData => {
-                        courseObject.coverPicture = courseData.data.data.coverPicture
+                        courseObject.cover_picture = courseData.data.data.cover_picture
                     })
                 }
                 courseObject.chapters = []
