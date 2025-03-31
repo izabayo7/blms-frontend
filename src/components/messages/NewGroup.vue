@@ -303,11 +303,8 @@ export default {
 
       console.log(newGroup,status)
 
-      if(status === 200 || status === 201){
-        console.log('ee');
-      }else{
-        this.setGroupError(message)
-      }
+      //on error set an error
+      if(status !== 200 || status !== 201) this.setGroupError(message)
 
       const {code, createdAt,members,name} = newGroup.data.data
 
