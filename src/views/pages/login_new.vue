@@ -184,7 +184,7 @@ export default {
       );
       if (res.data.status != 404) {
         this.institution = res.data.data.name;
-        this.image = res.data.data.image || this.image;
+        this.image = res.data.data.logo || this.image;
       } else {
         this.$router.push("/college_login");
       }
