@@ -19,7 +19,9 @@
         </template>
         <!-- display the date of submission -->
         <template v-slot:item.last_submitted="{ item }">
-          <span class="normal--text">{{ item.createdAt | formatDate }}</span>
+          <span class="normal--text">{{
+            item.last_submitted | formatDate
+          }}</span>
         </template>
         <template v-slot:item.marking_satus="{ item }">
           {{ item.marking_status }}
@@ -27,10 +29,15 @@
         <!-- display the grades -->
         <template v-slot:item.unread_results="{ item }">
           <div class="unread_results">
-            <div class="number vertically--centered">
+            <div
+              :class="`${
+                item.unread_results ? 'number' : ''
+              } vertically--centered`"
+            >
               {{ item.unread_results }}
             </div>
             <svg
+              v-if="item.unread_results"
               xmlns="http://www.w3.org/2000/svg"
               class="vertically--centered"
               width="29.91"
