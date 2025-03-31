@@ -2,12 +2,9 @@
   <div class="my-select">
     <div class="select-container" @click="showOptions = !showOptions">
       <label :for="id" class="d-flex">
-        <select disabled v-model="content" :name="name" :id="id">
-          <option :value="label" disabled selected>{{ label }}</option>
-          <option v-for="(option, i) in options" :value="option" :key="i">
-            {{ option }}
-          </option>
-        </select>
+        <div class="select" :name="name" :id="id">
+          {{content}}
+        </div>
         <div v-show="showOptions" class="options">
           <div @click="handleInput(option)" class="option" v-for="(option, i) in options" :value="option" :key="i">
             {{ option }}
@@ -68,7 +65,7 @@ export default {
     label {
       @include input-el;
 
-      select {
+      .select {
         width: 100%;
         padding-left: 1.4rem;
         font-family: Inter;
