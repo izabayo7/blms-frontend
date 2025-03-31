@@ -315,6 +315,7 @@
     </v-row>
     <invite-users-dialog
         v-if="showInviteUsers"
+        :total_admins="this.user_statistics.total_admins"
         @closeModal="showInviteUsers = false"
     />
     <faculty-dialog
