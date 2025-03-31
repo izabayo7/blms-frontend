@@ -142,6 +142,14 @@ export default {
 
         },
 
+        //change message read status and unread messages
+        CHANGE_MESSAGE_READ_STATUS(state,id){
+            state.incomingMessages.map((message,index) => {
+                if(message.id === id){
+                    state.incomingMessages[index].unreadMessagesLength = 0
+                }
+            })
+        }
 
 
     },
