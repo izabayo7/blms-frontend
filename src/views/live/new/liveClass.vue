@@ -294,6 +294,9 @@ export default {
       if (comment.reply) {
         const comments = this.comments.filter(e => e._id == comment.reply)
         if (comments.length) {
+          if(!comments[0].replies) {
+            comments[0].replies = []
+          }
           const replies = comments[0].replies.filter(e=>e._id == comment._id)
           if (!replies.length)
             this.replied({_id: comment.reply, data: comment});
@@ -311,9 +314,6 @@ export default {
     replied(data) {
       this.comments.map((comment) => {
         if (comment._id === data._id) {
-          if(!comment.replies) {
-            comment.replies = []
-          }
           comment.replies.push(data.data)
         }
       });
