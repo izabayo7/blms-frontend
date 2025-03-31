@@ -147,7 +147,7 @@
                 :boundIndex="i"
                 template="quiz-files"
                 hint="Click on an image to designate it as the correct  choice"
-                :allowedTypes="['image']"
+                allowedTypes="image/*"
                 :multiple="true"
                 @addFile="addPicture"
                 @removeFile="removePicture"

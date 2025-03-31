@@ -308,7 +308,7 @@ export default {
     ...mapActions("quiz", ["getQuizes", "getAssignments"]),
     ...mapActions("modal", ["set_modal"]),
     handleRowClick(value) {
-      this.$router.push(`quiz/attempt/${value.name}`)
+      this.$router.push(this.currentView === 'quiz' ? `/quiz/attempt/${value.name}` : `/assignments/${value._id}`)
     },
   },
   created() {
