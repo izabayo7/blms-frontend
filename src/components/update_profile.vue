@@ -2,7 +2,7 @@
   <v-container fluid class="py-0">
     <v-row id="user_profile">
       <cropper :img="img" @change="imageCropped" />
-      <v-col class="col-12 pa-md-16 py-md-6"><h2> General Info</h2> </v-col>
+      <v-col class="col-12 pa-md-16 py-md-6"><h2>General Info</h2> </v-col>
       <v-col class="col-12 col-md-5 course-content px-md-6 py-md-0">
         <v-row>
           <v-col class="col-7 mx-auto">
@@ -79,7 +79,6 @@
           <input v-model="user.email" type="text" class="course_input" />
           <p class="lable font-weight-medium mt-5">Phone number</p>
           <input v-model="user.phone" type="text" class="course_input" />
- 
         </div>
         <div v-if="user.category.name == 'STUDENT'" class="title text-h5 mt-5">
           Enrolled courses
@@ -148,11 +147,11 @@ import jwt from "jsonwebtoken";
 import axios from "axios";
 import Apis from "@/services/apis";
 import { mapGetters, mapActions } from "vuex";
-import {emit} from "../services/event_bus";
+import { emit } from "../services/event_bus";
 
 export default {
   name: "UserProfile",
-  components:{
+  components: {
     cropper: () => import("@/components/reusable/ui/ImageCropper"),
   },
   data: () => ({
@@ -172,7 +171,7 @@ export default {
     oldPassword: "",
     newPassword: "",
     profile: undefined,
-    img:"",
+    img: "",
     confirmNewPassword: "",
   }),
   computed: {
@@ -212,7 +211,7 @@ export default {
       this.profile = img;
     },
     handleFileUpload(e) {
-      this.readURL(e)
+      this.readURL(e);
       this.profile = this.$refs.file.files[0];
     },
     validate() {
@@ -272,23 +271,23 @@ export default {
         this.$store.dispatch("modal/set_modal", {
           template: "display_information",
           title: "Updating Course",
-          message: `uploading ${this.profile.name}`,
+          message: `uploading profile`,
         });
-        const formData = new FormData();
-        formData.append("file", this.profile);
-        response = await Apis.update_user_profile(formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
+        response = await Apis.update_user_profile(
+          {
+            profile: this.profile,
           },
-          onUploadProgress: (progressEvent) => {
-            this.$store.dispatch(
-              "modal/set_progress",
-              parseInt(
-                Math.round((progressEvent.loaded / progressEvent.total) * 100)
-              )
-            );
-          },
-        });
+          {
+            onUploadProgress: (progressEvent) => {
+              this.$store.dispatch(
+                "modal/set_progress",
+                parseInt(
+                  Math.round((progressEvent.loaded / progressEvent.total) * 100)
+                )
+              );
+            },
+          }
+        );
       }
 
       // set the token in the session
@@ -396,6 +395,7 @@ export default {
     this.getCourses({
       user_name: this.$store.state.user.user.user_name,
     });
+    this.profile = this.user.profile;
   },
 };
 </script>

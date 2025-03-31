@@ -1,20 +1,20 @@
 import Api from './server'
-import {logout} from "./global_functions";
+import { logout } from "./global_functions";
 
 
 
 /* interceptors */
 Api.interceptors.response.use(function (response) {
 
-    const {data:{status,message}} = response
+    const { data: { status, message } } = response
 
-    if(status === 401){
-        if(message.toLowerCase() === 'invalid token')
+    if (status === 401) {
+        if (message.toLowerCase() === 'invalid token')
             logout()
     }
 
     return response
-}, function (error){
+}, function (error) {
     console.log(error)
     return new Promise.reject(error)
 })
@@ -23,7 +23,7 @@ Api.interceptors.response.use(function (response) {
 Api.interceptors.request.use((config) => {
 
     //get token
-    const {jwt:token} = JSON.parse(localStorage.getItem('vue-session-key'))
+    const { jwt: token } = JSON.parse(localStorage.getItem('vue-session-key'))
 
     //add token to headers
     config.headers = {
@@ -54,16 +54,17 @@ export default {
         return Api.put(`/${path}/${id}`, body, config)
     },
     update_user(body) {
-        return Api().put(`/user`, body)
+        return Api.put(`/user`, body)
     },
     update_user_password(body) {
-        return Api().put(`/user/password`, body)
+        return Api.put(`/user/password`, body)
     },
     update_user_profile(body, config) {
-        return Api().put(`/user/profile`, body, config)
+        console.log(body)
+        return Api.put(`/user/profile`, body, config)
     },
     remove_user_profile(file_name) {
-        return Api().delete(`/user/profile/${file_name}`)
+        return Api.delete(`/user/profile/${file_name}`)
     },
     // delete requests
     delete(path, id) {
