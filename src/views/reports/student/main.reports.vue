@@ -103,6 +103,9 @@
             {{ Math.round(item.progress.progress) }}%
           </p>
         </template>
+        <template v-slot:item.grade="{ item }">
+          <span>{{ Math.round(item.score) || 0 }}%</span>
+        </template>
         <template v-slot:no-data>
           <span class="text-h6">Oops You don't have a course.</span>
         </template>
