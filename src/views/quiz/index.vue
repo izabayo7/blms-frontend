@@ -67,9 +67,8 @@
               @click:row="handleRowClick"
           >
             <template v-slot:item.actions="{ item }">
-<div class="d-flex">
-              <svg
-                  @click="
+              <div class="d-flex">
+                <button @click="
                   set_modal({
                     template: 'action_confirmation',
                     method: {
@@ -79,14 +78,24 @@
                     title: 'Delete Quiz',
                     message: 'Are you sure you want to delete this quiz?',
                   })
-                " xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
-                <path fill="none" d="M0 0h24v24H0z"/>
-                <path
-                    d="M7 6V3a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v3h5v2h-2v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V8H2V6h5zm2-2v2h6V4H9z"
-                    fill="rgba(231,76,60,1)"/>
-              </svg>
-              <svg @click="$router.push(`quiz/edit/${item.name}`)" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"/><path d="M9.243 19H21v2H3v-4.243l9.9-9.9 4.242 4.244L9.242 19zm5.07-13.556l2.122-2.122a1 1 0 0 1 1.414 0l2.829 2.829a1 1 0 0 1 0 1.414l-2.122 2.121-4.242-4.242z" fill="rgba(47,204,113,1)"/></svg>
-</div>
+                ">
+                  <svg
+                      xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                    <path fill="none" d="M0 0h24v24H0z"/>
+                    <path
+                        d="M7 6V3a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v3h5v2h-2v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V8H2V6h5zm2-2v2h6V4H9z"
+                        fill="rgba(231,76,60,1)"/>
+                  </svg>
+                </button>
+                <button @click="$router.push(`quiz/edit/${item.name}`)">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                    <path fill="none" d="M0 0h24v24H0z"/>
+                    <path
+                        d="M9.243 19H21v2H3v-4.243l9.9-9.9 4.242 4.244L9.242 19zm5.07-13.556l2.122-2.122a1 1 0 0 1 1.414 0l2.829 2.829a1 1 0 0 1 0 1.414l-2.122 2.121-4.242-4.242z"
+                        fill="rgba(47,204,113,1)"/>
+                  </svg>
+                </button>
+              </div>
             </template>
             <template v-slot:no-data>
               <span class="text-h6">Oops You have not yet created a quiz.</span>
@@ -149,8 +158,8 @@ export default {
   methods: {
     ...mapActions("quiz", ["getQuizes"]),
     ...mapActions("modal", ["set_modal"]),
-    handleRowClick(value){
-        this.$router.push(`quiz/attempt/${value.name}`)
+    handleRowClick(value) {
+      this.$router.push(`quiz/attempt/${value.name}`)
     },
   },
   created() {
@@ -163,7 +172,7 @@ export default {
 </script>
 
 <style lang="scss">
-#view-quiz{
+#view-quiz {
   table {
     tbody {
       tr {
@@ -172,6 +181,7 @@ export default {
     }
   }
 }
+
 .round {
   .v-card > *:first-child:not(.v-btn):not(.v-chip),
   .v-card > .v-card__progress + *:not(.v-btn):not(.v-chip) {

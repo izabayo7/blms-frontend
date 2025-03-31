@@ -1,436 +1,388 @@
 <template>
-  <v-app class="create-quiz-page" v-if="selected_quiz !== undefined">
-    <div class="d-flex">
-      <span class="quiz_lable">Quiz title</span>
-      <v-text-field
-        v-model="selected_quiz.name"
-        class="quiz_title ml-4 mt-n3"
-        required
-      />
-    </div>
-    <span class="quiz_lable my-6">Quiz instructions</span>
-    <kurious-editor
-      v-if="mode !== ''"
-      ref="editor"
-      :mode="mode"
-      :defaultContent="
-        selected_quiz.instructions && selected_quiz.instructions != '<p></p>'
-          ? selected_quiz.quiz
+  <div v-if="questions.length" id="create-quiz">
+    <div id="quiz-info">
+      <div class="label">Quiz editing wizzard</div>
+      <div class="input-group">
+        <label for="quiz-title">Title</label>
+        <input v-model="title" id="quiz-title" type="text">
+      </div>
+      <div class="input-group">
+        <label>Instructions</label>
+        <div class="quiz-instructions">
+          <Editor
+              ref="editor"
+              mode="edit"
+              :defaultContent="
+        instructions && instructions != '<p></p>'
+          ? instructions
           : '<ol><li><p>Write your custom instructions</p></li></ol>'
       "
-      template="small"
-    />
-    <span class="quiz_lable my-6">Quiz duration</span>
-    <time-picker :duration="duration" @updateTime="updateDutation" />
-    <span class="quiz_lable my-6">Questions</span>
-    <v-row v-for="(question, i) in selected_quiz.questions" :key="i">
-      <v-col class="col-12">
-        <v-row>
-          <v-col class="col-1 px-0">
-            <span class="question_number">Q{{ i + 1 }}</span>
-          </v-col>
-          <v-col class="col-10 px-0">
-            <v-row>
-              <v-col class="col-12 col-md-3">
-                <span class="field_title">question Type</span>
-                <v-select
-                  v-model="question.type"
-                  :items="questionTypes"
-                  label="Question Type"
-                  class="field_shadow_2"
-                  @change="handleTypeChange(i)"
-                  solo
-                ></v-select>
-              </v-col>
-              <v-col class="col-12 col-md-6 pb-0">
-                <v-row>
-                  <v-col class="col-12 mt-n3">
-                    <span class="field_title">question Details</span>
-                    <v-textarea
-                      v-model="question.details"
-                      placeholder="Type question details"
-                      class="field_shadow_1"
-                      solo
-                      required
-                    ></v-textarea>
-                  </v-col>
-                  <v-col
-                    class="col-12"
-                    v-if="question.type !== 'Open ended' && question.options"
-                  >
-                    <v-row>
-                      <v-col
-                        v-if="
-                          question.type === 'Single text select' ||
-                          question.type === 'Multiple text select'
-                        "
-                        class="col-12"
-                      >
-                        <v-textarea
-                          v-for="(option, k) in question.options.choices"
-                          :key="k"
-                          v-model="option.text"
-                          :placeholder="`Option ${k + 1}`"
-                          class="question-options"
-                          @click:prepend="handleOptionClick(i, k)"
-                          :prepend-icon="
-                            option.right ? 'mdi-check' : 'mdi-close'
-                          "
-                          solo
-                          required
-                        >
-                          <template
-                            v-if="question.options.choices.length > 2"
-                            v-slot:append-outer
-                          >
-                            <v-icon
-                              :color="'error'"
-                              @click="removeOption(i, k)"
-                              v-text="'mdi-close'"
-                            />
-                          </template>
-                        </v-textarea>
-                        <v-btn text class="add-option" @click="addOption(i)">
-                          <v-icon class="mr-2">mdi-plus</v-icon>Add Option
-                        </v-btn>
-                      </v-col>
-                      <v-col
-                        v-else-if="
-                          question.type === 'Single file select' ||
-                          question.type === 'Multiple file select'
-                        "
-                        class="col-12 file-drop"
-                      >
-                        <div
-                          v-if="soltAttachments(i).length > 0"
-                          class="attachments"
-                        >
-                          <!-- <div
-                            v-for="(choice, key) in soltAttachments(i)"
-                            :key="key"
-                            class="file-listing d-flex"
-                          > -->
-                          <div
-                            class="downloadable_attachment vertically--centered"
-                          >
-                            <!-- <v-icon color="#000000" x-large
-                                >mdi-file{{
-                                  findIcon(choice.src)
-                                }}-outline</v-icon
-                              > -->
-                            <!-- <v-icon color="#000000" x-large
-                              >mdi-file-outline</v-icon
-                            > -->
-                            <!-- <span class="filename text-truncate">{{
-                                choice.src.split("/")[
-                                  choice.src.split("/").length - 1
-                                ]
-                              }}</span> -->
-                            <div class="pictures-container">
-                              <v-card
-                                v-for="(choice,
-                                k) in question.options.choices.filter((_c) =>
-                                  _c.src.includes('http')
-                                )"
-                                :key="k"
-                                flat
-                                tile
-                                class="ma-1 d-flex"
-                                color="transparent"
-                              >
-                                <v-img
-                                  :src="`${
-                                    choice.src
-                                  }?format=png&width=200&height=200&token=${$session.get(
-                                    'jwt'
-                                  )}`"
-                                  :lazy-src="`${
-                                    choice.src
-                                  }?format=png&width=200&height=200&token=${$session.get(
-                                    'jwt'
-                                  )}`"
-                                  :gradient="
-                                    choice.right
-                                      ? 'to top right, rgba(100,115,201,.33), rgba(25,32,72,.7)'
-                                      : undefined
-                                  "
-                                  @click="handleOptionClick(i, k)"
-                                  class="vertically--centered text-center"
-                                >
-                                  <v-icon
-                                    v-if="choice.right"
-                                    class="white--text"
-                                    size="50"
-                                    >mdi-check</v-icon
-                                  >
-                                  <template v-slot:placeholder>
-                                    <v-row
-                                      class="fill-height ma-0"
-                                      align="center"
-                                      justify="center"
-                                    >
-                                      <v-progress-circular
-                                        indeterminate
-                                        color="grey lighten-5"
-                                      ></v-progress-circular>
-                                    </v-row>
-                                  </template>
-                                </v-img>
-                                <button
-                                  @click.prevent="
-                                    remove_quiz_attached_file({
-                                      index: i,
-                                      file_name: choice.src,
-                                    })
-                                  "
-                                >
-                                  <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    width="45"
-                                    height="45"
-                                    viewBox="0 0 69 69"
-                                  >
-                                    <circle
-                                      id="Ellipse_225"
-                                      data-name="Ellipse 225"
-                                      cx="34.5"
-                                      cy="34.5"
-                                      r="34.5"
-                                      fill="#fc6767"
-                                    />
-                                    <path
-                                      id="Icon_material-delete"
-                                      data-name="Icon material-delete"
-                                      d="M9,28.5a3.009,3.009,0,0,0,3,3H24a3.009,3.009,0,0,0,3-3v-18H9ZM28.5,6H23.25l-1.5-1.5h-7.5L12.75,6H7.5V9h21V6Z"
-                                      transform="translate(16.5 16.5)"
-                                      fill="none"
-                                      stroke="#fff"
-                                      stroke-width="2"
-                                    />
-                                  </svg>
-                                </button>
-                              </v-card>
-                            </div>
-                          </div>
-                          <!-- </div> -->
-                        </div>
-                        <kurious-file-picker
-                          :ref="`picker${i}`"
-                          :boundIndex="i"
-                          :allowedTypes="['image']"
-                          :multiple="true"
-                          @addFile="addPicture"
-                          @removeFile="removePicture"
-                          @fileClicked="handleOptionClick"
-                        />
-                      </v-col>
-                    </v-row>
-                  </v-col>
-                </v-row>
-              </v-col>
-              <v-col class="col-6 col-md-2 mx-auto mx-md-0">
-                <span class="field_title">Marks</span>
-                <v-text-field
-                  v-model="question.marks"
-                  suffix="Marks"
-                  class="field_shadow_1"
-                  type="number"
-                  solo
-                  required
-                ></v-text-field>
-              </v-col>
-            </v-row>
-          </v-col>
-          <v-col class="col-1 px-0">
-            <v-btn
-              v-if="selected_quiz.questions.length > 1"
-              class="mt-10"
-              icon
-              @click="removeQuestion(i)"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="21"
-                height="27"
-                viewBox="0 0 21 27"
-              >
-                <path
-                  id="Icon_material-delete"
-                  data-name="Icon material-delete"
-                  d="M9,28.5a3.009,3.009,0,0,0,3,3H24a3.009,3.009,0,0,0,3-3v-18H9ZM28.5,6H23.25l-1.5-1.5h-7.5L12.75,6H7.5V9h21Z"
-                  transform="translate(-7.5 -4.5)"
-                  fill="#fc6767"
+          />
+        </div>
+      </div>
+      <div class="flex d-block d-md-flex">
+        <div class="input-group">
+          <label for="quiz-duration">Duration</label>
+          <div class="duration-input" id="quiz-duration">
+            <input class="inner-input" v-model="hours" type="number"> hrs : <input v-model="minutes" class="inner-input"
+                                                                                   type="number"> mins
+          </div>
+        </div>
+        <div class="input-group ml-auto">
+          <label for="quiz-pass-marks">Pass-marks (%)</label>
+          <input id="quiz-pass-marks" v-model="passMarks" type="number">
+        </div>
+      </div>
+    </div>
+    <div id="quiz-questions">
+      <div v-for="(question, i) in questions" :key="question.name" class="question mb-5">
+        <div class="question-number">{{ i + 1 }}</div>
+        <div class="question-content">
+          <div class="row">
+            <div class="col-12 col-md-6">
+              <select-ui
+                  :label="question.type"
+                  name="question-type"
+                  id="question-type"
+                  class="mb-15px"
+                  :options="questions_types"
+                  @input="
+                (e) => {
+                  question.type = e;
+                  handleTypeChange(i);
+                }
+              "
+              />
+            </div>
+            <div class="col-12 col-md-2">
+              <div class="required mb-15px d-flex">
+                <div class="text">Required</div>
+                <switch-ui :defaultValue="question.required"
+                           @input="
+                (e) => {
+                  question.required = e;
+                }
+              "
                 />
-              </svg>
-            </v-btn>
-          </v-col>
-        </v-row>
-      </v-col>
-    </v-row>
-    <v-btn color="#707070" class="white--text" rounded @click="addQuestion()">
-      <v-icon>mdi-plus</v-icon>Add a question
-    </v-btn>
-    <v-row>
-      <v-btn class="white--text save-quiz" rounded @click="saveQuiz()"
-        >Update quiz</v-btn
-      >
-      <v-btn
-        color="#707070"
-        class="cancel-quiz"
-        text
-        @click="$router.push('/quiz')"
-        >Cancel</v-btn
-      >
-    </v-row>
-  </v-app>
+              </div>
+            </div>
+            <div class="col-12 col-md-3 text-md-right pt-0">
+              <div class="marks mb-15px ml-auto">
+                <div class="input-group">
+                  <label>Marks</label>
+                  <input class="question-marks" v-model="question.marks" type="number">
+                </div>
+              </div>
+            </div>
+            <div class="col-12 col-md-1">
+              <div v-if="questions.length > 1" class="delete-question mb-15px">
+                <svg @click="removeQuestion(i)" class="cursor-pointer" width="28" height="28" viewBox="0 0 28 28"
+                     fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <g clip-path="url(#clip0)">
+                    <path
+                        d="M7.0026 22.1657C7.0026 23.449 8.0526 24.499 9.33594 24.499H18.6693C19.9526 24.499 21.0026 23.449 21.0026 22.1657V8.16569H7.0026V22.1657ZM22.1693 4.66569H18.0859L16.9193 3.49902H11.0859L9.91927 4.66569H5.83594V6.99902H22.1693V4.66569Z"
+                        fill="#FF0808"/>
+                  </g>
+                  <defs>
+                    <clipPath id="clip0">
+                      <rect width="28" height="28" fill="white"/>
+                    </clipPath>
+                  </defs>
+                </svg>
+
+              </div>
+            </div>
+          </div>
+          <div class="question-details d-block">
+            <div class="input-group">
+              <label>Question text</label>
+              <textarea
+                  v-model="question.details"
+                  placeholder="Type your question here ..."
+                  class="kurious--textarea mb-4 customScroll"
+                  rows="8"
+              ></textarea>
+            </div>
+          </div>
+          <div v-if="question.type.includes('text')" class="text-select">
+            <div
+                v-for="(option, k) in question.options.choices"
+                :key="k"
+                class="option d-block d-md-flex">
+              <div class="details">
+                              <textarea
+                                  placeholder="option 1"
+                                  v-model="option.text"
+                                  class="kurious--textarea mb-4 customScroll"
+                                  rows="8"
+                              ></textarea>
+              </div>
+              <div class="status mx-auto">
+                <label>Correct</label>
+                <!--                <transition name="fade" >-->
+                <svg v-if="option.right" @click="handleOptionClick(i, k)" width="18" height="20" viewBox="0 0 18 20"
+                     fill="none"
+                     xmlns="http://www.w3.org/2000/svg">
+                  <rect x="0.613894" y="5.7721" width="13.5057" height="13.5057" rx="1.84168" stroke="#828282"
+                        stroke-width="1.22779"/>
+                  <path d="M3.68555 10.0695L7.36891 16.2084L16.5773 2.08887" stroke="#828282" stroke-width="2.45558"
+                        stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+
+                <svg v-else @click="handleOptionClick(i, k)" width="15" height="15" viewBox="0 0 15 15" fill="none"
+                     xmlns="http://www.w3.org/2000/svg">
+                  <rect x="0.613894" y="0.72034" width="13.5057" height="13.5057" rx="1.84168" stroke="#828282"
+                        stroke-width="1.22779"/>
+                </svg>
+
+                <!--                </transition>-->
+              </div>
+              <button v-if="question.options.choices.length > 2" class="delete" @click="removeOption(i, k)">Delete
+                option
+              </button>
+            </div>
+            <button class="add-option" @click="addOption(i)">Add option</button>
+          </div>
+          <div v-if="question.type.includes('image')" class="image-select">
+            <label>Maximum 4 images ( 1 Megabyte maximum size for each)</label>
+            <FilePicker
+                :ref="`picker${i}`"
+                :boundIndex="i"
+                template="quiz-files"
+                hint="Click on an image to designate it as the correct  choice"
+                :allowedTypes="['image']"
+                :multiple="true"
+                @addFile="addPicture"
+                @removeFile="removePicture"
+                @fileClicked="handleOptionClick"
+            />
+          </div>
+          <div v-if="question.type == 'File upload'" class="file-upload">
+            <label>Max file size 2 MB</label>
+            <div class="allowed-files">
+              <div class="type"><input type="radio"> Pdf</div>
+              <div class="type"><input type="radio">Word document</div>
+              <div class="type"><input type="radio">Powerpoint file</div>
+              <div class="type"><input type="radio">text</div>
+              <div class="type"><input type="radio">Zip</div>
+              <div class="type"><input type="radio">image</div>
+              <div class="type"><input type="radio">Video</div>
+              <div class="type"><input type="radio">All</div>
+            </div>
+            <!--            <checkbox-->
+            <!--                :disabled="false"-->
+            <!--                @check_it="toogleIsAdminStatus"-->
+            <!--                v-model=""-->
+            <!--            />-->
+          </div>
+
+        </div>
+      </div>
+    </div>
+    <button @click="addQuestion()" class="quiz-action full mt-4" v-if="questions.length">Add question</button>
+    <div id="quiz-actions" class=" d-flex mb-12 mt-6">
+      <button class="quiz-action cancel" @click="
+                      set_modal({
+                        template: 'action_confirmation',
+                        title: 'Cancel quiz',
+                        message: 'Are you sure you want to Cancel this quiz?',
+                      })
+">Cancel
+      </button>
+      <button class="quiz-action" v-if="!questions.length" @click="recreate">Add questions</button>
+      <button class="quiz-action" v-else @click="validate">Save quiz</button>
+    </div>
+  </div>
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
-import TimePicker from "@/components/quiz/timePicker";
+import {mapActions} from "vuex";
+
 export default {
+  name: "EditQuiz",
   components: {
-    TimePicker,
+    // Checkbox: () => import("@/components/reusable/ui/Checkbox"),
+    FilePicker: () => import("@/components/reusable/FilePicker"),
+    Editor: () => import("@/components/reusable/Editor"),
+    SelectUi: () => import("@/components/reusable/ui/select-ui"),
+    SwitchUi: () => import("@/components/reusable/ui/switcher")
   },
   data: () => ({
-    pictures: [],
-    mode: "",
-    duration: {},
-    questionTypes: [
+    questions_types: [
       "Open ended",
       "Single text select",
       "Multiple text select",
-      "Single file select",
-      "Multiple file select",
+      "Single image select",
+      "Multiple image select",
       "File upload",
-      // "Matching",
-      // "Filling Blanks",
-      // "Image Selection",
-      // "Audio Question",
     ],
+    pictures: [[], []],
+    hours: 0,
+    minutes: 0,
     questions: [],
+    error: "",
+    instructions: "",
+    title: "",
+    passMarks: 0
   }),
+  watch: {
+    error() {
+      if (this.error != "")
+        this.$store.dispatch("app_notification/SET_NOTIFICATION", {
+          message: this.error,
+          status: "danger",
+          uptime: 2000,
+        }).then(() => {
+          this.error = ""
+        })
+    },
+  },
   computed: {
-    // get the current course
-    ...mapGetters("quiz", ["selected_quiz"]),
+    // get the current coursevestin na dorcas
   },
   methods: {
-    ...mapActions("quiz", ["update_quiz", "findQuizByName"]),
-    updateDutation(hh, mm, ss) {
-      this.duration.hh = hh;
-      this.duration.mm = mm;
-      this.duration.ss = ss;
-    },
-    handleOptionClick(questionIndex, optionIndex, fileName) {
-      let rightChoices = [],
-        calculatedIndex = optionIndex,
-        realIndex = optionIndex,
-        separatingIndex = 0;
-
-      if (fileName) {
-        for (const i in this.selected_quiz.questions[questionIndex].options
-          .choices) {
+    ...mapActions("modal", ["set_modal"]),
+    formatQuestionTypes(questions) {
+      for (let i = 0; i < questions.length; i++) {
+        for (const index in this.questions_types) {
           if (
-            !this.selected_quiz.questions[questionIndex].options.choices[
-              i
-            ].src.includes("http")
+              questions[i].type == this.questions_types[index].toLowerCase().split(" ").join("_")
           ) {
-            separatingIndex = i;
-            calculatedIndex = parseInt(i) + realIndex;
-            break;
+            questions[i].type = this.questions_types[index];
           }
         }
+        this.pictures.push([]);
+      }
+      return questions
+    },
+    validate() {
+      if (this.title == "")
+        return this.error = "Title is required"
+
+      if (this.title.length < 3)
+        return this.error = "Title is too short"
+
+      if (this.hours == 0 && this.minutes == 0)
+        return this.error = "Duration is required"
+
+      if (this.passMarks == 0)
+        return this.error = "PassMarks is required"
+
+      for (const i in this.questions) {
+        if (this.questions[i].details == "")
+          return this.error = `Question ${parseInt(i) + 1} must have question text`
+
+        if (this.questions[i].details.length < 5)
+          return this.error = `Question ${parseInt(i) + 1} question text too short`
+
+        if (this.questions[i].type == "Select question type")
+          return this.error = `Question ${parseInt(i) + 1} type is required`
+
+        if (this.questions[i].marks == "")
+          return this.error = `Question ${parseInt(i) + 1} marks are required`
+
+        if (this.questions[i].type.includes('select')) {
+          let right_choice_found = false;
+
+          if (this.questions[i].type.includes('image')) {
+            if (this.questions[i].options.choices.length < 2)
+              return this.error = `Question ${parseInt(i) + 1}, must have atleast options,pick files`
+          }
+
+          for (const k in this.questions[i].options.choices) {
+
+            if (this.questions[i].options.choices[k].right)
+              right_choice_found = true;
+
+            if (this.questions[i].type.includes('text')) {
+              if (this.questions[i].options.choices[k].text == "")
+                return this.error = `Question ${parseInt(i) + 1}, option ${parseInt(k) + 1} text is required`
+
+              if (this.questions[i].options.choices[k].text.length < 3)
+                return this.error = `Question ${parseInt(i) + 1}, option ${parseInt(k) + 1} text is too short`
+            }
+          }
+          if (!right_choice_found)
+            return this.error = `Question ${parseInt(i) + 1} must have a right choice`
+        }
+
+
       }
 
-      for (const k in this.selected_quiz.questions[questionIndex].options
-        .choices) {
-        if (k == calculatedIndex) {
-          this.selected_quiz.questions[questionIndex].options.choices[
-            k
-          ].right = !this.selected_quiz.questions[questionIndex].options
-            .choices[k].right;
-        } else if (
-          this.selected_quiz.questions[questionIndex].type.includes("Single")
-        ) {
-          this.selected_quiz.questions[questionIndex].options.choices[
-            k
-          ].right = false;
-        }
-        if (
-          this.selected_quiz.questions[questionIndex].options.choices[k]
-            .right &&
-          calculatedIndex > separatingIndex - 1 &&
-          fileName
-        ) {
-          rightChoices.push(calculatedIndex - separatingIndex);
-        }
-      }
-      if (this.selected_quiz.questions[questionIndex].type.includes("file")) {
-        this.$refs[`picker${questionIndex}`][0].showRightFiles(
-          questionIndex,
-          rightChoices
-        );
-      }
+      this.saveQuiz();
     },
-    soltAttachments(index) {
-      let attachments = [];
-      for (const i in this.selected_quiz.questions[index].options.choices) {
-        if (
-          this.selected_quiz.questions[index].options.choices[i].src.includes(
-            "http"
-          )
-        ) {
-          attachments.push(
-            this.selected_quiz.questions[index].options.choices[i]
-          );
-        }
-      }
-      return attachments;
-    },
-    //delete a quiz attached file
-    remove_quiz_attached_file({ index, file_name }) {
-      for (const i in this.selected_quiz.questions[index].options.choices) {
-        if (
-          this.selected_quiz.questions[index].options.choices[i].src ===
-          file_name
-        ) {
-          this.selected_quiz.questions[index].options.choices.splice(i, 1);
-          break;
-        }
-      }
-    },
+    ...mapActions("quiz", ["update_quiz", "findQuizByName"]),
     addPicture(file, boundIndex) {
       this.pictures[boundIndex].push(file);
-      this.selected_quiz.questions[boundIndex].options.choices.push({
+      this.questions[boundIndex].options.choices.push({
         src: file.name,
         right: false,
       });
     },
     removePicture(index, boundIndex) {
       this.pictures[boundIndex].splice(index, 1);
-      this.selected_quiz.questions[boundIndex].options.choices.splice(index, 1);
+      this.questions[boundIndex].options.choices.splice(index, 1);
+    },
+    recreate() {
+      this.questions = [
+        {
+          type: "Open ended",
+          marks: 0,
+          required: false,
+          details: "",
+          options: {
+            choices: [],
+          },
+        },
+      ];
+      this.pictures = [[], []];
+    },
+    handleOptionClick(questionIndex, optionIndex) {
+      console.log(questionIndex, optionIndex)
+      let rightChoices = [];
+
+      for (const k in this.questions[questionIndex].options.choices) {
+        if (k == optionIndex) {
+          this.questions[questionIndex].options.choices[k].right = !this
+              .questions[questionIndex].options.choices[k].right;
+        } else if (this.questions[questionIndex].type.includes("Single")) {
+          this.questions[questionIndex].options.choices[k].right = false;
+        }
+        if (this.questions[questionIndex].options.choices[k].right) {
+          rightChoices.push(k);
+        }
+      }
+      if (this.questions[questionIndex].type.includes("image")) {
+        this.$refs[`picker${questionIndex}`][0].showRightFiles(
+            questionIndex,
+            rightChoices
+        );
+      }
     },
     handleTypeChange(index) {
-      if (this.selected_quiz.questions[index].type.includes("text")) {
-        this.selected_quiz.questions[index].options = {
+      if (this.questions[index].type.includes("text")) {
+        this.questions[index].options = {
           choices: [
-            { text: "", right: false },
-            { text: "", right: false },
+            {text: "", right: false},
+            {text: "", right: false},
           ],
         };
       } else if (
-        this.selected_quiz.questions[index].type.includes("file") &&
-        this.selected_quiz.questions[index].type.includes("select")
+          this.questions[index].type.includes("image") &&
+          this.questions[index].type.includes("select")
       ) {
-        this.selected_quiz.questions[index].options = {
+        this.questions[index].options = {
           choices: [],
         };
+      }
+      if (this.questions[index].type == "File upload") {
+        this.questions[index].allowed_files = ["All"]
       }
       this.pictures[index] = [];
     },
     addQuestion() {
-      this.selected_quiz.questions.push({
-        type: "",
+      this.questions.push({
+        type: "Open ended",
         marks: 0,
         details: "",
         options: {
@@ -440,186 +392,78 @@ export default {
       this.pictures.push([]);
     },
     addOption(index) {
-      this.selected_quiz.questions[index].options.choices.push({
-        text: "",
-        right: false,
-      });
+      this.questions[index].options.choices.push({text: "", right: false});
     },
     removeOption(index, index1) {
-      this.selected_quiz.questions[index].options.choices.splice(index1, 1);
+      this.questions[index].options.choices.splice(index1, 1);
     },
     removeQuestion(index) {
-      this.selected_quiz.questions.splice(index, 1);
-      this.selected_quiz.pictures.splice(index, 1);
+      this.questions.splice(index, 1);
+      this.pictures.splice(index, 1);
     },
-    toSeconds(duration) {
-      const hours = duration.hh ? duration.hh : 0;
-      const minutes = duration.mm ? duration.mm : 0;
-      const seconds = duration.ss ? duration.ss : 0;
-      const result = seconds + minutes * 60 + hours * 3600;
-      return result;
-    },
-    to_hh_mm_ss(seconds) {
-      let string = new Date(seconds * 1000).toISOString().substr(11, 8);
-      string = string.split(":");
-      return {
-        hh: string[0],
-        mm: string[1],
-        ss: string[2],
-      };
+    calculateSeconds() {
+      return parseInt(this.minutes) * 60 + parseInt(this.hours) * 3600;
     },
     async saveQuiz() {
       let questions = [];
-      for (const index in this.selected_quiz.questions) {
-        // format the question type
-        this.selected_quiz.questions[index].type = this.selected_quiz.questions[
-          index
-        ].type
-          .toLowerCase()
-          .split(" ")
-          .join("_");
-
-        // remove options for non select questions
-        if (!this.selected_quiz.questions[index].type.includes("select")) {
-          this.selected_quiz.questions[index].options = undefined;
+      for (const index in this.questions) {
+        this.questions[index].type = this.questions[index].type
+            .toLowerCase()
+            .split(" ")
+            .join("_");
+        if (!this.questions[index].type.includes("select")) {
+          this.questions[index].options = undefined;
         }
-        // remove media path from src
-        else if (
-          this.selected_quiz.questions[index].type.includes("file-select")
-        ) {
-          for (const i in this.selected_quiz.questions[index].options.choices) {
-            const mediapath = this.selected_quiz.questions[index].options
-              .choices[i].src;
-            this.selected_quiz.questions[index].options.choices[
-              i
-            ].src = mediapath.split("/")[mediapath.split("/").length - 1];
-          }
-        }
-        questions.push(this.selected_quiz.questions[index]);
+        questions.push(this.questions[index]);
       }
 
       const editorContent = this.$refs.editor.getHTML();
 
-      this.update_quiz({
+      this.create_quiz({
         quiz: {
-          name: this.selected_quiz.name,
+          name: this.title,
           instructions:
-            editorContent ==
-            `<ol><li><p>Write your custom instructions</p></li></ol>`
-              ? undefined
-              : editorContent,
-          duration: this.toSeconds(this.duration),
+              editorContent ==
+              `<ol><li><p>Write your custom instructions</p></li></ol>`
+                  ? undefined
+                  : editorContent,
+          duration: this.calculateSeconds(),
           user: this.$store.state.user.user.user_name,
           questions: questions,
+          passMarks: this.passMarks
         },
         pictures: this.pictures,
       }).then(() => {
         this.$router.push("/quiz");
-      });
-    },
-    formatQuestionType(value) {
-      for (const index in this.questionTypes) {
-        if (
-          value == this.questionTypes[index].toLowerCase().split(" ").join("_")
-        ) {
-          return this.questionTypes[index];
-        }
-      }
+      }).catch((e) => {
+        this.$store.dispatch("app_notification/SET_NOTIFICATION", {
+          message: e.message,
+          status: "danger",
+          uptime: 5000,
+        }).then(() => {
+          this.error = ""
+        })
+      })
     },
   },
   created() {
-    this.mode = "edit";
     this.findQuizByName({
       user_name: this.$store.state.user.user.user_name,
       quizName: this.$route.params.name,
     }).then((quiz) => {
-      this.duration = this.to_hh_mm_ss(quiz.duration);
+      let duration = new Date(quiz.duration * 1000).toISOString().substr(11, 8);
+      duration = duration.split(":");
+      this.hours = duration[0]
+      this.minutes = duration[1]
+      this.passMarks = quiz.passMarks;
+      this.instructions = quiz.instructions;
+      this.title = quiz.name;
 
-      for (let i = 0; i < quiz.questions.length; i++) {
-        this.selected_quiz.questions[i].type = this.formatQuestionType(
-          quiz.questions[i].type
-        );
-        this.pictures.push([]);
-      }
+      this.questions = this.formatQuestionTypes(quiz.questions);
     });
   },
 };
 </script>
-
-<style lang="scss" scoped>
-.create-quiz-page {
-  background-color: #f9faff;
-  padding: 30px;
-  .quiz_lable {
-    color: #8f8f8f;
-    font-size: 20px;
-  }
-  .quiz_title {
-    width: 12px !important;
-    max-width: 300px;
-  }
-  .question_number,
-  field_title {
-    font-size: 24px;
-  }
-  .mdi-plus::before {
-    font-size: 28px;
-    color: #fff;
-    background-color: #707070;
-    border-radius: 15px;
-  }
-  a.add-option.router-link-exact-active.router-link-active {
-    text-decoration: none;
-    color: #717171;
-    margin-left: 5px;
-    font-weight: bold;
-  }
-  button.theme--light.v-btn.v-btn--contained.v-btn--rounded.v-size--default.white--text {
-    width: 160px;
-    margin-left: 0;
-  }
-
-  button.white--text.save-quiz.v-btn.v-btn--contained.v-btn--rounded.v-size--default {
-    width: 120px;
-    margin: 20px 30px;
-    background-color: $primary;
-  }
-
-  button.cancel-quiz.v-btn.v-btn--flat.v-btn--text.theme--light.v-size--default {
-    font-size: 18px;
-    margin: 20px -10px;
-  }
-  .v-text-field.v-text-field--solo:not(.v-text-field--solo-flat)
-    > .v-input__control
-    > .v-input__slot:focus-within {
-    border-left: 8px solid #ffc100;
-  }
-  .downloadable_attachment {
-    width: 100%;
-    margin-bottom: 18px;
-  }
-  .pictures-container {
-    display: flex;
-    flex-direction: row;
-    flex-flow: wrap;
-  }
-}
-</style>
 <style lang="scss">
-// the shadows
-.field_shadow_1.v-text-field.v-text-field--solo:not(.v-text-field--solo-flat)
-  > .v-input__control
-  > .v-input__slot {
-  box-shadow: 0px 10px 20px rgb(183, 183, 183, 0.16) !important;
-}
-
-.field_shadow_2.v-text-field.v-text-field--solo:not(.v-text-field--solo-flat)
-  > .v-input__control
-  > .v-input__slot {
-  box-shadow: 0px 10px 40px rgb(199, 199, 199, 0.16) !important;
-}
-
-.v-menu__content {
-  box-shadow: 0px 10px 40px rgb(199, 199, 199, 0.16) !important;
-}
+@import '../../assets/sass/imports/createQuiz';
 </style>
