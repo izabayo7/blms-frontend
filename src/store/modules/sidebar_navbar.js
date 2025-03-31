@@ -1,7 +1,8 @@
 const getDefaultState = () => ({
     sidebar_expanded: true,
     page_actions_visible: true,
-    group_model: false
+    group_model: false,
+    college: {}
 })
 
 export default {
@@ -11,6 +12,9 @@ export default {
         //change state of side bar expansion
         TOGGLE_SIDEBAR_EXPANSION(state) {
             state.sidebar_expanded = !state.sidebar_expanded;
+        },
+        SET_COLLEGE_INFO(state, college) {
+            state.college = college
         },
         // page action is a right side bar used in live on small devices
         TOGGLE_PAGE_ACTIONS_VISIBILITY(state) {
