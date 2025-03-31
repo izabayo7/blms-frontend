@@ -38,6 +38,7 @@
 import Chip from "@/components/reusable/ui/Chip";
 import Member from "@/components/messages/Member";
 import {mapActions} from "vuex";
+import apis from "@/services/apis";
 export default {
   name: "AddMember",
   components: {Member, Chip},
@@ -72,7 +73,10 @@ export default {
         return
       }
 
-      this.searchUser({query: this.currentMember}).then(result => {
+      apis.get(`chat_group/${this.$route.params.id}/search_members?data=${this.currentMember}`).then(result => {
+        console.log('before ', result)
+        result = result.data.data.results
+        console.log('after ', result)
         this.userLoading = false;
         this.foundUsers= result;
 
@@ -89,6 +93,9 @@ export default {
 
       this.group.members.unshift(user)
     },
+    createAddMember(){
+      apis.create()
+    }
 
   }
 }
