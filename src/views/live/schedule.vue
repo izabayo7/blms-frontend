@@ -226,9 +226,9 @@ export default {
     },
     quizNames() {
       let res = []
-      // for (const i in this.all_quiz) {
-      //   res.push(this.quiz[i].name)
-      // }
+      for (const i in this.all_quiz) {
+        res.push(this.all_quiz[i].name)
+      }
       return res
     }
   },

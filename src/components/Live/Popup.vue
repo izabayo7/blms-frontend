@@ -3,9 +3,9 @@
     <div class="modal-backdrop">
       <div :class="`modal customScroll`">
         <div class="col-12 title mx-auto" @click="close()">
-          {{title}}
+          {{ title }}
         </div>
-        <slot name="content" />
+        <slot name="content"/>
       </div>
     </div>
   </transition>
@@ -47,7 +47,8 @@ export default {
 
   background: #FFFFFF;
   border-radius: 13px;
-  .title{
+
+  .title {
     font-family: Inter;
     font-style: normal;
     font-weight: bold;
@@ -59,7 +60,8 @@ export default {
     color: #193074;
     margin-top: 48px;
   }
-  .subtitle{
+
+  .subtitle {
     font-family: Inter;
     font-style: normal;
     font-weight: 500;
@@ -69,7 +71,8 @@ export default {
     margin-bottom: 20px;
     color: #000000;
   }
-  .detail{
+
+  .detail {
     font-family: Inter;
     font-style: normal;
     font-weight: normal;
@@ -78,14 +81,26 @@ export default {
     text-align: center;
     margin-bottom: 16px;
     color: #000000;
-    span{
+
+    span {
       font-weight: bold;
     }
   }
-  .mx-auto{
+
+  .d-md-flex {
+    .detail {
+      color: #828282;
+      span{
+        margin-left: 4px;
+      }
+    }
+  }
+
+  .mx-auto {
     width: fit-content;
   }
-  button{
+
+  button {
     background: none;
     font-family: Inter;
     font-style: normal;
@@ -95,7 +110,23 @@ export default {
     text-align: center;
 
     color: #3C3C3C;
+    &.action{
+      font-family: Inter;
+      font-style: normal;
+      font-weight: 500;
+      font-size: 15px;
+      line-height: 18px;
+
+      color: #3C3C3C;
+      padding: 19px 47px;
+      border-radius: 4.75155px;
+    }
+    &.primary{
+      background: #193074 !important;
+      color: white;
+    }
   }
+
 }
 
 .modal-fade-enter,
@@ -107,6 +138,7 @@ export default {
 .modal-fade-leave-active {
   transition: opacity 0.5s ease;
 }
+
 /* Portrait phones and smaller */
 @media (max-width: 1000px) {
   #schedule_live_class {
