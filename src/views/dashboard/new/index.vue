@@ -202,15 +202,21 @@
       </div>
       <div class="v-col col-6"></div>
     </v-row>
+    <invite-users-dialog />
   </v-container>
 </template>
 
 <script>
+import { mapActions } from "vuex";
 export default {
-  name: "Application Dashboard",
+  name: "ApplicationDashboard",
   components: {
-    // AppNav: () => import("@/components/dashboard/new/nav-bar"),
+    InviteUsersDialog: () => import("@/components/dashboard/InviteUsersDialog"),
   },
+  methods: {
+    ...mapActions("modal", ["set_modal"]),
+  },
+  beforeMount() {},
 };
 </script>
 
