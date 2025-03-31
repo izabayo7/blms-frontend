@@ -1,7 +1,9 @@
 <template>
   <div class="sidebar">
-    <div class="toggle">
-      <v-icon large @click="toggle">mdi-menu</v-icon>
+    <div class="toggle-container">
+      <div class="toggle">
+        <v-icon large @click="toggle">mdi-menu</v-icon>
+      </div>
     </div>
     <div class="routes mt-15">
       <ul ref="nav">
@@ -191,15 +193,20 @@ export default {
 <style lang="scss" scoped>
 .sidebar {
   height: 100vh;
-  box-shadow: 0px 0px 15px 0px $secondary;
+  box-shadow: 0 0 15px 0 $secondary;
   transition: 0.4s ease-out;
-  .toggle {
-    display: inline-flex;
-    align-self: flex-start;
-    padding: 1rem;
-    margin: auto;
-    width: fit-content;
-    cursor: pointer;
+
+  .toggle-container{
+      border-bottom: 1px solid lighten($font,65);
+
+    .toggle {
+      display: inline-flex;
+      align-self: flex-start;
+      padding: 1.2rem;
+      margin: auto;
+      width: fit-content;
+      cursor: pointer;
+    }
   }
 
   .routes {
