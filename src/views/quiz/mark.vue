@@ -243,6 +243,7 @@
                       ? attempt.answers[i].feedback._id
                       : ''
                   "
+                  @addFeedback="addFeedback"
                 />
               </v-col>
             </v-row>
@@ -369,6 +370,15 @@ export default {
       "update_quiz_submission",
       "findQuizSubmissionByUserAndQuizNames",
     ]),
+
+    addFeedback(answer_id, feedback) {
+      for (const i in this.attempt.answers) {
+        if (this.attempt.answers[i]._id == answer_id) {
+          this.attempt.answers[i].feedback = feedback;
+        }
+      }
+    },
+
     checkChoiceStatus(choosed_options, choice) {
       if (choice.src) {
         for (const option of choosed_options) {
