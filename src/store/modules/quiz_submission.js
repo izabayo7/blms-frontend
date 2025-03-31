@@ -80,19 +80,19 @@ export default {
         },
 
         //get quiz_submissions  in a quiz
-        async getQuizSubmissionsInQuiz({state, dispatch}, {quiz_id}) {
+        async getQuizSubmissionsInQuiz({state, dispatch}, {quiz_id, isAssignments}) {
 
-            let result = state.quiz_submission.data.filter(e => e._id == quiz_id)
-
+            let result = state.quiz_submission.data.filter(e => e._id === quiz_id)
+            const index = isAssignments ? 1 : 0
             // if submission not loaded fetch them
             if (!result.length) {
 
                 // eslint-disable-next-line no-undef
                 result = await dispatch('getQuizSubmissions', {user_name: user.state.user.user_name})
-                result = result.filter(e => e._id == quiz_id)
+                result = result.filter(e => e._id === quiz_id)
             }
 
-            return result[0]
+            return result[index]
         },
 
         //get quiz_submissions  in a quiz
@@ -206,10 +206,10 @@ export default {
         },
         //get all quiz submissions
         quiz_submissions: state => {
-            return state.quiz_submission.data.filter(x => !x.submissionMode)
+            return state.quiz_submission.data.filter(x => !x.submissionMode && !x.submissions[0].assignment)
         },
         assignment_submissions: state => {
-            return state.quiz_submission.data.filter(x => x.submissionMode)
+            return state.quiz_submission.data.filter(x => x.submissionMode || x.submissions[0].assignment)
         },
     },
 }

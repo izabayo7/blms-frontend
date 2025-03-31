@@ -134,7 +134,7 @@
           </div>
           <Feedback
               class="mt-4 feedback_container"
-              v-if="(assignment_submission.feedback_src && assignment.status === 'RELEASED') || (assignment_submission._id &&userCategory === 'INSTRUCTOR')"
+              v-if="((assignment_submission.feedback || assignment_submission.feedback_src) && assignment.status === 'RELEASED') || (assignment_submission._id &&userCategory === 'INSTRUCTOR')"
               :submission_id="assignment_submission._id"
               :feedback_name="assignment_submission.feedback_src"
               :feedbackId="
@@ -167,7 +167,7 @@
             </div>
           </div>
           <div id="quiz-actions" class=" d-flex mb-12 mt-6">
-            <button @click="$router.push(`/${userCategory==='STUDENT' ? 'assignments':'quiz'}`)"
+            <button @click="$router.go(-1)"
                     class="quiz-action cancel">
               Cancel
             </button>
