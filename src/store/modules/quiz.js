@@ -45,6 +45,9 @@ export default {
         addExam(state, exam) {
             state.exams.data.unshift(exam)
         },
+        addQuiz(state, quiz) {
+            state.quiz.data.unshift(quiz)
+        },
         editAssignment(state, {assignment, id}) {
             for (const i in state.assignments.data) {
                 if (state.assignments.data[i]._id === id) {

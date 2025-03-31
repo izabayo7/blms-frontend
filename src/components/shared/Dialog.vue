@@ -342,6 +342,7 @@ to start presenting</span>
         <div class="actions">
           <v-btn
               @click="performAction"
+              id="continueExam"
               class="mx-2 white--text action-button cancel"
           >{{ link ? 'I decline' : 'Continue' }}
           </v-btn

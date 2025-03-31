@@ -7,7 +7,8 @@
             <v-row>
               <div class="col-12 d-flex justify-center">
                 <div class="nav d-block d-md-flex">
-                  <div class="item cursor-pointer" @click="$router.push('/assessments/quiz')" :class="{active:currentView==='quiz'}">
+                  <div class="item cursor-pointer" @click="$router.push('/assessments/quiz')"
+                       :class="{active:currentView==='quiz'}">
                     <div class="icon">
                       <svg width="26" height="27" viewBox="0 0 26 27" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path
@@ -121,7 +122,7 @@
                 <div class="text-right">
                   <button @click="$router.push(`${$route.path}/new`)"
                           class="create">
-                    New {{currentView === 'quiz' ? 'quiz' : currentView === 'exams' ? 'exam' : 'assignment'}}
+                    New {{ currentView === 'quiz' ? 'quiz' : currentView === 'exams' ? 'exam' : 'assignment' }}
                   </button>
                 </div>
               </div>
@@ -148,6 +149,27 @@
 
                   <div class="tooltip-text">
                     Edit
+                  </div>
+                </div>
+                <div @click.stop="duplicateAssessment('quiz',item._id)" class="tooltip">
+                  <svg width="39" height="39" viewBox="0 0 39 39" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="19.5" cy="19.5" r="19.5" fill="#DEDEDE"/>
+                    <circle cx="19.5" cy="19.5" r="19.5" stroke="#DEDEDE"/>
+                    <g clip-path="url(#clip0_4002_273)">
+                      <path
+                          d="M15 14V11C15 10.7348 15.1054 10.4804 15.2929 10.2929C15.4804 10.1054 15.7348 10 16 10H28C28.2652 10 28.5196 10.1054 28.7071 10.2929C28.8946 10.4804 29 10.7348 29 11V25C29 25.2652 28.8946 25.5196 28.7071 25.7071C28.5196 25.8946 28.2652 26 28 26H25V29C25 29.552 24.55 30 23.993 30H12.007C11.8751 30.0008 11.7444 29.9755 11.6223 29.9256C11.5002 29.8757 11.3892 29.8022 11.2957 29.7093C11.2021 29.6164 11.1278 29.5059 11.0771 29.3841C11.0263 29.2624 11.0001 29.1319 11 29L11.003 15C11.003 14.448 11.453 14 12.01 14H15ZM13.003 16L13 28H23V16H13.003ZM17 14H25V24H27V12H17V14Z"
+                          fill="black"/>
+                    </g>
+                    <defs>
+                      <clipPath id="clip0_4002_273">
+                        <rect width="19.5556" height="19.5556" fill="white" transform="translate(10 10)"/>
+                      </clipPath>
+                    </defs>
+                  </svg>
+
+
+                  <div class="tooltip-text">
+                    Duplicate
                   </div>
                 </div>
                 <div @click.stop="
@@ -212,7 +234,8 @@
                     {{ item.status === 'DRAFT' ? 'Publish' : 'Un publish' }}
                   </div>
                 </div>
-                <div @click.stop="$router.push(`exams/edit/${item._id.toString()}`)" class="tooltip">
+                <div @click.stop="$router.push(`exams/edit/${item._id.toString()}`)"
+                     :class="{'ml-auto':item.status === 'RELEASED'}" class="tooltip">
                   <svg width="39" height="39" viewBox="0 0 39 39" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <circle cx="19.5" cy="19.5" r="19.5" fill="#DEDEDE"/>
                     <circle cx="19.5" cy="19.5" r="19.5" stroke="#DEDEDE"/>
@@ -223,6 +246,27 @@
 
                   <div class="tooltip-text">
                     Edit
+                  </div>
+                </div>
+                <div @click.stop="duplicateAssessment('exams',item._id)" class="tooltip">
+                  <svg width="39" height="39" viewBox="0 0 39 39" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="19.5" cy="19.5" r="19.5" fill="#DEDEDE"/>
+                    <circle cx="19.5" cy="19.5" r="19.5" stroke="#DEDEDE"/>
+                    <g clip-path="url(#clip0_4002_273)">
+                      <path
+                          d="M15 14V11C15 10.7348 15.1054 10.4804 15.2929 10.2929C15.4804 10.1054 15.7348 10 16 10H28C28.2652 10 28.5196 10.1054 28.7071 10.2929C28.8946 10.4804 29 10.7348 29 11V25C29 25.2652 28.8946 25.5196 28.7071 25.7071C28.5196 25.8946 28.2652 26 28 26H25V29C25 29.552 24.55 30 23.993 30H12.007C11.8751 30.0008 11.7444 29.9755 11.6223 29.9256C11.5002 29.8757 11.3892 29.8022 11.2957 29.7093C11.2021 29.6164 11.1278 29.5059 11.0771 29.3841C11.0263 29.2624 11.0001 29.1319 11 29L11.003 15C11.003 14.448 11.453 14 12.01 14H15ZM13.003 16L13 28H23V16H13.003ZM17 14H25V24H27V12H17V14Z"
+                          fill="black"/>
+                    </g>
+                    <defs>
+                      <clipPath id="clip0_4002_273">
+                        <rect width="19.5556" height="19.5556" fill="white" transform="translate(10 10)"/>
+                      </clipPath>
+                    </defs>
+                  </svg>
+
+
+                  <div class="tooltip-text">
+                    Duplicate
                   </div>
                 </div>
                 <div @click.stop="
@@ -351,6 +395,27 @@
                     Edit
                   </div>
                 </div>
+                <div @click.stop="duplicateAssessment('assignments',item._id)" class="tooltip">
+                  <svg width="39" height="39" viewBox="0 0 39 39" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="19.5" cy="19.5" r="19.5" fill="#DEDEDE"/>
+                    <circle cx="19.5" cy="19.5" r="19.5" stroke="#DEDEDE"/>
+                    <g clip-path="url(#clip0_4002_273)">
+                      <path
+                          d="M15 14V11C15 10.7348 15.1054 10.4804 15.2929 10.2929C15.4804 10.1054 15.7348 10 16 10H28C28.2652 10 28.5196 10.1054 28.7071 10.2929C28.8946 10.4804 29 10.7348 29 11V25C29 25.2652 28.8946 25.5196 28.7071 25.7071C28.5196 25.8946 28.2652 26 28 26H25V29C25 29.552 24.55 30 23.993 30H12.007C11.8751 30.0008 11.7444 29.9755 11.6223 29.9256C11.5002 29.8757 11.3892 29.8022 11.2957 29.7093C11.2021 29.6164 11.1278 29.5059 11.0771 29.3841C11.0263 29.2624 11.0001 29.1319 11 29L11.003 15C11.003 14.448 11.453 14 12.01 14H15ZM13.003 16L13 28H23V16H13.003ZM17 14H25V24H27V12H17V14Z"
+                          fill="black"/>
+                    </g>
+                    <defs>
+                      <clipPath id="clip0_4002_273">
+                        <rect width="19.5556" height="19.5556" fill="white" transform="translate(10 10)"/>
+                      </clipPath>
+                    </defs>
+                  </svg>
+
+
+                  <div class="tooltip-text">
+                    Duplicate
+                  </div>
+                </div>
                 <div @click.stop="
                   set_modal({
                     template: 'action_confirmation',
@@ -390,8 +455,9 @@
 </template>
 
 <script>
-import {mapActions, mapGetters} from "vuex";
+import {mapActions, mapGetters, mapMutations} from "vuex";
 import {getTime} from "../../services/global_functions";
+import Apis from "@/services/apis";
 
 export default {
   data: () => ({
@@ -442,7 +508,7 @@ export default {
   }),
   computed: {
     // get the current course
-    ...mapGetters("quiz", ["all_quiz", "assignments","exams"]),
+    ...mapGetters("quiz", ["all_quiz", "assignments", "exams"]),
     // format the quiz to fit in the table
     formated_quiz() {
       let formated_quiz = [];
@@ -463,15 +529,34 @@ export default {
       return this.$store.state.user.user.category.name;
     },
   },
-  watch:{
-    $route(){
+  watch: {
+    $route() {
       this.setCurrentView()
     }
   },
   methods: {
-    ...mapActions("quiz", ["getQuizes", "getAssignments","getExams"]),
+    ...mapActions("quiz", ["getQuizes", "getAssignments", "getExams",]),
     ...mapActions("modal", ["set_modal"]),
+    ...mapMutations("quiz", ["addExam", "addAssignment", "addQuiz"]),
     getTime,
+    duplicateAssessment(type, id) {
+
+      Apis.create(`${type}/duplicate/${id}`).then(res => {
+        if (res.data.data) {
+          if (type === 'exams')
+            this.addExam(res.data.data)
+          if (type === 'quiz')
+            this.addQuiz(res.data.data)
+          if (type === 'assignments')
+            this.addAssignment(res.data.data)
+        }
+      })
+      console.log(type, id)
+      /*
+      this.addAssignment(res.data.data)
+      this.addExam(res.data.data)
+       */
+    },
     handleRowClick(value) {
       this.$router.push(this.currentView === 'quiz' ? `quiz/attempt/${value.name}` : this.currentView === 'exams' ? `exams/attempt/${value._id}` : `assignments/${value._id}`)
     },
