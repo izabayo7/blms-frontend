@@ -1,7 +1,7 @@
 <template>
   <div class="combined-statistics pt-6">
     <div class="row">
-      <div class="selection col-12 col-lg-5 px-0" :class="{'px-0': $vuetify.breakpoint.width < 700 }">
+      <div class="selection col-12 pb-0 col-lg-5 px-0" :class="{'px-0': $vuetify.breakpoint.width < 700 }">
         <div class="title mb-6">Select data</div>
         <button
             v-for="(obj, i) in data_categories"
@@ -12,7 +12,7 @@
           {{ obj.name }}
         </button>
       </div>
-      <div class="result-view mb-3 col-12 col-lg-7">
+      <div class="result-view pb-0 col-12 col-lg-7">
         <div class="filters-containter">
           <div class="filters">
             <div class="cursor-pointer" @click="activeFilter = 1" :class="{'active': activeFilter === 1}">All time</div>
@@ -46,7 +46,7 @@ import Apis from "@/services/apis";
 export default {
   name: "combined-statistics",
   data: () => ({
-    selected_category: "User joins",
+    selected_category: "User online",
     userJoins: undefined,
     loaded: false,
     activeFilter: 4,
@@ -100,11 +100,42 @@ export default {
     chart: Apexcharts,
   },
   methods: {
+    findStartDate(date) {
+      switch (this.activeFilter) {
+        case 2: {
+          const res = new Date(date)
+          res.setFullYear(res.getFullYear() - 1)
+          return res
+        }
+        case 3: {
+          const res = new Date(date)
+          res.setMonth(res.getMonth() - 1)
+          return res
+        }
+        case 4: {
+          const res = new Date(date)
+          res.setDate(res.getDate() - 7)
+          return res
+        }
+        case 5: {
+          const res = new Date(date)
+          res.setDate(res.getDate() - 1)
+          return res
+        }
+        default:
+          return new Date(this.$store.state.sidebar_navbar.college.createdAt)
+      }
+    },
     async fetchData() {
       this.loaded = false
+      const today = new Date()
+      const endDate = new Date(today)
+      let startDate = this.findStartDate(endDate)
+      endDate.setDate(endDate.getDate() + 1)
+      startDate = startDate.toISOString()
       let response
       if (this.selected_category === "User joins") {
-        response = await Apis.get(`user/statistics/user_joins?start_date=${this.$store.state.sidebar_navbar.college.createdAt}&end_date=${new Date().toISOString()}`);
+        response = await Apis.get(`user/statistics/user_joins?start_date=${startDate}&end_date=${endDate.toISOString()}`);
         this.series = [
           {
             name: "Users",
@@ -114,7 +145,7 @@ export default {
         this.chartOptions.xaxis.categories = response.data.data.map(x => x._id)
         this.loaded = true
       } else if (this.selected_category === "Quizes submitted") {
-        response = await Apis.get(`quiz_submission/statistics/submitted?start_date=${this.$store.state.sidebar_navbar.college.createdAt}&end_date=${new Date().toISOString()}`);
+        response = await Apis.get(`quiz_submission/statistics/submitted?start_date=${startDate}&end_date=${endDate.toISOString()}`);
         this.series = [
           {
             name: "Submissions",
@@ -124,7 +155,7 @@ export default {
         this.chartOptions.xaxis.categories = response.data.data.map(x => x._id)
         this.loaded = true
       } else if (this.selected_category === "Users online") {
-        response = await Apis.get(`user_logs/statistics/online?start_date=${this.$store.state.sidebar_navbar.college.createdAt}&end_date=${new Date().toISOString()}`);
+        response = await Apis.get(`user_logs/statistics/online?start_date=${startDate}&end_date=${endDate.toISOString()}`);
         this.series = [
           {
             name: "Users",
@@ -134,7 +165,7 @@ export default {
         this.chartOptions.xaxis.categories = response.data.data.map(x => x._id)
         this.loaded = true
       } else {
-        response = await Apis.get(`user_logs/statistics/${this.selected_category === "Course access" ? 'course_access' : 'live_session_access'}?start_date=${this.$store.state.sidebar_navbar.college.createdAt}&end_date=${new Date().toISOString()}`);
+        response = await Apis.get(`user_logs/statistics/${this.selected_category === "Course access" ? 'course_access' : 'live_session_access'}?start_date=${startDate}&end_date=${endDate.toISOString()}`);
         this.series = [
           {
             name: this.selected_category,
@@ -149,6 +180,9 @@ export default {
   },
   watch: {
     selected_category() {
+      this.fetchData();
+    },
+    activeFilter() {
       this.fetchData();
     }
   },
@@ -255,6 +289,7 @@ export default {
     }
   }
 }
+
 /* Portrait phones and smaller */
 @media (max-width: 700px) {
   .combined-statistics {

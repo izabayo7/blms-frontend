@@ -241,7 +241,7 @@
             :class="{ active: activeRoute('messages') }"
         >
           <div class="link-icon">
-            <div v-if="!activeRoute('messages')" class="number">{{ unreads }}</div>
+            <div v-if="!activeRoute('messages') && unreads" class="number">{{ unreads }}</div>
             <svg
                 width="26"
                 height="27"
