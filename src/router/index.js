@@ -14,7 +14,22 @@ const routes = [
             allowAnonymous: true
         },
     },
+        // the login page
     {
+        path: '/login',
+        name: 'Login',
+        component: () =>
+            import('@/components/login'),
+        meta: {
+            allowAnonymous: true
+        }
+    },
+    {
+        /**
+         * DASHBOARD CHILDREN
+         *  components that will share the sidebar and the navbar
+         *  they are also protected since their parent is protected
+         */
         path: '/kurious',
         component: () =>
             import('@/views/dashboard/Index-new'),
@@ -112,105 +127,6 @@ const routes = [
                 import('@/components/admin/users.vue')
         },]
     },
-    // the login page
-    {
-        path: '/login',
-        name: 'Login',
-        component: () =>
-            import('@/components/login'),
-        meta: {
-            allowAnonymous: true
-        }
-    },
-    // the dashboard
-    // {
-    //     path: '/app',
-    //     component: () =>
-    //         import('@/views/dashboard'),
-    //     meta: {
-    //         allowAnonymous: false
-    //     },
-    //     /**
-    //      * DASHBOARD CHILDREN
-    //      *  components that will share the sidebar and the navbar
-    //      *  they are also protected since their parent is protected
-    //      */
-    //     children: [{
-    //         path: '/courses',
-    //         name: 'Courses',
-    //         component: () =>
-    //             import('@/components/courses.vue')
-    //     }, {
-    //         path: '/courses/new-course',
-    //         name: 'New Course',
-    //         component: () =>
-    //             import('@/components/newCourse.vue')
-    //     }, {
-    //         path: '/courses/edit/:id',
-    //         name: 'Edit Course',
-    //         component: () =>
-    //             import('@/components/editCourse.vue')
-    //     }, {
-    //         path: '/courses/:id',
-    //         name: 'CourseDetails',
-    //         component: () =>
-    //             import('@/components/course-details.vue')
-    //     }, {
-    //         path: '/quiz/new-quiz',
-    //         name: 'Set Quiz',
-    //         component: () =>
-    //             import('@/components/set-quiz.vue')
-    //     }, {
-    //         path: '/quiz/attempt/:id',
-    //         name: 'TakeQuiz',
-    //         component: () =>
-    //             import('@/components/take-quiz.vue')
-    //     }, {
-    //         path: '/reports/submission/:id',
-    //         name: 'MarkQuiz',
-    //         component: () =>
-    //             import('@/components/mark-quiz.vue')
-    //     }, {
-    //         path: '/messages',
-    //         component: () =>
-    //             import('@/components/chat.vue')
-    //     }, {
-    //         path: '/reports',
-    //         name: 'Reports',
-    //         component: () =>
-    //             import('@/components/reports.vue')
-    //     }, {
-    //         path: '/library',
-    //         name: 'Library',
-    //         component: () =>
-    //             import('@/components/library.vue')
-    //     }, {
-    //         path: '/live-class',
-    //         name: 'liveClass',
-    //         component: () =>
-    //             import('@/components/live-class.vue')
-    //     }, {
-    //         path: '/profile',
-    //         name: 'profile',
-    //         component: () =>
-    //             import('@/components/profile.vue')
-    //     }, {
-    //         path: '/accounts/currentUser',
-    //         name: 'User Profile',
-    //         component: () =>
-    //             import('@/components/profile.vue')
-    //     }, {
-    //         path: '/quiz',
-    //         name: 'Quiz',
-    //         component: () =>
-    //             import('@/components/quiz/index.vue')
-    //     }, {
-    //         path: '/users',
-    //         name: 'Users',
-    //         component: () =>
-    //             import('@/components/admin/users.vue')
-    //     },]
-    // },
     {
         path: '/register/users',
         name: 'Register Users',
