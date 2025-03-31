@@ -55,6 +55,32 @@
           <online-user v-for="user in users" :user="user" :key="user"/>
         </div>
       </div>
+      <div class="live-class--actions">
+        <div class="live-class--action attendance">
+          <button>
+            <span class="icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"/><path d="M21 8v12.993A1 1 0 0 1 20.007 22H3.993A.993.993 0 0 1 3 21.008V2.992C3 2.455 3.449 2 4.002 2h10.995L21 8zm-2 1h-5V4H5v16h14V9zM8 7h3v2H8V7zm0 4h8v2H8v-2zm0 4h8v2H8v-2z"/></svg>
+            </span>
+            <span class="text">CHECK ATTENDANCE</span>
+          </button>
+        </div>
+        <div class="live-class--action release-quiz">
+          <button>
+            <span class="icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"/><path d="M10 15.172l9.192-9.193 1.415 1.414L10 18l-6.364-6.364 1.414-1.414z"/></svg>
+            </span>
+            <span class="text">RELEASE QUIZ</span>
+          </button>
+        </div>
+        <div class="live-class--action end-class">
+          <button>
+            <span class="icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"/><path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm0-11.414L9.172 7.757 7.757 9.172 10.586 12l-2.829 2.828 1.415 1.415L12 13.414l2.828 2.829 1.415-1.415L13.414 12l2.829-2.828-1.415-1.415L12 10.586z" fill="rgba(255,255,255,1)"/></svg>
+            </span>
+            <span class="text">END CLASS</span>
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -819,6 +845,41 @@ export default {
       overflow-y: auto;
 
       @include scroll-bar;
+    }
+
+  }
+
+  &--actions{}
+
+  &--action{
+    button{
+      display: flex;
+      padding-left: 1rem;
+      span{
+        display: block;
+        font-size: .9rem;
+        padding:.5rem 1rem;
+        svg{
+          width:1rem;
+          height: 1rem;
+        }
+      }
+    }
+
+    &.attendance,
+    &.release-quiz{
+      button{
+        span{
+          color:$primary;
+          svg{
+            fill:$primary;
+          }
+        }
+      }
+    }
+
+    &.attendance{
+      background-color: $warn;
     }
   }
 
