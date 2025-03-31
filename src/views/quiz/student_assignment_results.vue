@@ -110,7 +110,21 @@
               Cancel
             </button>
             <button v-if="$store.state.user.user.category.name === 'STUDENT'" class="quiz-action" @click="validate">
-              {{ assignment_submission._id ? 'Save' : 'Submit' }} assignment
+              {{ assignment_submission._id ? 'Save' : 'Submit' }}
+            </button>
+            <button v-if="$store.state.user.user.category.name === 'STUDENT' && assignment_submission._id && !assignment_submission.marked"
+                    class="quiz-action delete" @click="
+                  set_modal({
+                    template: 'action_confirmation',
+                    method: {
+                      action: 'quiz/delete_assignment_submission',
+                      parameters: { id: assignment_submission._id },
+                    },
+                    title: 'Delete assignment submission',
+                    message: 'Are you sure you want to delete this submission?',
+                  })
+                ">
+              Delete
             </button>
           </div>
         </div>
@@ -177,6 +191,7 @@ export default {
   methods: {
     downloadAttachment,
     ...mapActions("quiz", ["getAssignment"]),
+    ...mapActions("modal", ["set_modal"]),
     async getSubmission() {
       const res = await Apis.get(`assignment_submission/user/${this.$store.state.user.user.user_name}/${this.$route.params.id}`, this.assignment_submission)
       if (res.data.data) {
@@ -491,11 +506,16 @@ export default {
         background: #BABABC;
         max-width: 146px;
       }
+      &.delete {
+        background: #FC6767;
+        max-width: 146px;
+      }
     }
 
     .text-input {
       max-width: 580px;
       min-height: 134px;
+      margin-top: 40px;
       height: fit-content;
       padding: 12px;
       border: 1.54684px solid #626262;

@@ -1,4 +1,5 @@
 import apis from "@/services/apis";
+import router from '@/router'
 
 const getDefaultState = () => ({
     // storage for all quiz
@@ -240,6 +241,11 @@ export default {
                     }
                 }
             })
+        },
+        // eslint-disable-next-line no-empty-pattern
+        async delete_assignment_submission({}, {id}) {
+            await apis.delete('assignment_submission', id)
+            router.push('/assignments')
         },
         change_assignment_status({state}, {id, status}) {
             apis.update('assignments/changeStatus', id + '/' + status).then(() => {
