@@ -20,7 +20,7 @@
         </template>
         <template v-slot:item.total_marks="{ item }">
           <span class="normal--text">{{
-            `${item.total_marks} / ${item.quiz.total_marks}`
+            `${item.marked ? item.total_marks : ''} / ${item.quiz.total_marks}`
           }}</span>
         </template>
         <template v-slot:item.marking_status="{ item }">
