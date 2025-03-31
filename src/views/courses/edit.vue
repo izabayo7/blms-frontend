@@ -1,6 +1,9 @@
   <template>
   <v-app>
-    <v-row v-if="course != undefined" class="new-class-form ml-md-10 ml-2 mt-md-10 mt-4">
+    <v-row
+      v-if="course != undefined"
+      class="new-class-form ml-md-10 ml-2 mt-md-10 mt-4"
+    >
       <v-col class="col-12">
         <h1 class="d-block">EDIT COURSE</h1>
         <div class="new-class-btns mb-5">
@@ -27,7 +30,12 @@
           <v-row>
             <v-col class="col-12 col-md-6">
               <h3>Course Name</h3>
-              <input v-model="course.name" type="text" class="course_input" placeholder="Type course name..." />
+              <input
+                v-model="course.name"
+                type="text"
+                class="course_input"
+                placeholder="Type course name..."
+              />
               <h3>Student Group</h3>
               <v-select
                 v-model="selectedFacultyCollegeYearName"
@@ -55,7 +63,15 @@
                     : 'course-image white--text bg-color-one text-h2'
                 "
               >
-                <v-img :src="`${course.cover_picture}?height=300&width=300&token=${$session.get('jwt')}`" :lazy-src="`${course.cover_picture}?height=300&width=300&token=${$session.get('jwt')}`" alt="avatar">
+                <v-img
+                  :src="`${
+                    course.cover_picture
+                  }?height=300&width=300&token=${$session.get('jwt')}`"
+                  :lazy-src="`${
+                    course.cover_picture
+                  }?height=300&width=300&token=${$session.get('jwt')}`"
+                  alt="avatar"
+                >
                   <template v-slot:placeholder>
                     <v-row
                       class="fill-height ma-0"
@@ -155,10 +171,10 @@ export default {
       )._id;
     },
   },
-  watch:{
-    error(){
-      console.log(this.error)
-    }
+  watch: {
+    error() {
+      console.log(this.error);
+    },
   },
   methods: {
     ...mapActions("courses", ["findCourseByName", "updateCourse"]),
@@ -173,19 +189,19 @@ export default {
     },
     validate() {
       if (this.course.name === "") {
-        return this.error = 'name is required'
+        return (this.error = "name is required");
       } else if (this.course.name.length < 3) {
-        return this.error = 'name is too short'
+        return (this.error = "name is too short");
       }
       if (this.selectedFacultyCollegeYearName === "") {
-        return this.error = 'student_group is required'
+        return (this.error = "student_group is required");
       }
       if (this.course.description === "") {
-        return this.error = 'description is required'
+        return (this.error = "description is required");
       } else if (this.course.description.length < 10) {
-        return this.error = 'description is too short'
+        return (this.error = "description is too short");
       }
-      this.saveCourseChanges()
+      this.saveCourseChanges();
     },
     saveCourseChanges() {
       this.updateCourse({
@@ -205,11 +221,11 @@ export default {
   },
   created() {
     this.getFacultyCollegeYears(this.$store.state.user.user.user_name);
-    this.findCourseByName({ 
+    this.findCourseByName({
       user_name: this.$store.state.user.user.user_name,
       courseName: this.$route.params.name,
     }).then((course) => {
-      this.selectedFacultyCollegeYearName = `${course.faculty_college_year.faculty_college.faculty.name} ${course.faculty_college_year.college_year.digit}`;
+      this.selectedFacultyCollegeYearName = `${course.faculty_college_year.faculty_college.faculty.name} year ${course.faculty_college_year.college_year.digit}`;
     });
   },
 };
