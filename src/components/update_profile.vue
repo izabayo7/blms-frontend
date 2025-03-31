@@ -142,9 +142,7 @@
 
 <script>
 import colors from "@/assets/sass/imports/_colors.scss";
-import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import axios from "axios";
 import Apis from "@/services/apis";
 import { mapGetters, mapActions } from "vuex";
 import { emit } from "../services/event_bus";
@@ -304,89 +302,6 @@ export default {
       // others land to the dashboard
       else if (category === "ADMIN") {
         this.$router.push("/administration");
-      }
-    },
-    async updateProfile() {
-      if (this.oldPassword !== "") {
-        this.passwordValid = await bcrypt.compare(
-          this.oldPassword,
-          this.$store.state.user.password
-        );
-        if (!this.passwordValid) {
-          alert("old password is incorrect");
-          return 0;
-        }
-      }
-      const category =
-        this.$store.state.user.category === "SuperAdmin"
-          ? "superAdmin"
-          : this.$store.state.user.category.toLowerCase();
-      const formData = new FormData();
-
-      formData.append("surName", this.user.surName);
-      formData.append("otherNames", this.user.otherNames);
-      formData.append("gender", this.user.gender);
-      formData.append("nationalId", this.user.nationalId);
-      formData.append("phone", this.user.phone);
-      formData.append("email", this.user.email);
-
-      if (this.newPassword !== "") {
-        formData.append("password", this.newPassword);
-      }
-
-      if (this.$store.state.user.category === "Student") {
-        formData.append("DOB", this.user.DOB);
-      }
-      if (this.$store.state.user.category !== "SuperAdmin") {
-        formData.append("college", this.user.college);
-      }
-
-      if (this.user.profile) {
-        formData.append("profile", this.user.profile);
-      }
-
-      const response = await axios.put(
-        `http://161.35.199.197:7070/kurious/${category}/${this.$store.state.user._id}`,
-        formData,
-        { headers: { "Content-Type": "multipart/form-data" } }
-      );
-      if (response.data._id) {
-        // success message needed
-        const updatedUser = {
-          _id: response.data._id,
-          surName: response.data.surName,
-          otherNames: response.data.otherNames,
-          gender: response.data.gender,
-          nationalId: response.data.nationalId,
-          phone: response.data.phone,
-          email: response.data.email,
-          password: response.data.password,
-          category: this.$store.state.user.category,
-        };
-
-        if (response.data.profile) {
-          updatedUser.profile = response.data.profile;
-        }
-
-        if (this.$store.state.user.category !== "SuperAdmin") {
-          // updatedUser.isActive = response.data.isActive
-          updatedUser.college = response.data.college;
-        }
-
-        if (this.$store.state.user.category === "Student") {
-          // for non student
-          updatedUser.DOB = response.data.DOB;
-        }
-
-        const ONE_DAY = 60 * 60 * 24;
-        this.$session.remove("jwt");
-        this.$session.set(
-          "jwt",
-          jwt.sign(updatedUser, "KurichTech01", { expiresIn: ONE_DAY })
-        );
-        this.$store.dispatch("setUser", updatedUser);
-      } else {
-        //  error message needed
       }
     },
   },

@@ -9,7 +9,7 @@
             <div class="infos-holder justify-center align-center">
               <transition name="fade">
                 <div class="row error-wrapper" v-if="groupError.length">
-                  <div class="an_error">{{groupError}}</div>
+                  <div class="an_error">{{ groupError }}</div>
                 </div>
               </transition>
               <div class="row group-name">
@@ -219,11 +219,13 @@ export default {
     },
   },
   methods: {
-    ...mapMutations("sidebar_navbar", {toggleGroup: "TOGGLE_GROUP_MODEL_VISIBILITY"}),
+    ...mapMutations("sidebar_navbar", {
+      toggleGroup: "TOGGLE_GROUP_MODEL_VISIBILITY",
+    }),
     ...mapMutations("chat", {
-      setGroupError:"SET_GROUP_ERROR",
-      changeConversationStand:"CHANGE_CONVERSATION_STAND",
-      setDisplayedUser:"SET_DISPLAYED_USER"
+      setGroupError: "SET_GROUP_ERROR",
+      changeConversationStand: "CHANGE_CONVERSATION_STAND",
+      setDisplayedUser: "SET_DISPLAYED_USER",
     }),
     ...mapActions("users", ["searchUser"]),
 
@@ -303,42 +305,64 @@ export default {
         college: this.$store.state.user.user.college,
       };
       const newGroup = await a.create("chat_group", body);
-      const {status, message} = newGroup.data
-
+      const { status, message, data } = newGroup.data;
 
       //on error set an error
-      if(status === 200 || status === 201){
+      if (status === 200 || status === 201) {
+        let response;
+        if (this.b64Img !== "") {
+          response = await a.update(
+            "chat_group",
+            `${data.code}/profile`,
+            {
+              profile: this.b64Img,
+            }
+            // {
+            //   onUploadProgress: (progressEvent) => {
+            //     this.$store.dispatch(
+            //       "modal/set_progress",
+            //       parseInt(
+            //         Math.round(
+            //           (progressEvent.loaded / progressEvent.total) * 100
+            //         )
+            //       )
+            //     );
+            //   },
+            // }
+          );
+        }
 
-        const {code, createdAt,members,name} = newGroup.data.data
+        const { code, createdAt, members, name } = newGroup.data.data;
 
         // new group as contact
         const newGroupAsContact = {
-          id:code,
-          is_group:true,
-          last_message:{
-            content:"This group was created by ",
-            time:createdAt
+          id: code,
+          is_group: true,
+          last_message: {
+            content: "This group was created by ",
+            time: createdAt,
           },
-          members:members,
-          name:name,
-          unreadMessagesLength:1,
+          members: members,
+          name: name,
+          unreadMessagesLength: 1,
+          image: response ? response.data.data.profile : undefined,
+        };
 
-        }
-
-
-        this.changeConversationStand({msg:newGroupAsContact,creation:true}) // add the group on top of other conversations
+        this.changeConversationStand({
+          msg: newGroupAsContact,
+          creation: true,
+        }); // add the group on top of other conversations
         await this.$router.push(`/messages/${newGroup.data.data.code}`); //then go to group chat by changing route
-        this.setDisplayedUser(newGroupAsContact) //set this group as current displayed user on chat
-        this.toggleGroup() //then switch off/make it invisible group creation model
+        this.setDisplayedUser(newGroupAsContact); //set this group as current displayed user on chat
+        this.toggleGroup(); //then switch off/make it invisible group creation model
 
         //empty the group property
-        this.group.name =  ""
-        this.group.public =  false
-        this.group.members =  []
-      }else{
-        this.setGroupError(message)
+        this.group.name = "";
+        this.group.public = false;
+        this.group.members = [];
+      } else {
+        this.setGroupError(message);
       }
-
     },
   },
   mounted() {
@@ -381,7 +405,6 @@ export default {
       left: 50%;
       transform: translate(-50%, -50%);
 
-
       .infos {
         .infos-holder {
           align-self: center !important;
@@ -390,22 +413,24 @@ export default {
           margin: auto;
 
           //animation
-          .fade-enter-active, .fade-leave-active{
-            transition: .4s ease-in;
+          .fade-enter-active,
+          .fade-leave-active {
+            transition: 0.4s ease-in;
           }
-          .fade-enter, .fade-leave-to{
+          .fade-enter,
+          .fade-leave-to {
             opacity: 0;
           }
 
-          .error-wrapper{
+          .error-wrapper {
             width: 100%;
 
-            .an_error{
-              padding: 1rem .5rem;
+            .an_error {
+              padding: 1rem 0.5rem;
               width: 100%;
-              border-left: 3px solid lighten($danger,5);
-              background-color: lighten($danger,25);
-              color:lighten($danger,5);
+              border-left: 3px solid lighten($danger, 5);
+              background-color: lighten($danger, 25);
+              color: lighten($danger, 5);
             }
           }
 

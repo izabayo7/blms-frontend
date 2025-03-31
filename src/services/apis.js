@@ -47,6 +47,7 @@ export default {
     },
     // post requests
     create(path, body, config) {
+        
         return Api.post(`/${path}`, body, config)
     },
     // put requests
