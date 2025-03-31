@@ -28,12 +28,13 @@
                 type="text"
                 id="faculty-name"
                 placeholder="Type name here"
+                v-model="faculty.name"
               />
             </div>
           </div>
           <div class="input-group">
             <div class="label">
-              <label for="faculty-description">Faculty desciption</label>
+              <label for="faculty-description">Faculty description</label>
               <span class="important">*</span>
             </div>
             <div class="input-container">
@@ -42,6 +43,7 @@
                 placeholder="Type the description here"
                 rows="4"
                 cols="50"
+                v-model="faculty.description"
               >
               At w3schools.com you will learn how to make a website. They offer free tutorials in all web development technologies.
               </textarea>
@@ -59,10 +61,10 @@
                 label="Select dean instructor"
                 name="role"
                 id="user_category"
-                :options="user_categories"
+                :options="instructor_names"
                 @input="
                   (e) => {
-                    selected_user_category = e;
+                    select_dean(e);
                   }
                 "
               />
@@ -188,31 +190,25 @@
 
 <script>
 import SelectUi from "@/components/reusable/ui/select-ui";
+import Apis from "@/services/apis";
 
 export default {
   components: { SelectUi },
   data: () => ({
     closable: false,
     user_categories: [],
+    instructors:[],
     selected_user_category: "",
+    faculty:{
+      name: "",
+      description: "",
+    },
+    dean:{
+      id:""
+    },
     addedStudentGroups: [
       {
         name: "Computer science Year 3",
-      },
-      {
-        name: "Computer science Year 2",
-      },
-      {
-        name: "Computer science Year 1",
-      },
-      {
-        name: "Computer science Year 3",
-      },
-      {
-        name: "Computer science Year 2",
-      },
-      {
-        name: "Computer science Year 1",
       },
     ],
   }),
@@ -220,15 +216,31 @@ export default {
     visible() {
       return 1;
     },
+    instructor_names(){
+      const res = []
+      for (const i in this.instructors) {
+        res.push(`${this.instructors[i].sur_name} ${this.instructors[i].other_names}`)
+      }
+      return res
+    }
   },
-  beforeMount() {
+  async beforeMount() {
     setTimeout(() => {
       const dialog = document.querySelector(".v-dialog--active");
       dialog.style.maxWidth = "1078px";
       // dialog.style.setProperty("height", "538px", "important");
       dialog.style.setProperty("min-height", "538px", "important");
     }, 0);
+
+    let res = await Apis.get(`user/college/${this.$store.state.user.user.college}/INSTRUCTOR`);
+    this.instructors = res.data.data;
+    console.log(this.instructors)
   },
+  methods:{
+    select_dean(name){
+      console.log(name)
+    }
+  }
 };
 </script>
 

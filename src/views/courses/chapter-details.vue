@@ -339,7 +339,6 @@ export default {
       this.editorContent = "";
       //getting chapter content
       this.getChapterMainContent(id).then((d) => {
-        console.log(d);
         this.editorContent = d;
       });
 
