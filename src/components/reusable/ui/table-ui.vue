@@ -121,6 +121,10 @@ export default {
           width:calc(100% - .6rem);
           display:table;
           table-layout:fixed;
+
+          th{
+            padding:0;
+          }
         }
         tbody{
           display: block;
@@ -180,10 +184,20 @@ export default {
 
           th{
             text-align: start;
-            padding:.6rem .5rem;
 
             .head-tab-wrapper{
+              padding:.6rem .5rem;
               cursor: pointer;
+            }
+            .sorting{
+              height: 100%;
+              background-color:$bg-one;
+
+              .icon{
+                svg{
+                  transform:rotate(180deg);
+                }
+              }
             }
           }
           td{
