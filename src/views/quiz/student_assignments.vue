@@ -137,7 +137,7 @@
               </div>
             </template>
             <template v-slot:item.action="{ item }">
-              <button class="attempt-exam" :class="{disabled : disabled}" @click=" disabled ?
+              <button class="attempt-exam" :class="{disabled : disabled || item.submission}" :disabled="item.submission" @click=" disabled ?
                       set_modal({
                         template: 'payment_err',
                       }) : $router.push('/exam/instructions?exam='+item._id)">

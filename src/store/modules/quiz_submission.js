@@ -84,10 +84,12 @@ export default {
             return apis.get(`quiz_submission/user`).then(async (d) => {
                 d.data = d.data.data
 
-                const res = await apis.get(`assignment_submission`)
+                let res = await apis.get(`assignment_submission`)
 
                 state.quiz_submission.data = d.data.concat(res.data.data)
 
+                res = await apis.get(`exam_submission`)
+                state.quiz_submission.data = state.quiz_submission.data.concat(res.data.data)
                 //announce that data have been loaded
                 state.quiz_submission.loaded = true
 
@@ -97,15 +99,15 @@ export default {
         },
 
         //get quiz_submissions  in a quiz
-        async getQuizSubmissionsInQuiz({state, dispatch}, {quiz_id, isAssignments}) {
-            let result = isAssignments ? state.quiz_submission.data.filter(e => e._id === quiz_id && e.submissions[0].assignment) : state.quiz_submission.data.filter(e => e._id === quiz_id && e.submissions[0].quiz)
+        async getQuizSubmissionsInQuiz({state, dispatch}, {quiz_id, isAssignments, isExam}) {
+            let result = state.quiz_submission.data.filter(e => e._id === quiz_id && e.submissions[0][isExam ? 'exam' : isAssignments ? 'assignment' : 'quiz'])
 
             // if submission not loaded fetch them
             if (!result.length) {
 
                 // eslint-disable-next-line no-undef
                 result = await dispatch('getQuizSubmissions', {user_name: user.state.user.user_name})
-                result = isAssignments ? state.quiz_submission.data.filter(e => e._id === quiz_id && e.submissions[0].assignment) : state.quiz_submission.data.filter(e => e._id === quiz_id && e.submissions[0].quiz)
+                result = state.quiz_submission.data.filter(e => e._id === quiz_id && e.submissions[0][isExam ? 'exam' : isAssignments ? 'assignment' : 'quiz'])
             }
 
             return result[0]
@@ -223,7 +225,15 @@ export default {
         //get all quiz submissions
         quiz_submissions: state => {
             try {
-                return state.quiz_submission.data.length ? state.quiz_submission.data.filter(x => !x.submissionMode && !x.submissions[0].assignment) : []
+                return state.quiz_submission.data.length ? state.quiz_submission.data.filter(x => !x.submissions[0].exam && !x.submissions[0].assignment) : []
+            } catch (e) {
+                return []
+            }
+
+        },
+        exam_submissions: state => {
+            try {
+                return state.quiz_submission.data.length ? state.quiz_submission.data.filter(x => !x.submissions[0].quiz && !x.submissions[0].assignment) : []
             } catch (e) {
                 return []
             }

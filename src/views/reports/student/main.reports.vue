@@ -4,12 +4,14 @@
       <div class="d-flex">
         <h3 class="mr-4" :class="{active : currentView === 'quiz'}" @click="currentView = 'quiz'">Quiz
           Submissions({{ quiz_submissions.length }})</h3>
-        <h3 :class="{active : currentView === 'assignments'}" @click="currentView = 'assignments'">Assignment
+        <h3 class="mr-4" :class="{active : currentView === 'assignments'}" @click="currentView = 'assignments'">Assignment
           Submissions ({{ assignment_submissions.length }})</h3>
+        <h3 :class="{active : currentView === 'exams'}" @click="currentView = 'exams'">Exam
+          Submissions ({{ exam_submissions.length }})</h3>
       </div>
       <v-data-table
           :headers="submissionHeaders"
-          :items="currentView === 'quiz' ? quiz_submissions : assignment_submissions"
+          :items="currentView === 'quiz' ? quiz_submissions : currentView === 'assignments' ? assignment_submissions : exam_submissions"
           :items-per-page="5"
           sort-by="last_submitted"
           class="data-table"
@@ -172,7 +174,7 @@ export default {
       return this.$store.state.user.user.category.name;
     },
     ...mapGetters("courses", ["courses"]),
-    ...mapGetters("quiz_submission", ["quiz_submissions", "assignment_submissions"]),
+    ...mapGetters("quiz_submission", ["quiz_submissions", "assignment_submissions",'exam_submissions']),
     // only display courses we started
     activeCourses() {
       return this.courses.filter((course) => course.progress);
@@ -186,7 +188,7 @@ export default {
         this.$router.push(`/courses/preview/${value.name}`)
       else
 
-        this.$router.push(`/reports/${value._id}${value.submissions[0].assignment ? '/assignments' : ''}`)
+        this.$router.push(`/reports/${value._id}${value.submissions[0].assignment ? '/assignments' : value.submissions[0].exam ? '/exams' : ''}`)
     },
     returnCourseName(quiz) {
       if (quiz.target.type === "facultyCollegeyear") {

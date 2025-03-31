@@ -265,6 +265,14 @@ const routes = [
                         },
                     },
                     {
+                        path: '/reports/:target/exams',
+                        component: () =>
+                            import( /* webpackChunkName: "reports-by-target" */ '@/views/reports/deep'),
+                        meta: {
+                            allowedUsers: ["STUDENT","INSTRUCTOR"]
+                        },
+                    },
+                    {
                         path: '/reports/:target/:user_name',
                         component: () =>
                             import( /* webpackChunkName: "user-reports" */ '@/views/reports'),
