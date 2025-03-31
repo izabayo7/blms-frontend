@@ -7,12 +7,12 @@
     <back class="mt-0 mb-6 ml-0 ml-md-n6" />
 
     <v-row class="relative">
-      <v-col class="col-12 col-md-8">
+      <v-col class="col-12 col-md-8 px-0">
         <navigation title="Submissions" :links="navigation_links" />
         <v-row
           v-for="(question, i) in selected_quiz_submission.quiz.questions"
           :key="i"
-          class="col-12 col-md-12"
+          class="col-12 col-md-12 px-0"
         >
           <v-col class="col-12">
             <v-row>
@@ -466,6 +466,7 @@ export default {
       userName: this.$route.params.user_name,
       quizName: this.$route.params.quiz_name,
     }).then(async () => {
+      console.log(this.selected_quiz_submission)
       this.attempt = {
         quiz: this.selected_quiz_submission.quiz._id,
         user: this.selected_quiz_submission.user.user_name,

@@ -22,7 +22,7 @@
           />
         </svg>
       </div>
-      <div class="content">
+      <div class="content uploader">
         <h4 v-if="title" class="title">{{ title }}....</h4>
         <span v-if="title" class="sub-title">Please wait</span>
         <p class="unconfirmed">{{ message }}</p>
@@ -134,6 +134,10 @@ export default {
 }
 .dialog_t_1 {
   padding: 18px;
+  border-radius: 12px;
+  .uploader{
+    padding: 20px 50px 50px;
+  }
   h4.title {
     font-weight: 600;
     color: #0f0f0f;
