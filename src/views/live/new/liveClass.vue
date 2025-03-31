@@ -45,11 +45,11 @@
                 <div class="no-video--wrapper" :class="{presenting:isPresenting}">
                   <div class="instructor-info">
                     <img
-                        src="https://s3.amazonaws.com/cms-assets.tutsplus.com/uploads/users/810/profiles/19338/profileImage/profile-square-extra-small.png"
+                        :src="instructor ? instructor.profile : ''"
                         alt="profile picture" class="picture">
                     <h2 class="course">Economics Basics: Chapter 8 part II</h2>
                     <span class="source">by instuctor</span>
-                    <h2 class="name">Rubogora Emanuel</h2>
+                    <h2 class="name">{{ participationInfo.isOfferingCourse ? "YOU" : `${instructor ? instructor.sur_name + ' '+ instructor.other_names : ''}` }}</h2>
                   </div>
                   <div class="screen-sharing-video" v-if="isPresenting">
                     <div class="screen-sharing-video--wrapper">
@@ -333,6 +333,10 @@ export default {
   },
   computed: {
     ...mapGetters('user', ['user']),
+    instructor(){
+      const el = this.participants.filter(e=>e.userInfo.category == "INSTRUCTOR")
+      return el[0] ? el[0].userInfo : undefined
+    }
   },
   methods: {
     async getUserInfo(id) {
