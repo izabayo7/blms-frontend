@@ -34,10 +34,10 @@ jobs:
     needs: build_image
     
     steps:
-      - name: Stop running container
-        run: docker stop $(echo $IMAGE_NAME)
-      - name: Remove old container
-        run: docker rm $(echo $IMAGE_NAME)
+      # - name: Stop running container
+      #   run: docker stop $(echo $IMAGE_NAME)
+      # - name: Remove old container
+      #   run: docker rm $(echo $IMAGE_NAME)
       - name: Run a new container from a new image
         run: docker run -d \
             --restart always \
