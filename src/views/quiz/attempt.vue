@@ -331,7 +331,7 @@ export default {
         this.selected_quiz.duration - this.remaining_time;
       this.create_quiz_submission({
         submission: this.attempt,
-        attachments: this.filesToUpload,
+        attachments: this.filesToUpload.filter(e=>e.file != ""),
       }).then((is_selection_only) => {
         if (is_selection_only) {
           this.$router.push(`/quiz/${this.selected_quiz.name}/results`);
@@ -373,10 +373,10 @@ export default {
             this.attempt.answers.push({ text: "" });
           } else if (question.type === "file_upload") {
             this.attempt.answers.push({ src: "" });
-            this.filesToUpload.push({ file: "" });
           } else {
             this.attempt.answers.push({ choosed_options: [] });
           }
+          this.filesToUpload.push({ file: "" });
         }
       });
     }

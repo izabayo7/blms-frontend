@@ -64,7 +64,7 @@ wrong date in recorder
                       !selected_quiz_submission
                     "
                       :color="primary"
-                      class="white--text next-chapter"
+                      class="white--text next-chapter mb-8"
                       :to="`/quiz/preview/${course.chapters[activeIndex].quiz[0].name}`"
                       rounded
                   >Take Quiz
