@@ -74,7 +74,7 @@
       </div>
       <div class="admin">
         <div class="checkbox">
-          <checkbox :disabled="IamAdmin" v-model="member.isAdmin" />
+          <checkbox :disabled="IamAdmin" @check_it="toogleIsAdminStatus" v-model="member.isAdmin" />
         </div>
         <p>Admin</p>
       </div>
@@ -85,18 +85,12 @@
 <script>
 import Checkbox from "@/components/reusable/ui/Checkbox";
 import { mapActions, mapState } from "vuex";
-import apis from "@/services/apis";
 export default {
   name: "Group-member",
   components: { Checkbox },
   props: {
     member: { required: true },
     IamAdmin: { required: true },
-  },
-  data() {
-    return {
-      checked: true,
-    };
   },
   computed: {
     ...mapState("modal", ["confirmed"]),
@@ -112,17 +106,15 @@ export default {
         this.$emit("removeMember", this.member);
       }
     },
+
   },
   methods: {
-    async removeMember() {
-      await apis.update(
-        "chat_group",
-        `${this.$route.params.id}/toogle_isAdmin/${this.member.data.user_name}`
-      );
-      this.$emit("toogleMemberAdmin", this.member);
-    },
-    ...mapActions("chat", ["start_conversation"]),
+    ...mapActions("chat", ["start_conversation", "toogleIsAdmin"]),
     ...mapActions("modal", ["set_modal"]),
+    toogleIsAdminStatus(){
+      this.toogleIsAdmin({groupId: this.$route.params.id, member: this.member})
+      this.$emit("toogleMemberAdmin", this.member);
+    }
   },
 };
 </script>

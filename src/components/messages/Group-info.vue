@@ -58,6 +58,7 @@
               :member="member"
               :IamAdmin="IamAdmin"
               @removeMember="removeMember"
+              @toogleMemberAdmin="toogleMemberAdmin"
             />
           </div>
           <div class="action-btn">
@@ -105,6 +106,13 @@ export default {
     removeMember(member) {
       this.group.members.splice(this.group.members.indexOf(member), 1);
       this.update_confirmation(false);
+    },
+    toogleMemberAdmin(member) {
+      for (const k in this.group.members) {
+        if (this.group.members[k].id == member.id) {
+          this.group.members[k].isAdmin = member.isAdmin;
+        }
+      }
     },
   },
   mounted() {

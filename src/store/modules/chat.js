@@ -225,6 +225,24 @@ export default {
                 for (const i in state.incomingMessages) {
                     if (state.incomingMessages[i].id == groupId) {
                         state.incomingMessages[i].members.splice(state.incomingMessages[i].members.indexOf(member), 1)
+                        break
+                    }
+                }
+            })
+
+        },
+        toogleIsAdmin({ state }, { groupId, member }) {
+            apis.update("chat_group", `${groupId}/toogle_isAdmin/${member.data.user_name}`).then(() => {
+                for (const i in state.incomingMessages) {
+                    if (state.incomingMessages[i].id == groupId) {
+                        for (const k in state.incomingMessages[i].members) {
+                            if (state.incomingMessages[i].members[k].id == member.id) {
+                                console.log('kbx')
+                                console.log(k)
+                                state.incomingMessages[i].members[k].isAdmin = !state.incomingMessages[i].members[k].isAdmin
+                            }
+                        }
+                        break
                     }
                 }
             })

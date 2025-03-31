@@ -22,9 +22,6 @@ export default {
       this.$emit('check_it',!this.check)
     }
   },
-  mounted() {
-    console.log(this)
-  }
 }
 </script>
 
