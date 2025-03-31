@@ -233,7 +233,7 @@
                                preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
                             <path
                                 d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12L19 6.41z"
-                                />
+                            />
                           </svg>
                         </v-img>
                       </v-card>
@@ -367,7 +367,6 @@
 <script>
 import {mapGetters, mapActions} from "vuex";
 import {downloadAttachment} from "@/services/global_functions"
-import {omit} from "lodash";
 
 export default {
   data: () => ({
@@ -533,8 +532,10 @@ export default {
         user: this.selected_quiz_submission.user.user_name,
         auto_submitted: this.selected_quiz_submission.auto_submitted,
         used_time: this.selected_quiz_submission.used_time,
-        answers: this.selected_quiz_submission.answers.map((x) =>
-            omit(x, ["feedback"])
+        answers: this.selected_quiz_submission.answers.map((x) => {
+              x.feedback = undefined
+              return x
+            }
         ),
         marked: this.selected_quiz_submission.marked,
         total_marks: this.selected_quiz_submission.totalMarks,
@@ -558,11 +559,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.check-svg{
+.check-svg {
   fill: #FFFFFF;
   height: 50px;
   width: 50px;
 }
+
 .cool-box {
   padding: 4px 12px;
   text-align: center;
