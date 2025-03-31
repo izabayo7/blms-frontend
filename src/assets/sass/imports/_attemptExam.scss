@@ -1,5 +1,9 @@
 #attempt {
   &.attempt--exam {
+    .logo {
+      max-height: 100%
+    }
+
     .title {
       font-family: Inter !important;
       font-style: normal;
