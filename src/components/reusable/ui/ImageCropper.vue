@@ -4,6 +4,7 @@
       <div class="cropper-holder">
         <cropper class="cropper" :src="img" :stencil-props="{aspectRatio: 1}" @change="change"></cropper>
       </div>
+<!--      cropped image preview-->
       <div class="preview"><img ref="cropper-privew" id="preview-cropped-image" src="" alt=""></div>
   </div>
 </div>
