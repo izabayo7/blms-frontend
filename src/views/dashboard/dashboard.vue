@@ -111,6 +111,9 @@ export default {
       overflow-y: auto;
       overflow-x: hidden;
       background: $tertiary;
+      .lower-space {
+        height: 40px;
+      }
     }
   }
 
@@ -134,16 +137,4 @@ export default {
   transform: translateY(100px);
 }
 
-/* Portrait phones and smaller */
-@media (max-width: 700px) {
-  .dashboard {
-    .contents {
-      .main-content {
-        .lower-space {
-          height: 40px;
-        }
-      }
-    }
-  }
-}
 </style>

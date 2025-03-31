@@ -37,7 +37,7 @@
           <!--          search bar-->
           <div class="search col">
             <div class="search-wrapper">
-              <search placeholder="Search user"/>
+<!--              <search placeholder="Search user"/>-->
             </div>
           </div>
 
@@ -96,7 +96,7 @@
 
 <script>
 import buttonUi from '@/components/reusable/ui/button-ui'
-import Search from "../../components/reusable/Search2";
+// import Search from "../../components/reusable/Search2";
 import TableUi from "../../components/reusable/table/TableUi";
 import TableRow from "../../components/reusable/table/TableRow";
 import TableHeadRow from "../../components/reusable/table/TableHeadRow";
@@ -109,7 +109,7 @@ export default {
   components: {
     TableUi,
     TableRow,
-    Search,
+    // Search,
     buttonUi,
     TableHeadRow,
     FacultyDialog: () => import("@/components/dashboard/addFaculty"),
