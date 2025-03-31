@@ -15,6 +15,7 @@ import years from '@/store/modules/years'
 import live from '@/store/modules/live'
 import faculty_college_year from '@/store/modules/faculty_college_year'
 import live_session from '@/store/modules/live_session'
+import app_notification from '@/store/modules/app_notification'
 
 Vue.use(Vuex)
 export default new Vuex.Store({
@@ -39,6 +40,7 @@ export default new Vuex.Store({
         years,
         live,
         faculty_college_year,
-        live_session
+        live_session,
+        app_notification
     }
 })

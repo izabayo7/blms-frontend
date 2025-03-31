@@ -16,6 +16,7 @@
         </div>
       </main>
       <div class="main-content customScroll">
+        <notification />
         <router-view />
       </div>
     </main>
@@ -35,7 +36,7 @@ export default {
     sidebar,
     MobileSidebar,
     navbar,
-    ErrorTooltip: () => import("@/components/reusable/ErrorTooltip"),
+    Notification: () => import("@/components/shared/Notification"),
   },
   data() {
     return {
