@@ -36,7 +36,6 @@ export default {
     sidebar,
     MobileSidebar,
     navbar,
-    ErrorTooltip: () => import("@/components/reusable/ErrorTooltip"),
     Notification: () => import("@/components/shared/Notification"),
   },
   data() {
