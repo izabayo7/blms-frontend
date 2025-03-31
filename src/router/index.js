@@ -216,6 +216,21 @@ const routes = [
                         component: () =>
                             import( /* webpackChunkName: "change-password" */ '@/components/update_password.vue')
                     },
+                    {
+                        path: '/settings',
+                        component: () =>
+                            import( /* webpackChunkName: "settings" */ '@/views/settings'),
+                        children: [
+                            {
+                                path: '/settings/institution',
+                                component: () => import( /* webpackChunkName: "settings" */ '@/views/settings/institution'),
+                            },
+                            {
+                                path: '/settings/payments',
+                                component: () => import( /* webpackChunkName: "settings" */ '@/views/settings/payments'),
+                            },
+                        ]
+                    },
 
                     // course routes
                     ...course,
