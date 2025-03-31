@@ -3,7 +3,7 @@ const getDefaultState = () => ({
     // storage for all facultyCollegeYears
     facultyCollegeYears: {
         data: [],
-        loaded: false
+        loaded: false,
     },
     faculties: {
         data: [],
@@ -13,6 +13,10 @@ const getDefaultState = () => ({
         data: [],
         loaded: false
     },
+    header:{
+        head:"",
+        title:""
+    }
 })
 
 export default {
@@ -21,6 +25,11 @@ export default {
     mutations: {
         RESET_STATE(state) {
             Object.assign(state, getDefaultState())
+        },
+
+        //mutating page header
+        SET_HEADER(state,header){
+            state.header = header;
         }
     },
     actions: {
@@ -46,14 +55,13 @@ export default {
             })
         },
         //get faculties from backend
-        getFaculties({ state }, collegeId) {
+        async getFaculties({ state }, collegeId) {
             // when faculties not loaded fetch them
             if (!state.faculties.loaded) {
-                apis.get(`faculty/college/${collegeId}`).then(d => {
-                    state.faculties.data = d.data
+                const {data:{data}} = await apis.get(`faculty/college/${collegeId}`)
+                    state.faculties.data = data
                     //announce that data have been loaded
                     state.faculties.loaded = true
-                })
             }
         },
         //get faculties that a college can imoprt from backend
@@ -91,6 +99,11 @@ export default {
                 }
             })
         },
+
+        //page header
+        changeHeader({commit},header){
+            commit("SET_HEADER",header)
+        }
     },
     getters: {
 
@@ -113,6 +126,7 @@ export default {
         },
         //get all specified faculties
         faculties: state => {
+
             return state.faculties.data
         },
         //get all specified importable_faculties
@@ -127,5 +141,10 @@ export default {
             }
             return facultyCollegeYearNames
         },
+
+        // getting page header
+        header: state => {
+            return state.header
+        }
     },
 }
