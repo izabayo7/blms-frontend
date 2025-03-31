@@ -94,7 +94,9 @@
               <h3>
                 {{ `${course.user.sur_name} ${course.user.other_names}` }}
               </h3>
-              <p class="faculty">PHD, web development</p>
+              <p class="faculty">
+                {{ course.faculty_college_year.faculty_college.faculty.name }}
+              </p>
             </article>
           </div>
 
