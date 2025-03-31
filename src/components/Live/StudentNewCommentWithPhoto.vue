@@ -49,18 +49,25 @@ import ButtonUi from "../reusable/ui/button-ui";
 export default {
   name: "StudentNewCommentWithPhoto",
   components: {ButtonUi, ExpandableInput},
+  props:{
+    isLive: {
+      type: Boolean,
+      default: false
+    }
+  },
   data() {
     return {
       comment: "",
     };
   },
   computed: {
+    ...mapGetters("chat", ["socket"]),
     ...mapGetters("user", ["user_full_names", "username"]),
     ...mapGetters("courses", ["selectedChapter", "totalComments"]),
     comment_object() {
       return {
         sender: this.username,
-        target: { type: "chapter", id: this.selectedChapter },
+        target: { type: this.isLive? "live_session" : "chapter", id: this.isLive? "609ab8838fc73f303874e10e" : this.selectedChapter },
         content: this.comment,
       };
     },
@@ -70,17 +77,35 @@ export default {
   },
   methods: {
     async send_comment() {
+      console.log("ahaaaa",this.comment)
       if (empty(this.comment)) return;
 
       try {
-        let { data } = await api.create("comment", this.comment_object);
-        data.data.replies = [];
-        this.$store.commit(
-          "courses/SET_TOTAL_COMMENTS_ON_A_CHAPTER",
-          this.totalComments == "" ? 1 : this.totalComments + 1
-        );
-        this.$emit("sent", data.data);
-        this.comment = "";
+        if(!this.isLive) {
+          let {data} = await api.create("comment", this.comment_object);
+          data.data.replies = [];
+          this.$store.commit(
+              "courses/SET_TOTAL_COMMENTS_ON_A_CHAPTER",
+              this.totalComments == "" ? 1 : this.totalComments + 1
+          );
+          this.$emit("sent", data.data);
+          this.comment = "";
+        } else{
+          this.socket.emit("comment/new", {
+            receivers: [],
+            comment: this.comment_object,
+          });
+          this.socket.on("res/comment/new", (result)=>{
+            console.log("\n\n\nyagiye weeeeeeeeeeeeeeeeeeeee\n\n\n", result)
+            // this.$store.commit(
+            //     "courses/SET_TOTAL_COMMENTS_ON_A_CHAPTER",
+            //     this.totalComments == "" ? 1 : this.totalComments + 1
+            // );
+            result.replies = [];
+            this.$emit("sent", result);
+            this.comment = "";
+          });
+        }
       } catch (err) {
         console.log(err);
       }

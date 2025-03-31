@@ -189,7 +189,7 @@
             />
           </div>
           <div class="student-new-comment">
-            <student-new-comment-with-photo v-model="comment"/>
+            <student-new-comment-with-photo @sent="addComment" :isLive="true"/>
           </div>
         </div>
         <div v-if="participationInfo.isOfferingCourse" class="live-class--actions">
@@ -386,6 +386,9 @@ export default {
     },
   },
   methods: {
+    addComment(comment){
+      this.comments.push(comment)
+    },
     replied(data) {
       this.comments.map((comment) => {
         if (comment._id === data._id) comment.replies.push(data.data);
