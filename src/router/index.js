@@ -248,7 +248,7 @@ const routes = [
                         component: () =>
                             import( /* webpackChunkName: "reports-by-target" */ '@/views/reports/deep'),
                         meta: {
-                            allowedUsers: ["STUDENT"]
+                            allowedUsers: ["STUDENT","INSTRUCTOR"]
                         },
                     },
                     {

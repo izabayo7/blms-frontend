@@ -1,5 +1,5 @@
 <template>
-  <button @click="$router.go(-1)" rounded color="#fff">
+  <button @click="target ? $router.push(target) : $router.go(-1)" rounded color="#fff">
     <svg width="9" height="12" viewBox="0 0 9 12" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M7.80859 1L2.30859 6L7.80859 11" stroke="#4A4A4A" stroke-width="2"/>
     </svg>
@@ -8,6 +8,14 @@
   </button>
 </template>
 <script>
+export default {
+  name: "BackButton",
+  props:{
+    target:{
+      type: String
+    }
+  }
+}
 </script>
 <style lang="scss" scoped>
 button{
