@@ -337,6 +337,20 @@ export default {
                 }
             })
         },
+        //delete a video
+        deleteVideo({ state }) {
+            apis.delete(`chapter/${state.selectedChapter}/`,'video').then(() => {
+                for (const i in state.courses.data) {
+                    if (state.courses.data[i]._id == state.selectedCourse) {
+                        for (const k in state.courses.data[i].chapters) {
+                            if (state.courses.data[i].chapters[k]._id == state.selectedChapter) {
+                                state.courses.data[i].chapters[k].uploaded_video = undefined
+                            }
+                        }
+                    }
+                }
+            })
+        },
         //find a course by name
         findCourseByName({ state, commit }, { user_name, courseName }) {
             let courseFound = false
