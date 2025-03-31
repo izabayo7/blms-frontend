@@ -10,7 +10,7 @@
           This will prevent you from failing unexpectedly.
         </div>
 
-        <div class="card">
+        <div class="card mb-12 mb-lg-0">
           <div class="heading">CANDIDATE EXAM CONDUCT AND EXAM SECURITY AGREEMENT</div>
           <div class="body">
             <div>Before your attempt, Please read all the conditions bellow. <br>

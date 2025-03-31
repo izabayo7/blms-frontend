@@ -193,7 +193,7 @@ export default {
     ...mapGetters("quiz", ["assignments", "exams"]),
     ...mapGetters("user", ["paymentStatus"]),
     disabled() {
-      return this.paymentStatus.paid !== false
+      return this.paymentStatus.paid === false
     }
   },
   methods: {

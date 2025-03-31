@@ -310,28 +310,30 @@ export default {
       return new Date(this.remaining_time * 1000).toISOString().substr(11, 8);
     },
     disabled() {
-      return this.paymentStatus.paid !== false
+      return this.paymentStatus.paid === false
     }
   },
   watch: {
     remaining_time() {
       if (this.remaining_time > 0) {
-        setTimeout(() => {
-          this.remaining_time -= 1;
-        }, 1000);
-        if (this.remaining_time == this.exam.duration - 1)
-          this.initialiseQuiz();
+        // setTimeout(() => {
+        //   this.remaining_time -= 1;
+        // }, 1000);
+        // if (this.remaining_time == this.exam.duration - 1)
+        //   this.initialiseQuiz();omputed
 
         this.attempt.used_time = this.exam.duration - this.remaining_time;
       } else if (!this.done) {
         this.done = true;
         const category = this.$store.state.user.user.category.name;
-        if (category == "INSTRUCTOR") {
-          this.$router.push("/quiz/timeout");
-        } else if (category == "STUDENT") {
+        this.attempt.auto_submitted = true;
+        if (category == "STUDENT") {
           this.markUndoneQuestions();
-          this.attempt.auto_submitted = true;
           this.saveAttempt();
+        } else {
+          this.set_modal({
+            template: `exam_closed_timeout`,
+          })
         }
       }
     },
@@ -362,6 +364,11 @@ export default {
   methods: {
     ...mapActions("modal", ["set_modal"]),
     ...mapActions("quiz", ["getExam"]),
+    endExam() {
+      this.set_modal({
+        template: `exam_closed_failed`,
+      })
+    },
     moveTooltip(e) {
       let tooltip = document.querySelector('.coupontooltip');
       tooltip.style.left = e.pageX + 'px';
@@ -377,7 +384,6 @@ export default {
           end: false
         })
       }
-      this.goFullscreen()
     },
     async uploadFile(index) {
       const formData = new FormData()
@@ -572,13 +578,17 @@ export default {
       }
     },
     async saveAttempt() {
-      console.log('twagiye')
-      this.socket.emit('save-exam-progress', {
-        submission_id: this.submission_id,
-        attempt: this.attempt,
-        end: true,
-        questions: this.exam.questions
-      })
+      if (this.$store.state.user.user.category.name === 'STUDENT')
+        this.socket.emit('save-exam-progress', {
+          submission_id: this.submission_id,
+          attempt: this.attempt,
+          end: true,
+          questions: this.exam.questions
+        })
+      else
+        this.set_modal({
+          template: `exam_closed_successfull`,
+        })
     },
     goFullscreen() {
       var el = document.documentElement
@@ -601,34 +611,43 @@ export default {
       // this.set_modal({
       //   template: 'exam_closed_successfull',
       // })
+    },
+    setUp() {
+      document.querySelector('body').addEventListener('click', this.goFullscreen)
+
+      function goodbye(e) {
+        if (!e) e = window.event;
+        //e.cancelBubble is supported by IE - this will kill the bubbling process.
+        e.cancelBubble = true;
+        e.returnValue = 'You sure you want to leave?'; //This is displayed on the dialog
+
+        //e.stopPropagation works in Firefox.
+        if (e.stopPropagation) {
+          e.stopPropagation();
+          e.preventDefault();
+        }
+      }
+
+      window.addEventListener('beforeunload', goodbye)
+
+      // track if one leaves tab
+      document.addEventListener("visibilitychange", () => {
+        if (document.visibilityState !== "visible") {
+          this.endExam()
+        }
+      })
+
+      window.addEventListener("resize", () => {
+        if ((!window.fullScreen) &&
+            (window.innerWidth !== screen.width || window.innerHeight !== screen.height)) {
+          this.endExam()
+        }
+      })
     }
   },
   created() {
+    this.setUp()
 
-    document.querySelector('body').addEventListener('mouseenter', this.goFullscreen)
-
-    function goodbye(e) {
-      if (!e) e = window.event;
-      //e.cancelBubble is supported by IE - this will kill the bubbling process.
-      e.cancelBubble = true;
-      e.returnValue = 'You sure you want to leave?'; //This is displayed on the dialog
-
-      //e.stopPropagation works in Firefox.
-      if (e.stopPropagation) {
-        e.stopPropagation();
-        e.preventDefault();
-      }
-    }
-
-    window.addEventListener('beforeunload', goodbye)
-    document.addEventListener("visibilitychange", () => {
-          if (document.visibilityState == "visible") {
-            console.log("tab is active")
-          } else {
-            console.log("tab is inactive")
-          }
-        }
-    )
     this.mode = "edit";
     if (this.$store.state.user.user.category.name === "STUDENT") {
       // this.findQuizSubmissionByUserAndQuizNames({
