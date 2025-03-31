@@ -78,7 +78,7 @@
         <chart
             type="donut"
             class="my-chart ml-n6"
-            width="150"
+            :width="width"
             :options="chartOptions"
             :series="[data.total,100-data.total]"
         ></chart>
@@ -103,12 +103,16 @@ export default {
     data: {
       type: Object
     },
+    width: {
+      type: Number
+    },
     type: {
       type: String,
       required: true,
     },
     total: {
       type: Number,
+      default: 150
     },
     labels: {
       type: Array
