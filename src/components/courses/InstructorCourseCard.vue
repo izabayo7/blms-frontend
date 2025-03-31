@@ -73,7 +73,7 @@
             </template>
           </v-img>
           <v-avatar
-            class="course-image white--text bg-color-one text-h2"
+            class="course-image white--text bg-color-one text-h2 hidden-md-and-down"
             size="106"
             v-else
           >{{ course.name | computeText }}</v-avatar
