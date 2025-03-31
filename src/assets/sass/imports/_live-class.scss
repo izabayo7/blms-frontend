@@ -463,7 +463,6 @@
                 color: white;
                 cursor: pointer;
               }
-
               h2 {
                 font-size: 1rem !important;
 
@@ -472,7 +471,6 @@
                   margin: .2rem 0;
                 }
               }
-
               &.presenting {
                 display: flex;
                 align-items: center;
@@ -1000,11 +998,9 @@
         margin: auto;
       }
     }
-
     &--actions {
       margin-bottom: 90px;
     }
-
     &--action {
       margin-left: auto;
       margin-right: auto;
@@ -1034,16 +1030,6 @@
             margin-bottom: 10px;
           }
         }
-      }
-    }
-
-    .live-class--video .video--wrapper .video-el .no-video--wrapper {
-      h2 {
-        font-size: .8rem !important;
-      }
-
-      .instructor-info {
-        padding-top: 1rem;
       }
     }
   }
