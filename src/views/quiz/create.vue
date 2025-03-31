@@ -13,7 +13,7 @@
       template="small"
     />
     <span class="quiz_lable my-6">Quiz duration</span>
-    <time-picker :duration="duration" @updateTime="updateDutation" />
+    <input :disabled="startNow" class="text-filed pa-4" v-model="time" type="time" />
     <span class="quiz_lable my-6">Questions</span>
     <v-row v-for="(question, i) in questions" :key="i">
       <v-col class="col-12">
@@ -164,12 +164,8 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
-import TimePicker from "@/components/quiz/timePicker";
+import { mapActions } from "vuex"
 export default {
-  components: {
-    TimePicker,
-  },
   data: () => ({
     pictures: [[], []],
     show: false,
@@ -177,6 +173,7 @@ export default {
     modal: true,
     mode: "",
     status: 200,
+    time: "00:00",
     name: "",
     duration: { hh: "00", mm: "00", ss: "00" },
     activeQuestion: 0,
@@ -198,13 +195,15 @@ export default {
     this.mode = "edit";
     this.recreate();
   },
+  watch: {
+    time(){
+      const time = time.split(':');
+      this.duration.hh = time[0];
+      this.duration.mm = time[1];
+    }
+  },
   methods: {
     ...mapActions("quiz", ["create_quiz"]),
-    updateDutation(hh, mm, ss) {
-      this.duration.hh = hh;
-      this.duration.mm = mm;
-      this.duration.ss = ss;
-    },
     addPicture(file, boundIndex) {
       this.pictures[boundIndex].push(file);
       this.questions[boundIndex].options.choices.push({
@@ -235,7 +234,7 @@ export default {
           },
         },
       ];
-      this.duration = { hh: "00", mm: "05", ss: "00" };
+      this.time = "00:00"
       this.pictures = [[], []];
     },
     handleOptionClick(questionIndex, optionIndex) {
