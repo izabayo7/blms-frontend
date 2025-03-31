@@ -3,7 +3,7 @@
   text-align: center;
   border: 1px solid #d9d9d9;
 
-  &.quiz-files {
+  &.quiz-files, &.attachment-files {
     background: rgba(25, 48, 116, 0.07);
     border-radius: 3.39104px;
     max-width: 347.58px;
@@ -11,6 +11,10 @@
     min-height: 94.95px;
     display: flex;
     align-items: center;
+  }
+
+  &.attachment-files {
+    max-width: 531px !important;
   }
 
   &.chat-files {
@@ -151,6 +155,7 @@ div.remove-container a {
   display: flex;
   flex-wrap: wrap;
 }
+
 /* Portrait phones and smaller */
 @media (max-width: 700px) {
   .attachment {
@@ -258,7 +263,11 @@ div.remove-container a {
                     class="attachment vertically--centered"
                 >
                   <div class="file_figure">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"/><path d="M9 2.003V2h10.998C20.55 2 21 2.455 21 2.992v18.016a.993.993 0 0 1-.993.992H3.993A1 1 0 0 1 3 20.993V8l6-5.997zM5.83 8H9V4.83L5.83 8zM11 4v5a1 1 0 0 1-1 1H5v10h14V4h-8z"/></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                      <path fill="none" d="M0 0h24v24H0z"/>
+                      <path
+                          d="M9 2.003V2h10.998C20.55 2 21 2.455 21 2.992v18.016a.993.993 0 0 1-.993.992H3.993A1 1 0 0 1 3 20.993V8l6-5.997zM5.83 8H9V4.83L5.83 8zM11 4v5a1 1 0 0 1-1 1H5v10h14V4h-8z"/>
+                    </svg>
                   </div>
                   <div class="file_name">
                     <span>{{ file.name | trimString(12) }}</span>
@@ -304,9 +313,9 @@ div.remove-container a {
             </div>
           </div>
         </v-col>
-        <v-col v-if="files.length === 0 && template === 'quiz-files' && !defaultFiles.length"
+        <v-col v-if="files.length === 0 && (template === 'quiz-files' || template === 'attachment-files') && !defaultFiles.length"
                class="col-12 quiz-details">
-          Upload you images here
+          {{ template ==='quiz-files' ? 'Upload you images here' : 'Pick additional files' }}
           <svg @click="clickButton()" class="cursor-pointer" width="22" height="22" viewBox="0 0 22 22" fill="none"
                xmlns="http://www.w3.org/2000/svg">
             <path
@@ -328,7 +337,7 @@ div.remove-container a {
           here!</span
         >
         </v-col>
-        <v-col v-if=" template === undefined || (template === 'quiz-files' && files.length)" class="col-2">
+        <v-col v-if=" template === undefined || ((template === 'quiz-files' || template === 'attachment-files') && files.length)" class="col-2">
           <v-btn class="mt-n2" @click="clickButton()" large icon>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
               <path fill="none" d="M0 0h24v24H0z"/>
