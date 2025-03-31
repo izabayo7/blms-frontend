@@ -6,14 +6,20 @@ const prefix = '/live'
 
 const routes =  [
     {
-        path:'/course/',
+        path:'/course',
         name:"liveCourse",
-        component:() => import(  /* webpackChunkName: "live" */ "@/views/live/new/index.vue")
+        component:() => import(  /* webpackChunkName: "live" */ "@/views/live/new/index.vue"),
+        meta: {
+            allowedUsers: ["INSTRUCTOR"]
+        },
     },
     {
         path: '/schedule',
         component: () =>
             import(  /* webpackChunkName: "schedule-live" */'@/views/live/schedule'),
+        meta: {
+            allowedUsers: ["INSTRUCTOR"]
+        },
     },
     {
         path:'/test/:courseId',

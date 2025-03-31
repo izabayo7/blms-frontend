@@ -370,6 +370,7 @@ export default {
         height: 106px;
         position: absolute;
         bottom: 0;
+        z-index: 7;
         padding: 14px 51px;
         font-family: Inter;
         font-style: normal;

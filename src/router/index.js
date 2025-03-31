@@ -92,31 +92,39 @@ const routes = [
                         path: '/users',
                         name: "users",
                         component: () => import( /* webpackChunkName: "users" */ '@/views/users/index.vue'),
+                        meta: {
+                            allowedUsers: ["ADMIN"]
+                        },
                     },
                     {
                         path: '/students',
                         component: () => import( /* webpackChunkName: "users-students" */ '@/views/users/students.vue'),
-                    },
-                    {
-                        path: '/users/students',
-                        name: "students",
-                        component: () => import( /* webpackChunkName: "users-students" */ '@/views/users/students.vue'),
+                        meta: {
+                            allowedUsers: ["INSTRUCTOR"]
+                        },
                     },
                     {
                         path: '/users/:username',
                         name: "student",
                         component: () => import( /* webpackChunkName: "user-by-name" */ '@/views/users/user/profile.vue'),
                     },
+
                     //for faculties
                     {
                         path: '/faculties',
                         name: "faculties",
                         component: () => import( /* webpackChunkName: "faculties" */ '@/views/faculties/index.vue'),
+                        meta: {
+                            allowedUsers: ["ADMIN"]
+                        },
                     },
                     {
                         path: '/faculties/:facultyId',
                         name: "faculty",
                         component: () => import( /* webpackChunkName: "faculty-by-id" */ '@/views/faculties/faculty/index.vue'),
+                        meta: {
+                            allowedUsers: ["ADMIN"]
+                        },
                         children: [
                             {
                                 path: '/faculties/:facultyId/details',
@@ -150,10 +158,16 @@ const routes = [
                         path: '/announcements',
                         name: "announcements",
                         component: () => import( /* webpackChunkName: "announcements" */ '@/views/announcement/index.vue'),
+                        meta: {
+                            allowedUsers: ["INSTRUCTOR", "ADMIN"]
+                        },
                     },
                     {
                         path: '/announcements/new',
                         component: () => import( /* webpackChunkName: "announcements" */ '@/views/announcement/new.vue'),
+                        meta: {
+                            allowedUsers: ["INSTRUCTOR", "ADMIN"]
+                        },
                     },
                     {
                         path: '/announcements/view/:id',
@@ -162,22 +176,35 @@ const routes = [
                     {
                         path: '/announcements/edit/:id',
                         component: () => import( /* webpackChunkName: "announcements" */ '@/views/announcement/edit.vue'),
+                        meta: {
+                            allowedUsers: ["INSTRUCTOR", "ADMIN"]
+                        },
                     },
+
                     // for reports
                     {
                         path: '/reports',
                         component: () =>
-                            import( /* webpackChunkName: "reports" */ '@/views/reports')
+                            import( /* webpackChunkName: "reports" */ '@/views/reports'),
+                        meta: {
+                            allowedUsers: ["INSTRUCTOR", "STUDENT"]
+                        },
                     },
                     {
                         path: '/reports/:target',
                         component: () =>
-                            import( /* webpackChunkName: "reports-by-target" */ '@/views/reports/deep')
+                            import( /* webpackChunkName: "reports-by-target" */ '@/views/reports/deep'),
+                        meta: {
+                            allowedUsers: ["INSTRUCTOR", "STUDENT"]
+                        },
                     },
                     {
                         path: '/reports/:target/:user_name',
                         component: () =>
-                            import( /* webpackChunkName: "user-reports" */ '@/views/reports')
+                            import( /* webpackChunkName: "user-reports" */ '@/views/reports'),
+                        meta: {
+                            allowedUsers: ["INSTRUCTOR", "STUDENT"]
+                        },
                     },
                     {
                         path: '/profile/:user_name',
@@ -226,7 +253,7 @@ const router = new VueRouter({
 })
 // before navigating to any route
 router.beforeEach((to, from, next) => {
-    if(to.path != from.path || to.path == "/") {
+    if (to.path !== from.path || to.path === "/") {
         // if the session exist and the vuex store is not set
         if (Vue.prototype.$session.exists() && (!store.state.user.isLoggedIn || !axios.defaults.headers.common.Authorization)) {
             // get the token
@@ -255,10 +282,11 @@ router.beforeEach((to, from, next) => {
             })
         } else if ((to.path === '/login' || to.path === '/') && store.state.user.isLoggedIn) {
             next({
-                path: `/${store.state.user.user.category.name === 'STUDENT' || store.state.user.user.category.name === 'INSTRUCTOR' ? 'courses' : 'welcome'}`,
+                path: `/welcome`,
             })
         }
-
+        if (to.meta.allowedUsers && !to.meta.allowedUsers.includes(store.state.user.user.category.name))
+            next({path: '/wambebaweeeeee'})
         next()
     }
 })

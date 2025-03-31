@@ -15,13 +15,19 @@ const routes =  [
         path: '/new',
         name: 'Set Quiz',
         component: () =>
-            import( /* webpackChunkName: "new-quiz" */ '@/views/quiz/create')
+            import( /* webpackChunkName: "new-quiz" */ '@/views/quiz/create'),
+        meta: {
+            allowedUsers: ["INSTRUCTOR"]
+        },
     },
     {
         path: '/edit/:name',
         name: 'Edit Quiz',
         component: () =>
-            import( /* webpackChunkName: "edit-quiz" */ '@/views/quiz/edit')
+            import( /* webpackChunkName: "edit-quiz" */ '@/views/quiz/edit'),
+        meta: {
+            allowedUsers: ["INSTRUCTOR"]
+        },
     },
     {
         path: '/preview/:name',
