@@ -31,7 +31,7 @@
             />
           </svg>
         </div>
-        <div class="remove" v-if="!IamTheOwner">
+        <div class="remove" v-if="!IamTheOwner && IamAdmin">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
@@ -44,7 +44,7 @@
             />
           </svg>
         </div>
-        <div class="exit" v-if="IamTheOwner">
+        <div :class="`exit ${IamAdmin ? '' : 'ml-n6'}`" v-if="IamTheOwner">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
@@ -87,6 +87,9 @@ export default {
       return (
         this.member.data.user_name === this.$store.state.user.user.user_name
       );
+    },
+    IamAdmin() {
+      return this.member.data.isAdmin;
     },
   },
   methods: {

@@ -76,16 +76,25 @@ export default {
   },
 
   beforeMount() {
-    //load user since the route have changed
-    this.setUsername(this.$route.params.username).then((username) => {
-      this.loadMessages(username);
-      if (this.currentDisplayedUser.id == username) {
-        console.log(this.incomingMessages)
-        this.incomingMessages.map((d) => {
-          if (this.$route.params.username == d.id) {
-            this.SET_DISPLAYED_USER(d);
+    this.socket.emit("message/conversation_id", {
+      conversation_id: this.$route.params.username,
+    });
+    this.socket.on("res/message/conversation_id", (username_valid) => {
+      if (username_valid) {
+        //load user since the route have changed
+        this.setUsername(this.$route.params.username).then((username) => {
+          this.loadMessages(username);
+          if (this.currentDisplayedUser.id == username) {
+            console.log(this.incomingMessages);
+            this.incomingMessages.map((d) => {
+              if (this.$route.params.username == d.id) {
+                this.SET_DISPLAYED_USER(d);
+              }
+            });
           }
         });
+      } else {
+        console.log('hhhhhhhhhhhhhhhhhhhhhhh kamobwe')
       }
     });
   },

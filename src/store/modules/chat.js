@@ -29,6 +29,17 @@ export default {
         SET_DISPLAYED_USER(state, data) {
             state.currentDisplayedUser = data;
         },
+        ADD_INCOMING_CONTACT(state,data){
+            let FOUND = false;
+
+            /* handling existing user */
+            state.incomingMessages.map(msg => {
+                if(msg.id === data.id) FOUND = true
+            })
+
+            if(FOUND) return 
+            else state.incomingMessages.push(data)
+        },
 
         //store loaded messages
         STORE_LOADED_MESSAGES(state, data) {
@@ -232,10 +243,11 @@ export default {
                 state.request.ongoing = true
                 state.request.id = id
             }
-
+console.log(id, typeof id)
 
             // Get messages
             getters.socket.on('res/message/conversation', ({ conversation }) => {
+                console.log(conversation)
                 //check if returned conversation object has data
                 if (conversation.length > 0) {
                     commit('STORE_LOADED_MESSAGES', { username: id, conversation: conversation })
@@ -247,12 +259,13 @@ export default {
                 state.request.id = null
                 state.request.ongoing = false
                 emit('conversation_loaded')
+                console.log('kbx')
                 // console.log(conversation)
             })
         },
         setUsername({ commit, state }, username) {
             commit('SET_USERNAME', username)
-
+console.log(username, typeof username)
             return new Promise((res, rej) => {
                 if (state.username === username) {
                     res(state.username)
@@ -300,6 +313,7 @@ export default {
 
             //get the user messages from store
             let messages = store.getters['chat/getLoadedMessagesBaseOnId'](state.username)
+            console.log(messages)
             let messagesFound = !!messages
 
             //if user messages are not in store load it from backend

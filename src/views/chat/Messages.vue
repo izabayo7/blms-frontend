@@ -111,7 +111,6 @@ export default {
       }
     },
     storeCurrentDisplayedUser() {
-      console.log('hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh')
       //listen when the user contacts/incoming messages are loaded
       on("incoming_message_initially_loaded", () => {
         if (!this.incomingMessages.length) {
