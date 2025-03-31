@@ -15,7 +15,7 @@
               class="col-12 col-md-12"
           >
             <p class="question_details col-md-12 col-12">
-              {{ `${i + 1}. ${question.details}` }}
+              {{ `${i + 1}. ${question.details}` }} <span v-if="question.required" class="red--text">*</span>
             </p>
             <div v-if="question.type === 'file_upload'" class="file-container d-flex">
               <div class="col-4 pa-0">
