@@ -9,7 +9,7 @@
             <span class="live" v-if="participationInfo.isOfferingCourse">Live</span>
           </div>
           <div v-if="participationInfo.isOfferingCourse" class="time">
-            00 : 00 : 36
+            {{live_session.time}}
           </div>
           <div v-else class="users">
             {{ participants.length }} watching

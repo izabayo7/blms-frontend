@@ -164,6 +164,7 @@ export default {
     margin-top: 40px;
     border-radius: 15px;
     background-color: #eee;
+    cursor: pointer;
 
     .instructor-course-title {
       font-weight: bold;
