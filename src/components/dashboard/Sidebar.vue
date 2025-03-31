@@ -230,8 +230,11 @@ export default {
           svg {
             width: 27px;
             height: 27px;
-            color: red;
             fill: #828282;
+
+            path{
+              fill: #828282;
+            }
           }
         }
 
@@ -247,6 +250,10 @@ export default {
 
           svg {
             fill: $main;
+
+            path{
+              fill:$main;
+            }
           }
           .link-name {
             color: $main;
