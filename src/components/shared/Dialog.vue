@@ -373,6 +373,8 @@ to start presenting</span>
         <button v-else @click="handleSubmit">Submit</button>
       </div>
     </div>
+    <!-- view for action confirmation -->
+    <slot v-if="template == 'live_session_settings'"/>
   </v-dialog>
 </template>
 
@@ -380,9 +382,10 @@ to start presenting</span>
 import {mapGetters, mapMutations, mapState, mapActions} from "vuex";
 
 export default {
+  name: "Dialog",
   data: () => ({
     userCode: "",
-    showModal: false,
+    showModal: this.template === undefined,
     attendance: 100,
     interval: null
   }),
@@ -410,7 +413,8 @@ export default {
   },
   watch: {
     visible() {
-      this.showModal = this.visible
+      if (!this.template)
+        this.showModal = this.visible
     },
     showModal() {
       if (this.visible)

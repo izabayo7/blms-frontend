@@ -495,6 +495,9 @@ openQuiz">
       <div v-if="!loaded" class="loading">Loading</div>
       <div v-else class="not-found">Sorry {{ error }}</div>
     </div>
+    <app-dialog template="live_session_settings">
+      <media-sources-selection />
+    </app-dialog>
   </div>
 </template>
 
@@ -509,7 +512,7 @@ import OnlineUser from "../../../components/Live/OnlineUser";
 import StudentNewCommentWithPhoto from "../../../components/Live/StudentNewCommentWithPhoto";
 import Apis from '../../../services/apis'
 import {convertUTCDateToLocalDate, playSound} from "../../../services/global_functions";
-
+import MediaSourcesSelection from "@/components/Live/MediaSourcesSelection";
 const sound = require("../../../assets/audio/com.mp3");
 
 export default {
@@ -518,6 +521,7 @@ export default {
     Discussion,
     StudentNewCommentWithPhoto,
     OnlineUser,
+    MediaSourcesSelection,
     back: () => import("@/components/shared/back-button"),
   },
   data() {
