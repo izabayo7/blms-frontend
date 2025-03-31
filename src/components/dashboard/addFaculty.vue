@@ -1,21 +1,7 @@
 <template>
   <v-dialog v-model="visible" :persistent="!closable">
     <div class="faculty-dialog-body">
-      <!--      <div class="close">-->
-      <!--        <svg-->
-      <!--          xmlns="http://www.w3.org/2000/svg"-->
-      <!--          viewBox="0 0 24 24"-->
-      <!--          width="24"-->
-      <!--          height="24"-->
-      <!--          @click="$emit('closeModal')"-->
-      <!--        >-->
-      <!--          <path fill="none" d="M0 0h24v24H0z" />-->
-      <!--          <path-->
-      <!--            d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm0-11.414L9.172 7.757 7.757 9.172 10.586 12l-2.829 2.828 1.415 1.415L12 13.414l2.828 2.829 1.415-1.415L13.414 12l2.829-2.828-1.415-1.415L12 10.586z"-->
-      <!--          />-->
-      <!--        </svg>-->
-      <!--      </div>-->
-      <div class="tittle px-0 px-md-6 pa-6 pb-0">Create a faculty</div>
+      <div class="tittle px-0 px-md-6 pa-6 pb-0">{{ editMode ? 'Edit' : 'Create a' }} faculty</div>
       <div class="row px-0 px-md-6 pt-0">
         <div class="col-12 col-lg-6">
           <div class="input-group">
@@ -212,8 +198,18 @@
 <script>
 import SelectUi from "@/components/reusable/ui/select-ui";
 import Apis from "@/services/apis";
+import {mapGetters} from "vuex";
 
 export default {
+  props: {
+    editMode: {
+      type: Boolean,
+      default: false
+    },
+    facultyId: {
+      type: String
+    }
+  },
   components: {SelectUi},
   data: () => ({
     closable: false,
@@ -234,6 +230,8 @@ export default {
     addedStudentGroups: [],
   }),
   computed: {
+    ...mapGetters('faculties', {state: "faculty"}),
+    ...mapGetters('faculty_college_year', ['facultyCollegeYears']),
     visible() {
       return 1;
     },
@@ -255,7 +253,17 @@ export default {
 
     let res = await Apis.get(`user/college/${this.$store.state.user.user.college}/INSTRUCTOR`);
     this.instructors = res.data.data;
-    console.log(this.instructors)
+
+    if (this.editMode) {
+      await this.$store.dispatch("faculties/getFaculty", this.facultyId)
+      this.faculty = {name: this.state.name, description: this.state.description}
+      await this.$store.dispatch('faculty_college_year/getFacultyCollegeYearsByFaculty', {facultyId: this.facultyId})
+      this.facultyCollegeYears.map(x => {
+        this.addedStudentGroups.push({
+          name: x.name
+        })
+      })
+    }
   },
   watch: {
     error() {
