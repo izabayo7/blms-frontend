@@ -59,7 +59,8 @@ export default {
       selected_all:false,
       selected:[],
       tabularData:this.data,
-      currentSortingTab:""
+      currentSortingTab:"",
+      sortingIncreasing:false
     }
   },
   computed:{
@@ -83,12 +84,18 @@ export default {
 
     },
     sort(tabHead){
+
+      if(this.currentSortingTab === tabHead)
+        this.sortingIncreasing = !this.sortingIncreasing
+
+
+      this.tabularData = this.tabularData.sort((first,second) => {
+        if(first[tabHead] < second[tabHead]) return this.sortingIncreasing ? -1 : 1
+        if(first[tabHead] > second[tabHead]) return this.sortingIncreasing ? 1 : -1
+        return 0
+      })
+
       this.currentSortingTab = tabHead
-        this.tabularData = this.tabularData.sort((first,second) => {
-          if(first[tabHead] < second[tabHead]) return -1
-          if(first[tabHead] > second[tabHead]) return 1
-          return 0
-        })
     },
     select(i){
       const selected = new Set(this.selected)
