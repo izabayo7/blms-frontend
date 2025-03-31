@@ -142,15 +142,6 @@ export default {
       this.logo = this.$refs.file.files[0];
     },
     saveCollegeChanges() {
-      console.log({
-        college: {
-          name: this.college.name,
-          email: this.college.email,
-          phone: this.college.phone,
-          location: this.college.location,
-        },
-        logo: this.logo,
-      })
       this.updateCollege({
         college: {
           name: this.college.name,

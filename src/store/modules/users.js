@@ -1,5 +1,4 @@
 import apis from "@/services/apis";
-import router from '@/router'
 export default {
     namespaced: true,
     state: {
@@ -36,10 +35,21 @@ export default {
             }
         },
         //create a user
-        createUser({ state }, { user, category }) {
+        createUser({ state }, { user, category, facultyCollegeYear }) {
+            let userObj = {}
             return apis.create(`${category}`, user).then(d => {
-                state.users.data.push(d)
-                router.push('/administration')
+                userObj = d.data
+                if (category == 'student') {
+                    apis.create("student-faculty-college-year", {
+                        student: d.data._id,
+                        facultyCollegeYear: facultyCollegeYear,
+                    }).then((_d)=>{
+                        userObj.studentFacultyCollegeYear = _d.data
+                        state.users.data.push(userObj)
+                    })
+                } else {
+                    state.users.data.push(userObj)
+                }
             })
         },
     },

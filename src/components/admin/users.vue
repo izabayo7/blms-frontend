@@ -232,7 +232,7 @@
         </v-card>
       </v-col>
       <v-col class="col-md-3 col-12">
-        <v-card class="school-card">
+        <v-card v-if="college" class="school-card">
           <v-row>
             <v-col class="col-12">
               <img
@@ -275,7 +275,7 @@
             ></v-col>
             <v-col class="col-2 offset-1">
               <v-btn rounded to="/administration/register/users">
-                <v-icon>mdi-account-plus-outline</v-icon>Add new user
+                <v-icon color="#fff" class="mr-2">mdi-account-plus-outline</v-icon>Add new user
               </v-btn>
             </v-col>
           </v-row>

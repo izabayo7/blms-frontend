@@ -94,7 +94,7 @@
                       <div
                         class="v-input__icon v-input__icon--prepend-inner mx-2"
                       >
-                        +250
+                        +25
                       </div>
                     </div>
                     <div class="v-text-field__slot">
@@ -158,8 +158,8 @@
             <v-col v-if="$route.name.includes('Student')" class="col-12">
               <label>Faculty</label>
               <v-select
-                v-model="faculty"
-                :items="facilityCollegeYearNames"
+                v-model="selectedFacultyCollegeYearName"
+                :items="facultyCollegeYearNames"
                 solo
                 class="group-select"
               ></v-select>
@@ -169,7 +169,7 @@
               <v-row>
                 <v-col class="col-4" v-for="(gender, n) in genders" :key="n">
                   <v-icon
-                    :color="selectedGender === gender ? '#FFD248' : '#B4B4B4'"
+                    :color="selectedGender === gender ? primary : '#B4B4B4'"
                     @click="selectedGender = gender"
                     >mdi-checkbox-{{
                       selectedGender === gender ? "marked" : "blank"
@@ -187,79 +187,41 @@
                 year-icon="mdi-calendar-blank"
                 prev-icon="mdi-skip-previous"
                 next-icon="mdi-skip-next"
-                color="#653737"
+                :color="primary"
                 landscape
               ></v-date-picker>
             </v-col>
-            <v-col class="col-8 mx-auto">
+            <v-col class="col-12 mx-auto">
               <v-btn
-                v-if="$route.name.includes('Student')"
                 rounded
                 x-large
-                class="yellow white--text px-16"
-                @click="saveStudent"
-                >Create account</v-btn
+                class="action-button px-12"
+                @click="saveUser"
               >
+                Create account
+              </v-btn>
               <v-btn
-                v-else
-                rounded
-                x-large
-                class="yellow white--text px-16"
-                @click="saveInstructor"
-                >Create account</v-btn
+                color="transparent"
+                class="cancel-quiz mt-n2 ml-4 py-6 px-16"
+                @click="$router.push('/administration/register/users')"
               >
+                Cancel
+              </v-btn>
             </v-col>
           </v-row>
         </v-form>
       </v-col>
     </v-row>
-    <kurious-dialog
-      :show="show"
-      :message="message"
-      :modal="modal"
-      color="#ffd248"
-      :status="status"
-    >
-      <!-- <v-icon slot="icon" size="55" dark>mdi-clipboard-text-multiple-outline</v-icon> -->
-      <v-icon slot="icon" size="55" dark>mdi-check</v-icon>
-      <v-row slot="actions">
-        <v-col class="col-10 mx-auto my-0">
-          <v-btn
-            rounded
-            x-large
-            color="#ffd248"
-            class="white--text px-16 mx-2"
-            @click="
-              resetFields();
-              show = false;
-            "
-            >Add New Student</v-btn
-          >
-          <v-btn
-            id="panel--btn"
-            rounded
-            x-large
-            color="#ffd248"
-            class="orange--text px-16 mx-2"
-            to="/register/users"
-            >Back To Panel</v-btn
-          >
-        </v-col>
-      </v-row>
-    </kurious-dialog>
   </v-container>
 </template>
 
 <script>
-import Apis from "@/services/apis";
+import colors from "@/assets/sass/imports/_colors.scss";
+import { mapGetters, mapActions } from "vuex";
 export default {
   data: () => ({
-    message: "",
-    show: false,
-    status: 200,
-    modal: true,
-    facilityCollegeYearNames: [],
-    facilityCollegeYearCodes: [],
+    selectedFacultyCollegeYearName: "",
+    primary: colors.primary,
     selectedGender: "Male",
     genders: ["Male", "Female"],
     surName: "",
@@ -268,14 +230,36 @@ export default {
     email: "",
     nationalId: undefined,
     phone: "",
-    faculty: "",
   }),
-  beforeMount() {
-    if (this.$route.name.includes("Student")) {
-      this.getFaculties();
-    }
+  computed: {
+    ...mapGetters("faculties", ["facultyCollegeYearNames"]),
+    selectedFacultyCollegeYearCode() {
+      return this.$store.getters["faculties/facultyCollegeYear"](
+        this.selectedFacultyCollegeYearName
+      )._id;
+    },
   },
   methods: {
+    ...mapActions("users", ["createUser"]),
+    ...mapActions("faculties", ["getFacultyCollegeYears"]),
+    saveUser() {
+      this.createUser({
+        user: {
+          surName: this.surName,
+          otherNames: this.otherNames,
+          phone: this.phone,
+          gender: this.selectedGender,
+          DOB: this.DOB,
+          email: this.email,
+          nationalId: this.nationalId,
+          college: this.$store.state.user.user.college,
+        },
+        category: this.$route.path.split('/')[this.$route.path.split('/').length -1],
+        facultyCollegeYear: this.selectedFacultyCollegeYearCode
+      }).then(() => {
+        this.$router.push('/administration')
+      });
+    },
     checkLength(index) {
       const nationalIdInputs = document.querySelectorAll(".id-inputs");
       if (parseInt(nationalIdInputs[index].value) > 10000) {
@@ -284,24 +268,6 @@ export default {
         nationalIdInputs[index].style.color = "inherit";
         if (index === 3) {
           this.nationalId = `${nationalIdInputs[0].value}${nationalIdInputs[1].value}${nationalIdInputs[2].value}${nationalIdInputs[3].value}`;
-        }
-      }
-    },
-    async getFaculties() {
-      try {
-        const response = await Apis.get(
-          `facility-college-year/college/${this.$store.state.user.college}`
-        );
-        for (const facultyCollegeYear of response.data) {
-          this.facilityCollegeYearNames.push(facultyCollegeYear.name);
-          this.facilityCollegeYearCodes.push(facultyCollegeYear._id);
-        }
-      } catch (error) {
-        if (error.request && !error.response) {
-          this.status = 503;
-          this.message = "Service Unavailable";
-          this.modal = false;
-          this.show = true;
         }
       }
     },
@@ -315,71 +281,19 @@ export default {
       this.selectedGender = "";
       this.faculty = "";
     },
-    async saveStudent() {
-      try {
-        this.faculty = this.facilityCollegeYearCodes[
-          this.facilityCollegeYearNames.indexOf(this.faculty)
-        ];
-        const response = await Apis.create("student", {
-          surName: this.surName,
-          otherNames: this.otherNames,
-          phone: `0${this.phone}`,
-          gender: this.selectedGender,
-          DOB: this.DOB,
-          email: this.email,
-          nationalId: this.nationalId,
-          college: this.$store.state.user.college,
-        });
-
-        await Apis.create("student-facility-college-year", {
-          student: response.data._id,
-          facilityCollegeYear: this.faculty,
-        });
-        this.message = "Student Registered";
-        this.show = "true";
-      } catch (error) {
-        if (error.response) {
-          this.status = error.response.status;
-          this.message = error.response.data;
-        } else if (error.request) {
-          this.status = 503;
-          this.message = "Service Unavailable";
-        }
-        this.modal = false;
-        this.show = true;
-      }
-    },
-    async saveInstructor() {
-      try {
-        await Apis.create("instructor", {
-          surName: this.surName,
-          otherNames: this.otherNames,
-          phone: `0${this.phone}`,
-          gender: this.selectedGender,
-          email: this.email,
-          nationalId: this.nationalId,
-          college: this.$store.state.user.college,
-        });
-        this.message = "Instructor Registered";
-        this.show = "true";
-      } catch (error) {
-        if (error.response) {
-          this.status = error.response.status;
-          this.message = error.response.data;
-        } else if (error.request) {
-          this.status = 503;
-          this.message = "Service Unavailable";
-        }
-        this.modal = false;
-        this.show = true;
-      }
-    },
+  },
+  created() {
+    this.getFacultyCollegeYears(this.$store.state.user.user.college);
   },
 };
 </script>
 
 <style lang="scss" scoped>
 #student-regist {
+  .action-button {
+    background-color: $primary !important;
+    color: white !important;
+  }
   .v-text-field.v-text-field--solo .v-input__control {
     min-height: 40px;
     padding: 0;
@@ -387,7 +301,7 @@ export default {
   .v-text-field.v-text-field--solo:not(.v-text-field--solo-flat)
     > .v-input__control
     > .v-input__slot:focus-within {
-    border-bottom: 4px solid #ffc100;
+    border-bottom: 4px solid $primary;
   }
   .v-text-field input.id-inputs {
     flex: 1 1 auto;
@@ -413,7 +327,7 @@ export default {
     overflow-y: auto;
     background-color: #f9faff;
     label {
-      color: #6A6A6A;
+      color: #6a6a6a;
       font-size: 17px;
     }
     form.v-form {
