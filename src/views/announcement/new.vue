@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid class="announcements_page px-6 pl-md-14 pt-9">
+  <v-container fluid class="announcements_page px-6 pl-md-14 pr-md-9 pt-9">
     <v-row class="page_title">
       <div class="col-4 col-md-6">
         <div class="upper">Dashboard</div>
@@ -121,31 +121,98 @@
               <div class="label">Announcement title</div>
               <input v-model="announcement.title" type="text">
             </div>
-            <div class="input-group">
-              <SelectUi
-                  label="Select target type"
-                  name="role"
-                  id="target_type"
-                  :options="target_types"
-                  @input="
+            <div class="d-flex mb-4 target">
+              <button class="button" :class="{'outlined' : target_type === 'individual'}"
+                      @click="target_type = 'groups'">Groups
+              </button>
+              <button class="button ml-auto" :class="{'outlined' : target_type === 'groups'}"
+                      @click="target_type = 'individual'">Individuals
+              </button>
+            </div>
+            <div v-if="target_type === 'groups'">
+              <div class="input-group">
+                <SelectUi
+                    label="Select target type"
+                    name="role"
+                    id="target_type"
+                    :options="target_types"
+                    @input="
                               (e) => {
                                 selected_target_type = e;
                               }
                             "
-              />
-            </div>
-            <div class="input-group">
-              <SelectUi
-                  label="Select target"
-                  name="role"
-                  id="target_id"
-                  :options="select_options"
-                  @input="
+                />
+              </div>
+              <div class="input-group">
+                <SelectUi
+                    label="Select target"
+                    name="role"
+                    id="target_id"
+                    :options="select_options"
+                    @input="
                               (e) => {
                                 selected_target_id = e;
                               }
                             "
-              />
+                />
+              </div>
+            </div>
+            <div v-else-if="target_type === 'individual'">
+              <div class="row ma-0 group-members">
+                <label for="group_members_input">Add users</label>
+                <div class="members input-group">
+                  <input
+                      @input="getUsers"
+                      v-model="currentMember"
+                      type="text"
+                      id="group_members_input"
+                  />
+                  <transition name="member">
+                    <div
+                        class="found-members"
+                        v-if="foundUsers.length > 0 || userLoading"
+                    >
+                      <svg
+                          v-if="userLoading"
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 24 24"
+                          width="24"
+                          height="24"
+                      >
+                        <path fill="none" d="M0 0h24v24H0z"/>
+                        <path d="M12 3a9 9 0 0 1 9 9h-2a7 7 0 0 0-7-7V3z"/>
+                      </svg>
+                      <div class="no-user" v-if="NotFoundText.length > 0">
+                        {{ NotFoundText }}
+                      </div>
+                      <transition-group name="members">
+                        <div
+                            class="member"
+                            v-for="user in foundUsers"
+                            @click="addMember(user)"
+                            :key="user.email"
+                        >
+                          <member
+                              :disabled="disabled(user.email)"
+                              :user="user"
+                          />
+                        </div>
+                      </transition-group>
+                    </div>
+                  </transition>
+                </div>
+                <div class="added-members-list" v-if="users.length > 0">
+                  <transition-group name="chips">
+                    <chip
+                        v-for="(member, i) in users"
+                        @closed="closed(i)"
+                        :key="member.email"
+                    >
+                      {{ member.sur_name + " " + member.other_names }}
+                    </chip>
+                  </transition-group>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -171,31 +238,80 @@
 <script>
 import SelectUi from "@/components/reusable/ui/select-ui";
 import Apis from "@/services/apis";
+import {mapActions, mapGetters} from "vuex";
 
 export default {
   name: "CreateAnnouncement",
   components: {
     Editor: () => import("@/components/reusable/Editor"),
+    Member: () => import("@/components/messages/Member"),
+    chip: () => import("@/components/reusable/ui/Chip"),
     SelectUi
   },
-  computed: {},
+  computed: {
+    ...mapGetters("users",["selected_users"])
+  },
   data: () => ({
     announcement: {
       title: "",
       target: "",
       content: "",
-      createdAt: new Date()
+      createdAt: new Date(),
     },
     target_types: ['course', 'student group', 'faculty', 'college'],
     selected_target_type: '',
     selected_target_id: '',
+    target_type: 'groups',
     select_options: [],
+    users: [],
     courses: [],
     student_groups: [],
     faculties: [],
-    error: ""
+    error: "",
+    currentMember: "",
+    userLoading: false,
+    foundUsers: [],
+    NotFoundText: ""
   }),
   methods: {
+    ...mapActions("users", ["searchUser"]),
+    addMember(user) {
+      const membersNotAvailable = this.foundUsers.length <= 0;
+      const disabled = this.disabled(user.email);
+
+      if (membersNotAvailable || this.currentMember.length <= 0 || disabled)
+        return;
+
+      this.users.unshift(user);
+    },
+    closed(i) {
+      this.users.splice(i, 1);
+    },
+    disabled(email) {
+      return this.users.some((member) => member.email === email);
+    },
+    getUsers() {
+      this.userLoading = true;
+      this.NotFoundText = "";
+      const EmptyStringRegex = /^\s+$/g; //regext to detect empty string
+
+      if (
+          EmptyStringRegex.test(this.currentMember) ||
+          this.currentMember.length <= 0
+      ) {
+        this.foundUsers = [];
+        this.userLoading = false;
+        return;
+      }
+
+      this.searchUser({query: this.currentMember}).then((result) => {
+        this.userLoading = false;
+        this.foundUsers = result;
+
+        //tell user that we didnt find the user with such id
+        this.NotFoundText = result.length > 0 ? "" : "No user found";
+      });
+    },
     async computeOptions() {
 
       this.select_options = []
@@ -246,41 +362,49 @@ export default {
         return this.error = "Announcement title is required"
       if (this.announcement.title.length < 5)
         return this.error = "Announcement title too short"
-      if (this.selected_target_id === 'Select target')
-        return this.error = "Announcement target is required"
       if (this.announcement.content === '<ol><li><p>Write your content here</p></li></ol>')
         return this.error = "Announcement content is required"
       this.announcement.createdAt = undefined
-      this.announcement.target = {
-        type: this.selected_target_type === 'student group' ? 'student_group' : this.selected_target_type,
-        id: this.findId()
+      if (this.target_type === 'groups') {
+        if (this.selected_target_id === 'Select target')
+          return this.error = "Announcement target is required"
+
+        this.announcement.target = {
+          type: this.selected_target_type === 'student group' ? 'student_group' : this.selected_target_type,
+          id: this.findId()
+        }
+      } else {
+        if (this.users.length === 0)
+          return this.error = "Please select users to send the announcement"
+        this.announcement.specific_receivers = this.users.map(x => x.user_name)
+        this.announcement.target = undefined
       }
       this.saveAnnouncement();
     },
-    findId(){
-      if(this.selected_target_type === 'college')
+    findId() {
+      if (this.selected_target_type === 'college')
         return this.$store.state.sidebar_navbar.college._id
       else if (this.selected_target_type === 'student group') {
         for (const i in this.student_groups) {
-          if(this.student_groups[i].name === this.selected_target_id)
+          if (this.student_groups[i].name === this.selected_target_id)
             return this.student_groups[i]._id
         }
       } else if (this.selected_target_type === 'faculty') {
         for (const i in this.faculties) {
-          if(this.faculties[i].name === this.selected_target_id)
+          if (this.faculties[i].name === this.selected_target_id)
             return this.faculties[i]._id
         }
       } else if (this.selected_target_type === 'course') {
         for (const i in this.courses) {
-          if(this.courses[i].name === this.selected_target_id)
+          if (this.courses[i].name === this.selected_target_id)
             return this.courses[i]._id
         }
       }
     },
     async saveAnnouncement() {
 
-      const response = await Apis.create('announcement/group', this.announcement)
-      if(response.data.status !== 201)
+      const response = await Apis.create(`announcement/${this.target_type === 'groups' ? 'group' : 'specific_users'}`, this.announcement)
+      if (response.data.status !== 201)
         this.error = response.data.message
       else {
         this.$store.dispatch("app_notification/SET_NOTIFICATION", {
@@ -307,6 +431,14 @@ export default {
         })
     },
   },
+  mounted() {
+    if(this.$route.query.target === 'individual') {
+      this.target_type = 'individual'
+      if (this.selected_users.length) {
+        this.users = this.selected_users
+      }
+    }
+  }
 };
 </script>
 

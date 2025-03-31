@@ -1,5 +1,5 @@
 <template>
-  <tr @click="rowClicked(data[options.link.paramPropertyName] || null)" class="table-body-row table-row" >
+  <tr @click="options ? rowClicked(data[options.link.paramPropertyName] || null) : undefined" class="table-body-row table-row" >
 <!--            select checkbox-->
     <td v-if="showSelect" class="select--wrapper">
       <div class="select select-one" >
@@ -42,6 +42,8 @@ export default {
     select(e){
       this.$emit('select',e)
       console.log('select row')
+    },
+    changeSelectedIndex() {
       this.selectSelected  = !this.selectSelected;
     },
     rowClicked(id) {

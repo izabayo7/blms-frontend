@@ -23,7 +23,7 @@
             />
           </div>
           <div class="col-12 hidden-sm-and-down col-md-3">
-            <button class="mx-auto">
+            <button class="mx-auto" @click="notifyStudents">
               <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <g clip-path="url(#clip0)">
                   <path
@@ -90,16 +90,16 @@
           <div class="table">
             <table-ui :options="options">
               <template #tableHeaderRow>
-                <table-head-row :cols="options.keysToShow"/>
+                <table-head-row @select="handleSelect" :cols="options.keysToShow"/>
               </template>
 
               <!--              rows-->
               <template v-if="statistics" #tableRows>
                 <table-row :data="user"
-                           v-for="user in statistics.students" :key="user._id">
+                           v-for="(user, i) in statistics.students" :key="user._id" @select="handleRowSelect(i)"
+                           :selected="selected_users.has(i)" :ref="`row${i}`">
                   <template #cols>
-                    <td class="row--image" @mouseenter="mouseOnPic($event,user.user_name,'user-profile-card')"
-                        @mouseleave="mouseOutPic($event,'user-profile-card')">
+                    <td class="row--image">
                       <img v-if="user.profile" :src="user.profile + '?width=50'" class="img" alt=" profile pic">
                       <v-avatar v-else size="30" class="profile-avatar img">
                         {{ `${user.sur_name} ${user.other_names}` | computeText }}
@@ -132,7 +132,7 @@ import TableUi from "../../components/reusable/table/TableUi";
 import TableHeadRow from "../../components/reusable/table/TableHeadRow";
 import SelectUi from "@/components/reusable/ui/select-ui";
 import TableRow from "../../components/reusable/table/TableRow";
-import {mapActions, mapGetters} from "vuex";
+import {mapActions, mapGetters, mapMutations} from "vuex";
 import Apis from '../../services/apis'
 
 export default {
@@ -160,6 +160,45 @@ export default {
     }
   },
   methods: {
+    ...mapMutations("users", ["SET_SELECTED_USERS"]),
+    handleSelect(value) {
+      for (const i in this.statistics.students) {
+        if (value.has(-1)) {
+          if (!this.$refs[`row${i}`][0].selectSelected)
+            this.$refs[`row${i}`][0].changeSelectedIndex()
+        } else if (this.$refs[`row${i}`][0].selectSelected)
+          this.$refs[`row${i}`][0].changeSelectedIndex()
+      }
+
+      this.selected_users = value
+    },
+    handleRowSelect(index) {
+      const found = this.selected_users.has(index)
+      if (found)
+        this.selected_users.delete(index)
+      else
+        this.selected_users.add(index)
+
+      this.$refs[`row${index}`][0].changeSelectedIndex()
+    },
+    notifyStudents() {
+      if (!this.selected_users.size)
+        return this.$store.dispatch("app_notification/SET_NOTIFICATION", {
+          message: "please select atleast one user",
+          status: "info",
+          uptime: 5000,
+        })
+      let users = []
+      if (this.selected_users.has(-1)) {
+        users = this.statistics.students
+      } else
+        for (const item of this.selected_users) {
+          users.push(this.statistics.students[item])
+        }
+
+      this.SET_SELECTED_USERS(users)
+      this.$router.push('/announcements/new?target=individual')
+    },
     ...mapActions("courses", ["getCourses"]),
     async loadStatistics() {
       let course_id
@@ -169,7 +208,6 @@ export default {
           break
         }
       }
-      console.log(course_id)
       const res = await Apis.get(`course/statistics/course/${course_id}`)
       this.statistics = res.data.data
     }
@@ -183,6 +221,7 @@ export default {
     return {
       statistics: undefined,
       selected_course: undefined,
+      selected_users: new Set([]),
       options: {
         coloredRows: false,
         keysToShow: [" ", "User name", "Gender", "Course progress", "Perfomance (%)", "Attendace"],

@@ -38,7 +38,7 @@
           <div class="table-header">
             <table-header>
               <template #actions>
-                <div class="action mx-2" @click="click('notify')">
+                <div class="action mx-2" @click="click('announce')">
                   <table-action-burner>
                     <template #icon>
                       <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 11 11" fill="none">
@@ -47,7 +47,7 @@
                             fill="#193074"/>
                       </svg>
                     </template>
-                    <template #text>Notify</template>
+                    <template #text>Send announcement</template>
                   </table-action-burner>
                 </div>
                 <!--                <div class="action mx-2" @click="click('invite')">-->
@@ -123,7 +123,7 @@ import TableHeader from "../../components/reusable/ui/table-header";
 import apis from "../../services/apis"
 import tableActionBurner from '../../components/reusable/ui/table-action-burner'
 import moment from 'moment'
-import {mapActions} from "vuex";
+import {mapActions, mapMutations} from "vuex";
 
 export default {
   name: "Users",
@@ -141,13 +141,14 @@ export default {
           RouteTo: '/users/user/{id}',
           paramPropertyName: '_id'
         },
-        keysToShow: ["sur_name", "other_names", "email", "user_name", "status", "gender"],
+        keysToShow: ["sur_name", "other_names", "user_name", "status", "gender"],
         showSelect: true
       },
     }
   },
   methods: {
     ...mapActions("modal", ["set_modal"]),
+    ...mapMutations("users", ["SET_SELECTED_USERS"]),
     click(value) {
       if (!this.selected_users.size)
         return this.$store.dispatch("app_notification/SET_NOTIFICATION", {
@@ -156,7 +157,19 @@ export default {
           uptime: 5000,
         })
 
-      console.log(value)
+      if (value === 'announce') {
+        let users = []
+
+        if (this.selected_users.has(-1)) {
+          users = this.users
+        } else
+          for (const item of this.selected_users) {
+            users.push(this.users[item])
+          }
+
+        this.SET_SELECTED_USERS(users)
+        this.$router.push('/announcements/new?target=individual')
+      }
 
       if (value.includes('hold')) {
         const ids = []

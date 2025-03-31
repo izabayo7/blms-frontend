@@ -6,6 +6,7 @@ const getDefaultState = () => ({
         loaded: false
     },
     selected_user: '',
+    selected_users: [],
     search_results: {
         data: []
     },
@@ -25,6 +26,9 @@ export default {
         SET_USER(state, user) {
             state.user = user
             state.isLoggedIn = true
+        },
+        SET_SELECTED_USERS(state, user_names) {
+            state.selected_users = user_names
         },
         UNSET_USER(state) {
             state.user = null
@@ -165,6 +169,9 @@ export default {
         ,
         selected_user: state => {
             return state.users.data.filter(user => user._id == state.selected_user)[0]
+        },
+        selected_users: state => {
+            return state.selected_users
         },
         usersOnFaculties: state => {
             return state.usersBasedOnFaculties.data;
