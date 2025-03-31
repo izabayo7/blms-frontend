@@ -171,7 +171,7 @@
                     class="quiz-action cancel">
               Cancel
             </button>
-            <button v-if="(userCategory === 'STUDENT' && assignment.status !=='RELEASED') || $route.params.user_name"
+            <button v-if="(userCategory === 'STUDENT' && assignment.status !=='RELEASED' && !isExpired) || $route.params.user_name"
                     class="quiz-action" @click="validate">
               {{ assignment_submission._id ? 'Save' : 'Submit' }}
             </button>
@@ -231,6 +231,9 @@ export default {
     FilePicker: () => import("@/components/reusable/FilePicker"),
   },
   computed: {
+    isExpired(){
+      return new Date() > new Date(this.assignment.dueDate)
+    },
     backend_url() {
       return process.env.VUE_APP_api_service_url
     },
