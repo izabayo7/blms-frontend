@@ -41,7 +41,7 @@
           </button>
         </div>
         <div class="vertically--centered">
-          <img :src="college_logo" class="logo" />
+          <img :src="college_logo" class="logo" @click="$router.push('live/class/course/test')" />
         </div>
       </div>
       <div :class="`py-0 col-${showCreateCourseButton ? '5' : '4'} d-flex`">

@@ -454,9 +454,13 @@ export default {
     leaveRoom() {
       alert('Are you sure you want to leave this class ?')
       this.sendMessage({
-        id: 'leaveRoom'
+        id: this.participationInfo.isOfferingCourse ? 'closeRoom' : 'leaveRoom'
       });
-
+      if(!this.participationInfo.isOfferingCourse){
+        this.onCloseRoom();
+      }
+    },
+    onCloseRoom(){
       for (let key in this.participants) {
         this.participants[key].dispose();
       }
@@ -464,7 +468,6 @@ export default {
       this.ws.close();
       this.$router.push('/')
     },
-
     async receiveVideo(sender) {
       console.log(`\n\n\n\n\n receiving video for ${sender} \n\n\n\n\n`)
       let participant = sender == this.participationInfo.name ? this.participants[this.participantIndex(sender)] : new Participant(sender, this, false, await this.getUserInfo(sender.split('_')[0]));
@@ -543,6 +546,10 @@ export default {
         case 'userId':
           self.id = parsedMessage.data;
           self.participationInfo.name = self.id;
+          break;
+        case 'roomClosed':
+          alert('Room Closed')
+          this.onCloseRoom();
           break;
         case 'existingParticipants':
           this.onExistingParticipants(parsedMessage);
