@@ -1,99 +1,124 @@
 <template>
-  <div class="small-card">
-    <div class="d-flex">
-      <div class="icon">
-        <slot name="icon" />
+  <div class="small-card" :class="template">
+    <div v-if="template === 'ADMIN'">
+      <div class="d-flex">
+        <div class="icon">
+          <slot name="icon"/>
+        </div>
+        <div class="top-blocks">
+          <div v-for="item in headers" :key="item" class="inner">{{ item }}</div>
+        </div>
       </div>
-      <div class="top-blocks">
-        <div v-for="item in headers" :key="item" class="inner">{{ item }}</div>
+      <div class="statistics mt-3">
+        <div class="combined">
+          <div class="chat">
+            <chart
+                type="donut"
+                class="my-chart ml-n6"
+                width="150"
+                :options="chartOptions"
+                :series="series"
+            ></chart>
+          </div>
+          <div class="total mt-n4">{{ total }}</div>
+          <div class="label">
+            {{
+              type == "users"
+                  ? "Total number of users"
+                  : "Total number of courses"
+            }}
+          </div>
+        </div>
+        <div class="details mt-4">
+          <div class="element">
+            <div class="label">
+              <div class="text">{{ headers[0] }}:</div>
+              <div class="numb ml-2">{{ series[0] }}</div>
+            </div>
+            <div class="progress mt-n5 mb-4">
+              <v-progress-linear
+                  :active="false"
+                  :value="percent(series[0])"
+                  class="mt-6 progressbar reports yellow"
+              />
+            </div>
+          </div>
+          <div class="element">
+            <div class="label">
+              <div class="text">{{ headers[1] }}:</div>
+              <div class="numb ml-2">{{ series[1] }}</div>
+            </div>
+            <div class="progress mt-n5 mb-4">
+              <v-progress-linear
+                  :active="false"
+                  :value="percent(series[1])"
+                  class="mt-6 progressbar reports blue"
+              />
+            </div>
+          </div>
+          <div class="element">
+            <div class="label">
+              <div class="text">{{ headers[2] }}:</div>
+              <div class="numb ml-2">{{ series[2] }}</div>
+            </div>
+            <div class="progress mt-n5 mb-4">
+              <v-progress-linear
+                  :active="false"
+                  :value="percent(series[2])"
+                  class="mt-6 progressbar reports red"
+              />
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-    <div class="statistics mt-3">
-      <div class="combined">
-        <div class="chat">
-          <chart
+    <div class="text-center" v-else-if="template === 'INSTRUCTOR'">
+      <div class="start">{{ data.start }}</div>
+      <div class="chart">
+        <chart
             type="donut"
             class="my-chart ml-n6"
-            width="150"
+            :width="width"
             :options="chartOptions"
-            :series="series"
-          ></chart>
-        </div>
-        <div class="total mt-n4">{{ total }}</div>
-        <div class="label">
-          {{
-            type == "users"
-              ? "Total number of users"
-              : "Total number of courses"
-          }}
-        </div>
+            :series="[data.total,100-data.total]"
+        ></chart>
       </div>
-      <div class="details mt-4">
-        <div class="element">
-          <div class="label">
-            <div class="text">{{ headers[0] }}:</div>
-            <div class="numb ml-2">{{ series[0] }}</div>
-          </div>
-          <div class="progress mt-n5 mb-4">
-            <v-progress-linear
-              :active="false"
-              :value="percent(series[0])"
-              class="mt-6 progressbar reports yellow"
-            />
-          </div>
-        </div>
-        <div class="element">
-          <div class="label">
-            <div class="text">{{ headers[1] }}:</div>
-            <div class="numb ml-2">{{ series[1] }}</div>
-          </div>
-          <div class="progress mt-n5 mb-4">
-            <v-progress-linear
-              :active="false"
-              :value="percent(series[1])"
-              class="mt-6 progressbar reports blue"
-            />
-          </div>
-        </div>
-        <div class="element">
-          <div class="label">
-            <div class="text">{{ headers[2] }}:</div>
-            <div class="numb ml-2">{{ series[2] }}</div>
-          </div>
-          <div class="progress mt-n5 mb-4">
-            <v-progress-linear
-              :active="false"
-              :value="percent(series[2])"
-              class="mt-6 progressbar reports red"
-            />
-          </div>
-        </div>
-      </div>
+      <div class="end">{{ data.end }}</div>
     </div>
   </div>
 </template>
 
 <script>
 import Apexcharts from "vue-apexcharts";
+
 export default {
   props: {
     series: {
       type: Array,
-      required: true,
+    },
+    template: {
+      type: String,
+      default: "ADMIN"
+    },
+    data: {
+      type: Object
+    },
+    width: {
+      type: Number,
+      default: 150
     },
     type: {
       type: String,
-      required: true,
     },
     total: {
       type: Number,
     },
-    labels:{
+    labels: {
       type: Array
     },
     headers: {
       type: Array,
-      required: true,
+      required: false,
     },
   },
   methods: {
@@ -107,6 +132,7 @@ export default {
         width: 380,
         type: "donut",
       },
+      plotOptions: {},
       dataLabels: {
         enabled: false,
       },
@@ -136,7 +162,23 @@ export default {
     chart: Apexcharts,
   },
   beforeMount() {
-    this.chartOptions.labels = this.labels
+    if (this.labels)
+      this.chartOptions.labels = this.labels
+    if(this.data) {
+      this.chartOptions.colors = this.data.colors
+      // this.chartOptions.legend.show = true
+      this.chartOptions.plotOptions.pie = {
+        donut: {
+          labels: {
+            show: true,
+            value: {
+              show: true
+            },
+            label: 'test'
+          }
+        }
+      }
+    }
   }
 };
 </script>
@@ -147,20 +189,57 @@ export default {
   left: 0px;
   top: 0px;
 
+  &.INSTRUCTOR {
+    max-width: 217px;
+    min-height: 197px;
+  }
+
   background: #ffffff;
   box-shadow: 0px 7.44731px 12.4122px rgba(180, 180, 180, 0.25);
   border-radius: 4.13739px;
   padding: 14px 30px;
+
+  .start {
+    font-family: Inter;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 11.0783px;
+    line-height: 13px;
+    /* identical to box height */
+
+
+    color: #000000;
+  }
+.chart{
+  height: 100px;
+  margin: 18px auto;
+}
+  .end {
+    font-family: Inter;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 11.0783px;
+    line-height: 13px;
+    /* identical to box height */
+
+
+    color: #000000;
+
+  }
+
   .d-flex {
     max-width: 100%;
+
     .icon {
       width: 30%;
     }
   }
+
   .top-blocks {
     border: 0.827479px solid #dedede;
     max-width: 70%;
     display: flex;
+
     .inner {
       width: 201.09px;
       min-height: 22.95px;
@@ -179,8 +258,10 @@ export default {
       color: #515151;
     }
   }
+
   .statistics {
     display: flex;
+
     .total {
       font-family: Inter;
       font-size: 41px;
@@ -189,6 +270,7 @@ export default {
       letter-spacing: 0em;
       text-align: left;
     }
+
     .label {
       font-family: Inter;
       font-size: 10px;
@@ -197,10 +279,13 @@ export default {
       letter-spacing: 0em;
       text-align: left;
     }
+
     .details {
       width: 50%;
+
       .label {
         display: flex;
+
         .text {
           font-family: Inter;
           font-size: 11px;
@@ -209,6 +294,7 @@ export default {
           letter-spacing: 0em;
           text-align: left;
         }
+
         .numb {
           font-family: Inter;
           font-size: 12px;
@@ -219,33 +305,48 @@ export default {
         }
       }
     }
+
     .progress {
       &bar {
         border-radius: 20px !important;
         height: 7px !important;
         width: 87%;
+
         .v-progress-linear__background {
           background: #dedede !important;
+
           &[style] {
             opacity: 1 !important;
           }
         }
+
         &.yellow {
           .v-progress-linear__determinate {
             background: #ffae34 !important;
           }
         }
+
         &.blue {
           .v-progress-linear__determinate {
             background: #193074 !important;
           }
         }
+
         &.red {
           .v-progress-linear__determinate {
             background: #ff0808 !important;
           }
         }
       }
+    }
+  }
+}
+
+/* Portrait phones and smaller */
+@media (max-width: 700px) {
+  .small-card {
+    .chart {
+      margin: 18px auto 45px;
     }
   }
 }

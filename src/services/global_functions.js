@@ -83,6 +83,8 @@ function empty(string) {
  */
 function logout() {
 
+    const institution = store.state.sidebar_navbar.college.name
+
     // clear the session
     vue.$session.destroy();
 
@@ -101,7 +103,7 @@ function logout() {
     store.commit("years/RESET_STATE");
 
     // redirect to login
-    router.push("/login");
+    router.push("/login?institution=" + institution);
 }
 
 function calculateNearestLiveSession(course) {
