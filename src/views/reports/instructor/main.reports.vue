@@ -3,9 +3,9 @@
 
     <div class="table-one">
       <div class="d-flex">
-        <h3 class="mr-4" :class="{active : currentView === 'quiz'}" @click="currentView = 'quiz'">Quiz Submissions</h3>
+        <h3 class="mr-4" :class="{active : currentView === 'quiz'}" @click="currentView = 'quiz'">Quiz Submissions({{quiz_submissions.length}})</h3>
         <h3 :class="{active : currentView === 'assignments'}" @click="currentView = 'assignments'">Assignment
-          Submissions</h3>
+          Submissions ({{assignment_submissions.length}})</h3>
       </div>
       <v-data-table
           :headers="submissionHeaders"
