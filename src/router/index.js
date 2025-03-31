@@ -4,6 +4,8 @@ import store from '../store'
 import axios from 'axios'
 import jwt from "jsonwebtoken"
 
+import live from '@/router/modules/live.router'
+
 Vue.use(VueRouter)
 
 const routes = [
@@ -157,6 +159,8 @@ const routes = [
                             },
                         ]
                     },
+
+
                     // for courses
                     {
                         path: '/courses',
@@ -171,7 +175,8 @@ const routes = [
                         name: 'Edit Course',
                         component: () =>
                             import('@//views/courses/edit')
-                    }, {
+                    },
+                    {
                         path: '/courses/new',
                         name: 'Create course',
                         component: () =>
@@ -187,18 +192,22 @@ const routes = [
                             }
                         ]
                     },
+
+
                     // for quiz
                     {
                         path: '/quiz',
                         name: 'Quiz',
                         component: () =>
                             import('@/views/quiz')
-                    }, {
+                    },
+                    {
                         path: '/quiz/new',
                         name: 'Set Quiz',
                         component: () =>
                             import('@/views/quiz/create')
-                    }, {
+                    },
+                    {
                         path: '/quiz/edit/:name',
                         name: 'Edit Quiz',
                         component: () =>
@@ -229,12 +238,15 @@ const routes = [
                         name: 'TakeQuiz',
                         component: () =>
                             import('@/views/quiz/attempt')
-                    }, {
+                    },
+                    {
                         path: '/quiz/:quiz_name/:user_name',
                         name: 'MarkQuiz',
                         component: () =>
                             import('@/views/quiz/mark')
                     },
+
+
                     // for reports
                     {
                         path: '/reports',
@@ -256,20 +268,25 @@ const routes = [
                         name: 'Library',
                         component: () =>
                             import('@/components/library.vue')
-                    }, {
+                    },
+                    {
                         path: '/live-class',
                         name: 'liveClass',
                         component: () =>
                             import('@/components/live-class.vue')
-                    }, {
+                    },
+                    {
                         path: '/profile/:user_name',
                         component: () =>
                             import('@/components/update_profile.vue')
-                    }, {
+                    },
+                    {
                         path: '/update/password',
                         component: () =>
                             import('@/components/update_password.vue')
                     },
+
+
                     // administration functionalities
                     {
                         path: '/administration',
@@ -295,19 +312,24 @@ const routes = [
                             allowAnonymous: false
                         }
                     },
+
                     // live related
-                    {
-                        path: '/live',
-                        name: 'Live',
-                        component: () =>
-                            import('@/views/live')
-                    },
-                    {
-                        path: '/live/room/:id',
-                        name: 'Live Room',
-                        component: () =>
-                            import('@/views/live/live-class')
-                    },
+                    // {
+                    //     path: '/live',
+                    //     name: 'Live',
+                    //     component: () =>
+                    //         import('@/views/live')
+                    // },
+                    // {
+                    //     path: '/live/room/:id',
+                    //     name: 'Live Room',
+                    //     component: () =>
+                    //         import('@/views/live/live-class')
+                    // },
+
+
+                    // live course
+                    ...live
                 ]
             },
             // administration functionalities
