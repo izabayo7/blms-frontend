@@ -1,6 +1,6 @@
 <template>
 <div class="my-faculties bg-one d-flex justify-center">
-  <div class="faculties-container  row">
+  <div v-if="coursesByFaculty.length > 0" class="faculties-container  row">
 <!--      <div class="tabular-users">-->
 <!--        <div class="table-wrapper mt-6" v-if="coursesByFaculty.length > 0">-->
 
@@ -18,6 +18,21 @@
          v-for="(course, i) in coursesByFaculty"
          :key="i">
       <student-course-card category="ongoing" :course="course"/>
+    </div>
+  </div>
+  <div v-else class="empty-faculties">
+    <div class="wrapper">
+      <div class="icon">
+        <svg width="43" height="43" viewBox="0 0 43 43" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M8.95829 23.6142V30.7808L21.5 37.625L34.0416 30.7808V23.6142L21.5 30.4583L8.95829 23.6142ZM21.5 5.375L1.79163 16.125L21.5 26.875L37.625 18.0779V30.4583H41.2083V16.125L21.5 5.375Z" fill="#989899"/>
+        </svg>
+      </div>
+      <div class="title">No courses created</div>
+      <div class="subtitle">You can invite instructors to this faculty <br> to start creating courses  by clicking on
+      </div>
+      <button  class="action">
+        Invite users
+      </button>
     </div>
   </div>
 </div>
@@ -56,6 +71,7 @@ name: "FacultyCourses",
 </script>
 
 <style lang="scss" scoped>
+@import '../../../assets/sass/imports/tableEmptyState';
 .my-faculties{
   height: 100%;
   width:100%;
