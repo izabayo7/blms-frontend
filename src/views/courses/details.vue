@@ -4,14 +4,16 @@
       <!-- button to show chapters list in small devices -->
       <v-btn
           @click="$store.commit('sidebar_navbar/TOGGLE_PAGE_ACTIONS_VISIBILITY')"
-          class="hidden-md-and-up mr-n8 white--text"
+          class="hidden-md-and-up mr-n8 white--text toogle-right-sidebar"
           :color="primary"
           right
           bottom
           rounded
           fixed
       >
-        <v-icon>mdi-arrow-left</v-icon>
+        <svg style="width:24px;height:24px" viewBox="0 0 24 24">
+          <path fill="white" d="M20,11V13H8L13.5,18.5L12.08,19.92L4.16,12L12.08,4.08L13.5,5.5L8,11H20Z" />
+        </svg>
       </v-btn>
       <!-- the chapters list for big devices only -->
       <v-col class="col-3 hidden-sm-and-down pt-0 fill-height">
@@ -164,3 +166,9 @@ export default {
   },
 };
 </script>
+<style>
+.toogle-right-sidebar{
+  bottom: 97px !important;
+  z-index: 9;
+}
+</style>
