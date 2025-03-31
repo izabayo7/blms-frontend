@@ -1,233 +1,300 @@
 <template>
   <!-- details container -->
-  <section v-if="course" class="my-container">
+  <section class="my-container">
     <!--      this is for student preview-->
-    <div class="student" v-if="userCategory === 'Student'">
-      <!-- <button class="back">back</button> -->
-      <main class="description">
-        <h1 class="pb-5">{{ course.name }}</h1>
-        <article class="desc pb-10">{{ course.description }}</article>
-
-        <div class="instructor-profile">
-          <article>
-            <img
-              v-if="course.instructor.profile"
-              :src="course.instructor.profile"
-              alt="profile picture"
-            />
-            <v-avatar v-else size="50" class="bg-color-one">
-              <span class="white--text">{{
-                `${course.instructor.surName} ${course.instructor.otherNames}`
-                  | computeText
-              }}</span>
-            </v-avatar>
-          </article>
-          <article class="owner">
-            <h3>
-              {{
-                `${course.instructor.surName} ${course.instructor.otherNames}`
-              }}
-            </h3>
-            <p class="faculty">PHD, web development</p>
-          </article>
+    <v-row v-if="userCategory === 'Student'">
+      <v-col v-if="!loaded" class="col-12">
+        <div class="ssc elevation-0 ssc-card student-card-skeleton ml mt-10">
+          <div class="ssc-wrapper flex justify-between ml">
+            <div class="w-60 ml">
+              <div class="ssc-head-line mb w-50"></div>
+              <div class="ssc-line w-60 mt-8"></div>
+              <div class="ssc-line w-60"></div>
+              <div class="ssc-line w-60"></div>
+              <div class="ssc-line w-60"></div>
+              <div class="ssc-line w-60"></div>
+              <div class="ssc-line w-60"></div>
+              <div class="ssc-line w-40 mb-8"></div>
+              <div class="ssc-wrapper flex">
+                <div class="w-20">
+                  <div class="ssc-circle mb"></div>
+                </div>
+                <div class="w-50 mt-2 mr">
+                  <div class="ssc-line w-70"></div>
+                  <div class="ssc-line w-70"></div>
+                </div>
+              </div>
+              <div class="ssc-wrapper flex mt py-0">
+                <div class="w-20">
+                  <div class="ssc-circle mb"></div>
+                </div>
+                <div class="w-50 mt-2 mr">
+                  <div class="ssc-line w-50 mt-2"></div>
+                </div>
+              </div>
+              <div class="ssc-wrapper flex pt-0">
+                <div class="w-20">
+                  <div class="ssc-circle mb"></div>
+                </div>
+                <div class="w-50 mt-2 mr">
+                  <div class="ssc-line w-50 mt-2"></div>
+                </div>
+              </div>
+            </div>
+            <div class="w-40">
+              <div class="ssc ssc-card elevation-0">
+                <div class="ssc-wrapper pa-0">
+                  <div class="ssc-square w-100" style="height: 20rem"></div>
+                </div>
+                <div class="ssc-wrapper flex ml pb-0">
+                  <div class="w-50 mt-2 mr">
+                    <div class="ssc-head-line w-70"></div>
+                  </div>
+                  <div class="w-20">
+                    <div class="ssc-circle mb"></div>
+                  </div>
+                </div>
+                <div class="ssc-wrapper flex ml py-0">
+                  <div class="w-90 mt-2 mr">
+                    <div class="ssc-head-line w-90"></div>
+                  </div>
+                </div>
+                <div class="ssc-wrapper flex ml">
+                  <div class="w-60 mt-2 mx-auto">
+                    <div class="ssc-head-line w-90" style="height: 38px"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
+      </v-col>
+      <v-col v-else class="col-12 student">
+        <!-- <button class="back">back</button> -->
+        <main class="description">
+          <h1 class="pb-5">{{ course.name }}</h1>
+          <article class="desc pb-10">{{ course.description }}</article>
 
-        <article class="infos pt-10">
-          <div>
-            <v-avatar size="40" class="bg-color-one">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="62"
-                height="62"
-                viewBox="0 0 62 62"
-              >
-                <circle
-                  id="Ellipse_218"
-                  data-name="Ellipse 218"
-                  cx="31"
-                  cy="31"
-                  r="31"
-                  fill="#fc6767"
-                />
-                <g id="noun_index_1232133" transform="translate(13 13)">
-                  <g
-                    id="Group_125"
-                    data-name="Group 125"
-                    transform="translate(5.5 4)"
-                  >
-                    <g id="Group_124" data-name="Group 124">
-                      <rect
-                        id="Rectangle_1142"
-                        data-name="Rectangle 1142"
-                        width="7.25"
-                        height="2.417"
-                        transform="translate(18.125 19.333)"
-                        fill="#fff"
-                      />
-                      <rect
-                        id="Rectangle_1143"
-                        data-name="Rectangle 1143"
-                        width="7.25"
-                        height="2.417"
-                        transform="translate(18.125 22.958)"
-                        fill="#fff"
-                      />
-                      <rect
-                        id="Rectangle_1144"
-                        data-name="Rectangle 1144"
-                        width="7.25"
-                        height="2.417"
-                        transform="translate(18.125 26.583)"
-                        fill="#fff"
-                      />
-                      <path
-                        id="Path_1949"
-                        data-name="Path 1949"
-                        d="M5.5,33H22.417V22.125h8.458V4H5.5ZM28.458,19.708H20V30.583H11.542V6.417H28.458ZM7.917,6.417H9.125V30.583H7.917Z"
-                        transform="translate(-5.5 -4)"
-                        fill="#fff"
-                      />
+          <div class="instructor-profile">
+            <article>
+              <img
+                v-if="course.instructor.profile"
+                :src="course.instructor.profile"
+                alt="profile picture"
+              />
+              <v-avatar v-else size="50" class="bg-color-one">
+                <span class="white--text">{{
+                  `${course.instructor.surName} ${course.instructor.otherNames}`
+                    | computeText
+                }}</span>
+              </v-avatar>
+            </article>
+            <article class="owner">
+              <h3>
+                {{
+                  `${course.instructor.surName} ${course.instructor.otherNames}`
+                }}
+              </h3>
+              <p class="faculty">PHD, web development</p>
+            </article>
+          </div>
+
+          <article class="infos pt-10">
+            <div>
+              <v-avatar size="40" class="bg-color-one">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="62"
+                  height="62"
+                  viewBox="0 0 62 62"
+                >
+                  <circle
+                    id="Ellipse_218"
+                    data-name="Ellipse 218"
+                    cx="31"
+                    cy="31"
+                    r="31"
+                    fill="#fc6767"
+                  />
+                  <g id="noun_index_1232133" transform="translate(13 13)">
+                    <g
+                      id="Group_125"
+                      data-name="Group 125"
+                      transform="translate(5.5 4)"
+                    >
+                      <g id="Group_124" data-name="Group 124">
+                        <rect
+                          id="Rectangle_1142"
+                          data-name="Rectangle 1142"
+                          width="7.25"
+                          height="2.417"
+                          transform="translate(18.125 19.333)"
+                          fill="#fff"
+                        />
+                        <rect
+                          id="Rectangle_1143"
+                          data-name="Rectangle 1143"
+                          width="7.25"
+                          height="2.417"
+                          transform="translate(18.125 22.958)"
+                          fill="#fff"
+                        />
+                        <rect
+                          id="Rectangle_1144"
+                          data-name="Rectangle 1144"
+                          width="7.25"
+                          height="2.417"
+                          transform="translate(18.125 26.583)"
+                          fill="#fff"
+                        />
+                        <path
+                          id="Path_1949"
+                          data-name="Path 1949"
+                          d="M5.5,33H22.417V22.125h8.458V4H5.5ZM28.458,19.708H20V30.583H11.542V6.417H28.458ZM7.917,6.417H9.125V30.583H7.917Z"
+                          transform="translate(-5.5 -4)"
+                          fill="#fff"
+                        />
+                      </g>
                     </g>
                   </g>
-                </g>
-              </svg>
-            </v-avatar>
-            <span class="content">{{
-              `${course.chapters.length} chapter ${
-                course.chapters.length > 1 ? "s" : ""
-              }`
-            }}</span>
-          </div>
-          <div class="pt-4">
-            <v-avatar size="40" class="bg-color-one">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="62"
-                height="62"
-                viewBox="0 0 62 62"
+                </svg>
+              </v-avatar>
+              <span class="content">{{
+                `${course.chapters.length} chapter ${
+                  course.chapters.length > 1 ? "s" : ""
+                }`
+              }}</span>
+            </div>
+            <div class="pt-4">
+              <v-avatar size="40" class="bg-color-one">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="62"
+                  height="62"
+                  viewBox="0 0 62 62"
+                >
+                  <circle
+                    id="Ellipse_219"
+                    data-name="Ellipse 219"
+                    cx="31"
+                    cy="31"
+                    r="31"
+                    fill="#3ce970"
+                  />
+                  <g id="noun_Assignment_1833812" transform="translate(15 15)">
+                    <path
+                      id="Path_1950"
+                      data-name="Path 1950"
+                      d="M8.453,45.716h.905v-1.81H9.81V43H8v.905h.453Z"
+                      transform="translate(-3.284 -22.443)"
+                      fill="#fff"
+                    />
+                    <rect
+                      id="Rectangle_1145"
+                      data-name="Rectangle 1145"
+                      width="1"
+                      height="1"
+                      transform="translate(6 27)"
+                      fill="#fff"
+                    />
+                    <path
+                      id="Path_1951"
+                      data-name="Path 1951"
+                      d="M2.25,24.13l.655.328V28.7a.453.453,0,0,0,.453.453H24.63a.453.453,0,0,0,.453-.453V18.234L29.1,10.815a.453.453,0,0,0-.2-.62L27.1,9.289a.452.452,0,0,0-.6.189l-1.412,2.607V2.453A.453.453,0,0,0,24.63,2H5.621a.453.453,0,0,0-.453.453V16.076a2.267,2.267,0,0,0-1.81,2.217,2.227,2.227,0,0,0,.2.923A1.813,1.813,0,0,0,2,21.009v2.716a.453.453,0,0,0,.25.4Zm6.741,0a.453.453,0,0,0,.25-.4V22.367h.453v1.81H8.9ZM27.082,10.295l1,.5L22.63,20.861l-1-.5ZM20.621,22.587,19.9,23.8l-.212-1.273L21.1,21.107l1.22.61-.353,2.117-1.3.432.728-1.214ZM24.177,2.905V13.757l-3.535,6.526-1.764,1.764a.452.452,0,0,0-.126.394l.453,2.716a.453.453,0,0,0,.59.355l2.716-.905a.453.453,0,0,0,.3-.355l.44-2.641.924-1.706v8.345H8.336V25.083h1.81a.453.453,0,0,0,.453-.453V21.914a.453.453,0,0,0-.453-.453H9.242v-.453a1.813,1.813,0,0,0-1.559-1.793L7.69,19.2h2.457a.453.453,0,0,0,.453-.453V16.031a.453.453,0,0,0-.453-.453H7.431a.453.453,0,0,0-.453.453v.464a2.243,2.243,0,0,0-.905-.418V2.905ZM7.884,18.294v-1.81h1.81v1.81ZM2.905,21.009A.906.906,0,0,1,3.81,20.1h.624a.453.453,0,0,0,.3-.793,1.338,1.338,0,0,1-.47-1.017,1.358,1.358,0,0,1,2.716,0,1.338,1.338,0,0,1-.47,1.017.453.453,0,0,0,.3.793h.624a.906.906,0,0,1,.905.905v2.436l-.655.328a.453.453,0,0,0-.25.4v4.073H3.81V24.177a.453.453,0,0,0-.25-.4l-.655-.327Z"
+                      fill="#fff"
+                    />
+                    <rect
+                      id="Rectangle_1146"
+                      data-name="Rectangle 1146"
+                      width="11"
+                      height="2"
+                      transform="translate(12 4)"
+                      fill="#fff"
+                    />
+                    <rect
+                      id="Rectangle_1147"
+                      data-name="Rectangle 1147"
+                      width="11"
+                      height="1"
+                      transform="translate(12 11)"
+                      fill="#fff"
+                    />
+                    <rect
+                      id="Rectangle_1148"
+                      data-name="Rectangle 1148"
+                      width="9"
+                      height="1"
+                      transform="translate(12 17)"
+                      fill="#fff"
+                    />
+                    <rect
+                      id="Rectangle_1149"
+                      data-name="Rectangle 1149"
+                      width="6"
+                      height="1"
+                      transform="translate(12 23)"
+                      fill="#fff"
+                    />
+                    <path
+                      id="Path_1952"
+                      data-name="Path 1952"
+                      d="M13.453,9.621h2.716a.453.453,0,0,0,.453-.453V6.453A.453.453,0,0,0,16.168,6H13.453A.453.453,0,0,0,13,6.453V9.168A.453.453,0,0,0,13.453,9.621Zm.453-2.716h1.81v1.81h-1.81Z"
+                      transform="translate(-6.021 -2.19)"
+                      fill="#fff"
+                    />
+                    <path
+                      id="Path_1953"
+                      data-name="Path 1953"
+                      d="M13.453,22.621h2.716a.453.453,0,0,0,.453-.453V19.453A.453.453,0,0,0,16.168,19H13.453a.453.453,0,0,0-.453.453v2.716A.453.453,0,0,0,13.453,22.621Zm.453-2.716h1.81v1.81h-1.81Z"
+                      transform="translate(-6.021 -9.306)"
+                      fill="#fff"
+                    />
+                    <rect
+                      id="Rectangle_1150"
+                      data-name="Rectangle 1150"
+                      height="1"
+                      transform="translate(28 2)"
+                      fill="#fff"
+                    />
+                    <rect
+                      id="Rectangle_1151"
+                      data-name="Rectangle 1151"
+                      height="1"
+                      transform="translate(28 3)"
+                      fill="#fff"
+                    />
+                    <rect
+                      id="Rectangle_1152"
+                      data-name="Rectangle 1152"
+                      width="1"
+                      transform="translate(28 3)"
+                      fill="#fff"
+                    />
+                    <rect
+                      id="Rectangle_1153"
+                      data-name="Rectangle 1153"
+                      width="2"
+                      transform="translate(26 3)"
+                      fill="#fff"
+                    />
+                  </g>
+                </svg>
+              </v-avatar>
+              <span class="content"
+                >{{ course.assignmentsLength }} assignments</span
               >
-                <circle
-                  id="Ellipse_219"
-                  data-name="Ellipse 219"
-                  cx="31"
-                  cy="31"
-                  r="31"
-                  fill="#3ce970"
-                />
-                <g id="noun_Assignment_1833812" transform="translate(15 15)">
-                  <path
-                    id="Path_1950"
-                    data-name="Path 1950"
-                    d="M8.453,45.716h.905v-1.81H9.81V43H8v.905h.453Z"
-                    transform="translate(-3.284 -22.443)"
-                    fill="#fff"
-                  />
-                  <rect
-                    id="Rectangle_1145"
-                    data-name="Rectangle 1145"
-                    width="1"
-                    height="1"
-                    transform="translate(6 27)"
-                    fill="#fff"
-                  />
-                  <path
-                    id="Path_1951"
-                    data-name="Path 1951"
-                    d="M2.25,24.13l.655.328V28.7a.453.453,0,0,0,.453.453H24.63a.453.453,0,0,0,.453-.453V18.234L29.1,10.815a.453.453,0,0,0-.2-.62L27.1,9.289a.452.452,0,0,0-.6.189l-1.412,2.607V2.453A.453.453,0,0,0,24.63,2H5.621a.453.453,0,0,0-.453.453V16.076a2.267,2.267,0,0,0-1.81,2.217,2.227,2.227,0,0,0,.2.923A1.813,1.813,0,0,0,2,21.009v2.716a.453.453,0,0,0,.25.4Zm6.741,0a.453.453,0,0,0,.25-.4V22.367h.453v1.81H8.9ZM27.082,10.295l1,.5L22.63,20.861l-1-.5ZM20.621,22.587,19.9,23.8l-.212-1.273L21.1,21.107l1.22.61-.353,2.117-1.3.432.728-1.214ZM24.177,2.905V13.757l-3.535,6.526-1.764,1.764a.452.452,0,0,0-.126.394l.453,2.716a.453.453,0,0,0,.59.355l2.716-.905a.453.453,0,0,0,.3-.355l.44-2.641.924-1.706v8.345H8.336V25.083h1.81a.453.453,0,0,0,.453-.453V21.914a.453.453,0,0,0-.453-.453H9.242v-.453a1.813,1.813,0,0,0-1.559-1.793L7.69,19.2h2.457a.453.453,0,0,0,.453-.453V16.031a.453.453,0,0,0-.453-.453H7.431a.453.453,0,0,0-.453.453v.464a2.243,2.243,0,0,0-.905-.418V2.905ZM7.884,18.294v-1.81h1.81v1.81ZM2.905,21.009A.906.906,0,0,1,3.81,20.1h.624a.453.453,0,0,0,.3-.793,1.338,1.338,0,0,1-.47-1.017,1.358,1.358,0,0,1,2.716,0,1.338,1.338,0,0,1-.47,1.017.453.453,0,0,0,.3.793h.624a.906.906,0,0,1,.905.905v2.436l-.655.328a.453.453,0,0,0-.25.4v4.073H3.81V24.177a.453.453,0,0,0-.25-.4l-.655-.327Z"
-                    fill="#fff"
-                  />
-                  <rect
-                    id="Rectangle_1146"
-                    data-name="Rectangle 1146"
-                    width="11"
-                    height="2"
-                    transform="translate(12 4)"
-                    fill="#fff"
-                  />
-                  <rect
-                    id="Rectangle_1147"
-                    data-name="Rectangle 1147"
-                    width="11"
-                    height="1"
-                    transform="translate(12 11)"
-                    fill="#fff"
-                  />
-                  <rect
-                    id="Rectangle_1148"
-                    data-name="Rectangle 1148"
-                    width="9"
-                    height="1"
-                    transform="translate(12 17)"
-                    fill="#fff"
-                  />
-                  <rect
-                    id="Rectangle_1149"
-                    data-name="Rectangle 1149"
-                    width="6"
-                    height="1"
-                    transform="translate(12 23)"
-                    fill="#fff"
-                  />
-                  <path
-                    id="Path_1952"
-                    data-name="Path 1952"
-                    d="M13.453,9.621h2.716a.453.453,0,0,0,.453-.453V6.453A.453.453,0,0,0,16.168,6H13.453A.453.453,0,0,0,13,6.453V9.168A.453.453,0,0,0,13.453,9.621Zm.453-2.716h1.81v1.81h-1.81Z"
-                    transform="translate(-6.021 -2.19)"
-                    fill="#fff"
-                  />
-                  <path
-                    id="Path_1953"
-                    data-name="Path 1953"
-                    d="M13.453,22.621h2.716a.453.453,0,0,0,.453-.453V19.453A.453.453,0,0,0,16.168,19H13.453a.453.453,0,0,0-.453.453v2.716A.453.453,0,0,0,13.453,22.621Zm.453-2.716h1.81v1.81h-1.81Z"
-                    transform="translate(-6.021 -9.306)"
-                    fill="#fff"
-                  />
-                  <rect
-                    id="Rectangle_1150"
-                    data-name="Rectangle 1150"
-                    height="1"
-                    transform="translate(28 2)"
-                    fill="#fff"
-                  />
-                  <rect
-                    id="Rectangle_1151"
-                    data-name="Rectangle 1151"
-                    height="1"
-                    transform="translate(28 3)"
-                    fill="#fff"
-                  />
-                  <rect
-                    id="Rectangle_1152"
-                    data-name="Rectangle 1152"
-                    width="1"
-                    transform="translate(28 3)"
-                    fill="#fff"
-                  />
-                  <rect
-                    id="Rectangle_1153"
-                    data-name="Rectangle 1153"
-                    width="2"
-                    transform="translate(26 3)"
-                    fill="#fff"
-                  />
-                </g>
-              </svg>
-            </v-avatar>
-            <span class="content"
-              >{{ course.assignmentsLength }} assignments</span
-            >
-          </div>
-        </article>
-      </main>
-      <main class="preview">
-        <preview
-          :image="course.coverPicture"
-          :name="course.name"
-          :dateUploaded="course.createdAt | formatDate"
-          :progress="course.progress"
-        />
-      </main>
-    </div>
+            </div>
+          </article>
+        </main>
+        <main class="preview">
+          <preview
+            :image="course.coverPicture"
+            :name="course.name"
+            :dateUploaded="course.createdAt | formatDate"
+            :progress="course.progress"
+          /></main
+      ></v-col>
+    </v-row>
     <!--      end of student preview-->
 
     <!--      teacher preview-->
@@ -658,6 +725,9 @@ export default {
     },
     // get the current course
     ...mapGetters("courses", ["course"]),
+    loaded(){
+      return this.course !== undefined
+    }
   },
   watch: {
     $route() {
@@ -847,6 +917,30 @@ button.back {
     height: 12px;
     background-color: #3d3d3d;
     transform: rotate(226deg);
+  }
+  .instructor-card-skeleton {
+    &.published {
+      max-height: 222px;
+    }
+    &.unpublished {
+      max-height: 187px;
+    }
+    max-width: 400px;
+    margin-top: 40px;
+    box-shadow: 0px 17px 34px rgba(116, 113, 113, 0.16);
+    .ssc-circle {
+      height: 110px;
+      width: 110px;
+    }
+    .ssc-square {
+      height: 20px;
+    }
+  }
+  .student-card-skeleton {
+    margin-top: 40px;
+    .button {
+      height: 82px !important;
+    }
   }
 }
 </style>

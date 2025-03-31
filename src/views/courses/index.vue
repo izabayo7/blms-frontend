@@ -282,7 +282,6 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-@import "skeleton-screen-css";
 #courses {
   background-color: #f8f8f8;
   min-height: calc(100vh - 76px);
