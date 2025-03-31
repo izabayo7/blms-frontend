@@ -297,14 +297,14 @@
           <v-col class="col-12 col-lg-10 pt-0 pl-0 recent-joined">
             <router-link class="more text-right" to="/users">More ...</router-link>
             <div class="mt-5 d-flex">
+              <button class="lower_buttons" @click="showFacultyModal = true">
+                New Faculty
+              </button>
               <button
                   class="lower_buttons mr-2"
                   @click="showInviteUsers = true"
               >
                 Invite users
-              </button>
-              <button class="lower_buttons" @click="showFacultyModal = true">
-                New Faculty
               </button>
             </div>
           </v-col>
