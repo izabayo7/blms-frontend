@@ -224,6 +224,7 @@ import UnrealTimeDiscussionBoard from "../../components/Live/UnrealTimeDiscussio
 import {downloadAttachment} from "@/services/global_functions"
 import colors from "@/assets/sass/imports/_colors.scss";
 import {emit} from "../../services/event_bus";
+import Apis from "../../services/apis";
 
 export default {
   name: "chapter-details",
@@ -316,7 +317,7 @@ export default {
         });
       });
     },
-    immediateFunction() {
+    async immediateFunction() {
       const {index, id} = this.$route.params;
       this.activeIndex = index;
 
@@ -364,6 +365,7 @@ export default {
       this.findRecordedClass();
       // go to contents
       // document.getElementById("content-tab").click();
+      await Apis.create('user_logs',{course_id: this.course._id})
     },
   },
   beforeRouteUpdate(to, from, next) {
