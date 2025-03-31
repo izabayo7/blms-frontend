@@ -27,7 +27,7 @@
                   />
                   <transition name="member">
                     <div
-                        class="found-members"
+                        class="found-members customScroll"
                         v-if="foundUsers.length > 0 || userLoading"
                     >
                       <svg
@@ -236,8 +236,9 @@ export default {
       return this.group.members.some((member) => member.email === email);
     },
     getUsers() {
-      if (this.currentMember === "")
-        return
+      if (this.currentMember === "") {
+        return this.foundUsers = []
+      }
       this.userLoading = true;
       this.NotFoundText = "";
       const EmptyStringRegex = /^\s+$/g; //regext to detect empty string

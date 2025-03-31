@@ -30,6 +30,8 @@
   padding: 1rem 0;
   display: flex;
   justify-content: center;
+  max-height: 30vh;
+  overflow-y: auto;
   flex-wrap: wrap;
   transition: .4s ease-in-out;
   .disabled{
