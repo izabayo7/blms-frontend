@@ -8,6 +8,9 @@
       <li class="subpage-navbar--link" :class="{active:activeLink === 'students'}">
         <router-link :to="`/faculties/${facultyId}/students`"> Users </router-link>
         </li>
+      <li class="subpage-navbar--link" :class="{active:activeLink === 'courses'}">
+        <router-link :to="`/faculties/${facultyId}/courses`"> Courses </router-link>
+        </li>
       <li class="subpage-navbar--link" :class="{active:activeLink === 'groups'}">
         <router-link :to="`/faculties/${facultyId}/groups`"> Student Groups </router-link>
         </li>
