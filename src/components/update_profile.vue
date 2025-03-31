@@ -145,14 +145,14 @@ import colors from "@/assets/sass/imports/_colors.scss";
 import jwt from "jsonwebtoken";
 import Apis from "@/services/apis";
 import { mapGetters, mapActions } from "vuex";
-import {cropper} from "../services/mixins"
+import {cropperMixin} from "../services/mixins"
 
 export default {
   name: "UserProfile",
   components: {
     cropper: () => import("@/components/reusable/ui/ImageCropper"),
   },
-  mixins:[cropper],
+  mixins:[cropperMixin],
   data: () => ({
     tab: null,
     error: "",
