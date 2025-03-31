@@ -18,7 +18,7 @@
                  :class="`--${$vuetify.breakpoint.name} ${sidebarOpen ? '' : 'viewer'}`"
                  @mouseenter="toggleMenu(true)"
                  @mouseleave="toggleMenu(false)">
-              <div class="no-video" v-show="noVideo || isPresenting">
+              <div class="no-video" v-show="noVideo || (isPresenting && participationInfo.isOfferingCourse)">
                 <div class="no-video--wrapper" :class="{presenting:isPresenting}">
                   <div class="instructor-info">
                     <img
@@ -43,7 +43,7 @@
               <video v-show="!noVideo && !isPresenting" id="video_feed">
                 <!--                <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" >-->
               </video>
-              <video v-if="!participationInfo.isOfferingCourse" v-show="!noVideo && !isPresenting" id="viewer_screen_feed">
+              <video v-if="!participationInfo.isOfferingCourse" v-show="!noVideo && isPresenting" id="viewer_screen_feed">
                 <!--                <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" >-->
               </video>
               <transition name="fade">
@@ -329,6 +329,15 @@ export default {
 
       this.sendMessage(message);
       this.isPresenting = !this.isPresenting;
+      if(!this.isPresenting){
+        this.sendMessage({
+          id: "notifyUser",
+          receiver: "ALL",
+          videoStatus: this.videoEnabled,
+          audioStatus: this.audioEnabled,
+          screenStatus: this.isPresenting
+        })
+      }
     },
     register() {
       console.log("harahiye")
