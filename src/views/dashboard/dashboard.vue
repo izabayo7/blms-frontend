@@ -58,11 +58,6 @@ export default {
   },
   mixins: [userSimpleCard, userPayment],
   created() {
-    this.$gtag.event('dashboard-visit', {
-      'event_category': 'logs',
-      'event_label': 'User visited the dashboard',
-      'value': 1
-    })
     this.redirect()
   },
   computed: {

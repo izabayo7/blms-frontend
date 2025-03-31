@@ -1,4 +1,5 @@
 import Apis from "@/services/apis";
+import { event } from 'vue-gtag'
 
 const getDefaultState = () => ({
     sidebar_expanded: true,
@@ -37,6 +38,11 @@ export default {
         SET_COLLEGE_INFO(state, college) {
             state.college = college
             document.querySelector('title').innerHTML = `${college.name}`
+            event('dashboard-visit', {
+                'event_category': 'logs',
+                'event_label': 'User visited the dashboard',
+                'value': 1
+            })
         },
         SET_COLLEGE_PLAN(state, plan) {
             state.plan = plan
