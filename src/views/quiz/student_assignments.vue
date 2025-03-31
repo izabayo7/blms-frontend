@@ -211,8 +211,9 @@ export default {
       let date = new Date(item.starting_time)
       date.setHours(date.getHours() - 2)
 
-      if (new Date() < endDate)
+      if (new Date() < date){
         return true
+      }
 
       let endDate = new Date(date)
       endDate.setTime(endDate.getTime() + (item.duration * 1000))
