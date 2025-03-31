@@ -562,12 +562,15 @@ export default {
     }
 
   },
-  // watch:{
-  //   me(){
-  //     this.videoEnabled = true
-  //     this.audioEnabled = true
-  //   }
-  // }
+  beforeDestroy() {
+    this.ws.close();
+  },
+  watch:{
+    videoEnabled(){
+      this.noVideo = !this.videoEnabled
+      console.log(this.noVideo, this.videoEnabled)
+    }
+  }
 }
 </script>
 
