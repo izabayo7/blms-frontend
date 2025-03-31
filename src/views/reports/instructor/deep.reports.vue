@@ -9,6 +9,7 @@
         :items-per-page="5"
         sort-by="dateOfSubmission"
         class="data-table"
+        @click:row="handleRowClick"
       >
         <template v-slot:item.student_name="{ item }">
           <span class="d-block">{{
@@ -54,15 +55,6 @@
               fill="#fc6767"
             />
           </svg>
-        </template>
-        <template v-slot:item.actions="{ item }">
-          <v-btn
-            color="warning"
-            :to="`/quiz/${quiz_submission.name}/${item.user.user_name}`"
-            icon
-          >
-            <v-icon> mdi-eye </v-icon>
-          </v-btn>
         </template>
         <template v-slot:no-data>
           <span class="text-h6">Oops You have no submissions.</span>
@@ -113,7 +105,6 @@ export default {
           align: "center",
           sortable: false,
         },
-        { text: "Actions", value: "actions", align: "center", sortable: false },
       ];
     },
     navigation_links() {
@@ -139,8 +130,8 @@ export default {
   },
   methods: {
     ...mapActions("quiz_submission", ["getQuizSubmissionsInQuiz"]),
-    guess() {
-      return Math.random() > Math.random();
+    handleRowClick(value) {
+      this.$router.push(`/quiz/${this.quiz_submission.name}/${value.user.user_name}`)
     },
   },
   created() {
