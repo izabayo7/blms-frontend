@@ -113,12 +113,11 @@ export default {
     storeCurrentDisplayedUser() {
       //listen when the user contacts/incoming messages are loaded
       on("incoming_message_initially_loaded", () => {
-        console.log(this.incomingMessages)
         if (!this.incomingMessages.length) {
           this.$router.push("/messages/no-conversation");
         }
         this.incomingMessages.map((d) => {
-          if (this.$route.params.username === d.id) {
+          if (this.$route.params.username === d.id.toString()) {
             this.SET_DISPLAYED_USER(d);
           }
         });

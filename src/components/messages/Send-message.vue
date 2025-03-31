@@ -115,7 +115,7 @@ export default {
       let input = this.$refs["input"];
       let length = input.textContent.length;
       this.msg = input.textContent;
-
+console.log(this.currentDisplayedUser.id)
       //emit that we are typing
       this.socket.emit("message/typing", {
         conversation_id: this.currentDisplayedUser.id,

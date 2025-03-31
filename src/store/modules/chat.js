@@ -52,11 +52,9 @@ export default {
         ADD_INCOMING_MESSAGE(state, newMessage) {
 
             const id = newMessage.group ? newMessage.group : newMessage.sender.user_name
-            console.log(newMessage)
             //get last message from stored conversation
             store.dispatch('chat/lastMessageInCertainChatMessages', id).then(({ lastMessage, groupIndex, userIndex }) => {
 
-                console.log(lastMessage, userIndex, groupIndex)
                 //if conversation was found and message not duplicated
                 if (userIndex === undefined || lastMessage._id === newMessage._id)
                     return
@@ -207,10 +205,8 @@ export default {
 
             // Get contacts new style
             getters.socket.on('res/message/contacts', ({ contacts }) => {
-                console.log(contacts)
                 state.incomingMessages = contacts
                 emit('incoming_message_initially_loaded')
-                console.log(state.incomingMessages)
             });
         },
         start_conversation({ state, getters }, user_name) {
@@ -231,7 +227,6 @@ export default {
             // get messages
             //first check if we have ongoing requested data with the same id as this
             if (state.request.id !== id) {
-                console.log('aha')
                 getters.socket.emit('message/conversation', { conversation_id: id });
                 state.request.ongoing = true
                 state.request.id = id
