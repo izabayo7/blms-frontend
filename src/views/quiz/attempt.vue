@@ -72,8 +72,16 @@
                   class="ma-1"
                 >
                   <v-img
-                    :src="`${choice.src}?format=png&width=200&height=200&token=${$session.get('jwt')}`"
-                    :lazy-src="`${choice.src}?format=png&width=200&height=200&token=${$session.get('jwt')}`"
+                    :src="`${
+                      choice.src
+                    }?format=png&width=200&height=200&token=${$session.get(
+                      'jwt'
+                    )}`"
+                    :lazy-src="`${
+                      choice.src
+                    }?format=png&width=200&height=200&token=${$session.get(
+                      'jwt'
+                    )}`"
                     :gradient="
                       checkChoiceStatus(attempt.answers[i].choosed_options, {
                         src: choice.src,
@@ -201,12 +209,9 @@ export default {
       "findQuizSubmissionByStudentAndQuizNames",
     ]),
     start_couter() {
-      console.log("ahoooooooooo");
       while (this.remaining_time > 0) {
-        setTimeout(() => {
-          console.log(this.remaining_time);
-          this.remaining_time -= 60;
-        }, 1000);
+        console.log(this.remaining_time);
+        this.remaining_time -= 60;
       }
     },
     checkChoiceStatus(choosed_options, choice) {
@@ -331,6 +336,7 @@ export default {
           this.attempt.answers.push({ choosed_options: [] });
         }
       }
+      this.start_couter();
     });
   },
 };
