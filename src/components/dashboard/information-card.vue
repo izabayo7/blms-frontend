@@ -15,7 +15,7 @@
             <chart
                 type="donut"
                 class="my-chart ml-n6"
-                width="150"
+                :width="size === 'small' ? 90 : 150"
                 :options="chartOptions"
                 :series="series"
             ></chart>
@@ -29,7 +29,7 @@
             }}
           </div>
         </div>
-        <div class="details mt-4">
+        <div :class="`details ${size === 'small' ? 'ml-auto' : 'mt-4'}`">
           <div class="element">
             <div class="label">
               <div class="text">{{ headers[0] }}:</div>
@@ -191,9 +191,7 @@ export default {
 <style lang="scss">
 .small-card {
   max-width: 350px;
-  &.small{
-    max-width: 286.95px
-  }
+
   height: 229px;
   left: 0px;
   top: 0px;
@@ -351,17 +349,37 @@ export default {
       }
     }
   }
+
+  &.small {
+    max-width: 306px;
+    height: 197px;
+    padding: 14px 21px;
+
+    .statistics {
+      .label {
+        font-size: 8px;
+      }
+    }
+
+    .top-blocks {
+      .inner {
+        font-size: 8px;
+      }
+    }
+  }
 }
 
 /* Portrait phones and smaller */
 @media (max-width: 700px) {
   .small-card {
-    &.INSTRUCTOR{
+    &.INSTRUCTOR {
       height: 230px;
     }
+
     .chart {
       margin: 18px auto 45px;
     }
+
     max-width: 90% !important;
     margin: auto;
     height: fit-content;

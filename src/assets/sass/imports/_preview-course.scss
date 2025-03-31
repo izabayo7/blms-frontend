@@ -135,7 +135,7 @@ button.back {
     }
 
     .content {
-      max-width: 698px;
+      //max-width: 698px;
       width: 100%;
       min-height: 428px;
       left: 455px;
@@ -167,6 +167,7 @@ button.back {
         line-height: 32px;
         margin-bottom: 34.1px;
         color: #717171;
+        overflow-wrap: anywhere;
       }
 
       .details .col {
