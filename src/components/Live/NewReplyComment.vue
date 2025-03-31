@@ -4,7 +4,16 @@
     <div class="my-reply-comment-container">
       <form @submit.prevent="reply" action="" class="reply-comment">
         <div class="profile-pic">
-          <v-avatar size="30">{{ user_full_names | computeText }}</v-avatar>
+          <v-avatar size="30">
+            <img
+                v-if="user.profile"
+                :src="`${user.profile}?width=30`"
+                alt="profile picture"
+            />
+            <div v-else class="text">
+              {{ user_full_names | computeText }}
+            </div>
+          </v-avatar>
         </div>
         <div class="ml-4 input-holder">
           <div class="input"><input v-model="reply_comment" type="text" placeholder="write-something"></div>
@@ -50,7 +59,7 @@ export default {
   computed: {
     ...mapGetters("chat", ["socket"]),
     ...mapGetters("live_session", ["participants"]),
-    ...mapGetters('user', ['user_full_names', 'username']),
+    ...mapGetters('user', ['user_full_names', 'username', 'user']),
     ...mapGetters("courses", ['selectedChapter']),
     reply_comment_object() {
       return {
