@@ -1,5 +1,6 @@
 <template>
   <v-app v-if="quiz_submission" id="reports-page" class="instructor_reports">
+    <back class="mt-0 mb-6 ml-n6" to="/reports" />
     <div class="table-one">
       <navigation title="Submissions" class="mb-6" :links="navigation_links" />
       <v-data-table
@@ -68,6 +69,7 @@ import colors from "@/assets/sass/imports/_colors.scss";
 export default {
   components:{
     navigation: () => import("@/components/shared/simple_navigation"),
+    back: () => import("@/components/shared/back-button"),
   },
   data: () => ({
     primary: colors.primary,
