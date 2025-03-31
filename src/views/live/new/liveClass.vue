@@ -1455,7 +1455,7 @@ export default {
 
   .live-class-details {
     background-color: white;
-    margin-left: -1.2rem;
+    //margin-left: -1.2rem;
     padding-left: 19.2px;
     padding-right: 19.2px;
     margin-top: -2.6rem;
