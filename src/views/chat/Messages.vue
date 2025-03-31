@@ -103,7 +103,9 @@ export default {
       const testReg = /\/messages\/group\/[a-z]+/g; //test for '/messages/group/...route
       const groupRouteFound = testReg.test(this.$route.path);
 
-      if (this.$route.params.username) return;
+      const user_found = this.incomingMessages.filter(x=>x.id ===  this.$route.params.username)
+
+      if (user_found.length) return;
 
       if (!groupRouteFound) {
         this.SET_DISPLAYED_USER(this.incomingMessages[0]);
@@ -202,7 +204,7 @@ export default {
 
         .incoming-contacts-move {
           transition: transform 1s;
-          padding: 20rem;
+          //padding: 20rem;
         }
       }
     }
