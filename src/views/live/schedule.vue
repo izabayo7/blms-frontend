@@ -296,8 +296,7 @@ export default {
         // notify students that session is scheduled
         this.socket.emit('live-session', {
           user_group,
-          content: `scheduled a live session on ${this.data} at ${this.time}`,
-          route: '/'
+          content: `scheduled a live session on ${this.date} at ${this.time}`
         })
 
         this.showModal = false;
