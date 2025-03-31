@@ -13,7 +13,9 @@
           <router-link class="normal--text d-block" to="/">{{
             item.target.course.name
           }}</router-link>
-          <router-link class="normal--text small" to="/">{{item.target.course.user_group.name}}</router-link>
+          <router-link class="normal--text small" to="/">{{
+            item.target.course.user_group.name
+          }}</router-link>
         </template>
         <template v-slot:item.chapter_name="{ item }">
           <router-link class="normal--text" to="/">{{
@@ -134,16 +136,24 @@ export default {
         {
           text: "Chapter",
           value: "chapter_name",
+          sortable: false,
         },
         {
           text: "Submissions",
           value: "total_submissions",
+          sortable: false,
         },
         {
           text: "Maximum Marks",
           value: "total_marks",
+          sortable: false,
         },
-        { text: "Marking status", value: "marking_status", align: "center" },
+        {
+          text: "Marking status",
+          value: "marking_status",
+          sortable: false,
+          align: "center",
+        },
         { text: "", value: "actions", align: "center", sortable: false },
       ];
     },
@@ -199,10 +209,11 @@ export default {
 .instructor_reports {
   // font-family: Poppins;
   .normal--text {
-    font-size: 18px;
+    font-size: 14px;
     font-weight: 500;
     &.small {
       font-size: 12px;
+      font-weight: 400;
     }
   }
   // .actions {
@@ -213,7 +224,7 @@ export default {
   .data-table {
     &.courses {
       .normal--text {
-        font-size: 14px;
+        font-size: 12px;
         font-weight: 500;
       }
       .semi_bold_text {
