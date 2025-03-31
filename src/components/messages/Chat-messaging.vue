@@ -1,7 +1,7 @@
 <template>
   <main class="my-chat-messaging customScroll" id="my-chat-messaging">
     <!--    messages container-->
-    <div class="msg-container" id="msg-container" ref="msg-container">
+    <div class="msg-container" @scroll="loadMoreMessages" id="msg-container" ref="msg-container">
       <!--      if there are no messages-->
       <div class="no-msgs" v-if="!data">
         you have not yet started conversation with
@@ -182,7 +182,7 @@
 </template>
 
 <script>
-import {mapState, mapGetters, mapMutations} from "vuex";
+import {mapState, mapGetters, mapMutations, mapActions} from "vuex";
 // import {on} from "@/services/event_bus";
 import {chatMixins} from "@/services/mixins";
 
@@ -193,7 +193,7 @@ export default {
     Editor: () => import("@/components/reusable/Editor"),
   },
   props: {
-    data: {type: [Array, Boolean], required: true},
+    // data: {type: [Array, Boolean], required: true},
   },
   data() {
     return {
@@ -204,6 +204,9 @@ export default {
   computed: {
     ...mapState("chat", ["currentDisplayedUser", "incomingMessages"]),
     ...mapGetters("chat", ["socket"]),
+    data() {
+      return this.$store.getters["chat/currentMessages"]
+    },
     typing_members() {
       let names = [];
       for (const i in this.typers) {
@@ -222,6 +225,20 @@ export default {
   // },
   methods: {
     ...mapMutations("chat", ["CHANGE_MESSAGE_READ_STATUS"]),
+    ...mapActions("chat", ["loadMessages"]),
+    findTotalMessages(){
+      let i = 0
+      for (const k in this.data) {
+        i += this.data[k].messages.length
+      }
+      return i
+    },
+    loadMoreMessages() {
+      const el = document.querySelector('.msg-container');
+      if (el.scrollTop === 0 && this.data[0].from !== "SYSTEM") {
+        this.loadMessages({id: this.$route.params.username, lastMessage: this.data[0].messages[0]._id})
+      }
+    },
     // is message going or coming
     msgGoing(owner) {
       return owner && owner.toLowerCase() === "me";
@@ -304,7 +321,8 @@ export default {
     the reason we call this function the end is that we need to wait for the all message to be rendered
     so that we can scroll them
      */
-    this.scrollChatToBottom();
+    if (this.findTotalMessages() < 11)
+      this.scrollChatToBottom();
   },
 };
 </script>

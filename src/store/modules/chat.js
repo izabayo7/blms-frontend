@@ -71,15 +71,21 @@ export default {
                 return
 
             let exists = false;
+            let i = 0
 
             //check if the messages we are about to add doesn't exist
             state.loadedMessages.map(loadedMsg => {
-                if (loadedMsg.username === data.username)
+                if (loadedMsg.username === data.username) {
                     exists = true
+                } else {
+                    i++
+                }
             })
-
             if (!exists)
-                state.loadedMessages.push(data)
+                state.loadedMessages.unshift(data)
+            else if (!state.loadedMessages[i].conversation.includes(data.conversation[0])) {
+                state.loadedMessages[i].conversation.unshift(...data.conversation)
+            }
         },
 
         //add incoming message
@@ -307,19 +313,19 @@ export default {
             else getters.socket.emit('message/start_conversation', {conversation_id: user_name});
         },
         //load user messages
-        loadMessages({getters, state, commit}, id) {
+        loadMessages({getters, state, commit}, {id, lastMessage}) {
             // const group = user.is_group
 
             // get messages
             //first check if we have ongoing requested data with the same id as this
             if (state.request.id !== id) {
-                getters.socket.emit('message/conversation', {conversation_id: id});
+                getters.socket.emit('message/conversation', {conversation_id: id, lastMessage});
                 state.request.ongoing = true
                 state.request.id = id
             }
 
             // Get messages
-            getters.socket.on('res/message/conversation', ({conversation}) => {
+            getters.socket.on('res/message/conversation', ({conversation, lastMessage}) => {
                 //check if returned conversation object has data
                 if (conversation.length > 0) {
                     commit('STORE_LOADED_MESSAGES', {username: id, conversation: conversation})
@@ -330,7 +336,9 @@ export default {
 
                 state.request.id = null
                 state.request.ongoing = false
-                emit('conversation_loaded')
+                console.log(lastMessage)
+                if (!lastMessage)
+                    emit('conversation_loaded')
 
             })
         },
@@ -387,7 +395,7 @@ export default {
             //if user messages are not in store load it from backend
             //and user has conversation with
             if (messagesFound === false && state.request.status !== 404) {
-                store.dispatch('chat/loadMessages', state.username)
+                store.dispatch('chat/loadMessages', {id: state.username})
             }
 
             return messages
