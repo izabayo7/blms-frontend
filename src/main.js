@@ -16,6 +16,7 @@ const options = {
     persist: true,
 }
 
+// global vue.js registration
 Vue.use(VueSession, options)
 Vue.use(Vuetify)
 Vue.use(VuePlyr)
