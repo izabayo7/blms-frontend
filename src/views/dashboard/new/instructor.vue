@@ -3,7 +3,7 @@
     <div v-if="$vuetify.breakpoint.width > 900">
       <v-row class="page_title">
         <div class="upper">Dashboard</div>
-        <div class="lower">Overviewer</div>
+        <div class="lower">Overview</div>
       </v-row>
       <v-row v-if="course_statistics" class="mt-6 px-4">
         <div class="v-col col-12 col-md-6 pa-0">
