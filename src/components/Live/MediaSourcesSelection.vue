@@ -159,10 +159,15 @@ export default {
 
 <style lang="scss" scoped>
 .mds{
-  @include fit-content;
+  //@include fit-content;
+  width:100%;
+  height:100%;
+  display: grid;
+  place-items: center;
 
   &--wrapper{
     background-color: $color-white;
+    padding:2.75rem;
 
     h4{
       text-align: center;
@@ -208,6 +213,7 @@ export default {
   &-go-live{
     display: grid;
     place-items: center;
+    margin-top:.5rem;
 
     &--btn{
       width:9rem;
