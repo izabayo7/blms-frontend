@@ -580,10 +580,12 @@ export default {
     }
   },
   methods: {
-    peresenterChanged(id) {
+    presenterChanged(id) {
       const video = this.me.getVideoElement();
-      if (this.me.userInfo._id == this.live_session.course.user)
+      video.muted = false
+      if (this.me.userInfo._id == this.live_session.course.user) {
         this.me.rtcPeer.enabled = false
+      }
 
       for (let i in this.participants) {
         if (this.participants[i].userInfo._id == id) {
@@ -645,9 +647,17 @@ export default {
       });
       this.onHandRaisedOrLowerd(id, false)
     },
-    onViewerStopedPresenting() {
-      this.me.rtcPeer.enabled = true
-      this.me.rtcPeer.showLocalVideo();
+    onViewerStopedPresenting(force) {
+      console.log(force)
+      if (this.me) {
+        this.me.rtcPeer.enabled = true
+        this.me.rtcPeer.showLocalVideo();
+        const video = this.me.getVideoElement();
+        video.muted = true
+        if(force){
+          this.start_presenting()
+        }
+      }
     },
     start_presenting() {
       this.participationInfo.isOfferingCourse = true;
@@ -829,12 +839,13 @@ export default {
         else if (message === 'deny_presenting')
           this.handlePresentationResponse(sender, false)
         else
-          this.onViewerStopedPresenting()
+          this.onViewerStopedPresenting(true)
+        console.log(message)
       })
       self.socket.on("live/presenterChanged", ({id, session_id}) => {
         console.log('\n\n', {id, session_id}, '\n\n')
         if (session_id == self.live_session._id) {
-          self.peresenterChanged(id)
+          self.presenterChanged(id)
         }
       })
 
