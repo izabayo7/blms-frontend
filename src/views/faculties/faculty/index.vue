@@ -43,7 +43,7 @@
 <!--    faculty page links/navbar-->
     <section class="faculty--links links">
       <section class="links--wrapper">
-        <subpage-navbar/>
+        <faculty-navbar/>
       </section>
     </section>
 
@@ -56,12 +56,12 @@
 </template>
 
 <script>
-import SubpageNavbar from "../../../components/reusable/subpage-navbar";
+import FacultyNavbar from "../../../components/reusable/faculty-navbar";
 import Search from "../../../components/reusable/Search2";
 import ButtonUi from "../../../components/reusable/ui/button-ui";
 export default {
 name: "FacultyIndex",
-  components: {ButtonUi, Search, SubpageNavbar},
+  components: {ButtonUi, Search, FacultyNavbar},
   data(){
     return{
       facultyId:this.$route.params.facultyId
