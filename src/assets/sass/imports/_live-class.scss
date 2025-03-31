@@ -243,16 +243,6 @@
         color: #FFFFFF;
       }
 
-      .users {
-        font-family: Poppins;
-        font-style: normal;
-        font-weight: 500;
-        font-size: 15px;
-        line-height: 25px;
-
-        color: #4A4A4A;
-      }
-
       .live {
         width: 65.38px;
         height: 18.97px;
@@ -267,10 +257,22 @@
 
       }
     }
+    .users {
+      font-family: Poppins;
+      font-style: normal;
+      font-weight: 500;
+      font-size: 15px;
+      line-height: 25px;
 
+      color: #FFFFFF;
+    }
+.more-details{
+  position: absolute;
+  padding: 15.08px 18px;
+}
     .video {
       width: 100%;
-
+      margin-top: 13px;
       &--wrapper {
         width: 100%;
 
@@ -344,7 +346,7 @@
           }
 
           .speaking-user {
-            display: none;
+            //display: none;
             height: 60px;
             width: 177px;
             position: absolute;
@@ -377,6 +379,93 @@
             }
           }
 
+          .live-comments-container {
+            max-width: 384px;
+            margin-left: auto;
+            width: fit-content;
+            margin-right: 9px;
+            padding-right: 9px;
+            z-index: 19;
+            position: sticky;
+
+            .title {
+              font-family: Montserrat;
+              font-style: normal;
+              font-weight: bold;
+              font-size: 11.0057px !important;
+              line-height: 17px;
+              /* identical to box height, or 150% */
+
+              letter-spacing: -0.015em;
+
+              color: #FFFFFF;
+              margin-left: 9px;
+            }
+
+            .toogle-comments {
+              display: grid;
+              place-items: center;
+            }
+
+            .comments-area {
+              transition: .5s;
+              margin-left: 100%;
+              overflow: hidden;
+              width: 0px;
+              &.visible{
+                width: 100%;
+                margin-left: 0%;
+              }
+              .inner-comments {
+                max-height: 360px;
+                overflow-y: auto;
+
+                .my-discussion .my-discussion-container {
+                  background-color: transparent;
+
+                  .comment .comment__name span {
+                    color: $main;
+                  }
+
+                  .right .comment__text {
+                    color: #F2F2F2;
+                  }
+
+                  .right .comment__time {
+                    color: #E3E3E3;
+                  }
+
+                  .right .comment__reply-icon .inner-icon {
+                    .text span {
+                      color: #F6F6F6;
+                    }
+
+                    .icon svg {
+                      fill: #F6F6F6;
+                    }
+                  }
+                }
+              }
+
+              .my-student-new-comment-with-photo .my-student-new-comment-container-with-photo form {
+                width: 355px;
+                min-height: 39px;
+                max-height: 89px;
+                background: #F2F2F2;
+                border-radius: 19.5px;
+                padding: 0.15rem;
+.send{
+  width: 40px;
+}
+                .input span {
+                  max-height: 70px !important;
+                }
+              }
+
+              max-height: 438px;
+            }
+          }
+
           //video controls
           .video-controls {
             position: absolute;
@@ -385,6 +474,13 @@
             bottom: 0;
 
             &--wrapper {
+              max-width: 60%;
+              transition: .5s;
+
+              &.centered{
+                margin-left: 20%;
+                margin-right: 21%;
+              }
               display: flex;
               justify-content: space-evenly;
               //background-color: transparentize(#000, .4);
@@ -809,17 +905,15 @@
   }
 
   .live-class-details {
-    background-color: white;
+    //background-color: white;
     //margin-left: -1.2rem;
     padding-left: 19.2px;
     padding-right: 19.2px;
-    margin-top: -2.6rem;
-    padding-top: 36.6px;
-    min-height: 24.6vh;
+    position: absolute;
+    bottom: 36px;
 
     &--wrapper {
       padding-top: 1rem;
-      display: flex;
 
       .description {
         font-family: Poppins;
@@ -828,33 +922,45 @@
         font-size: 12px;
         line-height: 18px;
 
-        color: #464646;
+        color: #FFFFFF;
         max-width: 360px;
       }
 
       .disabled {
-        color: rgba(0, 0, 0, 0.26) !important;
-        background-color: rgba(0, 0, 0, 0.12) !important;
-        font-size: 14px !important;
+        //color: rgba(0, 0, 0, 0.26) !important;
+        //background-color: rgba(0, 0, 0, 0.12) !important;
+        //font-size: 14px !important;
       }
 
       .quiz {
         button {
-          background: #193074;
-          filter: drop-shadow(0px 6.8487px 15.0671px rgba(152, 152, 152, 0.161));
-          height: 36.537025451660156px;
-          width: 140.19863891601562px;
-          border-radius: 10px;
+          margin-top: 19px;
+
+          background: #FCFCFC;
+          width: 166.07px;
+          height: 39.35px;
+          border-radius: 20px;
           font-family: Montserrat;
           font-style: normal;
-          font-weight: normal;
+          font-weight: bold;
           font-size: 12px;
           line-height: 15px;
+          display: flex;
           align-items: center;
-          text-align: center;
+          justify-content: center;
 
-          color: #FFFFFF;
+          color: #252525;
+          margin-right: 29px;
         }
+      }
+      .raise-hand .text{
+        font-family: Poppins;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 12px;
+        line-height: 18px;
+
+        color: #EEEEEE;
       }
     }
   }
@@ -1047,7 +1153,8 @@
       .instructor-info {
         padding: 1rem;
       }
-      .screen-sharing-video{
+
+      .screen-sharing-video {
         margin: -30px 20px 0px 0px;
       }
     }
