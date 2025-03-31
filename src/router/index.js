@@ -98,7 +98,13 @@ const routes = [
                     },
                     {
                         path: '/courses/:name',
-                        component: () => import('@/views/courses/details')
+                        component: () => import('@/views/courses/details'),
+                        children: [
+                            {
+                                path:'/courses/:name/chapter/:index/:id',
+                                component:() => import('@/views/courses/chapter-details')
+                            }
+                        ]
                     },
                     // for quiz
                     {
