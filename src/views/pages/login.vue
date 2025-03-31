@@ -92,7 +92,15 @@
                 LOGIN
               </button>
             </form>
-            <div class="forgot-password mx-auto">Forgot password</div>
+            <div
+              class="forgot-password mx-auto"
+            >
+            <router-link
+              to="/forgot_password"
+            >
+              Forgot password
+            </router-link>
+            </div>
           </div>
         </div>
       </v-col>
@@ -112,7 +120,7 @@ export default {
     showPassword: false,
     password: "",
     message: "Please login to continue",
-    image: "https://apis.kurious.rw/assets/images/image%204.png",
+    image: "https://apis.kurious.rw/assets/images/logo.png",
     institution: "Kurious Learn",
   }),
   methods: {

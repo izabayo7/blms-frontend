@@ -4,10 +4,13 @@
       <v-col class="col-12 mx-auto col-md-6">
         <div class="reset-password-box mx-auto text-center">
           <div class="heading">
-            <img :src="image" alt="" class="logo mx-auto" />
             <div class="college-name">{{ institution }}.</div>
             <div class="welcome">Reset password</div>
+            <!-- <div :class="`message ${valid ? '' : 'red--text'}`">
+              {{ message }}
+            </div> -->
             <form @submit.prevent="login">
+              <div class="label">Email</div>
               <div class="input-container">
                 <div class="input-icon">
                   <svg
@@ -43,18 +46,92 @@
                   required
                 />
               </div>
-              <div :class="`message ${valid ? '' : 'red--text'}`">
-                {{ message }}
+              <div class="label">Choose A Password</div>
+              <div class="input-container">
+                <div class="input-icon">
+                  <svg
+                    width="15"
+                    height="18"
+                    viewBox="0 0 15 18"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M13.8 16.1999V14.5999C13.8 13.7512 13.4629 12.9373 12.8627 12.3372C12.2626 11.737 11.4487 11.3999 10.6 11.3999H4.2C3.35131 11.3999 2.53737 11.737 1.93726 12.3372C1.33714 12.9373 1 13.7512 1 14.5999V16.1999"
+                      stroke="#BABABC"
+                      stroke-width="1.8"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                    <path
+                      d="M7.39995 8.1998C9.16726 8.1998 10.6 6.76712 10.6 4.9998C10.6 3.23249 9.16726 1.7998 7.39995 1.7998C5.63264 1.7998 4.19995 3.23249 4.19995 4.9998C4.19995 6.76712 5.63264 8.1998 7.39995 8.1998Z"
+                      stroke="#BABABC"
+                      stroke-width="1.8"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </div>
+                <input
+                  type="email"
+                  placeholder="Email"
+                  v-model="email_user_name_or_phone"
+                  autocomplete="false"
+                  class="wide"
+                  @keyup="validate"
+                  required
+                />
               </div>
-              <button class="login-button">RESET PASSWORD</button>
+              <div class="label">Confirm Password</div>
+              <div class="input-container">
+                <div class="input-icon">
+                  <svg
+                    width="15"
+                    height="18"
+                    viewBox="0 0 15 18"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M13.8 16.1999V14.5999C13.8 13.7512 13.4629 12.9373 12.8627 12.3372C12.2626 11.737 11.4487 11.3999 10.6 11.3999H4.2C3.35131 11.3999 2.53737 11.737 1.93726 12.3372C1.33714 12.9373 1 13.7512 1 14.5999V16.1999"
+                      stroke="#BABABC"
+                      stroke-width="1.8"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                    <path
+                      d="M7.39995 8.1998C9.16726 8.1998 10.6 6.76712 10.6 4.9998C10.6 3.23249 9.16726 1.7998 7.39995 1.7998C5.63264 1.7998 4.19995 3.23249 4.19995 4.9998C4.19995 6.76712 5.63264 8.1998 7.39995 8.1998Z"
+                      stroke="#BABABC"
+                      stroke-width="1.8"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </div>
+                <input
+                  type="email"
+                  placeholder="Email"
+                  v-model="email_user_name_or_phone"
+                  autocomplete="false"
+                  class="wide"
+                  @keyup="validate"
+                  required
+                />
+              </div>
+              <button
+                :disabled="!valid"
+                :class="`login-button ${valid ? '' : 'disabled'}`"
+              >
+                UPDATE PASSWORD
+              </button>
             </form>
             <div class="lower-message">
               <div class="message-row">
                 Don’t have an account contact us ?
-                <a to="/register">Register</a>
+                <a href="/register">Register</a>
               </div>
               <div class="message-row">
-                Remembered your password ? <router-link to="/login" />
+                Remembered your password ? <a href="/login">Login</a>
               </div>
               <div class="message-row">
                 Having trouble resseting your password ?
@@ -78,11 +155,21 @@ export default {
     email_user_name_or_phone: "",
     showPassword: false,
     password: "",
-    message: "",
+    message: "Please login to continue",
     image: "https://apis.kurious.rw/assets/images/image%204.png",
     institution: "Kurious Learn",
   }),
   methods: {
+    // validate the form
+    validate() {
+      this.message =
+        this.email_user_name_or_phone.length < 3
+          ? "username or email too short"
+          : this.password.length < 8
+          ? "Password too short"
+          : "Please login to continue";
+      this.valid = this.message == "Please login to continue";
+    },
     async login() {
       try {
         const credentials = {
@@ -172,8 +259,7 @@ export default {
     font-family: Inter;
     form {
       height: 60%;
-      padding-top: 20px;
-      padding-bottom: 60px;
+      padding-top: 40px;
       justify-content: center;
     }
     .welcome {
@@ -193,14 +279,9 @@ export default {
       color: #bababc;
     }
     .logo {
-      // margin-top: 19px;
-      // max-width: 100%;
-      // max-height: 73px;
       margin-top: 19px;
       max-width: 100%;
       max-height: 73px;
-      object-fit: scale-down;
-      min-height: 73px;
     }
     .message {
       font-style: normal;
@@ -214,12 +295,21 @@ export default {
       margin: 13px auto;
       padding: 0;
     }
+    .label {
+      text-align: left;
+      font-family: Inter;
+      font-style: normal;
+      font-weight: 500;
+      font-size: 10px;
+      color: #6a6a6a;
+      margin-left: 0.6rem;
+    }
     .input {
       &-container {
         max-width: 299px;
 
         height: 36px;
-        margin: 24px auto;
+        margin: 5px auto 24px;
         border: 1.34978px solid #bababc;
         box-sizing: border-box;
         border-radius: 10px;

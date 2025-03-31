@@ -24,9 +24,16 @@ const routes = [
             allowAnonymous: true
         }
     },
-    // the login page
     {
         path: '/reset_password',
+        component: () =>
+            import('@/views/pages/reset_password'),
+        meta: {
+            allowAnonymous: true
+        }
+    },
+    {
+        path: '/forgot_password',
         component: () =>
             import('@/views/pages/forgot_password'),
         meta: {
@@ -115,22 +122,22 @@ const routes = [
                     //for faculties
                     {
                         path: '/faculties',
-                        name:"faculties",
+                        name: "faculties",
                         component: () => import('@/views/faculties/index.vue'),
                     },
                     {
                         path: '/faculties/groups/:facultyId',
-                        name:"facultyGroups",
+                        name: "facultyGroups",
                         component: () => import('@/views/faculties/groups/faculty.vue'),
                     },
                     {
                         path: '/faculties/students/:facultyId',
-                        name:"facultyStudents",
+                        name: "facultyStudents",
                         component: () => import('@/views/faculties/students/faculty.vue'),
                     },
                     {
                         path: '/faculties/courses/:facultyId',
-                        name:"facultyCourses",
+                        name: "facultyCourses",
                         component: () => import('@/views/faculties/courses/faculty.vue'),
                     },
                     // for courses
