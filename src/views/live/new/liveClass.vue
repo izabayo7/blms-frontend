@@ -292,7 +292,12 @@ export default {
     },
     replied(data) {
       this.comments.map((comment) => {
-        if (comment._id === data._id) comment.replies.push(data.data);
+        if (comment._id === data._id) {
+          if(!comment.replies) {
+            comment.replies = []
+          }
+          comment.replies.push(data.data)
+        }
       });
     },
     async getUserInfo(id) {
@@ -576,7 +581,7 @@ export default {
       if (result.reply) {
         const comments = self.comments.filter(e => e._id == result.reply)
         if (comments.length) {
-          const replies = comments.replies.filter(e=>e._id == result._id)
+          const replies = comments[0].replies.filter(e=>e._id == result._id)
           if (!replies.length)
             self.replied({_id: result.reply, data: result});
         }
