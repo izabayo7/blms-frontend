@@ -135,6 +135,7 @@ export default {
                 // console.log(contacts)
                 state.incomingMessages = contacts
                 emit('incoming_message_initially_loaded')
+                console.log(state.incomingMessages)
             });
         },
         //load user messages
@@ -150,7 +151,6 @@ export default {
 
             // Get messages
             getters.socket.on('receive_conversation', ({conversation}) => {
-                emit('conversation_loaded')
                 //check if returned conversation object has data
                 if(conversation.length > 0){
                     commit('STORE_LOADED_MESSAGES',{username:id,conversation:conversation})
@@ -161,6 +161,7 @@ export default {
 
                 state.request.id = null
                 state.request.ongoing = false
+                emit('conversation_loaded')
                 // console.log(conversation)
             })
         },

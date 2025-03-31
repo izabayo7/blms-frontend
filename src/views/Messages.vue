@@ -5,7 +5,7 @@
     <div class="side incoming col-3">
     <div class="message-search"> <search bg="#ffffff" placeholder="search message" :width="100" :fontSize="12" /> </div>
     <div class="incoming-messages" v-if="incomingMessages.length > 0">
-      <incoming-chat v-for="(message,i) in incomingMessages"  :key="i" :data="message" :typing="false" />
+      <incoming-chat v-for="(message,i) in incomingMessages"  :key="i" :data="message" />
     </div>
   </div>
   <div class="side chat col-9" >
@@ -57,7 +57,6 @@ export default {
           this.incomingMessages.map(d => {
             if(this.$route.params.username === d.id){
               this.SET_DISPLAYED_USER(d)
-              // console.log(d)
             }
           })
         })
