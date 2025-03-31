@@ -284,7 +284,7 @@ export default {
   },
   data: () => ({
     type: "",
-    starting_time:"",
+    starting_time: "",
     selected_course: "",
     questions_types: [
       "Open ended",
@@ -332,7 +332,7 @@ export default {
     findLocalTime,
     ...mapActions('quiz', ['getExam']),
     ...mapActions("courses", ["getCourses"]),
-    ...mapMutations("quiz",["editExam"]),
+    ...mapMutations("quiz", ["editExam"]),
     fileTypeClicked(type, index) {
       if (this.questions[index].allowed_files.includes(type)) {
         this.questions[index].allowed_files.splice(this.questions[index].allowed_files.indexOf(type), 1)
@@ -544,11 +544,14 @@ export default {
             break
           }
         }
+        let str = new Date().toISOString()
+        str = str.split(".")
 
+        this.starting_time += `:00.${str[1]}`
         Apis.update('exams', this.$route.params.id, {
           name: this.title,
           course: this.selected_course,
-          type:this.type,
+          type: this.type,
           instructions:
               editorContent ==
               `<ol><li><p>Write your custom instructions</p></li></ol>`
@@ -641,7 +644,6 @@ export default {
       this.getExam({
         id: this.$route.params.id,
       }).then(({exam}) => {
-        console.log(exam)
         let duration = new Date(exam.duration * 1000).toISOString().substr(11, 8);
         duration = duration.split(":");
         this.hours = duration[0]
