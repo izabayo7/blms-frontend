@@ -316,11 +316,11 @@ export default {
   watch: {
     remaining_time() {
       if (this.remaining_time > 0) {
-        // setTimeout(() => {
-        //   this.remaining_time -= 1;
-        // }, 1000);
-        // if (this.remaining_time == this.exam.duration - 1)
-        //   this.initialiseQuiz();omputed
+        setTimeout(() => {
+          this.remaining_time -= 1;
+        }, 1000);
+        if (this.remaining_time === this.exam.duration - 1)
+          this.initialiseQuiz();
 
         this.attempt.used_time = this.exam.duration - this.remaining_time;
       } else if (!this.done) {
@@ -365,9 +365,7 @@ export default {
     ...mapActions("modal", ["set_modal"]),
     ...mapActions("quiz", ["getExam"]),
     endExam() {
-      this.set_modal({
-        template: `exam_closed_failed`,
-      })
+      this.saveAttempt(true)
     },
     moveTooltip(e) {
       let tooltip = document.querySelector('.coupontooltip');
@@ -559,7 +557,7 @@ export default {
         this.socket.on('start-exam', (id) => {
           this.submission_id = id;
         })
-        this.socket.on('exam-progress-saved', ({index, end}) => {
+        this.socket.on('exam-progress-saved', ({index, end, cheated}) => {
           if (end) {
             // notify instructor
             this.socket.emit('student-submitted', {
@@ -568,26 +566,28 @@ export default {
               content: 'submitted quiz ' + this.exam.name
             })
             this.set_modal({
-              template: `exam_closed_${this.attempt.auto_submitted ? 'timeout' : 'successfull'}`,
+              template: `exam_closed_${this.attempt.auto_submitted ? 'timeout' : cheated ? 'failed' : 'successfull'}`,
             })
           } else if (index !== undefined) {
             if (this.filesToUpload[index].file !== "")
               this.uploadFile(index);
           }
+          this.removeListeners()
         })
       }
     },
-    async saveAttempt() {
+    async saveAttempt(cheated) {
       if (this.$store.state.user.user.category.name === 'STUDENT')
         this.socket.emit('save-exam-progress', {
           submission_id: this.submission_id,
           attempt: this.attempt,
           end: true,
-          questions: this.exam.questions
+          questions: this.exam.questions,
+          cheated
         })
       else
         this.set_modal({
-          template: `exam_closed_successfull`,
+          template: `exam_closed_${cheated ? 'failed' : 'successfull'}`,
         })
     },
     goFullscreen() {
@@ -612,37 +612,42 @@ export default {
       //   template: 'exam_closed_successfull',
       // })
     },
-    setUp() {
-      document.querySelector('body').addEventListener('click', this.goFullscreen)
-
-      function goodbye(e) {
-        if (!e) e = window.event;
-        //e.cancelBubble is supported by IE - this will kill the bubbling process.
-        e.cancelBubble = true;
-        e.returnValue = 'You sure you want to leave?'; //This is displayed on the dialog
-
-        //e.stopPropagation works in Firefox.
-        if (e.stopPropagation) {
-          e.stopPropagation();
-          e.preventDefault();
-        }
+    removeListeners() {
+      document.querySelector('body').removeEventListener('click', this.goFullscreen)
+      window.removeEventListener('beforeunload', this.goodbye)
+      window.removeEventListener('resize', this.detectResize)
+      document.removeEventListener('visibilitychange', this.detectFocus)
+    },
+    detectResize() {
+      if ((!window.fullScreen) &&
+          (window.innerWidth !== screen.width || window.innerHeight !== screen.height)) {
+        this.endExam()
       }
+    },
+    detectFocus() {
+      if (document.visibilityState !== "visible") {
+        this.endExam()
+      }
+    },
+    goodbye(e) {
+      if (!e) e = window.event;
+      //e.cancelBubble is supported by IE - this will kill the bubbling process.
+      e.cancelBubble = true;
+      e.returnValue = 'You sure you want to leave?'; //This is displayed on the dialog
 
-      window.addEventListener('beforeunload', goodbye)
+      //e.stopPropagation works in Firefox.
+      if (e.stopPropagation) {
+        e.stopPropagation();
+        e.preventDefault();
+      }
+    },
+    setUp() {
 
+      document.querySelector('body').addEventListener('click', this.goFullscreen)
+      window.addEventListener('beforeunload', this.goodbye)
       // track if one leaves tab
-      document.addEventListener("visibilitychange", () => {
-        if (document.visibilityState !== "visible") {
-          this.endExam()
-        }
-      })
-
-      window.addEventListener("resize", () => {
-        if ((!window.fullScreen) &&
-            (window.innerWidth !== screen.width || window.innerHeight !== screen.height)) {
-          this.endExam()
-        }
-      })
+      document.addEventListener("visibilitychange", this.detectFocus)
+      window.addEventListener("resize", this.detectResize)
     }
   },
   created() {
