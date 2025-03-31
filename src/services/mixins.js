@@ -34,11 +34,11 @@ const cropperMixin = {
             this.profile = img;
         },
         handleFileUpload(e) {
+            this.readURL(e);
+            // this.profile = this.$refs.file.files[0];
+
             //make sure that target is cleaned
             e.target.value = ''
-
-            this.readURL(e);
-            this.profile = this.$refs.file.files[0];
         }
     }
 }
