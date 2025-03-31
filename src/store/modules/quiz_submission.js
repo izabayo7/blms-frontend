@@ -87,9 +87,7 @@ export default {
                 result = result.filter(e => e._id == quiz_id)
             }
 
-
             return result[0]
-
         },
 
         //create a quiz_submission
