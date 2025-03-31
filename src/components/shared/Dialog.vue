@@ -145,35 +145,44 @@
       </div>
       <!-- show confirmations according to the set action -->
       <div class="content confirmation-dialog">
-        <svg width="56" v-if="modal_template.includes('timeout')" height="56" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M44.4254 10.6163L41.112 13.9297C37.4954 11.0597 32.9454 9.33301 27.9987 9.33301C23.7287 9.33301 19.762 10.6163 16.4487 12.7863L19.8554 16.193C22.2354 14.8163 25.0354 13.9997 27.9987 13.9997C37.0287 13.9997 44.332 21.303 44.332 30.333C44.332 33.2963 43.5154 36.0963 42.1387 38.4763L45.522 41.8597C47.7154 38.5697 48.9987 34.603 48.9987 30.333C48.9987 25.3863 47.272 20.8363 44.402 17.243L47.7154 13.9297L44.4254 10.6163ZM34.9987 2.33301H20.9987V6.99967H34.9987V2.33301ZM25.6654 22.0263L30.332 26.693V18.6663H25.6654V22.0263ZM7.04536 9.33301L4.08203 12.2963L10.4987 18.7363C8.28203 22.0497 6.9987 26.0397 6.9987 30.333C6.9987 41.9297 16.3787 51.333 27.9987 51.333C32.292 51.333 36.282 50.0497 39.6187 47.833L45.452 53.6663L48.4154 50.703L30.4254 32.713L7.04536 9.33301ZM27.9987 46.6663C18.9687 46.6663 11.6654 39.363 11.6654 30.333C11.6654 27.3463 12.482 24.5463 13.882 22.1197L36.1887 44.4263C33.7854 45.8497 30.9854 46.6663 27.9987 46.6663Z" fill="#FC6767"/>
+        <svg width="56" v-if="modal_template.includes('timeout')" height="56" viewBox="0 0 56 56" fill="none"
+             xmlns="http://www.w3.org/2000/svg">
+          <path
+              d="M44.4254 10.6163L41.112 13.9297C37.4954 11.0597 32.9454 9.33301 27.9987 9.33301C23.7287 9.33301 19.762 10.6163 16.4487 12.7863L19.8554 16.193C22.2354 14.8163 25.0354 13.9997 27.9987 13.9997C37.0287 13.9997 44.332 21.303 44.332 30.333C44.332 33.2963 43.5154 36.0963 42.1387 38.4763L45.522 41.8597C47.7154 38.5697 48.9987 34.603 48.9987 30.333C48.9987 25.3863 47.272 20.8363 44.402 17.243L47.7154 13.9297L44.4254 10.6163ZM34.9987 2.33301H20.9987V6.99967H34.9987V2.33301ZM25.6654 22.0263L30.332 26.693V18.6663H25.6654V22.0263ZM7.04536 9.33301L4.08203 12.2963L10.4987 18.7363C8.28203 22.0497 6.9987 26.0397 6.9987 30.333C6.9987 41.9297 16.3787 51.333 27.9987 51.333C32.292 51.333 36.282 50.0497 39.6187 47.833L45.452 53.6663L48.4154 50.703L30.4254 32.713L7.04536 9.33301ZM27.9987 46.6663C18.9687 46.6663 11.6654 39.363 11.6654 30.333C11.6654 27.3463 12.482 24.5463 13.882 22.1197L36.1887 44.4263C33.7854 45.8497 30.9854 46.6663 27.9987 46.6663Z"
+              fill="#FC6767"/>
         </svg>
-        <svg v-else-if="modal_template.includes('successfull')" width="59" height="61" viewBox="0 0 59 61" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg v-else-if="modal_template.includes('successfull')" width="59" height="61" viewBox="0 0 59 61" fill="none"
+             xmlns="http://www.w3.org/2000/svg">
           <rect width="59" height="61" rx="29.5" fill="#3CE970"/>
-          <path d="M24.2273 37.194L17.3068 29.9851L15 32.3881L24.2273 42L44 21.403L41.6932 19L24.2273 37.194Z" fill="white"/>
+          <path d="M24.2273 37.194L17.3068 29.9851L15 32.3881L24.2273 42L44 21.403L41.6932 19L24.2273 37.194Z"
+                fill="white"/>
         </svg>
 
         <svg v-else width="50" height="50" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M2.08203 43.7503H47.9154L24.9987 4.16699L2.08203 43.7503ZM27.082 37.5003H22.9154V33.3337H27.082V37.5003ZM27.082 29.167H22.9154V20.8337H27.082V29.167Z" fill="#FC6767"/>
+          <path
+              d="M2.08203 43.7503H47.9154L24.9987 4.16699L2.08203 43.7503ZM27.082 37.5003H22.9154V33.3337H27.082V37.5003ZM27.082 29.167H22.9154V20.8337H27.082V29.167Z"
+              fill="#FC6767"/>
         </svg>
 
 
-        <h4 class="title">{{ modal_template.includes('timeout') ? 'Time up !' : modal_template.includes('successfull') ? 'Submission successful' : 'Automatic submission' }}</h4>
+        <h4 class="title">{{
+            modal_template.includes('timeout') ? 'Time up !' : modal_template.includes('successfull') ? 'Submission successful' : 'Automatic submission'
+          }}</h4>
         <div v-if="modal_template.includes('timeout')" class="sub-title">
-Dear user, your work have been automaticaly submitted because
-you reached your time limit, all the answers were saved successfuly.
-Please wait for the instructor to check your work.
+          Dear user, your work have been automaticaly submitted because
+          you reached your time limit, all the answers were saved successfuly.
+          Please wait for the instructor to check your work.
         </div>
         <div v-else-if="modal_template.includes('successfull')" class="sub-title">
-Dear user, your work have been submitted susscesssfuly.
-All the answers were saved successfuly.
-Please wait for the instructor to check your work.
+          Dear user, your work have been submitted susscesssfuly.
+          All the answers were saved successfuly.
+          Please wait for the instructor to check your work.
 
         </div>
         <div v-else class="sub-title">
-Dear user, your work have been automaticaly submitted due to
-user conduct breach, You may be subject to deductions and even
-failure.
+          Dear user, your work have been automaticaly submitted due to
+          user conduct breach, You may be subject to deductions and even
+          failure.
         </div>
         <div class="actions">
           <v-btn
@@ -182,12 +191,6 @@ failure.
           >Reports
           </v-btn
           >
-<!--          <v-btn-->
-<!--              @click="toogle_visibility"-->
-<!--              class="mx-2 white&#45;&#45;text action-button cancel"-->
-<!--          >Okay-->
-<!--          </v-btn-->
-<!--          >-->
         </div>
       </div>
     </div>
@@ -252,7 +255,7 @@ failure.
           <v-btn
               @click="toogle_visibility"
               class="mx-2 white--text action-button cancel"
-          >{{ link ? 'I decline' : 'Continue'}}
+          >{{ link ? 'I decline' : 'Continue' }}
           </v-btn
           >
           <v-btn
@@ -490,6 +493,7 @@ export default {
   .action-button {
     width: 138px;
     height: 44px !important;
+
     &.cancel {
       background: #BABABC !important;
     }

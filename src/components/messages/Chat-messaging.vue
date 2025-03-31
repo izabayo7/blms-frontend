@@ -79,50 +79,115 @@
                 :id="msg._id"
                 :class="`msg-cntnr ${
                 !msg.content || msg.content === '' ? 'noBg' : ''
-              }`"
+              } d-flex`"
                 v-for="(msg, i) in msgs.messages"
                 :key="i"
             >
-              <!--            //for better html elements readability-->
               <div
                   class="msg mx-auto"
                   v-if="msg.content && msgs.from === 'SYSTEM'"
                   :inner-html.prop="msg.content | injectTime"
               />
-              <div
-                  class="msg"
-                  v-else-if="msg.content"
-                  :inner-html.prop="msg.content | urlify "
-              />
-              <div
-                  v-if="msg.attachments"
-                  :class="`attachments-cotainer ${msg.content ? 'pushed' : ''} ${
+              <div v-else class="actions">
+                <div class="d-flex">
+                  <div class="action tooltip">
+                    <div class="icon">
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M15.136 7.99989C15.136 11.9412 11.941 15.1363 7.99965 15.1363C4.05834 15.1363 0.863281 11.9412 0.863281 7.99989C0.863281 4.05858 4.05834 0.863525 7.99965 0.863525C11.941 0.863525 15.136 4.05858 15.136 7.99989Z"
+                            stroke="#BABABC"/>
+                        <path d="M4.72656 10.1819C6.90838 12.3637 9.0902 12.3637 11.272 10.1819H4.72656Z"
+                              fill="#BABABC"/>
+                        <path
+                            d="M5.81886 8.21828C6.54185 8.21828 7.12795 7.63218 7.12795 6.90919C7.12795 6.1862 6.54185 5.6001 5.81886 5.6001C5.09587 5.6001 4.50977 6.1862 4.50977 6.90919C4.50977 7.63218 5.09587 8.21828 5.81886 8.21828Z"
+                            fill="#BABABC"/>
+                        <path
+                            d="M10.1821 8.21828C10.9051 8.21828 11.4912 7.63218 11.4912 6.90919C11.4912 6.1862 10.9051 5.6001 10.1821 5.6001C9.45915 5.6001 8.87305 6.1862 8.87305 6.90919C8.87305 7.63218 9.45915 8.21828 10.1821 8.21828Z"
+                            fill="#BABABC"/>
+                      </svg>
+
+                    </div>
+                    <div class="tooltip-text">
+                      Add reaction
+                    </div>
+                  </div>
+                  <div class="action tooltip">
+                    <div class="icon">
+                      <svg width="18" height="15" viewBox="0 0 18 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M7 0V4C14 5 17 10 18 15C15.5 11.5 12 9.9 7 9.9V14L0 7L7 0ZM5 4.83L2.83 7L5 9.17V7.9H7C9.07 7.9 10.93 8.28 12.66 8.85C11.26 7.46 9.46 6.37 6.72 6L5 5.73V4.83Z"
+                            fill="#BABABC"/>
+                      </svg>
+
+                    </div>
+                    <div class="tooltip-text">
+                      Reply message
+                    </div>
+                  </div>
+                  <div class="action tooltip">
+                    <div class="icon">
+                      <svg width="14" height="18" viewBox="0 0 14 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M1 16C1 16.5304 1.21071 17.0391 1.58579 17.4142C1.96086 17.7893 2.46957 18 3 18H11C11.5304 18 12.0391 17.7893 12.4142 17.4142C12.7893 17.0391 13 16.5304 13 16V4H1V16ZM3 6H11V16H3V6ZM10.5 1L9.5 0H4.5L3.5 1H0V3H14V1H10.5Z"
+                            fill="#BABABC"/>
+                      </svg>
+
+                    </div>
+                    <div class="tooltip-text">
+                      Delete message
+                    </div>
+                  </div>
+                  <div class="action tooltip">
+                    <div class="icon">
+                      <svg width="18" height="15" viewBox="0 0 18 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M11 0V4C4 5 1 10 0 15C2.5 11.5 6 9.9 11 9.9V14L18 7L11 0ZM13 4.83L15.17 7L13 9.17V7.9H11C8.93 7.9 7.07 8.28 5.34 8.85C6.74 7.46 8.54 6.37 11.28 6L13 5.73V4.83Z"
+                            fill="#BABABC"/>
+                      </svg>
+
+                    </div>
+                    <div class="tooltip-text">
+                      Forward message
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div v-if="(msg.content || msg.attachments) && msgs.from !== 'SYSTEM'">
+                <div
+                    v-if="msg.content"
+                    class="msg"
+                    :inner-html.prop="msg.content | urlify "
+                />
+                <div
+                    v-if="msg.attachments"
+                    :class="`attachments-cotainer ${msg.content ? 'pushed' : ''} ${
                   msg.attachments.length > 1
                     ? msg.attachments.length > 2
                       ? 'more'
                       : 'two'
                     : ''
                 }`"
-              >
-                <div
-                    v-for="(attachment, k) in msg.attachments"
-                    :key="k"
-                    class="attachment"
                 >
-                  <img
-                      v-if="fileType(attachment) === 'image'"
-                      :src="attachment.src + `?token=${$session.get('jwt')}`"
-                      alt=""
-                  />
-                  <!--                  <audio v-if="fileType(attachment) === 'audio'" :src="attachment.src+ `?token=${$session.get('jwt')}`"></audio>-->
-                  <vue-plyr v-if="fileType(attachment) === 'audio'">
-                    <audio controls crossorigin playsinline>
-                      <source
-                          :src="attachment.src + `?token=${$session.get('jwt')}`"
-                          type="audio/mp3"
-                      />
-                    </audio>
-                  </vue-plyr>
+                  <div
+                      v-for="(attachment, k) in msg.attachments"
+                      :key="k"
+                      class="attachment"
+                  >
+                    <img
+                        v-if="fileType(attachment) === 'image'"
+                        :src="attachment.src + `?token=${$session.get('jwt')}`"
+                        alt=""
+                    />
+                    <!--                  <audio v-if="fileType(attachment) === 'audio'" :src="attachment.src+ `?token=${$session.get('jwt')}`"></audio>-->
+                    <vue-plyr v-if="fileType(attachment) === 'audio'">
+                      <audio controls crossorigin playsinline>
+                        <source
+                            :src="attachment.src + `?token=${$session.get('jwt')}`"
+                            type="audio/mp3"
+                        />
+                      </audio>
+                    </vue-plyr>
+                  </div>
                 </div>
               </div>
             </div>
@@ -522,6 +587,36 @@ export default {
         }
       }
 
+      .actions {
+        display: none;
+
+        .action {
+          display: flex;
+          justify-content: center;
+          align-content: center;
+          width: 24px;
+          height: 24px;
+        }
+
+        .tooltip-text {
+          background: #A8A7A7;
+          z-index: 9;
+
+          &::after {
+            border-color: #A8A7A7 transparent transparent transparent;
+          }
+        }
+      }
+
+      .msg-cntnr {
+        align-items: center;
+        &:hover {
+          .actions {
+            display: initial;
+          }
+        }
+      }
+
       .attachments-cotainer {
         //position: absolute;
         display: flex;
@@ -603,6 +698,7 @@ export default {
           .msg-cntnr {
             align-self: flex-end;
 
+
             .attachments-cotainer {
               right: 0;
               justify-content: flex-end;
@@ -645,6 +741,10 @@ export default {
       //   color: #00000066;
       //   padding-left: 0.8rem;
       // }
+      .msg-cntnr {
+        flex-direction: row-reverse;
+        justify-content: flex-end;
+      }
 
       .msg {
         border-radius: 0 15px 15px 0;
