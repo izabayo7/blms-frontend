@@ -173,7 +173,7 @@
       <v-row v-if="submission_statistics" class="page_title d-flex">
         <div class="col-6">
           <div class="upper">Dashboard</div>
-          <div class="lower">Overviewer</div>
+          <div class="lower">Overview</div>
         </div>
         <div class="col-6 vertically--centered">
           <button
