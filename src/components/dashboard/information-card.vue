@@ -79,8 +79,7 @@
             type="donut"
             class="my-chart"
             :class="{'ml-n6' : data === undefined}"
-            width="100%"
-            height="100%"
+            :width="155"
             :options="chartOptions"
             :series="[data.total,100-data.total]"
         ></chart>
@@ -179,17 +178,20 @@ export default {
         donut: {
           labels: {
             show: true,
-            name:{
+            name: {
               show: false
             },
             total: {
               show: true,
-              label: '',
+              fontSize: "15px",
+              color: '#373d3f',
+              showAlways: false,
               formatter: () => this.data.total + '%'
             },
           }
         }
       }
+      console.log(this.chartOptions)
     }
   }
 };
@@ -206,7 +208,8 @@ export default {
   &.INSTRUCTOR {
     max-width: 217px;
     min-height: 197px;
-    .chart{
+
+    .chart {
       overflow: hidden;
       max-width: 100%;
       display: flex;
