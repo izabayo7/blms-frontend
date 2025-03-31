@@ -1,6 +1,6 @@
 <template>
   <v-container
-      v-if="selected_quiz_submission"
+      v-if="selected_quiz_submission && attempt.quiz"
       fluid
       class="quiz-page white pl-lg-16"
   >
