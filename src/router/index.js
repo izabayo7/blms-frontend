@@ -26,16 +26,6 @@ const routes = [
             allowAnonymous: true
         }
     },
-        // the login page
-    {
-        path: '/college_login',
-        name: 'Login',
-        component: () =>
-            import('@/views/pages/login_new'),
-        meta: {
-            allowAnonymous: true
-        }
-    },
     // the loader
     {
         path: '/loading',
