@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid class="quiz_timeout_page white px-lg-16">
+  <v-container v-if="course" fluid class="quiz_timeout_page white px-lg-16">
     <back class="mt-0 mb-6 ml-lg-n6" />
     <v-row>
       <div class="title ml-2 mt-5">Automatic Submission ( Timed)</div>
@@ -36,12 +36,15 @@
           section
         </div>
         <div class="actions mt-8">
-          <button class="start_quiz" @click="$router.push(`/quiz/attempt/`)">
+          <button
+            class="start_quiz"
+            @click="$router.push(`/courses/${course.name}`)"
+          >
             Continue course
           </button>
           <button
             class="start_quiz grey ml-6"
-            @click="$router.push(`/quiz/attempt/`)"
+            @click="$router.push('/reports')"
           >
             Open reports
           </button>
@@ -95,7 +98,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
+import { mapGetters } from "vuex";
 export default {
   data: () => ({
     quiz: {},
@@ -106,16 +109,10 @@ export default {
     back: () => import("@/components/shared/back-button"),
   },
   computed: {
-    ...mapGetters("quiz", ["selected_quiz"]),
+    ...mapGetters("courses", ["course"]),
   },
-  methods: {
-    ...mapActions("quiz", ["findQuizByName"]),
-  },
-  created() {
-    // this.findQuizByName({
-    //   user_name: this.$store.state.user.user.user_name,
-    //   quizName: this.$route.params.name,
-    // });
+  beforeMount() {
+    if (!this.course) this.$router.push("/");
   },
 };
 </script>
