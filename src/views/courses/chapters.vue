@@ -60,12 +60,13 @@
                   <v-stepper-content step="1">
                     <v-card class="mb-12 pa-6 elevation-0" height="300px">
                       <h4 class="#f8f8f8--text">Name</h4>
-                      <v-text-field
-                        v-model="course.chapters[activeChapter].name"
-                        placeholder="Enter Chapter Name"
-                        class="chapter-name"
-                        solo
-                      ></v-text-field>
+                      <input v-model="course.chapters[activeChapter].name" type="text" class="course_input" placeholder="Enter chapter name..." />
+<!--                      <v-text-field-->
+<!--                        v-model="course.chapters[activeChapter].name"-->
+<!--                        placeholder="Enter Chapter Name"-->
+<!--                        class="chapter-name"-->
+<!--                        solo-->
+<!--                      ></v-text-field>-->
                       <h4>Description</h4>
                       <textarea
                         v-model="course.chapters[activeChapter].description"
