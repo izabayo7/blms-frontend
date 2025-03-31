@@ -103,7 +103,8 @@
             </div>
           </div>
         </div>
-        <div v-if="participationInfo.isOfferingCourse" class="live-comments" :class="`--${$vuetify.breakpoint.name} ${sidebarOpen ? '' : 'viewer'}`">
+        <div v-if="participationInfo.isOfferingCourse" class="live-comments"
+             :class="`--${$vuetify.breakpoint.name} ${sidebarOpen ? '' : 'viewer'}`">
           <div class="live-comments--wrapper">
             <div class="_title">LIVE COMMENTS</div>
             <div class="student-new-comment">
@@ -454,9 +455,13 @@ export default {
     leaveRoom() {
       alert('Are you sure you want to leave this class ?')
       this.sendMessage({
-        id: 'leaveRoom'
+        id: this.participationInfo.isOfferingCourse ? 'closeRoom' : 'leaveRoom'
       });
-
+      if (!this.participationInfo.isOfferingCourse) {
+        this.onCloseRoom();
+      }
+    },
+    onCloseRoom() {
       for (let key in this.participants) {
         this.participants[key].dispose();
       }
@@ -464,7 +469,6 @@ export default {
       this.ws.close();
       this.$router.push('/')
     },
-
     async receiveVideo(sender) {
       console.log(`\n\n\n\n\n receiving video for ${sender} \n\n\n\n\n`)
       let participant = sender == this.participationInfo.name ? this.participants[this.participantIndex(sender)] : new Participant(sender, this, false, await this.getUserInfo(sender.split('_')[0]));
@@ -488,6 +492,15 @@ export default {
       if (sender != this.participationInfo.name) {
         this.participants.push(participant);
         this.addParticipant({id: participant.userInfo._id})
+        if (this.participationInfo.isOfferingCourse) {
+          this.sendMessage({
+            id: "notifyUser",
+            receiver: participant.name,
+            videoStatus: this.videoEnabled,
+            audioStatus: this.audioEnabled,
+            screenStatus: this.isPresenting
+          })
+        }
       }
     },
 
@@ -544,6 +557,13 @@ export default {
           self.id = parsedMessage.data;
           self.participationInfo.name = self.id;
           break;
+        case 'roomClosed':
+          alert('Room Closed')
+          this.onCloseRoom();
+          break;
+        case 'initialScreenOff':
+          this.noVideo = true;
+          break;
         case 'existingParticipants':
           this.onExistingParticipants(parsedMessage);
           break;
@@ -555,6 +575,11 @@ export default {
           break;
         case 'toogleMedia':
           this.toogleMedia(parsedMessage);
+          break;
+        case 'notification':
+          this.isPresenting = parsedMessage.screenStatus;
+          this.videoEnabled = parsedMessage.videoStatus;
+          this.audioEnabled = parsedMessage.audioStatus;
           break;
         case 'receiveVideoAnswer':
           this.receiveVideoResponse(parsedMessage);

@@ -23,8 +23,13 @@ export default function Participant(name, vm, offeringCourse = false, userInfo) 
 
     console.log(userInfo)
     if (userInfo.category == "INSTRUCTOR") {
-        video.autoplay = true;
-        video.play();
+        // video.autoplay = true;
+        // video.play();
+
+        video.onloadedmetadata = function(e) {
+            video.play();
+        };
+
     }
 
     this.getVideoElement = function () {
