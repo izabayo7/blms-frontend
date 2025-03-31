@@ -293,8 +293,8 @@
         </v-row>
       </v-col>
       <v-col
-          :class="`col-12 col-md-4 mt-16 ${
-          $vuetify.breakpoint.name == 'lg' ? 'fixed right-0' : ''
+          :class="`col-12 col-md-4 mt-16 mb-16 ${
+          $vuetify.breakpoint.name == 'lg' ? 'fixed right-0 pl-12' : ''
         }`"
       >
         <v-row class="color-primary font-weight-black student_name mb-8">
