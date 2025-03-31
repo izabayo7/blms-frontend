@@ -61,11 +61,16 @@ export default {
     //here we check if the current route has a selected chat if not we directly
     // select the latest contact in chat and we make it active
     goToMessages(){
+      const testReg = /\/messages\/group\/[a-z]+/g //test for '/messages/group/...route
+      const groupRouteFound = testReg.test(this.$route.path)
+
       if(this.$route.params.username)
         return
 
-      this.SET_DISPLAYED_USER(this.incomingMessages[0])
-      this.$router.push(`/messages/${this.incomingMessages[0].id}`)
+      if(!groupRouteFound){
+        this.SET_DISPLAYED_USER(this.incomingMessages[0])
+        this.$router.push(`/messages/${this.incomingMessages[0].id}`)
+      }
 
     },
     storeCurrentDisplayedUser(){
@@ -83,7 +88,6 @@ export default {
         this.incomingMessages.map(d => {
           if(this.$route.params.username === d.id){
             this.SET_DISPLAYED_USER(d)
-            // console.log(d)
           }
         })
     }
