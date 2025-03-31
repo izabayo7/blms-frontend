@@ -59,7 +59,7 @@ const routes = [{
         component: () =>
             import('@/components/set-quiz.vue')
     }, {
-        path: '/take-quiz',
+        path: '/quiz/attempt/:id',
         name: 'TakeQuiz',
         component: () =>
             import('@/components/take-quiz.vue')
@@ -115,6 +115,11 @@ const routes = [{
     component: () =>
         import('@/components/recover-password.vue')
 },
+{
+    // catch all 404 - define at the very end
+    path: "*",
+    component: () => import("@/views/pages/notFound.vue")
+}
 ]
 
 const router = new VueRouter({

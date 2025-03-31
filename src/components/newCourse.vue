@@ -1,4 +1,4 @@
-<template>
+  <template>
   <v-app>
     <v-row class="new-class-form ml-10 mt-10">
       <v-col class="col-12">
@@ -36,81 +36,44 @@
           <h3>Student Group</h3>
           <v-select
             v-model="course.facilityCollegeYear"
-            :items="course.facilityCollegeYear"
+            :items="facilityCollegeYearNames"
             chips
             :rules="simpleRules"
-            multiple
             outlined
-            disabled="true"
             class="group-select"
           ></v-select>
           <h3>Course Description</h3>
-          <textarea v-model="course.description" class="course-description mb-4" cols="60" rows="8"></textarea>
+          <textarea v-model="course.description" class="kurious--textarea mb-4" cols="60" rows="8"></textarea>
           <h3>Course Cover Image</h3>
           <v-btn
-            rounded
-            color="#ffd248"
-            class="white--text course-image mt-4 mb-6 d-none"
+            fab
+            small
+            color="#828282"
+            class="white--text course-image mt-4 mb-6 mr-4"
             @click="pickfile()"
           >
-            <v-icon>mdi-arrow-expand-up</v-icon>Upload Image
+            <v-icon>mdi-paperclip</v-icon>
           </v-btn>
+          <span>{{course.coverPicture === undefined ? 'Upload Course CoverPicture' : course.coverPicture.name}}</span>
           <input
             ref="file"
             type="file"
+            hidden
+            accept="image/*"
             id="picture"
-            class="d-block my-6"
+            class="d-none my-6"
             @change="handleFileUpload()"
           />
-          <v-btn rounded color="#3CE970" class="white--text mb-6" @click="saveCourse()">Save Course</v-btn>
+          <v-btn
+            rounded
+            color="#3CE970"
+            class="white--text mb-6 d-block"
+            @click="saveCourse()"
+          >Save Course</v-btn>
         </form>
       </v-col>
       <v-col v-else class="col-12 pr-12">
         <form>
-          <div v-if="type=='details'">
-            <h3>Course Name</h3>
-            <v-text-field
-              v-model="course.name"
-              required
-              :rules="nameRules"
-              placeholder="Type course name..."
-              outlined
-              class="course-input"
-            ></v-text-field>
-            <h3>Student Group</h3>
-            <v-select
-              v-model="course.group"
-              :items="course.group"
-              chips
-              :rules="simpleRules"
-              multiple
-              outlined
-              class="group-select"
-            ></v-select>
-            <h3>Course Description</h3>
-            <textarea
-              v-model="course.description"
-              class="course-description mb-4"
-              cols="60"
-              rows="8"
-            ></textarea>
-            <h3>Course Cover Image</h3>
-            <v-btn
-              rounded
-              color="#ffd248"
-              class="white--text course-image mt-4 mb-6 d-block"
-              @click="pickfile()"
-            >
-              <v-icon>mdi-arrow-expand-up</v-icon>Upload Image
-            </v-btn>
-            <input ref="file" type="file" id="picture" hidden @change="handleFileUpload()" />
-            <v-btn
-              rounded
-              color="#3CE970"
-              class="white--text mb-6"
-              @click="saveCourse()"
-            >Save Course</v-btn>
-          </div>
           <div class="class-chapters">
             <v-row>
               <v-col class="col-12">
@@ -121,7 +84,7 @@
                   </v-stepper-step>
 
                   <v-stepper-content step="1">
-                    <v-card color="grey lighten-1" class="mb-12 pa-6" height="300px">
+                    <v-card class="mb-12 pa-6 elevation-0" height="300px">
                       <h4 class="#f8f8f8--text">Name</h4>
                       <v-text-field
                         v-model="chapter.name"
@@ -132,20 +95,19 @@
                       <h4>Description</h4>
                       <textarea
                         v-model="chapter.description"
-                        class="white mt-1 course-description mb-4"
+                        class="mt-1 kurious--textarea mb-4"
                         cols="72"
                         rows="5"
-                        placeholder="Course Description"
+                        placeholder="Enter Chapter Description"
                       ></textarea>
                     </v-card>
                     <v-btn color="primary" @click="e6 = 2">Continue</v-btn>
-                    <v-btn text class="py-6 mt-n3">RESET</v-btn>
                   </v-stepper-content>
 
                   <v-stepper-step :complete="e6 > 2" step="2" editable>Add chapter content</v-stepper-step>
 
                   <v-stepper-content step="2">
-                    <v-card color class="mb-12">
+                    <v-card class="mb-12 elevation-0">
                       <v-row>
                         <v-col class="col-12 actions-container">
                           <v-row>
@@ -173,12 +135,51 @@
                           />
                         </v-col>
                         <v-col class="col-12">
-                          <kurious-file-picker @addFile="addAttachment" @removeFile="removeAttachment" />
+                          <kurious-file-picker
+                            @addFile="addAttachment"
+                            @removeFile="removeAttachment"
+                          />
+                        </v-col>
+                        <v-col class="col-12">
+                          <h3>Quiz</h3>
+                          <v-select
+                            v-model="selectedQuizName"
+                            :items="quizNames"
+                            chips
+                            dense
+                            outlined
+                            class="quiz-select"
+                          ></v-select>
+                          <v-row
+                            v-if="selectedQuizName !== 'None'"
+                            class="quiz-details pa-4 quiz-select"
+                          >
+                            <v-col class="col-6">
+                              Name
+                              <span class="font-weight-bold">{{quizes[activeIndex].name}}</span>
+                            </v-col>
+                            <v-col class="col-6">
+                              Number of questions
+                              <span
+                                class="font-weight-bold"
+                              >{{quizes[activeIndex].containedQuestions}}</span>
+                            </v-col>
+                            <v-col class="col-6">
+                              Course
+                              <span class="font-weight-bold">{{quizes[activeIndex].course}}</span>
+                            </v-col>
+                            <v-col class="col-6">
+                              Duration
+                              <span
+                                class="font-weight-bold"
+                              >{{quizes[activeIndex].duration}}</span>
+                            </v-col>
+                          </v-row>
                         </v-col>
                       </v-row>
                     </v-card>
-                    <v-btn color="primary" @click="saveChapter()">Continue</v-btn>
-                    <v-btn text>Cancel</v-btn>
+                    <v-btn color="primary" class="mr-4" @click="saveChapter()">Save Chapter</v-btn>
+                    <v-btn text class="py-6 mt-n3" @click="reset('chapter')">Reset Chapter</v-btn>
                   </v-stepper-content>
                 </v-stepper>
               </v-col>
@@ -187,29 +188,55 @@
         </form>
       </v-col>
     </v-row>
+    <kurious-dialog :show="show" :message="message" :modal="modal" :status="status">
+      <!-- <v-icon slot="icon" size="55" dark>mdi-clipboard-text-multiple-outline</v-icon> -->
+      <v-icon slot="icon" size="55" dark>mdi-barley</v-icon>
+      <v-row slot="actions">
+        <v-col class="col-6 mx-auto my-0">
+          <v-btn color="mx-2" to="/courses">Go to Courses</v-btn>
+          <v-btn
+            v-if="type === 'details'"
+            color="mx-2"
+            @click="type = 'chapters'; show = false"
+          >Add Chapters</v-btn>
+          <v-btn v-else color="mx-2" @click="reset();show = false">Add Another Chapter</v-btn>
+        </v-col>
+      </v-row>
+    </kurious-dialog>
   </v-app>
 </template>
 
-<script>
+  <script>
 import Apis from "@/services/apis";
 import axios from "axios";
 export default {
   name: "NewClass",
+
   data: () => ({
     e6: 1,
+    facilityCollegeYearNames: ["testing group"],
+    facilityCollegeYearCodes: ["5f0ab5f7deea002f14fd93a2"],
     activeChapter: 0,
+    quizNames: ["None"],
+    selectedQuizName: "None",
+    quizes: [],
     attachments: [],
+    modal: true,
     type: "details",
     mode: "edit",
+    show: false,
     message: "",
+    status: 200,
     course: {
       _id: undefined,
       name: "",
-      facilityCollegeYear: "5f0ab5f7deea002f14fd93a2",
+      facilityCollegeYear: "",
       description: "",
       coverPicture: undefined,
     },
+    activeIndex: 0,
     chapter: {
+      _id: "",
       name: "",
       description: "",
     },
@@ -226,8 +253,49 @@ export default {
         document.querySelector(".ProseMirror").focus();
       }
     },
+    selectedQuizName() {
+      if (this.selectedQuizName !== "None") {
+        this.activeIndex = this.quizNames.indexOf(this.selectedQuizName) - 1;
+      }
+    },
+    type() {
+      if (this.type === "chapters") {
+        this.getQuizes();
+      }
+    },
   },
   methods: {
+    async getQuizes() {
+      try {
+        const response = await Apis.get("quiz");
+        for (const quiz of response.data) {
+          if (!quiz.target) {
+            const newQuiz = {
+              _id: quiz._id,
+              name: quiz.name,
+              course: "nyuma",
+              usage: 0,
+              containedQuestions: quiz.questions.length,
+              instructor: quiz.instructor,
+              questions: quiz.questions,
+              duration: `${quiz.duration.hh === "" ? "00" : quiz.duration.hh}:${
+                quiz.duration.mm === "" ? "00" : quiz.duration.mm
+              }:${quiz.duration.ss === "" ? "00" : quiz.duration.ss}`,
+              date: quiz.createdAt.split("T")[0].split("-").reverse().join("/"),
+            };
+            this.quizes.push(newQuiz);
+            this.quizNames.push(newQuiz.name);
+          }
+        }
+      } catch (error) {
+        if (error.request && !error.response) {
+          this.status = 503;
+          this.message = "Service Unavailable";
+          this.modal = false;
+          this.show = true;
+        }
+      }
+    },
     addAttachment(file) {
       this.attachments.push(file);
     },
@@ -249,86 +317,162 @@ export default {
       this.course.coverPicture = this.$refs.file.files[0];
     },
     async saveCourse() {
-      this.message = "";
-      const savedCourse = await Apis.create("course", {
-        name: this.course.name,
-        instructor: this.$store.state.user._id,
-        description: this.course.description,
-        facilityCollegeYear: this.course.facilityCollegeYear,
-      });
-      if (savedCourse.data._id) {
-        this.course._id = savedCourse.data._id;
-        // if pic provided upload it
-        if (this.course.coverPicture !== undefined) {
-          const formData = new FormData();
+      try {
+        this.message = "";
+        this.course.facilityCollegeYear = this.facilityCollegeYearCodes[
+          this.facilityCollegeYearNames.indexOf(this.course.facilityCollegeYear)
+        ];
+        let response = await Apis.create("course", {
+          name: this.course.name,
+          instructor: this.$store.state.user._id,
+          description: this.course.description,
+          facilityCollegeYear: this.course.facilityCollegeYear,
+        });
+        this.message = "Course was saved successfuly";
+        this.show = true;
+        this.course._id = response.data._id;
+
+        const formData = new FormData();
+
+        if (this.course.coverPicture) {
           formData.append("file", this.course.coverPicture);
-          const response = await axios.put(
-            `http://localhost:7070/kurious/file/updateCourseCoverPicture/${savedCourse.data._id}`,
+
+          response = await axios.put(
+            `http://localhost:7070/kurious/file/updateCourseCoverPicture/${this.course._id}`,
             formData,
             { headers: { "Content-Type": "multipart/form-data" } }
           );
-          if (!response.data._id) {
-            this.message = response.data;
-          }
+
+          setTimeout(() => {
+            this.message = "Cover Picture was saved successfully";
+          }, 1000);
         }
-      } else {
-        this.message = savedCourse.data;
+      } catch (error) {
+        if (error.response) {
+          this.status = error.response.status;
+          this.message = error.response.data;
+        } else if (error.request) {
+          this.status = 503;
+          this.message = "Service Unavailable";
+        }
+        this.modal = false;
+        this.show = true;
       }
-      if (this.message === "") {
-        // success message needed
-        this.type = "chapters";
+    },
+    async attachQuiz(type, id) {
+      try {
+        const quiz = this.quizes[this.activeIndex];
+        this.message = "";
+        const splitDuration = quiz.duration.split(":");
+        await Apis.update("quiz", this.quizes[this.activeIndex]._id, {
+          name: quiz.name,
+          questions: quiz.questions,
+          duration: {
+            hh: splitDuration[0],
+            mm: splitDuration[1],
+            ss: splitDuration[2],
+          },
+          instructor: quiz.instructor,
+          target: {
+            type: type,
+            id: id,
+          },
+        });
+        this.message = "Quiz was saved attached";
+        this.show = true;
+      } catch (error) {
+        if (error.response) {
+          this.status = error.response.status;
+          this.message = error.response.data;
+        } else if (error.request) {
+          this.status = 503;
+          this.message = "Service Unavailable";
+        }
+        this.modal = false;
+        this.show = true;
       }
     },
     async saveChapter() {
-      this.message = "";
-      const savedChapter = await Apis.create("chapter", {
-        name: this.chapter.name,
-        course: "5f2a2db8e1c8af0fd07ac541",
-        description: this.chapter.description,
-      });
-      if (savedChapter.data._id) {
-        const content = document.querySelector(".ProseMirror").innerHTML;
+      try {
+        this.message = "";
+        let response = await Apis.create("chapter", {
+          name: this.chapter.name,
+          course: "5f2a2db8e1c8af0fd07ac541",
+          description: this.chapter.description,
+        });
+        this.message = "Course was saved successfuly";
+        this.show = true;
+        this.chapter._id = response.data._id;
+        const content = document.querySelector(".ProseMirror").innerHTML; // should be changed after .. get content from the editor form more security
 
-        const response = await Apis.create(
-          `file/updateChapterContent/${savedChapter.data._id}`,
+        response = await Apis.create(
+          `file/updateChapterContent/${this.chapter._id}`,
           {
             content: content,
           }
         );
-        if (!response.data._id) {
-          this.message = response.data;
-        } else{
-      const formData = new FormData();
-      for (const i in this.attachments) {
-        formData.append("files[" + i + "]", this.attachments[i]);
-      }
-      const response = await axios.post(
-        `http://localhost:7070/kurious/file/AddAttachments/${savedChapter.data._id}`,
-        formData,
-        { headers: { "Content-Type": "multipart/form-data" } }
-      );
-      if (
-        response.data.message === "All attachments were successfully uploaded"
-      ) {
-        this.message = response.data;
-      } else {
-        alert(response.data);
-      }
+        setTimeout(() => {
+          this.message = "Chapter content was saved successfuly";
+        }, 1000);
+        const formData = new FormData();
+        for (const i in this.attachments) {
+          formData.append("files[" + i + "]", this.attachments[i]);
         }
-      } else {
-        this.message = savedChapter.data;
+        response = await axios.post(
+          `http://localhost:7070/kurious/file/AddAttachments/${this.chapter._id}`,
+          formData,
+          { headers: { "Content-Type": "multipart/form-data" } }
+        );
+        setTimeout(() => {
+          this.message = "Attachments were saved successfuly";
+        }, 1000);
+        if (this.selectedQuizName !== "None") {
+          this.attachQuiz("Chapter", this.chapter._id);
+        }
+      } catch (error) {
+        if (error.response) {
+          this.status = error.response.status;
+          this.message = error.response.data;
+        } else if (error.request) {
+          this.status = 503;
+          this.message = "Service Unavailable";
+        }
+        this.modal = false;
+        this.show = true;
       }
-      if (this.message === "") {
-        // success message needed
-        // this.type = 'chapters'
-        alert("kbx");
+    },
+    reset(type) {
+      if (type === "course") {
+        this.course = {
+          _id: undefined,
+          name: "",
+          facilityCollegeYear: "",
+          description: "",
+          coverPicture: undefined,
+        };
+      } else {
+        this.chapter = {
+          _id: "",
+          name: "",
+          description: "",
+        };
+        this.content = undefined;
+        this.attachments = [];
+        const closeButtons = document.querySelectorAll(".remove--button");
+        this.mode = "";
+        this.$nextTick(function () {
+          this.mode = "edit";
+        });
+        for (const button of closeButtons) {
+          button.click();
+        }
       }
     },
   },
 };
 </script>
 
-<style>
+  <style>
 .ProseMirror:focus {
   outline: none;
 }

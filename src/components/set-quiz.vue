@@ -53,6 +53,21 @@
       <v-btn color="#ffd248" class="white--text save-quiz" rounded @click="saveQuiz() ">Save</v-btn>
       <v-btn color="#707070" class="cancel-quiz" text>Cancel</v-btn>
     </v-row>
+    <kurious-dialog :show="show" :message="message" :modal="modal" :status="status">
+      <!-- <v-icon slot="icon" size="55" dark>mdi-clipboard-text-multiple-outline</v-icon> -->
+      <v-icon slot="icon" size="55" dark>mdi-barley</v-icon>
+      <v-row slot="actions">
+        <v-col class="col-6 mx-auto my-0">
+          <v-btn color="mx-2" to="/quiz">Go to Quizes</v-btn>
+          <v-btn
+            v-if="status !== 200"
+            color="mx-2"
+            @click="show = false"
+          >Edit Quiz</v-btn>
+          <v-btn v-else color="mx-2" @click="reset();show = false">Add Another Quiz</v-btn>
+        </v-col>
+      </v-row>
+    </kurious-dialog>
   </v-app>
 </template>
 
@@ -64,11 +79,10 @@ export default {
     VueTimepicker,
   },
   data: () => ({
-    methods: {
-      allowedHours: (v) => v % 2,
-      allowedMinutes: (v) => v >= 10 && v <= 50,
-      allowedStep: (m) => m % 10 === 0,
-    },
+    show: false,
+    message: "",
+    modal: true,
+    status: 200,
     name: "",
     duration: { hh: "00", mm: "00", ss: "00" },
     questionTypes: [
@@ -100,6 +114,27 @@ export default {
     ],
   }),
   methods: {
+    reset() {
+      this.questions = [
+        {
+          type: "Multiple select",
+          marks: 0,
+          details: "",
+          options: {
+            options: [{ text: "" }, { text: "" }],
+          },
+        },
+        {
+          type: "Open ended",
+          marks: 0,
+          details: "",
+          options: {
+            options: [{ text: "" }, { text: "" }],
+          },
+        },
+      ];
+      this.duration = { hh: "00", mm: "00", ss: "00" };
+    },
     addQuestion() {
       this.questions.push({
         type: "Open ended",
@@ -120,21 +155,34 @@ export default {
       this.questions.splice(index, 1);
     },
     async saveQuiz() {
-      let questions = [];
-      for (const question of this.questions) {
-        if (!question.type.includes("select")) {
-          question.options = undefined;
+      try {
+        let questions = [];
+        for (const question of this.questions) {
+          if (!question.type.includes("select")) {
+            question.options = undefined;
+          }
+          question.type = question.type.toLowerCase().replace(" ", "-");
+          questions.push(question);
         }
-        question.type = question.type.toLowerCase().replace(" ", "-");
-        questions.push(question);
+        await Apis.create("quiz", {
+          name: this.name,
+          duration: this.duration,
+          instructor: this.$store.state.user._id,
+          questions: questions,
+        });
+        this.message = "Quiz was saved successfully";
+        this.show = true;
+      } catch (error) {
+        if (error.response) {
+          this.status = error.response.status;
+          this.message = error.response.data;
+        } else if (error.request) {
+          this.status = 503;
+          this.message = "Service Unavailable";
+        }
+        this.modal = false;
+        this.show = true;
       }
-      const response = await Apis.create("quiz", {
-        name: this.name,
-        duration: this.duration,
-        instructor: this.$store.state.user._id,
-        questions: questions,
-      });
-      console.log(response);
     },
   },
 };

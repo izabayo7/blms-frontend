@@ -1,18 +1,13 @@
 <template>
-  <v-dialog id="kurious--dialog" v-model="show" persistent max-width="70%">
+  <v-dialog id="kurious--dialog" v-model="show" :persistent="modal" max-width="70%">
     <div class="round">
       <v-card class="text-center pa-12">
-        <v-avatar size="150" color="#4592ee">
-          <v-icon size="55" dark>mdi-clipboard-text-multiple-outline</v-icon>
+        <v-avatar size="150" :color="status === 200 ? '#4592ee' :  'red'">
+          <slot name="icon" /> 
         </v-avatar>
-        <v-card-text>{{message}}</v-card-text>
+        <v-card-text class="title">{{message}}</v-card-text>
         <v-card-actions>
-          <v-row>
-            <v-col class="col-6 mx-auto">
-              <v-btn color="mx-2" @click="show = false">Disagree</v-btn>
-              <v-btn color="mx-2" @click="show = false">Agree</v-btn>
-            </v-col>
-          </v-row>
+          <slot name="actions" />
         </v-card-actions>
       </v-card>
     </div>
@@ -34,11 +29,22 @@ export default {
       type: Boolean,
       default: true,
     },
+    status: {
+      type: Number,
+      default: 200,
+    },
   },
 };
 </script>
 <style lang="scss">
-.v-dialog.v-dialog--active.v-dialog--persistent {
+.v-dialog.v-dialog--active {
   border-radius: 56px;
+}
+.round {
+  .v-card > *:first-child:not(.v-btn):not(.v-chip),
+  .v-card > .v-card__progress + *:not(.v-btn):not(.v-chip) {
+    border-top-left-radius: 50% !important;
+    border-top-right-radius: 50% !important;
+  }
 }
 </style>

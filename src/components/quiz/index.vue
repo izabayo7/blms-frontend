@@ -51,7 +51,16 @@
         </v-card>
       </v-col>
     </v-row>
-    <kurious-dialog :show="show" :message="message" />
+    <kurious-dialog :show="show" :message="message" :status="status">
+      <!-- <v-icon slot="icon" size="55" dark>mdi-clipboard-text-multiple-outline</v-icon> -->
+      <v-icon slot="icon" size="55" dark>mdi-barley</v-icon>
+      <v-row slot="actions">
+        <v-col class="col-6 mx-auto my-0">
+          <v-btn color="mx-2" @click="show = false">Go to Back</v-btn>
+          <v-btn color="mx-2" @click="show = false">Reload</v-btn>
+        </v-col>
+      </v-row>
+    </kurious-dialog>
   </v-container>
 </template>
 
@@ -60,7 +69,8 @@ import Apis from "@/services/apis";
 export default {
   data: () => ({
     search: "",
-    show: true,
+    show: false,
+    status: 200,
     message: "just testing",
     quizes: [],
     headers: [
@@ -135,7 +145,11 @@ export default {
           this.quizes.push(newQuiz);
         }
       } catch (error) {
-        console.log(error);
+        if (error.request) {
+          this.status = 503;
+          this.message = "Service Unavailable";
+        }
+        this.show = true;
       }
     },
     async deleteQuiz(id) {
@@ -148,7 +162,14 @@ export default {
           }
         }
       } catch (error) {
-        console.log(error);
+        if (error.response) {
+          this.status = error.response.status;
+          this.message = error.response.data;
+        } else if (error.request) {
+          this.status = 503;
+          this.message = "Service Unavailable";
+        }
+        this.show = true;
       }
     },
   },
@@ -159,8 +180,8 @@ export default {
 .round {
   .v-card > *:first-child:not(.v-btn):not(.v-chip),
   .v-card > .v-card__progress + *:not(.v-btn):not(.v-chip) {
-    border-top-left-radius: 50%;
-    border-top-right-radius: 50%;
+    border-top-left-radius: 50% !important;
+    border-top-right-radius: 50% !important;
   }
 }
 </style>

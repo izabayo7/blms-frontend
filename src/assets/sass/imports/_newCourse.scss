@@ -15,6 +15,13 @@
     .group-select {
         width: 360px !important;
     }
+    .quiz-select {
+        margin: 10px 0 0 10px;
+        width: 460px !important;
+    }
+    .quiz-details{
+        background-color: #f8f8f8;
+    }
     .v-input__slot {
         height: 0px;
     }
@@ -24,7 +31,7 @@
     .v-input.course-description.v-textarea.theme--light.v-text-field.v-text-field--is-booted.v-text-field--enclosed.v-text-field--outlined {
         width: 430px;
     }
-    .course-description {
+    .kurious--textarea {
         padding: 10px;
         resize: none;
         display: block;

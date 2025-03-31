@@ -53,7 +53,7 @@
 <template>
   <form ref="fileform" id="kurious--drag" class="yellow">
     <v-row>
-      <v-col class="col-12">
+      <v-col class="col-10">
         <div class="file-list-container d-flex">
           <div v-for="(file, key) in files" :key="key" class="file-listing d-flex">
             <v-badge overlap color="transparent">
@@ -61,11 +61,11 @@
                 fab
                 x-small
                 color="error"
-                class="ml-n2 mt-n2"
+                class="ml-n2 mt-n2 remove--button"
                 slot="badge"
                 @click="removeFile( key )"
               >
-                <v-icon>mdi-close</v-icon>
+                <v-icon color="#fff">mdi-window-close</v-icon>
               </v-btn>
               <img
                 v-if="imageTypes.includes(file.type)"
@@ -84,7 +84,14 @@
         <span>Drop the files here!</span>
       </v-col>
       <v-col class="col-2">
-        <v-btn class="mt-n2" large icon><v-icon>mdi-paperclip</v-icon></v-btn>
+        <v-btn class="mt-n2" @click="clickButton()" large icon><v-icon>mdi-paperclip</v-icon></v-btn>
+        <input
+          type="file"
+          multiple
+          id="newFile"
+          hidden
+          @change="addFile()"
+        >
       </v-col>
     </v-row>
   </form>
@@ -171,6 +178,15 @@ export default {
   },
 
   methods: {
+    clickButton () {
+      document.getElementById('newFile').click()
+    },
+    addFile () {
+      for (const file of document.getElementById('newFile').files) {
+        this.files.push(file)
+      }
+      this.getImagePreviews()
+    },
     findIcon(type) {
       if (type.includes("video")) {
         return "-video";
