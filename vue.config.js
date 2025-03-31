@@ -1,15 +1,22 @@
+// const VuetifyLoaderPlugin = require('vuetify-loader/lib/plugin')
+
 module.exports = {
+  // configureWebpack: {
+  //   plugins: [
+  //     new VuetifyLoaderPlugin()
+  //   ],
+  // },
   css: {
     loaderOptions: {
       scss: {
-          prependData: `
+        prependData: `
           @import "@/assets/sass/styles.scss";
           `
       }
     }
   },
   "transpileDependencies": [
-    "vuetify" 
+    "vuetify"
   ],
   productionSourceMap: false,
 }

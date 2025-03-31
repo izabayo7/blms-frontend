@@ -300,7 +300,7 @@
 
 <script>
 import { mapGetters, mapActions } from "vuex";
-import _ from "lodash";
+import { omit } from "lodash";
 export default {
   data: () => ({
     alphabets: [
@@ -529,7 +529,7 @@ export default {
         auto_submitted: this.selected_quiz_submission.auto_submitted,
         used_time: this.selected_quiz_submission.used_time,
         answers: this.selected_quiz_submission.answers.map((x) =>
-          _.omit(x, ["feedback"])
+          omit(x, ["feedback"])
         ),
         marked: this.selected_quiz_submission.marked,
         total_marks: this.selected_quiz_submission.totalMarks,
