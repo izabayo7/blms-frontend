@@ -135,7 +135,7 @@
                 selected_quiz_submission.marked || userCategory === 'INSTRUCTOR'
               "
             >
-              <v-col class="col-12 col-md-8 d-flex">
+              <v-col class="col-12 col-md-6 d-flex">
                 <div class="mr-3">Awarded marks:</div>
                 <div>
                   <div class="cool-box marks grey-color mt-n1">
@@ -153,7 +153,7 @@
               </v-col>
               <v-col
                 v-if="question.type.includes('select')"
-                class="col-12 col-md-4"
+                class="col-12 col-md-4 ml-n6"
               >
                 <div class="choice_status vertically--centered">
                   <svg
