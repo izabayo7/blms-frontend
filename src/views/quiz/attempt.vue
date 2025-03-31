@@ -5,7 +5,7 @@
       class="quiz-page px-4 px-md-16"
   >
     <div
-        v-if="(!selected_quiz_submission || $store.state.user.user.category.name ==  'INSTRUCTOR') && filesToUpload.length">
+        v-if="(!selected_quiz_submission || $store.state.user.user.category.name ==  'INSTRUCTOR') && filesToUpload.length && !disabled">
       <h2>{{ selected_quiz.name }}</h2>
       <v-row>
         <v-col class="col-12 col-md-7 questions-side">
@@ -213,6 +213,12 @@
         </v-col>
       </v-row>
     </div>
+    <div v-else-if="disabled">
+      <ErrorPage
+        title="You are not allowed to  do a quiz "
+        subtitle="You must first pay your school fees to regain access"
+      />
+    </div>
     <div class="d-flex justify-center align-center full-height" v-else>
       <img src="https://kurious.rw/_nuxt/img/loader.059b462.gif" alt="loading ..">
     </div>
@@ -260,8 +266,12 @@ export default {
     remaining_time: 0,
     submission_id: "",
   }),
+  components:{
+    ErrorPage: () => import("@/components/dashboard/error.vue"),
+  },
   computed: {
     ...mapGetters("chat", ["socket"]),
+    ...mapGetters("user", ["paymentStatus"]),
     ...mapGetters("network", ["onLine"]),
     // get the current course
     ...mapGetters("quiz", ["selected_quiz"]),
@@ -269,6 +279,9 @@ export default {
     formated_remaining_time() {
       return new Date(this.remaining_time * 1000).toISOString().substr(11, 8);
     },
+    disabled() {
+      return this.paymentStatus.paid === false
+    }
   },
   watch: {
     remaining_time() {
@@ -276,8 +289,7 @@ export default {
         setTimeout(() => {
           this.remaining_time -= 1;
         }, 1000);
-        if (this.remaining_time == this.selected_quiz.duration - 1)
-          this.initialiseQuiz();
+        // if (this.remaining_time
 
         this.attempt.used_time = this.selected_quiz.duration - this.remaining_time;
       } else if (!this.done) {
@@ -319,7 +331,6 @@ export default {
   methods: {
     saveProgress(index) {
       if (this.$store.state.user.user.category.name === 'STUDENT') {
-        console.log(this.$store.state.user.user.category.name)
         this.socket.emit('save-progress', {
           index,
           submission_id: this.submission_id,
@@ -558,8 +569,12 @@ export default {
     },
   },
   created() {
+
+    if (this.disabled)
+      return
+
     this.mode = "edit";
-    if (this.$store.state.user.user.category.name == "STUDENT") {
+    if (this.$store.state.user.user.category.name === "STUDENT") {
       this.findQuizSubmissionByUserAndQuizNames({
         userName: this.$store.state.user.user.user_name,
         quizName: this.$route.params.name,

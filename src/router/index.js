@@ -47,6 +47,14 @@ const routes = [
         }
     },
     {
+        path: '/unauthorized',
+        component: () =>
+            import( /* webpackChunkName: "error" */ '@/components/dashboard/error'),
+        meta: {
+            allowAnonymous: true
+        }
+    },
+    {
         path: '/reset_password',
         component: () =>
             import( /* webpackChunkName: "reset-password" */ '@/views/pages/reset_password'),
