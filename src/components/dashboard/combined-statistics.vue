@@ -6,11 +6,19 @@
         <button
             v-for="(obj, i) in data_categories"
             :key="i"
-            :class="`choice ${obj.name == selected_category ? 'active' : ''}`"
+            :class="`choice hidden-sm-and-down ${obj.name == selected_category ? 'active' : ''}`"
             @click="selected_category = obj.name"
         >
           {{ obj.name }}
         </button>
+        <select-ui
+            :options="data_categories.map((x)=>x.name)"
+            @input="
+                (e) => {
+                  selected_category = e;
+                }
+              "
+        />
       </div>
       <div class="result-view pb-0 col-12 col-lg-7">
         <div class="filters-containter">
@@ -42,6 +50,7 @@
 <script>
 import Apexcharts from "vue-apexcharts";
 import Apis from "@/services/apis";
+import SelectUi from "@/components/reusable/ui/select-ui";
 
 export default {
   name: "combined-statistics",
@@ -98,6 +107,7 @@ export default {
   }),
   components: {
     chart: Apexcharts,
+    SelectUi
   },
   methods: {
     findStartDate(date) {
