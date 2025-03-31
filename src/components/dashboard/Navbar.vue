@@ -27,7 +27,7 @@ export default {
   components: {
     search: () => import("@/components/reusable/Search"),
     notifications: () => import("@/components/reusable/Notification"),
-    profile: () => import("@/components/reusable/Profile"),
+    profile: () => import("./Profile"),
   },
 };
 </script>

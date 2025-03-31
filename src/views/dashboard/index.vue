@@ -1,38 +1,19 @@
 <template>
-  <v-app>
-    <!-- inject the navbar -->
-    <dashboard-dynamic-nav-bar />
-
-    <!-- inject the sidebar -->
-    <dashboard-dynamic-side-bar />
-
-    <!-- display child components according to the current route -->
-    <v-main :class="`bg-one ${contentClass}`">
-      <router-view />
-    </v-main>
-  </v-app>
+  <router-view />
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 export default {
-  name: "Dashboard",
-  components: {
-    DashboardDynamicNavBar: () => import("@/components/navbar"),
-    DashboardDynamicSideBar: () => import("@/components/sidebar"),
+  name: "Index",
+  computed: {
+    ...mapGetters("chat", ["socket"]),
   },
-  computed:{
-    contentClass(){
-      return ['xs', 'sm', 'md'].includes(this.$vuetify.breakpoint.name) ? '' : `sidebar-${this.$store.state.sidebar.minivariant ? 'collapsed' : 'expanded'}` 
-    }
-  }
+  mounted() {
+    //  
+    this.socket.on("receive-message", (message) => {
+      console.log(message, "og kbx");
+    });
+  },
 };
 </script>
-
-<style lang="scss">
-.sidebar-expanded {
-  padding: 48px 0px 0px 202px !important;
-}
-.sidebar-collapsed {
-  padding: 48px 0px 0px 99px !important;
-}
-</style>

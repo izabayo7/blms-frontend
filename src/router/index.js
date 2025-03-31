@@ -26,163 +26,178 @@ const routes = [
     },
     {
         /**
-         * DASHBOARD CHILDREN
-         *  components that will share the sidebar and the navbar
-         *  they are also protected since their parent is protected
+         * DASHBOARD Parent
+         *  This was done so that we can use global event listeners to make the whole
+         *  application realtime on whatever page your on
          */
-        path: '/kurious',
+        path: '/app',
         component: () =>
-            import('@/views/dashboard/Index-new'),
+            import('@/views/dashboard/index'),
         meta: {
             allowAnonymous: false
         },
-        // for chat
-        children: [{
-            path: '/messages',
-            component: () => import('@/views/chat/Messages.vue'),
-            children: [
-                { path: '/messages/:username', component: () => import('@/views/chat/Chat.vue') }
-            ]
-        },
-        // for courses
-        {
-            path: '/courses',
-            component: () => import('@/views/courses'),
-        },
-        {
-            path: '/courses/preview/:name',
-            component: () => import('@/views/courses/preview')
-        },
-        {
-            path: '/courses/edit/:name',
-            name: 'Edit Course',
-            component: () =>
-                import('@//views/courses/edit')
-        }, {
-            path: '/courses/new-course',
-            name: 'Create course',
-            component: () =>
-                import('@/views/courses/create')
-        },
-        {
-            path: '/courses/:name',
-            component: () => import('@/views/courses/details')
-        },
-        // for quiz
-        {
-            path: '/quiz',
-            name: 'Quiz',
-            component: () =>
-                import('@/views/quiz')
-        }, {
-            path: '/quiz/new-quiz',
-            name: 'Set Quiz',
-            component: () =>
-                import('@/views/quiz/create')
-        }, {
-            path: '/quiz/edit/:name',
-            name: 'Edit Quiz',
-            component: () =>
-                import('@/views/quiz/edit')
-        }, {
-            path: '/quiz/attempt/:name',
-            name: 'TakeQuiz',
-            component: () =>
-                import('@/views/quiz/attempt')
-        }, {
-            path: '/quiz/:quiz_name/:student_name',
-            name: 'MarkQuiz',
-            component: () =>
-                import('@/views/quiz/mark')
-        },
-        // for reports
-        {
-            path: '/reports',
-            name: 'Reports',
-            component: () =>
-                import('@/views/reports')
-        }, {
-            path: '/library',
-            name: 'Library',
-            component: () =>
-                import('@/components/library.vue')
-        }, {
-            path: '/live-class',
-            name: 'liveClass',
-            component: () =>
-                import('@/components/live-class.vue')
-        }, {
-            path: '/profile',
-            name: 'profile',
-            component: () =>
-                import('@/components/profile.vue')
-        }, {
-            path: '/accounts/currentUser',
-            name: 'User Profile',
-            component: () =>
-                import('@/components/profile.vue')
-        }, 
-        // administration functionalities
-        {
-            path: '/administration',
-            name: 'Users',
-            component: () =>
-                import('@/components/admin/users.vue')
-        },
-        {
-            path: '/administration/faculties',
-            name: 'Faculties',
-            component: () =>
-                import('@/components/faculty'),
-            meta: {
-                allowAnonymous: false
-            }
-        },
-        {
-            path: '/administration/studentgroup',
-            name: 'Student Group',
-            component: () =>
-                import('@/components/studentGroup'),
-            meta: {
-                allowAnonymous: false
-            }
-        },]
-    },
-    // administration functionalities
-    {
-        path: '/administration/register/users',
-        name: 'Register Users',
-        component: () =>
-            import('@/views/administration/registration/users/panel')
-    }, {
-        path: '/administration/register/users/student',
-        name: 'Register Student',
-        component: () =>
-            import('@/views/administration/registration/users')
-    }, {
-        path: '/administration/register/users/instructor',
-        name: 'Register Instructor',
-        component: () =>
-            import('@/views/administration/registration/users')
-    }, {
-        path: '/administration/register/users/admin',
-        name: 'Register Admin',
-        component: () =>
-            import('@/views/administration/registration/admin/admin')
-    }, {
-        path: '/administration/register/faculty',
-        name: 'Register Faculty',
-        component: () =>
-            import('@/views/administration/registration/faculty')
-    },
-    {
-        path: '/administration/school-details',
-        name: 'SchoolDetails',
-        component: () =>
-            import('@/components/school-details'),
-        meta: {
-            allowAnonymous: false
-        }
+        children: [
+            {
+                /**
+                 * DASHBOARD
+                 *  children will share the sidebar and the navbar
+                 */
+                path: '/dashboard',
+                component: () =>
+                    import('@/views/dashboard/dashboard'),
+                meta: {
+                    allowAnonymous: false
+                },
+                // for chat
+                children: [
+                    {
+                        path: '/messages',
+                        component: () => import('@/views/chat/Messages.vue'),
+                        children: [
+                            { path: '/messages/:username', component: () => import('@/views/chat/Chat.vue') }
+                        ]
+                    },
+                    // for courses
+                    {
+                        path: '/courses',
+                        component: () => import('@/views/courses'),
+                    },
+                    {
+                        path: '/courses/preview/:name',
+                        component: () => import('@/views/courses/preview')
+                    },
+                    {
+                        path: '/courses/edit/:name',
+                        name: 'Edit Course',
+                        component: () =>
+                            import('@//views/courses/edit')
+                    }, {
+                        path: '/courses/new-course',
+                        name: 'Create course',
+                        component: () =>
+                            import('@/views/courses/create')
+                    },
+                    {
+                        path: '/courses/:name',
+                        component: () => import('@/views/courses/details')
+                    },
+                    // for quiz
+                    {
+                        path: '/quiz',
+                        name: 'Quiz',
+                        component: () =>
+                            import('@/views/quiz')
+                    }, {
+                        path: '/quiz/new-quiz',
+                        name: 'Set Quiz',
+                        component: () =>
+                            import('@/views/quiz/create')
+                    }, {
+                        path: '/quiz/edit/:name',
+                        name: 'Edit Quiz',
+                        component: () =>
+                            import('@/views/quiz/edit')
+                    }, {
+                        path: '/quiz/attempt/:name',
+                        name: 'TakeQuiz',
+                        component: () =>
+                            import('@/views/quiz/attempt')
+                    }, {
+                        path: '/quiz/:quiz_name/:student_name',
+                        name: 'MarkQuiz',
+                        component: () =>
+                            import('@/views/quiz/mark')
+                    },
+                    // for reports
+                    {
+                        path: '/reports',
+                        name: 'Reports',
+                        component: () =>
+                            import('@/views/reports')
+                    }, {
+                        path: '/library',
+                        name: 'Library',
+                        component: () =>
+                            import('@/components/library.vue')
+                    }, {
+                        path: '/live-class',
+                        name: 'liveClass',
+                        component: () =>
+                            import('@/components/live-class.vue')
+                    }, {
+                        path: '/profile',
+                        name: 'profile',
+                        component: () =>
+                            import('@/components/profile.vue')
+                    }, {
+                        path: '/accounts/currentUser',
+                        name: 'User Profile',
+                        component: () =>
+                            import('@/components/profile.vue')
+                    },
+                    // administration functionalities
+                    {
+                        path: '/administration',
+                        name: 'Users',
+                        component: () =>
+                            import('@/components/admin/users.vue')
+                    },
+                    {
+                        path: '/administration/faculties',
+                        name: 'Faculties',
+                        component: () =>
+                            import('@/components/faculty'),
+                        meta: {
+                            allowAnonymous: false
+                        }
+                    },
+                    {
+                        path: '/administration/studentgroup',
+                        name: 'Student Group',
+                        component: () =>
+                            import('@/components/studentGroup'),
+                        meta: {
+                            allowAnonymous: false
+                        }
+                    },]
+            },
+            // administration functionalities
+            {
+                path: '/administration/register/users',
+                name: 'Register Users',
+                component: () =>
+                    import('@/views/administration/registration/users/panel')
+            }, {
+                path: '/administration/register/users/student',
+                name: 'Register Student',
+                component: () =>
+                    import('@/views/administration/registration/users')
+            }, {
+                path: '/administration/register/users/instructor',
+                name: 'Register Instructor',
+                component: () =>
+                    import('@/views/administration/registration/users')
+            }, {
+                path: '/administration/register/users/admin',
+                name: 'Register Admin',
+                component: () =>
+                    import('@/views/administration/registration/admin/admin')
+            }, {
+                path: '/administration/register/faculty',
+                name: 'Register Faculty',
+                component: () =>
+                    import('@/views/administration/registration/faculty')
+            },
+            {
+                path: '/administration/school-details',
+                name: 'SchoolDetails',
+                component: () =>
+                    import('@/components/school-details'),
+                meta: {
+                    allowAnonymous: false
+                }
+            },
+        ],
     },
     // recover password
     {
