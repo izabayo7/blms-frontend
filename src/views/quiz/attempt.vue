@@ -270,7 +270,7 @@ export default {
     remaining_time() {
       if (this.remaining_time > 0) {
         setTimeout(() => {
-          // this.remaining_time -= 1;
+          this.remaining_time -= 1;
         }, 1000);
       } else if (!this.done) {
         this.done = true;

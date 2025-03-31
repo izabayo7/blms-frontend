@@ -1,7 +1,7 @@
 <template>
   <div class="marking_feedback">
     <div class="d-flex">
-      <div class="col-9 pa-0">
+      <div class="col-12 col-md-9 pa-0">
         <div
           v-if="$store.state.user.user.category.name !== 'INSTRUCTOR'"
           class="feedback_sender text-right"
@@ -243,6 +243,7 @@ export default {
     min-height: 140px;
     overflow-wrap: anywhere;
     max-width: 100%;
+    width: 100%;
     &.saved_feedback {
       color: black;
       background-color: #e1e1e1;
