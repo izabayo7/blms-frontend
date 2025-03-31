@@ -19,7 +19,7 @@
       <div class="right">
         <div class="comment">
           <h4 class="comment__name">
-            <span @mouseenter="content.sender.user_name !== $store.state.user.user.user_name ? mouseOnPic($event,content.sender.user_name,'user-profile-card') : null">{{ fullNames }} </span
+            <span @mouseenter="((content.sender.user_name !== $store.state.user.user.user_name) && !$route.path.includes('live')) ? mouseOnPic($event,content.sender.user_name,'user-profile-card') : null">{{ fullNames }} </span
             ><span v-if="verified" class="category"
           ><svg
               height="512pt"
