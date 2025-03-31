@@ -261,10 +261,7 @@ openQuiz">
                             Take quiz
                           </button>
                         </div>
-                        <button @click="                      set_modal({
-                        template: 'presentation_request',
-                        method: { action: 'live_session/change_confirmation',parameters: { value: 'accept_presenting'} },
-                      })" class="raise-hand">
+                        <button v-if="instructor" @click="requestPresenting(!isHandRaised,instructor._id)" class="raise-hand">
                           <div class="icon d-flex justify-center">
                             <svg width="37" height="46" viewBox="0 0 37 46" fill="none"
                                  xmlns="http://www.w3.org/2000/svg">
@@ -274,7 +271,7 @@ openQuiz">
                             </svg>
 
                           </div>
-                          <div class="text">raise hand</div>
+                          <div class="text">{{ isHandRaised ? 'lower' : 'raise' }} hand</div>
                         </button>
                       </div>
                     </div>
@@ -348,7 +345,7 @@ openQuiz">
                 </svg>
 
               </div>
-              <div class="text">raise hand</div>
+              <div class="text">{{ isHandRaised ? 'lower' : 'raise' }} hand</div>
             </button>
             </div>
           </div>
@@ -490,6 +487,7 @@ export default {
   data() {
     return {
       ws: null,
+      isHandRaised: false,
       participants: [{
         userInfo:{
           sur_name: 'test',
@@ -581,14 +579,67 @@ export default {
     }
   },
   methods: {
+    onHandRaisedOrLowerd(sender, raisedHand){
+      for (const i in this.participants) {
+        if(this.participants[i].userInfo._id == sender){
+          this.participants[i].userInfo.raisedHand = raisedHand
+          break;
+        }
+      }
+    },
+    handlePresentationResponse(sender, allowed){
+      this.isHandRaised = !this.isHandRaised;
+      if(allowed)
+        this.set_modal({
+          template: 'presentation_request',
+          method: { action: 'live_session/change_confirmation',parameters: { value: 'accept_presenting'} },
+        })
+      else
+        this.$store.dispatch("app_notification/SET_NOTIFICATION", {
+          message: 'Sorry your request to present was denied',
+          status: "danger",
+          uptime: 2000,
+        })
+    },
     accept_presenter(id){
-console.log(id)
+      this.socket.emit("live/presentation_request", {
+        receiver: {id},
+        message: 'accept_presenting'
+      });
+      this.onHandRaisedOrLowerd(id,false)
+    },
+    requestPresenting(raiseHand,id){
+      this.socket.emit("live/presentation_request", {
+        receiver: {id},
+        message: raiseHand ? 'request_presenting' : 'revert_presenting_request'
+      });
+      this.onHandRaisedOrLowerd(id,false)
     },
     deny_presenter(id){
-console.log(id)
+      this.socket.emit("live/presentation_request", {
+        receiver: {id},
+        message: 'deny_presenting'
+      });
+      this.onHandRaisedOrLowerd(id,false)
+    },
+    onViewerStopedPresenting(){
+
     },
     start_presenting(){
       this.participationInfo.isOfferingCourse = true;
+    },
+    stop_presenting(){
+      let id
+      for (const i in this.participants) {
+        if(this.participants[i].userInfo.category == 'INSTRUCTOR'){
+          id = this.participants[i].userInfo._id
+          break;
+        }
+      }
+      this.socket.emit("live/presentation_request", {
+        receiver: {id},
+        message: 'finished_presenting'
+      });
     },
     toogleComments() {
       this.showComments = !this.showComments;
@@ -723,6 +774,24 @@ console.log(id)
           status: "info",
           uptime: 5000,
         });
+      })
+      self.socket.on("res/live/presentation_request/sent", ({message}) => {
+        if(['request_presenting','revert_presenting_request'].includes(message)){
+          this.isHandRaised = !this.isHandRaised;
+        }
+      })
+      self.socket.on("res/live/presentation_request", ({message,sender}) => {
+      // [request_presenting, revert_presenting_request, accept_presenting, deny_presenting
+        if(message === 'request_presenting')
+          this.onHandRaisedOrLowerd(sender,true)
+        else if(message === 'revert_presenting_request')
+          this.onHandRaisedOrLowerd(sender,false)
+        else if(message === 'accept_presenting')
+          this.handlePresentationResponse(sender, true)
+        else if(message === 'deny_presenting')
+          this.handlePresentationResponse(sender, false)
+        else
+          this.onViewerStopedPresenting()
       })
 
       self.socket.on("res/live/checkAttendance", ({code}) => {
