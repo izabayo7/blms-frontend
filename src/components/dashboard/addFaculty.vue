@@ -123,7 +123,8 @@
                         stroke-linecap="round"
                     />
                   </svg>
-                  Add student group</button>
+                  Add student group
+                </button>
                 <button v-else @click="saveStudentGroupChanges">Save</button>
               </div>
             </div>
@@ -131,8 +132,8 @@
           <div class="added-student-groups customScroll">
             <div v-for="(item, i) in addedStudentGroups" :key="i" class="item">
               <div class="name">{{ item.name }}</div>
-              <div class="actions">
-                <button @click="edit(i)" class="edit">
+              <div class="actions ml-auto">
+                <button @click="edit(i)" class="edit mr-4">
                   edit
                   <svg
                       width="14"
@@ -220,8 +221,7 @@ export default {
     dean: {
       id: ""
     },
-    addedStudentGroups: [
-    ],
+    addedStudentGroups: [],
   }),
   computed: {
     visible() {
@@ -261,32 +261,42 @@ export default {
   }
   ,
   methods: {
-      // getStudentGroups(){
-      //   Apis.get(`user_groups/college/`).then(d => {
-      //
-      //   })
-      // },
-    addStudentGroup(){
-      if(this.currentStudentGroup == "")
+    // getStudentGroups(){
+    //   Apis.get(`user_groups/college/`).then(d => {
+    //
+    //   })
+    // },
+    addStudentGroup() {
+      if (this.currentStudentGroup == "")
         this.error = "Please enter the student group name"
       else if (this.currentStudentGroup.length < 5)
         this.error = "Student group name too short"
       else {
-        this.addedStudentGroups.unshift({name: this.currentStudentGroup})
-        this.currentStudentGroup = ""
+        const count = this.addedStudentGroups.filter(s => s.name == this.currentStudentGroup)
+        if (!count.length) {
+          this.addedStudentGroups.unshift({name: this.currentStudentGroup})
+          this.currentStudentGroup = ""
+        } else {
+          this.error = "Dupplicate names not allowed"
+        }
       }
     },
-    saveStudentGroupChanges(){
-      this.addedStudentGroups[this.editingIndex].name = this.currentStudentGroup;
-      this.currentStudentGroup = ""
-      this.isEditing = false
+    saveStudentGroupChanges() {
+      const dupplicates = this.addedStudentGroups.filter(s => s.name == this.currentStudentGroup)
+      if (dupplicates.length > 1 || this.addedStudentGroups.indexOf(dupplicates[0]) != this.editingIndex) {
+        this.error = "Dupplicate names not allowed"
+      } else {
+        this.addedStudentGroups[this.editingIndex].name = this.currentStudentGroup;
+        this.currentStudentGroup = ""
+        this.isEditing = false
+      }
     },
-    edit(i){
+    edit(i) {
       this.isEditing = true;
       this.editingIndex = i;
       this.currentStudentGroup = this.addedStudentGroups[i].name
     },
-    deleteStudentGroup(i){
+    deleteStudentGroup(i) {
       this.addedStudentGroups.splice(i, 1)
     },
     select_dean(name) {
@@ -295,7 +305,7 @@ export default {
     ,
     async createFaculty() {
       const res = await Apis.create("faculty", this.faculty);
-      if (res.data.status != 200 && res.data.status != 200) {
+      if (res.data.status != 200 && res.data.status != 201) {
         this.$store.dispatch("app_notification/SET_NOTIFICATION", {
           message: res.data.message,
           status: "danger",
@@ -307,6 +317,30 @@ export default {
           status: "success",
           uptime: 2000,
         })
+        const unsaved = []
+        for (const i in this.addedStudentGroups) {
+          const response = await Apis.create("user_groups", {
+            name: this.addedStudentGroups[i].name,
+            faculty: res.data.data._id
+          });
+          if (response.data.status != 200 && response.data.status != 201) {
+            this.$store.dispatch("app_notification/SET_NOTIFICATION", {
+              message: response.data.message,
+              status: "danger",
+              uptime: 2000,
+            })
+            unsaved.push(this.addedStudentGroups[i])
+          }
+        }
+        if (!unsaved.length) {
+          this.$store.dispatch("app_notification/SET_NOTIFICATION", {
+            message: "User groups added successfully",
+            status: "success",
+            uptime: 2000,
+          })
+          this.$emit('closeModal')
+        } else
+          this.addedStudentGroups = unsaved
       }
     }
     ,
