@@ -48,20 +48,26 @@ export default {
         //add incoming message
         ADD_INCOMING_MESSAGE(state,newMessage){
 
+            //get last message from stored conversation
             store.dispatch('chat/lastMessageInCertainChatMessages',newMessage.sender._id).then(({lastMessage,groupIndex,userIndex}) => {
 
+                //if conversation was found and message not duplicated
                if(userIndex === undefined || lastMessage._id === newMessage._id)
                    return
 
+                //full names of the one who is sending messsage
                 let incomingName = `${newMessage.sender.surName} ${newMessage.sender.otherNames}`
-
+                    //user conversation between sender and receiver
                     let userMessages = state.loadedMessages[userIndex].conversation
-
+                        //if conversation was found
                     if(userMessages){
+                        // if the last sender is the receiver
                         if(userMessages[groupIndex].from.toLowerCase() === 'me'){
+                            //store it as new set of message conversation
                             userMessages.push(
                                 {from:incomingName,messages:[newMessage]}
                             )
+                            //else append to the current messages
                         } else{
                             userMessages[userMessages.length-1].messages.push(newMessage)
                         }
