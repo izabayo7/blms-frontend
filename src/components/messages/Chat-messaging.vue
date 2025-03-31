@@ -345,7 +345,7 @@ export default {
       .attachments-cotainer {
         //position: absolute;
         display: flex;
-
+        flex-wrap: wrap;
         &.pushed {
           margin-top: .5rem
         }
