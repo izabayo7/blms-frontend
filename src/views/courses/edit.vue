@@ -90,14 +90,6 @@
       <v-col v-else class="col-12 pr-12">
         <v-row v-if="activeChapter > -1">
           <v-col class="col-12 col-md-3 px-0 text-left">
-            <!-- <v-btn
-              v-for="(chapter, i) in course.chapters"
-              :key="i"
-              :color="activeChapter === i ? '#ffd248': ''"
-              width="90%"
-              :class="`${activeChapter === i ? 'white--text': ''} d-block my-4 pt-5 pb-8 text-wrap`"
-              @click="activeChapter=i"
-            >{{chapter.name | trimString(20)}}</v-btn>-->
             <v-badge
               v-for="(chapter, i) in course.chapters"
               :key="i"
@@ -110,7 +102,7 @@
                 color="error"
                 class="ml-n2 mt-n2 remove--button"
                 slot="badge"
-                @click="deleteChapter(chapter._id)"
+                @click="ask_confirmation('DELETE_CHAPTER',{ id: chapter._id})"
               >
                 <v-icon color="#fff">mdi-window-close</v-icon>
               </v-btn>
@@ -491,7 +483,14 @@ export default {
     ]),
     ...mapActions("faculties", ["getFacultyCollegeYears"]),
     ...mapActions("quiz", ["getQuizes"]),
-    ...mapMutations("modal",["toogle_visibility","update_modal_template", "update_confirmation_action"]),
+    ...mapMutations("modal", [
+      "toogle_visibility",
+      "update_modal_template",
+      "update_confirmation_action",
+      "update_confirmation_method",
+      "update_title",
+      "update_message",
+    ]),
     // pick coverPicture
     pickfile() {
       document.getElementById("picture").click();
@@ -607,9 +606,22 @@ export default {
       this.selectedQuizName = "";
       this.course.chapters[this.activeChapter].quiz = [];
     },
+    // handle dialogs
+    ask_confirmation(action, credentials) {
+      if (action == "DELETE_CHAPTER") {
+        this.update_confirmation_action("delete_chapter");
+        this.update_confirmation_method({
+          action: "courses/delete_chapter",
+          parameters: { id: credentials.id },
+        });
+        this.update_modal_template("action_confirmation");
+        this.update_title("Delete Chapter");
+        this.update_message("Are you sure you want to delete this chapter?");
+        this.toogle_visibility();
+      }
+      console.log(credentials);
+    },
     deleteChapter(chapterId) {
-      this.update_confirmation_action('delete_chapter')
-      this.update_modal_template('')
       console.log(chapterId);
     },
   },
@@ -647,7 +659,7 @@ export default {
     color: #fff;
   }
   .active-chapter {
-    background-color: #ffd248;
+    background-color: $primary;
   }
 }
 </style>

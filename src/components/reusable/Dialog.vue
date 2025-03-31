@@ -1,5 +1,6 @@
 <template>
   <v-dialog id="kurious--dialog" v-model="visible" :persistent="!closable">
+    <!-- view for information display ex(showing progress or a message) -->
     <div v-if="modal_template == 'information'" class="dialog-body dialog_t_1">
       <div class="close-dialog">
         <svg
@@ -25,6 +26,7 @@
         <v-progress-linear :value="progress" color="#ffc100" class="request-progress" />
       </div>
     </div>
+    <!-- view for action confirmation -->
     <div v-else-if="modal_template == 'action_confirmation'" class="dialog-body dialog_t_1">
       <div class="close-dialog">
         <svg
@@ -42,13 +44,13 @@
           />
         </svg>
       </div>
-      <div v-if="confirmation_action=='delete_chapter'" class="content">
-        <h4 class="title">Delete Chapter</h4>
-        <span class="sub-title">Are you sure you want to delete this chapter?</span>
-        <p class="unconfirmed">{{message}}</p>
+      <!-- show confirmations according to the set action -->
+      <div class="content">
+        <h4 class="title">{{title}}</h4>
+        <span class="sub-title">{{message}}</span>
         <div class="actions">
-          <v-btn @click="toogle_visibility" class="mx-2 white--text" color="#ffd248">Cancle</v-btn>
-          <v-btn @click="update_confirmation(true); toogle_visibility(); " outlined class="mx-2" color="#ffd248">Delete</v-btn>
+          <v-btn @click="toogle_visibility" class="mx-2 white--text" color="#ffd248">Cancel</v-btn>
+          <v-btn @click="$store.dispatch(confirmation_method.action, confirmation_method.parameters); toogle_visibility(); " outlined class="mx-2" color="#ffd248">Delete</v-btn>
         </div>
       </div>
     </div>
@@ -67,7 +69,10 @@ export default {
       "closable",
       "status",
       "modal_template",
-      "confirmation_action"
+      "confirmation_action",
+      "confirmation_method",
+      "title",
+      "message"
     ]),
   },
   methods: {

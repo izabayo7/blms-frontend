@@ -250,6 +250,22 @@ export default {
                 router.push('/courses')
             })
         },
+        //delete a course
+        delete_chapter({ state }, {id}) {
+            apis.delete('chapter', id).then(() => {
+                for (const i in state.courses.data) {
+                    if (state.courses.data[i]._id == state.selectedCourse) {
+                        for (const k in state.courses.data[i].chapters) {
+                            if (state.courses.data[i].chapters[k]._id == id) {
+                                state.courses.data[i].chapters.splice(k, 1)
+                                break
+                            }
+                        }
+                        break
+                    }
+                }
+            })
+        },
         //delete an attachment
         deleteAttachment({ state }, attachmentId) {
             apis.delete('file/removeAttachment', attachmentId).then(() => {

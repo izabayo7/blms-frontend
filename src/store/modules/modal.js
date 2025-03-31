@@ -17,6 +17,8 @@ export default {
         confirmed: false,
         // set current confirmation action
         confirmation_action: '',
+        // set action to be called if the user confirms and it's arguements
+        confirmation_method: {action: '', parameters: {}},
         // set current modal template (information view, confirmation view, ...)
         modal_template: '',
 
@@ -66,6 +68,10 @@ export default {
         update_confirmation_action(state, value) {
             state.confirmation_action = value
         },
+        // update the confirmation method
+        update_confirmation_method(state, value) {
+            state.confirmation_method = value
+        },
         // reset the status
         reset_status(state) {
             state.message = 200
@@ -109,6 +115,10 @@ export default {
         //get current confirmation action
         confirmation_action: state => {
             return state.confirmation_action
+        },
+        //get current confirmation method
+        confirmation_method: state => {
+            return state.confirmation_method
         },
         //get current modal template
         modal_template: state => {

@@ -2,7 +2,7 @@
 <template>
   <v-app>
     <router-view />
-    <kurious-dialog template="confirmation" :action="'delete_chapter'" />
+    <kurious-dialog />
   </v-app>
 </template>
 
