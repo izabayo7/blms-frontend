@@ -41,7 +41,7 @@
           </v-col>
         </v-row>
         <v-row v-else>
-          <img src="@/assets/images/courses_empty.svg" />
+          <img src="@/assets/images/courses_empty.svg"  class="mx-auto"/>
           <div class="col-12">
             <p class="text-center">You have no ongoing courses</p>
             <p class="text-center">You can review completed courses.</p>

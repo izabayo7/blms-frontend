@@ -25,8 +25,23 @@
 export default {
   methods: {
     logout() {
+      // clear the session
       this.$session.destroy();
-      this.$store.dispatch("user/unsetUser");
+      
+      // reset the modules
+      this.$store.commit("user/unsetUser");
+      this.$store.commit("users/RESET_STATE");
+      this.$store.commit("sidebar_navbar/RESET_STATE");
+      this.$store.commit("quiz/RESET_STATE");
+      this.$store.commit("quiz_submission/RESET_STATE");
+      this.$store.commit("notification/RESET_STATE");
+      this.$store.commit("modal/RESET_STATE");
+      this.$store.commit("faculties/RESET_STATE");
+      this.$store.commit("courses/RESET_STATE");
+      this.$store.commit("colleges/RESET_STATE");
+      this.$store.commit("chat/RESET_STATE");
+
+      // redirect to login
       this.$router.push("/login");
     },
   },

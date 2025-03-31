@@ -1,18 +1,20 @@
 import apis from "@/services/apis";
 import router from '@/router'
+const getDefaultState = () => ({
+    // storage for all courses
+    courses: {
+        data: [],
+        loaded: false
+    },
+    // the current course's id (the one we are viewing or editing)
+    selectedCourse: '',
+    // the current chapter's id (the one we are viewing or editing)
+    selectedChapter: '',
+})
+
 export default {
     namespaced: true,
-    state: {
-        // storage for all courses
-        courses: {
-            data: [],
-            loaded: false
-        },
-        // the current course's id (the one we are viewing or editing)
-        selectedCourse: '',
-        // the current chapter's id (the one we are viewing or editing)
-        selectedChapter: '',
-    },
+    state: getDefaultState,
     mutations: {
         // update the selectedCourse
         set_selected_course(state, id) {
@@ -48,6 +50,9 @@ export default {
                 }
             }
         },
+        RESET_STATE(state) {
+            Object.assign(state, getDefaultState())
+        }
     },
     actions: {
         //get courses from backend
@@ -170,7 +175,7 @@ export default {
                     break
                 }
             }
-            return apis.update('chapter', state.selectedChapter, chapter).then( async () => {
+            return apis.update('chapter', state.selectedChapter, chapter).then(async () => {
 
                 if (content) {
                     const formData = new FormData()
@@ -409,7 +414,7 @@ export default {
                     break
                 }
             }
-            return apis.create('chapter', chapter).then( async (d) => {
+            return apis.create('chapter', chapter).then(async (d) => {
 
                 if (content) {
                     const formData = new FormData()

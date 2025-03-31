@@ -1,15 +1,17 @@
 import apis from "@/services/apis";
+const getDefaultState = () => ({
+    // storage for all quiz
+    quiz: {
+        data: [],
+        loaded: false
+    },
+    // keep the selected quiz
+    selected_quiz: ''
+})
+
 export default {
     namespaced: true,
-    state: {
-        // storage for all quiz
-        quiz: {
-            data: [],
-            loaded: false
-        },
-        // keep the selected quiz
-        selected_quiz: ''
-    },
+    state: getDefaultState,
     mutations: {
         // update quiz target
         update_quiz_target(state, { id, target }) {
@@ -26,6 +28,9 @@ export default {
         set_selected_quiz(state, id) {
             state.selected_quiz = id
         },
+        RESET_STATE(state) {
+            Object.assign(state, getDefaultState())
+        }
     },
     actions: {
         //get quiz from backend
@@ -41,13 +46,7 @@ export default {
         },
         //create a quiz
         create_quiz({ state, dispatch }, { quiz, pictures }) {
-            let quizIndex
-            for (const i in state.quiz.data) {
-                if (state.quiz.data[i]._id === state.selected_quiz) {
-                    quizIndex = i
-                    break
-                }
-            }
+
             return apis.create('quiz', quiz).then(d => {
                 if (pictures.length > 0) {
                     let index = 0
@@ -74,10 +73,10 @@ export default {
                                 dispatch('modal/set_progress', parseInt(Math.round((progressEvent.loaded / progressEvent.total) * 100)), { root: true })
                             }
                         }).then((response) => {
-                            state.quiz.data[quizIndex] = response.data
+                            state.quiz.data.push(response.data)
                         })
                     } else {
-                        state.quiz.data[quizIndex] = d.data
+                        state.quiz.data.push(d.data)
                     }
                 }
             })

@@ -1,26 +1,28 @@
+const getDefaultState = () => ({
+    // the visibility
+    visible: false,
+    // request progress
+    progress: 0,
+    // the title
+    title: '',
+    // the text to display
+    message: '',
+    // ability to close the modal
+    closable: false,
+    // request status
+    status: 200,
+    // set user feedback on confirmations
+    confirmed: false,
+    // set action to be called if the user confirms and it's arguements
+    confirmation_method: { action: '', parameters: {} },
+    // set current modal template (information view, confirmation view, ...)
+    modal_template: '',
+
+})
+
 export default {
     namespaced: true,
-    state: {
-        // the visibility
-        visible: false,
-        // request progress
-        progress: 0,
-        // the title
-        title: '',
-        // the text to display
-        message: '',
-        // ability to close the modal
-        closable: false,
-        // request status
-        status: 200,
-        // set user feedback on confirmations
-        confirmed: false,
-        // set action to be called if the user confirms and it's arguements
-        confirmation_method: { action: '', parameters: {} },
-        // set current modal template (information view, confirmation view, ...)
-        modal_template: '',
-
-    },
+    state: getDefaultState,
     mutations: {
         // show or hide the modal
         toogle_visibility(state) {
@@ -57,6 +59,9 @@ export default {
         // update modal template
         update_modal_template(state, value) {
             state.modal_template = value
+        },
+        RESET_STATE(state) {
+            Object.assign(state, getDefaultState())
         }
     },
     actions: {

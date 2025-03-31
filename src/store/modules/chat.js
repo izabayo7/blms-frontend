@@ -3,19 +3,21 @@ import { emit } from '@/services/event_bus'
 import user from '@/store/modules/user'
 import store from '@/store'
 
+const getDefaultState = () => ({
+    username: null,
+    currentDisplayedUser: {},
+    incomingMessages: [],
+    loadedMessages: [],
+    request: {
+        ongoing: false,
+        id: null,
+        status: 0
+    },
+})
+
 export default {
     namespaced: true,
-    state: {
-        username: null,
-        currentDisplayedUser: {},
-        incomingMessages: [],
-        loadedMessages: [],
-        request: {
-            ongoing: false,
-            id: null,
-            status: 0
-        },
-    },
+    state: getDefaultState,
     mutations: {
         //set the current user
         SET_USERNAME(state, username) {
@@ -128,7 +130,9 @@ export default {
             })
 
         },
-
+        RESET_STATE(state) {
+            Object.assign(state, getDefaultState())
+        }
 
 
     },

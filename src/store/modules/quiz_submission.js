@@ -1,15 +1,17 @@
 import apis from "@/services/apis";
+const getDefaultState = () => ({
+    // storage for all quiz_submissions 
+    quiz_submission: {
+        data: [],
+        loaded: false
+    },
+    // keep the selected quiz_submission
+    selected_quiz_submission: ''
+})
+
 export default {
     namespaced: true,
-    state: {
-        // storage for all quiz_submissions 
-        quiz_submission: {
-            data: [],
-            loaded: false
-        },
-        // keep the selected quiz_submission
-        selected_quiz_submission: ''
-    },
+    state: getDefaultState,
     mutations: {
         // add quiz_submission marks
         add_quiz_target(state, { id, target }) {
@@ -26,6 +28,9 @@ export default {
         set_selected_quiz_submission(state, id) {
             state.selected_quiz_submission = id
         },
+        RESET_STATE(state) {
+            Object.assign(state, getDefaultState())
+        }
     },
     actions: {
         //get quiz_submissions  from backend

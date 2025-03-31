@@ -1,16 +1,21 @@
 import apis from "@/services/apis";
+const getDefaultState = () => ({
+    // storage for all notifications
+    notifications: {
+        data: [],
+        loaded: false
+    },
+})
+
 export default {
     namespaced: true,
-    state: {
-        // storage for all notifications
-        notifications: {
-            data: [],
-            loaded: false
-        },
-    },
+    state: getDefaultState,
     mutations: {
         addNotification(state, value) {
             state.notifications.data.unshift(value)
+        },
+        RESET_STATE(state) {
+            Object.assign(state, getDefaultState())
         }
     },
     actions: {

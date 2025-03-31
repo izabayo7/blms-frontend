@@ -77,7 +77,7 @@
                       {{ course.chapters[activeIndex].name }}
                     </v-col>
                     <!-- <v-col class="col-6"></v-col> -->
-                    <v-col class="col-12 text-center">
+                    <v-col class="col-12">
                       <loader v-if="editorContent == ''" type="2" class="vertically--centered" />
                       <kurious-editor
                         v-if="editorContent !== ''"

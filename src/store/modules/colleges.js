@@ -1,19 +1,23 @@
 import apis from "@/services/apis";
 import router from '@/router'
+const getDefaultState = () => ({
+    colleges: {
+        data: [],
+        loaded: false
+    },
+    selected_college: ''
+})
 export default {
     namespaced: true,
-    state: {
-        colleges: {
-            data: [],
-            loaded: false
-        },
-        selected_college: ''
-    },
+    state: getDefaultState,
     mutations: {
         // update the selected college
         set_selected_college(state, id) {
             state.selected_college = id
         },
+        RESET_STATE(state) {
+            Object.assign(state, getDefaultState())
+        }
     },
     actions: {
         //get college from backend

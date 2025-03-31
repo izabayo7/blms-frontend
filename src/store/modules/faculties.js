@@ -1,18 +1,23 @@
 import apis from "@/services/apis";
+const getDefaultState = () => ({
+    // storage for all facultyCollegeYears
+    facultyCollegeYears: {
+        data: [],
+        loaded: false
+    },
+    faculties: {
+        data: [],
+        loaded: false
+    },
+})
+
 export default {
     namespaced: true,
-    state: {
-        // storage for all facultyCollegeYears
-        facultyCollegeYears: {
-            data: [],
-            loaded: false
-        },
-        faculties: {
-            data: [],
-            loaded: false
-        },
-    },
+    state: getDefaultState,
     mutations: {
+        RESET_STATE(state) {
+            Object.assign(state, getDefaultState())
+        }
     },
     actions: {
         //get facultyCollegeYears from backend (currently I'm fetching all for faster development but in future we'll fetch according to the current logged in user)

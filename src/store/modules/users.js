@@ -1,12 +1,14 @@
 import apis from "@/services/apis";
+const getDefaultState = () => ({
+    users: {
+        data: [],
+        loaded: false
+    },
+})
+
 export default {
     namespaced: true,
-    state: {
-        users: {
-            data: [],
-            loaded: false
-        },
-    },
+    state: getDefaultState,
     mutations: {
         SET_USER(state, user) {
             state.user = user
@@ -16,6 +18,9 @@ export default {
             state.user = null
             state.isLoggedIn = false
         },
+        RESET_STATE(state) {
+            Object.assign(state, getDefaultState())
+        }
     },
     actions: {
         //get users from backend
@@ -43,7 +48,7 @@ export default {
                     apis.create("student-faculty-college-year", {
                         student: d.data._id,
                         facultyCollegeYear: facultyCollegeYear,
-                    }).then((_d)=>{
+                    }).then((_d) => {
                         userObj.studentFacultyCollegeYear = _d.data
                         state.users.data.push(userObj)
                     })

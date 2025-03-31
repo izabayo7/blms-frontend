@@ -116,14 +116,14 @@
             class="radio-btn d-block mb-4 submitt-attempt"
             @click="saveAttempt"
             rounded
-            >Submitt Answers</v-btn
+            >Submit Answers</v-btn
           >
           <v-btn
             v-else
             class="radio-btn d-block mb-4 submitt-attempt"
             @click="$router.push('/quiz')"
             rounded
-            >Back to courses</v-btn
+            >Back to quiz</v-btn
           >
         </v-col>
         <v-col class="col-12 col-md-5 timer-side">

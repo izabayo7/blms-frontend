@@ -15,12 +15,7 @@ import colleges from '@/store/modules/colleges'
 Vue.use(Vuex)
 export default new Vuex.Store({
     namespaced: true,
-    state: {
-        sidebar: {
-            visible: false,
-            minivariant: false
-        },
-    },
+    state: {},
     mutations: {
     },
     actions: {
