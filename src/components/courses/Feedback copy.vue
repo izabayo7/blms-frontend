@@ -1,13 +1,25 @@
 <template>
   <div>
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="27"
+      height="22.5"
+      viewBox="0 0 27 22.5"
+    >
+      <path
+        id="Icon_material-reply"
+        data-name="Icon material-reply"
+        d="M15,13.5v-6L4.5,18,15,28.5V22.35c7.5,0,12.75,2.4,16.5,7.65C30,22.5,25.5,15,15,13.5Z"
+        transform="translate(-4.5 -7.5)"
+        fill="#606060"
+      />
+    </svg>
     <div class="d-flex">
-      <div class="col-9 pa-0">
+      <div class="col-11">
         <div
           ref="feedback_input"
           :class="`feedback_input ${content == '' ? 'empty_feedback' : ''}`"
-          :contenteditable="
-            $store.state.user.user.category.name === 'INSTRUCTOR'
-          "
+          :contenteditable="$store.state.user.user.category.name === 'INSTRUCTOR'"
           @keyup="computeFeedbackClass()"
         >
           {{ content }}
@@ -17,7 +29,7 @@
         v-if="
           mode == 'any' && $store.state.user.user.category.name === 'INSTRUCTOR'
         "
-        class="col-3 vertically--centered pa-0"
+        class="col-4 vertically--centered"
       >
         <div class="actions">
           <svg
