@@ -508,6 +508,9 @@ export default {
         //get unpublished courses (instructor)
         unpublishedCourses: state => {
             return state.courses.data.filter(course => !course.published)
+        },
+        totalComments: state => {
+            return state.totalCommentsOnAChapter;
         }
     },
 }
