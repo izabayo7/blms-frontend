@@ -17,7 +17,7 @@
           <v-col class="col-12">
             <v-row>
               <v-col
-                :class="question.type.includes('select') ? 'col-10' : 'col-12'"
+                :class="question.type.includes('select') ? 'col-11' : 'col-12'"
               >
                 <p class="question-details col-md-12 col-12">
                   {{ `${i + 1}. ${question.details}` }}
@@ -43,7 +43,6 @@
                   :id="`file${i}`"
                   hidden
                 />
-
                 <textarea
                   v-if="question.type === 'open_ended'"
                   v-model="attempt.answers[i].text"
@@ -52,84 +51,163 @@
                   placeholder="Type your answer here"
                   class="answer-field"
                 ></textarea>
-                <div v-else class="options">
-                  <div v-if="question.type.includes('text')" class="d-block">
-                    <div
-                      v-for="(choice, k) in question.options.choices"
-                      :key="k"
-                      :class="`text_selection ${
-                        checkChoiceStatus(attempt.answers[i].choosed_options, {
-                          text: choice.text,
-                        })
-                          ? choice.right
-                            ? ''
-                            : 'wrong_choice'
-                          : ''
-                      }
-                      ${choice.right ? 'right_choice' : ''}
-                      `"
-                    >
-                      {{ `${alphabets[k]}. ${choice.text}` }}
-                    </div>
-                  </div>
-                  <div class="pictures-container" v-else>
-                    <v-card
-                      v-for="(choice, k) in question.options.choices"
-                      :key="k"
-                      flat
-                      tile
-                      class="ma-1"
-                    >
-                      <v-img
-                        :src="`${
-                          choice.src
-                        }?format=png&width=200&height=200&token=${$session.get(
-                          'jwt'
-                        )}`"
-                        :lazy-src="`${
-                          choice.src
-                        }?format=png&width=200&height=200&token=${$session.get(
-                          'jwt'
-                        )}`"
-                        :gradient="
+                <div v-else class="d-flex">
+                  <div class="options">
+                    <div v-if="question.type.includes('text')" class="d-block">
+                      <div
+                        v-for="(choice, k) in question.options.choices"
+                        :key="k"
+                        :class="`text_selection ${
                           checkChoiceStatus(
                             attempt.answers[i].choosed_options,
                             {
-                              src: choice.src,
+                              text: choice.text,
                             }
                           )
-                            ? 'to top right, rgba(100,115,201,.33), rgba(25,32,72,.7)'
-                            : undefined
-                        "
-                        class="vertically--centered text-center"
+                            ? choice.right
+                              ? ''
+                              : 'wrong_choice'
+                            : ''
+                        }
+                      ${choice.right ? 'right_choice' : ''}
+                      `"
                       >
-                        <template v-slot:placeholder>
-                          <v-row
-                            class="fill-height ma-0"
-                            align="center"
-                            justify="center"
-                          >
-                            <v-progress-circular
-                              indeterminate
-                              color="grey lighten-5"
-                            ></v-progress-circular>
-                          </v-row>
-                        </template>
-                        <v-icon
-                          v-if="
+                        {{ `${alphabets[k]}. ${choice.text}` }}
+                      </div>
+                    </div>
+                    <div class="pictures-container" v-else>
+                      <v-card
+                        v-for="(choice, k) in question.options.choices"
+                        :key="k"
+                        flat
+                        tile
+                        class="ma-1"
+                      >
+                        <v-img
+                          :src="`${
+                            choice.src
+                          }?format=png&width=200&height=200&token=${$session.get(
+                            'jwt'
+                          )}`"
+                          :lazy-src="`${
+                            choice.src
+                          }?format=png&width=200&height=200&token=${$session.get(
+                            'jwt'
+                          )}`"
+                          :gradient="
                             checkChoiceStatus(
                               attempt.answers[i].choosed_options,
                               {
                                 src: choice.src,
                               }
                             )
+                              ? 'to top right, rgba(100,115,201,.33), rgba(25,32,72,.7)'
+                              : undefined
                           "
-                          class="white--text"
-                          size="50"
-                          >mdi-{{ choice.right ? "check" : "close" }}</v-icon
+                          class="vertically--centered text-center"
                         >
-                      </v-img>
-                    </v-card>
+                          <template v-slot:placeholder>
+                            <v-row
+                              class="fill-height ma-0"
+                              align="center"
+                              justify="center"
+                            >
+                              <v-progress-circular
+                                indeterminate
+                                color="grey lighten-5"
+                              ></v-progress-circular>
+                            </v-row>
+                          </template>
+                          <v-icon
+                            v-if="
+                              checkChoiceStatus(
+                                attempt.answers[i].choosed_options,
+                                {
+                                  src: choice.src,
+                                }
+                              )
+                            "
+                            class="white--text"
+                            size="50"
+                            >mdi-{{ choice.right ? "check" : "close" }}</v-icon
+                          >
+                        </v-img>
+                      </v-card>
+                    </div>
+                  </div>
+
+                  <div v-if="question.type.includes('select')" class="ml-4">
+                    <div class="choice_status vertically--centered">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        v-if="attempt.answers[i].marks == question.marks"
+                        width="34.657"
+                        height="32.115"
+                        viewBox="0 0 34.657 32.115"
+                      >
+                        <g
+                          id="Icon_feather-check-square"
+                          data-name="Icon feather-check-square"
+                          transform="translate(2.5 2.5)"
+                        >
+                          <path
+                            id="Path_2256"
+                            data-name="Path 2256"
+                            d="M13.5,16.545l4.519,4.519L33.083,6"
+                            transform="translate(-4.462 -4.494)"
+                            fill="none"
+                            stroke="#3ce970"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="5"
+                          />
+                          <path
+                            id="Path_2257"
+                            data-name="Path 2257"
+                            d="M31.615,18.058V28.6A3.013,3.013,0,0,1,28.6,31.615H7.513A3.013,3.013,0,0,1,4.5,28.6V7.513A3.013,3.013,0,0,1,7.513,4.5h16.57"
+                            transform="translate(-4.5 -4.5)"
+                            fill="none"
+                            stroke="#3ce970"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="5"
+                          />
+                        </g>
+                      </svg>
+
+                      <svg
+                        v-else
+                        id="Icon_ionic-ios-checkbox-outline"
+                        data-name="Icon ionic-ios-checkbox-outline"
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="30.103"
+                        height="30.103"
+                        viewBox="0 0 30.103 30.103"
+                      >
+                        <path
+                          id="Path_2259"
+                          data-name="Path 2259"
+                          d="M32.094,4.5H7.009A2.506,2.506,0,0,0,4.5,7.009V32.094A2.506,2.506,0,0,0,7.009,34.6H32.094A2.506,2.506,0,0,0,34.6,32.094V7.009A2.506,2.506,0,0,0,32.094,4.5Zm.314,27.281a.629.629,0,0,1-.627.627H7.322a.629.629,0,0,1-.627-.627V7.322A.629.629,0,0,1,7.322,6.7H31.781a.629.629,0,0,1,.627.627Z"
+                          transform="translate(-4.5 -4.5)"
+                          fill="#fc6767"
+                        />
+                        <path
+                          id="Icon_metro-cross"
+                          data-name="Icon metro-cross"
+                          d="M19.112,15.339h0l-5.064-5.064L19.111,5.21h0a.523.523,0,0,0,0-.738L16.719,2.08a.523.523,0,0,0-.738,0h0L10.917,7.145,5.853,2.08h0a.523.523,0,0,0-.738,0L2.723,4.473a.523.523,0,0,0,0,.738h0l5.064,5.064L2.723,15.339h0a.523.523,0,0,0,0,.738l2.392,2.392a.523.523,0,0,0,.738,0h0L10.917,13.4l5.064,5.064h0a.523.523,0,0,0,.738,0l2.392-2.392a.523.523,0,0,0,0-.738Z"
+                          transform="translate(4.548 4.653)"
+                          fill="#fc6767"
+                        />
+                      </svg>
+
+                      <span class="ml-2 font-weight-bold">
+                        {{
+                          attempt.answers[i].marks == question.marks
+                            ? "Right answer"
+                            : "Wrong answer"
+                        }}
+                      </span>
+                    </div>
                   </div>
                 </div>
               </v-col>
@@ -139,7 +217,7 @@
                 selected_quiz_submission.marked || userCategory === 'INSTRUCTOR'
               "
             >
-              <v-col class="col-12 col-md-6 d-flex">
+              <v-col class="col-12 col-md-6 d-flex pb-0">
                 <div class="mr-3">Awarded marks:</div>
                 <div>
                   <div class="cool-box marks grey-color mt-n1">
@@ -156,83 +234,8 @@
                   </div>
                 </div>
               </v-col>
-              <v-col
-                v-if="question.type.includes('select')"
-                class="col-12 col-md-4 ml-n6"
-              >
-                <div class="choice_status vertically--centered">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    v-if="attempt.answers[i].marks == question.marks"
-                    width="34.657"
-                    height="32.115"
-                    viewBox="0 0 34.657 32.115"
-                  >
-                    <g
-                      id="Icon_feather-check-square"
-                      data-name="Icon feather-check-square"
-                      transform="translate(2.5 2.5)"
-                    >
-                      <path
-                        id="Path_2256"
-                        data-name="Path 2256"
-                        d="M13.5,16.545l4.519,4.519L33.083,6"
-                        transform="translate(-4.462 -4.494)"
-                        fill="none"
-                        stroke="#3ce970"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="5"
-                      />
-                      <path
-                        id="Path_2257"
-                        data-name="Path 2257"
-                        d="M31.615,18.058V28.6A3.013,3.013,0,0,1,28.6,31.615H7.513A3.013,3.013,0,0,1,4.5,28.6V7.513A3.013,3.013,0,0,1,7.513,4.5h16.57"
-                        transform="translate(-4.5 -4.5)"
-                        fill="none"
-                        stroke="#3ce970"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="5"
-                      />
-                    </g>
-                  </svg>
 
-                  <svg
-                    v-else
-                    id="Icon_ionic-ios-checkbox-outline"
-                    data-name="Icon ionic-ios-checkbox-outline"
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="30.103"
-                    height="30.103"
-                    viewBox="0 0 30.103 30.103"
-                  >
-                    <path
-                      id="Path_2259"
-                      data-name="Path 2259"
-                      d="M32.094,4.5H7.009A2.506,2.506,0,0,0,4.5,7.009V32.094A2.506,2.506,0,0,0,7.009,34.6H32.094A2.506,2.506,0,0,0,34.6,32.094V7.009A2.506,2.506,0,0,0,32.094,4.5Zm.314,27.281a.629.629,0,0,1-.627.627H7.322a.629.629,0,0,1-.627-.627V7.322A.629.629,0,0,1,7.322,6.7H31.781a.629.629,0,0,1,.627.627Z"
-                      transform="translate(-4.5 -4.5)"
-                      fill="#fc6767"
-                    />
-                    <path
-                      id="Icon_metro-cross"
-                      data-name="Icon metro-cross"
-                      d="M19.112,15.339h0l-5.064-5.064L19.111,5.21h0a.523.523,0,0,0,0-.738L16.719,2.08a.523.523,0,0,0-.738,0h0L10.917,7.145,5.853,2.08h0a.523.523,0,0,0-.738,0L2.723,4.473a.523.523,0,0,0,0,.738h0l5.064,5.064L2.723,15.339h0a.523.523,0,0,0,0,.738l2.392,2.392a.523.523,0,0,0,.738,0h0L10.917,13.4l5.064,5.064h0a.523.523,0,0,0,.738,0l2.392-2.392a.523.523,0,0,0,0-.738Z"
-                      transform="translate(4.548 4.653)"
-                      fill="#fc6767"
-                    />
-                  </svg>
-
-                  <span class="ml-2 font-weight-bold">
-                    {{
-                      attempt.answers[i].marks == question.marks
-                        ? "Right answer"
-                        : "Wrong answer"
-                    }}
-                  </span>
-                </div>
-              </v-col>
-              <v-col class="col-12">
+              <v-col class="col-12 pt-0">
                 <feedback
                   v-if="
                     selected_quiz_submission.answers[i].feedback ||
@@ -283,7 +286,7 @@
             <span> Submission ID </span>
             <button
               @click="copy(selected_quiz_submission._id)"
-              class="copy_code ml-2"
+              :class="`copy_code ml-2 ${coppied ? 'coppied' : ''}`"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -362,6 +365,7 @@ export default {
     attempt: {},
     mode: "view",
     computedTotalMarks: 0,
+    coppied: false
   }),
   components: {
     back: () => import("@/components/shared/back-button"),
@@ -418,6 +422,10 @@ export default {
     ]),
     copy(content) {
       navigator.clipboard.writeText(content);
+      this.coppied = true
+      setTimeout(() => {
+        this.coppied = false
+      }, 2000);
     },
     computeTotalMarks() {
       console.log("ahooooooooooooooo");
@@ -566,8 +574,10 @@ export default {
   color: $primary;
   border: 1px solid $primary;
 }
+.options {
+  width: 70%;
+}
 .text_selection {
-  width: 75%;
   border-radius: 20px;
   padding: 16px;
   box-shadow: 0px 4px 16px rgb(199 199 199);
@@ -603,5 +613,14 @@ export default {
     rgba(249, 93, 93, 0.53) 100%
   );
   box-shadow: 0px 6px 3px rgba(0, 0, 0, 0.16);
+}
+.marks {
+  font-size: 1rem;
+}
+.coppied{
+  color: $primary;
+  svg{
+    fill:$primary
+  }
 }
 </style>
