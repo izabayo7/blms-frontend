@@ -38,6 +38,9 @@ export default {
     &:active{
       border:3px solid lighten($primary,40)
     }
+    &:focus{
+      border:3px solid lighten($primary,40)
+    }
 
     button{
       color:$main;
