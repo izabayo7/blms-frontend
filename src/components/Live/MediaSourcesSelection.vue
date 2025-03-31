@@ -52,6 +52,13 @@
               <select-ui  id="mds-audio-out"  name="mds-audio-out" v-model="selectedDevices.audioOutput" :options="devices.audioOutput.map(device => device.label)"/>
             </div>
           </div>
+          <div class="mds-go-live">
+            <div class="mds-go-live--btn">
+              <button-ui fill>
+                <template #content>Go live</template>
+              </button-ui>
+            </div>
+          </div>
 
         </div>
 
@@ -68,9 +75,10 @@
 
 <script>
 import SelectUi from "../reusable/ui/select-ui";
+import ButtonUi from "../reusable/ui/button-ui";
 export default {
   name: "MediaSourcesSelection",
-  components: {SelectUi},
+  components: {ButtonUi, SelectUi},
   data(){
     return{
       devices:{
@@ -183,7 +191,27 @@ export default {
             width:14.25rem;
           }
         }
+
+      }
+
+      &--preview{
+        margin-left:3rem;
+
+        &--video{
+          padding:.5rem;
+          border:2px solid lighten($grayish, 30);
+        }
+
       }
     }
+
+  &-go-live{
+    display: grid;
+    place-items: center;
+
+    &--btn{
+      width:9rem;
+    }
+  }
 }
 </style>
