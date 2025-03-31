@@ -275,8 +275,7 @@ export default {
       console.log(this.loaded);
       //get courses on page load
       this.getCourses({
-        userCategory: this.userCategory.toLowerCase(),
-        userId: this.$store.state.user.user.user_name,
+        user_name: this.$store.state.user.user.user_name,
       });
       console.log(this.loaded);
     }

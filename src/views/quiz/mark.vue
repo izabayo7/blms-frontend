@@ -4,7 +4,7 @@
     fluid
     class="quiz-page white px-16"
   >
-  <back class="mt-0 mb-6 ml-n6" to="/reports" />
+    <back class="mt-0 mb-6 ml-n6" to="/reports" />
     <v-row>
       <v-col class="col-12" v-if="userCategory === 'INSTRUCTOR'">
         <v-row class="pa-0">
@@ -56,7 +56,7 @@
           </p>
           <v-col class="col-10">
             <v-btn
-              v-if="question.type === 'file-upload'"
+              v-if="question.type === 'file_upload'"
               rounded
               color="#ffd248"
               disabled
@@ -71,14 +71,14 @@
               }}</span>
             </v-btn>
             <input
-              v-if="question.type === 'file-upload'"
+              v-if="question.type === 'file_upload'"
               type="file"
               :id="`file${i}`"
               hidden
             />
 
             <textarea
-              v-if="question.type === 'open-ended'"
+              v-if="question.type === 'open_ended'"
               v-model="attempt.answers[i].text"
               cols="50"
               disabled
@@ -91,7 +91,7 @@
                 <div
                   v-for="(choice, k) in question.options.choices"
                   :key="k"
-                  :class="`text-selection ${
+                  :class="`text_selection ${
                     checkChoiceStatus(attempt.answers[i].choosed_options, {
                       text: choice.text,
                     })
@@ -111,8 +111,16 @@
                   class="ma-1"
                 >
                   <v-img
-                    :src="`${choice.src}?format=png&width=200&height=200`"
-                    :lazy-src="`${choice.src}?format=png&width=200&height=200`"
+                    :src="`${
+                      choice.src
+                    }?format=png&width=200&height=200&token=${$session.get(
+                      'jwt'
+                    )}`"
+                    :lazy-src="`${
+                      choice.src
+                    }?format=png&width=200&height=200&token=${$session.get(
+                      'jwt'
+                    )}`"
                     :gradient="
                       checkChoiceStatus(attempt.answers[i].choosed_options, {
                         src: choice.src,
@@ -156,7 +164,7 @@
             "
           >
             <div
-              v-if="question.type === 'open-ended'"
+              v-if="question.type === 'open_ended'"
               class="cool-box grey-bg ml-6 mt-n1"
             >
               <input
@@ -439,12 +447,12 @@ export default {
     }).then(async () => {
       this.attempt = {
         quiz: this.selected_quiz_submission.quiz._id,
-        user: this.selected_quiz_submission.user._id,
-        autoSubmitted: this.selected_quiz_submission.autoSubmitted,
-        usedTime: this.selected_quiz_submission.usedTime,
+        user: this.selected_quiz_submission.user.user_name,
+        auto_submitted: this.selected_quiz_submission.auto_submitted,
+        used_time: this.selected_quiz_submission.used_time,
         answers: this.selected_quiz_submission.answers,
         marked: this.selected_quiz_submission.marked,
-        totalMarks: this.selected_quiz_submission.totalMarks,
+        total_marks: this.selected_quiz_submission.totalMarks,
       };
       if (!this.attempt.marked && this.userCategory === "Instructor") {
         this.mode = "edit";
@@ -503,7 +511,7 @@ export default {
   color: $primary;
   border: 1px solid $primary;
 }
-.text-selection {
+.text_selection {
   width: 75%;
   border-radius: 20px;
   padding: 16px;

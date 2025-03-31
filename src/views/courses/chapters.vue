@@ -66,12 +66,6 @@
                         class="course_input"
                         placeholder="Enter chapter name..."
                       />
-                      <!--                      <v-text-field-->
-                      <!--                        v-model="course.chapters[activeChapter].name"-->
-                      <!--                        placeholder="Enter Chapter Name"-->
-                      <!--                        class="chapter-name"-->
-                      <!--                        solo-->
-                      <!--                      ></v-text-field>-->
                       <h4>Description</h4>
                       <textarea
                         v-model="course.chapters[activeChapter].description"
@@ -624,7 +618,7 @@ export default {
   created() {
     // load quizes
     this.getQuizes({
-      userId: this.$store.state.user.user._id,
+      user_name: this.$store.state.user.user.user_name,
     });
     // automatically add one chapter if there are no chapters
     if (this.course.chapters.length == 0) {
