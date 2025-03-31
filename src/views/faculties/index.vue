@@ -197,4 +197,18 @@ export default {
 
   }
 }
+/* Portrait phones and smaller */
+@media (max-width: 700px) {
+  .my-faculties {
+    .users-page-container {
+      .students-table{
+        overflow: auto;
+        .table-wrapper{
+          min-width: 808px;
+          overflow: auto;
+        }
+      }
+    }
+  }
+}
 </style>

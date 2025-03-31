@@ -9,7 +9,7 @@
       <div id="user-profile-card">
         <user-simple-card :loading="userByUsernameLoading" @close="mouseOutPic($event,'user-profile-card')">
           <template #name>{{ userByUsername.other_names + " " + userByUsername.sur_name }}</template>
-          <template #type>Instructor</template>
+          <template #type>{{ userByUsername.category }}</template>
           <template #image>
             <img v-if="userByUsername.profile" :src="userByUsername.profile + '?width=50'" alt=" profile pic">
             <v-avatar v-else :size="30" class="profile-avatar">
