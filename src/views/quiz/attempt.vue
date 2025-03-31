@@ -791,6 +791,9 @@ export default {
 
     margin-bottom: 0px;
   }
+  .timer {
+    position: initial;
+  }
   .file-container {
     box-shadow: 0px 0px 10px 2px rgba(25, 48, 116, 0.25);
     border-radius: 8px;
