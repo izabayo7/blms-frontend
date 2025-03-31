@@ -295,8 +295,27 @@ export default {
       };
       const newGroup = await a.create("chat_group", body);
       console.log(newGroup)
-      this.$router.push(`/messages/${newGroup.data.data.code}`);
-      this.toggleGroup()
+
+
+
+      const {code, createdAt,members,name} = newGroup.data.data
+
+      // new group as contact
+      const newGroupAsContact = {
+        id:code,
+        is_group:true,
+        last_message:{
+          content:"This group was created by ",
+          time:createdAt
+        },
+        members:members,
+        name:name,
+        unreadMessagesLength:1,
+
+      }
+      console.log(newGroupAsContact);
+      // this.$router.push(`/messages/${newGroup.data.data.code}`);
+      // this.toggleGroup()
     },
   },
   mounted() {
