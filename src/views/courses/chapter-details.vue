@@ -24,16 +24,16 @@
         <!-- <span v-if="course !== undefined">{{course.name}}</span> -->
         <v-tabs background-color="white" color="#ffd248" right v-model="selectedTab">
           <v-tab :key="0" id="content-tab">
-            <v-icon class="mx-2">mdi-book-open-variant</v-icon>
+            <v-icon class="mx-md-2">mdi-book-open-variant</v-icon>
             Chapter
           </v-tab>
           <v-tab :key="1">
-            <v-icon class="mx-2">mdi-chat-outline</v-icon>
+            <v-icon class="mx-md-2">mdi-chat-outline</v-icon>
             Discussions
             {{ totalComments }}
           </v-tab>
           <v-tab :key="2">
-            <v-icon class="mx-2">mdi-file-download-outline</v-icon>
+            <v-icon class="mx-md-2">mdi-file-download-outline</v-icon>
             Downloads
           </v-tab>
 
