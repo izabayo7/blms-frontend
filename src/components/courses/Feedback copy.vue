@@ -1,15 +1,25 @@
 <template>
-  <div class="marking_feedback">
+  <div>
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="27"
+      height="22.5"
+      viewBox="0 0 27 22.5"
+    >
+      <path
+        id="Icon_material-reply"
+        data-name="Icon material-reply"
+        d="M15,13.5v-6L4.5,18,15,28.5V22.35c7.5,0,12.75,2.4,16.5,7.65C30,22.5,25.5,15,15,13.5Z"
+        transform="translate(-4.5 -7.5)"
+        fill="#606060"
+      />
+    </svg>
     <div class="d-flex">
-      <div class="col-9 pa-0">
+      <div class="col-11">
         <div
           ref="feedback_input"
-          :class="`feedback_input ${
-            content == '' ? 'empty_feedback' : 'saved_feedback'
-          }`"
-          :contenteditable="
-            $store.state.user.user.category.name === 'INSTRUCTOR'
-          "
+          :class="`feedback_input ${content == '' ? 'empty_feedback' : ''}`"
+          :contenteditable="$store.state.user.user.category.name === 'INSTRUCTOR'"
           @keyup="computeFeedbackClass()"
         >
           {{ content }}
@@ -19,16 +29,16 @@
         v-if="
           mode == 'any' && $store.state.user.user.category.name === 'INSTRUCTOR'
         "
-        class="col-3 vertically--centered pa-0"
+        class="col-4 vertically--centered"
       >
-        <div v-if="content !== '' || showDelete" class="actions">
+        <div class="actions">
           <svg
             @click="removeFeedback()"
             xmlns="http://www.w3.org/2000/svg"
             width="20.57"
             height="20.57"
             viewBox="0 0 20.57 20.57"
-            class="mr-3 remove_feedback"
+            class="mr-3"
           >
             <path
               id="Icon_ionic-ios-close-circle"
@@ -38,7 +48,7 @@
               fill="#fc6767"
             />
           </svg>
-          <!-- <svg
+          <svg
             @click="editFeedback()"
             xmlns="http://www.w3.org/2000/svg"
             width="20.57"
@@ -52,31 +62,24 @@
               transform="translate(-4.5 -4.496)"
               fill="#3ce970"
             />
-          </svg> -->
+          </svg>
         </div>
       </div>
     </div>
-    <div class="save_feedback d-flex">
-      <v-btn
-        v-if="$store.state.user.user.category.name === 'INSTRUCTOR' && showSave"
-        @click="content != '' ? editFeedback() : addFeedback()"
-        class="primary-bg px-6 py-4 mt-4"
-        rounded
-        >Save</v-btn
-      >
-      <div
-        v-show="message != ''"
-        class="mt-3 ml-5 text-right col-6 message_place"
-      >
-        {{ message }}
-      </div>
-    </div>
+    <v-btn
+      v-if="
+        $store.state.user.user.category.name === 'INSTRUCTOR' && mode == 'any'
+      "
+      @click="addFeedback()"
+      class="primary-bg px-6 py-4 mt-4"
+      rounded
+      >Save</v-btn
+    >
   </div>
 </template>
 
 <script>
 import Apis from "@/services/apis";
-import { mapMutations } from "vuex";
 export default {
   props: {
     content: {
@@ -94,9 +97,6 @@ export default {
   },
   data: () => ({
     element: undefined,
-    showSave: false,
-    showDelete: false,
-    message: "",
   }),
   computed: {
     refName() {
@@ -107,31 +107,14 @@ export default {
       // return this.feedbackContent() == this.content ? "view" : "edit";
       return "any";
     },
-    currentContent() {
-      return this.$refs.feedback_input
-        ? this.$refs.feedback_input.innerHTML
-        : "";
-    },
   },
   watch: {
     element() {
       console.log("hahiyeeeeee");
       this.computeFeedbackClass();
     },
-    message() {
-      if (this.message != "") {
-        this.showSave = false;
-        setTimeout(() => {
-          this.message = "";
-        }, 2000);
-      }
-    },
   },
   methods: {
-    ...mapMutations("quiz_submission", [
-      "add_answer_feedback",
-      "remove_answer_feedback",
-    ]),
     feedbackContent() {
       return this.$refs.feedback_input
         ? this.$refs.feedback_input.innerHTML
@@ -146,15 +129,9 @@ export default {
           element.className = element.className.replace(" empty_feedback", "");
         }
       }
-      // show or hide save button
-      this.showSave = this.feedbackContent() != this.content;
-    },
-    removeNonBreakingSpace(text) {
-      return text.replace(/&nbsp;/g, "");
     },
     async addFeedback() {
-      let content = this.removeNonBreakingSpace(this.feedbackContent());
-
+      const content = this.feedbackContent();
       if (content == "") {
         console.log("reka genda");
         return;
@@ -167,17 +144,7 @@ export default {
         },
         content: content,
       });
-
-      // add the feedback in state
-      this.add_answer_feedback({
-        answer_id: this.answerId,
-        feedback: response.data.data,
-      });
-
-      let element = this.$refs.feedback_input;
-      element.className += " saved_feedback";
-      this.message = "feedback successfuly saved";
-      this.showDelete = true;
+      console.log(response);
     },
     async editFeedback() {
       const content = this.feedbackContent();
@@ -188,31 +155,11 @@ export default {
       const response = await Apis.update("comment", this.feedbackId, {
         content: content,
       });
-
-      // update the feedback in state
-      this.add_answer_feedback({
-        answer_id: this.answerId,
-        feedback: response.data.data,
-      });
-
-      this.message = "feedback successfuly updated";
+      console.log(response);
     },
     async removeFeedback() {
       const response = await Apis.delete("comment", this.feedbackId);
       console.log(response);
-      let element = this.$refs.feedback_input;
-      element.innerHTML = "";
-      element.className = element.className.replace(
-        "saved_feedback",
-        "empty_feedback"
-      );
-      this.message = "feedback successfuly removed";
-      this.showDelete = false;
-
-      // remove the feedback from the state
-      this.remove_answer_feedback({
-        answer_id: this.answerId,
-      });
     },
   },
   mounted() {
@@ -225,35 +172,22 @@ export default {
 </script>
 
 <style lang="scss">
-.marking_feedback {
-  .feedback_input {
-    border: 2px solid #d2d2d2;
-    padding: 15px;
-    border-radius: 9px;
-    min-height: 140px;
-    overflow-wrap: anywhere;
-    max-width: 100%;
-    &.saved_feedback {
-      color: #989898;
-      background-color: #f5f5f5;
-      border: none;
-    }
-  }
-  .feedback_input:focus {
-    outline: none;
-  }
-  .empty_feedback::before {
-    content: "Write feedback here";
-  }
-  .primary-bg {
-    background-color: $primary !important;
-    color: white !important;
-  }
-  .message_place {
-    color: $primary;
-  }
-  .remove_feedback {
-    cursor: pointer;
-  }
+.feedback_input {
+  border: 2px solid #d2d2d2;
+  padding: 15px;
+  border-radius: 9px;
+  min-height: 140px;
+  overflow-wrap: anywhere;
+  max-width: 100%;
+}
+.feedback_input:focus {
+  outline: none;
+}
+.empty_feedback::before {
+  content: "Write feedback here";
+}
+.primary-bg {
+  background-color: $primary !important;
+  color: white !important;
 }
 </style>

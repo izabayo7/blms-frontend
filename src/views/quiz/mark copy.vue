@@ -2,19 +2,56 @@
   <v-container
     v-if="selected_quiz_submission"
     fluid
-    class="quiz-page white pl-lg-16"
+    class="quiz-page white px-lg-16"
   >
     <back class="mt-0 mb-6 ml-n6" to="/reports" />
-
-    <v-row class="relative">
+    <v-row>
+      <v-col class="col-12" v-if="userCategory === 'INSTRUCTOR'">
+        <v-row class="pa-0">
+          <v-col class="col-5 mx-auto d-flex">
+            <button
+              :class="`mode-type mx-2 ${
+                mode === 'view' ? 'active' : 'inactive'
+              }`"
+              @click="mode = 'view'"
+            >
+              View
+            </button>
+            <button
+              :class="`mode-type mx-2 ${
+                mode === 'edit' ? 'active' : 'inactive'
+              }`"
+              @click="mode = 'edit'"
+            >
+              Edit
+            </button>
+          </v-col>
+        </v-row>
+      </v-col>
       <v-col class="col-12 col-md-8">
-        <navigation />
+        <h2>{{ selected_quiz_submission.quiz.name }}</h2>
+      </v-col>
+      <v-col class="col-12 col-md-4 mt-2 d-flex text-center">
+        <div class="totalMarks">
+          <h3>Total marks</h3>
+        </div>
+        <div class="cool-box blue-bg d-flex ml-6 mt-n1">
+          <p class="white--text">
+            {{
+              `${attempt.marked ? computedTotalMarks + "/" : ""}${
+                selected_quiz_submission.quiz.total_marks
+              }`
+            }}
+          </p>
+        </div>
+      </v-col>
+      <v-col class="col-12 col-md-12 questions-side">
         <v-row
           v-for="(question, i) in selected_quiz_submission.quiz.questions"
           :key="i"
           class="col-12 col-md-12"
         >
-          <v-col class="col-12">
+          <v-col class="col-12 col-lg-7">
             <v-row>
               <v-col
                 :class="question.type.includes('select') ? 'col-10' : 'col-12'"
@@ -47,6 +84,7 @@
                 <textarea
                   v-if="question.type === 'open_ended'"
                   v-model="attempt.answers[i].text"
+                  :cols="$vuetify.breakpoint.name == 'lg' ? 50 : 40"
                   disabled
                   rows="5"
                   placeholder="Type your answer here"
@@ -129,119 +167,119 @@
                   </div>
                 </div>
               </v-col>
-            </v-row>
-            <v-row
-              v-if="
-                selected_quiz_submission.marked || userCategory === 'INSTRUCTOR'
-              "
-            >
-              <v-col class="col-12 col-md-8 d-flex">
-                <div class="mr-3">Awarded marks:</div>
-                <div>
-                  <div class="cool-box marks grey-color mt-n1">
-                    <input
-                      :class="`marks-input ${
-                        question.type === 'open_ended' ? 'editable' : ''
-                      }`"
-                      v-model="attempt.answers[i].marks"
-                      :readonly="mode === 'view'"
-                      type="text"
-                    />
-                    <span>{{ `/${question.marks}` }}</span>
-                  </div>
-                </div>
-              </v-col>
               <v-col
                 v-if="question.type.includes('select')"
-                class="col-12 col-md-4"
+                class="col-2 vertically--centered"
               >
-                <div class="choice_status vertically--centered">
+                <button
+                  v-if="attempt.answers[i].marks == question.marks"
+                  :class="`${
+                    attempt.answers[i].marks != question.marks ? 'd-none' : ''
+                  } svg-check-marks`"
+                >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    v-if="attempt.answers[i].marks == question.marks"
-                    width="34.657"
-                    height="32.115"
-                    viewBox="0 0 34.657 32.115"
+                    width="25"
+                    height="25"
+                    viewBox="0 0 42 42"
                   >
                     <g
-                      id="Icon_feather-check-square"
-                      data-name="Icon feather-check-square"
-                      transform="translate(2.5 2.5)"
+                      id="Rectangle_903"
+                      data-name="Rectangle 903"
+                      fill="none"
+                      stroke="#3ce970"
+                      stroke-width="3"
                     >
-                      <path
-                        id="Path_2256"
-                        data-name="Path 2256"
-                        d="M13.5,16.545l4.519,4.519L33.083,6"
-                        transform="translate(-4.462 -4.494)"
+                      <rect width="42" height="42" rx="8" stroke="none" />
+                      <rect
+                        x="1.5"
+                        y="1.5"
+                        width="39"
+                        height="39"
+                        rx="6.5"
                         fill="none"
-                        stroke="#3ce970"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="5"
-                      />
-                      <path
-                        id="Path_2257"
-                        data-name="Path 2257"
-                        d="M31.615,18.058V28.6A3.013,3.013,0,0,1,28.6,31.615H7.513A3.013,3.013,0,0,1,4.5,28.6V7.513A3.013,3.013,0,0,1,7.513,4.5h16.57"
-                        transform="translate(-4.5 -4.5)"
-                        fill="none"
-                        stroke="#3ce970"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="5"
                       />
                     </g>
-                  </svg>
-
-                  <svg
-                    v-else
-                    id="Icon_ionic-ios-checkbox-outline"
-                    data-name="Icon ionic-ios-checkbox-outline"
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="30.103"
-                    height="30.103"
-                    viewBox="0 0 30.103 30.103"
-                  >
                     <path
-                      id="Path_2259"
-                      data-name="Path 2259"
-                      d="M32.094,4.5H7.009A2.506,2.506,0,0,0,4.5,7.009V32.094A2.506,2.506,0,0,0,7.009,34.6H32.094A2.506,2.506,0,0,0,34.6,32.094V7.009A2.506,2.506,0,0,0,32.094,4.5Zm.314,27.281a.629.629,0,0,1-.627.627H7.322a.629.629,0,0,1-.627-.627V7.322A.629.629,0,0,1,7.322,6.7H31.781a.629.629,0,0,1,.627.627Z"
-                      transform="translate(-4.5 -4.5)"
+                      id="Icon_feather-check"
+                      data-name="Icon feather-check"
+                      d="M30,9,13.5,25.5,6,18"
+                      transform="translate(3 4)"
+                      fill="none"
+                      stroke="#3ce970"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="3"
+                    />
+                  </svg>
+                </button>
+                <button v-else class="svg-check-marks">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="25"
+                    height="25"
+                    viewBox="0 0 42 42"
+                  >
+                    <rect
+                      id="Rectangle_902"
+                      data-name="Rectangle 902"
+                      width="42"
+                      height="42"
+                      rx="8"
                       fill="#fc6767"
                     />
                     <path
                       id="Icon_metro-cross"
                       data-name="Icon metro-cross"
-                      d="M19.112,15.339h0l-5.064-5.064L19.111,5.21h0a.523.523,0,0,0,0-.738L16.719,2.08a.523.523,0,0,0-.738,0h0L10.917,7.145,5.853,2.08h0a.523.523,0,0,0-.738,0L2.723,4.473a.523.523,0,0,0,0,.738h0l5.064,5.064L2.723,15.339h0a.523.523,0,0,0,0,.738l2.392,2.392a.523.523,0,0,0,.738,0h0L10.917,13.4l5.064,5.064h0a.523.523,0,0,0,.738,0l2.392-2.392a.523.523,0,0,0,0-.738Z"
-                      transform="translate(4.548 4.653)"
-                      fill="#fc6767"
+                      d="M19.511,15.663h0l-5.186-5.187L19.511,5.29h0a.536.536,0,0,0,0-.755l-2.45-2.45a.536.536,0,0,0-.755,0h0L11.119,7.271,5.933,2.084h0a.536.536,0,0,0-.755,0l-2.45,2.45a.536.536,0,0,0,0,.755h0l5.187,5.187L2.727,15.663h0a.535.535,0,0,0,0,.755l2.45,2.45a.536.536,0,0,0,.755,0h0l5.187-5.187,5.187,5.187h0a.535.535,0,0,0,.755,0l2.45-2.45a.535.535,0,0,0,0-.755Z"
+                      transform="translate(9.43 11.072)"
+                      fill="#fff"
                     />
                   </svg>
-
-                  <span class="ml-2">
-                    {{
-                      attempt.answers[i].marks == question.marks
-                        ? "Right answer"
-                        : "Wrong answer"
-                    }}
-                  </span>
-                </div>
+                </button>
               </v-col>
+            </v-row>
+          </v-col>
+          <v-col
+            class="col-12 col-lg-5"
+            v-if="
+              selected_quiz_submission.marked || userCategory === 'INSTRUCTOR'
+            "
+          >
+            <v-row>
+              <v-col class="col-12 col-md-5 pb-0 pr-md-0"
+                ><div class="question title grey-color">
+                  Q{{ i + 1 }} marks
+                </div></v-col
+              >
+              <v-col class="col-12 col-md-6 pl-md-0">
+                <div class="cool-box marks grey-color mt-n1">
+                  <input
+                    :class="`marks-input ${
+                      question.type === 'open_ended' ? 'editable' : ''
+                    }`"
+                    v-model="attempt.answers[i].marks"
+                    :readonly="mode === 'view'"
+                    type="text"
+                  />
+                  <span>{{ `/${question.marks}` }}</span>
+                </div></v-col
+              >
               <v-col class="col-12">
                 <feedback
                   v-if="
-                    selected_quiz_submission.answers[i].feedback ||
+                    attempt.answers[i].feedback.length ||
                     userCategory === 'INSTRUCTOR'
                   "
                   :content="
-                    selected_quiz_submission.answers[i].feedback
-                      ? selected_quiz_submission.answers[i].feedback.content
+                    attempt.answers[i].feedback.length
+                      ? attempt.answers[i].feedback[0].content
                       : ''
                   "
-                  :answerId="selected_quiz_submission.answers[i]._id"
+                  :answerId="attempt.answers[i]._id"
                   :feedbackId="
-                    selected_quiz_submission.answers[i].feedback
-                      ? selected_quiz_submission.answers[i].feedback._id
+                    attempt.answers[i].feedback.length
+                      ? attempt.answers[i].feedback[0]._id
                       : ''
                   "
                 />
@@ -249,44 +287,13 @@
             </v-row>
           </v-col>
         </v-row>
-      </v-col>
-      <v-col
-        :class="`col-12 col-md-4 mt-16 ${
-          $vuetify.breakpoint.name == 'lg' ? 'fixed right-0' : ''
-        }`"
-      >
-        <v-row class="font-weight-black color-primary student_name mb-8">
-          {{ selected_quiz_submission.user.sur_name }}
-          {{ selected_quiz_submission.user.other_names }}
-        </v-row>
-        <v-row class="mb-6">
-          <div class="mr-3 title font-weight-bold">Total marks</div>
-          <div>
-            <div class="cool-box marks total grey-color mt-n1">
-              <input
-                class="marks-input"
-                v-model="computedTotalMarks"
-                readonly
-                type="text"
-              />
-              <span>{{ `/${selected_quiz_submission.quiz.total_marks}` }}</span>
-            </div>
-          </div>
-        </v-row>
-        <v-row>
-          <v-btn
-            v-if="userCategory === 'INSTRUCTOR'"
-            class="red-bg mr-3 px-8"
-            to="/reports"
-            >Cancel</v-btn
-          >
-          <v-btn
-            v-if="userCategory === 'INSTRUCTOR'"
-            class="primary-bg"
-            @click="updateSubmission"
-            >Save progress</v-btn
-          >
-        </v-row>
+        <v-btn
+          v-if="userCategory === 'INSTRUCTOR'"
+          class="d-block mb-4 primary-bg"
+          @click="updateSubmission"
+          rounded
+          >Save Marks</v-btn
+        >
       </v-col>
     </v-row>
   </v-container>
@@ -294,7 +301,6 @@
 
 <script>
 import { mapGetters, mapActions } from "vuex";
-import _ from "lodash";
 export default {
   data: () => ({
     alphabets: [
@@ -332,7 +338,6 @@ export default {
   components: {
     back: () => import("@/components/shared/back-button"),
     feedback: () => import("@/components/courses/Feedback"),
-    navigation: () => import("@/components/shared/simple_navigation"),
   },
   computed: {
     ...mapGetters("quiz_submission", ["selected_quiz_submission"]),
@@ -364,7 +369,6 @@ export default {
       "update_quiz_submission",
       "findQuizSubmissionByUserAndQuizNames",
     ]),
-
     checkChoiceStatus(choosed_options, choice) {
       if (choice.src) {
         for (const option of choosed_options) {
@@ -488,13 +492,11 @@ export default {
         user: this.selected_quiz_submission.user.user_name,
         auto_submitted: this.selected_quiz_submission.auto_submitted,
         used_time: this.selected_quiz_submission.used_time,
-        answers: this.selected_quiz_submission.answers.map((x) =>
-          _.omit(x, ["feedback"])
-        ),
+        answers: this.selected_quiz_submission.answers,
         marked: this.selected_quiz_submission.marked,
         total_marks: this.selected_quiz_submission.totalMarks,
       };
-      if (this.userCategory === "INSTRUCTOR") {
+      if (!this.attempt.marked && this.userCategory === "Instructor") {
         this.mode = "edit";
       }
     });
@@ -504,21 +506,14 @@ export default {
 
 <style lang="scss" scoped>
 .cool-box {
-  padding: 4px 12px;
+  padding: 10px 20px;
   text-align: center;
-  font-size: 1.3rem;
-  * {
-    color: $primary;
-  }
+  font-size: 1.7rem;
   display: inline-flex;
   font-weight: bold;
-  // border-radius: 13px;
+  border-radius: 13px;
   &.marks {
-    // border: 2px solid #cbcbcb;
-    box-shadow: 0px 3px 6px rgb(0, 0, 0, 0.16);
-  }
-  &.total {
-    border-radius: 11px;
+    border: 2px solid #cbcbcb;
   }
   p {
     margin: 0;
@@ -550,10 +545,6 @@ export default {
   background-color: $primary !important;
   color: white !important;
 }
-.red-bg {
-  background-color: #fc6767 !important;
-  color: white !important;
-}
 .svg-check-marks {
   display: block;
   margin: 16px;
@@ -582,20 +573,5 @@ export default {
     /* border-color: green; */
     box-shadow: 8px 9px 11px rgb(199 199 199);
   }
-}
-.relative {
-  position: relative;
-}
-.fixed {
-  position: fixed;
-}
-.right-0 {
-  right: 0;
-}
-.color-primary {
-  color: $primary;
-}
-.student_name {
-  font-size: 1.6rem;
 }
 </style>
