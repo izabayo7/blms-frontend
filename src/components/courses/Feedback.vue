@@ -3,6 +3,12 @@
     <div class="d-flex">
       <div class="col-9 pa-0">
         <div
+          v-if="$store.state.user.user.category.name !== 'INSTRUCTOR'"
+          class="feedback_sender text-right"
+        >
+          Instructor feedback
+        </div>
+        <div
           ref="feedback_input"
           :class="`feedback_input ${
             content == '' ? 'empty_feedback' : 'saved_feedback'
@@ -226,6 +232,10 @@ export default {
 
 <style lang="scss">
 .marking_feedback {
+  .feedback_sender {
+    color: black;
+    font-weight: 700;
+  }
   .feedback_input {
     border: 2px solid #d2d2d2;
     padding: 15px;
@@ -234,8 +244,9 @@ export default {
     overflow-wrap: anywhere;
     max-width: 100%;
     &.saved_feedback {
-      color: #989898;
-      background-color: #f5f5f5;
+      color: black;
+      background-color: #e1e1e1;
+      // box-shadow: 3px 6px 10px rgb(0, 0, 0, 0.16);
       border: none;
     }
   }

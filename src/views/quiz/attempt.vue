@@ -123,8 +123,8 @@
             class="radio-btn d-block mb-4 submitt-attempt"
             @click="
               $store.state.user.user.category.name == 'STUDENT'
-                ? saveAttempt
-                : $router.push('quiz/submitted')
+                ? saveAttempt()
+                : $router.push('/quiz/submitted')
             "
             rounded
             >Submit Answers</v-btn
@@ -148,7 +148,7 @@
     <div v-else>
       You arleady did this assignment, you can
       <router-link
-        :to="`/quiz/${$route.params.name}/${$store.state.user.user.surName}_${$store.state.user.user.otherNames}`"
+        :to="`/quiz/${$route.params.name}/${$store.state.user.user.user_name}`"
         >review your submission</router-link
       >
     </div>
@@ -223,7 +223,7 @@ export default {
     ...mapActions("quiz", ["findQuizByName"]),
     ...mapActions("quiz_submission", [
       "create_quiz_submission",
-      "findQuizSubmissionByStudentAndQuizNames",
+      "findQuizSubmissionByUserAndQuizNames",
     ]),
     async markUndoneQuestions() {
       for (const i in this.attempt.answers) {
@@ -334,19 +334,26 @@ export default {
       this.create_quiz_submission({
         submission: this.attempt,
         attachments: this.filesToUpload,
-      }).then(() => {
-        this.$router.push(
-          `${this.attempt.auto_submitted ? "/quiz/timeout" : "/quiz/submitted"}`
-        );
+      }).then((is_selection_only) => {
+        if (is_selection_only) {
+          this.$router.push(`/quiz/${this.selected_quiz.name}/results`);
+        } else {
+          this.$router.push(
+            `${
+              this.attempt.auto_submitted ? "/quiz/timeout" : "/quiz/submitted"
+            }`
+          );
+        }
       });
     },
   },
   created() {
     this.mode = "edit";
     if (!this.loaded) {
-      if (this.$store.state.user.user.category == "Student") {
-        this.findQuizSubmissionByStudentAndQuizNames({
-          studentName: `${this.$store.state.user.user.surName}_${this.$store.state.user.user.otherNames}`,
+      if (this.$store.state.user.user.category.name == "STUDENT") {
+        console.log("aaaaaaaaaaaaaaa");
+        this.findQuizSubmissionByUserAndQuizNames({
+          userName: this.$store.state.user.user.user_name,
           quizName: this.$route.params.name,
         });
       }
