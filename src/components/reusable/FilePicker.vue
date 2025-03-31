@@ -132,7 +132,7 @@ div.remove-container a {
         <input
           type="file"
           :multiple="multiple"
-          class="newFile"
+          :id="inputId"
           :accept="
             allowedTypes === undefined
               ? undefined
@@ -181,7 +181,11 @@ export default {
       uploadPercentage: 0,
     };
   },
-
+  computed: {
+    inputId() {
+      return `file_input_${Math.floor(Math.random() * 100)}`
+    },
+  },
   mounted() {
     /*
         Determine if drag and drop functionality is capable in the browser
@@ -244,10 +248,10 @@ export default {
 
   methods: {
     clickButton() {
-      document.querySelector(".newFile").click();
+      document.getElementById(this.inputId).click();
     },
     addFile() {
-      for (const file of document.querySelector(".newFile").files) {
+      for (const file of document.getElementById(this.inputId).files) {
         this.files.push(file);
         this.$emit("addFile", file, this.boundIndex);
       }
