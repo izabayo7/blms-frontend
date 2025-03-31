@@ -20,7 +20,7 @@
                 template: 'action_confirmation',
                 method: {
                   action: 'courses/delete_chapter',
-                  parameters: { id: chapter._id },
+                  parameters: { id: chapter._id }
                 },
                 title: 'Delete Chapter',
                 message: 'Are you sure you want to delete this chapter?',

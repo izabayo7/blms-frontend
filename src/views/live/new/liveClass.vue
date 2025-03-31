@@ -177,7 +177,7 @@ openQuiz">
         </div>
         <div class="live-class--actions">
           <div class="live-class--action attendance">
-            <button>
+            <button @click="checkAttandance">
             <span class="icon">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none"
                                                                                                        d="M0 0h24v24H0z"/><path
@@ -363,6 +363,7 @@ export default {
     },
   },
   methods: {
+    ...mapActions("modal", ["set_modal"]),
     downloadAttachment,
     openQuiz() {
       let route = this.$router.resolve(`/quiz/preview/${this.quiz.name}`);
@@ -475,6 +476,22 @@ export default {
           uptime: 5000,
         });
       })
+
+      self.socket.on("res/live/checkAttendance", ({code}) => {
+        console.log(code)
+        this.set_modal({
+          template: 'live_related',
+          method: {action: 'live_session/answerAttendance', parameters: {user: {id: self.instructor._id}}},
+          title: 'ATTENDANCE CHECK',
+          message: 'Hey user, are you there ? Type the code bellow to confirm ',
+          code: code,
+        })
+      })
+
+      self.socket.on("res/live/studentAnswered", ({id}) => {
+        console.log("res/live/studentAnswered", id)
+      })
+
       self.socket.on("comment/new", (result) => {
         // this.$store.commit(
         //     "courses/SET_TOTAL_COMMENTS_ON_A_CHAPTER",
@@ -686,6 +703,12 @@ export default {
         quiz: this.live_session.quiz,
         receivers: this.$store.getters['live_session/participants']
       });
+    },
+    checkAttandance() {
+      this.socket.emit("live/checkAttendance", {
+        receivers: this.$store.getters['live_session/participants']
+      });
+      console.log(this.$store.getters['live_session/participants'])
     },
     toogleVideo() {
       let message = {

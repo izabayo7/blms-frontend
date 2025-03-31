@@ -1,13 +1,6 @@
 <template>
   <div class="courses-container">
     <button  @click="                      set_modal({
-                        template: 'live_related',
-                        method: { action: 'courses/delete_course' },
-                        title: 'Delete Course',
-                        message: 'Are you sure you want to delete this course?',
-                        code: 'Test',
-                      })">Test</button>
-    <button  @click="                      set_modal({
                         template: 'live_related_ended',
                         method: { action: 'courses/delete_course' },
                         title: 'Delete Course',

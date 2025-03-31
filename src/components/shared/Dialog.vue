@@ -81,17 +81,17 @@
     <!-- view for action confirmation -->
     <div
         v-else-if="modal_template.includes('live_related')"
-        class="dialog-body live"
+        class="dialog-body live-check"
         :class="{ ended : modal_template.includes('ended')}"
     >
       <div class="title">{{ title }}</div>
       <div class="sub-title">{{ message }}</div>
       <div v-if="!modal_template.includes('ended')" class="code">{{ code }}</div>
       <div v-if="!modal_template.includes('ended')" class="">
-        <input type="text">
+        <input v-model="userCode" type="text">
       </div>
       <div class="action">
-        <button>Submit</button>
+        <button @click="handleSubmit">Submit</button>
       </div>
     </div>
   </v-dialog>
@@ -101,6 +101,9 @@
 import {mapGetters, mapMutations, mapState, mapActions} from "vuex";
 
 export default {
+  data:()=>({
+    userCode: ""
+  }),
   computed: {
     ...mapState("modal", ["confirmed"]),
     ...mapGetters("modal", [
@@ -123,6 +126,16 @@ export default {
       "toogle_visibility",
       "update_confirmation"
     ]),
+    handleSubmit(){
+      if(this.code != this.userCode)
+        this.$store.dispatch("app_notification/SET_NOTIFICATION", {
+          message: "please enter the given code",
+          status: "info",
+          uptime: 2000,
+        })
+      else
+        this.performAction()
+    },
     ...mapActions("modal", ['reset_modal']),
     performAction() {
       if (this.confirmation_method) {
@@ -163,153 +176,152 @@ export default {
   border-radius: 56px;
 }
 
-#kurious--dialog {
-  .dialog_t_1 {
-    padding: 18px;
+.dialog_t_1 {
+  padding: 18px;
+  border-radius: 12px;
+
+  .uploader {
+    padding: 20px 50px 50px;
+  }
+
+  h4.title {
+    font-weight: 600;
+    color: #0f0f0f;
+    font-size: 18px !important;
+  }
+
+  .subtitle {
+    color: #545454;
+    font-size: 25px;
+  }
+
+  .unconfirmed {
+    color: #0f0f0f;
+    margin-top: 19px;
+    font-size: 18px;
+  }
+
+  .request-progress {
+    height: 8px;
     border-radius: 12px;
+    width: 67%;
+    margin: auto;
+  }
 
-    .uploader {
-      padding: 20px 50px 50px;
-    }
+  .close-dialog {
+    text-align: right;
+    padding: 11px;
 
-    h4.title {
-      font-weight: 600;
-      color: #0f0f0f;
-      font-size: 18px !important;
-    }
-
-    .subtitle {
-      color: #545454;
-      font-size: 25px;
-    }
-
-    .unconfirmed {
-      color: #0f0f0f;
-      margin-top: 19px;
-      font-size: 18px;
-    }
-
-    .request-progress {
-      height: 8px;
-      border-radius: 12px;
-      width: 67%;
-      margin: auto;
-    }
-
-    .close-dialog {
-      text-align: right;
-      padding: 11px;
-
-      svg {
-        cursor: pointer;
-      }
-    }
-
-    .content.confirmation-dialog {
-      margin-top: -35px;
-
-      .actions {
-        margin-top: 38px;
-      }
-
-      h4.title {
-        margin-bottom: 45px;
-      }
-    }
-
-    .action-button-outlined {
-      color: $primary !important;
-      caret-color: $primary;
-    }
-
-    .action-button {
-      background-color: $primary !important;
-      border-color: $primary;
+    svg {
+      cursor: pointer;
     }
   }
 
-  .live {
-    width: 651px;
-    height: 315px !important;
-    padding: 30px;
+  .content.confirmation-dialog {
+    margin-top: -35px;
 
-    &.ended {
-      padding: 63px;
-
-      .title {
-        margin-bottom: 33px;
-      }
-
-      .sub-title {
-        margin-bottom: 44px;
-      }
+    .actions {
+      margin-top: 38px;
     }
 
-    background: #FFFFFF;
-    border-radius: 5px;
-
-    div {
-      margin-bottom: 15px;
+    h4.title {
+      margin-bottom: 45px;
     }
+  }
+
+  .action-button-outlined {
+    color: $primary !important;
+    caret-color: $primary;
+  }
+
+  .action-button {
+    background-color: $primary !important;
+    border-color: $primary;
+  }
+}
+
+.live-check {
+  width: 651px;
+  height: 315px !important;
+  padding: 30px;
+
+  &.ended {
+    padding: 63px;
 
     .title {
-      font-family: Montserrat;
-      font-style: normal;
-      font-weight: bold;
-      font-size: 30px;
-      line-height: 37px;
-      text-align: center;
-
-      color: #000000;
+      margin-bottom: 33px;
     }
 
     .sub-title {
-      font-family: Montserrat;
-      font-style: normal;
-      font-weight: normal;
-      font-size: 15px;
-      line-height: 18px;
-
-      color: #000000;
+      margin-bottom: 44px;
     }
+  }
 
-    .code {
-      font-family: Montserrat;
-      font-style: normal;
-      font-weight: bold;
-      font-size: 30px;
-      line-height: 37px;
-      text-align: center;
+  background: #FFFFFF;
+  border-radius: 5px;
 
-      color: #000000;
+  div {
+    margin-bottom: 15px;
+  }
 
-    }
+  .title {
+    font-family: Montserrat;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 30px;
+    line-height: 37px;
+    text-align: center;
 
-    input {
-      width: 251px;
+    color: #000000;
+  }
+
+  .sub-title {
+    font-family: Montserrat;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 15px;
+    line-height: 18px;
+
+    color: #000000;
+  }
+
+  .code {
+    font-family: Montserrat;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 30px;
+    line-height: 37px;
+    text-align: center;
+
+    color: #000000;
+
+  }
+
+  input {
+    width: 251px;
+    height: 44px;
+    left: 557px;
+    top: 421px;
+
+    background: #E8E8E8;
+    border-radius: 5px;
+    padding: 10px 40px;
+  }
+
+  .action {
+    button {
+      width: 199px;
       height: 44px;
-      left: 557px;
-      top: 421px;
-
-      background: #E8E8E8;
-      border-radius: 5px;
-      padding: 10px 40px;
+      font-family: Montserrat;
+      font-style: normal;
+      font-weight: 300;
+      font-size: 20px;
+      line-height: 24px;
+      color: #FFFFFF;
+      background: #193074;
+      border-radius: 15px;
     }
 
-    .action {
-      button {
-        width: 199px;
-        height: 44px;
-        font-family: Montserrat;
-        font-style: normal;
-        font-weight: 300;
-        font-size: 20px;
-        line-height: 24px;
-        color: #FFFFFF;
-        background: #193074;
-        border-radius: 15px;
-      }
-    }
   }
 
   #panel--btn {
@@ -322,40 +334,38 @@ export default {
 
 /* Portrait phones and smaller */
 @media (max-width: 700px) {
-  #kurious--dialog {
-    .live {
-      max-width: 342px;
-      width: 100%;
-      height: fit-content !important;
-      padding: 19px 10px;
+  .live-check {
+    max-width: 342px;
+    width: 100%;
+    height: fit-content !important;
+    padding: 19px 10px;
 
-      div {
-        margin-bottom: 10px;
-      }
+    div {
+      margin-bottom: 10px;
+    }
 
-      .title {
-        font-size: 15px;
-      }
+    .title {
+      font-size: 15px;
+    }
 
-      .sub-title {
-        font-size: 10px;
-      }
+    .sub-title {
+      font-size: 10px;
+    }
 
-      .code {
-        font-size: 15px;
-      }
+    .code {
+      font-size: 15px;
+    }
 
-      input {
-        width: 140px;
-        height: 25px;
-      }
+    input {
+      width: 140px;
+      height: 25px;
+    }
 
-      .action {
-        button {
-          width: 122.77px;
-          height: 27.15px;
-          font-size: 12.34px;
-        }
+    .action {
+      button {
+        width: 122.77px;
+        height: 27.15px;
+        font-size: 12.34px;
       }
     }
   }
