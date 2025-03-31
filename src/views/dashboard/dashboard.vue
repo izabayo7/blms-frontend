@@ -16,6 +16,7 @@
         </div>
       </main>
       <div class="main-content customScroll">
+        <notification :message="'Advanced aerobics course just went live'" :status="'warn'" />
         <router-view />
       </div>
     </main>
@@ -36,6 +37,7 @@ export default {
     MobileSidebar,
     navbar,
     ErrorTooltip: () => import("@/components/reusable/ErrorTooltip"),
+    Notification: () => import("@/components/shared/Notification"),
   },
   data() {
     return {

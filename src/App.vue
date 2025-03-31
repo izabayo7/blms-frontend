@@ -3,19 +3,13 @@
     <router-view />
     <app-dialog />
     <new-group />
-    <notification-tooltip class="d-none" />
   </v-app>
 </template>
 
 <script>
-// import axios from "axios";
-// import jwt from "jsonwebtoken";
-
-import NotificationTooltip from "./components/reusable/NotificationTooltip";
 export default {
   name: "App",
   components: {
-    NotificationTooltip,
     appDialog: () => import("@/components/shared/Dialog"),
     NewGroup: () => import("@/components/messages/NewGroup"),
   },
