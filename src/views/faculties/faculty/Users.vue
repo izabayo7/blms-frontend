@@ -27,7 +27,7 @@
               <template #tableRows>
                 <table-row :selected="allSelected" @select="selectRow($event, user)" :data="user" v-for="user in usersOnFaculties" :key="user._id">
                   <template #cols>
-                    <td class="row--image" @mouseenter="mouseOnPic($event,user._id)" @mouseleave="mouseOutPic"><img src="https://i2.wp.com/worldbusinessfitness.com/wp-content/uploads/2018/01/opulent-profile-square-07.jpg?ssl=1" alt=" profile pic"></td>
+                    <td class="row--image" @mouseenter="mouseOnPic($event,user._id,'user-profile-card')" @mouseleave="mouseOutPic($event,'user-profile-card')"><img src="https://i2.wp.com/worldbusinessfitness.com/wp-content/uploads/2018/01/opulent-profile-square-07.jpg?ssl=1" alt=" profile pic"></td>
                     <td >{{user.sur_name}}</td>
                     <td>{{user.other_names}}</td>
                     <td>{{user.email}}</td>
@@ -68,15 +68,11 @@ name: "FacultyUsers",
       },
       selectedUsers:[],
       timeout:"",
-      card : document.getElementById("user-profile-card")
     }
   },
   computed:{
-    ...mapGetters('faculties',['faculties']),
+    ...mapGetters('faculties',['faculty']),
     ...mapGetters('users',['usersOnFaculties']),
-    faculty(){
-      return this.faculties
-    },
   },
   methods:{
     hovered(){
@@ -95,7 +91,7 @@ name: "FacultyUsers",
 
   // if there is no faculty loaded load it based on this route id
     if(this.faculty.length <= 0)
-      await this.$store.dispatch("faculties/getFaculties",this.facultyId)
+      await this.$store.dispatch("faculties/getFaculty",this.facultyId)
 
     await this.$store.dispatch('faculties/changeHeader',{head:this.faculty.name,title:"Users List"})
 

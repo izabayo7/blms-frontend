@@ -1,11 +1,11 @@
 export default{
     methods:{
-        mouseOnPic(e,userId){
-            console.log(e)
+        mouseOnPic(e,userId,cardId){
+            const card = document.getElementById(cardId)
           this.timeout = setTimeout(() => {
-            this.card.style.display = "block"
-            this.card.style.top = e.clientY + "px";
-            this.card.style.left = e.clientX + "px";
+            card.style.display = "block"
+            card.style.top = e.clientY + "px";
+            card.style.left = e.clientX + "px";
 
             console.log(userId)
 
@@ -13,10 +13,10 @@ export default{
           }, 1500)
 
         },
-        mouseOutPic(){
+        mouseOutPic(e,cardId){
           clearTimeout(this.timeout)
-            console.log(this.card)
-          this.card.style.display = "none";
+          const card = document.getElementById(cardId)
+          card.style.display = "none";
         },
     }
 }
