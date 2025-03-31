@@ -72,6 +72,9 @@ export default {
   mounted() {
     on("message-received", () => {
       this.scrollChatToBottom();
+      this.socket.emit("message/all_messages_read", {
+        conversation_id: this.currentDisplayedUser.id,
+      });
     });
   },
 
