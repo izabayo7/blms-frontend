@@ -130,16 +130,37 @@
           "
         />
       </div>
-      <button class="submit" @click="saveSession()">Schedule class</button>
+      <button class="submit" @click="isConfirming=true;showModal=true">Schedule class</button>
     </div>
-    <Popup v-show="showModal" :title="'Success'">
-      <template v-slot:content>
+    <Popup v-show="showModal" :title="'You are about to schedule a live class with the following details'">
+      <template v-if="isConfirming" v-slot:content>
+        <div class="d-md-flex mx-auto">
+          <div class="mr-4">
+            <div class="detail">Course name: <span>Mechanical engeneering</span></div>
+            <div class="detail">Chapter name : <span>Mechanical engeneering</span></div>
+            <div class="detail">Student group : <span>Mechanical engeneering</span></div>
+            <div class="detail">Date : <span>Mechanical engeneering</span></div>
+            <div class="detail">Time : <span>Mechanical engeneering</span></div>
+          </div>
+          <div>
+            <div class="detail">Notification : <span>Mechanical engeneering</span></div>
+            <div class="detail">Details : <span>Mechanical engeneering</span></div>
+          </div>
+        </div>
+        <div class="mx-auto">
+          <button class="action" @click="showModal = false">Cancel</button>
+          <button class="action primary" @click="saveSession()">Approve</button>
+        </div>
+      </template>
+      <template v-else v-slot:content>
         <div class="subtitle">Live class successfly scheduled for :</div>
         <div class="detail">course : <span>Mechanical engeneering</span></div>
         <div class="detail"> user group: <span>ME Year 3</span></div>
         <div class="detail"><span>APRIL 23 2021 at 18 : 45</span></div>
         <div class="detail">Student have already been notified</div>
-        <div class="mx-auto"><button @click="showModal = false">OKAY</button></div>
+        <div class="mx-auto">
+          <button @click="showModal = false">OKAY</button>
+        </div>
       </template>
     </Popup>
   </div>
@@ -166,7 +187,8 @@ export default {
       selected_course: "",
       selected_chapter: "",
       selected_quiz: "",
-      showModal: true,
+      showModal: false,
+      isConfirming: false,
     };
   },
   watch: {
