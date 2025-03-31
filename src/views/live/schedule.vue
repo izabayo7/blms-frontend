@@ -228,7 +228,7 @@ export default {
       return res;
     },
     selectedQuiz() {
-      if (this.all_quiz.length && this.selected_quiz != "") {
+      if (this.selected_quiz && this.all_quiz.length && this.selected_quiz != "") {
         return this.all_quiz.filter((quiz) => quiz.name == this.selected_quiz)[0]._id;
       } else {
         return undefined;
