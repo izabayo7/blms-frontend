@@ -118,9 +118,10 @@ export default {
   .table-container{
     .table-wrapper{
       background-color:$main;
-      padding:2rem 1rem 1rem 1rem;
+      padding:1rem;
       table{
         width: 100%;
+        table-layout:fixed;
         border-collapse: collapse;
         border-bottom: 2px solid $bg-one;
 
@@ -157,7 +158,8 @@ export default {
         }
 
         tbody tr {
-          width:100%;
+          width:fit-content;
+          min-width: 100%;
           display:table;
           table-layout:fixed;
         }
@@ -217,7 +219,8 @@ export default {
           }
           td{
             padding:.6rem .5rem;
-            box-sizing:content-box;
+            box-sizing:border-box;
+            min-width: fit-content;
           }
         }
       }
