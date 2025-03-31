@@ -95,6 +95,16 @@ const routes = [
                         name:"faculties",
                         component: () => import('@/views/faculties/index.vue'),
                     },
+                    {
+                        path: '/user-groups/groups/:faculty',
+                        name:"faculty",
+                        component: () => import('@/views/faculties/groups/faculty.vue'),
+                    },
+                    {
+                        path: '/user-groups/instructors/:faculty',
+                        name:"faculty",
+                        component: () => import('@/views/faculties/instructors/faculty.vue'),
+                    },
                     // for courses
                     {
                         path: '/courses',
