@@ -211,21 +211,12 @@ export default {
                         commit('quiz/update_quiz_target', { id: quizId, target: quizCopy.target }, { root: true })
                     })
                 }
+
                 // remove quiz 
                 else if (state.courses.data[courseIndex].chapters[chapterIndex].quiz.length > 0 && quiz === undefined) {
-                    let quizCopy = JSON.parse(JSON.stringify(state.courses.data[courseIndex].chapters[chapterIndex].quiz[0]))
-                    const quizId = quizCopy._id
-                    // remove quiz target
-                    quizCopy.target = undefined
-                    //   remove unnecessary fields
-                    quizCopy._id = undefined
-                    quizCopy.__v = undefined
-                    quizCopy.createdAt = undefined
-                    quizCopy.updatedAt = undefined
-                    quizCopy.usage = undefined
-                    quizCopy.course = undefined
+
                     state.courses.data[courseIndex].assignmentsLength--;
-                    apis.update('quiz', quizId, quizCopy).then(() => {
+                    apis.delete('quiz', `${state.courses.data[courseIndex].chapters[chapterIndex].quiz[0]._id}/target`).then(() => {
                         commit('quiz/update_quiz_target', { id: state.courses.data[courseIndex].chapters[chapterIndex].quiz[0]._id, target: undefined }, { root: true })
                         state.courses.data[courseIndex].chapters[chapterIndex].quiz.splice(0, 1)
                     })
