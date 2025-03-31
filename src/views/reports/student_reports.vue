@@ -56,6 +56,18 @@
             <path id="Icon_material-feedback" data-name="Icon material-feedback" d="M22.092,3H5.121A2.119,2.119,0,0,0,3.011,5.121L3,24.214l4.243-4.243h14.85a2.128,2.128,0,0,0,2.121-2.121V5.121A2.128,2.128,0,0,0,22.092,3ZM14.668,15.728H12.546V13.607h2.121Zm0-4.243H12.546V7.243h2.121Z" transform="translate(-3 -3)" fill="#fc6767"/>
           </svg>
         </template>
+        <template v-slot:item.actions="{ item }">
+          <v-btn
+            color="warning"
+            :to="`/quiz/${quiz_submission.name}/${item.user.user_name}`"
+            icon
+            >
+              <v-icon>
+                mdi-eye
+              </v-icon>
+            </v-btn
+          >
+        </template>
         <template v-slot:no-data>
           <span class="text-h6">Oops You have no submissions.</span>
         </template>
@@ -101,6 +113,7 @@ export default {
           align: "center"
         },
         { text: "Feedback", value: "feedback", align: "center", sortable: false, },
+        { text: "Actions", value: "actions", align: "center", sortable: false, },
       ];
     },
     navigation_links(){
