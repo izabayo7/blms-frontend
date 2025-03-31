@@ -2,7 +2,7 @@
   <div class="courses-container">
     <!-- view of the student -->
     <v-container v-if="userCategory == 'STUDENT'" id="courses" fluid>
-      <v-row>
+      <v-row class="mx-0">
         <v-col class="col-12 courses-header">
           <h2>
             Hey Mr{{
@@ -43,7 +43,7 @@
             </div>
           </v-col>
         </v-row>
-        <v-row v-else-if="loaded && ongoingCourses.length">
+        <v-row class="mx-0" v-else-if="loaded && ongoingCourses.length">
           <v-col
               v-for="(course, i) in ongoingCourses"
               :key="i"
@@ -52,7 +52,7 @@
             <student-course-card category="ongoing" :course="course"/>
           </v-col>
         </v-row>
-        <v-row v-else>
+        <v-row class="mx-0" v-else>
           <img src="@/assets/images/courses_empty.svg" class="mx-auto"/>
           <div class="col-12">
             <p class="text-center">You have no ongoing courses</p>
@@ -94,7 +94,7 @@
             </div>
           </v-col>
         </v-row>
-        <v-row v-if="loaded && finishedCourses.length">
+        <v-row class="mx-0" v-if="loaded && finishedCourses.length">
           <v-col
               v-for="(course, i) in finishedCourses"
               :key="i"
