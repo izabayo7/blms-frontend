@@ -1,10 +1,12 @@
 <template>
   <v-container fluid class="login-page">
     <v-row>
+      <!-- the side of image -->
       <v-col cols="12" md="6" class="image-side">
         <h2 class="headline">KURIOUS.</h2>
         <v-img height="550px" :src="require('@/assets/images/image1.png')" class="welcome-image" />
       </v-col>
+      <!-- the side of the form -->
       <v-col cols="12" md="6" class="login-side">
         <v-form ref="loginForm" v-model="valid" class="login-form" @submit.prevent="validate()">
           <h1>Welcome Back,</h1>
@@ -20,17 +22,32 @@
           <v-text-field
             v-model="password"
             required
-            type="password"
+            color="#ffc100"
             placeholder="Password"
             class="text-field"
-            :rules="passwordRules"
+            :rules="simpleRules"
             solo
+            @click:append="showPassword = !showPassword"
+            :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+            :type="showPassword ? 'text' : 'password'"
           />
+          <v-select
+            class="text-field"
+            v-model="userCategory"
+            :items="userCategories"
+            :rules="simpleRules"
+            prefix="Login as "
+            solo
+          ></v-select>
           <router-link to="/recover-password" class="forgot-pass">Forgot Password?</router-link>
           <v-btn class="login-btn" @click.native="validate()" type="submit">Login</v-btn>
         </v-form>
       </v-col>
     </v-row>
+    <!-- the dialog for messages -->
+    <kurious-dialog :show="show" :message="message" :status="status">
+      <v-icon slot="icon" size="55" dark>mdi-barley</v-icon>
+    </kurious-dialog>
   </v-container>
 </template>
 
@@ -43,59 +60,83 @@ export default {
   data: () => ({
     valid: true,
     message: "",
+    userCategory: "",
     email: "",
+    showPassword: false,
+    show: false,
+    status: 200,
+    userCategories: ["Student", "Instructor", "Admin", "Super admin"],
     emailRules: [
       (v) => !!v || "Email is required",
       (v) => /.+@.+/.test(v) || "Email must be valid",
     ],
     password: "",
-    passwordRules: [
-      (v) => !!v || "Password is required",
-      // v => (/([ !"#$%&'()*+,-./:;<=>?@[\]^_`{|}~])/.test(v) && /(?=.*\d)/.test(v) && /(?=.*[A-Z])/.test(v) && /(?=.*[a-z])/.test(v)) || 'Password must contain uppercase characters, lowercase characters, numbers and symbols',
-      // v => (v && v.length >= 8) || 'Password must atleast have 8 characters',
-      // v => (v && v.length <= 15) || 'Password must not exceed 15 characters',
-    ],
+    simpleRules: [(v) => !!v || "This Field is required"],
   }),
   methods: {
-    // umukura@gmail.com
-    // Kurious@2020
-    async validate() {
-      this.message = "";
+    // validate the form
+    validate() {
       if (this.$refs.loginForm.validate()) {
-        let userCategory = "student";
-        const errorMessage = "Invalid Email or Password";
+        this.login();
+      }
+    },
+    async login() {
+      try {
+        // format the user category
+        this.userCategory = this.userCategory
+          .toLowerCase()
+          .split(" ")
+          .join("-");
+
         const credentials = {
           email: this.email.toLowerCase(),
           password: this.password,
         };
-        let response = await Apis.login(userCategory, credentials);
-        if (response.data === errorMessage) {
-          userCategory = "instructor";
-          response = await Apis.login(userCategory, credentials);
-          if (response.data === errorMessage) {
-            userCategory = "admin";
-            response = await Apis.login(userCategory, credentials);
-            if (response.data === errorMessage) {
-              userCategory = "superAdmin";
-              response = await Apis.login(userCategory, credentials);
-            }
-          }
-        }
-        if (response.data === errorMessage) {
-          this.message = "Invalid passcode or password";
-          alert(this.message);
-        } else {
-          axios.defaults.headers.common.Authorization = `${response.data}`;
-          this.$session.start();
-          this.$session.set("jwt", response.data);
-          this.$store.dispatch("setUser", jwt.decode(this.$session.get("jwt")));
 
-          if (userCategory === "student" || userCategory === "instructor") {
-            this.$router.push({ name: "Courses" });
-          } else {
-            alert("not in mvp");
-          }
+        // call the login api
+        let response = await Apis.login(this.userCategory, credentials);
+
+        // set the token in axios headers
+        axios.defaults.headers.common.Authorization = `${response.data}`;
+
+        // start the session
+        this.$session.start();
+        // set the token in the session
+        this.$session.set("jwt", response.data);
+        // keep the decoded user in vuex
+        this.$store.dispatch("setUser", jwt.decode(this.$session.get("jwt")));
+
+        if (this.$route.query.redirect) {
+          this.$router.push(this.$route.query.redirect);
         }
+        // student and teacher land to courses
+        else if (
+          this.userCategory === "student" ||
+          this.userCategory === "instructor"
+        ) {
+          this.$router.push("/courses");
+        }
+        // others land to the dashboard
+        else if (this.userCategory === "admin") {
+          this.$router.push("/users");
+        }
+      } catch (error) {
+        // handle errors
+        // the server responded
+        if (error.response) {
+          this.status = error.response.status;
+          this.message = error.response.data;
+        }
+        // the server didn't respond
+        else if (error.request) {
+          this.status = 503;
+          this.message = "Service Unavailable";
+        }
+        this.show = true;
+        // hide the message after 3seconds
+        setTimeout(() => {
+          this.show = false;
+        }, 3000);
       }
     },
   },

@@ -1,8 +1,8 @@
+@import './variables';
 @import './imports/home';
 @import './imports/login';
 @import './imports/dashboard';
-@import './imports/course';
-@import './imports/class';
+@import './imports/courses';
 @import './imports/sidebar';
 @import './imports/navbar';
 @import './imports/newCourse';
@@ -12,9 +12,8 @@
 @import './imports/live-class';
 @import './imports/profile';
 @import './imports/reports';
-@import './imports/admin-dashboard';
+@import './imports/users';
 @import './imports/chat';
-// @import './variables';
 // @import './imports/editor';
 /* Chrome, Safari, Edge, Opera */
 input::-webkit-outer-spin-button,

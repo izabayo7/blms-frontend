@@ -1,75 +1,219 @@
 <template>
-<v-container fluid>
-  <v-card @click="$router.push({ name: 'CourseDetails', params: { id: course._id } })" class="course" v-if="category=='ongoing'">
-      <v-row>
-          <v-col cols="5" id="cover-pic">
-              <v-img
-              class="course-image"
-              v-bind:src="''+image"
-              ></v-img>
-          </v-col>
-          <v-col cols="7">
-              <span class="title d-block mb-2 mb-sm-1">{{ course.name }}</span>
-              <span class="subtitle mb-3 mb-sm-1 d-block">By <span class="caption">{{ course.instructor }}</span></span>
-              <span class="course-description text-caption d-block text-truncate mb-6 mb-sm-1">{{ course.description }}</span>
-                <v-progress-linear
-                v-model="power"
-                color="#ffc100"
-                height="25"
-                />
-                <p class="text-caption font-weight-bold">15% completion</p>
-          </v-col>
+  <v-container fluid>
+    <v-card
+      v-if="category=='ongoing'"
+      :to="`courses/${course._id}`"
+      class="course-card elevation-0 py-1 px-3"
+    >
+      <v-row class="card-content">
+        <v-col cols="5" class="course-image-side">
+          <v-img v-if="image" :src="''+image" class="course-image"></v-img>
+          <v-avatar
+            class="course-image white--text bg-color-one text-h2"
+            size="125"
+            v-else
+          >{{computText(course.name)}}</v-avatar>
+        </v-col>
+        <v-col class="col-7 coure-details-side pt-6">
+          <p class="course-title">{{course.name}}</p>
+          <p class="course-instructor">{{instructor.surName}}</p>
+          <p class="course-description">{{trimString(course.description, 100)}}</p>
+          <v-progress-linear :value="progress" color="#ffc100" class="course-progress" />
+          <p class="course-completion">{{Math.round(progress)}}% completion</p>
+        </v-col>
       </v-row>
-  </v-card>
-  <v-card @click="$router.push({ name: 'CourseDetails', params: { id: course._id } })"  class="course completed" v-else>
+    </v-card>
+    <v-card v-else :to="`courses/${course._id}`" class="course completed">
       <v-row>
-          <v-col cols="12" id="cover-pic">
-              <v-img
-              class="course-image"
-              v-bind:src="''+image"
-              ></v-img>
-          </v-col>
-          <v-col cols="12" class="completed-results">
-              <span class="title d-block text-truncate mb-2 mb-sm-1">{{ course.name }}</span>
-              <span class="course-description text-caption d-block mb-6">{{ course.description }}</span>
-            <h4> 
-                <v-avatar size="30" class="user-profile">
-                    <img
-                        src="https://cdn.vuetifyjs.com/images/john.jpg"
-                        alt="avatar"
-                    >
-                </v-avatar>
-                Instructor {{ course.instructor }}</h4>
-            <h4> <v-icon color="#ffd248">mdi-star-outline</v-icon> 4.2</h4>
-          </v-col>
+        <v-col class="col-12 py-0" id="cover-pic">
+          <!-- <v-img class="course-image" :src="''+image" ></v-img> -->
+          <v-img v-if="image" :src="''+image" class="course-image" style="height: 217px"></v-img>
+          <div v-else class="bg-color-one no-image text-center pt-12">
+            <span class="text-h1 white--text">{{computText(course.name)}}</span>
+          </div>
+        </v-col>
+        <v-col cols="12" class="completed-results">
+          <span class="title d-block text-truncate mb-2 mb-sm-1 pt-3">{{ course.name }}</span>
+          <span
+            class="course-description text-caption d-block mb-6"
+          >{{ trimString(course.description, 150) }}</span>
+          <h4>
+            <v-avatar size="30" class="user-profile">
+              <img src="https://cdn.vuetifyjs.com/images/john.jpg" alt="avatar" />
+            </v-avatar>
+            Instructor {{ instructor.surName }}
+          </h4>
+          <h4>
+            <v-icon color="#ffd248">mdi-star-outline</v-icon>4.2
+          </h4>
+        </v-col>
       </v-row>
-  </v-card>
-</v-container>
+    </v-card>
+  </v-container>
 </template>
 
 <script>
+import Apis from "@/services/apis";
 export default {
-    data:() =>({
-        power: 78,
-        knowledge: 45
-    }),
- props: {
-     image: {
-         type: String,
-         default: 'https://media.inmobalia.com/imgV1/B8vEv5Xh~OlgGrmOOeWCtYHtdv2TGtX20HosCpYxDmKApRO9fqu6aebRr_kOYwWZUUBuTZKwOZPzAYj7tZulyLOn1CMNcFuV2RqXoT28SJ2OnPhaGG~JUijtTYAgMuK~95K_MTLY7d8_mFzQgU5qCIR0acc49iB4a7RKlRbhA4L7nCLwQUoy~55Chgn65VnEfSbkn8wPAPU65wNYna0WPiwq3DO5FR3ZyC4GVH6cISHb5qeFj9bXdaLtSafxK6JAQUDjvlHmu11lcAZR0m_DzjaXII2SqzhJKqZGy8Wosxgange8oRKNfl1fRhzEUpEtTw8_MfQPTjpPx4wbxN_lreBfVwnD1tE-.jpg'
-     },
-     course: {
-         type: Object,
-         required: true
-     },
-     category: {
-         type: String,
-         required: true
-     }
- },
-}
+  data: () => ({
+    progress: 0,
+    instructor: {},
+  }),
+  props: {
+    course: {
+      type: Object,
+      required: true,
+    },
+    category: {
+      type: String,
+      required: true,
+    },
+  },
+  computed: {
+    image() {
+      return this.course.coverPicture !== undefined
+        ? `http://localhost:7070/kurious/file/courseCoverPicture/${this.course._id}`
+        : undefined;
+    },
+  },
+  beforeMount() {
+    this.getStudentProgress();
+    this.getInstructor();
+  },
+  methods: {
+    async getStudentProgress() {
+      try {
+        let response = await Apis.get(
+          `studentProgress/${this.$store.state.user._id}/${this.course._id}`
+        );
+        this.progress = response.data.progress;
+      } catch (error) {
+        if (error.response) {
+          this.maximumIndex = 0;
+          this.progress = 0;
+        } else if (error.request) {
+          this.status = 503;
+          this.message = "Service Unavailable";
+          this.modal = false;
+          this.show = true;
+        }
+      }
+    },
+    async getInstructor() {
+      try {
+        const response = await Apis.get(`instructor/${this.course.instructor}`);
+        this.instructor = response.data;
+      } catch (error) {
+        if (error.request && !error.response) {
+          this.status = 503;
+          this.message = "Service Unavailable";
+          this.modal = false;
+          this.show = true;
+        }
+      }
+    },
+    trimString(string, length) {
+      let trimedString = string.substring(0, length);
+      trimedString = trimedString.split(" ");
+      trimedString.splice(trimedString.length - 1, 1);
+      trimedString = trimedString.join(" ") + " ...";
+      return trimedString;
+    },
+    computText(name) {
+      let text = "";
+      const forbiden = ["and", "of"];
+      name.split(" ").forEach((val) => {
+        if (!forbiden.includes(val)) text += val.substring(0, 1).toUpperCase();
+      });
+
+      return text;
+    },
+  },
+};
 </script>
 
-<style>
+<style lang="scss" scoped>
+.bg-color-one.no-image.text-center {
+  height: 208px;
+}
+.course.completed {
+  box-shadow: 0 38px 76px rgba(138, 138, 138, 0.18);
+}
+.course-card.v-card.v-sheet {
+  width: 560px;
+  height: 189px;
+  border-radius: 24px;
+  .course-image-side {
+    padding: 35px 0 0;
+    .course-image {
+      height: 125px;
+      width: 125px;
+      border: none !important;
+      border-radius: 90px;
+      margin-left: 23px;
+      border: 1px solid grey;
+    }
+  }
+  .coure-details-side {
+    p {
+      margin-bottom: 7px !important;
+    }
+    .course-title {
+      line-height: 1;
+      color: #bbb;
+      font-size: 16px;
+      font-weight: bold;
+    }
+    .course-instructor {
+      font-size: 12px;
+      font-weight: 500;
+      //   margin-top: -12px;
+    }
+    .course-description {
+      font-size: 12px;
+      line-height: 1.2;
+      color: #acacac;
+    }
+    .course-progress {
+      height: 10px !important;
+      width: 130px;
+      border-radius: 3px;
+    }
+    .course-completion {
+      font-size: 11px;
+      font-weight: 700;
+      margin-top: 3px;
+    }
+  }
+}
+.course.completed {
+  min-height: 420px !important;
+  min-width: 352px;
+  border-radius: 0 !important;
 
-</style>/
+  h4 {
+    color: #acacac;
+  }
+
+  p {
+    color: #787878;
+  }
+
+  .course-description {
+    margin-right: 80px !important;
+  }
+
+  .course-image {
+    height: 200.6px;
+    margin: -12px 0 0 0px;
+    border-radius: 0;
+  }
+
+  .completed-results {
+    padding: 0px 29px !important;
+  }
+}
+.courses-not-found-image {
+  width: 69%;
+}
+</style>

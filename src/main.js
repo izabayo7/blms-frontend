@@ -29,8 +29,8 @@ export default new Vuetify(opts)
 Vue.config.productionTip = false
 
 new Vue({
-    router,
     store,
+    router,
     mdi,
     vuetify,
     render: h => h(App)

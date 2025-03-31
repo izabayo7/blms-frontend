@@ -1,45 +1,38 @@
 <template>
-  <v-app class="dashboard">
-    <dashboard-dynamic-side-bar />
-
+  <v-app>
+    <!-- inject the navbar -->
     <dashboard-dynamic-nav-bar />
 
-    <v-main id="mainContent">
+    <!-- inject the sidebar -->
+    <dashboard-dynamic-side-bar />
+
+    <!-- display child components according to the current route -->
+    <v-main :class="`bg-one ${contentClass}`">
       <router-view />
     </v-main>
   </v-app>
 </template>
 
 <script>
-import axios from "axios";
-import jwt from "jsonwebtoken";
 export default {
-  name: "DashboardIndex",
+  name: "Dashboard",
   components: {
     DashboardDynamicNavBar: () => import("@/components/navbar"),
     DashboardDynamicSideBar: () => import("@/components/sidebar"),
   },
-  beforeMount: async function () {
-    if (!this.$session.exists()) {
-      this.$router.push("/login");
-    } else if (this.$store.state.user === null) {
-      axios.defaults.headers.common.Authorization = `${this.$session.get(
-        "jwt"
-      )}`;
-      this.$store.dispatch("setUser", jwt.decode(this.$session.get("jwt")));
-      this.$store.state.isLoggedIn = true;
-      // const response = await Services.otherGets('token')
-      // if (response.data === 'Invalid Token') {
-      //   this.$session.destroy()
-      //   this.$router.push('/')
-      // }
+  computed:{
+    contentClass(){
+      return ['xs', 'sm', 'md'].includes(this.$vuetify.breakpoint.name) ? '' : `sidebar-${this.$store.state.sidebar.minivariant ? 'collapsed' : 'expanded'}` 
     }
-  },
+  }
 };
 </script>
 
-<style scoped>
-.dashboard {
-  background-color: #f8f8f8;
+<style lang="scss">
+.sidebar-expanded {
+  padding: 48px 0px 0px 202px !important;
+}
+.sidebar-collapsed {
+  padding: 48px 0px 0px 99px !important;
 }
 </style>

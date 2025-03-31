@@ -1,5 +1,5 @@
 <template>
-  <v-container class="pa-0">
+  <v-container class="details-menu pa-0">
     <v-row>
       <v-col class="chapters px-8">
         <v-btn
@@ -18,7 +18,7 @@
           height="25"
           class="mb-3 kurious--progressbar"
         />
-        <p class="text-caption">{{progress}}% completion</p>
+        <p class="text-caption">{{Math.round(progress)}}% completion</p>
         <span class="title mb-3 d-block">Chapters</span>
         <v-list subheader class="chapters-list ml-n3">
           <v-list-item

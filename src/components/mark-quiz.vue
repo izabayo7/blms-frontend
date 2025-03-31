@@ -9,7 +9,7 @@
           <h3>Total marks</h3>
         </div>
         <div class="cool-box blue-bg d-flex ml-6 mt-n1">
-          <p>{{quiz.totalMarks}}</p>
+          <p>{{`${attempt.marked ? attempt.totalMarks + '/' : '' }${quiz.totalMarks}`}}</p>
         </div>
       </v-col>
       <v-col v-if="quiz !== {}" class="col-12 col-md-8 questions-side">
@@ -92,6 +92,7 @@
               <input
                 :class="`marks-input ${attempt.answers[i].marks > question.marks ? 'red--text': ''}`"
                 v-model="attempt.answers[i].marks"
+                :readonly="attempt.marked"
                 type="text"
               />
               <span>{{`/${question.marks}`}}</span>
@@ -100,17 +101,20 @@
               <v-checkbox
                 :input-value="(attempt.answers[i].marks === question.marks)"
                 @click="attempt.answers[i].marks = question.marks"
+                :disabled="attempt.marked"
                 label="True"
               ></v-checkbox>
               <v-checkbox
                 :input-value="(attempt.answers[i].marks !== question.marks)"
                 @click="attempt.answers[i].marks = 0"
+                :disabled="attempt.marked"
                 label="False"
               ></v-checkbox>
             </div>
           </v-col>
         </v-row>
         <v-btn
+          v-if="!attempt.marked"
           name="radio-btn"
           class="radio-btn d-block mb-4"
           @click="updateSubmission"
@@ -168,6 +172,7 @@ export default {
     quiz: {},
     attempt: {},
     show: false,
+    mode: 'view',
     message: "",
     filesToUpload: [],
     status: 200,
@@ -207,9 +212,10 @@ export default {
         let response = await Apis.get(
           `quizSubmission/${this.$route.params.id}`
         );
-
-        for (const answer of response.data.answers) {
-          answer.marks = 0;
+        if (!response.data.marked) {
+          for (const answer of response.data.answers) {
+            answer.marks = 0;
+          }
         }
         this.attempt = {
           quiz: response.data.quiz,
@@ -217,7 +223,12 @@ export default {
           autoSubmitted: response.data.autoSubmitted,
           usedTime: response.data.usedTime,
           answers: response.data.answers,
+          marked: response.data.marked,
+          totalMarks: response.data.totalMarks,
         };
+        if (!this.attempt.marked && this.$tore.state.user.category === 'Instructor') {
+          this.mode = 'edit'
+        }
         const quizId = response.data.quiz;
         response = await Apis.get(`quiz/${quizId}`);
         this.quiz = response.data;

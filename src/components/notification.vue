@@ -3,7 +3,7 @@
     <v-col
       :cols="$vuetify.breakpoint.name === 'sm' ? 2 : $vuetify.breakpoint.name === 'xs' ? 1 : 1"
     >
-      <v-menu class="elevation-0" offset-y :close-on-content-click="true">
+      <v-menu id="notification-box" class="elevation-0" offset-y :close-on-content-click="true">
         <template v-slot:activator="{ on, attrs }">
           <v-avatar size="42" class="ml-n4" v-bind="attrs" v-on="on">
             <v-icon>mdi-bell-outline</v-icon>
@@ -133,6 +133,7 @@ export default {
   methods: {
     logOut() {
       this.$session.destroy();
+      this.$store.dispatch("unSetUser");
       this.$router.push("/login");
     },
     computText(name) {
@@ -154,5 +155,8 @@ export default {
   top: 70px !important;
   left: 867px !important;
   background-color: white;
+}
+#notification-box{
+  background-color: red;
 }
 </style>

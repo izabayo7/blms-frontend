@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '@/views/pages/home'
+import store from '../store'
+import axios from 'axios'
+import jwt from "jsonwebtoken"
 
 Vue.use(VueRouter)
 
@@ -9,26 +11,35 @@ const routes = [
     {
         path: '/',
         name: 'Home',
-        component: Home
+        component: () =>
+            import('@/views/pages/home'),
+        meta: {
+            allowAnonymous: true
+        }
     },
     // the login page
     {
         path: '/login',
         name: 'Login',
         component: () =>
-            import('@/components/login')
+            import('@/components/login'),
+        meta: {
+            allowAnonymous: true
+        }
     },
+    // the dashboard
     {
-        path: '/test',
-        name: 'dash',
-        component: () =>
-            import('@/components/dashboard')
-    },
-    {
-        path: '/kurious',
+        path: '/app',
         component: () =>
             import('@/views/dashboard'),
-
+        meta: {
+            allowAnonymous: false
+        },
+        /**
+         * DASHBOARD CHILDREN
+         *  components that will share the sidebar and the navbar
+         *  they are also protected since their parent is protected
+         */
         children: [{
             path: '/courses',
             name: 'Courses',
@@ -99,59 +110,85 @@ const routes = [
             component: () =>
                 import('@/components/quiz/index.vue')
         }, {
-            path: '/admin',
-            name: 'Admin',
+            path: '/users',
+            name: 'Users',
             component: () =>
-                import('@/components/admin/index.vue')
-        },
-        ]
+                import('@/components/admin/users.vue')
+        },]
     }, {
         path: '/register/users',
         name: 'Register Users',
         component: () =>
-            import('@/components/registration/users/panel.vue')
+            import('@/components/registration/users/panel.vue'),
+        meta: {
+            allowAnonymous: false
+        }
     }, {
         path: '/register/users/student',
         name: 'Register Student',
         component: () =>
-            import('@/components/registration/users/index.vue')
+            import('@/components/registration/users/index.vue'),
+        meta: {
+            allowAnonymous: false
+        }
     }, {
         path: '/register/users/instructor',
         name: 'Register Instructor',
         component: () =>
-            import('@/components/registration/users/index.vue')
+            import('@/components/registration/users/index.vue'),
+        meta: {
+            allowAnonymous: false
+        }
     }, {
         path: '/recover-password',
         name: 'Recover-Password',
         component: () =>
-            import('@/components/recover-password.vue')
+            import('@/components/recover-password.vue'),
+        meta: {
+            allowAnonymous: false
+        }
     },
     {
         path: '/register/users/admin',
         name: 'Register Admin',
         component: () =>
-            import('@/components/registration/admin/admin.vue')
+            import('@/components/registration/admin/admin.vue'),
+        meta: {
+            allowAnonymous: false
+        }
     }, {
         path: '/register/faculty',
         name: 'Register Faculty',
         component: () =>
-            import('@/components/registration/faculty/index.vue')
+            import('@/components/registration/faculty/index.vue'),
+        meta: {
+            allowAnonymous: false
+        }
     },
     {
         path: '/classes',
         name: 'Faculities',
         component: () =>
             import('@/components/faculty'),
+        meta: {
+            allowAnonymous: false
+        }
     }, {
         path: '/school-details',
         name: 'SchoolDetails',
         component: () =>
             import('@/components/school-details'),
+        meta: {
+            allowAnonymous: false
+        }
     }, {
         path: '/edit-school-info',
         name: 'EditSchoolDetails',
         component: () =>
             import('@/components/edit-school'),
+        meta: {
+            allowAnonymous: false
+        }
     },
     {
         // catch all 404 - define at the very end
@@ -165,6 +202,45 @@ const router = new VueRouter({
     hash: false,
     base: process.env.BASE_URL,
     routes
+})
+
+
+// before navigating to any route
+router.beforeEach((to, from, next) => {
+
+    // if the session exist and the vuex store is not set
+    if (Vue.prototype.$session.exists() && !store.state.isLoggedIn) {
+        // get the token
+        const token = Vue.prototype.$session.get(
+            "jwt"
+        )
+        // set the token in axios headers
+        axios.defaults.headers.common.Authorization = `${token}`;
+        // keep the decoded user in vuex store
+        store.dispatch("setUser", jwt.decode(token));
+    }
+
+    // check if the destination route is protected
+    if (!to.meta.allowAnonymous && !store.state.isLoggedIn) {
+        // go to login
+        next({
+            path: '/login',
+            // after loging in redirect to the requested route
+            query: {
+                redirect: to.fullPath
+            }
+        })
+    } 
+    // protect login page if user is logged in
+    else if (to.path === '/login' && store.state.isLoggedIn) {
+        next({
+            path: `/${store.state.user.category === 'Student' || store.state.user.category === 'Instructor' ? 'courses' : 'dashboard'}`,
+        })
+    } 
+    // go to the requested route
+    else {
+        next()
+    }
 })
 
 export default router
