@@ -1,0 +1,82 @@
+    .theme--light.v-text-field--filled>.v-input__control>.v-input__slot {
+        background-color: #fff;
+    }
+    
+    .user-profile {
+        margin-top: -10px;
+    }
+    
+    .v-avatar {
+        background-color: #fff;
+        margin-top: -8px;
+    }
+    
+    .course.completed {
+        height: 420px !important;
+        width: 352px;
+        border-radius: 0 !important;
+        h4 {
+            color: #ACACAC;
+        }
+        p {
+            color: #787878;
+        }
+        .course-description {
+            margin-right: 80px !important;
+        }
+        .course-image {
+            height: 200.6px;
+            margin: -12px 0 0 0px;
+            border-radius: 0;
+        }
+        .completed-results {
+            padding: 0px 29px !important;
+        }
+    }
+    
+    .course-heading {
+        margin-top: 30px;
+    }
+    
+    @media (max-width: 1200px) {
+        .course {
+            margin-bottom: .2rem;
+            .course-description {
+                display: none;
+            }
+            span.title.d-block.mb-2.mb-sm-1 {
+                font-size: 15px !important;
+            }
+            span.subtitle.mb-3.mb-sm-1.d-block {
+                font-size: 13px;
+                font-weight: bold;
+                margin-bottom: 8px!important;
+            }
+            application .title {
+                line-height: 0rem !important;
+            }
+            span.course-description.text-caption.d-block.text-truncate.mb-6.mb-sm-1 {
+                margin-bottom: 13px !important;
+            }
+        }
+        .course.completed {
+            height: 449px !important;
+        }
+        #courses h2 {
+            margin: 1rem 0 0 .6rem;
+        }
+        .course-heading {
+            margin-top: 0px;
+        }
+        .second-title {
+            margin: .5rem 0 -1rem 0 !important;
+        }
+        .v-toolbar__content .v-btn.v-btn--icon.v-size--default,
+        .v-toolbar__extension .v-btn.v-btn--icon.v-size--default {
+            height: 40px;
+            width: 17px;
+        }
+        header#navbar {
+            padding: 20px 0 !important;
+        }
+    }

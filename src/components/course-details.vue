@@ -13,20 +13,20 @@
         <v-icon>mdi-arrow-left</v-icon>
       </v-btn>
       <v-col class="col-3 hidden-sm-and-down">
-        <kurious-chapter-list
+        <!-- <kurious-chapter-list
           @changeChapter="changeActiveChapter"
           :chapters="chapters"
           :maximumIndex="maximumIndex"
           :progress="progress"
-        />
-        <!-- <kurious-inner-sidebar>
+        />-->
+        <kurious-inner-sidebar>
           <kurious-chapter-list
             @changeChapter="changeActiveChapter"
             :chapters="chapters"
             :maximumIndex="maximumIndex"
             :progress="progress"
           />
-        </kurious-inner-sidebar>-->
+        </kurious-inner-sidebar>
       </v-col>
       <kurious-page-actions
         v-on:hideActions="showActions = false"
@@ -40,7 +40,7 @@
           :progress="progress"
         />
       </kurious-page-actions>
-      <v-col class="col-12 col-md-9 course-content pa-md-10 pb-md-0">
+      <v-col class="col-12 col-md-9 course-content pa-md-1 pr-md-4 pb-md-0">
         <v-row>
           <v-col v-if="course !== undefined" class="col-12 title d-block">{{course.name}}</v-col>
           <v-col v-if="chapters[activeIndex].mainVideo" class="col-12" id="video">

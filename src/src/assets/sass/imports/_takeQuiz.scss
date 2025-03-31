@@ -1,0 +1,30 @@
+* {
+    margin: 0;
+}
+
+.quiz-page {
+    margin: 40px;
+    .questions-side {
+        .question-details {
+            width: 315px;
+        }
+        .answer-field {
+            border: 1px solid #707070;
+            border-radius: 5px;
+            resize: none;
+            padding: 10px;
+        }
+        .radio-btn1 {
+            margin-right: 311px;
+        }
+        .theme--light.v-btn:not(.v-btn--flat):not(.v-btn--text):not(.v-btn--outlined) {
+            margin-left: 0;
+        }
+        button.radio-btn.v-btn.v-btn--contained.theme--light.v-size--default.transparent {
+            border: 2px solid #707070 !important;
+            border-radius: 22px;
+            width: 190px;
+            height: 45px;
+        }
+    }
+}

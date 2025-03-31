@@ -4,8 +4,10 @@
     absolute
     mobile-breakpoint="960"
     id="sidebar"
-    color="red"
-    height="60%"
+    color="#f5f5f5"
+    class="inner-sidebar"
+    height="100%"
+    width="270px"
     fixed
   >
     <slot />
@@ -66,3 +68,11 @@ export default {
   },
 };
 </script>
+<style lang="scss">
+aside#sidebar {
+  width: 270px;
+  position: fixed;
+  left: 15%;
+  top: 63px !important;
+}
+</style>
