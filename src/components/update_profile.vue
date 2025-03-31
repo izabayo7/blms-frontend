@@ -13,7 +13,7 @@
               class="mt-4 d-block"
               id="user_pic"
             >
-              <img :src="profile || user.profile" alt="avatar" />
+              <img :src="profile || user.profile + `?width=${largeDevices.includes($vuetify.breakpoint.name) ? 200 : 120}`" alt="avatar" />
             </v-avatar>
             <v-avatar
               v-else

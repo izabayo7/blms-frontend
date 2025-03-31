@@ -437,7 +437,7 @@
                       Update course
                     </div>
                   </div>
-                  <div class="tooltip" @click="
+                  <div v-if="!course.published" class="tooltip" @click="
                       set_modal({
                         template: 'action_confirmation',
                         method: { action: 'courses/delete_course' },
