@@ -79,7 +79,8 @@
             type="donut"
             class="my-chart"
             :class="{'ml-n6' : data === undefined}"
-            :width="width"
+            :width="width+'px'"
+            height="100px"
             :options="chartOptions"
             :series="[data.total,100-data.total]"
         ></chart>
@@ -133,7 +134,7 @@ export default {
   data: () => ({
     chartOptions: {
       chart: {
-        width: 380,
+        // width: 380,
         type: "donut",
       },
       plotOptions: {},
@@ -145,9 +146,9 @@ export default {
         {
           breakpoint: 480,
           options: {
-            chart: {
-              width: 200,
-            },
+            // chart: {
+            //   width: 200,
+            // },
             legend: {
               show: false,
             },
@@ -355,6 +356,9 @@ export default {
 /* Portrait phones and smaller */
 @media (max-width: 700px) {
   .small-card {
+    &.INSTRUCTOR{
+      height: 230px;
+    }
     .chart {
       margin: 18px auto 45px;
     }

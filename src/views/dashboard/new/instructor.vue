@@ -183,7 +183,7 @@
             Schedule live class
           </button>
         </div>
-        <div class="col-6">
+        <div class="col-6 pr-0">
           <small-card
               :data="{
                   start: 'Grade-book',
@@ -191,12 +191,12 @@
                   total: Math.round(submission_statistics.marking_status),
                   colors: ['#193074','rgba(25, 48, 116, 0.24)']
                 }"
-              :width="80"
+              :width="100"
               template="INSTRUCTOR"
               :labels="['Marking Status']"
           />
         </div>
-        <div class="col-6">
+        <div class="col-6 pr-0">
           <small-card
               :data="{
                   start: 'Performance',
@@ -206,10 +206,10 @@
                 }"
               :labels="['Student perfomance']"
               template="INSTRUCTOR"
-              :width="80"
+              :width="100"
           />
         </div>
-        <div class="col-6">
+        <div class="col-6 ">
           <div class="college_info hvr-icon-grow">
             <div class="d-flex justify-center align-center">
               <div class="icon">
