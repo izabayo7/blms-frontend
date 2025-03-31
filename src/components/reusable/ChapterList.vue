@@ -18,23 +18,23 @@
           height="25"
           class="mb-3 kurious--progressbar"
         />
-        <p class="text-caption">{{Math.round(progress)}}% completion</p>
+        <p class="text-caption">{{ Math.round(progress) }}% completion</p>
         <span class="title mb-3 d-block">Chapters</span>
         <v-list subheader class="chapters-list ml-n3">
           <v-list-item
             v-for="(item, i) in chapters"
             :key="i"
-            :disabled="i>maximumIndex"
-            @click="$emit('change-chapter',i)"
+            :disabled="i > maximumIndex"
+            @click="$emit('change-chapter', i)"
             :class="activeIndex === i ? 'active--chapter' : ''"
           >
             <v-list-item-content class="vertically--centered">
-              <p class="chapter_name">{{item.name}}</p>
+              <p class="chapter_name">{{ item.name }}</p>
             </v-list-item-content>
 
             <v-list-item-action>
               <svg
-                v-if="maximumIndex > i"
+                v-if="maximumIndex > i || progress == 100"
                 xmlns="http://www.w3.org/2000/svg"
                 width="25"
                 height="25"
@@ -71,7 +71,7 @@
                   id="Ellipse_102"
                   data-name="Ellipse 102"
                   fill="none"
-                  :stroke="i == maximumIndex ? primary :  '#b4b4b4'"
+                  :stroke="i == maximumIndex ? primary : '#b4b4b4'"
                   v
                   stroke-width="3"
                 >
@@ -112,9 +112,9 @@ export default {
     activeIndex() {
       return this.currentIndex + 0;
     },
-    primary(){
-      return colors.primary
-    }
+    primary() {
+      return colors.primary;
+    },
   },
 };
 </script>
@@ -122,7 +122,7 @@ export default {
 .active--chapter {
   background: #0000001a !important;
 }
-.chapter_name{
+.chapter_name {
   line-height: 25px !important;
   margin-bottom: 0 !important;
 }

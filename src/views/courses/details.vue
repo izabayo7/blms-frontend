@@ -287,21 +287,25 @@ export default {
       }
     },
     activeIndex() {
-      this.$store.commit(
-        "quiz_submission/set_selected_quiz_submission",
-        undefined
-      );
-      this.editorContent = "";
-      this.getChapterMainContent(
-        this.course.chapters[this.activeIndex]._id
-      ).then((data) => {
-        this.editorContent = data;
-      });
-      if (this.course.chapters[this.activeIndex].quiz.length > 0) {
-        this.findQuizSubmissionByUserAndQuizNames({
-          userName: this.$store.state.user.user.user_name,
-          quizName: this.course.chapters[this.activeIndex].quiz[0].name,
+      if (this.activeIndex == this.course.chapters.length) {
+        this.$router.push("/courses");
+      } else {
+        this.$store.commit(
+          "quiz_submission/set_selected_quiz_submission",
+          undefined
+        );
+        this.editorContent = "";
+        this.getChapterMainContent(
+          this.course.chapters[this.activeIndex]._id
+        ).then((data) => {
+          this.editorContent = data;
         });
+        if (this.course.chapters[this.activeIndex].quiz.length > 0) {
+          this.findQuizSubmissionByUserAndQuizNames({
+            userName: this.$store.state.user.user.user_name,
+            quizName: this.course.chapters[this.activeIndex].quiz[0].name,
+          });
+        }
       }
     },
   },
