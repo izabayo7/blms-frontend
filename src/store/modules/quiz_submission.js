@@ -37,7 +37,7 @@ export default {
             }
         },
         // remove feedback from answer
-        remove_answer_feedback(state, { answer_id, feedback }) {
+        remove_answer_feedback(state, { answer_id }) {
             for (const i in state.quiz_submission.data) {
                 if (state.quiz_submission.data[i]._id === state.selected_quiz_submission) {
                     for (const k in state.quiz_submission.data[i].answers) {
