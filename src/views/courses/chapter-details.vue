@@ -327,9 +327,10 @@ export default {
         }
         this.activeIndex = index;
       });
-
+      this.editorContent = "";
       //getting chapter content
       this.getChapterMainContent(id).then((d) => {
+        console.log(d);
         this.editorContent = d;
       });
 
