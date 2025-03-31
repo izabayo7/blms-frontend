@@ -3,7 +3,7 @@
     <main class="faculty--wrapper">
 
       <!--    faculty page header-->
-      <section class="faculty--header header ">
+      <section class="faculty--header header pl-4">
         <div class="header--wrapper d-flex">
           <div class="heading col d-flex align-center">
             <div class="icon">
@@ -31,7 +31,7 @@
               <h2>{{ header.title }}</h2>
             </div>
           </div>
-          <div class="search col">
+          <div v-if="$route.path.includes('students')" class="search col">
             <div class="search-wrapper">
               <search placeholder="Search user"/>
             </div>
