@@ -120,16 +120,14 @@
             </div>
           </v-row>
           <v-btn
+            v-if="$store.state.user.user.category.name == 'STUDENT'"
             class="radio-btn d-block mb-4 submitt-attempt"
-            @click="
-              $store.state.user.user.category.name == 'STUDENT'
-                ? saveAttempt()
-                : $router.push('/quiz/submitted')
-            "
+            @click="saveAttempt()"
             rounded
             >Submit Answers</v-btn
           >
           <v-btn
+            v-else
             class="radio-btn d-block mb-4 submitt-attempt"
             @click="$router.push('/quiz')"
             rounded
