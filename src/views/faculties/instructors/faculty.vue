@@ -19,8 +19,8 @@
               </div>
             </div>
             <div class="text-content">
-              <h4>Faculty Details</h4>
-              <h2>Communication Design</h2>
+              <h4>COM DESIGN Year 1</h4>
+              <h2>Teacher’s list</h2>
             </div>
           </div>
           <div class="search col">
@@ -29,11 +29,7 @@
             </div>
           </div>
           <div class="add-user d-flex justify-end col">
-            <div class="add-user-button">
-              <button-ui>
-                <template #content>Create user group</template>
-              </button-ui>
-            </div>
+
           </div>
         </div>
       </div>
@@ -43,7 +39,7 @@
             <table-header />
           </div>
           <div class="table">
-            <table-ui :data="faculties"/>
+            <table-ui :data="instructors"/>
           </div>
         </div>
       </div>
@@ -52,22 +48,22 @@
 </template>
 
 <script>
-import buttonUi from '@/components/reusable/ui/button-ui'
 import Search from "../../../components/reusable/Search2";
 import TableHeader from "../../../components/reusable/ui/table-header";
 import TableUi from "../../../components/reusable/ui/table-ui";
 
 export default {
-name: "Faculty",
-  components: {TableUi, TableHeader, Search, buttonUi},
+  //TODO using dynamic instructors from backend
+name: "FacultyInstructors",
+  components: {TableUi, TableHeader, Search,},
   data(){
     return{
-      faculties:[
-        {"Students groups":"COM DESIGN YEAR 1", "No students":124,"Assigned Instructors":4, "Courses served":12 ,"Created on":"today"},
-        {"Students groups":"COM DESIGN YEAR 2 arts", "No students":64,"Assigned Instructors":9, "Courses served":4 ,"Created on":"12/12/2020"},
-        {"Students groups":"COM DESIGN YEAR 3", "No students":13,"Assigned Instructors":3, "Courses served":16 ,"Created on":"12/5/2020"},
-        {"Students groups":"COM DEVELOP YEAR 1", "No students":34,"Assigned Instructors":5, "Courses served":1 ,"Created on":"13/12/2021"},
-        {"Students groups":"COM SETTING YEAR 1", "No students":76,"Assigned Instructors":1, "Courses served":20 ,"Created on":"3/10/2019"},
+      instructors:[
+        {"sur_name":"Ntwari Jearn bosco", "Gender":"male", "courses":2},
+        {"sur_name":"Uwikunda peter arts", "Gender":"male", "courses":1},
+        {"sur_name":"Nyenyeri James", "Gender":"male", "courses":3},
+        {"sur_name":"Mukamana Sarah", "Gender":"female", "courses":2},
+        {"sur_name":"Nshuti Ntwari", "Gender":"male", "courses":1},
       ]
     }
   }
