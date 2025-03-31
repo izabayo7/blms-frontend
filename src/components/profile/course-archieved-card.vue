@@ -4,24 +4,24 @@
   <div class="ccc">
     <div class="ccc--wrapper d-flex justify-space-between">
       <!--      col 1 with tittle-->
-      <div class="ccc--col ccc--col__1 ccc--title">
+      <div class="ccc--col ccc--col__1 ccc--title  col-4 pa-0">
         <div class="ccc--title--name">
-          <h3>Bookkeeping basics</h3>
+          <h3>{{ data.name }}</h3>
         </div>
         <div class="ccc--title--start-date">
-          <p>Started on 27 jan 2021</p>
+          <p>Started on {{ data.createdAt | formatDate }}</p>
         </div>
       </div>
       <!--      col 2 with success rate-->
-      <div class="ccc--col ccc--col__2 ccc--class">
+      <div class="ccc--col ccc--col__2 ccc--class  col-4 pa-0">
         <div class="ccc--class--name">
-          <p>Communication design year1</p>
+          <p>{{ data.user_group.name }}</p>
         </div>
       </div>
       <!--      col 3 with last attempted quiz infos-->
-      <div class="ccc--col ccc--col__3 ccc--students">
-        <div class="ccc--students--title">
-          <h5>18 Chapters</h5>
+      <div class="ccc--col ccc--col__3 ccc--students  col-4 pa-0">
+        <div class="ccc--students--title text-center">
+          <h5>{{ data.total_chapters }} Chapters</h5>
         </div>
       </div>
     </div>
@@ -31,6 +31,11 @@
 <script>
 export default {
   name: "course-archieved-card",
+  props: {
+    data: {
+      type: Object
+    }
+  }
 }
 </script>
 

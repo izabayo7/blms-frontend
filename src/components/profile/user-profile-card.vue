@@ -24,8 +24,8 @@
           <div class="upc--information--data--type">
             <h5>{{ user.category }} profile</h5>
           </div>
-          <div class="upc--information--data--faculty">
-            <h3>Accounting year 2</h3>
+          <div v-if="user.category === 'STUDENT'" class="upc--information--data--faculty">
+            <h3>{{ user.user_groups }}</h3>
           </div>
           <div class="upc--information--data--email">
             <p>{{ user.email }}</p>
@@ -102,7 +102,13 @@ name: "user-profile-card",
       &--faculty{
         margin-top: .5rem;
         h3{
-          color:$color-one;
+          font-family: Roboto;
+          font-style: normal;
+          font-weight: 500;
+          font-size: 15.1822px;
+          line-height: 18px;
+
+          color: #FF7700;
         }
       }
 

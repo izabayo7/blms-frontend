@@ -1,42 +1,53 @@
 <template>
   <main class="profile">
-    <main v-if="user" class="profile--wrapper">
+    <main v-if="info" class="profile--wrapper">
       <div class="profile--user-profile-card profile--user-profile-card__1">
         <div class="profile--user-profile-card--profile">
-          <user-profile-card :user="user" />
+          <user-profile-card :user="info.user"/>
         </div>
         <div class="profile--user-profile-card--course-created">
           <div class="head mt-4 mb-1">
-            <h3>Course {{ user.category === 'STUDENT' ?  'enroled' : 'created' }}</h3>
+            <h3>Course {{ info.user.category === 'STUDENT' ? 'enroled' : 'created' }}</h3>
           </div>
-          <div class="course-card" v-for="i in 4" :key="i">
-            <course-created-card :type="user.category"/>
+          <div class="holder customScroll">
+            <div class="course-card" v-for="course in info.courses" :key="course._id">
+              <course-created-card :data="course" :type="info.user.category"/>
+            </div>
           </div>
         </div>
       </div>
-      <div v-if="$store.state.user.user.category.name !== 'STUDENT'" class="profile--user-profile-card profile--user-profile-card__2">
-        <div v-if="$store.state.user.user.category.name !== 'INSTRUCTOR' || user.category === 'STUDENT'" class="profile--user-profile-card--success-rate ">
+      <div v-if="$store.state.user.user.category.name !== 'STUDENT'"
+           class="profile--user-profile-card profile--user-profile-card__2">
+        <div v-if="$store.state.user.user.category.name !== 'INSTRUCTOR' || info.user.category === 'STUDENT'"
+             class="profile--user-profile-card--success-rate ">
           <div class="head ">
             <h3>Students success rate</h3>
           </div>
           <div class="success-stats-card d-flex justify-center">
-            <success-score-chart/>
+            <success-score-chart :courses="info.courses"/>
           </div>
         </div>
         <div class="profile--user-profile-card--performing-class">
           <div class="head mb-1">
-            <h3>{{ user.category === 'STUDENT' ? $store.state.user.user.category.name === 'INSTRUCTOR' ? 'Live class attendance status' : 'Detailed course scores' : 'Top 3 performing classes' }}</h3>
+            <h3>{{
+                info.user.category === 'STUDENT' ? $store.state.user.user.category.name === 'INSTRUCTOR' ? 'Live class attendance status' : 'Detailed course scores' : 'Top 3 performing classes'
+              }}</h3>
           </div>
-          <div class="enrol-course-card mt-1 mb-1" v-for="i in 3" :key="i">
-            <detailed-course-score-card :type="user.category"/>
+          <div class="holder customScroll">
+            <div class="enrol-course-card mt-1 mb-1" v-for="course in info.courses" :key="course._id">
+              <detailed-course-score-card :data="course" :type="info.user.category"/>
+            </div>
           </div>
         </div>
-        <div v-if="$store.state.user.user.category.name === 'INSTRUCTOR' && user.category === 'INSTRUCTOR'" class="profile--user-profile-card--performing-class mt-6">
+        <div v-if="$store.state.user.user.category.name === 'INSTRUCTOR' && info.user.category === 'INSTRUCTOR'"
+             class="profile--user-profile-card--performing-class mt-6">
           <div class="head mb-1">
             <h3>Archived courses ( Not in use)</h3>
           </div>
-          <div class="enrol-course-card mt-1 mb-1" v-for="i in 3" :key="i">
-            <course-archieved-card/>
+          <div class="holder customScroll">
+            <div class="enrol-course-card mt-1 mb-1" v-for="course in info.courses" :key="course._id">
+              <course-archieved-card :data="course"/>
+            </div>
           </div>
         </div>
         <!--          <enrol-course-card />-->
@@ -60,13 +71,14 @@ export default {
   name: "profile",
   components: {CourseArchievedCard, CourseCreatedCard, SuccessScoreChart, DetailedCourseScoreCard, UserProfileCard},
   data: () => ({
-    user: undefined
+    info: undefined
   }),
   methods: {
     loadUser() {
-      apis.get(`user/${this.$route.params.username}`)
+      apis.get(`user/${this.$route.params.username}?measure=extended`)
           .then(({data: {data}}) => {
-            this.user = data
+            this.info = data
+            this.info.user.user_groups = this.info.user_groups
           })
           .catch(err => {
             console.log(err)
@@ -99,10 +111,18 @@ export default {
         color: lighten($primary, 20);
       }
     }
-
     &--course-created {
-
-
+      .holder {
+        max-height: 240px;
+        overflow-y: auto;
+      }
+    }
+    &--performing-class{
+      .holder {
+        max-height: 200px;
+        overflow-y: auto;
+        overflow-x: hidden;
+      }
     }
   }
 }

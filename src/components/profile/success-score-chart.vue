@@ -1,17 +1,17 @@
 <template>
-<div class="ssc">
-  <div class="ssc--wrapper">
-    <apex-charts
-      type="bar"
-      class="my-chart ml-n6"
-      width="300px"
-      height="250px"
-      :options="chartOptions"
-      :series="series"
-    >
-    </apex-charts>
+  <div class="ssc">
+    <div v-if="courses.length" class="ssc--wrapper">
+      <apex-charts
+          type="bar"
+          class="my-chart ml-n6"
+          width="300px"
+          height="250px"
+          :options="chartOptions"
+          :series="series"
+      >
+      </apex-charts>
+    </div>
   </div>
-</div>
 </template>
 
 <script>
@@ -19,15 +19,26 @@ import apexCharts from 'vue-apexcharts';
 
 export default {
   name: "success-score-chart",
-  components:{
+  props: {
+    courses: {
+      type: Array
+    }
+  },
+  components: {
     apexCharts
   },
-  data(){
+  beforeMount() {
+    this.courses.map(x => {
+      this.chartOptions.xaxis.categories.push(x.name.split(' '))
+      this.series[0].data.push((Math.round(x.successRate) || 0))
+    })
+  },
+  data() {
     return {
       chartOptions: {
         chart: {
           id: "basic-bar",
-          type:"bar",
+          type: "bar",
         },
         grid: {
           show: false,      // you can either change hear to disable all grids
@@ -40,13 +51,7 @@ export default {
           offsetY: -15,
         },
         xaxis: {
-          categories: [
-            ["Bookkeeping", "basics"],
-            ["Business", "English"],
-            ["Computer", "science"],
-            ["Another", "test", "course"],
-            ["The course", "you failed"],
-          ],
+          categories: [],
           axisBorder: {
             show: true,
             color: "#212121",
@@ -81,9 +86,9 @@ export default {
             barHeight: "100%",
             colors: {
               ranges: [
-                { from: 0, to: 40, color: "#fc6767" },
-                { from: 41, to: 50, color: "#FF7700" },
-                { from: 51, to: 100, color: "#193074" },
+                {from: 0, to: 40, color: "#fc6767"},
+                {from: 41, to: 50, color: "#FF7700"},
+                {from: 51, to: 100, color: "#193074"},
               ],
               backgroundBarOpacity: 1,
             },
@@ -99,7 +104,7 @@ export default {
       series: [
         {
           name: "success rate",
-          data: [30, 81, 71, 46, 50],
+          data: [],
         },
       ],
     }
