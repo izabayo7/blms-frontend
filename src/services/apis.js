@@ -17,6 +17,13 @@ Api.interceptors.response.use(function (response) {
 
 Api.interceptors.request.use((config) => {
 
+    //add token to headers
+    config.headers = {
+        'Authorization': `Bearer ${token}`,
+        'Accept': 'application/json',
+        'Content-Type': 'application/x-www-form-urlencoded'
+    }
+
     return config
 })
 
