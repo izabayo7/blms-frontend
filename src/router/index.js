@@ -80,23 +80,13 @@ const routes = [
                 // for chat
                 children: [
                     {
-                        path: '/admin',
+                        path: '/welcome',
                         component: () =>
-                            import( /* webpackPrefetch: true */ /* webpackChunkName: "dashboard" */ '@/views/dashboard/new'),
+                            import( /* webpackPrefetch: true */ /* webpackChunkName: "dashboard" */ '@/views/dashboard/new/main'),
                         meta: {
                             allowAnonymous: false
                         }
                     },
-
-                    {
-                        path: '/instructor',
-                        component: () =>
-                            import( /* webpackPrefetch: true */ /* webpackChunkName: "dashboard" */ '@/views/dashboard/new/instructor'),
-                        meta: {
-                            allowAnonymous: false
-                        }
-                    },
-
                     //for users
                     {
                         path: '/users',

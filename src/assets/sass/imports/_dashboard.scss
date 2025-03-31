@@ -1,13 +1,196 @@
+.dashboard_page {
+  background-color: #f3f6ff;
+  min-height: 50em;
+  height: 10em;
+  .page_title {
+    display: block;
+    .upper {
+      font-family: Inter;
+      font-size: 17px;
+      font-style: normal;
+      font-weight: 500;
+      line-height: 13px;
+      letter-spacing: 0em;
+      text-align: left;
+      color: #343434;
+      margin-bottom: 15px;
+    }
+    .lower {
+      font-family: Inter;
+      font-style: normal;
+      font-weight: 600;
+      font-size: 24.8244px;
+      line-height: 13px;
+      /* identical to box height, or 53% */
+margin-bottom: 45px;
+      color: #343434;
+    }
+  }
+  .more_info_container {
+    max-width: 358.8px;
+  }
+  .college_info {
+    max-width: 358.8px;
+    // width: 100%;
+    left: 159px;
+    background: #ffffff;
+    box-shadow: 0px 5.79235px 13.2397px rgba(180, 180, 180, 0.25);
+    border-radius: 4.13739px;
+    padding: 17.38px 13.05px 9.1px 19.65px;
+    .college_name {
+      font-family: Inter;
+      font-style: normal;
+      font-weight: bold;
+      font-size: 20.687px;
+      line-height: 28px;
+      display: flex;
+      align-items: center;
 
-            
-            aside.v-navigation-drawer.v-navigation-drawer--open {
-                background-color: #ffd248;
-            }
-            
-            #sidebar-container {
-                padding: 0;
-            }
-            
-            aside.v-navigation-drawer.v-navigation-drawer--fixed.v-navigation-drawer--open.theme--dark {
-                width: 225px !important;
-            }
+      color: #193074;
+      margin-bottom: 50.48px;
+    }
+    .lower_content {
+      display: flex;
+    }
+    .number_of_users {
+      font-family: Inter;
+      font-style: normal;
+      font-weight: 500;
+      font-size: 12.4122px;
+      width: 60%;
+
+      display: flex;
+      align-items: center;
+      text-align: center;
+
+      color: #3c3c3c;
+    }
+    .account_type {
+      display: flex;
+      .text {
+        font-family: Inter;
+        font-style: normal;
+        font-weight: 500;
+        font-size: 11.4122px;
+        margin-left: 6px;
+
+        display: flex;
+        align-items: center;
+        text-align: center;
+
+        color: #3c3c3c;
+      }
+    }
+  }
+  .more_info {
+    width: 111.01px;
+    height: 89.8px;
+    background: #ffffff;
+    box-shadow: 0px 5.79235px 9.92974px rgba(156, 156, 156, 0.25);
+    border-radius: 4.13739px;
+    padding: 8px;
+
+    .total_number {
+      height: 49.34px;
+      width: 100%;
+      font-family: Inter;
+      font-style: normal;
+      font-weight: bold;
+      font-size: 33.0991px;
+      margin-top: -20px;
+      display: flex;
+      justify-content: center;
+
+      color: #000000;
+    }
+    .description {
+      width: 99.66px;
+      height: 34.54px;
+      left: calc(50% - 99.66px / 2 - 469.23px);
+      top: 369.06px;
+
+      font-family: Inter;
+      font-style: normal;
+      font-weight: 500;
+      font-size: 9.27479px;
+      text-align: center;
+
+      color: #3c3c3c;
+    }
+  }
+  .heading {
+    font-family: Inter;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 15px;
+    line-height: 4px;
+    color: #343434;
+  }
+  .recent {
+    width: 358px;
+    height: 77px;
+    background: #ffffff;
+    box-shadow: 0px 5.9px 13.2px rgba(0, 0, 0, 0.1);
+  }
+  .record {
+    display: flex;
+    padding: 12px;
+    justify-content: space-between;
+    .name {
+      font-family: Inter;
+      font-style: normal;
+      font-weight: bold;
+      font-size: 12.4122px;
+      color: #000000;
+      flex: 1;
+    }
+    .category {
+      font-family: Inter;
+      font-style: normal;
+      font-weight: normal;
+      font-size: 12.4122px;
+      color: #000000;
+      flex: 1;
+    }
+    .time {
+      font-family: Inter;
+      font-style: normal;
+      font-weight: normal;
+      font-size: 12.4122px;
+      color: #000000;
+      flex: 1;
+    }
+  }
+  .more {
+    font-family: Inter;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 12.4122px;
+    line-height: 4px;
+    /* identical to box height, or 33% */
+    text-align: right;
+    max-width: 310.8px;
+    color: #193074;
+  }
+  .lower_buttons {
+    width: 153.91px;
+    height: 43.86px;
+    left: calc(50% - 153.91px / 2 - 448.04px);
+    top: calc(50% - 43.86px / 2 + 231.49px);
+
+    background: #193074;
+    box-shadow: 0px 5.79235px 11.5847px rgba(147, 147, 147, 0.25);
+    border-radius: 2.48244px;
+
+    font-family: Inter;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 13.2397px;
+    /* identical to box height, or 150% */
+
+    color: #ffffff;
+  }
+  .my-chart {
+    max-width: 20%;
+  }
+}

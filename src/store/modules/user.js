@@ -54,6 +54,9 @@ export default {
         // get user username
         username(state) {
             return state.user.user_name
+        },
+        userCategory(state) {
+            return state.user.category.name
         }
     },
 }
