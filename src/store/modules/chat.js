@@ -45,9 +45,11 @@ export default {
         loadIncomingMessages({getters,state}){
             // get contacts new style
             getters.socket.emit('request_user_contacts');
+            console.log('we are in loading message')
 
             // Get contacts new style
             getters.socket.on('receive_user_contacts', ({contacts}) => {
+                // console.log(contacts)
                 state.incomingMessages = contacts
                 emit('incoming_message_initially_loaded')
             });
@@ -59,9 +61,10 @@ export default {
             getters.socket.emit('request_conversation',{ contactId: id});
 
             // Get messages new style
-            getters.socket.on('receive_conversation', ({conversation,}) => {
+            getters.socket.on('receive_conversation', ({conversation}) => {
                 commit('STORE_LOADED_DATA',{username:id,messages:conversation})
                 state.currentChatMessages = conversation
+                // console.log(conversation)
             })
         },
         setUsername({commit,state},username){
@@ -81,7 +84,8 @@ export default {
     getters:{
         // connect to socket from sever side
         socket(){
-            return io('http://161.35.199.197:7070/',{
+            console.log(user.state.user._id)
+            return io('http://161.35.199.197:7070',{
                 query:{
                     id:user.state.user._id // username of the connected user
                 }

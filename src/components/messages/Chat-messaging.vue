@@ -25,7 +25,7 @@ export default {
   methods: {
     // is message going or comming
     msgGoing(owner) {
-      return owner === 'me';
+      return owner.toLowerCase() === 'me';
     },
 
   },

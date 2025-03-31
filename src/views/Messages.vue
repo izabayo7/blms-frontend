@@ -5,7 +5,7 @@
     <div class="side incoming col-3">
     <div class="message-search"> <search bg="#ffffff" placeholder="search message" :width="100" :fontSize="12" /> </div>
     <div class="incoming-messages" v-if="incomingMessages.length > 0">
-      <incoming-chat v-for="(message,i) in incomingMessages" :read="message.unreadMessagesLength <= 0" :key="i" :data="message" :typing="message.typing" />
+      <incoming-chat v-for="(message,i) in incomingMessages"  :key="i" :data="message" :typing="false" />
     </div>
   </div>
   <div class="side chat col-9" >
@@ -45,17 +45,37 @@ export default {
     goToMessages(){
       if(this.$route.params.username)
         return
-      this.SET_DISPLAYED_USER({ contactId: this.incomingMessages[0].id})
+
+      this.SET_DISPLAYED_USER(this.incomingMessages[0])
       this.$router.push(`/messages/${this.incomingMessages[0].id}`)
 
+    },
+    storeCurrentDisplayedUser(){
+
+        //listen when the user contacts/incoming messages are loaded
+        on('incoming_message_initially_loaded',()=>{
+          this.incomingMessages.map(d => {
+            if(this.$route.params.username === d.id){
+              this.SET_DISPLAYED_USER(d)
+              console.log(d)
+            }
+          })
+        })
+
+      //when there is no event atleast try this
+        this.incomingMessages.map(d => {
+          if(this.$route.params.username === d.id){
+            this.SET_DISPLAYED_USER(d)
+            console.log(d)
+          }
+        })
     }
   },
   mounted(){
-
+    this.storeCurrentDisplayedUser()
     //listen if recent chat contact was loaded
     on('incoming_message_initially_loaded',()=>{
       this.goToMessages()
-      console.log(this.incomingMessages)
     })
     this.$store.dispatch('chat/loadIncomingMessages')
 

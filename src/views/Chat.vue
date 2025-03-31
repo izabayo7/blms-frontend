@@ -5,7 +5,7 @@
         <!--        profile picture of the current chatter-->
         <template #pic><img src="@/assets/images/instructor.png" alt="sender profile picture"></template>
         <!--        name of the current chatter-->
-        <template #name>Ntwari Clarance</template>
+        <template #name>{{currentDisplayedUser.name}}</template>
       </chat-header>
     </div>
     <div ref="messages-list" class="messages-list" >
@@ -50,6 +50,7 @@ export default {
 
   },
   created() {
+    console.log('created')
     //if there  are no current loaded messages, loads them
     if(this.currentChatMessages.length <=0){
       this.$store.dispatch('chat/loadMessages')
