@@ -13,7 +13,7 @@
                  @mouseenter="toggleMenu(true)"
                  @mouseleave="toggleMenu(false)">
               <div class="no-video"
-                   v-show="(noVideo && !isPresenting) || (isPresenting && participationInfo.isOfferingCourse)">
+                   v-show="(noVideo && !isPresenting) || (isPresenting && participationInfo.isOfferingCourse && (currentPresenter ? currentPresenter._id == me.userInfo._id:true))">
                 <div class="no-video--wrapper" :class="{presenting:isPresenting}">
                   <div v-if="isStudentPresenting || (currentPresenter ? currentPresenter.category == 'STUDENT': false)"
                        class="instructor-info">
@@ -67,8 +67,10 @@
                       fill="rgba(255,255,255,1)"/>
                 </svg>
               </button>
-              <video v-if="!participationInfo.isOfferingCourse" v-show="isPresenting"
-                     id="viewer_screen_feed" class="show">
+              <video
+                  v-if="!participationInfo.isOfferingCourse || ((currentPresenter && me) ? (currentPresenter._id != me.userInfo._id) : false)"
+                  v-show="isPresenting"
+                  id="viewer_screen_feed" class="show">
                 <!--                <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" >-->
               </video>
               <transition name="fade">
@@ -762,7 +764,7 @@ export default {
       this.onHandRaisedOrLowerd(id, false)
     },
     onViewerStopedPresenting() {
-        this.start_presenting()
+      this.start_presenting()
     },
     start_presenting() {
       this.participationInfo.isOfferingCourse = true;
@@ -897,7 +899,9 @@ export default {
             this.toogleMedia(parsedMessage);
             break;
           case 'notification':
-            this.isPresenting = parsedMessage.screenStatus;
+            if (!this.isStudentPresenting) {
+              this.isPresenting = parsedMessage.screenStatus;
+            }
             this.videoEnabled = parsedMessage.videoStatus;
             this.audioEnabled = parsedMessage.audioStatus;
             break;
@@ -1053,12 +1057,14 @@ export default {
       // }
     },
     shareScreen() {
-      if (!this.isPresenting) {
-        setTimeout(() => {
-          document.getElementById("video_screen_feed").srcObject.getVideoTracks()[0].addEventListener('ended', () =>
-              this.shareScreen())
-        }, 5000)
-      }
+      console.log('called !!!!!!!')
+      // if (!this.isPresenting) {
+      //   setTimeout(() => {
+      //     document.getElementById("video_screen_feed").srcObject.getVideoTracks()[0].addEventListener('ended', () =>
+      //         this.shareScreen())
+      //   }, 5000)
+      // }
+      // console.clear()
       let message = {
         id: this.isPresenting ? 'stopSharingScreen' : 'shareScreen',
       }
@@ -1090,12 +1096,14 @@ export default {
       this.sendMessage(message);
     },
     sendMessage(message) {
+      console.log(message)
       let jsonMessage = JSON.stringify(message);
       this.ws.send(jsonMessage);
     },
 
     onNewParticipant(request) {
       if (request.name != this.participationInfo.name + '_screen') {
+        console.log(request.name)
         this.receiveVideo(request.name);
       }
     },
@@ -1104,7 +1112,7 @@ export default {
       return this.participants.indexOf(result[0]);
     },
     removeParticipant(index) {
-      if (this.currentPresenter._id == this.participants[index].userInfo._id) {
+      if (this.currentPresenter ? (this.currentPresenter._id == this.participants[index].userInfo._id) : false) {
         this.currentPresenter = undefined
       }
       this.participants.splice(index, 1)
@@ -1166,6 +1174,8 @@ export default {
 
       if (self.isPresenting) {
         options.sendSource = 'screen'
+      } else {
+        console.log("isPresenting mf: " + self.isPresenting)
       }
 
       participant.rtcPeer = new WebRtcPeer.WebRtcPeerSendonly(options,
@@ -1180,7 +1190,7 @@ export default {
 
             this.generateOffer(participant.offerToReceiveVideo.bind(participant));
             if (self.presenter_id) {
-              console.clear()
+              // console.clear()
               console.log('tumusanzemo wlh')
               self.presenterChanged(self.presenter_id)
               self.presenter_id = undefined
@@ -1193,6 +1203,10 @@ export default {
               } else {
                 self.displaySrcVideo();
               }
+            }
+            if (self.isPresenting) {
+              document.getElementById("video_screen_feed").srcObject.getVideoTracks()[0].addEventListener('ended', () =>
+                  self.shareScreen())
             }
           })
 
@@ -1291,6 +1305,7 @@ export default {
       else {
         let userInfo = await this.getUserInfo(sender.split('_')[0]);
         participant = new Participant(sender, this, false, userInfo, this.create_videoElement(userInfo._id));
+        console.log(participant)
       }
       // if (participant.userInfo.category == "INSTRUCTOR") {
       let video = participant.getVideoElement();
