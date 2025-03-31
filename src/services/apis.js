@@ -7,6 +7,12 @@ const {jwt:token} = JSON.parse(localStorage.getItem('vue-session-key'))
 
 /* interceptors */
 Api.interceptors.response.use(function (response) {
+    const {data:{status,message}} = response
+
+    if(status === 401){
+        if(message.toLowerCase() === 'invalid token')
+
+    }
 
     return response
 }, function (error){
