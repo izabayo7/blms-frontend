@@ -1,5 +1,5 @@
 <template>
-  <div class="small-card" :class="template">
+  <div class="small-card" :class="template + ' '+size">
     <div v-if="template === 'ADMIN'">
       <div class="d-flex">
         <div class="icon">
@@ -79,7 +79,8 @@
             type="donut"
             class="my-chart"
             :class="{'ml-n6' : data === undefined}"
-            :width="width"
+            :width="width+'px'"
+            height="100px"
             :options="chartOptions"
             :series="[data.total,100-data.total]"
         ></chart>
@@ -103,6 +104,9 @@ export default {
     },
     data: {
       type: Object
+    },
+    size: {
+      type: String
     },
     width: {
       type: Number,
@@ -130,7 +134,7 @@ export default {
   data: () => ({
     chartOptions: {
       chart: {
-        width: 380,
+        // width: 380,
         type: "donut",
       },
       plotOptions: {},
@@ -142,9 +146,9 @@ export default {
         {
           breakpoint: 480,
           options: {
-            chart: {
-              width: 200,
-            },
+            // chart: {
+            //   width: 200,
+            // },
             legend: {
               show: false,
             },
@@ -186,7 +190,11 @@ export default {
 
 <style lang="scss">
 .small-card {
-  max-width: 359.95px;
+  max-width: 350px;
+  &.small{
+    max-width: 286.95px
+  }
+  height: 229px;
   left: 0px;
   top: 0px;
 
@@ -348,9 +356,15 @@ export default {
 /* Portrait phones and smaller */
 @media (max-width: 700px) {
   .small-card {
+    &.INSTRUCTOR{
+      height: 230px;
+    }
     .chart {
       margin: 18px auto 45px;
     }
+    max-width: 90% !important;
+    margin: auto;
+    height: fit-content;
   }
 }
 </style>
