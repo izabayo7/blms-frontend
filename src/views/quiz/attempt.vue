@@ -189,7 +189,7 @@
           <v-btn
               v-if="$store.state.user.user.category.name == 'STUDENT'"
               class="radio-btn d-block mb-4 submitt-attempt"
-              @click="saveAttempt()"
+              @click="validate"
               rounded
           >Submit Answers
           </v-btn
@@ -253,6 +253,7 @@ export default {
     ],
     attempt: {},
     done: false,
+    error: "",
     filesToUpload: [],
     remaining_time: 0,
   }),
@@ -282,6 +283,16 @@ export default {
           this.saveAttempt();
         }
       }
+    },
+    error() {
+      if (this.error != "")
+        this.$store.dispatch("app_notification/SET_NOTIFICATION", {
+          message: this.error,
+          status: "danger",
+          uptime: 2000,
+        }).then(() => {
+          this.error = ""
+        })
     },
   },
   methods: {
@@ -421,6 +432,24 @@ export default {
           this.attempt.answers[questionIndex].choosed_options.push(value);
         }
       }
+    },
+    validate() {
+      for (const i in this.selected_quiz.questions) {
+
+        if (this.selected_quiz.questions[i].required) {
+          if (this.selected_quiz.questions[i].type.includes('select') && !this.attempt.answers[i].choosed_options.length)
+            return this.error = `Question ${parseInt(i) + 1} is required`
+
+          else if(this.selected_quiz.questions[i].type == 'open_ended' && !this.attempt.answers[i].text.length)
+            return this.error = `Question ${parseInt(i) + 1} is required`
+
+          else if(this.selected_quiz.questions[i].type == 'file_upload' && !this.attempt.answers[i].src.length)
+            return this.error = `Question ${parseInt(i) + 1} is required`
+
+        }
+      }
+
+      this.saveAttempt();
     },
     async saveAttempt() {
       this.attempt.used_time =

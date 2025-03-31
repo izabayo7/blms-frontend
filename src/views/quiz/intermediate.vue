@@ -206,6 +206,11 @@ export default {
   .instructions {
     font-size: 1rem;
   }
+  .disabled {
+    color: rgba(0, 0, 0, 0.26) !important;
+    background-color: rgba(0, 0, 0, 0.12) !important;
+    font-size: 14px !important;
+  }
   .quiz_info {
     background-color: #d2d2d2;
     padding: 20px;
