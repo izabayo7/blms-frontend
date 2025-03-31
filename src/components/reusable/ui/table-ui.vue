@@ -50,6 +50,8 @@
 
 <script>
 //TODO auto flexible column based on length of data [liberi]
+import S from 'string'
+
 export default {
   name: "table-ui",
   props:{
@@ -69,14 +71,20 @@ export default {
   },
   computed:{
     tabHeads(){
-      try{
+      let tabHeadsCols;
 
-        const {keysToShow} = this.options;
-        return keysToShow
-      }catch(e){
-        return Object.keys(this.data[0])
-      }
-    }
+      const {keysToShow} = this.options;
+      tabHeadsCols = keysToShow || Object.keys(this.data[0]);
+
+      tabHeadsCols = tabHeadsCols.map(aTabHead => {
+        let s = S(aTabHead).humanize().s;
+        s = S(s).chompLeft("Total").s;
+
+        return S(s).humanize().s;
+      })
+
+      return tabHeadsCols;
+    },
   },
   methods:{
     inSelectedRows(idx){
