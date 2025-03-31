@@ -16,6 +16,7 @@
         </vue-plyr>
       </v-col>
     </v-row>
+
     <v-row>
       <v-col class="col-8">
         <!-- <span v-if="course !== undefined">{{course.name}}</span> -->
