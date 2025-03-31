@@ -63,7 +63,8 @@ export default {
       if (this.cardActive)
         Apis.update('user_notification', 'allSeen').then(() => {
           for (const i in this.notifications) {
-            this.notifications[i].status = 2
+            if (this.notifications[i].status === 3)
+              this.notifications[i].status = 2
           }
         })
     }
