@@ -34,3 +34,10 @@
         }
     }
 }
+
+/* Portrait phones and smaller */
+@media (max-width: 700px) {
+    .quiz-page {
+        padding: 10px;
+    }
+}

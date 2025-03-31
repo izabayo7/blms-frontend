@@ -4,7 +4,7 @@
     fluid
     class="quiz-page white pl-lg-16"
   >
-    <back class="mt-0 mb-6 ml-n6" />
+    <back class="mt-0 mb-6 ml-0 ml-md-n6" />
 
     <v-row class="relative">
       <v-col class="col-12 col-md-8">
@@ -17,9 +17,10 @@
           <v-col class="col-12">
             <v-row>
               <v-col
+                  class="px-0"
                 :class="question.type.includes('select') ? 'col-11' : 'col-12'"
               >
-                <p class="question-details col-md-12 col-12">
+                <p class="question-details col-md-12 col-12 px-0">
                   {{ `${i + 1}. ${question.details}` }}
                 </p>
                 <v-btn
