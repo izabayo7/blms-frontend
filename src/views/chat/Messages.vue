@@ -103,9 +103,11 @@ export default {
       const testReg = /\/messages\/group\/[a-z]+/g; //test for '/messages/group/...route
       const groupRouteFound = testReg.test(this.$route.path);
 
-      if (this.$route.params.username) return;
+      const user_found = this.incomingMessages.filter(x=>x.id ===  this.$route.params.username)
 
-      if (!groupRouteFound) {
+      if (user_found.length) return;
+
+      if (!groupRouteFound && this.incomingMessages.length) {
         this.SET_DISPLAYED_USER(this.incomingMessages[0]);
         this.$router.push(`/messages/${this.incomingMessages[0].id}`);
       }
@@ -115,12 +117,14 @@ export default {
       on("incoming_message_initially_loaded", () => {
         if (!this.incomingMessages.length) {
           this.$router.push("/messages/no-conversation");
+        } else {
+          this.incomingMessages.map((d) => {
+            console.log(d)
+            if (this.$route.params.username === d.id.toString()) {
+              this.SET_DISPLAYED_USER(d);
+            }
+          });
         }
-        this.incomingMessages.map((d) => {
-          if (this.$route.params.username === d.id.toString()) {
-            this.SET_DISPLAYED_USER(d);
-          }
-        });
       });
 
       //when there is no event atleast try this
@@ -133,6 +137,7 @@ export default {
   },
   mounted() {
     this.storeCurrentDisplayedUser();
+
     //listen if recent chat contact was loaded
     on("incoming_message_initially_loaded", () => {
       this.goToMessages();
@@ -202,7 +207,7 @@ export default {
 
         .incoming-contacts-move {
           transition: transform 1s;
-          padding: 20rem;
+          //padding: 20rem;
         }
       }
     }

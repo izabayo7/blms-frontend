@@ -75,8 +75,7 @@ export default {
 
             const id = newMessage.group ? newMessage.group : newMessage.sender.user_name
             //get last message from stored conversation
-            store.dispatch('chat/lastMessageInCertainChatMessages', id).then(({ lastMessage, groupIndex, userIndex }) => {
-
+            store.dispatch('chat/lastMessageInCertainChatMessages', id.toString()).then(({ lastMessage, groupIndex, userIndex }) => {
                 //if conversation was found and message not duplicated
                 if (userIndex === undefined || lastMessage._id === newMessage._id)
                     return
@@ -101,26 +100,26 @@ export default {
                         }
                     }
                 }
+                //increase unread message or read message
+                store.dispatch('chat/findIndexOfUserInIncomingMessages', id).then(idx => {
+                    if (idx === null) {
+                        //to be done later
+                    } else {
+                        //if the last message sender is the sam as new message sender
+                        if (newMessage.sender._id === state.currentDisplayedUser.id)
+                            state.incomingMessages[idx].unreadMessagesLength = 0
+                        else // unless the last message sender is not the same as new message sender
+                            state.incomingMessages[idx].unreadMessagesLength += 1
+
+                        state.incomingMessages[idx].last_message = newMessage
+
+                        //put conversation on the first place
+                        store.commit('chat/CHANGE_CONVERSATION_STAND', newMessage)
+                    }
+                })
 
             })
 
-            //increase unread message or read message
-            store.dispatch('chat/findIndexOfUserInIncomingMessages', id).then(idx => {
-                if (idx === null) {
-                    //to be done later
-                } else {
-                    //if the last message sender is the sam as new message sender
-                    if (newMessage.sender._id === state.currentDisplayedUser.id)
-                        state.incomingMessages[idx].unreadMessagesLength = 0
-                    else // unless the last message sender is not the same as new message sender
-                        state.incomingMessages[idx].unreadMessagesLength += 1
-
-                    state.incomingMessages[idx].last_message = newMessage
-                }
-            })
-
-            //put conversation on the first place
-            store.commit('chat/CHANGE_CONVERSATION_STAND', newMessage)
         },
         //store the message that we sent
         ADD_ONGOING_MESSAGE(state, newMessage) {
@@ -153,12 +152,11 @@ export default {
                 } else {
                     state.incomingMessages[idx].unreadMessagesLength = 0
                     state.incomingMessages[idx].last_message = newMessage
+
+                    // put conversation on the first place
+                    state.incomingMessages.splice(0, 0, state.incomingMessages.splice(idx, 1)[0])
                 }
             })
-
-            //put conversation on the first place
-            store.commit('chat/CHANGE_CONVERSATION_STAND', newMessage)
-
         },
         RESET_STATE(state) {
             Object.assign(state, getDefaultState())
@@ -180,7 +178,6 @@ export default {
         // change conversation to first if new message is sent or received
         CHANGE_CONVERSATION_STAND(state, msg) {
             let idx = -1;
-            console.log(msg)
             const id = msg.group ? msg.group : msg.sender.user_name;
             const message = {
                 content: msg.content,
@@ -193,8 +190,6 @@ export default {
                 if (val.id == id) idx = i
             })
 
-            console.log('id', idx)
-            // console.log(state.incomingMessages.splice(idx, 1))
             if (idx > -1) {
                 state.incomingMessages.splice(0, 0, state.incomingMessages.splice(idx, 1)[0])
                 state.incomingMessages[0].last_message = message
@@ -227,14 +222,15 @@ export default {
 
             // Get contacts new style
             getters.socket.on('res/message/contacts', ({ contacts }) => {
-                console.log(contacts)
                 state.incomingMessages = contacts
                 emit('incoming_message_initially_loaded')
             });
 
             // Get new contact
-            getters.socket.on('res/message/contacts/new', ({ contact }) => {
+            getters.socket.on('res/message/contacts/new', ({ contact, redirect }) => {
                 state.incomingMessages.unshift(contact)
+                if(redirect)
+                    router.push(`/messages/${contact.id}`)
             });
         },
         removeMember({ state }, { groupId, member }) {
@@ -254,8 +250,6 @@ export default {
                     if (state.incomingMessages[i].id == groupId) {
                         for (const k in state.incomingMessages[i].members) {
                             if (state.incomingMessages[i].members[k].id == member.id) {
-                                console.log('kbx')
-                                console.log(k)
                                 state.incomingMessages[i].members[k].isAdmin = !state.incomingMessages[i].members[k].isAdmin
                             }
                         }

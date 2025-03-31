@@ -40,7 +40,7 @@
                   >
                     <img
                       v-if="user.pic"
-                      :src="user.pic"
+                      :src="user.pic+'?height=50'"
                       :alt="`${user.names} profile picture`"
                     />
                     <v-avatar size="30" v-else class="avatar">

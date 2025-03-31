@@ -85,7 +85,6 @@ export default {
         this.setUsername(this.$route.params.username).then((username) => {
           this.loadMessages(username);
           if (this.currentDisplayedUser.id == username) {
-            console.log(this.incomingMessages);
             this.incomingMessages.map((d) => {
               if (this.$route.params.username == d.id) {
                 this.SET_DISPLAYED_USER(d);
@@ -93,9 +92,10 @@ export default {
             });
           }
         });
-      } else {
-        console.log('hhhhhhhhhhhhhhhhhhhhhhh kamobwe')
       }
+      // else {
+      //
+      // }
     });
   },
   beforeRouteUpdate(to, from, next) {
