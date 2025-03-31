@@ -141,7 +141,12 @@ import Search from "../../../components/reusable/Search2";
 import ButtonUi from "../../../components/reusable/ui/button-ui";
 export default {
 name: "Faculty",
-  components: {ButtonUi, Search, SubpageNavbar}
+  components: {ButtonUi, Search, SubpageNavbar},
+  data(){
+    return{
+      facultyId:this.$route.params.facultyId
+    }
+  }
 }
 </script>
 
