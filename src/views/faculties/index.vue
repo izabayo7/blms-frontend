@@ -38,6 +38,11 @@
         </div>
       </div>
 
+      <div class="nav">
+        <div class="nav--wrapper">
+          <subpage-navbar/>
+        </div>
+      </div>
 
       <div class="tabular-faculties">
         <div class="table-wrapper mt-6" v-if="faculties.length > 0">
@@ -65,10 +70,11 @@ import TableUi from "../../components/reusable/ui/table-ui";
 import apis from "../../services/apis";
 import moment from "moment";
 import {mapGetters} from 'vuex'
+import SubpageNavbar from "../../components/reusable/subpage-navbar";
 
 export default {
 name: "Faculties",
-  components: {TableUi, TableHeader, Search, buttonUi},
+  components: {SubpageNavbar, TableUi, TableHeader, Search, buttonUi},
   data(){
     return{
       faculties:[],
@@ -79,6 +85,10 @@ name: "Faculties",
   },
   computed:{
     ...mapGetters('user',['user'])
+  },
+  created(){
+
+    this.loadFaculties();
   },
   methods:{
     loadFaculties(){
@@ -100,10 +110,6 @@ name: "Faculties",
           console.log(err)
         })
     }
-  },
-  created(){
-
-    this.loadFaculties();
   }
 }
 </script>
