@@ -9,7 +9,7 @@
               <h2>Students</h2>
             </div>
           </div>
-          <div class="col-12 col-md-4">
+          <div class=" hidden-sm-and-down col-12 col-md-4">
             <select-ui
                 label="Select course"
                 name="role"
@@ -22,7 +22,7 @@
               "
             />
           </div>
-          <div class="col-12 col-md-3">
+          <div class="col-12 hidden-sm-and-down col-md-3">
             <button class="mx-auto">
               <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <g clip-path="url(#clip0)">
@@ -56,7 +56,7 @@
               Make anouncement
             </button>
           </div>
-          <div class="col-12 col-md-3 d-flex">
+          <div class="col-12 mt-6 mt-md-0 col-md-3 d-flex">
             <div>
               <div class="big">65%</div>
               <div class="small">Attendance</div>
@@ -66,9 +66,22 @@
               <div class="small">Performance</div>
             </div>
           </div>
+          <div class=" hidden-md-and-up col-12 col-md-4">
+            <select-ui
+                label="Select course"
+                name="role"
+                id="user_group"
+                :options="courses"
+                @input="
+                (e) => {
+                  selected_course = e;
+                }
+              "
+            />
+          </div>
         </div>
       </div>
-      <div class="tabular-users">
+      <div class="tabular-users mb-14">
         <div id="user-profile-card">
           <user-simple-card :loading="userByUsernameLoading">
             <template #name>{{ userByUsername.other_names + " " + userByUsername.sur_name }}</template>
