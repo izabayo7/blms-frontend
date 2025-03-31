@@ -2,7 +2,8 @@
 node_modules
 .dist
 old
-src--mike
+*--*
+*.zip
 # local env files
 .env.local
 .env.*.local

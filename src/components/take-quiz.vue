@@ -5,11 +5,27 @@
       <v-col v-if="quiz !== []" class="col-12 col-md-7 questions-side">
         <v-row v-for="(question, i) in quiz.questions" :key="i" class="col-12 col-md-12">
           <p class="question-details col-md-12 col-12">{{`${i+1}. ${question.details}`}}</p>
-          <textarea v-model="attempt.answers[i].text" v-if="question.type === 'open-ended'" cols="50" rows="5" placeholder="Type your answer here" class="answer-field"></textarea>
+          <textarea
+            v-model="attempt.answers[i].text"
+            v-if="question.type === 'open-ended'"
+            cols="50"
+            rows="5"
+            placeholder="Type your answer here"
+            class="answer-field"
+          ></textarea>
           <div v-else class="options">
-          <div class="d-block">
-            <v-btn v-for="(option, k) in question.options.options" :key="k" @click="handleOptionClick(i,k)" name="radio-btn" class="radio-btn d-block mb-4" rounded outlined :color="attempt.answers[i].choosedOptions.includes(k) ? 'green' : '' ">B. {{option.text}}</v-btn>
-          </div>
+            <div class="d-block">
+              <v-btn
+                v-for="(option, k) in question.options.options"
+                :key="k"
+                @click="handleOptionClick(i,k)"
+                name="radio-btn"
+                class="radio-btn d-block mb-4"
+                rounded
+                outlined
+                :color="attempt.answers[i].choosedOptions.includes(k) ? 'green' : '' "
+              >B. {{option.text}}</v-btn>
+            </div>
           </div>
         </v-row>
         <!-- <v-row class="col-12 col-md-12">
@@ -51,8 +67,14 @@
               </v-row>
             </v-container>
           </v-card>
-        </v-row> -->
-        <v-btn name="radio-btn" class="radio-btn d-block mb-4" @click="saveAttempt" rounded color="#ffd248">Submitt Quiz</v-btn>
+        </v-row>-->
+        <v-btn
+          name="radio-btn"
+          class="radio-btn d-block mb-4"
+          @click="saveAttempt"
+          rounded
+          color="#ffd248"
+        >Submitt Quiz</v-btn>
       </v-col>
       <v-col class="col-12 col-md-5 timer-side">
         <div class="timer">
@@ -70,25 +92,34 @@ export default {
     quiz: {},
     attempt: {},
     show: false,
-    message: '',
+    message: "",
     status: 200,
     modal: true,
   }),
-  beforeMount () {
-      this.getQuiz();
+  beforeMount() {
+    this.getQuiz();
   },
   methods: {
-    handleOptionClick(questionIndex, optionIndex){
-      if (this.quiz.questions[questionIndex].type === 'single-select') {
-        this.attempt.answers[questionIndex].choosedOptions = [optionIndex]
+    handleOptionClick(questionIndex, optionIndex) {
+      if (this.quiz.questions[questionIndex].type === "single-select") {
+        this.attempt.answers[questionIndex].choosedOptions = [optionIndex];
       } else {
-        if (this.attempt.answers[questionIndex].choosedOptions.includes(optionIndex)) {
-          this.attempt.answers[questionIndex].choosedOptions.splice(this.attempt.answers[questionIndex].choosedOptions.inexOf(optionIndex), 1)
+        if (
+          this.attempt.answers[questionIndex].choosedOptions.includes(
+            optionIndex
+          )
+        ) {
+          this.attempt.answers[questionIndex].choosedOptions.splice(
+            this.attempt.answers[questionIndex].choosedOptions.inexOf(
+              optionIndex
+            ),
+            1
+          );
         } else {
-          this.attempt.answers[questionIndex].choosedOptions.push(optionIndex)
+          this.attempt.answers[questionIndex].choosedOptions.push(optionIndex);
         }
       }
-      console.log(this.attempt)
+      console.log(this.attempt);
     },
     async getQuiz() {
       try {
@@ -98,13 +129,13 @@ export default {
           student: this.$store.state.user._id,
           autoSubbmitted: undefined,
           usedTime: 0,
-          answers: []
-        }
+          answers: [],
+        };
         for (const question of response.data.questions) {
-          if (question.type === 'open-ended') {
-            this.attempt.answers.push({text: ''})
+          if (question.type === "open-ended") {
+            this.attempt.answers.push({ text: "" });
           } else {
-            this.attempt.answers.push({choosedOptions: []})
+            this.attempt.answers.push({ choosedOptions: [] });
           }
         }
         this.quiz = response.data;
@@ -123,7 +154,6 @@ export default {
         this.message = "Course was saved successfuly";
         this.show = true;
         this.course._id = response.data._id;
-
       } catch (error) {
         if (error.response) {
           this.status = error.response.status;

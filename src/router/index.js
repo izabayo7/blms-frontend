@@ -36,7 +36,7 @@ const routes = [{
 {
     path: '/kurious',
     component: () =>
-        import('@/views/dashboard/index'),
+        import('@/views/dashboard'),
 
     children: [{
         path: '/courses',
@@ -93,11 +93,6 @@ const routes = [{
         component: () =>
             import('@/components/profile.vue')
     }, {
-        path: '/register/admin',
-        name: 'Register Admin',
-        component: () =>
-            import('@/components/registration/index.vue')
-    }, {
         path: '/quiz',
         name: 'Quiz',
         component: () =>
@@ -110,10 +105,36 @@ const routes = [{
     },
     ]
 }, {
+    path: '/register/users',
+    name: 'Register Users',
+    component: () =>
+        import('@/components/registration/users/panel.vue')
+}, {
+    path: '/register/users/student',
+    name: 'Register Student',
+    component: () =>
+        import('@/components/registration/users/index.vue')
+}, {
+    path: '/register/users/instructor',
+    name: 'Register Instructor',
+    component: () =>
+        import('@/components/registration/users/index.vue')
+}, {
     path: '/recover-password',
     name: 'Recover-Password',
     component: () =>
         import('@/components/recover-password.vue')
+},
+{
+    path: '/register/users/admin',
+    name: 'Register Admin',
+    component: () =>
+        import('@/components/registration/admin/admin.vue')
+}, {
+    path: '/register/faculty',
+    name: 'Register Admin',
+    component: () =>
+        import('@/components/registration/faculty/index.vue')
 },
 {
     // catch all 404 - define at the very end

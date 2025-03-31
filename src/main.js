@@ -10,6 +10,7 @@ import '@/assets/sass/styles.scss'
 import vuetify from './plugins/vuetify';
 import VueSession from 'vue-session'
 import VuePlyr from 'vue-plyr'
+import mdi from '@mdi/font/css/materialdesignicons.css'
 
 const options = {
     persist: true,
@@ -28,6 +29,7 @@ Vue.config.productionTip = false
 new Vue({
     router,
     store,
+    mdi,
     vuetify,
     render: h => h(App)
 }).$mount('#app')

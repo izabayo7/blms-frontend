@@ -2,8 +2,11 @@
   <v-dialog id="kurious--dialog" v-model="show" :persistent="modal" max-width="70%">
     <div class="round">
       <v-card class="text-center pa-12">
-        <v-avatar size="150" :color="status === 200 ? '#4592ee' :  'red'">
-          <slot name="icon" /> 
+        <v-avatar
+          size="150"
+          :color="color !== undefined ? color : status === 200 ? '#4592ee' :  'red'"
+        >
+          <slot name="icon" />
         </v-avatar>
         <v-card-text class="title">{{message}}</v-card-text>
         <v-card-actions>
@@ -33,6 +36,9 @@ export default {
       type: Number,
       default: 200,
     },
+    color: {
+      type: String,
+    },
   },
 };
 </script>
@@ -46,5 +52,11 @@ export default {
     border-top-left-radius: 50% !important;
     border-top-right-radius: 50% !important;
   }
+}
+#panel--btn {
+  background-color: transparent !important;
+  /* box-shadow: none; */
+  /* color: dodgerblue; */
+  border: 2px solid;
 }
 </style>

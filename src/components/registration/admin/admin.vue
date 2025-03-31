@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid id="registrations">
+  <v-container fluid id="registrations" class="pa-0">
     <v-row>
       <v-col class="col-12 col-md-4 pt-16">
         <v-img class="mt-16 centerd" src="@/assets/images/Admin-rafiki.png" alt="avatar" />
@@ -13,19 +13,27 @@
                   <h1 class="yellow--text font-weight-bold form-title pt-4">ADMIN REGISTRATION</h1>
                 </v-col>
                 <v-col class="col-12 col-md-6">
-                  <label for>First Name</label>
-                  <v-text-field type="text" solo />
+                  <label>School Name</label>
+                  <v-text-field v-model="schoolName" type="text" solo />
                 </v-col>
                 <v-col class="col-12 col-md-6">
-                  <label for>Last Name</label>
-                  <v-text-field type="text" solo />
+                  <label>School Email</label>
+                  <v-text-field v-model="schoolEmail" type="email" solo />
+                </v-col>
+                <v-col class="col-12 col-md-6">
+                  <label>First Name</label>
+                  <v-text-field v-model="surName" type="text" solo />
+                </v-col>
+                <v-col class="col-12 col-md-6">
+                  <label>Last Name</label>
+                  <v-text-field v-model="otherNames" type="text" solo />
                 </v-col>
                 <v-col class="col-12">
-                  <label for>Email</label>
-                  <v-text-field type="email" solo />
+                  <label>Email</label>
+                  <v-text-field v-model="email" type="email" solo />
                 </v-col>
                 <v-col class="col-12">
-                  <label for>Phone number</label>
+                  <label>Phone number</label>
                   <div
                     class="v-input theme--light v-text-field v-text-field--single-line v-text-field--solo v-text-field--is-booted v-text-field--enclosed"
                   >
@@ -35,7 +43,7 @@
                           <div class="v-input__icon v-input__icon--prepend-inner mx-2">+250</div>
                         </div>
                         <div class="v-text-field__slot">
-                          <input id="input-230" type="number" placeholder="xxxx" />
+                          <input id="input-230" v-model="phone" type="number" placeholder="xxxx" />
                         </div>
                       </div>
                       <div class="v-text-field__details">
@@ -47,7 +55,7 @@
                   </div>
                 </v-col>
                 <v-col class="col-12">
-                  <label for>National Id</label>
+                  <label>National Id</label>
                   <div
                     class="v-input theme--light v-text-field v-text-field--single-line v-text-field--solo v-text-field--is-booted v-text-field--enclosed"
                   >
@@ -93,21 +101,32 @@
                   </div>
                 </v-col>
                 <v-col class="col-12">
-                  <label for>Gender</label>
+                  <label>Gender</label>
                   <v-row>
-                    <v-col class="col-4" v-for="(gender,n) in genders" :key="n"> <v-icon :color="selectedgender === gender  ? '#FFD248' : '#B4B4B4'" @click="selectedgender = gender">mdi-checkbox-{{selectedgender === gender  ? 'marked' : 'blank'}}-circle{{selectedgender === gender  ? '' : '-outline'}}</v-icon> {{gender}}</v-col>
+                    <v-col class="col-4" v-for="(gender,n) in genders" :key="n">
+                      <v-icon
+                        :color="selectedgender === gender  ? '#FFD248' : '#B4B4B4'"
+                        @click="selectedgender = gender"
+                      >mdi-checkbox-{{selectedgender === gender ? 'marked' : 'blank'}}-circle{{selectedgender === gender ? '' : '-outline'}}</v-icon>
+                      {{gender}}
+                    </v-col>
                   </v-row>
                 </v-col>
-                <v-col class="col-12">
-                  <label for>Password</label>
-                  <v-text-field type="email" solo />
+                <!-- <v-col class="col-12">
+                  <label>Password</label>
+                  <v-text-field type="password" solo />
                 </v-col>
                 <v-col class="col-12">
-                  <label for>Confirm password</label>
-                  <v-text-field type="email" solo />
-                </v-col>
+                  <label>Confirm password</label>
+                  <v-text-field type="password" solo />
+                </v-col>-->
                 <v-col class="col-8 mx-auto">
-                  <v-btn rounded x-large class="yellow white--text px-16">Create account</v-btn>
+                  <v-btn
+                    rounded
+                    x-large
+                    class="yellow white--text px-16"
+                    @click="saveSchoolAndAdmin"
+                  >Create account</v-btn>
                 </v-col>
               </v-row>
             </v-form>
@@ -115,21 +134,92 @@
         </v-row>
       </v-col>
     </v-row>
+    <kurious-dialog :show="show" :message="message" :modal="modal" color="#ffd248" :status="status">
+      <!-- <v-icon slot="icon" size="55" dark>mdi-clipboard-text-multiple-outline</v-icon> -->
+      <v-icon slot="icon" size="55" dark>mdi-check</v-icon>
+      <v-row slot="actions">
+        <v-col class="col-10 mx-auto my-0">
+          <v-btn
+            rounded
+            x-large
+            color="#ffd248"
+            class="white--text px-16 mx-2"
+            @click="resetFields();show = false"
+          >Add New Admin</v-btn>
+          <v-btn
+            id="panel--btn"
+            rounded
+            x-large
+            color="#ffd248"
+            class="orange--text px-16 mx-2"
+            to="/register/users"
+          >Back To Panel</v-btn>
+        </v-col>
+      </v-row>
+    </kurious-dialog>
   </v-container>
 </template>
 <script>
+import Apis from "@/services/apis";
 export default {
-  data: ()=>({
-    selectedgender: 'Male',
-    genders: ['Male', 'Female']
+  data: () => ({
+    message: "",
+    show: false,
+    status: 200,
+    modal: true,
+    selectedgender: "Male",
+    genders: ["Male", "Female"],
+    schoolName: "",
+    schoolEmail: "",
+    surName: "",
+    otherNames: "",
+    nationalId: "",
+    email: "",
+    phone: "",
+    gender: "",
+    password: "",
   }),
   methods: {
     checkLength(index) {
       const nationalIdInputs = document.querySelectorAll(".id-inputs");
-      if (nationalIdInputs[index].value > 10000){
+      if (parseInt(nationalIdInputs[index].value) > 10000) {
         nationalIdInputs[index].style.color = "red";
       } else {
         nationalIdInputs[index].style.color = "inherit";
+        if (index === 3) {
+          this.nationalId = `${nationalIdInputs[0].value}${nationalIdInputs[1].value}${nationalIdInputs[2].value}${nationalIdInputs[3].value}`;
+        }
+      }
+    },
+    async saveSchoolAndAdmin() {
+      try {
+        const response = await Apis.create("college", {
+          name: this.schoolName,
+          email: this.schoolEmail,
+        });
+        this.message = "Admin Registered";
+        await Apis.create("admin", {
+          surName: this.surName,
+          otherNames: this.otherNames,
+          phone: `0${this.phone}`,
+          gender: this.selectedgender,
+          DOB: this.DOB,
+          email: this.email,
+          nationalId: this.nationalId,
+          college: response.data._id,
+        });
+        this.message = "Admin Registered";
+        this.show = "true";
+      } catch (error) {
+        if (error.response) {
+          this.status = error.response.status;
+          this.message = error.response.data;
+        } else if (error.request) {
+          this.status = 503;
+          this.message = "Service Unavailable";
+        }
+        this.modal = false;
+        this.show = true;
       }
     },
   },
@@ -163,12 +253,12 @@ export default {
     /* width: 48% !important; */
     text-align: center !important;
   }
-  .col{
+  .col {
     padding-top: 0 !important;
     // padding-bottom: 0 !important;
   }
 }
-.yellow{
-        background-color: #FFD248 !important;
-    }
+.yellow {
+  background-color: #ffd248 !important;
+}
 </style>

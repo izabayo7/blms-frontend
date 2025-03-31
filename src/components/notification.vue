@@ -16,7 +16,7 @@
               <v-divider class="mb-1" />
               <v-row>
                 <v-col class="col-3 mt-4">
-                  <span class="mx-3 hidden-sm-and-down" v-bind="attrs" v-on="on">
+                  <span class="mx-3 hidden-sm-and-down">
                     <v-avatar size="48" class="user-profile ml-2">
                       <!-- <img
                   v-if="$store.state.user.profile"
