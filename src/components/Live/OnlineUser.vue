@@ -1,8 +1,8 @@
 <template>
 <div class="online-user">
-  <div class="online-users--pic">
-    <figure class="online-user--pic--wrapper">
-      <img :src="user.img" :alt="`${user.name} profile picture`">
+  <div class="online-user--pic">
+    <figure class="online-user--pic--wrapper" >
+      <img :src="user.img" :class="status" :alt="`${user.name} profile picture`">
     </figure>
   </div>
   <div class="online-user--details">
@@ -23,10 +23,38 @@ export default {
         attendance:89,
       }
     }
+  },
+  computed:{
+    status(){
+      const a = this.user.attendance
+      return (a >= 80 )? "cool" : (a >= 55) ? "warn" : "danger"
+    }
   }
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+.online-user{
+  display: flex;
 
+  &--pic{
+    figure{
+      img{
+        width:2.1rem;
+        height: 2.1rem;
+        border-radius: 50%;
+
+        &.cool{
+          border:2px solid $success;
+        }
+        &.warn{
+          border:2px solid $warn;
+        }
+        &.danger{
+          border:2px solid $danger;
+        }
+      }
+    }
+  }
+}
 </style>
