@@ -2,7 +2,7 @@
   <div class="my-navbar row">
     <div class="col-6 py-0 col-md-3 d-flex top-left-contents">
       <div class="toggle ml-2 my-auto">
-        <v-icon large @click="toggle">
+        <!-- <v-icon large @click="toggle">
           <svg
             v-if="1==1"
             xmlns="http://www.w3.org/2000/svg"
@@ -22,7 +22,30 @@
           >
             <path fill="none" d="M0 0h24v24H0z" />
             <path d="M3 4h18v2H3V4zm0 7h12v2H3v-2zm0 7h18v2H3v-2z" /></svg
-        ></v-icon>
+        >
+        </v-icon> -->
+        <button class="toogle" @click="toggle">
+          <svg
+            v-if="state"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            width="24"
+            height="24"
+          >
+            <path fill="none" d="M0 0h24v24H0z" />
+            <path d="M3 4h18v2H3V4zm0 7h18v2H3v-2zm0 7h18v2H3v-2z" />
+          </svg>
+          <svg
+            v-else
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            width="24"
+            height="24"
+          >
+            <path fill="none" d="M0 0h24v24H0z" />
+            <path d="M3 4h18v2H3V4zm0 7h12v2H3v-2zm0 7h18v2H3v-2z" />
+          </svg>
+        </button>
       </div>
       <div class="vertically--centered">
         <img src="@/components/accountancy-logo 1.png" class="logo" />
@@ -220,7 +243,7 @@
 </template>
 <script>
 import Apis from "@/services/apis";
-import { mapMutations,mapState } from "vuex";
+import { mapMutations, mapState } from "vuex";
 export default {
   name: "Navbar",
   components: {
