@@ -8,7 +8,7 @@
 
     <v-row class="relative">
       <v-col class="col-12 col-md-8">
-        <navigation />
+        <navigation title="Submissions" :links="navigation_links" />
         <v-row
           v-for="(question, i) in selected_quiz_submission.quiz.questions"
           :key="i"
@@ -143,9 +143,10 @@
                       :class="`marks-input ${
                         question.type === 'open_ended' ? 'editable' : ''
                       }`"
+                      type="number"
                       v-model="attempt.answers[i].marks"
                       :readonly="mode === 'view'"
-                      type="text"
+                      @keyup="computeTotalMarks()"
                     />
                     <span>{{ `/${question.marks}` }}</span>
                   </div>
@@ -333,6 +334,7 @@ export default {
     quiz: {},
     attempt: {},
     mode: "view",
+    computedTotalMarks: 0,
   }),
   components: {
     back: () => import("@/components/shared/back-button"),
@@ -344,14 +346,21 @@ export default {
     userCategory() {
       return this.$store.state.user.user.category.name;
     },
-    computedTotalMarks() {
-      let result = 0;
-      for (const i in this.selected_quiz_submission.answers) {
-        result = parseInt(
-          result + parseInt(this.selected_quiz_submission.answers[i].marks || 0)
-        );
-      }
-      return result;
+    navigation_links() {
+      return [
+        {
+          text: "reports",
+          link: "/reports",
+        },
+        {
+          text: "kanze wlh",
+          link: "/reports/" + "",
+        },
+        {
+          text: `${this.selected_quiz_submission.user.sur_name} ${this.selected_quiz_submission.user.other_names}`,
+          link: this.$route.fullPath,
+        },
+      ];
     },
   },
   watch: {
@@ -369,7 +378,16 @@ export default {
       "update_quiz_submission",
       "findQuizSubmissionByUserAndQuizNames",
     ]),
-
+    computeTotalMarks() {
+      console.log("ahooooooooooooooo");
+      let result = 0;
+      for (const i in this.selected_quiz_submission.answers) {
+        result = parseInt(
+          result + parseInt(this.selected_quiz_submission.answers[i].marks || 0)
+        );
+      }
+      this.computedTotalMarks = result;
+    },
     checkChoiceStatus(choosed_options, choice) {
       if (choice.src) {
         for (const option of choosed_options) {
@@ -507,6 +525,7 @@ export default {
       if (this.userCategory === "INSTRUCTOR") {
         this.mode = "edit";
       }
+      this.computeTotalMarks();
     });
   },
 };

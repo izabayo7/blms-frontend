@@ -412,7 +412,7 @@ export default {
                     const quizId = quizCopy._id
                     // add quiz target
                     const target = {
-                        id: state.selectedChapter,
+                        id: d.data._id,
                         type: 'chapter'
                     }
                     state.courses.data[courseIndex].assignmentsLength++;

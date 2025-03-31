@@ -3,7 +3,7 @@
     <router-view />
     <app-dialog />
     <new-group />
-    <notification-tooltip />
+    <notification-tooltip class="d-none" />
   </v-app>
 </template>
 
@@ -17,7 +17,7 @@ export default {
   components: {
     NotificationTooltip,
     appDialog: () => import("@/components/shared/Dialog"),
-    NewGroup : () => import('@/components/messages/NewGroup')
+    NewGroup: () => import("@/components/messages/NewGroup"),
   },
 };
 </script>
