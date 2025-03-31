@@ -230,6 +230,7 @@ openQuiz">
       <div v-else class="live-class--attendance">
         <div class="live-class--attendance--wrapper long">
           <h3>DISCUSSION BOARD </h3>
+          <h3>ONLINE USERS : {{ participants.length }} </h3>
           <div class="live-comments-container viewer">
             <discussion
                 v-for="(comment, i) in comments"
@@ -410,7 +411,7 @@ export default {
       this.participationInfo.name = `${this.user.other_names} ${this.user.sur_name}`
       this.participationInfo.room = this.$route.params.liveSessionId
 
-      const host = 'test.stream.kurious.rw'
+      const host = 'stream.kurious.rw'
       // const host = 'localhost:8080'
 
       this.ws = new WebSocket('wss://' + host + '/kurious_stream' + `?token=${this.$session.get("jwt")}`);
