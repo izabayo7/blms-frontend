@@ -255,7 +255,7 @@
           </v-col>
         </v-row>
         <v-btn
-          v-if="!attempt.marked && userCategory === 'Instructor'"
+          v-if="userCategory === 'Instructor'"
           class="radio-btn d-block mb-4 submitt-attempt"
           @click="updateSubmission"
           rounded
@@ -306,6 +306,11 @@ export default {
     ...mapGetters("quiz_submission", ["selected_quiz_submission"]),
     userCategory() {
       return this.$store.state.user.user.category;
+    },
+  },
+  watch: {
+    async selected_quiz_submission() {
+      await this.autoMarkChoiceQuestions();
     },
   },
   methods: {
@@ -435,7 +440,7 @@ export default {
           answer.marks = 0;
         }
       }
-      await this.autoMarkChoiceQuestions();
+      // await this.autoMarkChoiceQuestions();
       this.attempt = {
         quiz: this.selected_quiz_submission.quiz._id,
         student: this.selected_quiz_submission.student._id,

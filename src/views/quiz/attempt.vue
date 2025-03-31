@@ -187,7 +187,7 @@ export default {
     ...mapGetters("quiz", ["selected_quiz"]),
     ...mapGetters("quiz_submission", ["selected_quiz_submission"]),
     formated_remaining_time() {
-      return new Date(this.remaining_time * 100).toISOString().substr(11, 8);
+      return new Date(this.remaining_time * 1000).toISOString().substr(11, 8);
     },
   },
   watch: {
@@ -315,7 +315,6 @@ export default {
       userId: this.$store.state.user.user._id,
       quizName: this.$route.params.name,
     }).then((quiz) => {
-      console.log(quiz);
       this.remaining_time = quiz.duration;
       this.attempt = {
         quiz: quiz._id,

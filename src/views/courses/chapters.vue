@@ -39,7 +39,7 @@
             }`"
             @click="activeChapter = i"
           >
-            {{ chapter.name | trimString(20) }}
+            {{ course.chapters[activeChapter].name | trimString(20) }}
           </button>
         </v-badge>
         <v-btn width="90%" class="py-6" @click="addNewChapter">
@@ -51,8 +51,8 @@
           <div class="class-chapters">
             <v-row>
               <v-col class="col-12">
-                <v-stepper v-model="e6" vertical>
-                  <v-stepper-step :complete="e6 > 1" step="1" editable
+                <v-stepper v-model="stepCounter" vertical>
+                  <v-stepper-step :complete="stepCounter > 1" step="1" editable
                     >Chapter {{ activeChapter + 1 }} -name &
                     description</v-stepper-step
                   >
@@ -75,14 +75,21 @@
                         placeholder="Enter Chapter Description"
                       ></textarea>
                     </v-card>
-                    <v-btn color="primary" @click="e6 = 2">Continue</v-btn>
+                    <v-btn color="primary" @click="stepCounter = 2"
+                      >Continue</v-btn
+                    >
                   </v-stepper-content>
 
-                  <v-stepper-step :complete="e6 > 2" step="2" editable>{{
-                    `Chapter ${activeChapter + 1} - ${
-                      action == "update" ? action : "add"
-                    } video`
-                  }}</v-stepper-step>
+                  <v-stepper-step
+                    :complete="stepCounter > 2"
+                    step="2"
+                    editable
+                    >{{
+                      `Chapter ${activeChapter + 1} - ${
+                        action == "update" ? action : "add"
+                      } video`
+                    }}</v-stepper-step
+                  >
 
                   <v-stepper-content step="2">
                     <v-card class="mb-12 pa-6 elevation-0" height="auto">
@@ -111,14 +118,21 @@
                         </v-col>
                       </v-row>
                     </v-card>
-                    <v-btn color="primary" @click="e6 = 3">Continue</v-btn>
+                    <v-btn color="primary" @click="stepCounter = 3"
+                      >Continue</v-btn
+                    >
                   </v-stepper-content>
 
-                  <v-stepper-step :complete="e6 > 3" step="3" editable>{{
-                    `Chapter ${activeChapter + 1} - ${
-                      action === "update" ? action : "add"
-                    } content`
-                  }}</v-stepper-step>
+                  <v-stepper-step
+                    :complete="stepCounter > 3"
+                    step="3"
+                    editable
+                    >{{
+                      `Chapter ${activeChapter + 1} - ${
+                        action === "update" ? action : "add"
+                      } content`
+                    }}</v-stepper-step
+                  >
 
                   <v-stepper-content step="3">
                     <v-card class="mb-12 elevation-0">
@@ -161,19 +175,21 @@
                         </v-col>
                       </v-row>
                     </v-card>
-                    <v-btn color="primary" class="mr-4" @click="e6 = 4"
+                    <v-btn color="primary" class="mr-4" @click="stepCounter = 4"
                       >Continue</v-btn
-                    >
-                    <v-btn text class="py-6 mt-n3" @click="reset('chapter')"
-                      >Reset Chapter</v-btn
                     >
                   </v-stepper-content>
 
-                  <v-stepper-step :complete="e6 > 4" step="4" editable>{{
-                    `Chapter ${activeChapter + 1} - ${
-                      action === "update" ? action : "add"
-                    } attachments`
-                  }}</v-stepper-step>
+                  <v-stepper-step
+                    :complete="stepCounter > 4"
+                    step="4"
+                    editable
+                    >{{
+                      `Chapter ${activeChapter + 1} - ${
+                        action === "update" ? action : "add"
+                      } attachments`
+                    }}</v-stepper-step
+                  >
 
                   <v-stepper-content step="4">
                     <v-card class="mb-12 elevation-0">
@@ -311,7 +327,7 @@
                             <v-col class="col-6 px-0">
                               Duration
                               <span class="font-weight-bold caption">{{
-                                new Date(selectedQuiz.duration * 100)
+                                new Date(selectedQuiz.duration * 1000)
                                   .toISOString()
                                   .substr(11, 8)
                               }}</span>
@@ -320,15 +336,12 @@
                         </v-col>
                       </v-row>
                     </v-card>
-                    <v-btn color="primary" class="mr-4" @click="e6 = 5"
+                    <v-btn color="primary" class="mr-4" @click="stepCounter = 5"
                       >Next</v-btn
-                    >
-                    <v-btn text class="py-6 mt-n3" @click="reset('chapter')"
-                      >Reset Chapter</v-btn
                     >
                   </v-stepper-content>
 
-                  <v-stepper-step :complete="e6 > 5" step="5"
+                  <v-stepper-step :complete="stepCounter > 5" step="5"
                     >update Chapter {{ activeChapter + 1 }}</v-stepper-step
                   >
 
@@ -347,8 +360,8 @@
                       @click="saveChapter"
                       >save Chapter</v-btn
                     >
-                    <v-btn text class="py-6 mt-n3" @click="reset('chapter')"
-                      >Reset Chapter</v-btn
+                    <v-btn text class="py-6 mt-n3" @click="updateActiveChapter"
+                      >Cancel</v-btn
                     >
                   </v-stepper-content>
                 </v-stepper>
@@ -362,7 +375,6 @@
 </template>
 
   <script>
-// import Apis from "@/services/apis";
 import { mapActions, mapGetters } from "vuex";
 export default {
   name: "edit_chapters",
@@ -373,10 +385,11 @@ export default {
     },
   },
   data: () => ({
-    e6: 1,
+    stepCounter: 1,
     activeChapter: -1,
     selectedQuizName: "",
     quizes: [],
+    quizNames: [],
     attachments: [],
     mode: "",
     content: "",
@@ -390,23 +403,23 @@ export default {
   computed: {
     // get the current course
     ...mapGetters("courses", ["course"]),
-    quizNames() {
-      let quizNames = this.$store.getters["quiz/quizNames"];
-      if (this.course.chapters[this.activeChapter].quiz.length > 0) {
-        quizNames.push(this.course.chapters[this.activeChapter].quiz[0].name);
-      }
-      return quizNames;
-    },
+    // get all quizes
+    ...mapGetters("quiz", ["all_quiz"]),
     selectedQuiz() {
-      return this.$store.getters["quiz/quiz"](this.selectedQuizName);
+      return this.all_quiz.filter(
+        (quiz) => quiz.name == this.selectedQuizName
+      )[0];
     },
   },
   watch: {
+    all_quiz() {
+      this.calculateQuizNames();
+    },
     activeChapter() {
       this.mode = "";
       this.content = "";
       this.selectedQuizName = "";
-      this.e6 = 1;
+      this.stepCounter = 1;
       if (this.course.chapters[this.activeChapter]._id) {
         this.getChapterMainContent(
           this.course.chapters[this.activeChapter]._id
@@ -417,19 +430,17 @@ export default {
       } else {
         this.mode = "edit";
       }
-      if (this.course.chapters[this.activeChapter].quiz.length > 0) {
-        this.selectedQuizName = this.course.chapters[
-          this.activeChapter
-        ].quiz[0].name;
-      }
+      // if (this.course.chapters[this.activeChapter].quiz.length > 0) {
+      //   this.selectedQuizName = this.course.chapters[
+      //     this.activeChapter
+      //   ].quiz[0].name;
+      // }
       this.video = undefined;
       this.attachments = [];
-      // console.log(this.activeChapter)
-      // this.$refs[`picker${this.activeChapter}1`].files = [];
-      // this.$refs[`picker${this.activeChapter}2`].files = [];
+      this.calculateQuizNames();
     },
-    e6() {
-      if (this.e6 === 3) {
+    stepCounter() {
+      if (this.stepCounter === 3) {
         document.querySelector(".ProseMirror").focus();
       } else if (
         this.course.chapters[this.activeChapter].documentContent != this.content
@@ -450,6 +461,31 @@ export default {
     ]),
     ...mapActions("quiz", ["getQuizes"]),
     ...mapActions("modal", ["set_modal"]),
+    calculateQuizNames() {
+      let quizNames = [];
+      if (this.all_quiz) {
+        for (const i in this.all_quiz) {
+          let addName = false;
+          if (this.all_quiz[i].target === undefined) {
+            addName = true;
+          } else if (
+            this.course.chapters[this.activeChapter].quiz.length > 0
+          ) {
+            if (
+              this.all_quiz[i].name ==
+              this.course.chapters[this.activeChapter].quiz[0].name
+            ) {
+              addName = true;
+            }
+          }
+
+          if (addName) {
+            quizNames.push(this.all_quiz[i].name);
+          }
+        }
+      }
+      this.quizNames = quizNames;
+    },
     updateActiveChapter() {
       if (this.activeChapter === 0 && this.course.chapters.length === 0) {
         this.addNewChapter();
@@ -457,7 +493,7 @@ export default {
         if (this.course.chapters.length > this.activeChapter) {
           this.activeChapter++;
         } else {
-          this.activeChapter--;
+          this.activeChapter = 0;
         }
       }
     },
@@ -468,7 +504,6 @@ export default {
       this.attachments.splice(index, 1);
     },
     updateVideo(file) {
-      console.log(file);
       this.chapterVideo = file;
     },
     removeVideo() {

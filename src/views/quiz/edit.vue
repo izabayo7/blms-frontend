@@ -330,6 +330,9 @@ export default {
             k
           ].right = !this.selected_quiz.questions[questionIndex].options
             .choices[k].right;
+            console.log(this.selected_quiz.questions[questionIndex].options.choices[
+            k
+          ].right)
         } else if (
           this.selected_quiz.questions[questionIndex].type.includes("Single")
         ) {

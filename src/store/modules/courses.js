@@ -193,6 +193,7 @@ export default {
                     quiz.__v = undefined
                     quiz.createdAt = undefined
                     quiz.updatedAt = undefined
+                    quiz.usage = undefined
                     for (const k in quiz.questions) {
                         if (quiz.questions[k].options) {
                             for (const j in quiz.questions[k].options.choices) {

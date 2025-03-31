@@ -17,9 +17,9 @@ export default {
                 if (state.quiz.data[i]._id === id) {
                     state.quiz.data[i].target = target
                 }
-                if (state.quiz.data[i].target == target) {
-                    state.quiz.data[i].target = undefined
-                }
+                // if (state.quiz.data[i].target == target && state.quiz.data[i]._id !== id) {
+                //     state.quiz.data[i].target = undefined
+                // }
             }
         },
         // update the selected_quiz
@@ -172,22 +172,8 @@ export default {
             return state.quiz.data.filter(quiz => quiz._id == state.selected_quiz)[0]
         },
         //get a specified quiz by name
-        quiz: state => (name) => {
-            return state.quiz.data.filter(quiz => quiz.name == name)[0]
-        },
-        //get a specified quiz by name
         all_quiz: state => {
             return state.quiz.data
-        },
-        //get a specified quiz by name
-        quizNames: state => {
-            let quizNames = []
-            for (const element of state.quiz.data) {
-                if (element.target == undefined) {
-                    quizNames.push(element.name)
-                }
-            }
-            return quizNames
         },
     },
 }
