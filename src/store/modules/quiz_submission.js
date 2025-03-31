@@ -122,10 +122,6 @@ export default {
         selected_quiz_submission: state => {
             return state.quiz_submission.data.filter(quiz_submission => quiz_submission._id == state.selected_quiz_submission)[0]
         },
-        // //get a specified quiz_submission by name
-        // quiz_submission: state => (name) => {
-        //     return state.quiz_submission.data.filter(quiz_submission => quiz_submission.name == name)[0]
-        // },
         //get a specified quiz_submission by name
         quiz_submissions: state => {
             return state.quiz_submission.data

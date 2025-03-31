@@ -314,18 +314,27 @@ export default {
         },
         //find a course by name
         findCourseByName({ state, commit }, { userCategory, userId, courseName }) {
-            if (state.courses.data.length < 1) {
+            let courseFound = false
+            if (state.courses.loaded) {
+                let courses = state.courses.data.filter(course => course.name == courseName)
+
+                if (courses.length > 0) {
+                    courseFound = true
+                    commit('set_selected_course', courses[0]._id)
+                    return courses[0]
+                }
+            }
+            if (!courseFound) {
                 return apis.get(`course/${userCategory}/${userId}/${courseName}`).then(d => {
-                    state.courses.data = [d.data]
+                    if (state.courses.loaded) {
+                        state.courses.data.push(d.data)
+                    } else {
+                        state.courses.data = [d.data]
+                    }
                     commit('set_selected_course', d.data._id)
                     return d.data
                 })
-            } else {
-                let course = state.courses.data.filter(course => course.name == courseName)[0]
-                commit('set_selected_course', course._id)
-                return course
             }
-
 
         },
         // create student progress in a lesson

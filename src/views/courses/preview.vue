@@ -5,20 +5,29 @@
     <div class="student" v-if="userCategory === 'Student'">
       <!-- <button class="back">back</button> -->
       <main class="description">
-        <h1 class="pb-5">{{course.name}}</h1>
+        <h1 class="pb-5">{{ course.name }}</h1>
         <article class="desc pb-10">{{ course.description }}</article>
 
         <div class="instructor-profile">
           <article>
-            <img v-if="course.instructor.profile" :src="course.instructor.profile" alt="profile picture" />
+            <img
+              v-if="course.instructor.profile"
+              :src="course.instructor.profile"
+              alt="profile picture"
+            />
             <v-avatar v-else size="50" class="bg-color-one">
-              <span
-                class="white--text"
-              >{{`${course.instructor.surName} ${course.instructor.otherNames}` | computeText}}</span>
+              <span class="white--text">{{
+                `${course.instructor.surName} ${course.instructor.otherNames}`
+                  | computeText
+              }}</span>
             </v-avatar>
           </article>
           <article class="owner">
-            <h3>{{ `${course.instructor.surName} ${course.instructor.otherNames}`}}</h3>
+            <h3>
+              {{
+                `${course.instructor.surName} ${course.instructor.otherNames}`
+              }}
+            </h3>
             <p class="faculty">PHD, web development</p>
           </article>
         </div>
@@ -26,7 +35,12 @@
         <article class="infos pt-10">
           <div>
             <v-avatar size="40" class="bg-color-one">
-              <svg xmlns="http://www.w3.org/2000/svg" width="62" height="62" viewBox="0 0 62 62">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="62"
+                height="62"
+                viewBox="0 0 62 62"
+              >
                 <circle
                   id="Ellipse_218"
                   data-name="Ellipse 218"
@@ -36,7 +50,11 @@
                   fill="#fc6767"
                 />
                 <g id="noun_index_1232133" transform="translate(13 13)">
-                  <g id="Group_125" data-name="Group 125" transform="translate(5.5 4)">
+                  <g
+                    id="Group_125"
+                    data-name="Group 125"
+                    transform="translate(5.5 4)"
+                  >
                     <g id="Group_124" data-name="Group 124">
                       <rect
                         id="Rectangle_1142"
@@ -74,13 +92,20 @@
                 </g>
               </svg>
             </v-avatar>
-            <span
-              class="content"
-            >{{ `${course.chapters.length} chapter ${course.chapters.length > 1 ? 's' : ''}` }}</span>
+            <span class="content">{{
+              `${course.chapters.length} chapter ${
+                course.chapters.length > 1 ? "s" : ""
+              }`
+            }}</span>
           </div>
           <div class="pt-4">
             <v-avatar size="40" class="bg-color-one">
-              <svg xmlns="http://www.w3.org/2000/svg" width="62" height="62" viewBox="0 0 62 62">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="62"
+                height="62"
+                viewBox="0 0 62 62"
+              >
                 <circle
                   id="Ellipse_219"
                   data-name="Ellipse 219"
@@ -188,7 +213,9 @@
                 </g>
               </svg>
             </v-avatar>
-            <span class="content">{{course.assignmentsLength}} assignments</span>
+            <span class="content"
+              >{{ course.assignmentsLength }} assignments</span
+            >
           </div>
         </article>
       </main>
@@ -219,7 +246,9 @@
             class="bg-color-one vertically--centered text-center preview-image"
             style="height: 100%"
           >
-            <span class="text-h1 white--text">{{course.name | computeText}}</span>
+            <span class="text-h1 white--text">{{
+              course.name | computeText
+            }}</span>
           </div>
         </div>
         <div class="preview-content col-sm-12 col-md-12 col-lg-8 col-xl-8">
@@ -257,7 +286,7 @@
                     </g>
                   </svg>
                 </div>
-                <div class="text">{{course.chapters.length}} chapters</div>
+                <div class="text">{{ course.chapters.length }} chapters</div>
               </div>
               <div class="info-col col-sm-6 col-md-~4 col-lg-4 col-xl-4">
                 <div class="icon">
@@ -275,7 +304,9 @@
                     />
                   </svg>
                 </div>
-                <div class="text">{{course.facultyCollegeYear.facultyCollege.faculty.name}}</div>
+                <div class="text">
+                  {{ course.facultyCollegeYear.facultyCollege.faculty.name }}
+                </div>
               </div>
               <div class="info-col col-sm-6 col-md-~4 col-lg-4 col-xl-4">
                 <div class="icon">
@@ -319,7 +350,9 @@
                     />
                   </svg>
                 </div>
-                <div class="text">{{course.assignmentsLength}} assignments</div>
+                <div class="text">
+                  {{ course.assignmentsLength }} assignments
+                </div>
               </div>
               <div class="info-col col-sm-6 col-md-~4 col-lg-4 col-xl-4">
                 <div class="icon">
@@ -337,7 +370,9 @@
                     />
                   </svg>
                 </div>
-                <div class="text">year {{course.facultyCollegeYear.collegeYear.digit}}</div>
+                <div class="text">
+                  year {{ course.facultyCollegeYear.collegeYear.digit }}
+                </div>
               </div>
               <div class="info-col col-sm-6 col-md-~4 col-lg-4 col-xl-4">
                 <div class="icon">
@@ -355,15 +390,22 @@
                     />
                   </svg>
                 </div>
-                <div
-                  class="text"
-                >{{`${course.attendedStudents} Student${course.attendedStudents > 1 ? 's' : ''}`}}</div>
+                <div class="text">
+                  {{
+                    `${course.attendedStudents} Student${
+                      course.attendedStudents > 1 ? "s" : ""
+                    }`
+                  }}
+                </div>
               </div>
             </article>
 
             <!--                action buttons-->
             <article class="action-btns">
-              <div @click="$router.push(`/courses/${course.name}`)" class="act-btn preview">
+              <div
+                @click="$router.push(`/courses/${course.name}`)"
+                class="act-btn preview"
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="110"
@@ -401,9 +443,11 @@
                 </svg>
               </div>
               <div
-                @click="tooglePublishCourse().then(()=>{
-                  $router.push('/courses')
-                })"
+                @click="
+                  tooglePublishCourse().then(() => {
+                    $router.push('/courses');
+                  })
+                "
                 class="act-btn upload"
               >
                 <svg
@@ -495,7 +539,10 @@
                   </g>
                 </svg>
               </div>
-              <div @click="$router.push(`/courses/edit/${course.name}`)" class="act-btn update">
+              <div
+                @click="$router.push(`/courses/edit/${course.name}`)"
+                class="act-btn update"
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="33.182"
@@ -531,10 +578,22 @@
                 </svg>
               </div>
               <div
-                @click="set_modal({ template: 'action_confirmation', method: { action: 'courses/delete_course' }, title: 'Delete Course', message: 'Are you sure you want to delete this course?'})"
+                @click="
+                  set_modal({
+                    template: 'action_confirmation',
+                    method: { action: 'courses/delete_course' },
+                    title: 'Delete Course',
+                    message: 'Are you sure you want to delete this course?',
+                  })
+                "
                 class="act-btn delete"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" width="23" height="29" viewBox="0 0 23 29">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="23"
+                  height="29"
+                  viewBox="0 0 23 29"
+                >
                   <path
                     id="Icon_material-delete"
                     data-name="Icon material-delete"
@@ -569,6 +628,15 @@ export default {
     },
     // get the current course
     ...mapGetters("courses", ["course"]),
+  },
+  watch: {
+    $route() {
+      this.findCourseByName({
+        userCategory: this.userCategory.toLowerCase(),
+        userId: this.$store.state.user.user._id,
+        courseName: this.$route.params.name,
+      });
+    },
   },
   methods: {
     ...mapActions("courses", [

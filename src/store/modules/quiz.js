@@ -125,16 +125,26 @@ export default {
 
         //find a quiz by name
         findQuizByName({ state, commit }, { userCategory, userId, quizName }) {
-            if (!state.quiz.data.length) {
+            let quizFound = false
+            if (state.quiz.loaded) {
+                let quiz = state.quiz.data.filter(quiz => quiz.name == quizName)[0]
+
+                if (quiz.length > 0) {
+                    quizFound = true
+                    commit('set_selected_quiz', quiz[0]._id)
+                    return quiz[0]
+                }
+            }
+            if (!quizFound) {
                 return apis.get(`quiz/${userCategory}/${userId}/${quizName}`).then(d => {
-                    state.quiz.data = [d.data]
+                    if (state.quiz.loaded) {
+                        state.quiz.data.push(d.data)
+                    } else {
+                        state.quiz.data = [d.data]
+                    }
                     commit('set_selected_quiz', d.data._id)
                     return d.data
                 })
-            } else {
-                let quiz = state.quiz.data.filter(quiz => quiz.name == quizName)[0]
-                commit('set_selected_quiz', quiz._id)
-                return quiz
             }
         },
         //delete a quiz
