@@ -15,7 +15,8 @@
               <div class="no-video"
                    v-show="(noVideo && !isPresenting) || (isPresenting && participationInfo.isOfferingCourse)">
                 <div class="no-video--wrapper" :class="{presenting:isPresenting}">
-                  <div v-if="isStudentPresenting || (currentPresenter ? currentPresenter.category == 'STUDENT': false)" class="instructor-info">
+                  <div v-if="isStudentPresenting || (currentPresenter ? currentPresenter.category == 'STUDENT': false)"
+                       class="instructor-info">
                     <img
                         v-if="currentPresenter.profile"
                         :src="currentPresenter.profile + '?width=100'"
@@ -79,8 +80,9 @@
                     </div>
                   </div>
                   <div class="more-details">
-                    <div v-if="(me ? currentPresenter != me.userInfo : false) || (userCategory == 'STUDENT' && !isStudentPresenting && instructor)"
-                         class="speaking-user">
+                    <div
+                        v-if="(me && currentPresenter ? currentPresenter._id != me.userInfo._id : false) || (userCategory == 'STUDENT' && !isStudentPresenting && instructor)"
+                        class="speaking-user">
                       <div class="d-flex" v-if="currentPresenter || instructor">
                         <div class="profile">
                           <img
@@ -520,6 +522,7 @@ export default {
       isHandRaised: false,
       newCommentAvailable: false,
       participants: [],
+      presenter_id: undefined,
       currentPresenter: undefined,
       comments: [],
       me: null,
@@ -629,6 +632,7 @@ export default {
       this.me.rtcPeer.enabled = false
     },
     presenterChanged(id) {
+      console.log(`\n\n\nYahindutse wlh ${id}\n\n\n`)
       const video = this.me.getVideoElement();
       video.muted = false
       if (this.me.userInfo._id == this.live_session.course.user) {
@@ -637,7 +641,7 @@ export default {
 
       for (let i in this.participants) {
         if (this.participants[i].userInfo._id == id) {
-          console.log(i, this.participants[i].rtcPeer)
+          console.log(i, this.participants[i])
           video.srcObject = this.participants[i].rtcPeer.getRemoteStream()
           this.currentPresenter = this.participants[i].userInfo;
           break;
@@ -701,10 +705,10 @@ export default {
       if (this.me) {
         this.me.rtcPeer.enabled = true
 
-        if(!this.audioEnabled)
+        if (!this.audioEnabled)
           this.me.rtcPeer.audioEnabled = false
 
-        if(!this.videoEnabled)
+        if (!this.videoEnabled)
           this.me.rtcPeer.videoEnabled = false
 
         this.me.rtcPeer.showLocalVideo();
@@ -895,6 +899,8 @@ export default {
           this.handlePresentationResponse(sender, false)
         else if (message === 'cancel_presenting')
           this.stopped_presenting(true)
+        else if (message === 'currentPresenter')
+          this.presenter_id = sender
         else
           this.onViewerStopedPresenting(true)
         console.log(message)
@@ -1108,14 +1114,22 @@ export default {
             }
             if (self.me === null)
               self.me = participant;
-            else {
-              console.log(self.me)
-            }
+
             this.generateOffer(participant.offerToReceiveVideo.bind(participant));
             if (!self.participationInfo.isOfferingCourse) {
               participant.rtcPeer.enabled = false
               video.srcObject = self.instructorParticipant ? self.instructorParticipant.rtcPeer.getRemoteStream() : undefined
               video.muted = false
+            }
+            if(self.presenter_id){
+              console.clear()
+              self.presenterChanged(self.presenter_id)
+              self.presenter_id = undefined
+              if(!self.participationInfo.isOfferingCourse){
+                setTimeout(()=>{
+                  video.play()
+                },3000)
+              }
             }
           })
 
@@ -1239,6 +1253,12 @@ export default {
             screenStatus: this.isPresenting
           })
 
+          if (this.isStudentPresenting)
+            this.socket.emit("live/presentation_request", {
+              receiver: {id: participant.userInfo._id},
+              message: 'currentPresenter'
+            });
+
           // notify new user if quiz was released
           if (this.displayQuiz)
             this.socket.emit("live/releaseQuiz", {
@@ -1252,9 +1272,9 @@ export default {
     onParticipantLeft(request) {
       this.participants[this.participantIndex(request.name)].dispose();
       this.removeParticipant(this.participantIndex(request.name))
-      // let participant = this.participants[request.name];
-      //
-      // delete this.participants[request.name];
+
+      if (this.isStudentPresenting)
+        this.me.rtcPeer.showLocalVideo()
     },
     toogleMedia(obj) {
       if (obj.isVideo) {
