@@ -158,6 +158,7 @@ export default {
           method: {action: 'users/holdAccounts', parameters: {usernames: ids, hold: true}},
           message: `Are you sure you want to hold ${this.selected_users.has(-1) ? 'All' : this.selected_users.size} user${this.selected_users.size > 1 || this.selected_users.has(-1) ? 's' : ''}?`,
         })
+
       } else if (value === 'delete') {
         const ids = []
 
@@ -172,6 +173,7 @@ export default {
           message: `Are you sure you want to delete ${this.selected_users.has(-1) ? 'All' : this.selected_users.size} user${this.selected_users.size > 1 || this.selected_users.has(-1) ? 's' : ''}?`,
         })
       }
+      this.loadUsers()
     },
     handleSelect(value) {
       this.selected_users = value
