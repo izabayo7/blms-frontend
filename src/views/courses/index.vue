@@ -225,7 +225,7 @@
                 <v-img :src="require('@/assets/images/live-class.svg')"></v-img>
               </v-col>
               <v-col>
-                <router-link to="/live/room">
+                <router-link to="/live">
                   <v-icon dark class="video-icon">mdi-video</v-icon>
                 </router-link>
               </v-col>
