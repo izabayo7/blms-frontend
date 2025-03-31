@@ -4,7 +4,7 @@
       <ul ref="nav">
         <div class="active-link"></div>
         <li
-            v-if="!disableFunctionalities&&(userCategory === 'ADMIN' || userCategory === 'INSTRUCTOR')"
+            v-if="userCategory === 'ADMIN' || (!disableFunctionalities && userCategory === 'INSTRUCTOR')"
             @click="
             closeSidebar();
             routeTo('/welcome');
@@ -33,7 +33,7 @@
           </div>
         </li>
         <li
-            v-if="!disableFunctionalities&&(userCategory === 'ADMIN' || userCategory === 'INSTRUCTOR')"
+            v-if="userCategory === 'ADMIN' || (!disableFunctionalities && userCategory === 'INSTRUCTOR')"
             @click="
             closeSidebar();
             routeTo(userCategory === 'ADMIN' ? '/users' : '/students');

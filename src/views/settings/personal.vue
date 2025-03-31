@@ -199,7 +199,7 @@ import jwt from "jsonwebtoken";
 import {cropperMixin} from "../../services/mixins";
 
 export default {
-  name: "Personal Settings",
+  name: "PersonalSettings",
   data: () => ({
     editStatus: [true, true, true, true, true, true],
     img: "",
