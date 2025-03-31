@@ -13,9 +13,10 @@
         </button>
       </div>
       <div class="result-view mb-3 col-12 col-lg-7" :class="{'px-8': $vuetify.breakpoint.width < 700 }">
-        <div class="title">User join rate</div>
+        <div class="title">{{ selected_category }} rate</div>
         <div class="chart">
           <chart
+              v-if="loaded"
             type="line"
             class="my-chart ml-n6"
             width="390px"
@@ -30,9 +31,13 @@
 
 <script>
 import Apexcharts from "vue-apexcharts";
+import Apis from "@/services/apis";
+
 export default {
   data: () => ({
-    selected_category: "",
+    selected_category: "User joins",
+    userJoins: undefined,
+    loaded: false,
     data_categories: [
       { name: "User joins" },
       { name: "Course user access" },
@@ -40,12 +45,7 @@ export default {
       { name: "Quizes done" },
       { name: "Live classes attendees" },
     ],
-    series: [
-      {
-        name: "Likes",
-        data: [4, 3, 10, 9, 29, 19, 22, 9, 12],
-      },
-    ],
+    series: undefined,
     chartOptions: {
       chart: {
         height: 350,
@@ -57,17 +57,7 @@ export default {
       },
       xaxis: {
         type: "datetime",
-        categories: [
-          "1/11/2000",
-          "2/11/2000",
-          "3/11/2000",
-          "4/11/2000",
-          "5/11/2000",
-          "6/11/2000",
-          "7/11/2000",
-          "8/11/2000",
-          "9/11/2000",
-        ],
+        categories: [],
         tickAmount: 10,
         labels: {
           formatter: function (value, timestamp, opts) {
@@ -97,6 +87,34 @@ export default {
   components: {
     chart: Apexcharts,
   },
+  methods:{
+    async fetchData(){
+      this.loaded = false
+      let response
+      if(this.selected_category === "User joins") {
+        response = await Apis.get(`user/statistics/user_joins?start_date=${this.$store.state.sidebar_navbar.college.createdAt}&end_date=${new Date().toISOString()}`);
+        this.series = [
+          {
+            name: "Users",
+            data: response.data.data.map(x => x.total_users),
+          },
+        ]
+        this.chartOptions.xaxis.categories = response.data.data.map(x => x._id)
+        this.loaded = true
+      } else {
+        this.loaded = true
+      }
+
+    }
+  },
+  watch:{
+    selected_category(){
+      this.fetchData();
+    }
+  },
+  async created() {
+    this.fetchData()
+  }
 };
 </script>
 

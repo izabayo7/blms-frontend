@@ -203,7 +203,7 @@
           </v-col>
         </div>
       </div>
-      <div class="v-col col-12 col-lg-8 py-0 " :class="{'px-0': $vuetify.breakpoint.width < 700 }">
+      <div class="v-col col-12 col-lg-8 py-0 mt-0 mt-md-n3" :class="{'px-0': $vuetify.breakpoint.width < 700 }">
         <v-row class="pa-0 mt-6 mt-md-0" :class="{'px-0': $vuetify.breakpoint.width < 700 }">
           <v-col class="col-12 col-lg-6 pt-0 mb-6 mb-md-0" :class="{'px-0': $vuetify.breakpoint.width < 700 }">
             <small-card
@@ -274,7 +274,7 @@
             </small-card>
           </v-col>
           <v-col class="col-12" :class="{'px-0': $vuetify.breakpoint.width < 700 }">
-            <combined-statistics>
+            <combined-statistics v-if="$store.state.sidebar_navbar.college">
               <template v-slot:icon>
                 <svg
                   width="21"
