@@ -1,16 +1,22 @@
-# base image
-FROM node:latest
+FROM node:lts-alpine
 
-# set working directory
+# install simple http server for serving static content
+RUN npm install -g http-server
+
+# make the 'app' folder the current working directory
 WORKDIR /app
 
-# add `/app/node_modules/.bin` to $PATH
-ENV PATH /app/node_modules/.bin:$PATH
+# copy both 'package.json' and 'package-lock.json' (if available)
+COPY package*.json ./
 
-# install and cache app dependencies
-COPY package.json /app/package.json
-RUN yarn install
-RUN yarn global add @vue/cli
+# install project dependencies
+RUN npm install
 
-# start app
-CMD ["yarn", "serve"]
+# copy project files and folders to the current working directory (i.e. 'app' folder)
+COPY . .
+
+# build app for production with minification
+RUN npm run build
+
+EXPOSE 8081
+CMD [ "http-server","--proxy", "http://localhost:8081?", "dist" ]

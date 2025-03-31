@@ -74,7 +74,7 @@
                 <!--                <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" >-->
               </video>
               <transition name="fade">
-                <div :class="`overlay ${noVideo? 'none' : ''}`" v-show="(showMenu || noVideo)">
+                <div :class="`overlay ${noVideo? 'none' : ''}`" v-show="(showMenu || (noVideo && !isPresenting))">
                   <div class="head hidden-sm-and-down">
                     <div class="text">
                       <h2>{{ live_session.course.name }}: Chapter </h2>
@@ -550,7 +550,7 @@ export default {
       showComments: false,
       isPresenting: false,
       participationInfo: {name: "", room: "", isOfferingCourse: false},
-      showMenu: true,
+      showMenu: false,
       videoEnabled: true,
       audioEnabled: true,
       live_session: null,
@@ -1081,8 +1081,7 @@ export default {
       return response.data.data
     },
     toggleMenu(status) {
-      console.log(status)
-      // this.showMenu = status
+      this.showMenu = status
     },
     shareScreen() {
       console.log('called !!!!!!!')
