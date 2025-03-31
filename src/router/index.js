@@ -316,6 +316,13 @@ const router = new VueRouter({
 })
 // before navigating to any route
 router.beforeEach((to, from, next) => {
+
+    if(to.query.forceLogout == "true"){
+        Vue.prototype.$session.destroy();
+        next({
+            path: '/login'
+        })
+    }
     if (to.path !== from.path || to.path === "/") {
         // if the session exist and the vuex store is not set
         if (Vue.prototype.$session.exists() && (!store.state.user.isLoggedIn || !axios.defaults.headers.common.Authorization)) {
@@ -340,7 +347,7 @@ router.beforeEach((to, from, next) => {
                 path: '/login',
                 // after logging in redirect to the requested route
                 query: {
-                    redirect: to.fullPath
+                    redirect: to.fullPath.replace('forceLogout=true','')
                 }
             })
         } else if ((to.path === '/login' || to.path === '/') && store.state.user.isLoggedIn) {
