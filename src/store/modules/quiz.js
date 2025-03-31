@@ -1,4 +1,5 @@
 import apis from "@/services/apis";
+
 const getDefaultState = () => ({
     // storage for all quiz
     quiz: {
@@ -18,7 +19,7 @@ export default {
     state: getDefaultState,
     mutations: {
         // update quiz target
-        update_quiz_target(state, { id, target }) {
+        update_quiz_target(state, {id, target}) {
             for (const i in state.quiz.data) {
                 if (state.quiz.data[i]._id === id) {
                     state.quiz.data[i].target = target
@@ -38,7 +39,7 @@ export default {
     },
     actions: {
         //get quiz from backend
-        getQuizes({ state }, { user_name }) {
+        getQuizes({state}, {user_name}) {
             // when quiz is not loaded fetch quizes
             if (!state.quiz.loaded) {
                 apis.get(`quiz/user/${user_name}`).then(d => {
@@ -49,7 +50,7 @@ export default {
                 })
             }
         },
-        getAssignments({ state }) {
+        getAssignments({state}) {
             // when quiz is not loaded fetch quizes
             if (!state.quiz.loaded) {
                 apis.get(`assignments`).then(d => {
@@ -61,10 +62,10 @@ export default {
             }
         },
         //create a quiz
-        create_quiz({ state, dispatch }, { quiz, pictures }) {
+        create_quiz({state, dispatch}, {quiz, pictures}) {
 
             return apis.create('quiz', quiz).then(d => {
-                if(d.data.status != 200 && d.data.status != 201){
+                if (d.data.status != 200 && d.data.status != 201) {
                     throw d.data
                 }
 
@@ -85,14 +86,18 @@ export default {
                     }
                     if (pictureFound) {
                         // set the dialog
-                        dispatch('modal/set_modal', { template: 'display_information', title: 'Creating quiz', message: 'uploading pictures' }, { root: true })
+                        dispatch('modal/set_modal', {
+                            template: 'display_information',
+                            title: 'Creating quiz',
+                            message: 'uploading pictures'
+                        }, {root: true})
 
                         apis.create(`quiz/${d.data._id}/attachment`, formData, {
                             headers: {
                                 'Content-Type': 'multipart/form-data'
                             },
                             onUploadProgress: (progressEvent) => {
-                                dispatch('modal/set_progress', parseInt(Math.round((progressEvent.loaded / progressEvent.total) * 100)), { root: true })
+                                dispatch('modal/set_progress', parseInt(Math.round((progressEvent.loaded / progressEvent.total) * 100)), {root: true})
                             }
                         }).then((response) => {
                             state.quiz.data.push(response.data)
@@ -104,8 +109,8 @@ export default {
             })
 
         },
-        release_marks({ dispatch, rootGetters }, {id,quizName,user_group}){
-            apis.update('quiz/release_marks',id).then(()=>{
+        release_marks({dispatch, rootGetters}, {id, quizName, user_group}) {
+            apis.update('quiz/release_marks', id).then(() => {
                 rootGetters['chat/socket'].emit('marksReleased', {
                     route: `/quiz/attempt/${quizName}`,
                     user_group,
@@ -115,13 +120,13 @@ export default {
                     message: "Marks released",
                     status: "success",
                     uptime: 5000,
-                }, { root: true });
+                }, {root: true});
             })
         },
         //update a quiz
-        update_quiz({ state, dispatch }, { quiz, pictures }) {
+        update_quiz({state, dispatch}, {quiz, pictures}) {
             return apis.update('quiz', state.selected_quiz, quiz).then(d => {
-                if(d.data.status != 200 && d.data.status != 201){
+                if (d.data.status != 200 && d.data.status != 201) {
                     throw d.data
                 }
                 d.data = d.data.data
@@ -146,14 +151,18 @@ export default {
                         }
                     }
                     if (pictureFound) {
-                        dispatch('modal/set_modal', { template: 'display_information', title: 'Updating quiz', message: 'uploading pictures' }, { root: true })
+                        dispatch('modal/set_modal', {
+                            template: 'display_information',
+                            title: 'Updating quiz',
+                            message: 'uploading pictures'
+                        }, {root: true})
 
                         apis.create(`quiz/${d.data._id}/attachment`, formData, {
                             headers: {
                                 'Content-Type': 'multipart/form-data'
                             },
                             onUploadProgress: (progressEvent) => {
-                                dispatch('modal/set_progress', parseInt(Math.round((progressEvent.loaded / progressEvent.total) * 100)), { root: true })
+                                dispatch('modal/set_progress', parseInt(Math.round((progressEvent.loaded / progressEvent.total) * 100)), {root: true})
                             }
                         }).then((response) => {
                             state.quiz.data[quizIndex] = response.data.data
@@ -167,7 +176,7 @@ export default {
         },
 
         //find a quiz by name
-        findQuizByName({ state, commit }, { user_name, quizName }) {
+        findQuizByName({state, commit}, {user_name, quizName}) {
             let quizFound = false
             if (state.quiz.loaded) {
                 let quiz = state.quiz.data.filter(quiz => quiz.name == quizName)
@@ -191,7 +200,7 @@ export default {
             }
         },
         //delete a quiz
-        delete_quiz({ state }, { id }) {
+        delete_quiz({state}, {id}) {
             apis.delete('quiz', id).then(() => {
                 for (const i in state.quiz.data) {
                     if (state.quiz.data[i]._id == id) {
@@ -201,11 +210,21 @@ export default {
                 }
             })
         },
-        delete_assignment({ state }, { id }) {
+        delete_assignment({state}, {id}) {
             apis.delete('assignments', id).then(() => {
                 for (const i in state.quiz.data) {
                     if (state.assignments.data[i]._id === id) {
                         state.assignments.data.splice(i, 1)
+                        break
+                    }
+                }
+            })
+        },
+        change_assignment_status({state}, {id, status}) {
+            apis.update('assignments/changeStatus', id + '/' + status).then(() => {
+                for (const i in state.quiz.data) {
+                    if (state.assignments.data[i]._id === id) {
+                        state.assignments.data[i].status = status
                         break
                     }
                 }
