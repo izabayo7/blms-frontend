@@ -224,7 +224,6 @@ export default {
 .v-dialog:not(.v-dialog--fullscreen) {
   height: 432px !important;
   width: 100% !important;
-  max-width: 742px;
   .dialog-body {
     height: 100%;
     padding: 30px;

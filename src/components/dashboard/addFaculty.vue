@@ -396,7 +396,6 @@ export default {
 .v-dialog:not(.v-dialog--fullscreen) {
   height: fit-content !important;
   width: 100% !important;
-  max-width: 1078px;
   border-radius: 0 !important;
 
   .faculty-dialog-body {
