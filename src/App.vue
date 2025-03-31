@@ -31,7 +31,8 @@ body {
 * {
   padding: 0;
   margin: 0;
-  color: $font;
+  // color: $font;
+  color: black;
 }
 
 input:focus,
