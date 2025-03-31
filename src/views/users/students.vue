@@ -90,16 +90,16 @@
           <div class="table">
             <table-ui :options="options">
               <template #tableHeaderRow>
-                <table-head-row :cols="options.keysToShow"/>
+                <table-head-row @select="handleSelect" :cols="options.keysToShow"/>
               </template>
 
               <!--              rows-->
               <template v-if="statistics" #tableRows>
                 <table-row :data="user"
-                           v-for="user in statistics.students" :key="user._id">
+                           v-for="(user, i) in statistics.students" :key="user._id" @select="handleRowSelect(i)"
+                           :selected="selected_users.has(i)" :ref="`row${i}`">
                   <template #cols>
-                    <td class="row--image" @mouseenter="mouseOnPic($event,user.user_name,'user-profile-card')"
-                        @mouseleave="mouseOutPic($event,'user-profile-card')">
+                    <td class="row--image">
                       <img v-if="user.profile" :src="user.profile + '?width=50'" class="img" alt=" profile pic">
                       <v-avatar v-else size="30" class="profile-avatar img">
                         {{ `${user.sur_name} ${user.other_names}` | computeText }}
@@ -160,9 +160,27 @@ export default {
     }
   },
   methods: {
-    notifyStudents(){
+    handleSelect(value) {
+      this.selected_users = value
+    },
+    handleRowSelect(index) {
+      const found = this.selected_users.has(index)
+      if (found)
+        this.selected_users.delete(index)
+      else
+        this.selected_users.add(index)
 
-      this.$router.push('/announcements/new?mode=customUsers')
+      this.$refs[`row${index}`][0].changeSelectedIndex()
+    },
+    notifyStudents() {
+      if (!this.selected_users.size)
+        return this.$store.dispatch("app_notification/SET_NOTIFICATION", {
+          message: "please select atleast one user",
+          status: "info",
+          uptime: 5000,
+        })
+
+      this.$router.push('/announcements/new?target=individual')
     },
     ...mapActions("courses", ["getCourses"]),
     async loadStatistics() {
@@ -186,6 +204,7 @@ export default {
     return {
       statistics: undefined,
       selected_course: undefined,
+      selected_users: new Set([]),
       options: {
         coloredRows: false,
         keysToShow: [" ", "User name", "Gender", "Course progress", "Perfomance (%)", "Attendace"],
