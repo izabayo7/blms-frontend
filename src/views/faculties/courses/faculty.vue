@@ -19,7 +19,7 @@
               </div>
             </div>
             <div class="text-content">
-              <h4>COM DESIGN Year 1</h4>
+              <h4>{{ faculty.name }}</h4>
               <h2>Courses’ list</h2>
             </div>
           </div>
@@ -35,9 +35,13 @@
       </div>
       <div class="tabular-users">
         <div class="table-wrapper mt-6">
+
+<!--          table header-->
           <div class="table-header">
             <table-header />
           </div>
+
+<!--          list of courses in table form-->
           <div class="table">
             <table-ui :data="courses"/>
           </div>
@@ -51,6 +55,7 @@
 import Search from "../../../components/reusable/Search2";
 import TableHeader from "../../../components/reusable/ui/table-header";
 import TableUi from "../../../components/reusable/ui/table-ui";
+import apis from "../../../services/apis";
 
 export default {
   //TODO using dynamic instructors from backend
@@ -58,6 +63,7 @@ name: "FacultyCourses",
   components: {TableUi, TableHeader, Search,},
   data(){
     return{
+      faculty:{},
       courses:[
         {"Course_name":"Computer Science", "Status":"ongoing", "Students":20,"Topics":13, "Marks":80,"CreatedAt":"20 feb 2020"},
         {"Course_name":"Innactive Neurones", "Status":"ongoing", "Students":10,"Topics":29, "Marks":100,"CreatedAt":"20 feb 2020"},
@@ -66,6 +72,19 @@ name: "FacultyCourses",
         {"Course_name":"Codiology", "Status":"ongoing", "Students":10,"Topics":3, "Marks":80,"CreatedAt":"20 feb 2020"},
       ]
     }
+  },
+  methods:{
+    getFacultyInformation(){
+      const {facultyId} = this.$route.params;
+
+      apis.get(`faculty/${facultyId}`)
+        .then(({data}) => {
+          this.faculty = data;
+        })
+    }
+  },
+  created(){
+    this.getFacultyInformation();
   }
 }
 </script>
