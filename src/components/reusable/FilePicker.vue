@@ -61,6 +61,13 @@
   }
 }
 
+.absolute{
+  margin-top: -40px;
+  z-index: 999;
+  position: absolute;
+  margin-left: 7px;
+  display: none;
+}
 .attachment {
   background-color: #f8f8f8;
   padding: 10px;
@@ -73,6 +80,10 @@
     box-shadow: 0px 6.78207px 6.78207px rgba(0, 0, 0, 0.25);
     border-radius: 5.08655px;
     object-fit: cover;
+    &.rightChoice{
+      border: 2px solid #42CB6B;
+      box-shadow: none;
+    }
   }
 }
 
@@ -158,6 +169,27 @@ div.remove-container a {
                     :class="template"
                     v-bind:ref="'preview' + parseInt(key)"
                 />
+                <div class="absolute">
+                  <svg width="38" height="39" viewBox="0 0 38 39" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <g filter="url(#filter0_d)">
+                      <circle cx="19.1714" cy="12.7837" r="11.8686" fill="white" fill-opacity="0.5"/>
+                      <circle cx="19.1714" cy="12.7837" r="11.4447" stroke="#3CE970" stroke-width="0.847759"/>
+                    </g>
+                    <path d="M16.2031 10.24L19.3822 15.5385C22.9145 10.24 25.7404 7.06093 31.0389 3.88184" stroke="black" stroke-width="1.81663" stroke-linecap="round"/>
+                    <defs>
+                      <filter id="filter0_d" x="0.520663" y="0.915039" width="37.3014" height="37.3014" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                        <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+                        <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"/>
+                        <feOffset dy="6.78207"/>
+                        <feGaussianBlur stdDeviation="3.39104"/>
+                        <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"/>
+                        <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow"/>
+                        <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow" result="shape"/>
+                      </filter>
+                    </defs>
+                  </svg>
+
+                </div>
               </v-badge>
               <v-badge v-else overlap color="transparent">
                 <v-btn
@@ -370,9 +402,14 @@ export default {
         let divs = document.querySelectorAll(`.picker${index} .attachment`);
         for (const i in this.files) {
           const indexFound = indices.filter((_i) => _i == i);
-
-          if (indexFound.length > 0) divs[i].style.border = "1px solid green";
-          else divs[i].style.border = "none";
+          if (indexFound.length > 0) {
+            divs[i].className += " rightChoice";
+            document.querySelectorAll(`.picker${index} .absolute`)[i].style.display='flex'
+          }
+          else{
+            divs[i].className = divs[i].className.replace(" rightChoice","");
+            document.querySelectorAll(`.picker${index} .absolute`)[i].style.display='none'
+          }
         }
       }
     },

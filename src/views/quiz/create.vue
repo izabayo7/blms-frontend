@@ -245,7 +245,7 @@ export default {
           rightChoices.push(k);
         }
       }
-      if (this.questions[questionIndex].type.includes("file")) {
+      if (this.questions[questionIndex].type.includes("image")) {
         this.$refs[`picker${questionIndex}`][0].showRightFiles(
             questionIndex,
             rightChoices
