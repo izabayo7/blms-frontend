@@ -31,7 +31,7 @@
           <div class="add-user d-flex justify-end col">
             <div class="add-user-button">
               <button-ui>
-                <template #content>Create user group</template>
+                <template #content>EDIT FACULTY INFO</template>
               </button-ui>
             </div>
           </div>
