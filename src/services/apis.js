@@ -45,6 +45,10 @@ export default {
     get(url) {
         return Api.get(`/${url}`)
     },
+    // generalised put for update
+    put(url,body,config){
+        return Api.put(`/${url}`,body,config)
+    },
     // post requests
     create(path, body, config) {
         
