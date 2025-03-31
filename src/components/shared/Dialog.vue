@@ -2,23 +2,23 @@
   <v-dialog id="kurious--dialog" v-model="visible" :persistent="!closable">
     <!-- view for information display ex(showing progress or a message) -->
     <div
-      v-if="modal_template == 'display_information'"
-      class="dialog-body dialog_t_1"
+        v-if="modal_template == 'display_information'"
+        class="dialog-body dialog_t_1"
     >
       <div class="close-dialog">
         <svg
-          v-if="closable"
-          @click="toogle_visibility"
-          xmlns="http://www.w3.org/2000/svg"
-          width="19.805"
-          height="19.8"
-          viewBox="0 0 19.805 19.8"
+            v-if="closable"
+            @click="toogle_visibility"
+            xmlns="http://www.w3.org/2000/svg"
+            width="19.805"
+            height="19.8"
+            viewBox="0 0 19.805 19.8"
         >
           <path
-            id="Icon_ionic-ios-close"
-            data-name="Icon ionic-ios-close"
-            d="M23.534,21.189l7.074-7.074a1.657,1.657,0,0,0-2.344-2.344L21.19,18.845l-7.074-7.074a1.657,1.657,0,1,0-2.344,2.344l7.074,7.074-7.074,7.074a1.657,1.657,0,0,0,2.344,2.344l7.074-7.074,7.074,7.074a1.657,1.657,0,1,0,2.344-2.344Z"
-            transform="translate(-11.285 -11.289)"
+              id="Icon_ionic-ios-close"
+              data-name="Icon ionic-ios-close"
+              d="M23.534,21.189l7.074-7.074a1.657,1.657,0,0,0-2.344-2.344L21.19,18.845l-7.074-7.074a1.657,1.657,0,1,0-2.344,2.344l7.074,7.074-7.074,7.074a1.657,1.657,0,0,0,2.344,2.344l7.074-7.074,7.074,7.074a1.657,1.657,0,1,0,2.344-2.344Z"
+              transform="translate(-11.285 -11.289)"
           />
         </svg>
       </div>
@@ -27,31 +27,31 @@
         <span v-if="title" class="sub-title">Please wait</span>
         <p class="unconfirmed">{{ message }}</p>
         <v-progress-linear
-          v-if="title"
-          :value="progress"
-          color="#ffc100"
-          class="request-progress"
+            v-if="title"
+            :value="progress"
+            color="#ffc100"
+            class="request-progress"
         />
       </div>
     </div>
     <!-- view for action confirmation -->
     <div
-      v-else-if="modal_template == 'action_confirmation'"
-      class="dialog-body dialog_t_1"
+        v-else-if="modal_template == 'action_confirmation'"
+        class="dialog-body dialog_t_1"
     >
       <div class="close-dialog">
         <svg
-          @click="toogle_visibility"
-          xmlns="http://www.w3.org/2000/svg"
-          width="19.805"
-          height="19.8"
-          viewBox="0 0 19.805 19.8"
+            @click="toogle_visibility"
+            xmlns="http://www.w3.org/2000/svg"
+            width="19.805"
+            height="19.8"
+            viewBox="0 0 19.805 19.8"
         >
           <path
-            id="Icon_ionic-ios-close"
-            data-name="Icon ionic-ios-close"
-            d="M23.534,21.189l7.074-7.074a1.657,1.657,0,0,0-2.344-2.344L21.19,18.845l-7.074-7.074a1.657,1.657,0,1,0-2.344,2.344l7.074,7.074-7.074,7.074a1.657,1.657,0,0,0,2.344,2.344l7.074-7.074,7.074,7.074a1.657,1.657,0,1,0,2.344-2.344Z"
-            transform="translate(-11.285 -11.289)"
+              id="Icon_ionic-ios-close"
+              data-name="Icon ionic-ios-close"
+              d="M23.534,21.189l7.074-7.074a1.657,1.657,0,0,0-2.344-2.344L21.19,18.845l-7.074-7.074a1.657,1.657,0,1,0-2.344,2.344l7.074,7.074-7.074,7.074a1.657,1.657,0,0,0,2.344,2.344l7.074-7.074,7.074,7.074a1.657,1.657,0,1,0,2.344-2.344Z"
+              transform="translate(-11.285 -11.289)"
           />
         </svg>
       </div>
@@ -61,17 +61,19 @@
         <span class="sub-title">{{ message }}</span>
         <div class="actions">
           <v-btn
-            @click="toogle_visibility"
-            class="mx-2 white--text action-button"
-            >Cancel</v-btn
+              @click="toogle_visibility"
+              class="mx-2 white--text action-button"
+          >Cancel
+          </v-btn
           >
           <v-btn
-            @click="
+              @click="
             performAction
             "
-            outlined
-            class="mx-2 action-button-outlined"
-            >Yes</v-btn
+              outlined
+              class="mx-2 action-button-outlined"
+          >Yes
+          </v-btn
           >
         </div>
       </div>
@@ -96,7 +98,8 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations, mapState, mapActions } from "vuex";
+import {mapGetters, mapMutations, mapState, mapActions} from "vuex";
+
 export default {
   computed: {
     ...mapState("modal", ["confirmed"]),
@@ -121,8 +124,8 @@ export default {
       "update_confirmation"
     ]),
     ...mapActions("modal", ['reset_modal']),
-    performAction(){
-      if(this.confirmation_method){
+    performAction() {
+      if (this.confirmation_method) {
         this.$store
             .dispatch(
                 this.confirmation_method.action,
@@ -132,8 +135,7 @@ export default {
               this.update_confirmation(true)
               this.reset_modal();
             })
-      }
-      else{
+      } else {
         this.reset_modal();
         this.$router.go(-1)
       }
@@ -148,176 +150,212 @@ export default {
   width: fit-content !important;
   max-width: 100% !important;
   border-radius: 22px !important;
+
   .dialog-body {
     height: 100%;
     background-color: white;
     text-align: center;
   }
 }
+
 // round the modal
 .v-dialog.v-dialog--active {
   border-radius: 56px;
 }
-.dialog_t_1 {
-  padding: 18px;
-  border-radius: 12px;
-  .uploader{
-    padding: 20px 50px 50px;
-  }
-  h4.title {
-    font-weight: 600;
-    color: #0f0f0f;
-    font-size: 18px !important;
-  }
-  .subtitle {
-    color: #545454;
-    font-size: 25px;
-  }
-  .unconfirmed {
-    color: #0f0f0f;
-    margin-top: 19px;
-    font-size: 18px;
-  }
-  .request-progress {
-    height: 8px;
+
+#kurious--dialog {
+  .dialog_t_1 {
+    padding: 18px;
     border-radius: 12px;
-    width: 67%;
-    margin: auto;
-  }
-  .close-dialog {
-    text-align: right;
-    padding: 11px;
-    svg {
-      cursor: pointer;
+
+    .uploader {
+      padding: 20px 50px 50px;
     }
-  }
-  .content.confirmation-dialog {
-    margin-top: -35px;
-    .actions {
-      margin-top: 38px;
-    }
+
     h4.title {
-      margin-bottom: 45px;
+      font-weight: 600;
+      color: #0f0f0f;
+      font-size: 18px !important;
+    }
+
+    .subtitle {
+      color: #545454;
+      font-size: 25px;
+    }
+
+    .unconfirmed {
+      color: #0f0f0f;
+      margin-top: 19px;
+      font-size: 18px;
+    }
+
+    .request-progress {
+      height: 8px;
+      border-radius: 12px;
+      width: 67%;
+      margin: auto;
+    }
+
+    .close-dialog {
+      text-align: right;
+      padding: 11px;
+
+      svg {
+        cursor: pointer;
+      }
+    }
+
+    .content.confirmation-dialog {
+      margin-top: -35px;
+
+      .actions {
+        margin-top: 38px;
+      }
+
+      h4.title {
+        margin-bottom: 45px;
+      }
+    }
+
+    .action-button-outlined {
+      color: $primary !important;
+      caret-color: $primary;
+    }
+
+    .action-button {
+      background-color: $primary !important;
+      border-color: $primary;
     }
   }
-  .action-button-outlined {
-    color: $primary !important;
-    caret-color: $primary;
-  }
-  .action-button {
-    background-color: $primary !important;
-    border-color: $primary;
-  }
-}
-.live{
-  width: 651px;
-  height: 315px !important;
-  padding: 30px;
 
-  &.ended{
-    padding: 63px;
-    .title{
-      margin-bottom: 33px;
+  .live {
+    width: 651px;
+    height: 315px !important;
+    padding: 30px;
+
+    &.ended {
+      padding: 63px;
+
+      .title {
+        margin-bottom: 33px;
+      }
+
+      .sub-title {
+        margin-bottom: 44px;
+      }
     }
-    .sub-title{
-      margin-bottom: 44px;
-    }
-  }
 
-  background: #FFFFFF;
-  border-radius: 5px;
-  div{
-    margin-bottom: 15px;
-  }
-  .title{
-    font-family: Montserrat;
-    font-style: normal;
-    font-weight: bold;
-    font-size: 30px;
-    line-height: 37px;
-    text-align: center;
-
-    color: #000000;
-  }
-  .sub-title{
-    font-family: Montserrat;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 15px;
-    line-height: 18px;
-
-    color: #000000;
-  }
-  .code{
-    font-family: Montserrat;
-    font-style: normal;
-    font-weight: bold;
-    font-size: 30px;
-    line-height: 37px;
-    text-align: center;
-
-    color: #000000;
-
-  }
-  input{
-    width: 251px;
-    height: 44px;
-    left: 557px;
-    top: 421px;
-
-    background: #E8E8E8;
+    background: #FFFFFF;
     border-radius: 5px;
-    padding: 10px 40px;
-  }
-  .action{
-    button{
-      width: 199px;
-      height: 44px;
+
+    div {
+      margin-bottom: 15px;
+    }
+
+    .title {
       font-family: Montserrat;
       font-style: normal;
-      font-weight: 300;
-      font-size: 20px;
-      line-height: 24px;
-      color: #FFFFFF;
-      background: #193074;
-      border-radius: 15px;
+      font-weight: bold;
+      font-size: 30px;
+      line-height: 37px;
+      text-align: center;
+
+      color: #000000;
+    }
+
+    .sub-title {
+      font-family: Montserrat;
+      font-style: normal;
+      font-weight: normal;
+      font-size: 15px;
+      line-height: 18px;
+
+      color: #000000;
+    }
+
+    .code {
+      font-family: Montserrat;
+      font-style: normal;
+      font-weight: bold;
+      font-size: 30px;
+      line-height: 37px;
+      text-align: center;
+
+      color: #000000;
+
+    }
+
+    input {
+      width: 251px;
+      height: 44px;
+      left: 557px;
+      top: 421px;
+
+      background: #E8E8E8;
+      border-radius: 5px;
+      padding: 10px 40px;
+    }
+
+    .action {
+      button {
+        width: 199px;
+        height: 44px;
+        font-family: Montserrat;
+        font-style: normal;
+        font-weight: 300;
+        font-size: 20px;
+        line-height: 24px;
+        color: #FFFFFF;
+        background: #193074;
+        border-radius: 15px;
+      }
     }
   }
+
+  #panel--btn {
+    background-color: transparent !important;
+    /* box-shadow: none; */
+    /* color: dodgerblue; */
+    border: 2px solid;
+  }
 }
-#panel--btn {
-  background-color: transparent !important;
-  /* box-shadow: none; */
-  /* color: dodgerblue; */
-  border: 2px solid;
-}
+
 /* Portrait phones and smaller */
 @media (max-width: 700px) {
-  .live{
-    max-width: 342px;
-    width: 100%;
-    height: fit-content !important;
-    padding: 19px 10px;
-    div{
-      margin-bottom: 10px;
-    }
-    .title{
-      font-size: 15px;
-    }
-    .sub-title{
-      font-size: 10px;
-    }
-    .code{
-      font-size: 15px;
-    }
-    input{
-      width: 140px;
-      height: 25px;
-    }
-    .action{
-      button{
-        width: 122.77px;
-        height: 27.15px;
-        font-size: 12.34px;
+  #kurious--dialog {
+    .live {
+      max-width: 342px;
+      width: 100%;
+      height: fit-content !important;
+      padding: 19px 10px;
+
+      div {
+        margin-bottom: 10px;
+      }
+
+      .title {
+        font-size: 15px;
+      }
+
+      .sub-title {
+        font-size: 10px;
+      }
+
+      .code {
+        font-size: 15px;
+      }
+
+      input {
+        width: 140px;
+        height: 25px;
+      }
+
+      .action {
+        button {
+          width: 122.77px;
+          height: 27.15px;
+          font-size: 12.34px;
+        }
       }
     }
   }
