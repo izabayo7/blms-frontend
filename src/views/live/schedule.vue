@@ -130,13 +130,14 @@
           "
         />
       </div>
-      <button class="submit">Schedule class</button>
+      <button class="submit" @click="saveSession()">Schedule class</button>
     </div>
   </div>
 </template>
 
 <script>
 import SelectUi from "@/components/reusable/ui/select-ui";
+import { mapActions } from "vuex";
 import TimePicker from "@/components/TimePicker";
 export default {
   components: { SelectUi, TimePicker },
@@ -162,6 +163,7 @@ export default {
     },
   },
   methods: {
+    ...mapActions("live_session",["createLiveSession"]),
     updateTime(value) {
       // console.log(value, this.counter);
       if (value) {
@@ -183,6 +185,19 @@ export default {
       this.useSeconds = showSeconds;
       this.showPicker = true;
     },
+    async saveSession(){
+      this.createLiveSession({
+        session: {
+          target: {
+            type: "chapter",
+            id: "5fc01903bff43af061f71727"
+          },
+          starting_time:this.date,
+        }
+      }).then(()=>{
+        console.log("Live session created")
+      })
+    }
   },
 };
 </script>
