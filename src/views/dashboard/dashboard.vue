@@ -8,7 +8,12 @@
     <!-- sidebar and dashboard content -->
     <main class="contents">
       <main class="sidebar">
-        <sidebar />
+        <div class="hidden-md-and-up row">
+          <mobile-sidebar />
+        </div>
+        <div class="hidden-sm-and-down row">
+          <sidebar />
+        </div>
       </main>
       <div class="main-content customScroll">
         <router-view />
@@ -21,12 +26,14 @@
 </template>
 <script>
 import sidebar from "@/components/dashboard/Sidebar";
+import MobileSidebar from "@/components/dashboard/MobileSidebar";
 import navbar from "@/components/dashboard/Navbar";
 
 export default {
   name: "Dashboard",
   components: {
     sidebar,
+    MobileSidebar,
     navbar,
     ErrorTooltip: () => import("@/components/reusable/ErrorTooltip"),
   },

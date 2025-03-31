@@ -232,7 +232,7 @@ export default {
       user_name: this.$store.state.user.user.user_name,
       courseName: this.$route.params.name,
     }).then((course) => {
-      this.selectedFacultyCollegeYearName = `${course.faculty_college_year.faculty_college.faculty.name} year ${course.faculty_college_year.college_year.digit}`;
+      this.selectedFacultyCollegeYearName = course.user_group.name;
     });
   },
 };

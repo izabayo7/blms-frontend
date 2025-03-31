@@ -94,6 +94,11 @@ const routes = [
                         }
                     },
                     {
+                        path: '/schedule_live',
+                        component: () =>
+                            import('@/views/live/schedule'),
+                    },
+                    {
                         path: '/messages/start-conversation',
                         component: () => import('@/views/chat/StartConversation.vue'),
                     },
@@ -129,32 +134,32 @@ const routes = [
                     //for faculties
                     {
                         path: '/faculties',
-                        name:"faculties",
+                        name: "faculties",
                         component: () => import('@/views/faculties/index.vue'),
                     },
                     {
                         path: '/faculties/:facultyId',
-                        name:"faculty",
+                        name: "faculty",
                         component: () => import('@/views/faculties/faculty/index.vue'),
                         children: [
                             {
                                 path: '/faculties/:facultyId/details',
-                                name:"facultyDetails",
+                                name: "facultyDetails",
                                 component: () => import('@/views/faculties/faculty/Faculty.vue'),
                             },
                             {
                                 path: '/faculties/:facultyId/groups',
-                                name:"facultyGroups",
+                                name: "facultyGroups",
                                 component: () => import('@/views/faculties/faculty/Groups.vue'),
                             },
                             {
                                 path: '/faculties/:facultyId/students',
-                                name:"facultyStudents",
+                                name: "facultyStudents",
                                 component: () => import('@/views/faculties/faculty/Users.vue'),
                             },
                             {
                                 path: '/faculties/:facultyId/courses',
-                                name:"facultyCourses",
+                                name: "facultyCourses",
                                 component: () => import('@/views/faculties/faculty/Courses.vue'),
                             },
                         ]
