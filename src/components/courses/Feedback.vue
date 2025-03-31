@@ -21,7 +21,7 @@
         "
         class="col-3 vertically--centered pa-0"
       >
-        <div v-if="content !== ''" class="actions">
+        <div v-if="content !== '' || showDelete" class="actions">
           <svg
             @click="removeFeedback()"
             xmlns="http://www.w3.org/2000/svg"
@@ -95,6 +95,7 @@ export default {
   data: () => ({
     element: undefined,
     showSave: false,
+    showDelete: false,
     message: "",
   }),
   computed: {
@@ -121,6 +122,7 @@ export default {
       if (this.message != "") {
         setTimeout(() => {
           this.message = "";
+          this.showSave = false;
         }, 2000);
       }
     },
@@ -166,7 +168,7 @@ export default {
       let element = this.$refs.feedback_input;
       element.className += " saved_feedback";
       this.message = "feedback successfuly saved";
-      this.showSave = false;
+      // this.showDelete = true;
     },
     async editFeedback() {
       const content = this.feedbackContent();
