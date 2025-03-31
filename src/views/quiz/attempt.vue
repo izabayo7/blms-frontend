@@ -169,17 +169,12 @@
                         ></v-progress-circular>
                       </v-row>
                     </template>
-                    <v-icon
-                        v-if="
+
+                    <svg class="check-svg"                        v-if="
                         checkChoiceStatus(attempt.answers[i].choosed_options, {
                           src: choice.src,
                         })
-                      "
-                        class="white--text"
-                        size="50"
-                    >mdi-check
-                    </v-icon
-                    >
+                      " xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" focusable="false" width="1em" height="1em" style="-ms-transform: rotate(360deg); -webkit-transform: rotate(360deg); transform: rotate(360deg);" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><path d="M21 7L9 19l-5.5-5.5l1.41-1.41L9 16.17L19.59 5.59L21 7z"/></svg>
                   </v-img>
                 </v-card>
               </div>
@@ -493,6 +488,11 @@ export default {
 </script>
 
 <style lang="scss">
+.check-svg{
+  fill: #FFFFFF;
+  height: 50px;
+  width: 50px;
+}
 .timer {
   width: 290px;
   height: 135px;
