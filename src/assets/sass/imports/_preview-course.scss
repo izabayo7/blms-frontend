@@ -31,6 +31,7 @@ button.back {
 
   main {
     overflow-wrap: anywhere;
+    min-width: 30vw;
 
     &.description {
       padding-left: 2rem;
@@ -462,7 +463,6 @@ padding: 58px 62px 30px;
   .student main {
     margin-top: 22px;
     margin-bottom: 32px;
-
     &.description {
       padding-left: 0;
     }
