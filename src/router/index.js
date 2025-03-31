@@ -89,6 +89,12 @@ const routes = [
                         name:"users",
                         component: () => import('@/views/users/students.vue'),
                     },
+                    //for faculties
+                    {
+                        path: '/faculties',
+                        name:"faculties",
+                        component: () => import('@/views/faculties/index.vue'),
+                    },
                     // for courses
                     {
                         path: '/courses',
