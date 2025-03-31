@@ -78,14 +78,18 @@
                     </v-col>
                     <!-- <v-col class="col-6"></v-col> -->
                     <v-col class="col-12">
-                      <loader v-if="editorContent == ''" type="2" class="vertically--centered" />
+                      <loader
+                        v-if="editorContent == ''"
+                        type="2"
+                        class="vertically--centered"
+                      />
                       <kurious-editor
                         v-if="editorContent !== ''"
                         :defaultContent="editorContent"
                       />
                     </v-col>
                     <v-col
-                      v-if="Math.round(maximumIndex) === activeIndex"
+                      v-if="Math.round(maximumIndex) === activeIndex && ready"
                       class="col-6 mx-auto"
                     >
                       <v-btn
@@ -100,7 +104,10 @@
                         >Take Quiz</v-btn
                       >
                       <v-btn
-                        v-else-if="userCategory === 'Student' && course.progress.progress < 100"
+                        v-else-if="
+                          userCategory === 'Student' &&
+                          course.progress.progress < 100
+                        "
                         :color="primary"
                         class="white--text"
                         @click="
@@ -184,7 +191,7 @@
                                 cx="29"
                                 cy="29"
                                 r="29"
-                                fill="#ffd248"
+                                :fill="primary"
                               />
                               <g
                                 id="Icon_feather-download"
@@ -250,14 +257,15 @@ import colors from "@/assets/sass/imports/_colors.scss";
 import { mapActions, mapGetters } from "vuex";
 export default {
   name: "course_details",
-  components:{
-    loader: ()=> import('@/components/loaders'),
+  components: {
+    loader: () => import("@/components/loaders"),
   },
   data: () => ({
     primary: colors.primary,
     activeIndex: -1,
     progressId: "",
     maximumIndex: -1,
+    ready: false,
     attachments: [],
     showActions: false,
     editorContent: "",
@@ -276,6 +284,7 @@ export default {
       }
     },
     activeIndex() {
+      this.ready = false;
       this.editorContent = "";
       console.log(this.activeIndex);
       this.getChapterMainContent(
@@ -287,6 +296,8 @@ export default {
         this.findQuizSubmissionByStudentAndQuizNames({
           studentName: `${this.$store.state.user.user.surName}_${this.$store.state.user.user.otherNames}`,
           quizName: this.course.chapters[this.activeIndex].quiz[0].name,
+        }).then(() => {
+          this.ready = true;
         });
       }
     },
@@ -336,7 +347,7 @@ export default {
           (course.progress.progress * course.chapters.length) / 100
         );
         if (this.maximumIndex > course.chapters.length - 1) {
-          this.maximumIndex = course.chapters.length - 1
+          this.maximumIndex = course.chapters.length - 1;
         }
       }
     });

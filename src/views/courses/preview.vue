@@ -3,6 +3,7 @@
   <section class="my-container">
     <!--      this is for student preview-->
     <v-row v-if="userCategory === 'Student'">
+      <back class="ma-6" to="/courses" />
       <v-col v-if="!loaded" class="col-12">
         <div class="ssc elevation-0 ssc-card student-card-skeleton ml mt-10">
           <div class="ssc-wrapper flex justify-between ml">
@@ -717,6 +718,7 @@ export default {
   name: "preview_course",
   components: {
     preview: () => import("@/components/courses/Preview"),
+    back: () => import("@/components/shared/back-button"),
   },
   computed: {
     // get the userCategory

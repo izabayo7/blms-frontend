@@ -63,7 +63,9 @@
           </div>
         </v-col>
         <v-col cols="12" class="completed-results">
-          <span class="title d-block mb-2 mb-sm-1 pt-3">{{ course.name | trimString(20) }}</span>
+          <span class="title d-block mb-2 mb-sm-1 pt-3">{{
+            course.name | trimString(20)
+          }}</span>
           <span class="course-description text-caption d-block mb-6">{{
             course.description | trimString(50)
           }}</span>
@@ -72,7 +74,7 @@
               size="30"
               :class="`${
                 course.instructor.profile ? '' : 'bg-color-one'
-              } user-profile mr-2`"
+              } user-profile mr-2 course-image`"
             >
               <img
                 v-if="course.instructor.profile"
@@ -160,10 +162,9 @@ export default {
     .course-image {
       height: 125px;
       width: 125px;
-      border: none !important;
       border-radius: 90px;
       margin-left: 8%;
-      border: 1px solid grey;
+      border: 2px solid $primary;
     }
   }
   .coure-details-side {
@@ -197,6 +198,14 @@ export default {
       margin-top: 3px;
     }
   }
+  // .course-image {
+  //   height: 110px;
+  //   width: 110px;
+  //   border-radius: 55px;
+  //   border: 2px solid $primary;
+  //   margin: 6px 0;
+  //   font-size: 35px !important;
+  // }
 }
 .date_finished {
   margin: -31px 0 0 40px !important;
