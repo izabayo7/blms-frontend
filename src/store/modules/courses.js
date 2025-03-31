@@ -107,9 +107,7 @@ export default {
                         }
                     }).then(courseData => {
                         courseObject.coverPicture = courseData.data.coverPicture
-                        setTimeout(() => {
-                            dispatch('modal/reset_modal', null, { root: true })
-                        }, 1000);
+                        dispatch('modal/reset_modal', null, { root: true })
                     })
                 }
                 courseObject.chapters = []
@@ -148,9 +146,7 @@ export default {
                         }
                     }).then(courseData => {
                         state.courses.data[courseIndex].coverPicture = courseData.data.coverPicture
-                        setTimeout(() => {
-                            dispatch('modal/reset_modal', null, { root: true })
-                        }, 1000);
+                        dispatch('modal/reset_modal', null, { root: true })
                     })
                 }
             })
@@ -215,9 +211,7 @@ export default {
                         }
                     }).then((videoResponse) => {
                         state.courses.data[courseIndex].chapters[chapterIndex].mainVideo = videoResponse.data.filepath
-                        setTimeout(() => {
-                            dispatch('modal/reset_modal', null, { root: true })
-                        }, 1000);
+                        dispatch('modal/reset_modal', null, { root: true })
                     })
                 } if (attachments.length > 0) {
                     dispatch('modal/set_modal', { template: 'display_information', title: 'Updating Chapter', message: `uploading attachments` }, { root: true })
@@ -236,9 +230,7 @@ export default {
                         for (const i in chapterResponse.data) {
                             state.courses.data[courseIndex].chapters[chapterIndex].attachments.push(chapterResponse.data[i])
                         }
-                        setTimeout(() => {
-                            dispatch('modal/reset_modal', null, { root: true })
-                        }, 1000);
+                        dispatch('modal/reset_modal', null, { root: true })
                     })
 
                 }
@@ -309,7 +301,7 @@ export default {
         //find a course by name
         findCourseByName({ state, commit }, { userCategory, userId, courseName }) {
             if (state.courses.data.length < 1) {
-               return apis.get(`course/${userCategory}/${userId}/${courseName}`).then(d => {
+                return apis.get(`course/${userCategory}/${userId}/${courseName}`).then(d => {
                     state.courses.data = [d.data]
                     commit('set_selected_course', d.data._id)
                     return d.data
@@ -402,9 +394,7 @@ export default {
                         }
                     }).then((videoResponse) => {
                         state.courses.data[courseIndex].chapters[chapterIndex].mainVideo = videoResponse.data.filepath
-                        setTimeout(() => {
-                            dispatch('modal/reset_modal', null, { root: true })
-                        }, 1000);
+                        dispatch('modal/reset_modal', null, { root: true })
                     })
                 } if (attachments.length > 0) {
                     dispatch('modal/set_modal', { template: 'display_information', title: 'Saving Chapter', message: `uploading attachments` }, { root: true })
@@ -423,9 +413,7 @@ export default {
                         for (const i in chapterResponse.data) {
                             state.courses.data[courseIndex].chapters[chapterIndex].attachments.push(chapterResponse.data[i])
                         }
-                        setTimeout(() => {
-                            dispatch('modal/reset_modal', null, { root: true })
-                        }, 1000);
+                        dispatch('modal/reset_modal', null, { root: true })
                     })
 
                 }

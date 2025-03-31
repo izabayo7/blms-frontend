@@ -63,9 +63,7 @@ export default {
                         }
                     }).then((response) => {
                         submissionObject = response.data
-                        setTimeout(() => {
-                            dispatch('modal/reset_modal', null, { root: true })
-                        }, 1000);
+                        dispatch('modal/reset_modal', null, { root: true })
                     })
                 }
                 state.quiz_submission.data.push(submissionObject)
@@ -95,22 +93,22 @@ export default {
             let submissionFound = false
             if (state.quiz_submission.loaded) {
                 let quiz_submission = state.quiz_submission.data.filter(quiz_submission => `${quiz_submission.student.surName}_${quiz_submission.student.otherNames}` == studentName && quiz_submission.quiz.name == quizName)
-                console.log(quiz_submission)
+
                 if (quiz_submission.length > 0) {
                     submissionFound = true
                     commit('set_selected_quiz_submission', quiz_submission[0]._id)
-
+                    return quiz_submission[0]
                 }
             }
             if (!submissionFound) {
-                console.log(state.quiz_submission.data)
-                apis.get(`quiz-submission/student/${studentName}/${quizName}`).then(d => {
+                return apis.get(`quiz-submission/student/${studentName}/${quizName}`).then(d => {
                     if (state.quiz_submission.loaded) {
                         state.quiz_submission.data.push(d.data)
                     } else {
                         state.quiz_submission.data = [d.data]
                     }
                     commit('set_selected_quiz_submission', d.data._id)
+                    return d.data
                 })
             }
         },

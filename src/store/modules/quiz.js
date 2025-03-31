@@ -70,9 +70,7 @@ export default {
                             }
                         }).then((response) => {
                             quizObject = response.data
-                            setTimeout(() => {
-                                dispatch('modal/reset_modal', null, { root: true })
-                            }, 1000);
+                            dispatch('modal/reset_modal', null, { root: true })
                         })
                     }
                 }
@@ -130,16 +128,16 @@ export default {
         //find a quiz by name
         findQuizByName({ state, commit }, { userCategory, userId, quizName }) {
             if (!state.quiz.data.length) {
-                apis.get(`quiz/${userCategory}/${userId}/${quizName}`).then(d => {
+                return apis.get(`quiz/${userCategory}/${userId}/${quizName}`).then(d => {
                     state.quiz.data = [d.data]
                     commit('set_selected_quiz', d.data._id)
+                    return d.data
                 })
             } else {
                 let quiz = state.quiz.data.filter(quiz => quiz.name == quizName)[0]
                 commit('set_selected_quiz', quiz._id)
+                return quiz
             }
-
-
         },
         //delete a quiz
         delete_quiz({ state }, { id }) {

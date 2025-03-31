@@ -397,16 +397,14 @@ export default {
       userCategory: this.$store.state.user.user.category.toLowerCase(),
       userId: this.$store.state.user.user._id,
       quizName: this.$route.params.name,
-    }).then(() => {
-      setTimeout(() => {
-        this.duration = this.to_hh_mm_ss(this.selected_quiz.duration);
-        for (const index in this.selected_quiz.questions) {
-          this.selected_quiz.questions[index].type = this.formatQuestionType(
-            this.selected_quiz.questions[index].type
+    }).then((quiz) => {
+        this.duration = this.to_hh_mm_ss(quiz.duration);
+        for (const index in quiz.questions) {
+          quiz.questions[index].type = this.formatQuestionType(
+            quiz.questions[index].type
           );
           this.pictures.push([]);
         }
-      }, 1000);
     });
   },
 };

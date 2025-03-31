@@ -129,7 +129,7 @@
       </v-row>
     </div>
     <div v-else>
-      You arleady did this assignment, you can 
+      You arleady did this assignment, you can
       <router-link
         :to="`/quiz/${$route.params.name}/${$store.state.user.user.surName}_${$store.state.user.user.otherNames}`"
         >review your submission</router-link
@@ -304,17 +304,17 @@ export default {
       userCategory: this.$store.state.user.user.category.toLowerCase(),
       userId: this.$store.state.user.user._id,
       quizName: this.$route.params.name,
-    });
-    setTimeout(() => {
-      this.remaining_time = this.selected_quiz.duration;
+    }).then((quiz) => {
+      console.log(quiz)
+      this.remaining_time = quiz.duration;
       this.attempt = {
-        quiz: this.selected_quiz._id,
+        quiz: quiz._id,
         student: this.$store.state.user.user._id,
         autoSubmitted: false,
         usedTime: 0,
         answers: [],
       };
-      for (const question of this.selected_quiz.questions) {
+      for (const question of quiz.questions) {
         if (question.type === "open-ended") {
           this.attempt.answers.push({ text: "" });
         } else if (question.type === "file-upload") {
@@ -324,7 +324,7 @@ export default {
           this.attempt.answers.push({ choosedOptions: [] });
         }
       }
-    }, 1000);
+    });
   },
 };
 </script>

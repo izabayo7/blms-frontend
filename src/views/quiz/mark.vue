@@ -377,8 +377,7 @@ export default {
     this.findQuizSubmissionByStudentAndQuizNames({
       studentName: this.$route.params.student_name,
       quizName: this.$route.params.quiz_name,
-    });
-    setTimeout(() => {
+    }).then(() => {
       if (!this.selected_quiz_submission.marked) {
         for (const answer of this.selected_quiz_submission.answers) {
           answer.marks = 0;
@@ -396,7 +395,7 @@ export default {
       if (!this.attempt.marked && this.userCategory === "Instructor") {
         this.mode = "edit";
       }
-    }, 1000);
+    });
   },
 };
 </script>

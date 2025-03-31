@@ -175,10 +175,9 @@ export default {
       userCategory: this.$store.state.user.user.category.toLowerCase(),
       userId: this.$store.state.user.user._id,
       courseName: this.$route.params.name,
+    }).then((course) => {
+      this.selectedFacultyCollegeYearName = `${course.facultyCollegeYear.facultyCollege.faculty.name} ${course.facultyCollegeYear.collegeYear.digit}`;
     });
-    setTimeout(() => {
-      this.selectedFacultyCollegeYearName = `${this.course.facultyCollegeYear.facultyCollege.faculty.name} ${this.course.facultyCollegeYear.collegeYear.digit}`;
-    }, 1000);
   },
 };
 </script>
