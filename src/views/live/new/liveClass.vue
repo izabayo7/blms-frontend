@@ -8,8 +8,11 @@
             <h2>{{ live_session.course.name }}: Chapter </h2>
             <span class="live" v-if="participationInfo.isOfferingCourse">Live</span>
           </div>
-          <div class="time">
+          <div v-if="participationInfo.isOfferingCourse" class="time">
             00 : 00 : 36
+          </div>
+          <div v-else class="users">
+            {{ participants.length }} watching
           </div>
         </div>
         <div class="video">
