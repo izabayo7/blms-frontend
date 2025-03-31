@@ -21,7 +21,7 @@
             :currentIndex="activeIndex"
             :maximumIndex="maximumIndex"
             :progress="
-            userCategory === 'INSTRUCTOR' ? 0 : course.progress.progress
+            userCategory === 'INSTRUCTOR' || userCategory === 'ADMIN' ? 0 : course.progress.progress
           "
         />
       </v-col>
@@ -35,7 +35,7 @@
             :currentIndex="activeIndex"
             :maximumIndex="maximumIndex"
             :progress="
-            userCategory === 'INSTRUCTOR' ? 0 : course.progress.progress
+            userCategory === 'INSTRUCTOR' || userCategory === 'ADMIN' ? 0 : course.progress.progress
           "
         />
       </kurious-page-actions>
@@ -130,7 +130,7 @@ export default {
       courseName: this.$route.params.name,
     }).then((course) => {
       const total_chapters = course.chapters.length;
-      if (this.userCategory === "INSTRUCTOR") {
+      if (this.userCategory === "INSTRUCTOR" || this.userCategory === 'ADMIN') {
         this.maximumIndex = total_chapters - 1;
         this.activeIndex = 0;
       } else {
