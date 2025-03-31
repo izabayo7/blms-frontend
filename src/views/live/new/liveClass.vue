@@ -620,6 +620,18 @@ export default {
     }
   },
   methods: {
+    handleRoomClosed(){
+      if (!this.participationInfo.isOfferingCourse)
+        this.set_modal({
+          template: 'live_related_ended',
+          title: 'Live class ended',
+          message: 'Hey user, the class you were attending has ended.',
+        })
+      else {
+        this.finishSession();
+        this.onCloseRoom();
+      }
+    },
     goodbye(e) {
       if (!e) e = window.event;
       //e.cancelBubble is supported by IE - this will kill the bubbling process.
@@ -892,16 +904,7 @@ export default {
             self.participationInfo.name = self.id;
             break;
           case 'roomClosed':
-            if (!self.participationInfo.isOfferingCourse)
-              self.set_modal({
-                template: 'live_related_ended',
-                title: 'Live class ended',
-                message: 'Hey user, the class you were attending has ended.',
-              })
-            else {
-              self.finishSession();
-              this.onCloseRoom();
-            }
+            self.handleRoomClosed();
             break;
           case 'screenAllowed':
             this.onExistingParticipants({data: []});
@@ -957,6 +960,9 @@ export default {
           status: "info",
           uptime: 5000,
         });
+      })
+      self.socket.on("live/classEnded", () => {
+        self.handleRoomClosed()
       })
       self.socket.on("res/live/presentation_request/sent", ({message}) => {
         if (['request_presenting', 'revert_presenting_request'].includes(message)) {
