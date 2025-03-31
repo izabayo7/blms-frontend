@@ -28,7 +28,7 @@ async function getImgFile(base64, filename) {
     /* convert base 64 to blob */
     const blob = await (await fetch(base64)).blob()
     /* convert blob to file image  and return it*/
-    return new File([blob], filename, { type: 'image/png' })
+    return new File([blob], filename, {type: 'image/png'})
 }
 
 /**
@@ -99,11 +99,23 @@ function calculateNearestLiveSession(course) {
     return live_session;
 }
 
+function convertUTCDateToLocalDate(date) {
+    var newDate = new Date(date.getTime() + date.getTimezoneOffset() * 60 * 1000);
+    var offset = date.getTimezoneOffset() / 60;
+    var hours = date.getHours();
+    newDate.setHours(hours - Math.abs(offset));
+
+    return newDate;
+}
+
+
+
 export {
     hasOwn,
     getImgFile,
     elapsedDuration,
     empty,
     logout,
-    calculateNearestLiveSession
+    calculateNearestLiveSession,
+    convertUTCDateToLocalDate
 }

@@ -472,7 +472,7 @@
 <script>
 import {mapActions, mapGetters} from "vuex";
 import Api from "@/services/apis.js"
-import {calculateNearestLiveSession} from "@/services/global_functions"
+import {calculateNearestLiveSession, convertUTCDateToLocalDate} from "@/services/global_functions"
 
 export default {
   name: "preview_course",
@@ -502,7 +502,7 @@ export default {
         if (this.course.chapters[i].live_sessions.length) {
           // if()
           if ((new Date(this.course.chapters[i].live_sessions[0].date) <= new Date(new Date().toISOString().substring(0, 10)))) {
-            if (new Date(this.nearestLiveSession.date.replace("00:00", this.nearestLiveSession.time)) <= new Date(new Date().toGMTString())) {
+            if (convertUTCDateToLocalDate(new Date(this.nearestLiveSession.date.replace("00:00", this.nearestLiveSession.time))) <= new Date(new Date().toGMTString())) {
               return true;
             }
           }

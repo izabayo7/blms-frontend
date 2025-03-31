@@ -94,7 +94,7 @@
             <student-course-card category="completed" :course="course" />
           </v-col>
         </v-row>
-        <v-row v-else>
+        <v-row v-else-if="loaded">
           <img src="@/assets/images/courses_empty.svg" class="mx-auto" />
           <div class="col-12">
             <p class="text-center">You have no finsihed courses</p>
