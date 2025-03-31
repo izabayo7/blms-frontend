@@ -116,7 +116,14 @@ const routes = [
                     },
                     {
                         path: '/exam/instructions',
-                        component: () => import( /* webpackChunkName: "assignments" */ '@/views/quiz/exam_intermediate.vue'),
+                        component: () => import( /* webpackChunkName: "exams" */ '@/views/quiz/exam_intermediate.vue'),
+                        meta: {
+                            allowedUsers: ["STUDENT","INSTRUCTOR"]
+                        },
+                    },
+                    {
+                        path: '/exam/attempt/:name',
+                        component: () => import( /* webpackChunkName: "exams" */ '@/views/quiz/attempt_exam.vue'),
                         meta: {
                             allowedUsers: ["STUDENT","INSTRUCTOR"]
                         },
