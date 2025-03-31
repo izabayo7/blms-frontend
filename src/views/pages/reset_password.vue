@@ -132,7 +132,7 @@
             {{ message }}
           </div>
         </div>
-        <div v-else class="reset-password-box mx-auto text-center">
+        <div v-else class="reset-password-box mx-auto d-flex align-center justify-center">
           {{ message }}
         </div>
       </v-col>
