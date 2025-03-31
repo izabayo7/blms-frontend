@@ -231,7 +231,7 @@ export default {
   components: {
     UnrealTimeDiscussionBoard,
     loader: () => import("@/components/loaders"),
-    Editor: () => import("@/components/reusable/Editor"),
+      Editor: () => import("@/components/reusable/Editor"),
   },
   data() {
     return {
@@ -366,7 +366,7 @@ export default {
       this.findRecordedClass();
       // go to contents
       // document.getElementById("content-tab").click();
-      await Apis.create('user_logs', {course_id: this.course._id})
+      await Apis.create('user_logs',{course_id: this.course._id})
     },
   },
   beforeRouteUpdate(to, from, next) {

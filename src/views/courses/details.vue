@@ -143,6 +143,14 @@ export default {
         if (this.maximumIndex > total_chapters - 1) {
           this.maximumIndex = total_chapters - 1;
         }
+        if (this.course.chapters[this.maximumIndex]._id > this.limit) {
+          for (const i in this.course.chapters) {
+            if (this.course.chapters[i]._id === this.limit) {
+              this.maximumIndex = i
+              break
+            }
+          }
+        }
       }
 
       const index = this.userCategory == "STUDENT" ? this.maximumIndex : 0;
