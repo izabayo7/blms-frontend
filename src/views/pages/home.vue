@@ -25,5 +25,22 @@
 <script>
 export default {
   name: "Home",
+  beforeMount() {
+    if (this.$session.exists()) {
+      axios.defaults.headers.common.Authorization = `${this.$session.get(
+        "jwt"
+      )}`;
+      this.$store.commit("user/SET_USER", jwt.decode(this.$session.get("jwt")));
+      this.$store.state.isLoggedIn = true;
+      if (
+        this.$store.state.user.category === "Student" ||
+        this.$store.state.user.category === "Instructor"
+      ) {
+        this.$router.push({ name: "Courses" });
+      } else {
+        alert("not in mvp");
+      }
+    }
+  },
 };
 </script>

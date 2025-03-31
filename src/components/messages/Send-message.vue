@@ -16,7 +16,7 @@
           <div class="filePreview"></div>
     </div>
       <div class="col-1 send">
-        <div class="icon">
+        <div class="icon" @click="sendMessage">
           <svg xmlns="http://www.w3.org/2000/svg" width="45.928" height="45.079" viewBox="0 0 45.928 45.079">
             <g id="Icon_feather-send" data-name="Icon feather-send" transform="translate(15.951 -2.049) rotate(30)">
               <path id="Path_1919" data-name="Path 1919" d="M33.129,3,16.5,19.629" transform="translate(-0.129 0)" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/>
@@ -31,6 +31,7 @@
 </template>
 
 <script>
+import {mapGetters,mapState} from 'vuex'
 export default {
   name: "Send-message",
   data(){
@@ -38,11 +39,24 @@ export default {
       msg:""
     }
   },
+  computed:{
+    ...mapGetters('chat',['socket']),
+    ...mapState('chat',['currentDisplayedUser'])
+
+  },
   methods:{
     inputClicked(){
       let input = this.$refs['input']
       // let placeholder = this.$refs['placeholder']
       input.focus();
+    },
+    sendMessage(){
+      // console.log(this.currentDisplayedUser)
+      this.socket.emit('send-message', {
+        recipients:[this.currentDisplayedUser.id],
+        msg: this.msg,
+        group: undefined
+      });
     },
     inputMsg(){
       let input = this.$refs['input']
@@ -76,7 +90,7 @@ export default {
     justify-content: center;
 
     .msg-input{
-
+      padding: 0;
       div.input{
         background-color: $secondary;
         position: relative;
@@ -105,7 +119,7 @@ export default {
         height: fit-content;
         width: fit-content;
         cursor: pointer;
-        align-content: center;
+        justify-content: center;
         padding: 0;
 
         .icon{
@@ -120,15 +134,16 @@ export default {
       }
 
       .send{
-        margin-left:.4rem;
-        border-radius: 50%;
+        padding: 0;
         display: flex;
+        justify-content: center;
         height: fit-content;
         width: fit-content;
         cursor: pointer ;
 
         .icon{
-          padding: .2rem;
+          border-radius: 50%;
+          padding: .2rem .3rem;
           background-color: $primary;
           svg{
             width: 20px;

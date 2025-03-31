@@ -92,6 +92,27 @@ export default {
           email: this.email.toLowerCase(),
           password: this.password,
         };
+        // let response = await Apis.login(userCategory, credentials);
+        // if (response.data === errorMessage) {
+          userCategory = "instructor";
+          let response = await Apis.login(userCategory, credentials);
+          // if (response.data === errorMessage) {
+            // userCategory = "admin";
+            // response = await Apis.login(userCategory, credentials);
+            // if (response.data === errorMessage) {
+              // userCategory = "superAdmin";
+              // response = await Apis.login(userCategory, credentials);
+            // }
+          // }
+        // }
+        if (response.data === errorMessage) {
+          this.message = "Invalid passcode or password";
+          alert(this.message);
+        } else {
+          axios.defaults.headers.common.Authorization = `${response.data}`;
+          this.$session.start();
+          this.$session.set("jwt", response.data);
+          this.$store.commit("user/SET_USER", jwt.decode(this.$session.get("jwt")));
 
         // call the login api
         let response = await Apis.login(this.userCategory, credentials);

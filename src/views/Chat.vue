@@ -5,11 +5,11 @@
         <!--        profile picture of the current chatter-->
         <template #pic><img src="@/assets/images/instructor.png" alt="sender profile picture"></template>
         <!--        name of the current chatter-->
-        <template #name>Ntwari Clarance</template>
+        <template #name>{{currentDisplayedUser.name}}</template>
       </chat-header>
     </div>
     <div ref="messages-list" class="messages-list" >
-      <chat-messaging/>
+      <chat-messaging :data="currentChatMessages"/>
     </div>
     <div ref="send-message" class="send-message">
       <send-message></send-message>
@@ -21,6 +21,7 @@
 import ChatHeader from '@/components/messages/Chat-header'
 import SendMessage from '@/components/messages/Send-message'
 import ChatMessaging from '@/components/messages/Chat-messaging'
+import {mapGetters, mapState, mapActions} from 'vuex'
 
 export default {
   name: "Chat",
@@ -29,21 +30,46 @@ export default {
     SendMessage,
     ChatMessaging
   },
-  methods:{
-    // set the messages container's height according to the screen height
-    setMessagesContainerHeight(){
-      let chatHolder = this.$refs['my-chat']
-      // let chatHeader = this.$refs['chat-header'];
-      // let msgsList = this.$refs['messages-list'];
-      // let sendMsg = this.$refs['send-message'];
-
-      const height = getComputedStyle(chatHolder)
-      console.log(height.height)
+  data(){
+    return {
     }
   },
-  mounted() {
-    //set height when component is mounted
-    this.setMessagesContainerHeight()
+  computed:{
+    ...mapState('chat',['currentDisplayedUser','currentChatMessages','username']),
+    ...mapGetters('chat',['socket']),
+  },
+  methods:{
+    ...mapActions('chat',['setUsername']),
+    loadNewCurrentMessages(username){
+      // to load new messages we need to make sure that the current user has changed
+      // and also make sure that there are no currently loaded messages
+      if(username !== this.$route.params.username || this.currentChatMessages.length <= 0 ){
+        this.$store.dispatch('chat/loadMessages',this.username); //load msgs
+      }
+    }
+
+  },
+  created() {
+    console.log('created')
+    //if there  are no current loaded messages, loads them
+    if(this.currentChatMessages.length <=0){
+      this.$store.dispatch('chat/loadMessages')
+    }
+  },
+  beforeMount() {
+    //load user since the route have changed
+    this.setUsername(this.$route.params.username).then(username => {
+      this.loadNewCurrentMessages(username)
+    })
+  },
+  beforeRouteUpdate(to,from,next){
+    //since username has changed let us also load new chat
+    this.setUsername(this.$route.params.username).then(username => {
+      this.loadNewCurrentMessages(username)
+
+    })
+
+    next()
   }
 }
 </script>

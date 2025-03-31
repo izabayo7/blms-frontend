@@ -8,24 +8,17 @@
 <script>
 export default {
   name: "App",
-  mounted() {
-    console.log(this.$el.style.height)
-
-  },
-  beforeMount: async function () {
-    let innerHeight = window.innerHeight
-    let app = document.getElementById('app')
-    app.style.height = innerHeight;
+  beforeCreate: async function () {
 
     if (!this.$session.exists()) {
       this.$router.push("/login");
       // keep the requested url then redirect after login
-    } else if (this.$store.state.user === null) {
+    } else if (this.$store.state.user.user === null) {
       axios.defaults.headers.common.Authorization = `${this.$session.get(
         "jwt"
       )}`;
-      this.$store.dispatch("setUser", jwt.decode(this.$session.get("jwt")));
-      this.$store.state.isLoggedIn = true;
+      this.$store.commit("user/SET_USER", jwt.decode(this.$session.get("jwt")));
+      this.$store.state.user.isLoggedIn = true;
       // const response = await Services.otherGets('token')
       // if (response.data === 'Invalid Token') {
       //   this.$session.destroy()

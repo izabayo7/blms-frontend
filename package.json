@@ -16,6 +16,7 @@
     "jquery": "^3.5.1",
     "jsonwebtoken": "^8.5.1",
     "popper.js": "^1.16.1",
+    "socket.io-client": "^2.3.0",
     "swiper": "^6.1.2",
     "tiptap": "^1.29.3",
     "tiptap-extensions": "^1.31.3",
