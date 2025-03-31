@@ -260,7 +260,9 @@
         <h4 v-if="$store.state.user.user.category.name === 'STUDENT'">
           Discussion Board
         </h4>
-        <discussion-board v-if="$store.state.user.user.category.name === 'STUDENT'"/>
+        <discussion-board
+          v-if="$store.state.user.user.category.name === 'STUDENT'"
+        />
 
         <kurious-instructor-action-board
           v-else-if="$store.state.user.user.category.name === 'INSTRUCTOR'"
@@ -282,9 +284,9 @@ import UnrealTimeDiscussionBoard from "../../components/Live/UnrealTimeDiscussio
 
 export default {
   name: "LiveClass",
-  components:{
+  components: {
     UnrealTimeDiscussionBoard,
-    DiscussionBoard
+    DiscussionBoard,
   },
   data: () => ({
     connection: new RTCMultiConnection(),
@@ -397,12 +399,12 @@ export default {
     // use your own TURN-server here!
     vm.connection.iceServers = [
       {
-        urls: [
-          "stun:stun.l.google.com:19302",
-          "stun:stun1.l.google.com:19302",
-          "stun:stun2.l.google.com:19302",
-          "stun:stun.l.google.com:19302?transport=udp",
-        ],
+        'urls': [
+            'stun:stun.l.google.com:19302',
+            'stun:stun1.l.google.com:19302',
+            'stun:stun2.l.google.com:19302',
+            'stun:stun.l.google.com:19302?transport=udp',
+        ]
       },
     ];
 
@@ -449,20 +451,22 @@ export default {
         console.log("rejoin-broadcast", broadcastId);
 
         vm.connection.attachStreams = [];
-        socket.emit("check-broadcast-presence", broadcastId, function (
-          isBroadcastExists
-        ) {
-          if (!isBroadcastExists) {
-            // the first person (i.e. real-broadcaster) MUST set his user-id
-            vm.connection.userid = broadcastId;
-          }
+        socket.emit(
+          "check-broadcast-presence",
+          broadcastId,
+          function (isBroadcastExists) {
+            if (!isBroadcastExists) {
+              // the first person (i.e. real-broadcaster) MUST set his user-id
+              vm.connection.userid = broadcastId;
+            }
 
-          socket.emit("join-broadcast", {
-            broadcastId: broadcastId,
-            userid: vm.connection.userid,
-            typeOfStreams: vm.connection.session,
-          });
-        });
+            socket.emit("join-broadcast", {
+              broadcastId: broadcastId,
+              userid: vm.connection.userid,
+              typeOfStreams: vm.connection.session,
+            });
+          }
+        );
       });
 
       socket.on("broadcast-stopped", function (broadcastId) {
