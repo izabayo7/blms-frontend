@@ -28,7 +28,9 @@ export default {
         setUser({ commit,state }, user) {
             state.isLoggedIn = true
             commit('SET_USER',user)
+
             Apis.get(`user/current`).then(res=>{
+                res.data.data.college = user.college
                 commit('SET_USER', res.data.data)
             })
         },
