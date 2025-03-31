@@ -1,7 +1,7 @@
 <template>
   <div class="combined-statistics pt-6">
     <div class="row">
-      <div class="selection col-12 col-lg-5 px-0" :class="{'px-0': $vuetify.breakpoint.width < 700 }">
+      <div class="selection col-12 pb-0 col-lg-5 px-0" :class="{'px-0': $vuetify.breakpoint.width < 700 }">
         <div class="title mb-6">Select data</div>
         <button
             v-for="(obj, i) in data_categories"
@@ -12,7 +12,7 @@
           {{ obj.name }}
         </button>
       </div>
-      <div class="result-view mb-3 col-12 col-lg-7">
+      <div class="result-view pb-0 col-12 col-lg-7">
         <div class="filters-containter">
           <div class="filters">
             <div class="cursor-pointer" @click="activeFilter = 1" :class="{'active': activeFilter === 1}">All time</div>
