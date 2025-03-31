@@ -531,6 +531,7 @@ export default {
         id: 'joinRoom',
         name: this.participationInfo.name,
         room: this.participationInfo.room,
+        record_session: this.live_session.record_session || false,
         offeringCourse: this.participationInfo.isOfferingCourse
       }
       this.sendMessage(message);
