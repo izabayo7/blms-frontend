@@ -51,6 +51,7 @@
           <div class="col-12 col-md-3">
             <div class="label">Institution logo</div>
           </div>
+          <cropper :img="img" @change="imageCropped" @save="saveChanges(1)"/>
           <div class="col-12 col-md-5 text-center">
             <input
                 ref="file"
@@ -60,18 +61,41 @@
                 hidden
                 @change="handleFileUpload"
             />
-            <img @click="pickfile()" class="college_logo cursor-pointer" :src="state.logo" alt="">
-            <div v-if="editStatus[1]" class="current_value lable"><span v-if="state.logo">Click on image to update the logo </span>
-            </div>
-            <div v-else class="edit">
-              <div class="actions">
-                <button class="save" @click="saveChanges(1)">Save</button>
-                <button class="cancel"
-                        @click="toogleEdit(1);profile=undefined;document.getElementById('picture').value = ''">Cancel
-                </button>
-              </div>
+            <v-avatar
+                v-if="state.logo"
+                width="auto"
+                :height="largeDevices.includes($vuetify.breakpoint.name) ? 150 : 120"
+                @click="pickfile"
+                class="mt-4 d-block cursor-pointer"
+                id="user_pic"
+            >
+              <img :src="state.logo + `?width=${largeDevices.includes($vuetify.breakpoint.name) ? 150 : 120}`"
+                   alt="avatar"/>
+            </v-avatar>
+            <div v-if="editStatus[2]" class="current_value lable"><span v-if="state.logo">Click on image to update the logo </span>
             </div>
           </div>
+<!--          <div class="col-12 col-md-5 text-center">-->
+<!--            <input-->
+<!--                ref="file"-->
+<!--                type="file"-->
+<!--                id="picture"-->
+<!--                allow="image/*"-->
+<!--                hidden-->
+<!--                @change="handleFileUpload"-->
+<!--            />-->
+<!--            <img @click="pickfile()" class="college_logo cursor-pointer" :src="state.logo" alt="">-->
+<!--            <div v-if="editStatus[1]" class="current_value lable"><span v-if="state.logo">Click on image to update the logo </span>-->
+<!--            </div>-->
+<!--            <div v-else class="edit">-->
+<!--              <div class="actions">-->
+<!--                <button class="save" @click="saveChanges(1)">Save</button>-->
+<!--                <button class="cancel"-->
+<!--                        @click="toogleEdit(1);profile=undefined;document.getElementById('picture').value = ''">Cancel-->
+<!--                </button>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
           <div class="col-12 col-md-4">
             <div class="action">
               <button v-if="state.logo" @click="
@@ -211,6 +235,7 @@
 
 import Apis from "@/services/apis";
 import {mapActions, mapMutations, mapState} from "vuex";
+import {cropperMixin} from "../../services/mixins";
 
 export default {
   name: "InstitutionSettings",
@@ -218,6 +243,7 @@ export default {
     editStatus: [true, true, true, true, true, true, true, true],
     img: "",
     logo: undefined,
+    largeDevices: ['md', 'lg', 'xl'],
     college: {
       name: "",
       motto: "",
@@ -233,6 +259,10 @@ export default {
   computed: {
     ...mapState("sidebar_navbar", {state: "college"}),
   },
+  components:{
+    cropper: () => import("@/components/reusable/ui/ImageCropper"),
+  },
+  mixins: [cropperMixin],
   watch: {
     state() {
       if (this.state) {
@@ -263,10 +293,6 @@ export default {
     }),
     toogleEdit(index) {
       this.$set(this.editStatus, index, !this.editStatus[index])
-    },
-    handleFileUpload() {
-      this.logo = document.getElementById("picture").files[0]
-      this.toogleEdit(1)
     },
     callback(res, index) {
       if (res.data.status !== 200)
@@ -337,8 +363,7 @@ export default {
           this.callback(res, index)
         })
       } else {
-        obj = new FormData()
-        obj.append('file', this.logo)
+        obj = {profile  : this.profile}
 
         this.$store.dispatch("modal/set_modal", {
           template: "display_information",

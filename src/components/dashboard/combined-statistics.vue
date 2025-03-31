@@ -12,6 +12,7 @@
           {{ obj.name }}
         </button>
         <select-ui
+            class="hidden-md-and-up"
             :options="data_categories.map((x)=>x.name)"
             @input="
                 (e) => {
