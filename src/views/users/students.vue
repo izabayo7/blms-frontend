@@ -176,6 +176,8 @@ export default {
   },
   created() {
     this.getCourses(!this.loaded);
+    if (this.courses.length)
+      this.selected_course = this.courses[0].name
   },
   data() {
     return {

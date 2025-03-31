@@ -67,7 +67,7 @@
                     </div>
                   </div>
                   <div class="data">
-                    <div v-for="data in submission_statistics.submissions" :key="data._id" class="d-flex">
+                    <div @click="$router.push(`/quiz/${data.quiz.name}/${data.user.user_name}`)" v-for="data in submission_statistics.submissions" :key="data._id" class="d-flex">
                       <div class="student-name">{{ data.user.sur_name + ' ' + data.user.other_names }}</div>
                       <div class="course-name mx-auto">{{ data.quiz.name | trimString(20) }}</div>
                       <div class="time">{{
@@ -148,7 +148,7 @@
                   </div>
                   <div v-else class="data">
                     <div v-for="data in course_statistics.latestComments" :key="data._id" class="d-flex">
-                      <div class="student-name">{{ data.sender.sur_name + ' ' + data.sender.other_names }}</div>
+                      <div class="student-name vertically--centered">{{ data.sender.sur_name + ' ' + data.sender.other_names }}</div>
                       <div class="course-name mx-auto">{{ data.chapter | trimString(20) }}</div>
                       <div class="time">{{
                           elapsedDuration(data.createdAt)
@@ -271,7 +271,7 @@
               </div>
               <div v-else class="data">
                 <div v-for="data in submission_statistics.submissions" :key="data._id">
-                  <div class="d-flex">
+                  <div class="d-flex" @click="$router.push(`/quiz/${data.quiz.name}/${data.user.user_name}`)">
                     <div class="student-name">{{ data.user.sur_name + ' ' + data.user.other_names }}</div>
                     <div class="course-name mx-auto">{{ data.quiz.name | trimString(20) }}</div>
                   </div>
