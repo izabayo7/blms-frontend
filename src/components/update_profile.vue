@@ -170,18 +170,12 @@ export default {
     profile: undefined,
     confirmNewPassword: "",
   }),
-  watch: {
-    action_confirmation() {
-      console.log(this.action_confirmed);
-    },
-  },
   computed: {
     user() {
       const user = JSON.stringify(this.$store.state.user.user);
       return JSON.parse(user);
     },
     ...mapGetters("courses", ["started_courses"]),
-    ...mapState("user", ["action_confirmed"]),
   },
   methods: {
     ...mapActions("courses", ["getCourses"]),

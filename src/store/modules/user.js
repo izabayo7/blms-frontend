@@ -5,8 +5,7 @@ export default {
     namespaced: true,
     state: {
         user: null,
-        isLoggedIn: false,
-        action_confirmed: false
+        isLoggedIn: false
     },
     mutations: {
         SET_USER(state, user) {
@@ -28,9 +27,6 @@ export default {
         unsetUser({ commit }) {
             commit('UNSET_USER')
             // reset the whole store
-        },
-        toogleActionConfirmation({ commit }) {
-            commit('toogleActionConfirmation')
         },
         async removeProfilePicture({ state, dispatch }) {
             const splited = state.user.profile.split("/");
@@ -58,9 +54,6 @@ export default {
         // get user username
         username(state) {
             return state.user.user_name
-        },
-        action_confirmed(state) {
-            return state.action_confirmed
         }
     },
 }
