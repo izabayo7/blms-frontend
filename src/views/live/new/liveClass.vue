@@ -109,7 +109,7 @@
             <div class="student-new-comment">
               <student-new-comment-with-photo v-model="comment"/>
             </div>
-            <div class="student-comments">
+            <div class="live-comments-container">
               <discussion
                   v-for="(comment, i) in comments"
                   :key="i"
@@ -179,7 +179,7 @@
       <div v-else class="live-class--attendance">
         <div class="live-class--attendance--wrapper long">
           <h3>DISCUSSION BOARD </h3>
-          <div class="online-users">
+          <div class="live-comments-container viewer">
             <discussion
                 v-for="(comment, i) in comments"
                 :key="i"
@@ -187,6 +187,9 @@
                 :verified="comment.sender.category !== 'STUDENT'"
                 @replied="replied"
             />
+          </div>
+          <div class="student-new-comment">
+            <student-new-comment-with-photo v-model="comment"/>
           </div>
         </div>
         <div v-if="participationInfo.isOfferingCourse" class="live-class--actions">
@@ -589,6 +592,25 @@ export default {
       }
     }
   },
+  mounted(){
+    let span = document.querySelector('.message-row span')
+    let actionButtons = document.querySelector('.action-btn');
+    span.innerText = 'write comment'
+    actionButtons.style.display = 'none';
+    // let focused = false;
+    span.onfocus = ()=>{
+      if(span.innerText == 'write comment'){
+        span.innerText = ""
+      }
+      actionButtons.style.display = 'flex';
+    }
+    span.onblur = ()=>{
+      if(span.innerText == ''){
+        span.innerText = "write comment"
+      }
+      actionButtons.style.display = 'none';
+    }
+  },
   created() {
     //know if this user has ability to give live class
     this.participationInfo.isOfferingCourse = this.user.category.name === 'INSTRUCTOR'
@@ -672,6 +694,6 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 @import '../../../assets/sass/imports/live-class';
 </style>

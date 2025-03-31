@@ -485,125 +485,218 @@
                 color: #3C3C3C;
             }
 
-            .student-comments {
-                .comment {
-                    .comment__name {
-                        font-family: Poppins;
-                        font-style: normal;
-                        font-weight: normal;
-                        font-size: 13.01px;
-                        line-height: 17px;
+        }
+    }
+    .live-comments-container {
+        .comment {
+            .comment__name {
+                font-family: Poppins;
+                font-style: normal;
+                font-weight: normal;
+                font-size: 13.01px;
+                line-height: 17px;
 
-                        color: #000000;
+                color: #000000;
 
-                    }
+            }
+
+            .comment__time {
+                font-family: Poppins;
+                font-style: normal;
+                font-weight: normal;
+                font-size: 9.12431px;
+                line-height: 11px;
+                /* identical to box height */
+
+
+                color: #484848;
+            }
+
+            .comment__text {
+                font-family: Poppins;
+                font-style: normal;
+                font-weight: normal;
+                font-size: 13.8739px;
+                line-height: 18px;
+
+                color: #484848;
+            }
+
+            .show-replies p {
+                font-family: Poppins;
+                font-style: normal;
+                font-weight: normal;
+                font-size: 9.12431px !important;
+                line-height: 11px;
+                /* identical to box height */
+
+
+                color: #484848;
+            }
+
+            .inner-icon {
+                svg {
+                    height: 17.1243133544921875px;
+                    width: 18.311697959899902px;
+                }
+
+                padding-left: 0 !important;
+                background-color: transparent !important;
+                .text{
+                    font-family: Poppins;
+                    font-style: normal;
+                    font-weight: normal;
+                    font-size: 8.56799px;
+                    line-height: 13px;
+
+                    color: #4A4A4A;
+                }
+            }
+            .comment-replies {
+                padding-left: 0 !important;
+                border-left: none !important;
+            }
+            .reply-comment-container {
+                .right {
+                    margin-top: 6px;
+                }
+
+
+                .comment .temp-flex {
+                    display: flex;
 
                     .comment__time {
-                        font-family: Poppins;
-                        font-style: normal;
-                        font-weight: normal;
-                        font-size: 9.12431px;
-                        line-height: 11px;
-                        /* identical to box height */
-
-
-                        color: #484848;
+                        margin-left: 12px;
+                        margin-top: 4px;
                     }
+                }
+            }
 
-                    .comment__text {
-                        font-family: Poppins;
-                        font-style: normal;
-                        font-weight: normal;
-                        font-size: 13.8739px;
-                        line-height: 18px;
+            .my-reply-comment .my-reply-comment-container .reply-comment {
+                .input-holder[data-v-645d75c2] {
+                    border-radius: 6px;
+                    border: 0.56px solid #9A9A9A
+                }
 
-                        color: #484848;
-                    }
+                input[type=text] {
+                    border: none;
+                    outline: none;
+                    -webkit-box-shadow: none;
+                    box-shadow: none;
+                    font-family: Montserrat;
+                    font-style: normal;
+                    font-weight: normal;
+                    font-size: 10.1571px;
+                    line-height: 12px;
+                    /* identical to box height */
+                    margin: 0;
 
-                    .show-replies p {
-                        font-family: Poppins;
-                        font-style: normal;
-                        font-weight: normal;
-                        font-size: 9.12431px !important;
-                        line-height: 11px;
-                        /* identical to box height */
+                    color: #ABABAB;
 
+                }
 
-                        color: #484848;
-                    }
+                .send {
+                    display: flex;
+                    align-items: center;
 
-                    .inner-icon {
-                        svg {
-                            height: 17.1243133544921875px;
-                            width: 18.311697959899902px;
-                        }
+                    svg {
+                        width: 30px;
+                        display: none;
 
-                        padding-left: 0 !important;
-                        background-color: transparent !important;
-                    }
-                    .comment-replies {
-                        padding-left: 0 !important;
-                        border-left: none !important;
-                    }
-                    .reply-comment-container {
-                        .right {
-                            margin-top: 6px;
-                        }
-
-
-                        .comment .temp-flex {
-                            display: flex;
-
-                            .comment__time {
-                                margin-left: 12px;
-                                margin-top: 4px;
-                            }
+                        &.live {
+                            display: initial;
                         }
                     }
+                }
+            }
 
-                    .my-reply-comment .my-reply-comment-container .reply-comment {
-                        .input-holder[data-v-645d75c2] {
-                            border-radius: 6px;
-                            border: 0.56px solid #9A9A9A
-                        }
+        }
+        &.viewer{
+            .comment{
+                .comment__name{
+                    font-size: 12px;
+                }
+                .comment__time{
+                    font-size: 9.57599px;
+                }
+                .comment__text{
+                    font-family: Poppins;
+                    font-style: normal;
+                    font-weight: normal;
+                    font-size: 12px;
+                    line-height: 18px;
 
-                        input[type=text] {
-                            border: none;
-                            outline: none;
-                            -webkit-box-shadow: none;
-                            box-shadow: none;
-                            font-family: Montserrat;
-                            font-style: normal;
-                            font-weight: normal;
-                            font-size: 10.1571px;
-                            line-height: 12px;
-                            /* identical to box height */
-                            margin: 0;
-
-                            color: #ABABAB;
-
-                        }
-
-                        .send {
-                            display: flex;
-                            align-items: center;
-
-                            svg {
-                                width: 30px;
-                                display: none;
-
-                                &.live {
-                                    display: initial;
-                                }
-                            }
-                        }
+                    color: #000000;
+                }
+                .inner-icon {
+                    svg {
+                        //transform: rotate(180deg) !important;
                     }
-
                 }
             }
         }
     }
+    .new-comment-with-photo{
+     .input{
+         span{
+             border: none;
+             &:focus{
+                 outline: none;
+             }
+             font-family: Poppins;
+             font-style: normal;
+             font-weight: normal;
+             font-size: 12px;
+             line-height: 18px;
+             /* identical to box height */
 
+
+             color: #ABABAB;
+         }
+     }
+        .action-btn{
+            .cancel{
+                background-color: transparent !important;
+                .button-container {
+                    border: none;
+                    button{
+                        font-family: Poppins;
+                        font-style: normal;
+                        font-weight: bold;
+                        font-size: 9px;
+                        line-height: 13px;
+                        display: flex;
+                        align-items: center;
+                        text-align: center;
+
+                        color: #BABABC;
+                    }
+                }
+            }
+            .send{
+                width: 77px;
+                height: 24px;
+                align-items: center;
+                .button-container {
+                    border: none;
+                    background: none;
+                    padding: 6px !important;
+                }
+                button{
+                    font-family: Poppins;
+                    font-style: normal;
+                    font-weight: normal;
+                    font-size: 9px;
+                    line-height: 13px;
+                    display: flex;
+                    align-items: center;
+                    text-align: center;
+
+                    color: #FFFFFF;
+                }
+            }
+        }
+    }
     .live-class-details {
         background-color: white;
         //margin-left: -1.2rem;
@@ -662,10 +755,11 @@
 
             &.long {
                 width: 378px;
-                height: 490px;
-                .online-users{
-                    max-height: 94%;
-                    padding: 31px
+                height: 550px;
+                .live-comments-container{
+                    max-height: 80%;
+                    padding: 31px;
+                    overflow-y: auto;
                 }
             }
         }
