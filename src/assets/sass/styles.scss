@@ -29,7 +29,7 @@ input::-webkit-inner-spin-button {
   margin: 0;
 }
 
-button:focus{
+button:focus {
   outline: none;
 }
 
@@ -43,13 +43,15 @@ input[type=number] {
   width: 0px;
 }
 
-.customScroll{
+.customScroll {
   &::-webkit-scrollbar {
     width: 8px;
   }
+
   &::-webkit-scrollbar-track {
     // background-color: #f8f8ff;
   }
+
   &::-webkit-scrollbar-track:hover {
     background-color: lighten($secondary, 4);
   }
@@ -58,10 +60,21 @@ input[type=number] {
     background-color: lighten($font, 40);
     border-radius: 10px;
   }
+
   &::-webkit-scrollbar-thumb:hover {
     background-color: lighten($font, 30);
   }
 }
-div#app{
+
+div#app {
   overflow-y: hidden;
+}
+
+.v-dialog {
+  box-shadow: none;
+
+}
+
+.v-dialog:not(.v-dialog--fullscreen) {
+  border-radius: 0 !important;
 }

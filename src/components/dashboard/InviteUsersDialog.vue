@@ -194,6 +194,11 @@ export default {
       `faculty_college_year/college/${this.$store.state.user.user.college}`
     );
     this.user_groups = user_groups_res.data.data;
+    setTimeout(() => {
+      const dialog = document.querySelector(".v-dialog--active");
+      dialog.style.maxWidth = "742px";
+      dialog.style.setProperty("height", "432px", "important");
+    }, 0);
   },
 };
 </script>
@@ -203,7 +208,6 @@ export default {
   height: 432px !important;
   width: 100% !important;
   max-width: 742px;
-  border-radius: 0 !important;
   .dialog-body {
     height: 100%;
     padding: 30px;

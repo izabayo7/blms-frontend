@@ -321,7 +321,6 @@ export default {
   methods: {
     ...mapActions("modal", ["set_modal"]),
   },
-  beforeMount() {},
 };
 </script>
 
