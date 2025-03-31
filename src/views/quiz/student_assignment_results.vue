@@ -1,28 +1,22 @@
 <template>
   <v-container id="view-assignments" class="px-6 pl-lg-14 pr-md-2 pt-6" fluid>
     <v-row>
-      <v-col class="col-12">
+      <v-col v-if="assignment" class="col-12">
         <div class="upper">
           <div>Assignments</div>
-          <div>Second assignment</div>
-          <div>Due on Aug 16 2021, before 6PM</div>
+          <div>{{ assignment.title }}</div>
+          <div>Due on {{ assignment.dueDate | formatDate }}, before {{ new Date(assignment.dueDate).toLocaleTimeString() }}</div>
         </div>
         <div class="lower">
-          <div class="description">
+          <div v-if="assignment.details" class="description">
             <Editor
                 ref="editor"
                 mode="view"
-                defaultContent="<p>            Dear students, I have a quick assignment for you.
-            Write a 200 words essay on how you believe technology
-            can help advance education.</p>
-<p>
-            Please only upload videosin mp4 format.
-            I have attached a sample essay that can help you understand
-            what i need from you. Thanks</p>"
+                :defaultContent="assignment.details"
             />
           </div>
-          <div v-if="2===2" class="attachment">
-            <div class="file-container row">
+          <div v-if="assignment.submissionMode === 'fileUpload'" class="attachment-container">
+            <div v-if="assignment.attachments.length" class="file-container row ma-0">
               <div class="indicator mb-2 col-12 pa-0">
                 <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path
@@ -33,16 +27,16 @@
                 </svg>
                 <span class="ml-1">Click on file to open</span>
               </div>
-              <div class="pick-file col-12 col-md-8 d-flex px-4">
+              <div v-for="(attachment, i) in assignment.attachments" :key="i" class="pick-file col-12 col-md-8 d-flex px-4">
                 <button
                     class="file-name">
-                  myBeautifulydoneEssaysample.docx
+                  {{ attachment.src }}
                 </button>
                 <div class="file-size mx-auto">
                   26kb
                 </div>
                 <div class="file-type ml-auto">
-                  docx
+                  {{ attachment.src.split('.')[attachment.src.split('.').length -1] }}
                 </div>
 
               </div>
@@ -70,33 +64,24 @@
                 </defs>
               </svg>
 
-              <span class="ml-1">Upload your submission bellow ( Docx format only)</span>
+              <span class="ml-1">Upload your submission bellow ( {{ assignment.allowed_files.join(' ,') }} format only)</span>
             </div>
-            <div class="d-flex submission">
-              <div>
-                <button class="file-picked" @click="pickfile(i)">
-                  Choose file
-                </button>
-                <div class="hint">Upload a file (optional )</div>
-              </div>
-              <div class="ml-4">
-                <div class="file-name">myBeautifulydoneEssay.pdf</div>
-                <div class="uploaded text-center">
-                  <svg width="21" height="20" viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path
-                        d="M7.71745 13.5013L4.21745 10.0013L3.05078 11.168L7.71745 15.8346L17.7174 5.83464L16.5508 4.66797L7.71745 13.5013Z"
-                        fill="#289448"/>
-                  </svg>
-                  File uploaded
-                </div>
-              </div>
+            <div class="submission">
+              <FilePicker
+                  :ref="`picker`"
+                  template="attachment-files"
+                  :allowedTypes="findAcceptedFiles()"
+                  :multiple="assignment.allowMultipleFilesSubmission"
+                  @addFile="addAssignmentAttachment"
+                  @removeFile="removeAssignmentAttachment"
+              />
             </div>
           </div>
           <div v-else class="text-input">
             <Editor
                 ref="editor"
                 mode="edit"
-                defaultContent="<p>Type in your assignments information</p>"
+                defaultContent="<p>Type your answer here</p>"
             />
           </div>
           <div id="quiz-actions" class=" d-flex mb-12 mt-6">
@@ -116,23 +101,12 @@ import {mapActions, mapGetters} from "vuex";
 
 export default {
   data: () => ({
-    search: "",
-    headers: [
-      {
-        text: "Title",
-        align: "start",
-        sortable: false,
-        value: "title",
-      },
-      {text: "Target", value: "target"},
-      {text: "Due date", value: "dueDate"},
-      {text: "Marks", value: "marks"},
-      {text: "Status", value: "status"},
-      {text: "My grade", value: "grades", sortable: false, align: "center"},
-    ],
+    assignment: undefined,
+    assignmentAttachments: [],
   }),
   components: {
     Editor: () => import("@/components/reusable/Editor"),
+    FilePicker: () => import("@/components/reusable/FilePicker"),
   },
   computed: {
     // get the current course
@@ -155,14 +129,51 @@ export default {
     },
   },
   methods: {
-    ...mapActions("modal", ["set_modal"]),
-    handleRowClick(value) {
-      this.$router.push(`quiz/attempt/${value.name}`)
+    ...mapActions("quiz", ["getAssignment"]),
+    addAssignmentAttachment(file) {
+      this.assignmentAttachments.push(file)
+    },
+    removeAssignmentAttachment(index) {
+      this.assignmentAttachments.splice(index, 1)
+    },
+    findAcceptedFiles() {
+      if (!this.assignment.allowed_files)
+        return "*"
+
+      let allowed_types = []
+      if (this.assignment.allowed_files.includes('image'))
+        allowed_types.push('image/*')
+
+      if (this.assignment.allowed_files.includes('Pdf'))
+        allowed_types.push('application/pdf')
+
+      if (this.assignment.allowed_files.includes('Word document'))
+        allowed_types.push('application/msword')
+
+      if (this.assignment.allowed_files.includes('Powerpoint file'))
+        allowed_types.push('application/vnd.ms-powerpoint')
+
+      if (this.assignment.allowed_files.includes('Zip'))
+        allowed_types.push('application/zip,application/x-zip,application/x-zip-compressed,application/octet-stream')
+
+      if (this.assignment.allowed_files.includes('image'))
+        allowed_types.push('.txt')
+
+      if (this.assignment.allowed_files.includes('Video'))
+        allowed_types.push('video/*')
+
+      return allowed_types.join(',')
+
     },
   },
-  created() {
-    // load formated_quiz
-
+  async created() {
+    this.assignment = await this.getAssignment({id: this.$route.params.id})
+    if(this.assignment){
+      let date = new Date(this.assignment.dueDate)
+      date.setMinutes(date.getUTCMinutes())
+      date.setHours(date.getUTCHours())
+      this.assignment.dueDate = new Date(date).toISOString()
+    }
   },
 };
 </script>
@@ -206,7 +217,7 @@ export default {
       color: #3C3C3C;
     }
 
-    .attachment {
+    .attachment-container {
       max-width: 580px;
       margin-top: 40px;
     }
@@ -278,46 +289,6 @@ export default {
       color: #193074;
     }
 
-    .submission {
-      .file-name {
-        font-family: Inter;
-        font-style: normal;
-        font-weight: bold;
-        font-size: 13.0899px;
-        line-height: 34px;
-        /* or 262% */
-
-        display: flex;
-        align-items: center;
-
-        color: #193074;
-      }
-
-      .uploaded {
-        font-family: Inter;
-        font-style: normal;
-        font-weight: normal;
-        font-size: 10px;
-        line-height: 26px;
-        /* identical to box height, or 262% */
-
-
-        color: #289448;
-      }
-
-      .hint {
-        font-family: Inter;
-        font-style: normal;
-        font-weight: bold;
-        font-size: 8px;
-        line-height: 26px;
-        /* identical to box height, or 328% */
-
-
-        color: #193074;
-      }
-    }
-
     .quiz-action {
       max-width: 237.16px;;
       width: 100%;
@@ -341,6 +312,7 @@ export default {
       padding: 12px;
       border: 1.54684px solid #626262;
       background-color: white;
+
       .ProseMirror {
 
         min-height: 70px;
