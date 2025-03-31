@@ -136,11 +136,11 @@
                     <!--              rows-->
                     <template #tableRows>
                       <table-row :selected="selected_users.has(i)" @select="handleRowSelect(i)" :data="user"
-                                 v-for="(user, i) in formatedUsers" :key="user._id" :ref="`row${i}`">
+                                 v-for="(user, i) in formatedUsers" :key="i" :ref="`row${i}`">
                         <template #cols>
                           <td @click="$router.push(`/users/${user.user_name}`)" class="row--image"
                               @mouseenter="mouseOnPic($event,user.user_name,'user-profile-card')"
-                              @mouseleave="mouseOutPic($event,'user-profile-card')">
+                              >
                             <img v-if="user.profile" :src="user.profile + '?width=50'" class="img" alt=" profile pic">
                             <v-avatar v-else size="30" class="profile-avatar img">
                               {{ `${user.sur_name} ${user.other_names}` | computeText }}
@@ -148,7 +148,7 @@
                           </td>
                           <td @click="$router.push(`/users/${user.user_name}`)"
                               @mouseenter="mouseOnPic($event,user.user_name,'user-profile-card')"
-                              @mouseleave="mouseOutPic($event,'user-profile-card')">{{ user.sur_name }}
+                              >{{ user.sur_name }}
                             {{ user.other_names }}
                           </td>
                           <td @click="$router.push(`/users/${user.user_name}`)" :title="user.email">

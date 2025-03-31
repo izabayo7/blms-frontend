@@ -7,7 +7,7 @@
 
     <transition name="fade">
       <div v-if="!isMobile" id="user-profile-card">
-        <user-simple-card :loading="userByUsernameLoading" @close="mouseOutPic($event,'user-profile-card')">
+        <user-simple-card :loading="userByUsernameLoading" @close="mouseOutPic">
           <template #name>{{ userByUsername.other_names + " " + userByUsername.sur_name }}</template>
           <template #type>{{ userByUsername.category }}</template>
           <template #image>

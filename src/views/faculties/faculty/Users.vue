@@ -19,14 +19,14 @@
                            v-for="user in usersOnFaculties" :key="user._id">
                   <template #cols>
                     <td class="row--image" @mouseenter="mouseOnPic($event,user.user_name,'user-profile-card')"
-                        @mouseleave="mouseOutPic($event,'user-profile-card')">
+                        >
                       <img v-if="user.profile" :src="user.profile + '?width=50'" class="img" alt=" profile pic">
                       <v-avatar v-else size="30" class="profile-avatar img">
                         {{ `${user.sur_name} ${user.other_names}` | computeText }}
                       </v-avatar>
                     </td>
                     <td @mouseenter="mouseOnPic($event,user.user_name,'user-profile-card')"
-                        @mouseleave="mouseOutPic($event,'user-profile-card')">{{ user.sur_name }} {{ user.other_names }}
+                        >{{ user.sur_name }} {{ user.other_names }}
                     </td>
                     <td>{{ user.email }}</td>
                     <td>{{ user.gender }}</td>
