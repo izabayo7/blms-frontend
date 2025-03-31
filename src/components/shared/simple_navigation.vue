@@ -1,9 +1,15 @@
 <template>
   <div>
-    <div class="text-h4 font-weight-bold">{{title}}</div>
+    <div class="text-h4 font-weight-bold">{{ title }}</div>
     <div class="links">
-      <a v-for="(link, i) in links" :key="i" :href="$route.path == link.link ? undefined : link.link">
-        <span :class="$route.path == link.link ? '' : 'simple_link'">{{ link.text }}</span>
+      <a
+        v-for="(link, i) in links"
+        :key="i"
+        @click="$route.path == link.link ? undefined : $router.push(link.link)"
+      >
+        <span :class="$route.path == link.link ? '' : 'simple_link'">{{
+          link.text
+        }}</span>
         {{ notLast(i) ? " / " : "" }}
       </a>
     </div>
@@ -11,15 +17,15 @@
 </template>
 <script>
 export default {
-  props:{
-    title:{
+  props: {
+    title: {
       type: String,
-      required: true
+      required: true,
     },
-    links:{
+    links: {
       type: Array,
-      required: true
-    }
+      required: true,
+    },
   },
   methods: {
     notLast(index) {

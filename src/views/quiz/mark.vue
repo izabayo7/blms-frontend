@@ -353,8 +353,12 @@ export default {
           link: "/reports",
         },
         {
-          text: "kanze wlh",
-          link: "/reports/" + "",
+          text: this.selected_quiz_submission.quiz._id,
+          link: "/reports/" + this.selected_quiz_submission.quiz._id,
+        },
+        {
+          text: this.selected_quiz_submission.quiz._id,
+          link: "/reports/" + this.selected_quiz_submission.quiz._id,
         },
         {
           text: this.selected_quiz_submission.user.sur_name
