@@ -2,7 +2,7 @@
   <v-container fluid :class="{'hfull': isMobile && $route.name === 'chatingRoom' && state}" class="dashboard pa-0">
     <!-- navbar -->
     <div class="my-navbar">
-      <navbar v-if="!(isMobile && $route.name === 'chatingRoom' && state) && !hideNavigations"/>
+      <navbar v-if="!(isMobile && $route.name === 'chatingRoom' && state)" :class="{'d-none' : hideNavigations}"/>
     </div>
 
     <transition name="fade">

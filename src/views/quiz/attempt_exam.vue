@@ -658,9 +658,9 @@ export default {
   created() {
     this.getExam({id: this.$route.params.id}).then(({exam, msg}) => {
       if (!exam) {
-        setTimeout(()=>{
+        setTimeout(() => {
           this.$router.push('/assessments')
-        },5000)
+        }, 5000)
         return this.error = msg
       }
 
@@ -671,9 +671,9 @@ export default {
         this.setUp()
 
       this.exam = exam
-      let date =  new Date(exam.starting_time)
-      const diff =  (new Date() - date);
-      if(diff > 0){
+      let date = new Date(exam.starting_time)
+      const diff = (new Date() - date);
+      if (diff > 0) {
         exam.duration -= (diff / 1000)
       }
 

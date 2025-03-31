@@ -193,7 +193,7 @@
                     template: 'action_confirmation',
                     method: {
                       action: 'quiz/change_exam_status',
-                      parameters: { id: item._id, status: item.status === 'DRAFT' ? 'PUBLISHED' : 'DRAFT', user_group: item.course.user_group, name: item.title },
+                      parameters: { id: item._id, status: item.status === 'DRAFT' ? 'PUBLISHED' : 'DRAFT', user_group: item.course.user_group, name: item.name },
                     },
                     title: 'Change Exam Status',
                     message: `Are you sure you want to ${item.status === 'DRAFT' ? 'Publish' : 'Un publish'} this exam?`,
