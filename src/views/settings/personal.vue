@@ -124,7 +124,7 @@
             </div>
           </div>
           <div class="col-12 col-md-3">
-            <div class="label">Contact email</div>
+            <div class="label">Email</div>
           </div>
           <div class="col-12 col-md-5">
             <div v-if="editStatus[4]" class="current_value">{{ user.email }}</div>
@@ -142,7 +142,7 @@
             </div>
           </div>
           <div class="col-12 col-md-3">
-            <div class="label">Contact phone</div>
+            <div class="label">Phone</div>
           </div>
           <div class="col-12 col-md-5">
             <div v-if="editStatus[5]" class="current_value">{{ user.phone || "not yet set" }}</div>
