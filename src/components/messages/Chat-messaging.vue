@@ -253,7 +253,7 @@
           </div>
           <div v-else class="msgs">
             <div class="announcement-container">
-              <div class="d-flex">
+              <div class="row ma-0 pa-0">
                 <div class="col-5">
                   <img
                       :src="$store.state.sidebar_navbar.college.logo"
@@ -261,7 +261,7 @@
                       class="college-logo"
                   />
                 </div>
-                <div class="col-7 vertically--centered justify-start">
+                <div class="col-12 col-md-6 ml-auto vertically--centered justify-start">
                   {{ msgs.title }}
                 </div>
               </div>
