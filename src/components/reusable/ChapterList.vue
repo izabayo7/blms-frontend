@@ -25,7 +25,7 @@
             v-for="(item, i) in chapters"
             :key="i"
             :disabled="i > maximumIndex"
-            @click="$emit('change-chapter', i)"
+            @click="$emit('change-chapter', {index:i,id:item._id})"
             :class="activeIndex === i ? 'active--chapter' : ''"
           >
             <v-list-item-content class="vertically--centered">
@@ -72,7 +72,6 @@
                   data-name="Ellipse 102"
                   fill="none"
                   :stroke="i == maximumIndex ? primary : '#b4b4b4'"
-                  v
                   stroke-width="3"
                 >
                   <circle cx="17.5" cy="17.5" r="17.5" stroke="none" />
