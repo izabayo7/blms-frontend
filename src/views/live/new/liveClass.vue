@@ -51,7 +51,7 @@
                   </div>
                   <div class="screen-sharing-video">
                     <div class="screen-sharing-video--wrapper">
-                      <h4>You are presenting the screen</h4>
+                      <h4>You are presenting your screen</h4>
                       <video >
                         <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" autoplay>
                       </video>
@@ -939,7 +939,30 @@ export default {
           .no-video{
             &--wrapper{
 
+              &.presenting{
+                display:flex;
+                align-items: center;
+                justify-content: space-evenly;
 
+              .instructor-info{
+                align-items: start;
+                img{
+                  border-radius:50%;
+                }
+
+                h2{
+                  font-size: 1rem;
+
+                  &.name{
+                    font-size:.8rem;
+                    margin:.2rem 0;
+                  }
+                }
+                span{
+                  font-size: .8rem;
+                }
+              }
+              }
 
               .instructor-info{
                 display:flex;
@@ -965,10 +988,18 @@ export default {
 
               .screen-sharing-video{
                 &--wrapper{
-                  width:13.125rem;
+                  display: grid;
+                  place-items: center;
+
+                  video{
+                    width:13.125rem;
+                    border:2px solid $main;
+                  }
 
                   h4{
                     color:$main;
+                    font-weight: 500;
+                    margin:.4rem 0;
                   }
                 }
               }
