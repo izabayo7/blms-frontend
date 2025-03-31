@@ -112,7 +112,7 @@ export default {
         // eslint-disable-next-line no-empty-pattern
         async getExam({}, {id}) {
             const d = await apis.get(`exams/${id}`)
-            return d.data.data
+            return {exam: d.data.data, msg: d.data.message}
         },
         //create a quiz
         create_quiz({state, dispatch}, {quiz, pictures}) {
