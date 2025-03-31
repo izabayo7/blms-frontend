@@ -2,7 +2,7 @@
 <div class="online-user">
   <div class="online-user--pic">
     <figure class="online-user--pic--wrapper" >
-      <img :src="user.profile" :class="status" :alt="`${user.sur_name} ${user.other_names} profile picture`">
+      <img :src="user.profile+'?width=100'" :class="status" :alt="`${user.sur_name} ${user.other_names} profile picture`">
     </figure>
   </div>
   <div class="online-user--details">

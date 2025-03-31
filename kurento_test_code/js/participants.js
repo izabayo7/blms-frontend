@@ -42,7 +42,7 @@ export default function Participant(name) {
 
 	span.appendChild(document.createTextNode(name));
 
-	video.id = 'video-' + name;
+	// video.id = 'video-' + name;
 	video.autoplay = true;
 	video.controls = false;
 

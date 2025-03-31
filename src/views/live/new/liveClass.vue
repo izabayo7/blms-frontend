@@ -127,7 +127,7 @@
       </div>
       <div class="live-class--attendance">
         <div class="live-class--attendance--wrapper">
-          <h3>ONLINE USERS : 60 </h3>
+          <h3>ONLINE USERS : {{ participants.length }} </h3>
           <div class="online-users">
             <online-user v-for="user in participants" :user="user.userInfo"
                          :key="`${(Date.now() * Math.random())}${user.name}`"/>
@@ -461,10 +461,22 @@ export default {
     },
 
     toogleVideo() {
+      let message = {
+        id: 'togleVideo',
+        isVideo: true,
+        enabled: this.me.rtcPeer.videoEnabled
+      }
+      this.sendMessage(message);
       this.me.rtcPeer.videoEnabled = !this.me.rtcPeer.videoEnabled;
       this.videoEnabled = !this.videoEnabled;
     },
     toogleAudio() {
+      let message = {
+        id: 'toogleAudio',
+        isVideo: false,
+        enabled: this.me.rtcPeer.audioEnabled
+      }
+      this.sendMessage(message);
       this.me.rtcPeer.audioEnabled = !this.me.rtcPeer.audioEnabled
       this.audioEnabled = !this.audioEnabled;
     },
@@ -488,9 +500,6 @@ export default {
       console.log(`\n\n\n\n\n receiving video for ${sender} \n\n\n\n\n`)
      let participant = sender == this.participationInfo.name ? this.participants[this.participantIndex(sender)] : new Participant(sender, this, false, await this.getUserInfo(sender.split('_')[0]));
 
-     if (sender != this.participationInfo.name) {
-       this.participants.push(participant);
-     }
       console.log("\n\n\n", sender, "\n\n\n", (!this.participationInfo.isOfferingCourse && sender != this.participationInfo.name))
       if ((!this.participationInfo.isOfferingCourse && sender != this.participationInfo.name) || (this.participationInfo.isOfferingCourse && sender == this.participationInfo.name)) {
         let video = participant.getVideoElement();
@@ -507,6 +516,9 @@ export default {
               this.generateOffer(participant.offerToReceiveVideo.bind(participant));
             })
       }
+     if (sender != this.participationInfo.name) {
+       this.participants.push(participant);
+     }
     },
 
     onParticipantLeft(request) {
