@@ -133,6 +133,11 @@ export default {
           background-color: $primary;
           color: $main;
         }
+        img {
+          width: 50px;
+          border-radius: 50%;
+          cursor: pointer;
+        }
       }
       .profile-names-email {
         padding: 0.2rem 1.3rem;
