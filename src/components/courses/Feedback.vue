@@ -159,9 +159,12 @@ export default {
         content: content,
       });
       this.add_answer_feedback({
-        answer_id: this.answerId, 
+        answer_id: this.answerId,
         feedback: response.data.data,
       });
+
+      let element = this.$refs.feedback_input;
+      element.className += " saved_feedback";
       this.message = "feedback successfuly saved";
     },
     async editFeedback() {

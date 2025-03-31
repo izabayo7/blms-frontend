@@ -230,20 +230,20 @@
               <v-col class="col-12">
                 <feedback
                   v-if="
-                    attempt.answers[i].feedback || userCategory === 'INSTRUCTOR'
+                    selected_quiz_submission.answers[i].feedback ||
+                    userCategory === 'INSTRUCTOR'
                   "
                   :content="
-                    attempt.answers[i].feedback
-                      ? attempt.answers[i].feedback.content
+                    selected_quiz_submission.answers[i].feedback
+                      ? selected_quiz_submission.answers[i].feedback.content
                       : ''
                   "
-                  :answerId="attempt.answers[i]._id"
+                  :answerId="selected_quiz_submission.answers[i]._id"
                   :feedbackId="
-                    attempt.answers[i].feedback
-                      ? attempt.answers[i].feedback._id
+                    selected_quiz_submission.answers[i].feedback
+                      ? selected_quiz_submission.answers[i].feedback._id
                       : ''
                   "
-                  @addFeedback="addFeedback"
                 />
               </v-col>
             </v-row>
@@ -301,6 +301,7 @@
 
 <script>
 import { mapGetters, mapActions } from "vuex";
+import _ from "lodash";
 export default {
   data: () => ({
     alphabets: [
@@ -370,14 +371,6 @@ export default {
       "update_quiz_submission",
       "findQuizSubmissionByUserAndQuizNames",
     ]),
-
-    addFeedback(answer_id, feedback) {
-      for (const i in this.attempt.answers) {
-        if (this.attempt.answers[i]._id == answer_id) {
-          this.attempt.answers[i].feedback = feedback;
-        }
-      }
-    },
 
     checkChoiceStatus(choosed_options, choice) {
       if (choice.src) {
@@ -502,7 +495,9 @@ export default {
         user: this.selected_quiz_submission.user.user_name,
         auto_submitted: this.selected_quiz_submission.auto_submitted,
         used_time: this.selected_quiz_submission.used_time,
-        answers: this.selected_quiz_submission.answers,
+        answers: this.selected_quiz_submission.answers.map((x) =>
+          _.omit(x, ["feedback"])
+        ),
         marked: this.selected_quiz_submission.marked,
         total_marks: this.selected_quiz_submission.totalMarks,
       };
