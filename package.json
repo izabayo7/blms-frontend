@@ -3,9 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
+    "start": "vue-cli-service serve",
     "build": "node --max_old_space_size=4096 node_modules/.bin/vue-cli-service build",
     "lint": "vue-cli-service lint",
+    "pm2": "pm2 restart Kurious_Learn",
     "ui": "vue ui"
   },
   "dependencies": {
