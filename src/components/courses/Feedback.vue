@@ -146,8 +146,12 @@ export default {
       // show or hide save button
       this.showSave = this.feedbackContent() != this.content;
     },
+    removeNonBreakingSpace(text) {
+      return text.replace(/&nbsp;/g, "");
+    },
     async addFeedback() {
-      const content = this.feedbackContent();
+      let content = this.removeNonBreakingSpace(this.feedbackContent());
+
       if (content == "") {
         console.log("reka genda");
         return;
