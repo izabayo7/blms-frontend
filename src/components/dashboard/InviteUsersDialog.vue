@@ -150,13 +150,22 @@ export default {
     updateCurrentEmailValue(email) {
       this.email = email;
     },
-    sendInvitations() {
-      console.log({
-        college: this.$store.state.user.user.college,
-        category: this.selected_user_category,
-        faculty_college_year: this.selected_user_group,
-        emails: this.emails,
-      });
+    async sendInvitations() {
+      if (!this.selected_user_group) {
+        console.log("user group is required");
+      } else if (!this.selected_user_group) {
+        console.log("user group is required");
+      } else if (!this.emails.length) {
+        console.log("you must atleast select one email");
+      } else {
+        const res = await Apis.create("user_invitations", {
+          college: this.$store.state.user.user.college,
+          category: this.selected_user_category,
+          faculty_college_year: this.selected_user_group,
+          emails: this.emails,
+        });
+        console.log(res);
+      }
     },
   },
   async beforeMount() {
