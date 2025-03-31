@@ -28,7 +28,7 @@
           <span
             class="normal--text"
             >{{
-              `${item.total_marks} / ${quiz_submission.total_marks}`
+              `${item.marked ? item.total_marks : ''} / ${quiz_submission.total_marks}`
             }}</span
           >
         </template>
