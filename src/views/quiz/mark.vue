@@ -265,6 +265,10 @@
               >
               <v-col class="col-12">
                 <feedback
+                  v-if="
+                    attempt.answers[i].feedback.length ||
+                    userCategory === 'INSTRUCTOR'
+                  "
                   :content="
                     attempt.answers[i].feedback.length
                       ? attempt.answers[i].feedback[0].content
