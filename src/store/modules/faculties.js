@@ -25,10 +25,10 @@ export default {
     },
     actions: {
         //get facultyCollegeYears from backend
-        getFacultyCollegeYears({ state }, collegeId) {
+        getFacultyCollegeYears({ state }, user) {
             // when faculty college years not loaded fetch them
             if (!state.facultyCollegeYears.loaded) {
-                apis.get(`faculty_college_year/college/${collegeId}`).then(d => {
+                apis.get(`faculty_college_year/user/${user}`).then(d => {
                     d.data = d.data.data
                     for (const i in d.data) {
                         d.data[i].name = `${d.data[i].faculty_college.faculty.name} year ${d.data[i].college_year.digit}`

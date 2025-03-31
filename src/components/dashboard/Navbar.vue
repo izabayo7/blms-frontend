@@ -8,7 +8,7 @@
         rounded
         dark
         class="add_course mt-3 white--text hidden-md-and-down"
-        to="/courses/new-course"
+        to="/courses/new"
       >
         <v-icon>mdi-plus</v-icon>Create new course
       </v-btn>
