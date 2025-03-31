@@ -76,6 +76,23 @@ const routes = [
         }
     },
     {
+        path: '/schools/:shortName',
+        component: () =>
+            import( /* webpackChunkName: "college-profile" */ '@/views/pages/college_profile/index'),
+        meta: {
+            allowAnonymous: true
+        }
+    },
+    {
+        // register and pay
+        path: '/schools/:shortName/:courseId',
+        component: () =>
+            import( /* webpackChunkName: "college-profile-course" */ '@/views/pages/college_profile/course'),
+        meta: {
+            allowAnonymous: true
+        }
+    },
+    {
         /**
          * DASHBOARD Parent
          *  This was done so that we can use global event listeners to make the whole

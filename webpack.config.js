@@ -1,6 +1,11 @@
 // webpack.config.js
 
 module.exports = {
+    mode: 'production',
+    optimization: {
+        nodeEnv: 'production',
+        minimize: true
+    },
     module: {
         rules: [
             {
