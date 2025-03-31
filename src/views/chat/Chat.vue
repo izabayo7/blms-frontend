@@ -96,9 +96,7 @@ export default {
 <style lang="scss" scoped>
 .my-chat {
   background-color: $main;
-  margin-top: 1rem;
-  //remove 1rem from the height since we have applied margin of 1rem
-  height: calc(100% - 1rem);
+  height: 100%;
   display: flex;
   flex-direction: column;
   flex-wrap: wrap;
