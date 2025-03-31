@@ -255,7 +255,9 @@
               <v-col class="col-12 col-md-6 pl-md-0">
                 <div class="cool-box marks grey-color mt-n1">
                   <input
-                    class="marks-input"
+                    :class="`marks-input ${
+                      question.type === 'open_ended' ? 'editable' : ''
+                    }`"
                     v-model="attempt.answers[i].marks"
                     :readonly="mode === 'view'"
                     type="text"
@@ -526,6 +528,10 @@ export default {
 }
 .marks-input {
   width: 50px;
+  &.editable {
+    border-bottom: 1px solid #d2d2d2;
+    text-align: center;
+  }
 }
 .marks-input:focus {
   outline: none;
