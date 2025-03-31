@@ -214,14 +214,17 @@ const routes = [
                         children: [
                             {
                                 path: '/',
+                                name: "personalSettings",
                                 component: () => import( /* webpackChunkName: "settings" */ '@/views/settings/personal'),
                             },
                             {
                                 path: '/settings/institution',
+                                name: "institutionSettings",
                                 component: () => import( /* webpackChunkName: "settings" */ '@/views/settings/institution'),
                             },
                             {
                                 path: '/settings/payments',
+                                name: "paymentSettings",
                                 component: () => import( /* webpackChunkName: "settings" */ '@/views/settings/payments'),
                             },
                         ]

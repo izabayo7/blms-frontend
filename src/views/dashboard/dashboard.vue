@@ -32,7 +32,10 @@
       </main>
       <div class="main-content customScroll">
         <notification/>
-        <router-view/>
+        <router-view v-if="showPage"/>
+        <div class="d-flex justify-center align-center" v-else>
+          ayiiiiiiiiiiiiii weeeeeeeeeeeeeeeeeeee
+        </div>
       </div>
     </main>
   </section>
@@ -55,11 +58,21 @@ export default {
     Notification: () => import("@/components/shared/Notification"),
   },
   mixins: [userSimpleCard],
+  created() {
+    console.log(this.$route)
+  },
   computed: {
     ...mapState("sidebar_navbar", {state: "showChatMobileNavbar"}),
     ...mapGetters('users', ['userByUsername', 'userByUsernameLoading']),
+    ...mapGetters('user', ['disableFunctionalities']),
     isMobile() {
       return this.$vuetify.breakpoint.width < 960
+    },
+    showPage() {
+      if (!this.disableFunctionalities)
+        return true
+      else
+        return this.$route.name ? this.$route.name.includes('chating') || this.$route.name.includes('Settings') : false
     }
   },
   data() {
@@ -103,9 +116,10 @@ export default {
       background: $tertiary;
     }
   }
-  &.hfull{
-    .contents{
-      .main-content{
+
+  &.hfull {
+    .contents {
+      .main-content {
         height: 100vh;
       }
     }
