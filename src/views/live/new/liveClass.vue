@@ -186,6 +186,7 @@ export default {
       ws: null,
       participants: [],
       me: null,
+      id: "",
       comment: "",
       noVideo: false,
       isPresenting: false,
@@ -527,6 +528,10 @@ export default {
       console.info('Received message: ', message);
 
       switch (parsedMessage.id) {
+        case 'userId':
+          self.id = parsedMessage.data;
+          self.participationInfo.name = self.id;
+          break;
         case 'existingParticipants':
           this.onExistingParticipants(parsedMessage);
           break;
@@ -551,7 +556,9 @@ export default {
           console.error('Unrecognized message', parsedMessage);
       }
     }
-
+    this.ws.onclose = ()=>{
+      console.log("\n\n\n\nclosed\n\n\n\n")
+    }
 
   },
   // watch:{
