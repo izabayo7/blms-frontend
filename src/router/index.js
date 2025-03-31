@@ -78,6 +78,17 @@ const routes = [
                             { path: '/messages/:username', component: () => import('@/views/chat/Chat.vue') }
                         ]
                     },
+                    //for users
+                    {
+                        path: '/users',
+                        name:"users",
+                        component: () => import('@/views/users/index.vue'),
+                    },
+                    {
+                        path: '/users/students',
+                        name:"users",
+                        component: () => import('@/views/users/students.vue'),
+                    },
                     // for courses
                     {
                         path: '/courses',
@@ -194,7 +205,7 @@ const routes = [
                     // administration functionalities
                     {
                         path: '/administration',
-                        name: 'Users',
+                        name: 'Administration',
                         component: () =>
                             import('@/views/administration/admin')
                     },
@@ -236,17 +247,17 @@ const routes = [
                 path: '/administration/register/users',
                 name: 'Register Users',
                 component: () =>
-                    import('@/views/administration/users')
+                    import('@/views/administration/users/registration')
             }, {
                 path: '/administration/register/users/student',
                 name: 'Register Student',
                 component: () =>
-                    import('@/views/administration/users/register')
+                    import('@/views/administration/users/registration/register')
             }, {
                 path: '/administration/register/users/instructor',
                 name: 'Register Instructor',
                 component: () =>
-                    import('@/views/administration/users/register')
+                    import('@/views/administration/users/registration/register')
             }, {
                 path: '/administration/register/users/admin',
                 name: 'Register Admin',
