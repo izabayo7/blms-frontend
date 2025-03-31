@@ -173,7 +173,7 @@ export default {
                     commit('modal/update_progress', 0, { root: true })
                     commit('modal/update_message', `uploading attachments`, { root: true })
                     const formData = new FormData()
-                    for (const i in this.attachments) {
+                    for (const i in attachments) {
                         formData.append("files[" + i + "]", attachments[i]);
                     }
                     apis.create(`file/addAttachments/${state.selectedChapter}`, formData, {
@@ -226,23 +226,22 @@ export default {
         },
         //delete an attachment
         deleteAttachment({ state }, attachmentId) {
-            console.log(attachmentId, state)
-            // apis.delete('file/removeAttachment', attachmentId).then(() => {
-            //     for (const i in state.courses.data) {
-            //         if (state.courses.data[i]._id == state.selectedCourse) {
-            //             for (const k in state.courses.data[i].chapters) {
-            //                 if (state.courses.data[i].chapters[k]._id == state.selectedChapter) {
-            //                     for (const l in state.courses.data[i].chapters[k].attachments) {
-            //                         if (state.courses..data[i].chapters[k].attachments[l]._id == attachmentId) {
-            //                             state.courses..data[i].chapters[k].attachments.splice(l, 1)
-            //                             return
-            //                         }
-            //                     }
-            //                 }
-            //             }
-            //         }
-            //     }
-            // })
+            apis.delete('file/removeAttachment', attachmentId).then(() => {
+                for (const i in state.courses.data) {
+                    if (state.courses.data[i]._id == state.selectedCourse) {
+                        for (const k in state.courses.data[i].chapters) {
+                            if (state.courses.data[i].chapters[k]._id == state.selectedChapter) {
+                                for (const l in state.courses.data[i].chapters[k].attachments) {
+                                    if (state.courses.data[i].chapters[k].attachments[l]._id == attachmentId) {
+                                        state.courses.data[i].chapters[k].attachments.splice(l, 1)
+                                        return
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            })
         },
         //find a course by name
         findCourseByName({ commit, dispatch }, { userCategory, userId, courseName }) {
