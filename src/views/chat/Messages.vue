@@ -71,7 +71,7 @@
                     class="user d-flex align-center"
                     v-for="(user, i) in foundUsers"
                     :key="i"
-                    @click="start_conversation(foundUsers[i].user_name);this.searchKey = ''"
+                    @click="start_conversation(foundUsers[i].user_name);searchKey = ''"
                 >
                   <div class="d-flex justify-start">
                     <img
