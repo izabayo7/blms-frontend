@@ -106,7 +106,7 @@ button.back {
       font-family: Inter;
       font-style: normal;
       font-weight: normal;
-      font-size: 15px;
+      font-size: 18px;
       line-height: 135.02%;
       color: #343434;
       padding: 16px 26px;
@@ -459,7 +459,11 @@ padding: 58px 62px 30px;
   }
   .instructor_preview {
     padding: 0 0 60px;
-
+    .tabs-container{
+      .item{
+        font-size: 15px;
+      }
+    }
     .tabs-body {
 
       padding: 0;
