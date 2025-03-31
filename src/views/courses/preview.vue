@@ -378,6 +378,7 @@
                 </div>
                 <div class="text">
                   {{ course.faculty_college_year.faculty_college.faculty.name }}
+                  <verified-badge />
                 </div>
               </div>
               <div class="info-col col-sm-6 col-md-~4 col-lg-4 col-xl-4">
@@ -734,6 +735,7 @@ export default {
   components: {
     preview: () => import("@/components/courses/Preview"),
     back: () => import("@/components/shared/back-button"),
+    verifiedBadge: () => import("@/components/reusable/ui/VerifiedBadge"),
   },
   computed: {
     // get the userCategory
