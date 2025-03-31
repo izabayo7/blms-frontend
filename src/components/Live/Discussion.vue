@@ -81,7 +81,7 @@
                   />
                 </svg>
               </div>
-              <div class="text"><span>reply</span></div>
+              <div class="text"><span>Reply</span></div>
             </div>
           </div>
           <div class="reply-comment mt-3" v-else>

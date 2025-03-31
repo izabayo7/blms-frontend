@@ -122,7 +122,7 @@ export default {
           this.foundUsers.push({
             names: `${results[i].sur_name} ${results[i].other_names}`,
             pic: results[i].profile,
-            category: results[i].category.name,
+            category: results[i].category,
             user_name: results[i].user_name,
             selected: false,
           });
