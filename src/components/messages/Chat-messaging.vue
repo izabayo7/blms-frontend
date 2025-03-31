@@ -30,11 +30,14 @@
             {{ msgs.from | computeText }}
           </v-avatar>
         </div>
-        <!--        list of messages sent or received-->
-        <div class="msgs">
-          <div class="msg" v-for="(msg, i) in msgs.messages" :key="i">
-            <!--            //for better html elements readability-->
-            <div :inner-html.prop="msg.content | urlify" />
+        <div>
+          <div v-if="!msgGoing(msgs.from) && currentDisplayedUser.is_group" class="sender_name">{{msgs.from}}</div>
+          <!--        list of messages sent or received-->
+          <div class="msgs">
+            <div class="msg" v-for="(msg, i) in msgs.messages" :key="i">
+              <!--            //for better html elements readability-->
+              <div :inner-html.prop="msg.content | urlify" />
+            </div>
           </div>
         </div>
       </div>
@@ -88,8 +91,8 @@ export default {
       //send event that all messages read
       if (scrollTop === scrollHeight) {
         //emit on server that we read all messages
-        this.socket.emit("all_messages_read", {
-          sender: this.currentDisplayedUser.id,
+        this.socket.emit("message/all_messages_read", {
+          conversation_id: this.currentDisplayedUser.id,
         });
 
         //mark messages in front end that we read them
@@ -127,7 +130,7 @@ export default {
     scrollableDiv.addEventListener("scroll", this.readMessages);
 
     //when message came stop typing
-    this.socket.on("message/new", (message) => {
+    this.socket.on("message/new", () => {
       this.typing = false;
     });
 
@@ -234,8 +237,16 @@ export default {
       display: flex;
       flex-direction: column;
 
+      .sender_name {
+        font-size: 13px;
+        color: #00000066;
+        padding-left: 0.8rem;
+      }
+
       //css for the image of the sender
       .picture {
+        display: flex;
+        place-items: flex-end;
         img {
           width: 30px;
           height: 30px;
