@@ -199,6 +199,7 @@ export default {
                             commit('quiz/update_quiz_target', { id: state.courses.data[courseIndex].chapters[chapterIndex].quiz[0]._id, target: undefined }, { root: true })
                             state.courses.data[courseIndex].chapters[chapterIndex].quiz.splice(0, 1)
                         }
+                        state.courses.data[courseIndex].assignmentsLength++;
                         state.courses.data[courseIndex].chapters[chapterIndex].quiz.push(quizResponse.data.data)
                         commit('quiz/update_quiz_target', { id: quizId, target: quizCopy.target }, { root: true })
                     })
@@ -216,7 +217,7 @@ export default {
                     quizCopy.updatedAt = undefined
                     quizCopy.usage = undefined
                     quizCopy.course = undefined
-
+                    state.courses.data[courseIndex].assignmentsLength--;
                     apis.update('quiz', quizId, quizCopy).then(() => {
                         commit('quiz/update_quiz_target', { id: state.courses.data[courseIndex].chapters[chapterIndex].quiz[0]._id, target: undefined }, { root: true })
                         state.courses.data[courseIndex].chapters[chapterIndex].quiz.splice(0, 1)
@@ -414,7 +415,7 @@ export default {
                         id: state.selectedChapter,
                         type: 'chapter'
                     }
-
+                    state.courses.data[courseIndex].assignmentsLength++;
                     apis.update('quiz', `${quizId}/target`, target).then((quizResponse) => {
                         if (state.courses.data[courseIndex].chapters[chapterIndex].quiz.length > 0) {
                             commit('quiz/update_quiz_target', { id: state.courses.data[courseIndex].chapters[chapterIndex].quiz[0]._id, target: undefined }, { root: true })

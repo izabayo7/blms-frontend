@@ -117,6 +117,7 @@ export default {
                         return d.data
 
                     if (state.quiz_submission.loaded) {
+                        // const found = state.quiz_submission.data.filter(e=>e._id == d._id)
                         state.quiz_submission.data.push(d.data)
                     } else {
                         state.quiz_submission.data = [d.data]
