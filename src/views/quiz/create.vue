@@ -48,7 +48,7 @@
         />
       </div>
       <div v-if="isExam" class="input-group assesment_type">
-        <label for="assessment-time">Expiration date & time</label>
+        <label for="assessment-time">Starting date & time</label>
         <input v-model="starting_time" id="assessment-time" type="datetime-local">
       </div>
       <div class="flex d-block d-md-flex">
