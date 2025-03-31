@@ -307,11 +307,11 @@ export default {
   watch: {
     remaining_time() {
       if (this.remaining_time > 0) {
-        // setTimeout(() => {
-        //   this.remaining_time -= 1;
-        // }, 1000);
-        // if (this.remaining_time === this.exam.duration - 1)
-        //   this.initialiseQuiz();
+        setTimeout(() => {
+          this.remaining_time -= 1;
+        }, 1000);
+        if (this.remaining_time === this.exam.duration - 1)
+          this.initialiseQuiz();
 
         this.attempt.used_time = this.exam.duration - this.remaining_time;
       } else if (!this.done) {
@@ -671,6 +671,12 @@ export default {
         this.setUp()
 
       this.exam = exam
+      let date =  new Date(exam.starting_time)
+      const diff =  (new Date() - date);
+      if(diff > 0){
+        exam.duration -= (diff / 1000)
+      }
+
       this.remaining_time = exam.duration;
       this.attempt = {
         exam: exam._id,

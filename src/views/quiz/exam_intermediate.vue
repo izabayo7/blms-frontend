@@ -68,7 +68,8 @@ export default {
     ...mapActions("quiz", ["getExam"]),
   },
   async created() {
-    this.exam = await this.getExam({id: this.$route.query.exam})
+    const {exam} = await this.getExam({id: this.$route.query.exam})
+    this.exam = exam
   }
 };
 </script>

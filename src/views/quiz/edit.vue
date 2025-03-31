@@ -640,18 +640,19 @@ export default {
     if (this.isExam) {
       this.getExam({
         id: this.$route.params.id,
-      }).then((quiz) => {
-        let duration = new Date(quiz.duration * 1000).toISOString().substr(11, 8);
+      }).then(({exam}) => {
+        console.log(exam)
+        let duration = new Date(exam.duration * 1000).toISOString().substr(11, 8);
         duration = duration.split(":");
         this.hours = duration[0]
         this.minutes = duration[1]
-        this.passMarks = quiz.passMarks;
-        this.instructions = quiz.instructions;
-        this.title = quiz.name;
-        this.questions = this.formatQuestionTypes(quiz.questions);
-        this.type = quiz.type
-        this.selected_course = quiz.course.name
-        this.starting_time = this.findLocalTime(quiz.starting_time)
+        this.passMarks = exam.passMarks;
+        this.instructions = exam.instructions;
+        this.title = exam.name;
+        this.questions = this.formatQuestionTypes(exam.questions);
+        this.type = exam.type
+        this.selected_course = exam.course.name
+        this.starting_time = this.findLocalTime(exam.starting_time)
       });
       this.getCourses(!this.loaded)
     } else
