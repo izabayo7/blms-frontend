@@ -80,6 +80,7 @@ export default {
         //get courses from backend
         getCourses({state}) {
             state.courses.data = []
+            state.courses.loaded = false
             // if courses not loaded fetch them
             // if (!state.courses.loaded) {
                 apis.get(`course/user`).then(d => {
