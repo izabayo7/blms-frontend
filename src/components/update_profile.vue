@@ -79,8 +79,7 @@
           <input v-model="user.email" type="text" class="course_input" />
           <p class="lable font-weight-medium mt-5">Phone number</p>
           <input v-model="user.phone" type="text" class="course_input" />
-          <p class="lable font-weight-medium mt-5">User name</p>
-          <input v-model="user.user_name" type="text" class="course_input" />
+ 
         </div>
         <div v-if="user.category.name == 'STUDENT'" class="title text-h5 mt-5">
           Enrolled courses

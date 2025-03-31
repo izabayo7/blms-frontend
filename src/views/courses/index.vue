@@ -109,13 +109,15 @@
       class="courses-home"
       fluid
     >
-      <v-row>
+      <v-row> 
         <v-col cols="12" md="6" class="courses-header mt-5">
           <h2>
             Hey Mr{{
-              `${$store.state.user.user.gender === "Male" ? "" : "s"} ${
-                $store.state.user.user.sur_name
-              }`
+              `${
+                $store.state.user.user.gender.toLowerCase() === "male"
+                  ? ""
+                  : "s"
+              } ${$store.state.user.user.sur_name}`
             }},
           </h2>
           <h3>Ready to start your courses?</h3>
