@@ -10,7 +10,7 @@ const chatMixins = {
     }
 }
 
-const cropper = {
+const cropperMixin = {
     methods:{
         readURL(input) {
             const self = this;
@@ -27,15 +27,20 @@ const cropper = {
             }
         },
         imageCropped(img) {
+            //if we have preview add it
             const image = document.getElementById("preview");
             image.src = img;
+
             this.profile = img;
         },
         handleFileUpload(e) {
+            //make sure that target is cleaned
+            e.target.value = ''
+
             this.readURL(e);
             this.profile = this.$refs.file.files[0];
         }
     }
 }
 
-export {cropper,chatMixins}
+export {cropperMixin,chatMixins}
