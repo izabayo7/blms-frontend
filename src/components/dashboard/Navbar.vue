@@ -1,6 +1,15 @@
 <template>
-  <div class="my-navbar row">
-    <div class="hidden-md-and-up">Small</div>
+  <div class="my-navbar">
+    <div class="hidden-md-and-up row">
+      <div class="col-8 logo_container">
+        <img :src="college_logo" class="logo my-auto" />
+      </div>
+      <div class="col-4 vertically--centered">
+        <div class="profile mt-n4">
+          <profile />
+        </div>
+      </div>
+    </div>
     <div class="hidden-sm-and-down row">
       <div
         :class="`col-6 py-0 col-md-${
@@ -152,6 +161,11 @@ export default {
       height: 30px;
       fill: $primary;
     }
+  }
+  .logo_container {
+    display: flex;
+    justify-content: left;
+    align-items: left;
   }
 }
 </style>
