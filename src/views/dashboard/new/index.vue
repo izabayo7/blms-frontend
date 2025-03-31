@@ -227,12 +227,13 @@
                   <div class="inner">Staff</div>
                 </div>
               </div>
-              <!-- <chart
+              <chart
                 type="donut"
+                class="my-chart"
                 width="380"
                 :options="chartOptions"
                 :series="series"
-              ></chart> -->
+              ></chart>
             </div>
           </v-col>
           <v-col class="col-6">
@@ -275,7 +276,7 @@
 
 <script>
 import { mapActions } from "vuex";
-// import Apexcharts from "vue-apexcharts";
+import Apexcharts from "vue-apexcharts";
 export default {
   name: "ApplicationDashboard",
   data: () => ({
@@ -311,7 +312,7 @@ export default {
   }),
   components: {
     InviteUsersDialog: () => import("@/components/dashboard/InviteUsersDialog"),
-    // chart: Apexcharts,
+    chart: Apexcharts,
   },
   methods: {
     ...mapActions("modal", ["set_modal"]),
