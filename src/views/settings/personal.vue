@@ -64,6 +64,7 @@
           <div class="col-12 col-md-3">
             <div class="label">Profile picture</div>
           </div>
+          <cropper :img="img" @change="imageCropped" @save="saveChanges(2)"/>
           <div class="col-12 col-md-5 text-center">
             <input
                 ref="file"
@@ -73,29 +74,35 @@
                 hidden
                 @change="handleFileUpload"
             />
-            <img @click="pickfile()" class="college_logo cursor-pointer" :src="state.logo" alt="">
-            <div v-if="editStatus[2]" class="current_value lable"><span v-if="state.logo">Click on image to update the logo </span></div>
-            <div v-else class="edit">
-              <div class="actions">
-                <button class="save" @click="saveChanges(2)">Save</button>
-                <button class="cancel" @click="toogleEdit(2);profile=undefined;document.getElementById('picture').value = ''">Cancel</button>
-              </div>
+            <v-avatar
+                v-if="user.profile"
+                width="auto"
+                :height="largeDevices.includes($vuetify.breakpoint.name) ? 150 : 120"
+                @click="pickfile"
+                class="mt-4 d-block cursor-pointer"
+                id="user_pic"
+            >
+              <img :src="user.profile + `?width=${largeDevices.includes($vuetify.breakpoint.name) ? 150 : 120}`"
+                   alt="avatar"/>
+            </v-avatar>
+            <div v-if="editStatus[2]" class="current_value lable"><span v-if="user.profile">Click on image to update the logo </span>
             </div>
           </div>
           <div class="col-12 col-md-4">
             <div class="action">
-              <button     v-if="state.logo"          @click="
+              <button v-if="user.profile" @click="
                 set_modal({
                   template: 'action_confirmation',
                   method: {
-                    action: 'sidebar_navbar/removeLogo',
+                    action: 'user/removeProfilePicture',
                   },
-                  title: 'Remove college logo',
+                  title: 'Remove profile picture',
                   message:
-                    'Are you sure you want to delete the college logo?',
+                    'Are you sure you want to remove your profile picture?',
                 })
-              " class="delete">Delete logo</button>
-              <button v-else @click="pickfile" class="upgrade">Upload logo</button>
+              " class="delete">Delete profile
+              </button>
+              <button v-else @click="pickfile" class="upgrade">Upload profile</button>
             </div>
           </div>
           <div class="col-12 col-md-3">
@@ -170,7 +177,8 @@
                   title: 'Delege account',
                   message:
                     'Are you sure you want to delete this account?',
-                })">Delete account</button>
+                })">Delete account
+              </button>
             </div>
           </div>
         </div>
@@ -184,14 +192,19 @@
 import Apis from "@/services/apis";
 import {mapActions, mapMutations, mapState} from "vuex";
 import jwt from "jsonwebtoken";
+import {cropperMixin} from "../../services/mixins";
 
 export default {
   name: "Personal Settings",
   data: () => ({
-    editStatus: [true, true, true, true, true,true],
+    editStatus: [true, true, true, true, true, true],
     img: "",
-    logo: undefined,
+    largeDevices: ['md', 'lg', 'xl'],
+    profile: undefined,
   }),
+  components: {
+    cropper: () => import("@/components/reusable/ui/ImageCropper"),
+  },
   computed: {
     ...mapState("sidebar_navbar", {state: "college"}),
     user() {
@@ -199,6 +212,7 @@ export default {
       return JSON.parse(user);
     },
   },
+  mixins: [cropperMixin],
   methods: {
     ...mapActions("modal", ["set_modal"]),
     pickfile() {
@@ -210,10 +224,6 @@ export default {
     toogleEdit(index) {
       this.$set(this.editStatus, index, !this.editStatus[index])
     },
-    handleFileUpload() {
-      this.logo = document.getElementById("picture").files[0]
-      this.toogleEdit(1)
-    },
     async callback(res, index) {
       if (res.data.status !== 200)
         this.$store.dispatch("app_notification/SET_NOTIFICATION", {
@@ -224,7 +234,8 @@ export default {
       else {
         // set the token in the session
         this.$session.set("jwt", res.data.data);
-        this.toogleEdit(index)
+        if (index !== 2)
+          this.toogleEdit(index)
         const user = await jwt.decode(this.$session.get("jwt"));
         this.$store.dispatch("user/setUser", user);
       }
@@ -279,16 +290,15 @@ export default {
           this.callback(res, index)
         })
       } else {
-        obj = new FormData()
-        obj.append('file', this.logo)
+        obj = {profile: this.profile}
 
         this.$store.dispatch("modal/set_modal", {
           template: "display_information",
-          title: "Updating Logo",
-          message: `uploading logo`,
+          title: "Updating profile",
+          message: `uploading profile`,
         });
 
-        Apis.update('college', this.state._id + '/logo', obj,
+        Apis.update('user', 'profile', obj,
             {
               onUploadProgress: (progressEvent) => {
                 this.$store.dispatch(
