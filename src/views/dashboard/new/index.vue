@@ -115,7 +115,7 @@
                     />
                   </svg>
 
-                  <div class="total_number">4</div>
+                  <div class="total_number">{{total_faculties}}</div>
                   <div class="description">number of faculties</div>
                 </div>
               </div>
@@ -145,7 +145,7 @@
                       fill="#FFAE34"
                     />
                   </svg>
-                  <div class="total_number">4</div>
+                  <div class="total_number">{{total_student_groups}}</div>
                   <div class="description">Student groups</div>
                 </div>
               </div>
@@ -164,7 +164,7 @@
                     />
                   </svg>
 
-                  <div class="total_number">4</div>
+                  <div class="total_number">{{total_courses}}</div>
                   <div class="description">number of courses</div>
                 </div>
               </div>
