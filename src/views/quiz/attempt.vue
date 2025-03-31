@@ -18,7 +18,7 @@
             </p>
             <div v-if="question.type === 'file_upload'" class="file-container d-flex">
               <div class="col-4 pa-0">
-                <div class="indicator mb-2 d-none">
+                <div v-if="filesToUpload[i].file == ''" class="indicator mb-2">
                   <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path
                         d="M9 0C4.03763 0 0 4.03763 0 9C0 13.9624 4.03763 18 9 18C13.9624 18 18 13.9624 18 9C18 4.03763 13.9624 0 9 0ZM9 16.875C4.6575 16.875 1.125 13.3425 1.125 9C1.125 4.6575 4.6575 1.125 9 1.125C13.3425 1.125 16.875 4.6575 16.875 9C16.875 13.3425 13.3425 16.875 9 16.875Z"
@@ -29,7 +29,7 @@
                   <span class="ml-1">no file chosen</span>
                 </div>
                 <div>
-                  <button class="pick-file file-picked" @click="pickfile">
+                  <button class="pick-file file-picked" @click="pickfile(i)">
                     Choose file
                   </button>
                 </div>
@@ -43,7 +43,7 @@
                   accepted
                 </div>
               </div>
-              <div class="col-8 d-flex py-0">
+              <div v-if="filesToUpload[i].file == ''" class="col-8 d-flex py-0">
                 <div class="justify-center align-center d-none">
                   <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <g clip-path="url(#clip0)">
@@ -77,9 +77,11 @@
                   </svg>
 
                 </div>
-                <div class="file-name ">myessay.pdf</div>
-                <div class="file-size mx-auto mx-md-0">126kb</div>
-                <div class="file-type mx-auto mx-md-0">pdf</div>
+              </div>
+              <div v-else class="col-8 d-flex py-0">
+                <div class="file-name ">{{ filesToUpload[i].file.name }}</div>
+                <div class="file-size mx-auto">{{ filesToUpload[i].file.size }}</div>
+                <div class="file-type mx-auto">{{ filesToUpload[i].file.name.split('.')[filesToUpload[i].file.name.split('.').length - 1] }}</div>
                 <div class="save-status hidden-sm-and-down d-md-flex justify-sm-center align-center">
                   <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path
@@ -95,6 +97,7 @@
                 type="file"
                 :id="`file${i}`"
                 hidden
+                :accept="findAcceptedFiles(i)"
                 @change="handleFileUpload(i)"
             />
 
@@ -326,6 +329,32 @@ export default {
     },
     pickfile(index) {
       document.getElementById(`file${index}`).click();
+    },
+    findAcceptedFiles(index){
+        let allowed_types = []
+      if(this.selected_quiz.questions[index].allowed_files.includes('image'))
+        allowed_types.push('image/*')
+
+      if(this.selected_quiz.questions[index].allowed_files.includes('Pdf'))
+        allowed_types.push('application/pdf')
+
+      if(this.selected_quiz.questions[index].allowed_files.includes('Word document'))
+        allowed_types.push('application/msword')
+
+      if(this.selected_quiz.questions[index].allowed_files.includes('Powerpoint file'))
+        allowed_types.push('application/vnd.ms-powerpoint')
+
+      if(this.selected_quiz.questions[index].allowed_files.includes('Zip'))
+        allowed_types.push('application/zip,application/x-zip,application/x-zip-compressed,application/octet-stream')
+
+      if(this.selected_quiz.questions[index].allowed_files.includes('image'))
+        allowed_types.push('.txt')
+
+      if(this.selected_quiz.questions[index].allowed_files.includes('Video'))
+        allowed_types.push('video/*')
+
+      return allowed_types.join(',')
+
     },
     handleFileUpload(index) {
       this.filesToUpload[index].file = document.getElementById(
@@ -616,7 +645,9 @@ export default {
 
   color: #289448;
 }
-
+.file-container{
+  width: 100%;
+}
 /* Portrait phones and smaller */
 @media (max-width: 700px) {
   .pick-file {
