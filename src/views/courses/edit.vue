@@ -25,16 +25,9 @@
       <v-col v-if="type == 'details'" class="col-12">
         <v-form>
           <v-row>
-            <v-col class="col-12 col-md-8">
+            <v-col class="col-12 col-md-6">
               <h3>Course Name</h3>
-              <v-text-field
-                v-model="course.name"
-                required
-                :rules="nameRules"
-                placeholder="Type course name..."
-                outlined
-                class="course-input"
-              ></v-text-field>
+              <input v-model="course.name" type="text" class="course_input" placeholder="Type course name..." />
               <h3>Student Group</h3>
               <v-select
                 v-model="selectedFacultyCollegeYearName"
@@ -52,7 +45,7 @@
                 rows="8"
               ></textarea>
             </v-col>
-            <v-col class="col-12 col-md-4">
+            <v-col class="col-12 col-md-6" align="center">
               <v-avatar
                 v-if="course.cover_picture"
                 size="245"
@@ -62,7 +55,7 @@
                     : 'course-image white--text bg-color-one text-h2'
                 "
               >
-                <v-img :src="course.cover_picture" :lazy-src="course.cover_picture" alt="avatar">
+                <v-img :src="`${course.cover_picture}?height=300&width=300&token=${$session.get('jwt')}`" :lazy-src="`${course.cover_picture}?height=300&width=300&token=${$session.get('jwt')}`" alt="avatar">
                   <template v-slot:placeholder>
                     <v-row
                       class="fill-height ma-0"
@@ -114,7 +107,7 @@
                 rounded
                 text
                 class="new-active-btn mb-6"
-                @click="saveCourseChanges"
+                @click="validate"
                 >update Course</v-btn
               >
               <v-btn
@@ -150,6 +143,7 @@ export default {
       (v) => v.length > 2 || "Name is too short",
     ],
     simpleRules: [(v) => !!v || "This field is required"],
+    error: "",
   }),
   computed: {
     // get the current course
@@ -172,12 +166,27 @@ export default {
     handleFileUpload() {
       this.coverPicture = this.$refs.file.files[0];
     },
-
+    validate() {
+      if (this.course.name === "") {
+        return this.error = 'name is required'
+      } else if (this.course.name.length < 3) {
+        return this.error = 'name is too short'
+      }
+      if (this.selectedFacultyCollegeYearName === "") {
+        return this.error = 'student_group is required'
+      }
+      if (this.course.description === "") {
+        return this.error = 'description is required'
+      } else if (this.course.description.length < 10) {
+        return this.error = 'description is too short'
+      }
+      this.saveCourseChanges()
+    },
     saveCourseChanges() {
       this.updateCourse({
         course: {
           name: this.course.name,
-          user: this.$store.state.user.user._id,
+          user: this.$store.state.user.user.user_name,
           description: this.course.description,
           faculty_college_year: this.selectedFacultyCollegeYearCode,
         },
@@ -190,9 +199,9 @@ export default {
     },
   },
   created() {
-    this.getFacultyCollegeYears(this.$store.state.user.user.college);
+    this.getFacultyCollegeYears(this.$store.state.user.user.user_name);
     this.findCourseByName({ 
-      userId: this.$store.state.user.user._id,
+      user_name: this.$store.state.user.user.user_name,
       courseName: this.$route.params.name,
     }).then((course) => {
       this.selectedFacultyCollegeYearName = `${course.faculty_college_year.faculty_college.faculty.name} ${course.faculty_college_year.college_year.digit}`;

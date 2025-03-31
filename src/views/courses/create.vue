@@ -27,13 +27,6 @@
                 <v-form>
                     <h3 class="input_lable">Course Name</h3>
                     <input v-model="course.name" type="text" class="course_input" placeholder="Type course name..." />
-<!--                    <v-text-field-->
-<!--                            v-model="course.name"-->
-<!--                            required-->
-<!--                            placeholder="Type course name..."-->
-<!--                            outlined-->
-<!--                            class="course-input"-->
-<!--                    ></v-text-field>-->
                     <h3 class="input_lable">Student Group</h3>
                     <v-select
                             v-model="selectedFacultyCollegeYearName"
