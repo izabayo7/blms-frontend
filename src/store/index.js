@@ -7,6 +7,7 @@ import quiz from "@/store/modules/quiz";
 import quiz_submission from "@/store/modules/quiz_submission";
 import chat from "@/store/modules/chat";
 import user from "@/store/modules/user";
+import notification from '@/store/modules/notification'
 
 Vue.use(Vuex)
 export default new Vuex.Store({
@@ -28,6 +29,7 @@ export default new Vuex.Store({
         quiz,
         quiz_submission,
         chat,
-        user
+        user,
+        notification
     }
 })

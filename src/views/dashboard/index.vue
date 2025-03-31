@@ -3,16 +3,19 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters, mapMutations } from "vuex";
 export default {
   name: "Index",
   computed: {
     ...mapGetters("chat", ["socket"]),
   },
+  methods: {
+    ...mapMutations("notification", ["addNotification"]),
+  },
   mounted() {
-    //  
-    this.socket.on("receive-message", (message) => {
-      console.log(message, "og kbx");
+    // listen to new notifications
+    this.socket.on("new-notification", ({ notification }) => {
+      this.addNotification(notification);
     });
   },
 };
