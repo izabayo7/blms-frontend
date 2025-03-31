@@ -253,14 +253,15 @@ export default {
                     rootGetters['chat/socket'].emit('marksReleased', {
                         route: `/assignments/${id}`,
                         user_group,
-                        content: `${status === 'RELEASE' ? 'released marks for' : 'published a new '} assignment ${name}`
+                        content: `${status === 'RELEASED' ? 'released marks for' : 'published a new '} assignment ${name}`
                     })
-                if (status === 'RELEASED')
+                if (status === 'RELEASED') {
                     dispatch("app_notification/SET_NOTIFICATION", {
                         message: "Marks released",
                         status: "success",
                         uptime: 5000,
                     }, {root: true});
+                }
                 for (const i in state.quiz.data) {
                     if (state.assignments.data[i]._id === id) {
                         state.assignments.data[i].status = status
