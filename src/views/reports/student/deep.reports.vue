@@ -1,7 +1,6 @@
 <template>
-  <v-app v-if="course" id="reports-page" class="instructor_reports">
-    <!-- <back class="mt-0 mb-6 ml-n6" to="/reports" /> -->
-    <div class="table-one">
+  <v-app id="reports-page" class="instructor_reports">
+    <div v-if="course" class="table-one">
       <navigation title="Submissions" class="mb-6" :links="navigation_links"/>
       <v-data-table
           :headers="submissionHeaders"
@@ -59,6 +58,10 @@
         </template>
       </v-data-table>
     </div>
+    <div v-else class="err text-center">
+      sorry the given submission id is invalid
+       <back class="mt-0 mb-6 mx-auto" target="/reports" />
+    </div>
   </v-app>
 </template>
 <script>
@@ -68,6 +71,7 @@ import colors from "@/assets/sass/imports/_colors.scss";
 export default {
   components: {
     navigation: () => import("@/components/shared/simple_navigation"),
+    back: () => import("@/components/shared/back-button"),
   },
   data: () => ({
     primary: colors.primary,
@@ -107,16 +111,19 @@ export default {
       ];
     },
     navigation_links() {
-      return [
+      let res = [
         {
           text: "reports",
           link: "/reports",
         },
-        {
+
+      ]
+      if (this.course)
+        res.push({
           text: this.course.submissions[0].quiz ? this.course.submissions[0].quiz.target.course.name : this.course.submissions[0].assignment.target.course.name,
           link: "/reports/" + this.$route.params.target,
-        },
-      ];
+        })
+      return res;
     },
     // get the userCategory
     userCategory() {

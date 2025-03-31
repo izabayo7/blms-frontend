@@ -3,9 +3,10 @@
 
     <div class="table-one">
       <div class="d-flex">
-        <h3 class="mr-4" :class="{active : currentView === 'quiz'}" @click="currentView = 'quiz'">Quiz Submissions({{quiz_submissions.length}})</h3>
+        <h3 class="mr-4" :class="{active : currentView === 'quiz'}" @click="currentView = 'quiz'">Quiz
+          Submissions({{ quiz_submissions.length }})</h3>
         <h3 :class="{active : currentView === 'assignments'}" @click="currentView = 'assignments'">Assignment
-          Submissions ({{assignment_submissions.length}})</h3>
+          Submissions ({{ assignment_submissions.length }})</h3>
       </div>
       <v-data-table
           :headers="submissionHeaders"
@@ -214,7 +215,7 @@ export default {
       if (value.attendedStudents)
         this.$router.push(`/courses/preview/${value.name}`)
       else
-        this.$router.push(`/reports/${value._id}`)
+        this.$router.push(`/reports/${value._id}${value.submissions[0].assignment ? '/assignments' : ''}`)
     },
   },
   created() {
