@@ -31,7 +31,7 @@
           </div>
         </li>
         <li
-          v-if="userCategory === 'ADMIN'"
+          v-if="userCategory === 'ADMIN' || userCategory === 'INSTRUCTOR'"
           @click="
             closeSidebar();
             routeTo('/users');
@@ -88,7 +88,7 @@
             class="link-name animate__animated animate__bounce"
             v-show="state"
           >
-            Users
+            {{ userCategory === 'ADMIN' ?  'Users' : 'Students' }}
           </div>
         </li>
         <li
