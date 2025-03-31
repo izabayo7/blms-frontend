@@ -7,7 +7,7 @@
             <img :src="image" alt="" class="logo mx-auto" />
             <div class="college-name">{{ institution }}.</div>
             <div class="welcome">Reset password</div>
-            <form @submit.prevent="login">
+            <form @submit.prevent="createPasswordReset">
               <div class="input-container">
                 <div class="input-icon">
                   <svg
@@ -36,14 +36,13 @@
                 <input
                   type="email"
                   placeholder="Email"
-                  v-model="email_user_name_or_phone"
+                  v-model="email"
                   autocomplete="false"
                   class="wide"
-                  @keyup="validate"
                   required
                 />
               </div>
-              <div :class="`message ${valid ? '' : 'red--text'}`">
+              <div :class="`message ${valid ? 'green--text' : 'red--text'}`">
                 {{ message }}
               </div>
               <button class="login-button">RESET PASSWORD</button>
@@ -68,62 +67,33 @@
 </template>
 <script>
 import Apis from "@/services/apis";
-import axios from "axios";
-import jwt from "jsonwebtoken";
 export default {
   name: "Login",
   data: () => ({
     valid: true,
-    userCategory: "",
-    email_user_name_or_phone: "",
-    showPassword: false,
-    password: "",
+    email: "",
     message: "",
     image: "https://apis.kurious.rw/assets/images/image%204.png",
     institution: "Kurious Learn",
   }),
   methods: {
-    async login() {
+    async createPasswordReset() {
       try {
-        const credentials = {
-          email_user_name_or_phone: this.email_user_name_or_phone,
-          password: this.password,
-        };
         // call the login api
-        let response = await Apis.login(credentials);
+        let response = await Apis.create("reset_password", {
+          email: this.email,
+        });
         console.log(response);
-        if (response.data.status != 200) {
-          this.message = response.data.message;
+        if (response.data.status != 201 ) {
           this.valid = false;
+          this.message = "Email is not registered";
         } else {
-          // set the token in axios headers
-          axios.defaults.headers.common.Authorization = `Bearer ${response.data.data}`;
-          // start the session
-          this.$session.start();
-          // set the token in the session
-          this.$session.set("jwt", response.data.data);
-
-          const user = await jwt.decode(this.$session.get("jwt"));
-          const category = user.category.name;
-          // keep the decoded user in vuex
-          this.$store.dispatch("user/setUser", user);
-          if (this.$route.query.redirect) {
-            this.$router.push(this.$route.query.redirect);
-          }
-          // student and teacher land to courses
-          else {
-            if (category === "STUDENT" || category === "INSTRUCTOR") {
-              this.$router.push("/courses");
-            }
-            // others land to the dashboard
-            else if (category === "ADMIN") {
-              this.$router.push("/administration");
-            }
-          }
+          this.valid = true;
+          this.message = response.data.message + ", check your email.";
         }
       } catch (error) {
-        this.message = "Service Unavailable";
         this.valid = false;
+        this.message = "Service Unavailable";
       }
     },
   },
@@ -167,13 +137,13 @@ export default {
     margin-top: 54px;
     background-color: white;
     border-radius: 33px;
-    padding: 40px;
+    padding: 30px 40px;
     text-align: center;
     font-family: Inter;
     form {
       height: 60%;
       padding-top: 20px;
-      padding-bottom: 60px;
+      // padding-bottom: 60px;
       justify-content: center;
     }
     .welcome {
@@ -189,7 +159,7 @@ export default {
       font-weight: bold;
       font-size: 21.8152px;
       text-align: center;
-      margin: 11px auto 15px;
+      margin: 11px auto 6px;
       color: #bababc;
     }
     .logo {
@@ -263,6 +233,7 @@ export default {
       width: 100%;
       height: 46.25px;
       margin: 8px;
+      margin-bottom: 110px;
       background: #193074;
       border-radius: 4.36304px;
       display: flex;
@@ -284,7 +255,7 @@ export default {
       color: #193074;
     }
     .lower-message {
-      align-items: baseline;
+      // align-items: baseline;
       .message-row {
         font-family: Inter;
         font-style: normal;
