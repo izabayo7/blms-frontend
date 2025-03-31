@@ -50,11 +50,15 @@ export default {
       display:flex;
       align-items:center;
       font-weight:300 !important;
+      font-size: .9rem;
 
       *{
         font-weight:300 !important;
       }
 
+      svg{
+        transform:scale(.7);
+      }
       span{
         margin:0 .3rem;
         display:flex;
