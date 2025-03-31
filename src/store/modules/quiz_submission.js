@@ -110,6 +110,7 @@ export default {
                 }
             }
             if (!submissionFound) {
+                console.log(userName)
                 return apis.get(`quiz_submission/user/${userName}/${quizName}`).then(d => {
                     d.data = d.data.data
                     if (!d.data)

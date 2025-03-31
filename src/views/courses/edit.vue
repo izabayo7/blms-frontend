@@ -54,15 +54,15 @@
             </v-col>
             <v-col class="col-12 col-md-4">
               <v-avatar
-                v-if="course.coverPicture"
+                v-if="course.cover_picture"
                 size="245"
                 :class="
-                  course.coverPicture
+                  course.cover_picture
                     ? 'user-profile ml-2 mt-6 d-block'
                     : 'course-image white--text bg-color-one text-h2'
                 "
               >
-                <v-img :src="course.coverPicture" :lazy-src="course.coverPicture" alt="avatar">
+                <v-img :src="course.cover_picture" :lazy-src="course.cover_picture" alt="avatar">
                   <template v-slot:placeholder>
                     <v-row
                       class="fill-height ma-0"
@@ -93,7 +93,7 @@
                 <v-icon>mdi-paperclip</v-icon>
               </v-btn>
               <span>{{
-                course.coverPicture === undefined
+                course.cover_picture === undefined
                   ? "Upload Course CoverPicture"
                   : coverPicture
                   ? coverPicture.name

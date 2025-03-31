@@ -243,7 +243,7 @@
                       </div>
                     </div>
                     <div v-else class="col col-12 text-center">
-                      <span>There are have no attachments</span>
+                      <span>There are no attachments</span>
                     </div>
                   </v-row>
                 </v-container>
@@ -299,7 +299,7 @@ export default {
       });
       if (this.course.chapters[this.activeIndex].quiz.length > 0) {
         this.findQuizSubmissionByUserAndQuizNames({
-          user_name: this.$store.state.user.user.user_name,
+          userName: this.$store.state.user.user.user_name,
           quizName: this.course.chapters[this.activeIndex].quiz[0].name,
         });
       }
@@ -339,15 +339,16 @@ export default {
       userId: this.$store.state.user.user._id,
       courseName: this.$route.params.name,
     }).then((course) => {
+      const total_chapters = course.chapters.length;
       if (this.userCategory === "INSTRUCTOR") {
-        this.maximumIndex = this.course.chapters.length - 1;
+        this.maximumIndex = total_chapters - 1;
         this.activeIndex = 0;
       } else {
         this.maximumIndex = Math.round(
-          (course.progress.progress * course.chapters.length) / 100
+          (course.progress.progress * total_chapters) / 100
         );
-        if (this.maximumIndex > course.chapters.length - 1) {
-          this.maximumIndex = course.chapters.length - 1;
+        if (this.maximumIndex > total_chapters - 1) {
+          this.maximumIndex = total_chapters - 1;
         }
       }
     });

@@ -289,7 +289,7 @@
         </main>
         <main class="preview">
           <preview
-            :image="course.coverPicture"
+            :image="course.cover_picture"
             :name="course.name"
             :dateUploaded="course.createdAt | formatDate"
             :progress="course.progress"
@@ -304,11 +304,11 @@
       <div class="preview-card row">
         <div class="preview-image col-sm-12 col-md-12 col-lg-4 col-xl-4">
           <v-img
-            v-if="course.coverPicture"
+            v-if="course.cover_picture"
             :alt="course.name + ' cover photo'"
             class="preview-media"
-            :src="course.coverPicture"
-            :lazy-src="course.coverPicture"
+            :src="course.cover_picture"
+            :lazy-src="course.cover_picture"
           >
             <template v-slot:placeholder>
               <v-row class="fill-height ma-0" align="center" justify="center">
@@ -449,7 +449,7 @@
                   </svg>
                 </div>
                 <div class="text">
-                  year {{ course.faculty_college_year.collegeYear.digit }}
+                  year {{ course.faculty_college_year.college_year.digit }}
                 </div>
               </div>
               <div class="info-col col-sm-6 col-md-~4 col-lg-4 col-xl-4">

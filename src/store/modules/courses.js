@@ -81,7 +81,6 @@ export default {
                             }
                             else {
                                 return apis.get(`chapter/${chapterId}/document`).then(d => {
-                                    d.data = d.data.data
                                     state.courses.data[i].chapters[k].documentContent = d.data
                                     return d.data
                                 })
