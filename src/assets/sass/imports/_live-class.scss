@@ -257,6 +257,7 @@
 
       }
     }
+
     .users {
       font-family: Poppins;
       font-style: normal;
@@ -266,25 +267,29 @@
 
       color: #FFFFFF;
     }
-.more-details{
-  position: absolute;
-  padding: 15.08px 18px;
-  .presenter{
-    .text{
-      font-family: Poppins;
-      font-style: normal;
-      font-weight: 500;
-      font-size: 17.7338px;
-      line-height: 27px;
-      text-align: center;
-      margin-right: 20px;
-      color: #FFFFFF;
+
+    .more-details {
+      position: absolute;
+      padding: 15.08px 18px;
+
+      .presenter {
+        .text {
+          font-family: Poppins;
+          font-style: normal;
+          font-weight: 500;
+          font-size: 17.7338px;
+          line-height: 27px;
+          text-align: center;
+          margin-right: 20px;
+          color: #FFFFFF;
+        }
+      }
     }
-  }
-}
+
     .video {
       width: 100%;
       margin-top: 13px;
+
       &--wrapper {
         width: 100%;
 
@@ -328,10 +333,18 @@
 
           background-color: #000;
 
-          video {
-            object-fit: cover;
+          .video-container, video {
             height: 100%;
             width: 100%;
+          }
+
+          video {
+            object-fit: cover;
+            display: none;
+
+            &.show {
+              display: block;
+            }
           }
 
           //animations
@@ -364,10 +377,12 @@
             //position: absolute;
             top: 18px;
             right: 18px;
-.vocal{
-  font-family: Segoe UI;
-  color: #FFFFFF;
-}
+
+            .vocal {
+              font-family: Segoe UI;
+              color: #FFFFFF;
+            }
+
             .profile {
               margin-right: 7px;
               width: 59.89px;
@@ -427,10 +442,12 @@
               margin-left: 100%;
               overflow: hidden;
               width: 0px;
-              &.visible{
+
+              &.visible {
                 width: 100%;
                 margin-left: 0%;
               }
+
               .inner-comments {
                 max-height: 360px;
                 overflow-y: auto;
@@ -469,9 +486,11 @@
                 background: #F2F2F2;
                 border-radius: 19.5px;
                 padding: 0.15rem;
-.send{
-  width: 40px;
-}
+
+                .send {
+                  width: 40px;
+                }
+
                 .input span {
                   max-height: 70px !important;
                 }
@@ -492,14 +511,16 @@
               max-width: 60%;
               transition: .5s;
 
-              &.centered{
+              &.centered {
                 margin-left: 20%;
                 margin-right: 21%;
-                &.wide{
+
+                &.wide {
                   max-width: 100%;
                   margin: 0px;
                 }
               }
+
               display: flex;
               justify-content: space-evenly;
               //background-color: transparentize(#000, .4);
@@ -572,6 +593,7 @@
             height: 100%;
             display: grid;
             place-content: center;
+
             &--wrapper {
               .avatar {
                 width: 3.9rem !important;
@@ -935,7 +957,6 @@
     bottom: 36px;
 
 
-
     &--wrapper {
       padding-top: 1rem;
 
@@ -977,7 +998,8 @@
           margin-right: 29px;
         }
       }
-      .raise-hand .text{
+
+      .raise-hand .text {
         font-family: Poppins;
         font-style: normal;
         font-weight: normal;
@@ -987,17 +1009,21 @@
         color: #EEEEEE;
       }
     }
-    &.non-absolute{
+
+    &.non-absolute {
       background-color: #FFFFFF;
       position: initial;
-      .quiz button{
-        background-color: rgb(0 0 0 / 39%)!important;
+
+      .quiz button {
+        background-color: rgb(0 0 0 / 39%) !important;
       }
+
       .raise-hand {
         .text {
           color: #9e9e9e;
         }
-        svg path{
+
+        svg path {
           stroke: #3C3C3C;
         }
       }
@@ -1138,7 +1164,8 @@
   .live-class {
     &--wrapper {
       display: block;
-      .video{
+
+      .video {
         margin-top: 0px;
       }
     }

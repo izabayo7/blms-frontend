@@ -13,26 +13,26 @@ const PARTICIPANT_MAIN_CLASS = 'participant main';
  * @param {boolean} offeringCourse - if participant is the one who is offering course
  * @return
  */
-export default function Participant(name, vm, offeringCourse = false, userInfo,videoElement) {
+export default function Participant(name, vm, offeringCourse = false, userInfo, videoElement) {
     this.name = name;
     this.userInfo = userInfo;
-    let video = name.includes("_screen") ? document.getElementById( vm.participationInfo.isOfferingCourse ? "video_screen_feed" : "viewer_screen_feed" ): videoElement;
+    let video = name.includes("_screen") ? document.getElementById(vm.participationInfo.isOfferingCourse ? "video_screen_feed" : "viewer_screen_feed") : videoElement;
     let rtcPeer;
     this.vm = vm;
     this.offeringCourse = offeringCourse
 
     if (userInfo.category == "INSTRUCTOR") {
         // video.setAttribute('poster','https://apis.kurious.rw/assets/images/video-loader.gif')
-        video.setAttribute('poster','https://apis.kurious.rw/assets/images/video-loader.gif')
+        video.setAttribute('poster', 'https://apis.kurious.rw/assets/images/video-loader.gif')
 
-        video.onloadedmetadata = function(e) {
+        video.onloadedmetadata = function (e) {
 
             video.play();
 
-            setTimeout(function(){
-                if(video.paused){
+            setTimeout(function () {
+                if (video.paused) {
                     video.removeAttribute('poster')
-                    let button  = document.querySelector('.play_button')
+                    let button = document.querySelector('.play_button')
                     button.style.display = 'initial'
                     // button.click()
                 }
@@ -75,7 +75,10 @@ export default function Participant(name, vm, offeringCourse = false, userInfo,v
     Object.defineProperty(this, 'rtcPeer', {writable: true});
 
     this.dispose = function () {
-        if (this.rtcPeer)
+        if (this.rtcPeer) {
             this.rtcPeer.dispose();
+            let el = this.getVideoElement()
+            el.parentNode.removeChild(el)
+        }
     };
 }

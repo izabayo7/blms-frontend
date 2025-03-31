@@ -53,10 +53,12 @@
                   </div>
                 </div>
               </div>
-              <video v-show="!noVideo && !isPresenting" id="video_feed"
-                     poster="https://apis.kurious.rw/assets/images/video-loader.gif">
-                <!--                <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" >-->
-              </video>
+              <div v-show="!noVideo && !isPresenting" class="video-container">
+                <video  id="video_feed" class="show"
+                        poster="https://apis.kurious.rw/assets/images/video-loader.gif">
+                  <!--                <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" >-->
+                </video>
+              </div>
               <button @click="playVideo" class="play_button">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="64" height="64">
                   <path fill="none" d="M0 0h24v24H0z"/>
@@ -614,8 +616,7 @@ export default {
     create_videoElement(id) {
       let element = document.createElement('video')
       element.setAttribute('id', `video_feed${id}`)
-      element.style.display = 'none'
-      document.querySelector('.video-el').appendChild(element)
+      document.querySelector('.video-container').appendChild(element)
       return element
     },
     stop_presenter() {
@@ -629,11 +630,12 @@ export default {
     },
     displaySrcVideo(){
       if (this.me) {
+        document.querySelector('video.show').className = ''
         if ((this.currentPresenter ? this.currentPresenter._id == this.live_session.course.user : this.userCategory == "INSTRUCTOR") || this.isStudentPresenting) {
           console.log('\n\n\ninner\n\n\n')
           let video = this.me.getVideoElement()
           video.muted = true
-          video.style.display = 'initial'
+          video.setAttribute('class','show')
         } else {
           console.log('twageze aha')
           for (let i in this.participants) {
@@ -643,7 +645,7 @@ export default {
               console.log(`\n\nparticipantId: ${this.participants[i].userInfo._id}\ncurrentPresenter: ${this.currentPresenter ? this.currentPresenter._id : this.instructor._id}\n`)
               const video = this.participants[i].getVideoElement();
               video.muted = false
-              video.style.display = 'initial'
+              video.setAttribute('class','show')
               break;
             }
           }
@@ -672,7 +674,7 @@ export default {
         }
       }
     },
-    stopped_presenting(forced) {
+      stopped_presenting(forced) {
       if (forced) {
         this.$store.dispatch("app_notification/SET_NOTIFICATION", {
           message: 'Sorry your the instructor canceled your presentation',
@@ -683,19 +685,22 @@ export default {
       this.isPresenting = false;
       this.participationInfo.isOfferingCourse = false
       this.me.rtcPeer.enabled = false
+      this.displaySrcVideo()
     },
     presenterChanged(id) {
       console.log(`\n\n\nYahindutse wlh ${id}\n\n\n`)
-      const video = this.me.getVideoElement();
-      video.muted = false
+      document.querySelector('video.show').className = ''
       if (this.me.userInfo._id == this.live_session.course.user) {
         this.me.rtcPeer.enabled = false
       }
 
       for (let i in this.participants) {
         if (this.participants[i].userInfo._id == id) {
-          console.log(i, this.participants[i])
-          video.srcObject = this.participants[i].rtcPeer.getRemoteStream()
+          let vid = document.querySelector(`video#video_feed${id}`)
+          vid.setAttribute('class','show')
+          setTimeout(()=>{
+            vid.play()
+          },3000)
           this.currentPresenter = this.participants[i].userInfo;
           break;
         }
@@ -764,9 +769,6 @@ export default {
         if (!this.videoEnabled)
           this.me.rtcPeer.videoEnabled = false
 
-        this.me.rtcPeer.showLocalVideo();
-        const video = this.me.getVideoElement();
-        video.muted = true
         if (force) {
           this.start_presenting()
         }
@@ -782,7 +784,8 @@ export default {
           receivers.push({id: x.userInfo._id})
         } else {
           this.me.rtcPeer.enabled = true
-          this.me.rtcPeer.showLocalVideo()
+          this.displaySrcVideo()
+          this.me.getVideoElement().play()
         }
       })
       console.log(receivers, session_id)
@@ -1168,28 +1171,22 @@ export default {
             if (self.me === null)
               self.me = participant;
 
-            const default_vid = document.querySelector('#video_feed')
             video.muted = true
 
             this.generateOffer(participant.offerToReceiveVideo.bind(participant));
             if (self.presenter_id) {
+              console.clear()
+              console.log('tumusanzemo wlh')
               self.presenterChanged(self.presenter_id)
               self.presenter_id = undefined
-              if (!self.participationInfo.isOfferingCourse) {
-                setTimeout(() => {
-                  video.play()
-                }, 3000)
-              }
             } else {
               if (!self.participationInfo.isOfferingCourse) {
                 if (self.instructorParticipant) {
-                  default_vid.style.display = 'none'
                   participant.rtcPeer.enabled = false
-                  self.displaySrcVideo()
+                  self.displaySrcVideo();
                 }
               } else {
-                default_vid.style.display = 'none'
-                video.style.display = 'initial'
+                self.displaySrcVideo();
               }
             }
           })
@@ -1341,7 +1338,7 @@ export default {
       this.participants[this.participantIndex(request.name)].dispose();
       this.removeParticipant(this.participantIndex(request.name))
 
-      this.findRightSource()
+      this.displaySrcVideo();
     },
     toogleMedia(obj) {
       if (obj.isVideo) {
