@@ -48,7 +48,7 @@
           </div>
         </v-row>
       </v-col>
-      <v-col cols="12">
+      <v-col cols="12" class="pb-0 mt-6">
         <h2 class="second-title course-group-title">Completed Courses</h2>
       </v-col>
       <v-col class="col-12 px-0">
@@ -294,7 +294,7 @@ export default {
 <style lang="scss" scoped>
 #courses {
   background-color: #F3F6FF;
-  padding: 25px 0px 25px 35px;
+  padding: 25px 0px 0 35px;
   min-height: calc(100vh - 76px);
   .perfom-action {
     background-color: $primary !important;
@@ -360,6 +360,12 @@ export default {
     }
     margin-top: 40px;
     box-shadow: 0px 17px 34px rgba(116, 113, 113, 0.16);
+  }
+}
+/* Portrait phones and smaller */
+@media (max-width: 700px) {
+  #courses {
+    padding: 25px 21px 45px 15px;
   }
 }
 </style>
