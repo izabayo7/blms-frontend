@@ -318,9 +318,13 @@
             }
         },
         beforeRouteUpdate(to,from,next) {
-            console.log(to,from)
+            this.$store.commit('DELETE_TOTAL_COMMENTS_ON_A_CHAPTER') //delete comments number to make sure that next comments doesn't have previously chapter comments number
             this.immediateFunction()
             emit('routeUpdate',)
+
+            //set new number of total comments
+            const total = this.$store.getters('courses/totalComments')
+            this.$store.commit('SET_TOTAL_COMMENTS_ON_A_CHAPTER',total)
             next()
         },
         created() {
