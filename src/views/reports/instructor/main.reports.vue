@@ -13,9 +13,7 @@
           <router-link class="normal--text d-block" to="/">{{
             item.target.course.name
           }}</router-link>
-          <router-link class="normal--text small" to="/">{{
-            `${item.target.faculty_college_year.faculty_college.faculty.name} year ${item.target.faculty_college_year.college_year.digit}`
-          }}</router-link>
+          <router-link class="normal--text small" to="/">{{item.target.course.user_group.name}}</router-link>
         </template>
         <template v-slot:item.chapter_name="{ item }">
           <router-link class="normal--text" to="/">{{
