@@ -129,7 +129,19 @@
                 :multiple="true"
             />
           </div>
-          <div class="file-upload"></div>
+          <div class="file-upload">
+            <label>Max file size 2 MB</label>
+            <div class="allowed-files">
+              <div class="type"><input type="radio"> Pdf</div>
+              <div class="type"><input type="radio">Word document</div>
+              <div class="type"><input type="radio">Powerpoint file</div>
+              <div class="type"><input type="radio">text</div>
+              <div class="type"><input type="radio">Zip</div>
+              <div class="type"><input type="radio">image</div>
+              <div class="type"><input type="radio">Video</div>
+              <div class="type"><input type="radio">All</div>
+            </div>
+          </div>
 
         </div>
       </div>
