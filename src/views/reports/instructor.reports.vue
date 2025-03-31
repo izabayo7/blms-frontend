@@ -80,6 +80,11 @@ export default {
           value: "total_submissions",
           align: "center",
         },
+        {
+          text: "Maximum Marks",
+          value: "total_marks",
+          align: "center",
+        },
         { text: "Status", value: "marked", align: "center" },
         { text: "Grade", value: "grade", align: "center" },
       ];
