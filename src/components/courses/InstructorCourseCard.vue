@@ -3,7 +3,7 @@
     <v-card :class="`class-card ${course.published ? '' : 'unpublished-card'}`">
       <v-row class="first-row">
         <v-col class="col-md-7 col-7 content-side">
-          <p class="instructor-course-title">{{course.name}}</p>
+          <p class="instructor-course-title">{{course.name | trimString(20)}}</p>
           <p class="course-chapters mt-0">{{course.chapters.length}} Chapters</p>
           <p
             :class="`instructor-course-description ${course.published ? 'hidden-md-and-down' : ''}`"
@@ -52,7 +52,12 @@
       </v-row>
       <v-row v-if="course.published" class="second-row hidden-md-and-down text-center">
         <v-col class="col-md-6">
-          <v-btn @click="tooglePublishCourse(course._id)" text color="error" class="action-btn">Unpublish Course</v-btn>
+          <v-btn
+            @click="tooglePublishCourse(course._id)"
+            text
+            color="error"
+            class="action-btn"
+          >Unpublish Course</v-btn>
         </v-col>
         <v-col class="col-md-6 text-right">
           <v-btn :to="`/courses/preview/${course.name}`" text class="action-btn">Preview Course</v-btn>
@@ -63,7 +68,7 @@
 </template>
 
 <script>
-import {mapActions} from 'vuex'
+import { mapActions } from "vuex";
 export default {
   data: () => ({
     power: 67,
@@ -85,18 +90,18 @@ export default {
     },
   },
   methods: {
-    ...mapActions("courses", [
-      "tooglePublishCourse",
-      "deleteCourse",
-    ]),
+    ...mapActions("courses", ["tooglePublishCourse", "deleteCourse"]),
   },
 };
 </script>
 
 <style lang="scss" scoped>
 .class-view {
+  .v-card.v-sheet.theme--light.class-card {
+    width: 400px;
+  }
   .class-card {
-    width: 350px;
+    width: 40px;
     margin-top: 40px;
     border-radius: 15px;
     background-color: #eee;
@@ -111,6 +116,7 @@ export default {
     }
     .first-row {
       background-color: #fff !important;
+      box-shadow: 0px 17px 34px rgba(116, 113, 113, 0.16);
       width: 400px;
       margin-left: 0;
       border-radius: 10px;
@@ -165,7 +171,7 @@ export default {
       }
     }
     .second-row {
-      width: 350px;
+      width: 400px;
       margin-left: 0;
       height: 38px;
       .action-btn {

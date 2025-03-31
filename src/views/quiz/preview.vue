@@ -1,6 +1,6 @@
 <template>
   <!-- details container -->
-  <section v-if="course" class="my-container">
+  <section v-if="course !== undefined" class="my-container">
     <!--      this is for student preview-->
     <div class="student" v-if="userCategory === 'Student'">
       <!-- <button class="back">back</button> -->

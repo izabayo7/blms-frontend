@@ -103,7 +103,7 @@ div.remove-container a {
         </div>
       </v-col>
       <v-col v-if="files.length === 0" class="col-10">
-        <span>Drop the {{allowedTypes === undefined ? 'files' : 'video'}} here!</span>
+        <span>Drop the {{allowedTypes === undefined ? 'files' : allowedTypes.includes('image') ? 'images' : 'video'}} here!</span>
       </v-col>
       <v-col class="col-2">
         <v-btn class="mt-n2" @click="clickButton()" large icon>

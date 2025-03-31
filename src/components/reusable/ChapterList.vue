@@ -25,7 +25,7 @@
             v-for="(item, i) in chapters"
             :key="i"
             :disabled="i>maximumIndex"
-            @click="$emit('changeChapter',i);activeIndex = i"
+            @click="$emit('changeChapter',i)"
             :class="activeIndex === i ? 'active--chapter' : ''"
           >
             <v-list-item-content>
@@ -36,7 +36,13 @@
               <!-- <v-icon
                 :color="maximumIndex > i  ? '#FFD248' : '#B4B4B4'"
               >mdi-checkbox-{{maximumIndex > i ? 'marked' : 'blank'}}-circle{{maximumIndex > i ? '' : '-outline'}}</v-icon>-->
-              <svg v-if="maximumIndex > i" xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 35 35">
+              <svg
+                v-if="maximumIndex > i"
+                xmlns="http://www.w3.org/2000/svg"
+                width="25"
+                height="25"
+                viewBox="0 0 35 35"
+              >
                 <circle
                   id="Ellipse_101"
                   data-name="Ellipse 101"
@@ -57,12 +63,19 @@
                   stroke-width="3"
                 />
               </svg>
-              <svg v-else xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 35 35">
+              <svg
+                v-else
+                xmlns="http://www.w3.org/2000/svg"
+                width="25"
+                height="25"
+                viewBox="0 0 35 35"
+              >
                 <g
                   id="Ellipse_102"
                   data-name="Ellipse 102"
                   fill="none"
-                  stroke="#b4b4b4"
+                  :stroke="i == maximumIndex ? '#ffd248' :  '#b4b4b4'"
+                  v
                   stroke-width="3"
                 >
                   <circle cx="17.5" cy="17.5" r="17.5" stroke="none" />

@@ -4,6 +4,7 @@ import courses from "@/store/modules/courses";
 import faculties from "@/store/modules/faculties";
 import modal from "@/store/modules/modal";
 import quiz from "@/store/modules/quiz";
+import quiz_submission from "@/store/modules/quiz_submission";
 import chat from "@/store/modules/chat";
 import user from "@/store/modules/user";
 
@@ -25,6 +26,7 @@ export default new Vuex.Store({
         faculties,
         modal,
         quiz,
+        quiz_submission,
         chat,
         user
     }

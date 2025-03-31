@@ -44,10 +44,6 @@
         </v-form>
       </v-col>
     </v-row>
-    <!-- the dialog for messages -->
-    <kurious-dialog :show="show" :message="message" :status="status">
-      <v-icon slot="icon" size="55" dark>mdi-barley</v-icon>
-    </kurious-dialog>
   </v-container>
 </template>
 <script>
@@ -58,12 +54,9 @@ export default {
   name: "Login",
   data: () => ({
     valid: true,
-    message: "",
     userCategory: "",
     email: "",
     showPassword: false,
-    show: false,
-    status: 200,
     userCategories: ["Student", "Instructor", "Admin", "Super admin"],
     emailRules: [
       (v) => !!v || "Email is required",
@@ -117,17 +110,14 @@ export default {
           }
         }
       } catch (error) {
-        console.log(error)
         // handle errors
         // the server responded
         if (error.response) {
-          this.status = error.response.status;
-          this.message = error.response.data;
+          this.$store.dispatch('modal/set_modal', { template: 'display_information', message: error.response.data, closable: true })
         }
         // the server didn't respond
         else if (error.request) {
-          this.status = 503;
-          this.message = "Service Unavailable";
+          this.$store.dispatch('modal/set_modal', { template: 'display_information', message: 'Service Unavailable', closable: true })
         }
         this.show = true;
         // hide the message after 3seconds
