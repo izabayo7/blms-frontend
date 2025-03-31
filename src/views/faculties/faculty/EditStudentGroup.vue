@@ -57,7 +57,7 @@
 
           <div v-else-if="activeTab == 2">
             <div class="tabular-users all-users-table">
-              <div class="table-wrapper mt-6" v-if="users.length > 0">
+              <div class="table-wrapper mt-6" v-if="usersOnUserGroups.length > 0">
                 <!--          {{ size }}-->
                 <div class="table-header">
                   <table-header>
@@ -66,7 +66,8 @@
                         <div class="action mx-2" @click="click('announce')">
                           <table-action-burner>
                             <template #icon>
-                              <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 11 11" fill="none">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 11 11"
+                                   fill="none">
                                 <path
                                     d="M3.14576 1.55151L2.41437 0.80361C1.18685 1.76071 0.378734 3.23559 0.307129 4.90921H1.33006C1.40678 3.52324 2.10237 2.30987 3.14576 1.55151ZM9.48281 4.90921H10.5057C10.429 3.23559 9.62091 1.76071 8.39851 0.80361L7.67223 1.55151C8.70539 2.30987 9.40609 3.52324 9.48281 4.90921ZM8.47523 5.17071C8.47523 3.56508 7.63642 2.22096 6.17363 1.86531V1.50967C6.17363 1.07557 5.83095 0.725159 5.40644 0.725159C4.98192 0.725159 4.63924 1.07557 4.63924 1.50967V1.86531C3.17133 2.22096 2.33765 3.55985 2.33765 5.17071V7.78574L1.31472 8.83175V9.35476H9.49816V8.83175L8.47523 7.78574V5.17071ZM5.40644 10.9238C5.47804 10.9238 5.54453 10.9185 5.61102 10.9029C5.94347 10.8296 6.21455 10.5995 6.34753 10.2857C6.39868 10.1602 6.42425 10.0242 6.42425 9.87776H4.37839C4.38351 10.4531 4.83871 10.9238 5.40644 10.9238Z"
                                     fill="#193074"/>
@@ -90,7 +91,8 @@
                         <div class="action mx-2" @click="click('delete')">
                           <table-action-burner>
                             <template #icon>
-                              <svg width="10" height="12" viewBox="0 0 10 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                              <svg width="10" height="12" viewBox="0 0 10 12" fill="none"
+                                   xmlns="http://www.w3.org/2000/svg">
                                 <path
                                     d="M0.891564 10.2864C0.891564 10.9875 1.46524 11.5612 2.16639 11.5612H7.2657C7.96685 11.5612 8.54052 10.9875 8.54052 10.2864V2.63742H0.891564V10.2864ZM9.17794 0.725182H6.94699L6.30958 0.0877686H3.12251L2.4851 0.725182H0.25415V2.00001H9.17794V0.725182Z"
                                     fill="#FF0808"/>
@@ -102,7 +104,8 @@
                         <div class="action mx-2" @click="showAddUsers = true">
                           <table-action-burner>
                             <template #icon>
-                              <svg width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+                              <svg width="17" height="17" viewBox="0 0 17 17" fill="none"
+                                   xmlns="http://www.w3.org/2000/svg">
                                 <path d="M8.5 1L8.5 16" stroke="black" stroke-width="1.95652" stroke-linecap="round"/>
                                 <path d="M1 8.5L16 8.5" stroke="black" stroke-width="1.95652" stroke-linecap="round"/>
                               </svg>
@@ -127,7 +130,7 @@
                     <!--              rows-->
                     <template #tableRows>
                       <table-row :selected="selected_users.has(i)" @select="handleRowSelect(i)" :data="user"
-                                 v-for="(user, i) in users" :key="user._id" :ref="`row${i}`">
+                                 v-for="(user, i) in usersOnUserGroups" :key="user._id" :ref="`row${i}`">
                         <template #cols>
                           <td @click="$router.push(`/users/${user.user_name}`)" class="row--image"
                               @mouseenter="mouseOnPic($event,user.user_name,'user-profile-card')"
@@ -139,20 +142,14 @@
                           </td>
                           <td @click="$router.push(`/users/${user.user_name}`)"
                               @mouseenter="mouseOnPic($event,user.user_name,'user-profile-card')"
-                              @mouseleave="mouseOutPic($event,'user-profile-card')">{{ user.sur_name }} {{ user.other_names }}
+                              @mouseleave="mouseOutPic($event,'user-profile-card')">{{ user.sur_name }}
+                            {{ user.other_names }}
                           </td>
                           <td @click="$router.push(`/users/${user.user_name}`)" :title="user.email">
-                            {{ user.email | trimString(18) }}
+                            {{ user.category | trimString(18) }}
                           </td>
-                          <td @click="$router.push(`/users/${user.user_name}`)">{{ user.user_name }}</td>
-                          <td v-if="$store.state.sidebar_navbar.college.users_verification_link">
-                            <div
-                                :class="`payment-status ${user.category === 'STUDENT' ? user.paid ? 'paid' : 'pending' : 'free'}`">
-                              {{ user.category === 'STUDENT' ? user.paid ? "Paid" : "Pending" : "Free" }}
-                            </div>
-                          </td>
-                          <td @click="$router.push(`/users/${user.user_name}`)">{{ user.status }}</td>
                           <td @click="$router.push(`/users/${user.user_name}`)">{{ user.gender }}</td>
+                          <td @click="$router.push(`/users/${user.user_name}`)">{{ user.date_joined }}</td>
                         </template>
                       </table-row>
                     </template>
@@ -176,13 +173,16 @@
               <div class="wrapper">
                 <div class="icon">
                   <svg width="43" height="43" viewBox="0 0 43 43" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M8.95829 23.6142V30.7808L21.5 37.625L34.0416 30.7808V23.6142L21.5 30.4583L8.95829 23.6142ZM21.5 5.375L1.79163 16.125L21.5 26.875L37.625 18.0779V30.4583H41.2083V16.125L21.5 5.375Z" fill="#989899"/>
+                    <path
+                        d="M8.95829 23.6142V30.7808L21.5 37.625L34.0416 30.7808V23.6142L21.5 30.4583L8.95829 23.6142ZM21.5 5.375L1.79163 16.125L21.5 26.875L37.625 18.0779V30.4583H41.2083V16.125L21.5 5.375Z"
+                        fill="#989899"/>
                   </svg>
                 </div>
                 <div class="title">No courses created</div>
-                <div class="subtitle">You can invite instructors to this faculty <br> to start creating courses  by clicking on
+                <div class="subtitle">You can invite instructors to this faculty <br> to start creating courses by
+                  clicking on
                 </div>
-                <button  class="action">
+                <button class="action">
                   Invite users
                 </button>
               </div>
@@ -208,39 +208,51 @@ import tableActionBurner from "../../../components/reusable/ui/table-action-burn
 import TableRow from "../../../components/reusable/table/TableRow";
 import TableHeadRow from "../../../components/reusable/table/TableHeadRow";
 import TableUi from "../../../components/reusable/table/TableUi";
+import userSimpleCard from "../../../mixins/user-simple-card.mixin";
 
 export default {
   name: "EditStudentGroup",
-  components:{
+  components: {
     TableHeader,
     // Search,
     tableActionBurner, TableRow, TableHeadRow, TableUi,
     AddUsersToStudentGroupDialog: () => import("@/components/dashboard/AddUsersToStudentGroupDialog")
   },
+  mixins: [userSimpleCard],
   data() {
     return {
       size: 0,
       numberOfNewNotifications: 4,
       cardActive: false,
       showAddUsers: false,
-      courses:[],
+      courses: [],
       name: "",
       error: "",
       activeTab: 1,
-      users: [{}],
       selected_users: new Set([]),
     };
   },
   methods: {
+    handleRowSelect(index) {
+      const found = this.selected_users.has(index)
+      if (found) {
+        this.selected_users.delete(index)
+        this.size--
+      } else {
+        this.selected_users.add(index)
+        this.size++
+      }
+      this.$refs[`row${index}`][0].changeSelectedIndex()
+    },
     handleSelect(value) {
-      for (const i in this.users) {
+      for (const i in this.usersOnUserGroups) {
         if (value.has(-1)) {
           if (!this.$refs[`row${i}`][0].selectSelected)
             this.$refs[`row${i}`][0].changeSelectedIndex()
         } else if (this.$refs[`row${i}`][0].selectSelected)
           this.$refs[`row${i}`][0].changeSelectedIndex()
       }
-      this.size = this.users.length
+      this.size = this.usersOnUserGroups.length
       this.selected_users = value
     },
     async editStudentGroup() {
@@ -264,6 +276,7 @@ export default {
     }
   },
   computed: {
+    ...mapGetters('users', ['usersOnUserGroups']),
     options() {
       const options = {
         link: {
@@ -282,6 +295,17 @@ export default {
   watch: {
     facultyCollegeYear() {
       this.name = this.facultyCollegeYear.name
+      this.$store.dispatch('users/loadUsersBasedOnUserGroups', {
+        userGroupId: this.facultyCollegeYear._id,
+        category: "ALL"
+      })
+    },
+    showAddUsers() {
+      if (!this.showAddUsers)
+        this.$store.dispatch('users/loadUsersBasedOnUserGroups', {
+          userGroupId: this.facultyCollegeYear._id,
+          category: "ALL"
+        })
     },
     error() {
       if (this.error != "")
@@ -303,6 +327,7 @@ export default {
 </script>
 <style lang="scss">
 @import '../../../assets/sass/imports/tableEmptyState';
+
 .edit-student-group-container {
   background-color: #FFFFFF;
   min-height: 68vh;

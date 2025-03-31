@@ -13,6 +13,9 @@ const getDefaultState = () => ({
     usersBasedOnFaculties: {
         data: "",
     },
+    usersBasedOnUserGroups: {
+        data: "",
+    },
     userByUsername: {
         data: "",
         loaded: false,
@@ -39,6 +42,9 @@ export default {
         },
         SET_USERS_ON_FACULTIES(state, {data}) {
             state.usersBasedOnFaculties.data = data;
+        },
+        SET_USERS_ON_USERGROUPS(state, {data}) {
+            state.usersBasedOnUserGroups.data = data;
         },
         SET_USER_BY_USERNAME(state, user) {
             state.userByUsername.data = user
@@ -123,6 +129,12 @@ export default {
                     commit("SET_USERS_ON_FACULTIES", {data})
                 })
         },
+        loadUsersBasedOnUserGroups({commit}, {userGroupId, category}) {
+            apis.get(`user/user_group/${userGroupId}/${category}`)
+                .then(({data: {data}}) => {
+                    commit("SET_USERS_ON_USERGROUPS", {data})
+                })
+        },
         holdAccounts({dispatch}, {usernames, hold}) {
             let success = true
             for (const i in usernames)
@@ -173,6 +185,9 @@ export default {
         },
         usersOnFaculties: state => {
             return state.usersBasedOnFaculties.data;
+        },
+        usersOnUserGroups: state => {
+            return state.usersBasedOnUserGroups.data || [];
         },
         userByUsername: state => state.userByUsername.data,
         userByUsernameLoading: state => !state.userByUsername.loaded
