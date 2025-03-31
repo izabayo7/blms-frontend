@@ -77,7 +77,8 @@
       <div class="chart">
         <chart
             type="donut"
-            class="my-chart ml-n6"
+            class="my-chart"
+            :class="{'ml-n6' : data === undefined}"
             :width="width"
             :options="chartOptions"
             :series="[data.total,100-data.total]"
@@ -164,7 +165,7 @@ export default {
   beforeMount() {
     if (this.labels)
       this.chartOptions.labels = this.labels
-    if(this.data) {
+    if (this.data) {
       this.chartOptions.colors = this.data.colors
       // this.chartOptions.legend.show = true
       this.chartOptions.plotOptions.pie = {
@@ -210,10 +211,12 @@ export default {
 
     color: #000000;
   }
-.chart{
-  height: 100px;
-  margin: 18px auto;
-}
+
+  .chart {
+    height: 100px;
+    margin: 18px auto;
+  }
+
   .end {
     font-family: Inter;
     font-style: normal;
