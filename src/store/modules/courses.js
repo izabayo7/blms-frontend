@@ -10,7 +10,7 @@ const getDefaultState = () => ({
     selectedCourse: '',
     // the current chapter's id (the one we are viewing or editing)
     selectedChapter: '',
-    totalCommentsOnAChapter:0   //total number of comments based on chapter
+    totalCommentsOnAChapter:""   //total number of comments based on chapter
 })
 
 export default {
@@ -31,7 +31,7 @@ export default {
         },
         // update number of total comments
         DELETE_TOTAL_COMMENTS_ON_A_CHAPTER(state){
-            state.totalCommentsOnAChapter = 0
+            state.totalCommentsOnAChapter = ""
         },
         // initialise a new chapter
         initialise_new_chapter(state) {
