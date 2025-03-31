@@ -4,7 +4,7 @@
       <v-col class="col-12 title d-block pt-0">{{ course.name }}</v-col>
       <v-col
           v-if="course.chapters[activeIndex].uploaded_video || recorded_video != ''"
-          class="col-8 pt-0"
+          class="col-12 col-md-8 pt-0"
           id="video"
       >
 <!--
@@ -20,7 +20,7 @@ wrong date in recorder
       </v-col>
     </v-row>
     <v-row>
-      <v-col class="col-8">
+      <v-col class="col-12 col-md-8">
         <!-- <span v-if="course !== undefined">{{course.name}}</span> -->
         <v-tabs background-color="white" color="#ffd248" right>
           <v-tab id="content-tab">
