@@ -74,7 +74,7 @@ import {mapMutations, mapState} from "vuex";
 export default {
   name: "NewGroup",
   components: {
-    switchUi: () => import('@/components/reusable/ui/switch'),
+    switchUi: () => import('@/components/reusable/ui/switcher'),
     chipUi: () => import('@/components/reusable/ui/Chip'),
     cropper: () => import('@/components/reusable/ui/ImageCropper')
   },
