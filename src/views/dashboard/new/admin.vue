@@ -47,9 +47,9 @@
             </div>
           </div>
           <div class="v-col col-12 pa-0 mt-5">
-            <div class="row ml-0 more_info_container">
+            <div @click="$router.push('/faculties')" class="row ml-0 more_info_container cursor-pointer">
               <div class="v-col col-4 pa-0">
-                <div @click="$router.push('/faculties')" class="more_info cursor-pointer">
+                <div  class="more_info">
                   <svg
                     width="27"
                     height="21"
