@@ -40,7 +40,11 @@
               class="menubar__button"
               @click="$emit('addmathlive')"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"/><path d="M4 2h16a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1zm1 2v16h14V4H5zm2 2h10v4H7V6zm0 6h2v2H7v-2zm0 4h2v2H7v-2zm4-4h2v2h-2v-2zm0 4h2v2h-2v-2zm4-4h2v6h-2v-6z"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+              <path fill="none" d="M0 0h24v24H0z"/>
+              <path
+                  d="M4 2h16a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1zm1 2v16h14V4H5zm2 2h10v4H7V6zm0 6h2v2H7v-2zm0 4h2v2H7v-2zm4-4h2v2h-2v-2zm0 4h2v2h-2v-2zm4-4h2v6h-2v-6z"/>
+            </svg>
           </button>
 
           <button
@@ -484,6 +488,7 @@ export default {
   },
   data() {
     return {
+      el: undefined,
       keepInBounds: true,
       editor: new Editor({
         editable: this.mode === "edit" ? true : false,
@@ -523,10 +528,28 @@ export default {
       this.editor.clearContent(true);
       this.editor.focus();
     },
-    setContent() {
+    removePlaceHolder() {
+      if (this.getHTML() == `<p>Type or paste your content here</p>`)
+        this.setContent()
+    },
+    addPlaceHolder() {
+      if (this.getHTML() == '<p></p>')
+        this.setContent(this.defaultContent)
+    },
+    detectEditorClick(e) {
+      if (!this.el)
+        this.el = document.querySelector('.ProseMirror')
+      if (e)
+        if (this.el && this.el.contains(e.target)) {
+          this.removePlaceHolder()
+        } else {
+          this.addPlaceHolder()
+        }
+    },
+    setContent(content) {
       // you can pass a json document
       this.editor.setContent(
-          {
+          content || {
             type: "doc",
             content: [
               {
@@ -534,7 +557,7 @@ export default {
                 content: [
                   {
                     type: "text",
-                    text: "This is some inserted text. 👋",
+                    text: "",
                   },
                 ],
               },
@@ -550,6 +573,12 @@ export default {
       return this.editor.getHTML();
     },
   },
+  created() {
+    document.addEventListener("click", this.detectEditorClick);
+  },
+  beforeDestroy() {
+    document.removeEventListener("click", this.detectEditorClick);
+  }
 };
 </script>
 
@@ -590,6 +619,7 @@ export default {
       border-radius: 8px;
       padding: 8px;
       border: 1px solid rgba(0, 0, 0, .2);
+
       &:focus {
         outline: none !important;
       }
