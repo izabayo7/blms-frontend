@@ -311,16 +311,7 @@
             :alt="course.name + ' cover photo'"
             class="preview-media"
             :src="`${course.cover_picture}?token=${$session.get('jwt')}`"
-            :lazy-src="`${course.cover_picture}?token=${$session.get('jwt')}`"
           >
-            <template v-slot:placeholder>
-              <v-row class="fill-height ma-0" align="center" justify="center">
-                <v-progress-circular
-                  indeterminate
-                  color="grey lighten-5"
-                ></v-progress-circular>
-              </v-row>
-            </template>
           </v-img>
           <div
             v-else
