@@ -32,16 +32,21 @@
             The .xlsx file should contain the following columns on each row
             <div v-if="choice === 4" class="columns">
               EMAIL, USER GROUP, USER CATEGORY
+              <a href="https://docs.google.com/spreadsheets/d/1fY2596IFt-73vZmYX9bDfHWKgrGSd9DOlJDQkqJ-vZ8/edit?usp=sharing"
+                 target="_blank">find sample here</a>
             </div>
-            <div class="columns">
+            <div v-if="choice === 1" class="columns">
               FIRST NAME, LAST NAME, GENDER, PASSWORD, USER GROUP, USER CATEGORY
+              <a href="http://docs.google.com/spreadsheets/d/15ZJ6ZYaxihVz2XpiV8Ub-cMMoBZZW74Tbxg6i9xgBu0/edit?usp=sharing"
+                 target="_blank">find sample here</a>
             </div>
           </div>
           <div class="send-container">
             <button class="add-email send cancel mr-4" @click="$emit('closeModal')">
               Cancel
             </button>
-            <button class="add-email send" @click="uploadFile">
+            <button class="add-email send" :class="{disabled: file === undefined}"
+                    :disabled="file === undefined" @click="uploadFile">
               Send
             </button>
           </div>
@@ -262,7 +267,7 @@ export default {
         } else {
           this.error = res.data.message
         }
-      } else{
+      } else {
         const res = await Apis.create("user_invitations/multiple", formData);
         if (res.data.status === 201) {
           res.data = res.data.data
