@@ -30,6 +30,7 @@
                   />
                 </v-list-item-content>
               </v-list-item>
+              <v-list-item v-if="!participants.length"> There are no participants </v-list-item>
             </v-list-item-group>
           </v-list>
         </v-card>
