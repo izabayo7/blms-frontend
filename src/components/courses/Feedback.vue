@@ -187,12 +187,18 @@ export default {
 <style lang="scss">
 .marking_feedback {
   .feedback_input {
-    border: 2px solid #d2d2d2;
+    color: #989898;
+    background-color: #f5f5f5;
+
     padding: 15px;
     border-radius: 9px;
     min-height: 140px;
     overflow-wrap: anywhere;
     max-width: 100%;
+    &.empty_feedback {
+      border: 2px solid #d2d2d2;
+      colo: black;
+    }
   }
   .feedback_input:focus {
     outline: none;
