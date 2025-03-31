@@ -51,6 +51,7 @@ export default {
                 state.group.error = '';
             },3000)
         },
+
         //store loaded messages
         STORE_LOADED_MESSAGES(state, data) {
             // verify if data object has information
