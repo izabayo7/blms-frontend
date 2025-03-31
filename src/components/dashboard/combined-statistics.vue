@@ -102,9 +102,13 @@ export default {
   methods: {
     async fetchData() {
       this.loaded = false
+      const today = new Date()
+      const endDate = new Date(today)
+          endDate.setDate(endDate.getDate() + 1)
+
       let response
       if (this.selected_category === "User joins") {
-        response = await Apis.get(`user/statistics/user_joins?start_date=${this.$store.state.sidebar_navbar.college.createdAt}&end_date=${new Date().toISOString()}`);
+        response = await Apis.get(`user/statistics/user_joins?start_date=${this.$store.state.sidebar_navbar.college.createdAt}&end_date=${endDate.toISOString()}`);
         this.series = [
           {
             name: "Users",
@@ -114,7 +118,7 @@ export default {
         this.chartOptions.xaxis.categories = response.data.data.map(x => x._id)
         this.loaded = true
       } else if (this.selected_category === "Quizes submitted") {
-        response = await Apis.get(`quiz_submission/statistics/submitted?start_date=${this.$store.state.sidebar_navbar.college.createdAt}&end_date=${new Date().toISOString()}`);
+        response = await Apis.get(`quiz_submission/statistics/submitted?start_date=${this.$store.state.sidebar_navbar.college.createdAt}&end_date=${endDate.toISOString()}`);
         this.series = [
           {
             name: "Submissions",
@@ -124,7 +128,7 @@ export default {
         this.chartOptions.xaxis.categories = response.data.data.map(x => x._id)
         this.loaded = true
       } else if (this.selected_category === "Users online") {
-        response = await Apis.get(`user_logs/statistics/online?start_date=${this.$store.state.sidebar_navbar.college.createdAt}&end_date=${new Date().toISOString()}`);
+        response = await Apis.get(`user_logs/statistics/online?start_date=${this.$store.state.sidebar_navbar.college.createdAt}&end_date=${endDate.toISOString()}`);
         this.series = [
           {
             name: "Users",
@@ -134,7 +138,7 @@ export default {
         this.chartOptions.xaxis.categories = response.data.data.map(x => x._id)
         this.loaded = true
       } else {
-        response = await Apis.get(`user_logs/statistics/${this.selected_category === "Course access" ? 'course_access' : 'live_session_access'}?start_date=${this.$store.state.sidebar_navbar.college.createdAt}&end_date=${new Date().toISOString()}`);
+        response = await Apis.get(`user_logs/statistics/${this.selected_category === "Course access" ? 'course_access' : 'live_session_access'}?start_date=${this.$store.state.sidebar_navbar.college.createdAt}&end_date=${endDate.toISOString()}`);
         this.series = [
           {
             name: this.selected_category,
@@ -255,6 +259,7 @@ export default {
     }
   }
 }
+
 /* Portrait phones and smaller */
 @media (max-width: 700px) {
   .combined-statistics {
