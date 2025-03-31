@@ -120,9 +120,9 @@ export default {
     },
     message() {
       if (this.message != "") {
+        this.showSave = false;
         setTimeout(() => {
           this.message = "";
-          this.showSave = false;
         }, 2000);
       }
     },
