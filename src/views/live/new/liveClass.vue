@@ -66,26 +66,37 @@
                     </div>
                   </div>
                   <div class="more-details">
-                    <!--                    <div class="speaking-user">-->
-                    <!--                      <div class="d-flex">-->
-                    <!--                        <div class="profile">-->
-                    <!--                          <img-->
-                    <!--                              v-if="instructor.profile"-->
-                    <!--                              :src="instructor.profile + '?width=100'"-->
-                    <!--                              alt="profile picture" class="picture">-->
-                    <!--                          <v-avatar v-else class="avatar">-->
-                    <!--                            {{ instructor.sur_name | computeText }}-->
-                    <!--                          </v-avatar>-->
-                    <!--                        </div>-->
-                    <!--                        <div class="user">-->
-                    <!--                          <div class="names">{{-->
-                    <!--                              participationInfo.isOfferingCourse ? "YOU" : `${instructor ? instructor.sur_name + ' ' + instructor.other_names : ''}`-->
-                    <!--                            }}-->
-                    <!--                          </div>-->
-                    <!--                          <div class="vocal"></div>-->
-                    <!--                        </div>-->
-                    <!--                      </div>-->
-                    <!--                    </div>-->
+                    <div v-if="currentPresenter || (userCategory == 'STUDENT' && !isStudentPresenting && instructor)"
+                         class="speaking-user">
+                      <div class="d-flex">
+                        <div class="profile">
+                          <img
+                              v-if="currentPresenter ? currentPresenter.profile : instructor.profile"
+                              :src="currentPresenter ? currentPresenter.profile : instructor.profile + '?width=100'"
+                              alt="profile picture" class="picture">
+                          <v-avatar v-else class="avatar">
+                            {{ (currentPresenter ? currentPresenter.sur_name : instructor.sur_name) | computeText }}
+                          </v-avatar>
+                        </div>
+                        <div class="user">
+                          <div class="names">{{
+                              `${currentPresenter ? currentPresenter.sur_name + ' ' + currentPresenter.other_names : instructor.sur_name + ' ' + instructor.other_names}`
+                            }}
+                          </div>
+                          <div class="vocal">Presenting</div>
+                        </div>
+                        <button v-if="userCategory != 'STUDENT' && !isStudentPresenting" @click="stop_presenter"
+                                class="stop-presenting ml-4">
+                          <svg width="26" height="26" viewBox="0 0 26 26" fill="none"
+                               xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="13" cy="13" r="13" fill="#E9E9E9"/>
+                            <path
+                                d="M16.875 10.0062L15.9938 9.125L12.5 12.6188L9.00625 9.125L8.125 10.0062L11.6188 13.5L8.125 16.9938L9.00625 17.875L12.5 14.3812L15.9938 17.875L16.875 16.9938L13.3812 13.5L16.875 10.0062Z"
+                                fill="#626262"/>
+                          </svg>
+                        </button>
+                      </div>
+                    </div>
                     <div v-if="isStudentPresenting " class="presenter d-flex">
                       <div class="text">You are presenting</div>
                       <button @click="stop_presenting" class="stop-presenting">
@@ -159,7 +170,8 @@
                       </div>
                     </div>
                   </div>
-                  <div class="video-controls" v-if="participationInfo.isOfferingCourse">
+                  <div class="video-controls"
+                       v-if="participationInfo.isOfferingCourse && (currentPresenter ? currentPresenter._id == this.me.userInfo._id : true)">
                     <div class="video-controls--wrapper"
                          :class="`${showComments?'':'centered'} ${$vuetify.breakpoint.mobile ? 'wide' : ''}`">
                       <button @click="toogleVideo" class="start-mute-video">
@@ -259,7 +271,8 @@
                     </div>
                   </div>
 
-                  <div v-else-if="!$vuetify.breakpoint.mobile && !isStudentPresenting" class="live-class-details">
+                  <div v-else-if="!$vuetify.breakpoint.mobile && !isStudentPresenting && userCategory == 'STUDENT'"
+                       class="live-class-details">
                     <div class="live-class-details--wrapper">
                       <div class="description">{{ live_session.chapter.description }}
                       </div>
@@ -286,7 +299,7 @@ openQuiz">
                       </div>
                     </div>
                   </div>
-                  <div class="video-controls" v-else>
+                  <div class="video-controls" v-else-if="userCategory == 'STUDENT'">
                     <div class="video-controls--wrapper viewer wide centered">
                       <span class="live">Live</span>
                       <div class="time">
@@ -494,6 +507,7 @@ export default {
       isHandRaised: false,
       newCommentAvailable: false,
       participants: [],
+      currentPresenter: undefined,
       comments: [],
       me: null,
       interval: null,
@@ -580,6 +594,27 @@ export default {
     }
   },
   methods: {
+    stop_presenter() {
+      let id = this.currentPresenter._id;
+      this.socket.emit("live/presentation_request", {
+        receiver: {id},
+        message: 'cancel_presenting'
+      });
+      this.currentPresenter = undefined
+      this.onViewerStopedPresenting(true)
+    },
+    stopped_presenting(forced) {
+      if (forced) {
+        this.$store.dispatch("app_notification/SET_NOTIFICATION", {
+          message: 'Sorry your the instructor canceled your presentation',
+          status: "info",
+          uptime: 5000,
+        })
+      }
+      this.isPresenting = false;
+      this.participationInfo.isOfferingCourse = false
+      this.me.rtcPeer.enabled = false
+    },
     presenterChanged(id) {
       const video = this.me.getVideoElement();
       video.muted = false
@@ -591,6 +626,7 @@ export default {
         if (this.participants[i].userInfo._id == id) {
           console.log(i, this.participants[i].rtcPeer)
           video.srcObject = this.participants[i].rtcPeer.getRemoteStream()
+          this.currentPresenter = this.participants[i].userInfo;
           break;
         }
       }
@@ -654,7 +690,7 @@ export default {
         this.me.rtcPeer.showLocalVideo();
         const video = this.me.getVideoElement();
         video.muted = true
-        if(force){
+        if (force) {
           this.start_presenting()
         }
       }
@@ -823,9 +859,7 @@ export default {
         if (['request_presenting', 'revert_presenting_request'].includes(message)) {
           this.isHandRaised = !this.isHandRaised;
         } else if (message == 'finished_presenting') {
-          this.isPresenting = false;
-          this.participationInfo.isOfferingCourse = false
-          this.me.rtcPeer.enabled = false
+          self.stopped_presenting()
         }
       })
       self.socket.on("res/live/presentation_request", ({message, sender}) => {
@@ -838,6 +872,8 @@ export default {
           this.handlePresentationResponse(sender, true)
         else if (message === 'deny_presenting')
           this.handlePresentationResponse(sender, false)
+        else if (message === 'cancel_presenting')
+          this.stopped_presenting(true)
         else
           this.onViewerStopedPresenting(true)
         console.log(message)
@@ -1047,10 +1083,13 @@ export default {
       participant.rtcPeer = new WebRtcPeer.WebRtcPeerSendonly(options,
           function (error) {
             if (error) {
-              return console.error(error);
+              console.error(error);
             }
             if (self.me === null)
               self.me = participant;
+            else {
+              console.log(self.me)
+            }
             this.generateOffer(participant.offerToReceiveVideo.bind(participant));
             if (!self.participationInfo.isOfferingCourse) {
               participant.rtcPeer.enabled = false

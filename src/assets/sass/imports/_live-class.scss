@@ -361,10 +361,13 @@
             //display: none;
             height: 60px;
             width: 177px;
-            position: absolute;
+            //position: absolute;
             top: 18px;
             right: 18px;
-
+.vocal{
+  font-family: Segoe UI;
+  color: #FFFFFF;
+}
             .profile {
               margin-right: 7px;
               width: 59.89px;
@@ -387,7 +390,7 @@
               /* identical to box height */
 
 
-              color: #193074;
+              color: #FFFFFF;
             }
           }
 
