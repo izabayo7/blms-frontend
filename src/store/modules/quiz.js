@@ -61,7 +61,7 @@ export default {
                         commit('modal/update_progress', 0, { root: true })
                         commit('modal/update_message', `uploading pictures`, { root: true })
 
-                        apis.create(`http://localhost:7070/kurious/file/quizAttachedFiles/${d.data._id}`, formData, {
+                        apis.create(`file/quizAttachedFiles/${d.data._id}`, formData, {
                             headers: {
                                 'Content-Type': 'multipart/form-data'
                             },
@@ -105,7 +105,7 @@ export default {
                         commit('modal/update_progress', 0, { root: true })
                         commit('modal/update_message', `uploading pictures`, { root: true })
 
-                        apis.create(`http://localhost:7070/kurious/file/quizAttachedFiles/${d.data._id}`, formData, {
+                        apis.create(`file/quizAttachedFiles/${d.data._id}`, formData, {
                             headers: {
                                 'Content-Type': 'multipart/form-data'
                             },

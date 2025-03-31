@@ -92,6 +92,7 @@
                         <kurious-file-picker
                           :boundIndex="i"
                           :allowedTypes="['image']"
+                          :multiple="true"
                           @addFile="addPicture"
                           @removeFile="removePicture"
                         />
@@ -106,6 +107,7 @@
                   v-model="question.marks"
                   suffix="Marks"
                   class="field_shadow_1"
+                  type="number"
                   solo
                   required
                 ></v-text-field>

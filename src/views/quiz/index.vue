@@ -62,7 +62,6 @@
           >
             <template v-slot:item.actions="{ item }">
               <v-icon
-                small
                 color="error"
                 @click="
                   set_modal({
@@ -78,13 +77,11 @@
                 >mdi-delete</v-icon
               >
               <v-icon
-                small
                 color="warning"
                 @click="$router.push(`quiz/view/${item.name}`)"
                 >mdi-eye</v-icon
               >
               <v-icon
-                small
                 color="success"
                 @click="$router.push(`quiz/edit/${item.name}`)"
                 >mdi-square-edit-outline</v-icon

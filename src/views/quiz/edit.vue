@@ -93,9 +93,71 @@
                         "
                         class="col-12 file-drop"
                       >
+                        <div
+                          v-if="soltAttachments(i).length > 0"
+                          class="attachments"
+                        >
+                          <div
+                            v-for="(choice, key) in soltAttachments(i)"
+                            :key="key"
+                            class="file-listing d-flex"
+                          >
+                            <div
+                              class="downloadable_attachment vertically--centered"
+                            >
+                              <!-- <v-icon color="#000000" x-large
+                                >mdi-file{{
+                                  findIcon(choice.src)
+                                }}-outline</v-icon
+                              > -->
+                              <v-icon color="#000000" x-large
+                                >mdi-file-outline</v-icon
+                              >
+                              <span class="filename text-truncate">{{
+                                choice.src.split("/")[
+                                  choice.src.split("/").length - 1
+                                ]
+                              }}</span>
+                              <button
+                                @click.prevent="
+                                  remove_quiz_attached_file({
+                                    index: i,
+                                    file_name: choice.src,
+                                  })
+                                "
+                              >
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  width="45"
+                                  height="45"
+                                  viewBox="0 0 69 69"
+                                >
+                                  <circle
+                                    id="Ellipse_225"
+                                    data-name="Ellipse 225"
+                                    cx="34.5"
+                                    cy="34.5"
+                                    r="34.5"
+                                    fill="#fc6767"
+                                  />
+                                  <path
+                                    id="Icon_material-delete"
+                                    data-name="Icon material-delete"
+                                    d="M9,28.5a3.009,3.009,0,0,0,3,3H24a3.009,3.009,0,0,0,3-3v-18H9ZM28.5,6H23.25l-1.5-1.5h-7.5L12.75,6H7.5V9h21V6Z"
+                                    transform="translate(16.5 16.5)"
+                                    fill="none"
+                                    stroke="#fff"
+                                    stroke-width="2"
+                                  />
+                                </svg>
+                              </button>
+                            </div>
+                          </div>
+                        </div>
                         <kurious-file-picker
                           :boundIndex="i"
                           :allowedTypes="['image']"
+                          :multiple="true"
                           @addFile="addPicture"
                           @removeFile="removePicture"
                         />
@@ -110,6 +172,7 @@
                   v-model="question.marks"
                   suffix="Marks"
                   class="field_shadow_1"
+                  type="number"
                   solo
                   required
                 ></v-text-field>
@@ -159,12 +222,9 @@ export default {
     VueTimepicker,
   },
   data: () => ({
-    pictures: [[], []],
+    pictures: [],
     mode: "",
-    status: 200,
-    name: "",
     duration: {},
-    activeQuestion: 0,
     questionTypes: [
       "Open ended",
       "Single text select",
@@ -185,16 +245,45 @@ export default {
   },
   methods: {
     ...mapActions("quiz", ["update_quiz", "findQuizByName"]),
+    soltAttachments(index) {
+      let attachments = [];
+      for (const i in this.selected_quiz.questions[index].options.choices) {
+        if (
+          this.selected_quiz.questions[index].options.choices[i].src.includes(
+            "http"
+          )
+        ) {
+          attachments.push(
+            this.selected_quiz.questions[index].options.choices[i]
+          );
+        }
+      }
+      return attachments;
+    },
+    //delete a quiz attached file
+    remove_quiz_attached_file({ index, file_name }) {
+      for (const i in this.selected_quiz.questions[index].options.choices) {
+        if (
+          this.selected_quiz.questions[index].options.choices[i].src ===
+          file_name
+        ) {
+          this.selected_quiz.questions[index].options.choices.splice(i, 1);
+          break;
+        }
+      }
+    },
     addPicture(file, boundIndex) {
       this.pictures[boundIndex].push(file);
-      this.questions[boundIndex].options.choices.push({ src: file.name });
+      this.selected_quiz.questions[boundIndex].options.choices.push({
+        src: file.name,
+      });
     },
     removePicture(index, boundIndex) {
       this.pictures[boundIndex].splice(index, 1);
-      this.questions[boundIndex].options.choices.splice(index, 1);
+      this.selected_quiz.questions[boundIndex].options.choices.splice(index, 1);
     },
     recreate() {
-      this.questions = [
+      this.selected_quiz.questions = [
         {
           type: "",
           marks: 0,
@@ -228,6 +317,7 @@ export default {
           choices: [],
         };
       }
+      this.pictures[index] = [];
     },
     addQuestion() {
       this.selected_quiz.questions.push({
@@ -269,14 +359,29 @@ export default {
     async saveQuiz() {
       let questions = [];
       for (const index in this.selected_quiz.questions) {
+        // format the question type
         this.selected_quiz.questions[index].type = this.selected_quiz.questions[
           index
         ].type
           .toLowerCase()
           .split(" ")
           .join("-");
+
+        // remove options for non select questions
         if (!this.selected_quiz.questions[index].type.includes("select")) {
           this.selected_quiz.questions[index].options = undefined;
+        }
+        // remove media path from src
+        else if (
+          this.selected_quiz.questions[index].type.includes("file-select")
+        ) {
+          for (const i in this.selected_quiz.questions[index].options.choices) {
+            const mediapath = this.selected_quiz.questions[index].options
+              .choices[i].src;
+            this.selected_quiz.questions[index].options.choices[
+              i
+            ].src = mediapath.split("/")[mediapath.split("/").length - 1];
+          }
         }
         questions.push(this.selected_quiz.questions[index]);
       }
@@ -300,6 +405,15 @@ export default {
         this.$router.push("/quiz");
       });
     },
+    formatQuestionType(value) {
+      for (const index in this.questionTypes) {
+        if (
+          value === this.questionTypes[index].toLowerCase().split(" ").join("-")
+        ) {
+          return this.questionTypes[index];
+        }
+      }
+    },
   },
   created() {
     this.mode = "edit";
@@ -310,6 +424,12 @@ export default {
     }).then(() => {
       setTimeout(() => {
         this.duration = this.to_hh_mm_ss(this.selected_quiz.duration);
+        for (const index in this.selected_quiz.questions) {
+          this.selected_quiz.questions[index].type = this.formatQuestionType(
+            this.selected_quiz.questions[index].type
+          );
+          this.pictures.push([]);
+        }
       }, 1000);
     });
   },
@@ -363,6 +483,10 @@ export default {
     > .v-input__control
     > .v-input__slot:focus-within {
     border-left: 8px solid #ffc100;
+  }
+  .downloadable_attachment {
+    width: 100%;
+    margin-bottom: 18px;
   }
 }
 </style>
