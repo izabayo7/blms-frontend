@@ -421,7 +421,7 @@ export default {
     // get all quizes
     ...mapGetters("quiz", ["all_quiz"]),
     selectedQuiz() {
-      return this.all_quiz
+      return this.all_quiz.length
         ? this.all_quiz.filter((quiz) => quiz.name == this.selectedQuizName)[0]
         : undefined;
     },

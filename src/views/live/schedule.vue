@@ -130,7 +130,7 @@
           "
         />
       </div>
-      <button class="submit" @click="isConfirming=true;showModal=true">Schedule class</button>
+      <button class="submit" @click="validateForm()">Schedule class</button>
     </div>
     <Popup v-show="showModal" :title="'You are about to schedule a live class with the following details'">
       <template v-if="isConfirming" v-slot:content>
@@ -224,6 +224,13 @@ export default {
       }
       return res;
     },
+    selectedQuiz() {
+      if (this.all_quiz.length && this.selected_quiz != "") {
+        return this.all_quiz.filter((quiz) => quiz.name == this.selected_quiz)[0]._id;
+      } else {
+        return undefined;
+      }
+    },
     quizNames() {
       let res = []
       for (const i in this.all_quiz) {
@@ -253,6 +260,24 @@ export default {
     toogleMenu() {
       this.menu = true;
     },
+    validateForm() {
+      if (this.selected_chapter == "" || this.date == "") {
+        this.$store.dispatch("app_notification/SET_NOTIFICATION", {
+          message: "All fields are required",
+          status: "danger",
+          uptime: 20000,
+        });
+      } else if (this.time == "00:00") {
+        this.$store.dispatch("app_notification/SET_NOTIFICATION", {
+          message: "Time is required",
+          status: "info",
+          uptime: 20000,
+        });
+      } else {
+        this.isConfirming = true;
+        this.showModal = true
+      }
+    },
     showTimePicker(showSeconds) {
       this.useSeconds = showSeconds;
       this.showPicker = true;
@@ -275,7 +300,7 @@ export default {
             id: chapter_id,
           },
           starting_time: this.date,
-          quiz: this.selected_quiz ? this.selected_quiz : undefined
+          quiz: this.selectedQuiz ? this.selectedQuiz : undefined
         },
       }).then(() => {
         console.log("Live session created");
