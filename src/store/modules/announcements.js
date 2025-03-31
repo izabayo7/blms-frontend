@@ -39,6 +39,16 @@ export default {
                 router.push('/announcements')
             })
         },
+        //create a announcement
+        deleteAnnouncement({state}) {
+            const id = state.selected_announcement
+            return apis.delete('announcement', id).then((d) => {
+                if(d.data.status === 200) {
+                    state.announcements.data = state.announcements.data.filter(e => e._id !== id)
+                    router.push('/announcements')
+                }
+            })
+        },
         //update a announcement
         updateAnnouncement({state}, {content}) {
             let announcementIndex
