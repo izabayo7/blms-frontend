@@ -3,7 +3,7 @@
     <img src="" alt="" v-if="user.pic" >
     <v-avatar size="25" class="avatar" v-else> {{ user.sur_name | computeText }}</v-avatar>
     <div class="name">{{ user.other_names + ' ' + user.sur_name}}</div>
-    <div class="type">{{ user.category.name.toLowerCase() }}</div>
+    <div class="type">{{ user.category.toLowerCase() }}</div>
   </div>
 </template>
 
