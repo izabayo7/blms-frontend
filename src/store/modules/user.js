@@ -25,11 +25,17 @@ export default {
         }
     },
     getters: {
+        // get user
         user(state){
             return state.user
         },
+        // get user full names
         user_full_names(state){
             return `${state.user.sur_name} ${state.user.other_names}`
+        },
+        // get user username
+        username(state){
+            return state.user.user_name
         }
     },
 }
