@@ -1,12 +1,21 @@
 <template>
 <div class="cropper-container" id="imageCropper" v-if="visible">
   <div class="inner-cropper" >
+    <div class="img">
       <div class="cropper-holder">
-        <cropper ref="cropper" class="cropper" :src="img" :stencil-props="{aspectRatio: 1}" ></cropper>
+        <h3 v-if="imgLoaded">Crop image</h3>
+        <cropper @change="changed" ref="cropper" class="cropper" :src="img" :stencil-props="{aspectRatio: 1}" ></cropper>
       </div>
+      <div class="preview" v-show="imgLoaded">
+        <h3>Image preview</h3>
+        <img ref="preview" src="" alt="">
+      </div>
+    </div>
+    <div class="btn">
+      <button class="done" @click="done">Save changes</button>
+      <button class="cancel" @click="cancel">Cancel</button>
+    </div>
   </div>
-  <button class="done" @click="done">Done</button>
-  <button class="cancel" @click="cancel">Cancel</button>
 </div>
 </template>
 
@@ -24,7 +33,8 @@ export default {
   },
   data(){
     return{
-      visible:false
+      visible:true,
+      imgLoaded:false
     }
   },
   methods:{
@@ -35,6 +45,10 @@ export default {
       this.$emit('change',canvas.toDataURL()) //emit on component that cropped photo was changed
       emit('image_cropped') //emit globally that image cropped
       this.visible = false
+    },
+    changed({canvas}){
+      this.$refs.preview.src = canvas.toDataURL();
+      this.imgLoaded = true
     },
     cancel(){
       this.visible  = false
@@ -52,12 +66,28 @@ export default {
 
 <style lang="scss" scoped>
 
+/* Medium (md) */
+@media (max-width: 768px) {
+  .cropper-container{
+    width:90%;
+    max-width: 90%;
+
+    .cropper-holder{
+      width:100% !important;
+
+      img{
+        width:100% !important;
+      }
+    }
+  }
+}
+
 .cropper-container{
   position: absolute;
   top:50%;
   left:50%;
   transform: translate(-50%,-50%);
-  padding:1rem 10rem;
+  padding:1rem ;
   height: fit-content;
   min-width: 50%;
   max-width: 80%;
@@ -66,39 +96,90 @@ export default {
   z-index: 101;
   box-shadow:  0 0 20px 4px #4ac1c62e;
 
-  button{
-    box-shadow: 0 0 10px 1px lighten($success,10);
-    width: 10rem;
-    padding:1rem 2rem;
-    background-color: $success;
-    color:$main;
+  .btn{
+    display: flex;
+    justify-content: center;
 
+    button{
+      min-width: 10rem;
+      padding:1rem 2rem;
+      margin:1rem;
+      width: fit-content;
+
+      &.done{
+        box-shadow: 0 0 10px 1px lighten($success,30);
+        background-color: $success;
+        color:$main;
+
+        &:hover{
+          background-color: lighten($success,10);
+        }
+
+      }
+      &.cancel{
+        border: 2px solid lighten($font,20);
+
+        &:hover{
+          background-color:lighten( $secondary,6);
+        }
+      }
+
+    }
   }
   .inner-cropper{
     height: 100%;
     width: 100%;
     position: relative;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: center;
     align-self: flex-end;
+
+
+    .img{
+      display: flex;
+      flex-wrap: wrap;
+      width: 100%;
+      justify-content: center;
+
+
+      h3{
+        text-align: center;
+        padding: .5rem;
+      }
+
+      .cropper-holder{
+        padding: 1rem;
+        max-width: 40rem;
+        box-sizing: border-box;
+        width:80%;
+        img{
+          width: 100% !important;
+          object-fit: contain;
+        }
+      }
+
+      .preview{
+        box-sizing: border-box;
+        align-self: center;
+        padding: 1rem;
+        min-width: 10rem;
+        width: 20%;
+        img{
+          width: 100%;
+        }
+      }
+
+    }
+
     .cropper-holder{
-        max-height: 50rem;
-        min-height: 70vh;
-        max-width:50rem;
-        min-width: 80%;
+      padding: 1rem;
       .cropper{
 
         .vue-advanced-cropper__image{
           width:100%;
           object-fit: contain;
         }
-      }
-    }
-    .preview{
-      align-self: flex-end;
-      img{
-        width: 10rem;
       }
     }
   }
