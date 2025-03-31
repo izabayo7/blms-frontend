@@ -8,40 +8,32 @@
         :items-per-page="5"
         sort-by="dateOfSubmission"
         class="data-table"
+        @click:row="handleRowClick"
       >
         <template v-slot:item.course_name="{ item }">
-          <router-link class="normal--text d-block" to="/">{{
+          <span class="normal--text d-block">{{
             item.target.course.name
-          }}</router-link>
-          <router-link class="normal--text small" to="/">{{
+          }}</span>
+          <span class="normal--text small">{{
             item.target.course.user_group.name
-          }}</router-link>
+          }}</span>
         </template>
         <template v-slot:item.chapter_name="{ item }">
-          <router-link class="normal--text" to="/">{{
+          <span class="normal--text">{{
             item.target.chapter.name
-          }}</router-link>
+          }}</span>
         </template>
         <template v-slot:item.total_marks="{ item }">
-          <span class="normal--text" to="/">{{ item.total_marks }}</span>
+          <span class="normal--text">{{ item.total_marks }}</span>
         </template>
         <template v-slot:item.marking_status="{ item }">
-          <span class="normal--text" to="/">{{ Math.round(item.marking_status.split('%')[0]) }}%</span>
+          <span class="normal--text">{{ Math.round(item.marking_status.split('%')[0]) }}%</span>
         </template>
         <template v-slot:item.total_submissions="{ item }">
           <span class="normal--text">{{ item.submissions.length }}</span>
         </template>
         <template v-slot:item.actions="{ item }">
           <v-row class="actions pa-0">
-            <v-col class="pa-0 pr-1 py-1">
-              <v-btn
-                class="white--text"
-                :color="primary"
-                :to="`/reports/${item._id}`"
-              >
-                View submissions
-              </v-btn></v-col
-            >
             <v-col class="pa-0 px-1 py-1">
               <v-btn
                 color="#02A617"
@@ -66,24 +58,23 @@
         :items-per-page="5"
         sort-by="dateOfSubmission"
         class="data-table courses"
+        @click:row="handleRowClick"
       >
-        <template v-slot:item.course_name="{ item }">
-          <router-link class="normal--text d-block" to="/">{{
+        <template v-slot:item.course_name="{ item }">{{
             item.name
-          }}</router-link>
+          }}
         </template>
-        <template v-slot:item.student_group="{ item }">
-          <router-link class="normal--text" to="/">{{
+        <template v-slot:item.student_group="{ item }">{{
             item.user_group.name
-          }}</router-link>
+          }}
         </template>
         <template v-slot:item.total_students="{ item }">
-          <span class="normal--text semi_bold_text" to="/">{{
+          <span class="normal--text semi_bold_text">{{
             item.attendedStudents
           }}</span>
         </template>
         <template v-slot:item.last_updated="{ item }">
-          <span class="normal--text semi_bold_text" to="/">{{
+          <span class="normal--text semi_bold_text" >{{
             item.updatedAt | formatDate
           }}</span>
         </template>
@@ -196,6 +187,12 @@ export default {
   methods: {
     ...mapActions("courses", ["getCourses"]),
     ...mapActions("quiz_submission", ["getQuizSubmissions"]),
+    handleRowClick(value){
+      if(value.attendedStudents)
+        this.$router.push(`/courses/preview/${value.name}`)
+      else
+        this.$router.push(`/reports/${value._id}`)
+    },
   },
   created() {
     //get courses on page load
