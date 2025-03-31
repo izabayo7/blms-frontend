@@ -181,8 +181,8 @@ export default {
     getters:{
         // connect to socket from sever side
         socket(){
-            // return io('http://161.35.199.197:7070',{
-            return io('http://192.168.8.100:7070',{
+            return io('http://161.35.199.197:7070',{
+            // return io('http://192.168.8.100:7070',{
                 query:{
                     id:user.state.user._id // username of the connected user
                 }
