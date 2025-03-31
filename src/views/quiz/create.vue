@@ -143,7 +143,7 @@
               ></textarea>
             </div>
           </div>
-          <div v-if="question.type.includes('text')" class="text-select">
+          <div v-if="question.type.includes('choice')" class="text-select">
             <div
                 v-for="(option, k) in question.options.choices"
                 :key="k"
@@ -312,8 +312,8 @@ export default {
     selected_course: "",
     questions_types: [
       "Open ended",
-      "Single text select",
-      "Multiple text select",
+      "Single choice selection",
+      "Multiple choice selection",
       "Single image select",
       "Multiple image select",
       "File upload",
@@ -522,6 +522,7 @@ export default {
     async saveQuiz() {
       let questions = [];
       for (const index in this.questions) {
+        this.questions[index].type = this.questions[index].type.replace('choice selection', 'text select');
         this.questions[index].type = this.questions[index].type
             .toLowerCase()
             .split(" ")
