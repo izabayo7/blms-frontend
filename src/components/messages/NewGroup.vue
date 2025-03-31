@@ -21,11 +21,8 @@
                       <svg v-if="userLoading" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"/><path d="M12 3a9 9 0 0 1 9 9h-2a7 7 0 0 0-7-7V3z"/></svg>
                       <div class="no-user" v-if="NotFoundText.length>0">{{ NotFoundText }}</div>
                       <transition-group name="members">
-                        <div class="member" :class="{disabled:disabled(user.email)}" v-for="(user) in foundUsers" @click="addMember(user)" :key="user.email">
-                          <img src="" alt="" v-if="user.pic" >
-                          <v-avatar size="25" class="avatar" v-else> {{ user.sur_name | computeText }}</v-avatar>
-                          <div class="name">{{ user.other_names + ' ' + user.sur_name}}</div>
-                          <div class="type">{{ user.category.name.toLowerCase() }}</div>
+                        <div class="member" v-for="(user) in foundUsers" @click="addMember(user)" :key="user.email">
+                          <member :disabled="disabled(user.email)"  :user="user"  />
                         </div>
                       </transition-group>
                     </div>
@@ -90,10 +87,12 @@
 import {emit, on} from '@/services/event_bus';
 import {mapMutations, mapState, mapActions} from "vuex";
 import a from '@/services/apis'
+import Member from "@/components/messages/Member";
 
 export default {
   name: "NewGroup",
   components: {
+    Member,
     switchUi: () => import('@/components/reusable/ui/switcher'),
     chip: () => import('@/components/reusable/ui/Chip'),
     cropper: () => import('@/components/reusable/ui/ImageCropper')
@@ -284,98 +283,6 @@ export default {
                 width: 100%;
               }
 
-              /*
-              animations on enter of members list
-               */
-              .member-enter-active, .member-leave-active {
-                transition: .5s;
-                transition-property: opacity,height;
-                height: auto;
-              }
-              .member-enter, .member-leave-to /* .fade-leave-active below version 2.1.8 */ {
-                opacity: 0;
-                height: 0;
-              }
-
-              .members-enter-active, .members-leave-active {
-                transition: .5s;
-                transition-property: opacity,height;
-                height: auto;
-              }
-              .members-enter, .members-leave-to /* .fade-leave-active below version 2.1.8 */ {
-                opacity: 0;
-                height: 0;
-              }
-
-              .found-members{
-                box-shadow: 0 2px 5px darken($blue-gray,5);
-                border-radius: 5px;
-                padding: 1rem 0;
-                display: flex;
-                justify-content: center;
-                flex-wrap: wrap;
-                transition: .4s ease-in-out;
-                .disabled{
-                  opacity:.3;
-                }
-                /* this element is added by vue due to transition group */
-                span{
-                  width: 100%;
-                }
-                .no-user{
-                  font-size: .8rem;
-                  color:lighten($font,20)
-                }
-                svg{
-                  border-radius: 50%;
-                  justify-self: center;
-                  animation: roll .9s ease-in-out infinite;
-                  fill:lighten($font,30);
-                }
-
-                @keyframes roll {
-                  0%{
-                    transform:rotate(0deg);
-                  }
-                  100%{
-                    transform: rotate(360deg);
-                  }
-                }
-                .member{
-                  width: 100%;
-                  transition:.3s ease-in;
-                  display: flex;
-                  padding:.4rem .7rem;
-                  cursor: pointer;
-                  font-size: .9rem;
-
-                  &:hover{
-                    background-color: $blue-gray;
-                  }
-
-                  .name {
-                    margin: 0 .4rem
-                  }
-
-                  .type{
-                    align-self: center;
-                    background-color: lighten($success,20);
-                    color:$font;
-                    margin-left: 2rem;
-                    font-size: .65rem;
-                    border-radius: 20px;
-                    height: fit-content;
-                    padding: .05rem .8rem;
-                  }
-
-                  .avatar{
-                    align-self: center;
-                    margin:0 .4rem;
-                    background-color: $primary;
-                    color:$main;
-                  }
-                }
-              }
             }
           }
 
