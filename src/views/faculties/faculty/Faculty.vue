@@ -49,10 +49,10 @@
 
 <!--    faculty page information/overview-->
     <div class="faculty--information information">
-      <div class="information--wrapper">
+      <div class="faculty--information--wrapper d-flex ">
 
 <!--        column 1-->
-        <div class="information--col__1">
+        <div class="faculty--information--col__1 faculty--information--col col-4">
           <div class="information--faculty-details">
             <div class="information--faculty-details--header">
               <h2>Communication design</h2>
@@ -64,56 +64,56 @@
         </div>
 
 <!--        column 2-->
-        <div class="information--col__2">
+        <div class="faculty--information--col__2 faculty--information--col col-8">
           <div class="faculty--details">
 
 <!--            row one for cards-->
-            <div class="faculty--details--row__1">
-              <div class="faculty--information-cards">
+            <div class="faculty--details--row__1 faculty--details--row">
+              <div class="faculty--information-cards d-flex justify-space-around">
 
 <!--                card 1-->
                 <div class="faculty--information-card__1 faculty--information-card">
-                  <div class="faculty--information-card--wrapper">
-                    <div class="faculty--information-card--icon">
+                  <div class="faculty--information-card--wrapper d-flex flex-column align-center">
+                    <div class="faculty--information-card--icon faculty--information-card--inner-row">
                       <svg width="56" height="36" viewBox="0 0 56 36" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M37.8387 15.542C41.9726 15.542 45.2848 12.205 45.2848 8.07107C45.2848 3.93713 41.9726 0.600098 37.8387 0.600098C33.7048 0.600098 30.3677 3.93713 30.3677 8.07107C30.3677 12.205 33.7048 15.542 37.8387 15.542ZM17.9161 15.542C22.0501 15.542 25.3622 12.205 25.3622 8.07107C25.3622 3.93713 22.0501 0.600098 17.9161 0.600098C13.7822 0.600098 10.4452 3.93713 10.4452 8.07107C10.4452 12.205 13.7822 15.542 17.9161 15.542ZM17.9161 20.5227C12.1137 20.5227 0.483871 23.4364 0.483871 29.2388V35.4646H35.3484V29.2388C35.3484 23.4364 23.7186 20.5227 17.9161 20.5227ZM37.8387 20.5227C37.1165 20.5227 36.2947 20.5725 35.4231 20.6472C38.3119 22.7391 40.329 25.5531 40.329 29.2388V35.4646H55.271V29.2388C55.271 23.4364 43.6412 20.5227 37.8387 20.5227Z" fill="#193074"/>
                       </svg>
                     </div>
-                    <div class="faculty--information-card--number"> 68 </div>
-                    <div class="faculty--information-card--text"> Users </div>
+                    <div class="faculty--information-card--number faculty--information-card--inner-row"> 68 </div>
+                    <div class="faculty--information-card--text faculty--information-card--inner-row"> Users </div>
                   </div>
                 </div>
 
 <!--                card 2-->
                 <div class="faculty--information-card__2 faculty--information-card">
-                  <div class="faculty--information-card--wrapper">
-                    <div class="faculty--information-card--icon">
+                  <div class="faculty--information-card--wrapper d-flex flex-column align-center">
+                    <div class="faculty--information-card--icon faculty--information-card--inner-row">
                       <svg width="56" height="36" viewBox="0 0 56 36" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M37.8387 15.542C41.9726 15.542 45.2848 12.205 45.2848 8.07107C45.2848 3.93713 41.9726 0.600098 37.8387 0.600098C33.7048 0.600098 30.3677 3.93713 30.3677 8.07107C30.3677 12.205 33.7048 15.542 37.8387 15.542ZM17.9161 15.542C22.0501 15.542 25.3622 12.205 25.3622 8.07107C25.3622 3.93713 22.0501 0.600098 17.9161 0.600098C13.7822 0.600098 10.4452 3.93713 10.4452 8.07107C10.4452 12.205 13.7822 15.542 17.9161 15.542ZM17.9161 20.5227C12.1137 20.5227 0.483871 23.4364 0.483871 29.2388V35.4646H35.3484V29.2388C35.3484 23.4364 23.7186 20.5227 17.9161 20.5227ZM37.8387 20.5227C37.1165 20.5227 36.2947 20.5725 35.4231 20.6472C38.3119 22.7391 40.329 25.5531 40.329 29.2388V35.4646H55.271V29.2388C55.271 23.4364 43.6412 20.5227 37.8387 20.5227Z" fill="#193074"/>
                       </svg>
                     </div>
-                    <div class="faculty--information-card--number"> 4 </div>
-                    <div class="faculty--information-card--text"> Students Groups </div>
+                    <div class="faculty--information-card--number faculty--information-card--inner-row"> 4 </div>
+                    <div class="faculty--information-card--text faculty--information-card--inner-row"> Students Groups </div>
                   </div>
                 </div>
 
 <!--                card 3-->
                 <div class="faculty--information-card__3 faculty--information-card">
-                  <div class="faculty--information-card--wrapper">
-                    <div class="faculty--information-card--icon">
+                  <div class="faculty--information-card--wrapper d-flex flex-column align-center">
+                    <div class="faculty--information-card--icon faculty--information-card--inner-row">
                       <svg width="56" height="36" viewBox="0 0 56 36" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M37.8387 15.542C41.9726 15.542 45.2848 12.205 45.2848 8.07107C45.2848 3.93713 41.9726 0.600098 37.8387 0.600098C33.7048 0.600098 30.3677 3.93713 30.3677 8.07107C30.3677 12.205 33.7048 15.542 37.8387 15.542ZM17.9161 15.542C22.0501 15.542 25.3622 12.205 25.3622 8.07107C25.3622 3.93713 22.0501 0.600098 17.9161 0.600098C13.7822 0.600098 10.4452 3.93713 10.4452 8.07107C10.4452 12.205 13.7822 15.542 17.9161 15.542ZM17.9161 20.5227C12.1137 20.5227 0.483871 23.4364 0.483871 29.2388V35.4646H35.3484V29.2388C35.3484 23.4364 23.7186 20.5227 17.9161 20.5227ZM37.8387 20.5227C37.1165 20.5227 36.2947 20.5725 35.4231 20.6472C38.3119 22.7391 40.329 25.5531 40.329 29.2388V35.4646H55.271V29.2388C55.271 23.4364 43.6412 20.5227 37.8387 20.5227Z" fill="#193074"/>
                       </svg>
                     </div>
-                    <div class="faculty--information-card--number"> 68 </div>
-                    <div class="faculty--information-card--text"> Courses </div>
+                    <div class="faculty--information-card--number faculty--information-card--inner-row"> 68 </div>
+                    <div class="faculty--information-card--text faculty--information-card--inner-row"> Courses </div>
                   </div>
                 </div>
               </div>
             </div>
 
 <!--            row two for dean/instructor information-->
-            <div class="faculty--details--row__2">
+            <div class="faculty--details--row__2 faculty--details--row">
               <div class="faculty--dean-information">
                 <div class="faculty--dean-header">
                   <h3>Dean Instructor</h3>
@@ -154,5 +154,74 @@ name: "Faculty",
   &--header{
     @include admin-page-header;
   }
+
+  &--links{
+    &.links{
+      &--wrapper{
+
+      }
+    }
+  }
+
+  &--information{
+    &--wrapper{
+
+    }
+
+    &--col{
+
+      &__1{
+
+      }
+      &__2{
+
+      }
+    }
+
+  }
+
+  &--details--row{
+    &__1{
+
+    }
+    &__2{
+
+    }
+  }
+
+  &--information-cards{
+
+  }
+
+  &--information-card{
+    width:10rem;
+    border:2px solid $secondary;
+    cursor: pointer;
+    padding:2rem 0;
+
+    &--inner-row{
+      padding:.5rem 0;
+    }
+
+    &:hover{
+      background-color:$primary;
+      border:none;
+      box-shadow: 0 0 10px 1px lighten($primary, 60);
+
+      *{
+        color:$main;
+        fill:$main;
+      }
+
+    }
+
+    &__1{
+
+    }
+    &__2{
+
+    }
+  }
+
 }
 </style>
