@@ -18,11 +18,7 @@
             </v-avatar>
           </div>
           <div class="input ml-3 pl-3 py-1">
-            <span role="textbox" contenteditable
-
-              type="text"
-            >
-            </span>
+            <expandable-input v-model="comment"/>
           </div>
         </div>
         <div class="action-btn" >
@@ -38,9 +34,11 @@
 import { mapGetters } from "vuex";
 import api from "@/services/apis";
 import { empty } from "../../services/global_functions";
+import ExpandableInput from "../reusable/ui/ExpandableInput";
 
 export default {
   name: "StudentNewCommentWithPhoto",
+  components: {ExpandableInput},
   data() {
     return {
       comment: "",
@@ -76,7 +74,7 @@ export default {
       } catch (err) {
         console.log(err);
       }
-    },
+    }
   },
 };
 </script>
@@ -111,15 +109,6 @@ export default {
           display: flex;
           justify-items: center;
 
-          span {
-            width: 100%;
-            color:$font;
-            font-size: .8rem;
-            outline:none;
-            border:.5px solid $secondary;
-            border-radius: 3px;
-            padding:.5rem;
-          }
         }
       }
       .action-btn{
