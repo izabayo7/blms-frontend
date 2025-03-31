@@ -1,14 +1,12 @@
 /* eslint-disable */
 
 const PARTICIPANT_MAIN_CLASS = 'participant main';
-const PARTICIPANT_CLASS = 'participant';
 
 /**
  * Creates a video element for a new participant
  *
- * @param {String} name - the name of the new participant, to be used as tag
- *                        name of the video element.
- *                        The tag of the new element will be 'video<name>'
+ * @param {String} name - the name of the new participant
+ *
  * @param {Object} vm -    vue instance that contains send message method
  *
  *
@@ -18,52 +16,20 @@ const PARTICIPANT_CLASS = 'participant';
 export default function Participant(name, vm, offeringCourse = false, userInfo) {
     this.name = name;
     this.userInfo = userInfo;
-    // let container = document.createElement('div');
-    // container.className = isPresentMainParticipant() ? PARTICIPANT_CLASS : PARTICIPANT_MAIN_CLASS;
-    // container.id = name;
-    // let span = document.createElement('span');
-    // let video = document.createElement('video');
     let video = document.getElementById("video_feed");
     let rtcPeer;
-    // this.vm = vm;
+    this.vm = vm;
     this.offeringCourse = offeringCourse
 
-    // container.appendChild(video);
-    // container.appendChild(span);
-    // container.onclick = switchContainerClass;
-    // document.getElementById('participants').appendChild(container);
-    //
-    // span.appendChild(document.createTextNode(name));
-    //
-    // video.id = 'video-' + name;
     console.log(userInfo)
     if (userInfo.category == "INSTRUCTOR") {
         video.autoplay = true;
-        video.play();
+        // video.play();
     }
-    // video.controls = false;
-
-
-    // this.getElement = function () {
-    //     return container;
-    // }
 
     this.getVideoElement = function () {
         return video;
     }
-
-    // function switchContainerClass() {
-    //     if (container.className === PARTICIPANT_CLASS) {
-    //         let elements = Array.prototype.slice.call(document.getElementsByClassName(PARTICIPANT_MAIN_CLASS));
-    //         elements.forEach(function (item) {
-    //             item.className = PARTICIPANT_CLASS;
-    //         });
-    //
-    //         container.className = PARTICIPANT_MAIN_CLASS;
-    //     } else {
-    //         container.className = PARTICIPANT_CLASS;
-    //     }
-    // }
 
     function isPresentMainParticipant() {
         return ((document.getElementsByClassName(PARTICIPANT_MAIN_CLASS)).length !== 0);

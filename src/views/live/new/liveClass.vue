@@ -234,7 +234,7 @@
 // import * as kurentoUtils from "../../../plugins/kurentoLive/kurento-utils.js"
 import Participant from "../../../plugins/kurentoLive/participants";
 import {WebRtcPeer} from 'kurento-utils'
-import {mapGetters, mapState} from 'vuex'
+import {mapActions, mapGetters, mapState} from 'vuex'
 import Discussion from "../../../components/Live/Discussion";
 import OnlineUser from "../../../components/Live/OnlineUser";
 import StudentNewCommentWithPhoto from "../../../components/Live/StudentNewCommentWithPhoto";
@@ -376,6 +376,7 @@ export default {
   },
   computed: {
     ...mapGetters('user', ['user']),
+    ...mapGetters("chat", ["socket"]),
     ...mapState("sidebar_navbar", {sidebarOpen: "sidebar_expanded"}),
     instructor() {
       const el = this.participants.filter(e => e.userInfo.category == "INSTRUCTOR")
@@ -386,7 +387,8 @@ export default {
     },
   },
   methods: {
-    addComment(comment){
+    ...mapActions("live_session", ["addParticipant"]),
+    addComment(comment) {
       this.comments.push(comment)
     },
     replied(data) {
@@ -486,6 +488,7 @@ export default {
       let participant = new Participant(this.participationInfo.name, this, true, await this.getUserInfo(this.participationInfo.name.split('_')[0]));
 
       this.participants.push(participant);
+      this.addParticipant({id: participant.userInfo._id})
 
 
       let video = participant.getVideoElement();
@@ -575,6 +578,7 @@ export default {
       }
       if (sender != this.participationInfo.name) {
         this.participants.push(participant);
+        this.addParticipant({id: participant.userInfo._id})
       }
     },
 
@@ -614,11 +618,11 @@ export default {
       }
     }
     cancelButton.onclick = () => {
-        span.innerText = "write comment"
-        actionButtons.style.display = 'none';
+      span.innerText = "write comment"
+      actionButtons.style.display = 'none';
     }
-    if(!this.participationInfo.isOfferingCourse){
-      span.className="stud_span"
+    if (!this.participationInfo.isOfferingCourse) {
+      span.className = "stud_span"
     }
   },
   created() {
@@ -674,12 +678,14 @@ export default {
           break;
         case 'iceCandidate':
           console.log(parsedMessage.name, self.participantIndex(parsedMessage.name), self.participants)
-          this.participants[self.participantIndex(parsedMessage.name)].rtcPeer.addIceCandidate(parsedMessage.candidate, function (error) {
-            if (error) {
-              console.error("Error adding candidate: " + error);
-              return null;
-            }
-          });
+          if (self.participantIndex(parsedMessage.name) != -1) {
+            self.participants[self.participantIndex(parsedMessage.name)].rtcPeer.addIceCandidate(parsedMessage.candidate, function (error) {
+              if (error) {
+                console.error("Error adding candidate: " + error);
+                return null;
+              }
+            });
+          }
           break;
         default:
           console.error('Unrecognized message', parsedMessage);
@@ -689,7 +695,14 @@ export default {
       console.trace();
       console.log("\n\n\n\nclosed\n\n\n\n", new Date())
     }
-
+    self.socket.on("comment/new", (result) => {
+      console.log("\n\n\nyaje weeeeeeeeeeeeeeeeeeeee\n\n\n", result)
+      // this.$store.commit(
+      //     "courses/SET_TOTAL_COMMENTS_ON_A_CHAPTER",
+      //     this.totalComments == "" ? 1 : this.totalComments + 1
+      // );
+      self.comments.push(result)
+    });
   },
   destroyed() {
     console.log("bibaye when destroyed")

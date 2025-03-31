@@ -62,6 +62,7 @@ export default {
   },
   computed: {
     ...mapGetters("chat", ["socket"]),
+    ...mapGetters("live_session", ["participants"]),
     ...mapGetters("user", ["user_full_names", "username"]),
     ...mapGetters("courses", ["selectedChapter", "totalComments"]),
     comment_object() {
@@ -92,7 +93,7 @@ export default {
           this.comment = "";
         } else{
           this.socket.emit("comment/new", {
-            receivers: [],
+            receivers: this.participants,
             comment: this.comment_object,
           });
           this.socket.on("res/comment/new", (result)=>{

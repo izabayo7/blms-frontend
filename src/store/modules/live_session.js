@@ -3,9 +3,9 @@ import apis from "@/services/apis";
 const getDefaultState = () => ({
     live_sessions: {
         data: [],
-        active_participants: [],
         loaded: false
     },
+    active_participants: [],
 })
 
 export default {
@@ -28,8 +28,9 @@ export default {
             })
         },
         addParticipant({state}, {id}) {
-            if (!state.active_participants.includes(id))
-                state.active_participants.push(id)
+            const index = state.active_participants.indexOf({id})
+            if (index == -1)
+                state.active_participants.push({id})
         },
         deleteLiveSession({state}, {id}) {
             return apis.delete('live_session', id).then(() => {
@@ -42,4 +43,10 @@ export default {
             })
         }
     },
+    getters:{
+        participants: state => {
+            return state.active_participants;
+        },
+    }
+
 }
