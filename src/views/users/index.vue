@@ -32,7 +32,7 @@
         </div>
       </div>
       <div class="tabular-users">
-        <div class="table-wrapper">
+        <div class="table-wrapper mt-10">
           <table-ui :data="users"/>
         </div>
       </div>
