@@ -137,12 +137,22 @@
 
 <script>
 import SubpageNavbar from "../../../components/reusable/subpage-navbar";
+import Search from "../../../components/reusable/Search2";
+import ButtonUi from "../../../components/reusable/ui/button-ui";
 export default {
 name: "Faculty",
-  components: {SubpageNavbar}
+  components: {ButtonUi, Search, SubpageNavbar}
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+.faculty{
+  &--wrapper{
 
+  }
+
+  &--header{
+    @include admin-page-header;
+  }
+}
 </style>
