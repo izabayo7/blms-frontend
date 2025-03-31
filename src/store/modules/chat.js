@@ -233,6 +233,11 @@ export default {
                 state.incomingMessages = contacts
                 emit('incoming_message_initially_loaded')
             });
+
+            // Get new contact
+            getters.socket.on('res/message/contacts/new', ({ contact }) => {
+                state.incomingMessages.unshift(contact)
+            });
         },
         removeMember({ state }, { groupId, member }) {
             apis.update("chat_group", `${groupId}/remove_member/${member.data.user_name}`).then(() => {
