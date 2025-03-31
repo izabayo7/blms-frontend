@@ -42,11 +42,21 @@
         <div class="video--wrapper" >
             <div class="video-el" @mouseenter="toggleMenu(true)" @mouseleave="toggleMenu(false)">
               <div class="no-video" v-if="noVideo">
-                <div class="no-video--wrapper">
-                  <img src="https://s3.amazonaws.com/cms-assets.tutsplus.com/uploads/users/810/profiles/19338/profileImage/profile-square-extra-small.png" alt="profile picture" class="picture">
-                  <h2 class="course">Economics Basics: Chapter 8 part II</h2>
-                  <span class="source">by instuctor</span>
-                  <h2 class="name">Rubogora Emanuel</h2>
+                <div class="no-video--wrapper presenting">
+                  <div class="instructor-info">
+                    <img src="https://s3.amazonaws.com/cms-assets.tutsplus.com/uploads/users/810/profiles/19338/profileImage/profile-square-extra-small.png" alt="profile picture" class="picture">
+                    <h2 class="course">Economics Basics: Chapter 8 part II</h2>
+                    <span class="source">by instuctor</span>
+                    <h2 class="name">Rubogora Emanuel</h2>
+                  </div>
+                  <div class="screen-sharing-video">
+                    <div class="screen-sharing-video-wrapper">
+                      <h4>You are presenting the screen</h4>
+                      <video >
+                        <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" autoplay>
+                      </video>
+                    </div>
+                  </div>
                 </div>
               </div>
               <video v-else>
@@ -130,11 +140,11 @@
   import Participant from "../../../plugins/kurentoLive/participants";
   import {WebRtcPeer} from 'kurento-utils'
   import {mapGetters} from 'vuex'
-  // import OnlineUser from "../../../components/Live/OnlineUser";
-  // import UnrealTimeDiscussionBoard from "../../../components/Live/UnrealTimeDiscussionBoard";
+  import OnlineUser from "../../../components/Live/OnlineUser";
+  import UnrealTimeDiscussionBoard from "../../../components/Live/UnrealTimeDiscussionBoard";
 export default {
   name: "liveClass",
-  // components: {UnrealTimeDiscussionBoard, OnlineUser},
+  components: {UnrealTimeDiscussionBoard, OnlineUser},
   data(){
     return{
       ws:null,
@@ -928,24 +938,26 @@ export default {
           //no video card
           .no-video{
             &--wrapper{
-              display:flex;
-              flex-direction: column;
-              align-items: center;
-              padding-top: 5rem;
-              padding-bottom: 6.9rem;
+              .instructor-info{
+                display:flex;
+                flex-direction: column;
+                align-items: center;
+                padding-top: 5rem;
+                padding-bottom: 6.9rem;
 
-              img{
-                width:3.9rem;
-                height:3.9rem;
-                border-radius:50%;
-              }
+                img{
+                  width:3.9rem;
+                  height:3.9rem;
+                  border-radius:50%;
+                }
 
-              h2{
-                color:$main;
-                margin:.4rem 0;
-              }
-              span{
-                color:$main;
+                h2{
+                  color:$main;
+                  margin:.4rem 0;
+                }
+                span{
+                  color:$main;
+                }
               }
             }
           }
