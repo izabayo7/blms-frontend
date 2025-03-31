@@ -153,7 +153,7 @@
           <div class="live-class-details--wrapper">
             <div class="description">{{ live_session.chapter.description }}
             </div>
-            <div v-if="displayQuiz && live_session.quiz" class="quiz ml-auto ">
+            <div v-if="displayQuiz && quiz" class="quiz ml-auto ">
               <button :to="`/quiz/preview/${live_session.quiz.name}`">
                 Take quiz
               </button>
@@ -181,7 +181,7 @@
             </button>
           </div>
           <div v-if="live_session.quiz" class="live-class--action release-quiz">
-            <button>
+            <button @click="releaseQuiz">
             <span class="icon">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none"
                                                                                                        d="M0 0h24v24H0z"/><path
@@ -292,8 +292,9 @@ export default {
       me: null,
       interval: null,
       id: "",
-      displayQuiz: true,
+      displayQuiz: false,
       elapsed_time: "",
+      quiz: null,
       comment: "",
       noVideo: false,
       isPresenting: false,
@@ -449,6 +450,10 @@ export default {
         console.trace();
         console.log("\n\n\n\nclosed\n\n\n\n", new Date())
       }
+      self.socket.on("live/quizReleased",(quiz)=>{
+        self.quiz = quiz;
+        self.displayQuiz = true
+      })
       self.socket.on("comment/new", (result) => {
         // this.$store.commit(
         //     "courses/SET_TOTAL_COMMENTS_ON_A_CHAPTER",
@@ -654,10 +659,9 @@ export default {
       }
 
     },
-    realesQuiz(){
+    releaseQuiz(){
       this.displayQuiz = true
-      self.sendMessage({
-        id: "releaseQuiz"})
+      this.socket.emit("live/releaseQuiz");
     },
     toogleVideo() {
       let message = {
