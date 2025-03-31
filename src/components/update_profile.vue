@@ -28,8 +28,9 @@
               class="white--text mt-6 px-6 py-5 profile_button"
               @click="pickfile()"
               >Upload photo</v-btn
-            ></v-col
-          >
+            >
+            <p class="mt-3">{{ profile ? profile.name : "" }}</p>
+          </v-col>
           <v-col class="col-12 col-md-6 text-center">
             <v-btn
               v-if="user.profile"
@@ -38,8 +39,8 @@
               outlined
               @click="pickfile()"
               >Remove photo</v-btn
-            ></v-col
-          >
+            >
+          </v-col>
           <v-col class="col-12">
             <p class="description text-center text-md-left">
               Photo will be shown to users wherever you send messages or comment
@@ -156,6 +157,7 @@ export default {
     showActions: false,
     oldPassword: "",
     newPassword: "",
+    profile: undefined,
     confirmNewPassword: "",
   }),
   computed: {
@@ -166,7 +168,6 @@ export default {
     ...mapGetters("courses", ["started_courses"]),
   },
   methods: {
-    ...mapActions("users", ["updateUser"]),
     ...mapActions("courses", ["getCourses"]),
     comparePassword() {
       this.passwordMatch = this.newPassword === this.confirmNewPassword;
@@ -175,10 +176,9 @@ export default {
       document.getElementById("picture").click();
     },
     handleFileUpload() {
-      this.user.profile = this.$refs.file.files[0];
+      this.profile = this.$refs.file.files[0];
     },
     validate() {
-      console.log("ahoooooo");
       if (this.user.sur_name === "") {
         return (this.error = "sur_name is required");
       } else if (this.user.sur_name.length < 3) {
@@ -209,13 +209,37 @@ export default {
       this.saveChanges();
     },
     async saveChanges() {
-      const response = await Apis.update_user({
+      let response = await Apis.update_user({
         sur_name: this.user.sur_name,
         other_names: this.user.other_names,
         phone: this.user.phone,
         email: this.user.email,
         user_name: this.user.user_name,
       });
+
+      if (this.profile) {
+        // set the dialog
+        this.$store.dispatch("modal/set_modal", {
+          template: "display_information",
+          title: "Updating Course",
+          message: `uploading ${this.profile.name}`,
+        });
+        const formData = new FormData();
+        formData.append("file", this.profile);
+        response = await Apis.update_user_profile(formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+          onUploadProgress: (progressEvent) => {
+            this.$store.dispatch(
+              "modal/set_progress",
+              parseInt(
+                Math.round((progressEvent.loaded / progressEvent.total) * 100)
+              )
+            );
+          },
+        });
+      }
 
       // set the token in the session
       this.$session.set("jwt", response.data.data);

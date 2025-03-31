@@ -33,9 +33,17 @@ export default {
     update(path, id, body, config) {
         return Api().put(`/${path}/${id}`, body, config)
     },
-    // put requests
     update_user(body) {
         return Api().put(`/user`, body)
+    },
+    update_user_password(body) {
+        return Api().put(`/user/password`, body)
+    },
+    update_user_profile(body, config) {
+        return Api().put(`/user/profile`, body, config)
+    },
+    remove_user_profile(file_name) {
+        return Api().delete(`/user/profile/${file_name}`)
     },
     // delete requests
     delete(path, id) {
