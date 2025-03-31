@@ -2,16 +2,16 @@
 <div class="subpage-navbar">
   <div class="subpage-navbar--wrapper d-flex justify-center">
     <ul class="subpage-navbar--links d-flex">
-      <li class="subpage-navbar--link active">
+      <li class="subpage-navbar--link" :class="{active:activeLink === 'details'}">
         <router-link :to="`/faculties/${facultyId}/details`"> Faculty Overview </router-link>
         </li>
-      <li class="subpage-navbar--link">
+      <li class="subpage-navbar--link" :class="{active:activeLink === 'students'}">
         <router-link :to="`/faculties/${facultyId}/students`"> Users </router-link>
         </li>
-      <li class="subpage-navbar--link">
+      <li class="subpage-navbar--link" :class="{active:activeLink === 'groups'}">
         <router-link :to="`/faculties/${facultyId}/groups`"> Student Groups </router-link>
         </li>
-      <li class="subpage-navbar--link">
+      <li class="subpage-navbar--link" :class="{active:activeLink === 'administration'}">
         <router-link :to="`/faculties/${facultyId}/administration`"> Adminstration </router-link>
         </li>
     </ul>
@@ -26,7 +26,12 @@ export default {
     return {
       facultyId:this.$route.params.facultyId
     }
-  }
+  },
+  computed:{
+    activeLink(){
+      return this.$route.path.split("/")[3]
+    }
+  },
 }
 </script>
 
