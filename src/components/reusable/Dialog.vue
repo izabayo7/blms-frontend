@@ -1,7 +1,7 @@
 <template>
   <v-dialog id="kurious--dialog" v-model="visible" :persistent="!closable">
     <!-- view for information display ex(showing progress or a message) -->
-    <div v-if="modal_template == 'information'" class="dialog-body dialog_t_1">
+    <div v-if="modal_template == 'display_information'" class="dialog-body dialog_t_1">
       <div class="close-dialog">
         <svg
           v-if="closable"
@@ -45,12 +45,17 @@
         </svg>
       </div>
       <!-- show confirmations according to the set action -->
-      <div class="content">
+      <div class="content confirmation-dialog">
         <h4 class="title">{{title}}</h4>
         <span class="sub-title">{{message}}</span>
         <div class="actions">
           <v-btn @click="toogle_visibility" class="mx-2 white--text" color="#ffd248">Cancel</v-btn>
-          <v-btn @click="$store.dispatch(confirmation_method.action, confirmation_method.parameters); toogle_visibility(); " outlined class="mx-2" color="#ffd248">Delete</v-btn>
+          <v-btn
+            @click="$store.dispatch(confirmation_method.action, confirmation_method.parameters); toogle_visibility(); "
+            outlined
+            class="mx-2"
+            color="#ffd248"
+          >Delete</v-btn>
         </div>
       </div>
     </div>
@@ -72,7 +77,7 @@ export default {
       "confirmation_action",
       "confirmation_method",
       "title",
-      "message"
+      "message",
     ]),
   },
   methods: {
@@ -102,7 +107,6 @@ export default {
     font-weight: 600;
     color: #0f0f0f;
     font-size: 18px !important;
-    margin-bottom: 45px;
   }
   .subtitle {
     color: #545454;
@@ -126,10 +130,13 @@ export default {
       cursor: pointer;
     }
   }
-  .content {
+  .content.confirmation-dialog {
     margin-top: -35px;
-    .actions{
+    .actions {
       margin-top: 38px;
+    }
+    h4.title {
+      margin-bottom: 45px;
     }
   }
 }

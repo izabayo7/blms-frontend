@@ -555,7 +555,7 @@ export default {
   computed: {
     // get the userCategory
     userCategory() {
-      return this.$store.state.user.category;
+      return this.$store.state.user.user.category;
     },
     // get the current course
     ...mapGetters("courses", ["course"])
@@ -569,8 +569,8 @@ export default {
   },
   created() {
     this.findCourseByName({
-      userCategory: this.$store.state.user.category.toLowerCase(),
-      userId: this.$store.state.user._id,
+      userCategory: this.userCategory.toLowerCase(),
+      userId: this.$store.state.user.user._id,
       courseName: this.$route.params.name,
     })
   },

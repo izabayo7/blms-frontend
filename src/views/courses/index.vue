@@ -139,8 +139,8 @@ export default {
     if (!this.loaded) {
       //get courses on page load
       this.getCourses({
-        userCategory: this.$store.state.user.category.toLowerCase(),
-        userId: this.$store.state.user._id,
+        userCategory: this.userCategory.toLowerCase(),
+        userId: this.$store.state.user.user._id,
       });
     }
   },

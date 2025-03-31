@@ -88,7 +88,7 @@
                         v-else
                         color="green"
                         class="white--text"
-                        @click="proceed"
+                        @click="finish_chapter($store.state.user.user._id)"
                       >Mark as complete</v-btn>
                     </v-col>
                     <v-col class="col-12">
@@ -218,12 +218,11 @@
 </template>
 
 <script>
-import Apis from "@/services/apis";
 import { mapActions, mapGetters } from "vuex";
 export default {
   name: "CourseDetails",
   data: () => ({
-    activeIndex: undefined,
+    activeIndex: -1,
     maximumIndex: 0,
     show: false,
     message: "",
@@ -249,41 +248,14 @@ export default {
         this.editorContent = data;
       });
     },
+    course(){
+      if (this.activeIndex == -1) {
+        this.activeIndex = 0
+      }
+    }
   },
   methods: {
-    ...mapActions("courses", ["findCourseByName", "getChapterMainContent"]),
-    async proceed() {
-      try {
-        let response;
-        if (this.maximumIndex === 0) {
-          response = await Apis.create("studentProgress", {
-            student: this.$store.state.user._id,
-            course: this.$route.params.id,
-            chapter: this.chapters[this.activeIndex]._id,
-          });
-          this.progressId = response.data._id;
-        } else {
-          response = await Apis.update("studentProgress", this.progressId, {
-            student: this.$store.state.user._id,
-            course: this.$route.params.id,
-            chapter: this.chapters[this.activeIndex]._id,
-          });
-        }
-        this.progress = response.data.progress;
-        this.maximumIndex++;
-        this.changeActiveChapter(this.activeIndex + 1);
-      } catch (error) {
-        if (error.response) {
-          this.status = error.response.status;
-          this.message = error.response.data;
-        } else if (error.request) {
-          this.status = 503;
-          this.message = "Service Unavailable";
-        }
-        this.modal = false;
-        this.show = true;
-      }
-    },
+    ...mapActions("courses", ["findCourseByName", "getChapterMainContent", "finish_chapter"]),
     async downloadAttachment(id) {
       const url = `http://localhost:7070/kurious/file/downloadAttachment/${id}`;
       window.location.href = url;
@@ -308,14 +280,10 @@ export default {
   },
   created() {
     this.findCourseByName({
-      userCategory: this.$store.state.user.category.toLowerCase(),
-      userId: this.$store.state.user._id,
+      userCategory: this.$store.state.user.user.category.toLowerCase(),
+      userId: this.$store.state.user.user._id,
       courseName: this.$route.params.name,
-    }).then((course) => {
-      this.course = course;
-      console.log(this.course);
-      this.activeIndex = 0;
-    });
+    })
   },
 };
 </script>
