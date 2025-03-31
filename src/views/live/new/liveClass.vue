@@ -28,7 +28,7 @@
       <!--      </div>-->
       <!--    </div>-->
 
-      <div class="live-class--video">
+      <div class="live-class--video" :class="`--${$vuetify.breakpoint.name}`">
         <div class="head">
           <div class="text">
             <h2>Economics Basics: Chapter 8 part II</h2>
@@ -40,7 +40,7 @@
         </div>
         <div class="video">
           <div class="video--wrapper">
-            <div class="video-el" @mouseenter="toggleMenu(true)" @mouseleave="toggleMenu(false)">
+            <div class="video-el" :class="`--${$vuetify.breakpoint.name}`" @mouseenter="toggleMenu(true)" @mouseleave="toggleMenu(false)">
               <div class="no-video" v-show="noVideo">
                 <div class="no-video--wrapper" :class="{presenting:isPresenting}">
                   <div class="instructor-info">
@@ -961,8 +961,14 @@ console.log('\n\n\n\n\n\n',participant)
 
   &--video {
     flex-basis: 70%;
-    padding-left: 3rem;
-    padding-right: 3rem;
+    &.--lg {
+      padding-left: 3rem;
+      padding-right: 3rem;
+    }
+    &.--sm, &.--md {
+      padding-left: 2rem;
+      padding-right: 2rem;
+    }
 
     .head {
       display: flex;
@@ -999,15 +1005,29 @@ console.log('\n\n\n\n\n\n',participant)
 
         .video-el {
           //width: fit-content;
-          max-height: 25rem;
-          position: relative;
+          &.--lg {
+            height: 320px;
+            width: 568.89px;
+          }
+          &.--md {
+            height: 253.1249px;
+            width: 450px;
+          }
+          &.--sm{
+            height: 224.999px;
+            width: 400px;
+          }
+          &.--xs{
+            height: calc(100vw / 1.77777777778);
+            width: 100vw;
+          }
           background-color: #000;
 
           video {
             object-fit: cover;
-            height: 100%;
-            max-height: 20rem;
-            width: 100%;
+            //height: 100%;
+            //max-height: 20rem;
+            //width: 100%;
           }
 
           //animations
