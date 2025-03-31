@@ -15,7 +15,7 @@
                     fill="#FFD248"/>
               </svg>
 
-              Live in 2 hours
+              Live in {{ rem_time }}
             </div>
           </div>
           <v-img
@@ -145,8 +145,17 @@ export default {
       required: true,
     },
   },
-  computed: {
-    nearestLiveSession() {
+  computed: {}
+  ,
+  data: () => ({
+    primary: colors.primary,
+    rem_time: "",
+    currentDate: new Date().toISOString().substring(0, 10),
+    startTimer: false,
+    nearestLiveSession: undefined
+  }),
+  methods: {
+    calculateNearestLiveSession() {
       let live_session = undefined
       for (const i in this.course.chapters) {
         if (this.course.chapters[i].live_sessions.length) {
@@ -159,14 +168,45 @@ export default {
           }
         }
       }
-      return live_session;
+      this.nearestLiveSession = live_session;
+      if (live_session && this.rem_time == "") {
+        this.setClock(new Date(this.nearestLiveSession.date.replace("00:00", this.nearestLiveSession.time)) / 1000)
+      }
+    },
+    setClock(endTime) {
+      var elapsed = new Date() / 1000;
+      var totalSec = endTime - elapsed;
+      var d = parseInt(totalSec / 86400);
+      if (d) {
+        this.rem_time = `${d} days`;
+        if (d == 1)
+          setTimeout(this.setClock(endTime), 60000);
+        else return
+      }
+      var h = parseInt(totalSec / 3600) % 24;
+      if (h) {
+        this.rem_time = `${h} hours`;
+        if (h == 1)
+          setTimeout(this.setClock(endTime), 60000);
+        else return
+      }
+      var m = parseInt(totalSec / 60) % 60;
+      if (m) {
+        this.rem_time = `${m} minutes`;
+        setTimeout(this.setClock(endTime), m > 1 ? 60000 : 1000)
+        return
+      }
+
+      var s = parseInt(totalSec % 60, 10);
+      if (s) {
+        this.rem_time = `${s} seconds`;
+        setTimeout(this.setClock(endTime), 1000)
+      }
     }
+  },
+  created() {
+    this.calculateNearestLiveSession()
   }
-  ,
-  data: () => ({
-    primary: colors.primary,
-    currentDate: new Date().toISOString().substring(0,10)
-  }),
 }
 ;
 </script>
