@@ -53,6 +53,8 @@ export default {
       input.focus();
     },
     sendMessage(){
+      if(this.msg.length <= 0)
+        return
       this.socket.emit('send-message', {
         recipients:[{id:this.currentDisplayedUser.id}],
         msg: this.msg,
@@ -119,6 +121,7 @@ export default {
           outline: none;
           padding: 0;
           max-height: 5rem;
+          min-height: 1.2rem;
           overflow-y: auto;
           overflow-x: hidden;
 
