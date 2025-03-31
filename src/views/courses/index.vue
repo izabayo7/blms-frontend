@@ -365,7 +365,7 @@ export default {
 /* Portrait phones and smaller */
 @media (max-width: 700px) {
   #courses {
-    padding: 25px 21px 45px 15px;
+    padding: 25px 0px 45px;
   }
 }
 </style>

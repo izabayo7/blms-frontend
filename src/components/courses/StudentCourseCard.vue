@@ -8,7 +8,7 @@
       <v-row class="card-content">
         <v-col cols="5" class="course-image-side">
           <div class="live">
-            <div v-if="nearestLiveSession" class="vertically--centered">
+            <div v-if="nearestLiveSession && !isLive" class="vertically--centered">
               <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path
                     d="M7.12364 14.6692C11.0579 14.6692 14.2473 11.4798 14.2473 7.54552C14.2473 3.61124 11.0579 0.421875 7.12364 0.421875C3.18936 0.421875 0 3.61124 0 7.54552C0 11.4798 3.18936 14.6692 7.12364 14.6692Z"
@@ -16,6 +16,14 @@
               </svg>
 
               Live in {{ rem_time }}
+            </div>
+            <div v-else-if="nearestLiveSession && isLive" class="vertically--centered justify-start">
+              <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path
+                    d="M7.12364 14.6692C11.0579 14.6692 14.2473 11.4798 14.2473 7.54552C14.2473 3.61124 11.0579 0.421875 7.12364 0.421875C3.18936 0.421875 0 3.61124 0 7.54552C0 11.4798 3.18936 14.6692 7.12364 14.6692Z"
+                    fill="#FC6767"/>
+              </svg>
+              Live now
             </div>
           </div>
           <v-img
@@ -145,7 +153,22 @@ export default {
       required: true,
     },
   },
-  computed: {}
+  computed: {
+    isLive() {
+      if (!this.nearestLiveSession) return false;
+      for (const i in this.course.chapters) {
+        if (this.course.chapters[i].live_sessions.length) {
+          // if()
+          if ((new Date(this.course.chapters[i].live_sessions[0].date) <= new Date(new Date().toISOString().substring(0, 10)))) {
+            if (new Date(this.nearestLiveSession.date.replace("00:00", this.nearestLiveSession.time)) <= new Date(new Date().toGMTString())) {
+              return true;
+            }
+          }
+        }
+      }
+      return false;
+    }
+  }
   ,
   data: () => ({
     primary: colors.primary,
@@ -160,6 +183,7 @@ export default {
       for (const i in this.course.chapters) {
         if (this.course.chapters[i].live_sessions.length) {
           if (!live_session && (new Date(this.course.chapters[i].live_sessions[0].date) >= new Date(this.currentDate))) {
+            console.log(new Date(this.course.chapters[i].live_sessions[0].date), new Date(this.currentDate))
             live_session = this.course.chapters[i].live_sessions[0]
           } else if (live_session) {
             if (live_session.date < this.course.chapters[i].live_sessions[0].date) {
@@ -180,27 +204,35 @@ export default {
       if (d) {
         this.rem_time = `${d} days`;
         if (d == 1)
-          setTimeout(() => {this.setClock(endTime)}, 60000);
+          setTimeout(() => {
+            this.setClock(endTime)
+          }, 60000);
         return
       }
       var h = parseInt(totalSec / 3600) % 24;
       if (h) {
         this.rem_time = `${h} hours`;
         if (h == 1)
-          setTimeout(() => {this.setClock(endTime)}, 60000);
+          setTimeout(() => {
+            this.setClock(endTime)
+          }, 60000);
         return
       }
       var m = parseInt(totalSec / 60) % 60;
       if (m) {
         this.rem_time = `${m} minutes`;
-        setTimeout(() => {this.setClock(endTime)}, m > 1 ? 60000 : 1000)
+        setTimeout(() => {
+          this.setClock(endTime)
+        }, m > 1 ? 60000 : 1000)
         return
       }
 
       var s = parseInt(totalSec % 60, 10);
       if (s) {
         this.rem_time = `${s} seconds`;
-        setTimeout(() => {this.setClock(endTime)}, 1000)
+        setTimeout(() => {
+          this.setClock(endTime)
+        }, 1000)
       }
     }
   },
@@ -236,7 +268,7 @@ export default {
 
 .course-card {
   box-shadow: 0px 4px 10px 3px rgba(25, 48, 116, 0.05);
-  width: 355px;
+  max-width: 355px;
   height: 170px;
   // border-radius: 24px;
   background: white;
@@ -264,7 +296,7 @@ export default {
     }
 
     .course-image {
-      height: 112.74px;
+      max-height: 112.74px;
       width: 112.74px;
       border-radius: 90px;
       //margin-left: 8%;

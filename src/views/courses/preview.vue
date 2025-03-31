@@ -257,7 +257,7 @@
               :name="course.name"
               :dateUploaded="course.createdAt | formatDate"
               :progress="course.progress"
-              :live="isLive"
+              :isLive="isLive"
           />
         </main>
       </v-col>
@@ -497,9 +497,11 @@ export default {
       return this.course !== undefined;
     },
     isLive() {
+      if(!this.nearestLiveSession) return false;
       for (const i in this.course.chapters) {
         if (this.course.chapters[i].live_sessions.length) {
-          if ((new Date(this.course.chapters[i].live_sessions[0].date) == new Date(new Date().toISOString().substring(0, 10)))) {
+          // if()
+          if ((new Date(this.course.chapters[i].live_sessions[0].date) <= new Date(new Date().toISOString().substring(0, 10)))) {
             if (new Date(this.nearestLiveSession.date.replace("00:00", this.nearestLiveSession.time)) <= new Date(new Date().toGMTString())) {
               return true;
             }
