@@ -19,7 +19,7 @@
         "
         class="col-3 vertically--centered pa-0"
       >
-        <div class="actions">
+        <div v-if="content !== ''" class="actions">
           <svg
             @click="removeFeedback()"
             xmlns="http://www.w3.org/2000/svg"
