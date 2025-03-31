@@ -13,9 +13,23 @@
                  @mouseenter="toggleMenu(true)"
                  @mouseleave="toggleMenu(false)">
               <div class="no-video"
-                   v-show="(noVideo && !isPresenting) || (isPresenting && participationInfo.isOfferingCourse)">
+                   v-show="(noVideo && !isPresenting) || (isPresenting && participationInfo.isOfferingCourse && (currentPresenter ? currentPresenter._id == me.userInfo._id:true))">
                 <div class="no-video--wrapper" :class="{presenting:isPresenting}">
-                  <div v-if="instructor" class="instructor-info">
+                  <div v-if="isStudentPresenting || (currentPresenter ? currentPresenter.category == 'STUDENT': false)"
+                       class="instructor-info">
+                    <img
+                        v-if="currentPresenter.profile"
+                        :src="currentPresenter.profile + '?width=100'"
+                        alt="profile picture" class="picture">
+                    <v-avatar v-else class="avatar mr-0">
+                      {{ currentPresenter.sur_name | computeText }}
+                    </v-avatar>
+                    <h2 class="name">{{
+                        isStudentPresenting ? "YOU are" : `${currentPresenter ? currentPresenter.sur_name + ' ' + currentPresenter.other_names : ''}`
+                      }}</h2>
+                    <span class="source">presenting</span>
+                  </div>
+                  <div v-else-if="instructor" class="instructor-info">
                     <img
                         v-if="instructor.profile"
                         :src="instructor.profile + '?width=100'"
@@ -32,16 +46,19 @@
                   <div class="screen-sharing-video" v-if="isPresenting">
                     <div class="screen-sharing-video--wrapper">
                       <h4>You are presenting your screen</h4>
-                      <video id="video_screen_feed">
+                      <video id="video_screen_feed" class="show">
                         <!--                        <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">-->
                       </video>
                     </div>
                   </div>
                 </div>
               </div>
-              <video v-show="!noVideo && !isPresenting" id="video_feed">
-                <!--                <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" >-->
-              </video>
+              <div v-show="!noVideo && !isPresenting" class="video-container">
+                <video id="video_feed" class="show"
+                       poster="https://apis.kurious.rw/assets/images/video-loader.gif">
+                  <!--                <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" >-->
+                </video>
+              </div>
               <button @click="playVideo" class="play_button">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="64" height="64">
                   <path fill="none" d="M0 0h24v24H0z"/>
@@ -50,8 +67,9 @@
                       fill="rgba(255,255,255,1)"/>
                 </svg>
               </button>
-              <video v-if="!participationInfo.isOfferingCourse" v-show="isPresenting"
-                     id="viewer_screen_feed">
+              <video
+                  v-show="isPresenting && ((currentPresenter && me) ? (currentPresenter._id != me.userInfo._id) : true)"
+                  id="viewer_screen_feed" class="show">
                 <!--                <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" >-->
               </video>
               <transition name="fade">
@@ -66,26 +84,38 @@
                     </div>
                   </div>
                   <div class="more-details">
-                    <!--                    <div class="speaking-user">-->
-                    <!--                      <div class="d-flex">-->
-                    <!--                        <div class="profile">-->
-                    <!--                          <img-->
-                    <!--                              v-if="instructor.profile"-->
-                    <!--                              :src="instructor.profile + '?width=100'"-->
-                    <!--                              alt="profile picture" class="picture">-->
-                    <!--                          <v-avatar v-else class="avatar">-->
-                    <!--                            {{ instructor.sur_name | computeText }}-->
-                    <!--                          </v-avatar>-->
-                    <!--                        </div>-->
-                    <!--                        <div class="user">-->
-                    <!--                          <div class="names">{{-->
-                    <!--                              participationInfo.isOfferingCourse ? "YOU" : `${instructor ? instructor.sur_name + ' ' + instructor.other_names : ''}`-->
-                    <!--                            }}-->
-                    <!--                          </div>-->
-                    <!--                          <div class="vocal"></div>-->
-                    <!--                        </div>-->
-                    <!--                      </div>-->
-                    <!--                    </div>-->
+                    <div
+                        v-if="(me && currentPresenter ? currentPresenter._id != me.userInfo._id : false) || (userCategory == 'STUDENT' && !isStudentPresenting && instructor)"
+                        class="speaking-user">
+                      <div class="d-flex" v-if="currentPresenter || instructor">
+                        <div class="profile">
+                          <img
+                              v-if="currentPresenter ? currentPresenter.profile : instructor.profile"
+                              :src="currentPresenter ? currentPresenter.profile : instructor.profile + '?width=100'"
+                              alt="profile picture" class="picture">
+                          <v-avatar v-else class="avatar">
+                            {{ (currentPresenter ? currentPresenter.sur_name : instructor.sur_name) | computeText }}
+                          </v-avatar>
+                        </div>
+                        <div class="user">
+                          <div class="names">{{
+                              `${currentPresenter ? currentPresenter.sur_name + ' ' + currentPresenter.other_names : instructor.sur_name + ' ' + instructor.other_names}`
+                            }}
+                          </div>
+                          <div class="vocal">Presenting</div>
+                        </div>
+                        <button v-if="userCategory != 'STUDENT' && !isStudentPresenting" @click="stop_presenter"
+                                class="stop-presenting ml-4">
+                          <svg width="26" height="26" viewBox="0 0 26 26" fill="none"
+                               xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="13" cy="13" r="13" fill="#E9E9E9"/>
+                            <path
+                                d="M16.875 10.0062L15.9938 9.125L12.5 12.6188L9.00625 9.125L8.125 10.0062L11.6188 13.5L8.125 16.9938L9.00625 17.875L12.5 14.3812L15.9938 17.875L16.875 16.9938L13.3812 13.5L16.875 10.0062Z"
+                                fill="#626262"/>
+                          </svg>
+                        </button>
+                      </div>
+                    </div>
                     <div v-if="isStudentPresenting " class="presenter d-flex">
                       <div class="text">You are presenting</div>
                       <button @click="stop_presenting" class="stop-presenting">
@@ -159,7 +189,8 @@
                       </div>
                     </div>
                   </div>
-                  <div class="video-controls" v-if="participationInfo.isOfferingCourse">
+                  <div class="video-controls"
+                       v-if="participationInfo.isOfferingCourse && (currentPresenter ? currentPresenter._id == this.me.userInfo._id : true)">
                     <div class="video-controls--wrapper"
                          :class="`${showComments?'':'centered'} ${$vuetify.breakpoint.mobile ? 'wide' : ''}`">
                       <button @click="toogleVideo" class="start-mute-video">
@@ -259,7 +290,8 @@
                     </div>
                   </div>
 
-                  <div v-else-if="!$vuetify.breakpoint.mobile && !isStudentPresenting" class="live-class-details">
+                  <div v-else-if="!$vuetify.breakpoint.mobile && !isStudentPresenting && userCategory == 'STUDENT'"
+                       class="live-class-details">
                     <div class="live-class-details--wrapper">
                       <div class="description">{{ live_session.chapter.description }}
                       </div>
@@ -286,7 +318,7 @@ openQuiz">
                       </div>
                     </div>
                   </div>
-                  <div class="video-controls" v-else>
+                  <div class="video-controls" v-else-if="userCategory == 'STUDENT'">
                     <div class="video-controls--wrapper viewer wide centered">
                       <span class="live">Live</span>
                       <div class="time">
@@ -494,6 +526,8 @@ export default {
       isHandRaised: false,
       newCommentAvailable: false,
       participants: [],
+      presenter_id: undefined,
+      currentPresenter: undefined,
       comments: [],
       me: null,
       interval: null,
@@ -580,15 +614,79 @@ export default {
     }
   },
   methods: {
-    peresenterChanged(id) {
-      const video = this.me.getVideoElement();
-      if (this.me.userInfo._id == this.live_session.course.user)
+    create_videoElement(id) {
+      let element = document.createElement('video')
+      element.setAttribute('id', `video_feed${id}`)
+      document.querySelector('.video-container').appendChild(element)
+      return element
+    },
+    stop_presenter() {
+      let id = this.currentPresenter._id;
+      this.socket.emit("live/presentation_request", {
+        receiver: {id},
+        message: 'cancel_presenting'
+      });
+      this.currentPresenter = undefined
+      this.onViewerStopedPresenting()
+    },
+    displaySrcVideo() {
+      if (this.me) {
+        const video = document.getElementById("video_feed");
+        if (video.className != '' && this.instructor)
+          video.className = ''
+        let displayedVid = document.querySelector('video.show')
+        if (displayedVid && !displayedVid.id.includes('_screen'))
+          displayedVid.className = '';
+
+        if ((this.currentPresenter ? this.currentPresenter._id == this.live_session.course.user : this.userCategory == "INSTRUCTOR") || this.isStudentPresenting) {
+          console.log('\n\n\ninner\n\n\n')
+          let video = this.me.getVideoElement()
+          video.muted = true
+          video.setAttribute('class', 'show')
+        } else {
+          console.log('twageze aha')
+          for (let i in this.participants) {
+            console.log(`\n\nparticipantId: ${this.participants[i].userInfo._id}\ncurrentPresenter: ${this.currentPresenter ? this.currentPresenter._id : this.instructor._id}\n`)
+            if (this.participants[i].userInfo._id == (this.currentPresenter ? this.currentPresenter._id : this.instructor._id)) {
+              console.log('twageze mo imbere')
+              console.log(`\n\nparticipantId: ${this.participants[i].userInfo._id}\ncurrentPresenter: ${this.currentPresenter ? this.currentPresenter._id : this.instructor._id}\n`)
+              const video = this.participants[i].getVideoElement();
+              video.muted = false
+              video.setAttribute('class', 'show')
+              break;
+            }
+          }
+        }
+      }
+    },
+    stopped_presenting(forced) {
+      if (forced) {
+        this.$store.dispatch("app_notification/SET_NOTIFICATION", {
+          message: 'Sorry your the instructor canceled your presentation',
+          status: "info",
+          uptime: 5000,
+        })
+      }
+      this.isPresenting = false;
+      this.participationInfo.isOfferingCourse = false
+      this.me.rtcPeer.enabled = false
+      this.displaySrcVideo()
+    },
+    presenterChanged(id) {
+      console.log(`\n\n\nYahindutse wlh ${id}\n\n\n`)
+      document.querySelector('video.show').className = ''
+      if (this.me.userInfo._id == this.live_session.course.user) {
         this.me.rtcPeer.enabled = false
+      }
 
       for (let i in this.participants) {
         if (this.participants[i].userInfo._id == id) {
-          console.log(i, this.participants[i].rtcPeer)
-          video.srcObject = this.participants[i].rtcPeer.getRemoteStream()
+          let vid = document.querySelector(`video#video_feed${id}`)
+          vid.setAttribute('class', 'show')
+          setTimeout(() => {
+            vid.play()
+          }, 500)
+          this.currentPresenter = this.participants[i].userInfo;
           break;
         }
       }
@@ -646,8 +744,7 @@ export default {
       this.onHandRaisedOrLowerd(id, false)
     },
     onViewerStopedPresenting() {
-      this.me.rtcPeer.enabled = true
-      this.me.rtcPeer.showLocalVideo();
+      this.start_presenting()
     },
     start_presenting() {
       this.participationInfo.isOfferingCourse = true;
@@ -659,7 +756,15 @@ export default {
           receivers.push({id: x.userInfo._id})
         } else {
           this.me.rtcPeer.enabled = true
-          this.me.rtcPeer.showLocalVideo()
+
+          if (!this.audioEnabled)
+            this.me.rtcPeer.audioEnabled = false
+
+          if (!this.videoEnabled)
+            this.me.rtcPeer.videoEnabled = false
+
+          this.displaySrcVideo()
+          // this.me.getVideoElement().play()
         }
       })
       console.log(receivers, session_id)
@@ -667,6 +772,7 @@ export default {
         receivers,
         session_id
       });
+      this.currentPresenter = this.me.userInfo
     },
     stop_presenting() {
       let id = this.instructor._id;
@@ -706,7 +812,7 @@ export default {
       this.participationInfo.name = `${this.user.other_names} ${this.user.sur_name}`
       this.participationInfo.room = this.$route.params.liveSessionId
 
-      const host = 'test.stream.kurious.rw'
+      const host = 'stream.kurious.rw'
       // const host = 'localhost:8080'
 
       this.ws = new WebSocket('wss://' + host + '/kurious_stream' + `?token=${this.$session.get("jwt")}`);
@@ -726,7 +832,7 @@ export default {
 
       window.onbeforeunload = () => {
         this.ws.close();
-        this.handleMediaTracks();
+        // this.handleMediaTracks();
       };
 
       this.ws.onmessage = (message) => {
@@ -773,7 +879,9 @@ export default {
             this.toogleMedia(parsedMessage);
             break;
           case 'notification':
-            this.isPresenting = parsedMessage.screenStatus;
+            if (!this.isStudentPresenting) {
+              this.isPresenting = parsedMessage.screenStatus;
+            }
             this.videoEnabled = parsedMessage.videoStatus;
             this.audioEnabled = parsedMessage.audioStatus;
             break;
@@ -813,9 +921,7 @@ export default {
         if (['request_presenting', 'revert_presenting_request'].includes(message)) {
           this.isHandRaised = !this.isHandRaised;
         } else if (message == 'finished_presenting') {
-          this.isPresenting = false;
-          this.participationInfo.isOfferingCourse = false
-          this.me.rtcPeer.enabled = false
+          self.stopped_presenting()
         }
       })
       self.socket.on("res/live/presentation_request", ({message, sender}) => {
@@ -828,13 +934,18 @@ export default {
           this.handlePresentationResponse(sender, true)
         else if (message === 'deny_presenting')
           this.handlePresentationResponse(sender, false)
+        else if (message === 'cancel_presenting')
+          this.stopped_presenting(true)
+        else if (message === 'currentPresenter')
+          this.presenter_id = sender
         else
           this.onViewerStopedPresenting()
+        console.log(message)
       })
       self.socket.on("live/presenterChanged", ({id, session_id}) => {
         console.log('\n\n', {id, session_id}, '\n\n')
         if (session_id == self.live_session._id) {
-          self.peresenterChanged(id)
+          self.presenterChanged(id)
         }
       })
 
@@ -926,12 +1037,14 @@ export default {
       // }
     },
     shareScreen() {
-      if (!this.isPresenting) {
-        setTimeout(() => {
-          document.getElementById("video_screen_feed").srcObject.getVideoTracks()[0].addEventListener('ended', () =>
-              this.shareScreen())
-        }, 5000)
-      }
+      console.log('called !!!!!!!')
+      // if (!this.isPresenting) {
+      //   setTimeout(() => {
+      //     document.getElementById("video_screen_feed").srcObject.getVideoTracks()[0].addEventListener('ended', () =>
+      //         this.shareScreen())
+      //   }, 5000)
+      // }
+      // console.clear()
       let message = {
         id: this.isPresenting ? 'stopSharingScreen' : 'shareScreen',
       }
@@ -963,12 +1076,14 @@ export default {
       this.sendMessage(message);
     },
     sendMessage(message) {
+      console.log(message)
       let jsonMessage = JSON.stringify(message);
       this.ws.send(jsonMessage);
     },
 
     onNewParticipant(request) {
       if (request.name != this.participationInfo.name + '_screen') {
+        console.log(request.name)
         this.receiveVideo(request.name);
       }
     },
@@ -977,6 +1092,16 @@ export default {
       return this.participants.indexOf(result[0]);
     },
     removeParticipant(index) {
+      if (this.currentPresenter ? (this.currentPresenter._id == this.participants[index].userInfo._id) : this.instructor._id == this.participants[index].userInfo._id) {
+        this.currentPresenter = undefined
+        if (!this.participants[index].name.includes('_screen')) {
+          if (this.live_session.course.user == this.me.userInfo._id) {
+            this.onViewerStopedPresenting()
+          } else {
+            document.querySelector('video').setAttribute('class', 'show')
+          }
+        }
+      }
       this.participants.splice(index, 1)
     },
     receiveVideoResponse(result) {
@@ -1015,8 +1140,8 @@ export default {
       // if (!this.participationInfo.isOfferingCourse) {
       //   constraints = null
       // }
-
-      let participant = new Participant(self.isPresenting ? `${this.participationInfo.name}_screen` : this.participationInfo.name, this, true, await this.getUserInfo(this.participationInfo.name.split('_')[0]));
+      let userInfo = await this.getUserInfo(this.participationInfo.name.split('_')[0])
+      let participant = new Participant(self.isPresenting ? `${this.participationInfo.name}_screen` : this.participationInfo.name, this, true, userInfo, this.create_videoElement(userInfo._id));
 
       this.participants.push(participant);
       this.addParticipant({id: participant.userInfo._id})
@@ -1031,20 +1156,39 @@ export default {
 
       if (self.isPresenting) {
         options.sendSource = 'screen'
+      } else {
+        console.log("isPresenting mf: " + self.isPresenting)
       }
 
       participant.rtcPeer = new WebRtcPeer.WebRtcPeerSendonly(options,
           function (error) {
             if (error) {
-              return console.error(error);
+              console.error(error);
             }
             if (self.me === null)
               self.me = participant;
+
+            video.muted = true
+
             this.generateOffer(participant.offerToReceiveVideo.bind(participant));
-            if (!self.participationInfo.isOfferingCourse) {
-              participant.rtcPeer.enabled = false
-              video.srcObject = self.instructorParticipant ? self.instructorParticipant.rtcPeer.getRemoteStream() : undefined
-              video.muted = false
+            if (self.presenter_id) {
+              // console.clear()
+              console.log('tumusanzemo wlh')
+              self.presenterChanged(self.presenter_id)
+              self.presenter_id = undefined
+            } else {
+              if (!self.participationInfo.isOfferingCourse) {
+                if (self.instructorParticipant) {
+                  participant.rtcPeer.enabled = false
+                  self.displaySrcVideo();
+                }
+              } else {
+                self.displaySrcVideo();
+              }
+            }
+            if (self.isPresenting) {
+              document.getElementById("video_screen_feed").srcObject.getVideoTracks()[0].addEventListener('ended', () =>
+                  self.shareScreen())
             }
           })
 
@@ -1137,21 +1281,25 @@ export default {
       this.$router.push('/')
     },
     async receiveVideo(sender) {
-      let participant = sender == this.participationInfo.name ? this.participants[this.participantIndex(sender)] : new Participant(sender, this, false, await this.getUserInfo(sender.split('_')[0]));
+      let participant;
+      if (sender == this.participationInfo.name)
+        participant = this.participants[this.participantIndex(sender)]
+      else {
+        let userInfo = await this.getUserInfo(sender.split('_')[0]);
+        participant = new Participant(sender, this, false, userInfo, this.create_videoElement(userInfo._id));
+        console.log(participant)
+      }
       // if (participant.userInfo.category == "INSTRUCTOR") {
       let video = participant.getVideoElement();
       let options = {
         remoteVideo: video,
         onicecandidate: participant.onIceCandidate.bind(participant)
       }
-      let self = this
+      // let self = this
       participant.rtcPeer = new WebRtcPeer.WebRtcPeerRecvonly(options,
           function (error) {
             if (error) {
               return console.error(error);
-            }
-            if (self.participationInfo.isOfferingCourse) {
-              self.onViewerStopedPresenting()
             }
             this.generateOffer(participant.offerToReceiveVideo.bind(participant));
           })
@@ -1168,22 +1316,31 @@ export default {
             screenStatus: this.isPresenting
           })
 
+          if (this.isStudentPresenting)
+            this.socket.emit("live/presentation_request", {
+              receiver: {id: participant.userInfo._id},
+              message: 'currentPresenter'
+            });
+
           // notify new user if quiz was released
           if (this.displayQuiz)
             this.socket.emit("live/releaseQuiz", {
               quiz: this.live_session.quiz,
               receivers: [{id: participant.userInfo._id}]
             });
+        } else if (participant.userInfo.category == 'INSTRUCTOR' && !this.isStudentPresenting) {
+          this.displaySrcVideo()
         }
       }
     },
 
     onParticipantLeft(request) {
+      this.displaySrcVideo();
+      console.log(this.participants, this.participantIndex(request.name))
       this.participants[this.participantIndex(request.name)].dispose();
+      console.log(this.participants)
       this.removeParticipant(this.participantIndex(request.name))
-      // let participant = this.participants[request.name];
-      //
-      // delete this.participants[request.name];
+      console.log(this.participants)
     },
     toogleMedia(obj) {
       if (obj.isVideo) {
@@ -1224,6 +1381,13 @@ export default {
   }
   ,
   watch: {
+    presenter_id() {
+      if (this.presenter_id != undefined && this.me) {
+        console.log('tumusanzemo wlh')
+        this.presenterChanged(this.presenter_id)
+        this.presenter_id = undefined
+      }
+    },
     videoEnabled() {
       this.noVideo = !this.videoEnabled
     },

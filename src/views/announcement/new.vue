@@ -385,17 +385,8 @@ export default {
         }
       }
     },
-    ...mapActions("modal", ["set_modal"]),
     async saveAnnouncement() {
-    //   this.set_modal({
-    //     template: 'action_confirmation',
-    //     method: {
-    //       action: 'user/removeProfilePicture',
-    //     },
-    //     title: 'Send Announcement',
-    //     message:
-    //         `Are you sure you want to to send this announcement to ${this.target_type === 'individual' ? this.selected_users.length : ''} users ${this.target_type !== 'individual' ? ' in ' : ''}?`,
-    //   })
+
       const response = await Apis.create(`announcement/${this.target_type === 'groups' ? 'group' : 'specific_users'}`, this.announcement)
       if (response.data.status !== 201)
         this.error = response.data.message
