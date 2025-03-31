@@ -58,7 +58,6 @@ import TableHeader from "../../components/reusable/ui/table-header";
 import TableUi from "../../components/reusable/ui/table-ui";
 import apis from "../../services/apis";
 import moment from "moment";
-import _ from "lodash";
 
 export default {
 name: "Faculties",
@@ -66,23 +65,24 @@ name: "Faculties",
   data(){
     return{
       faculties:[],
+      options:{
+        keysToShow:[ "name", "updatedAt", "createdAt"]
+      },
     }
   },
   methods:{
     loadFaculties(){
       apis.get("faculty")
         .then(({data:{data}}) => {
-          const attributesToPick = [ "name", "updatedAt", "createdAt"]
           let filteredFaculties = [];
 
           data.map(faculty => {
-            console.log();
 
             faculty.createdAt = moment(faculty.createdAt).format("DD MMM  YYYY")
             faculty.updatedAt = moment(faculty.updatedAt).format("DD MMM YYYY")
             //TODO finalising faculties
 
-            filteredFaculties.push(_.pick(faculty,attributesToPick))
+            filteredFaculties.push(faculty)
           })
           this.faculties = filteredFaculties;
         })

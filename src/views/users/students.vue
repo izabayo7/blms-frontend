@@ -32,7 +32,7 @@
             <table-header />
           </div>
           <div class="table">
-            <table-ui :data="users"/>
+            <table-ui :options="options" :data="users"/>
           </div>
         </div>
       </div>
@@ -74,7 +74,13 @@ export default {
         {username:"liberi",status:"registered", "User type":"Student",gender:"F",Faculty:"Ict","S group":"Year 2","Date added":"today","Date joined":"pending"},
         {username:"liberi",status:"registered", "User type":"Admin",gender:"M",Faculty:"Electronics","S group":"Year 2","Date added":"today","Date joined":"pending"},
         {username:"liberi",status:"pending", "User type":"Student",gender:"M",Faculty:"Economics","S group":"Year 2","Date added":"today","Date joined":"pending"},
-      ]
+      ],
+      options:{
+        link: {
+            RouteTo:'/users/user/{id}',
+            paramPropertyName:'_id'
+          },
+      },
     }
   }
 }
