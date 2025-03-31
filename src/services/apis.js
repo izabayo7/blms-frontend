@@ -1,5 +1,5 @@
 import Api from './server'
-// import Vue from "vue";
+import {logout} from "./global_functions";
 
 //get token
 const {jwt:token} = JSON.parse(localStorage.getItem('vue-session-key'))
@@ -11,7 +11,7 @@ Api.interceptors.response.use(function (response) {
 
     if(status === 401){
         if(message.toLowerCase() === 'invalid token')
-
+            logout()
     }
 
     return response
@@ -27,7 +27,6 @@ Api.interceptors.request.use((config) => {
     config.headers = {
         'Authorization': `Bearer ${token}`,
         'Accept': 'application/json',
-        'Content-Type': 'application/x-www-form-urlencoded'
     }
 
     return config
