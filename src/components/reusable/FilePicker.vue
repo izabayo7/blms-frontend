@@ -164,7 +164,7 @@ div.remove-container a {
 
 <template>
   <div>
-    <form ref="fileform" :class="`filePicker picker${boundIndex} ${template? template : ''}`">
+    <form ref="fileform" :class="`filePicker picker${boundIndex} ${template? template : 'pa-4'}`">
       <v-row>
         <v-col v-if="files.length" class="col-10">
           <div class="file-list-container customScroll">
@@ -328,7 +328,7 @@ div.remove-container a {
           here!</span
         >
         </v-col>
-        <v-col v-if=" template === undefined && ( files.length || defaultFiles.length)" class="col-2">
+        <v-col v-if=" template === undefined" class="col-2">
           <v-btn class="mt-n2" @click="clickButton()" large icon>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
               <path fill="none" d="M0 0h24v24H0z"/>
