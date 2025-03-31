@@ -125,8 +125,8 @@ name: "Faculty",
   methods:{
   },
   async mounted(){
-      await this.$store.dispatch('faculties/changeHeader',{head:this.faculty.name,title:"Faculty Details"})
       await this.$store.dispatch("faculties/getFaculties",this.facultyId)
+      await this.$store.dispatch('faculties/changeHeader',{head:this.faculty.name,title:"Faculty Details"})
   }
 }
 </script>
