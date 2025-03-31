@@ -3,15 +3,14 @@
         <div class="my-discussion-container">
             <div class="left">
                 <div class="avatar">
-                    <v-avatar :size="30" class="a_avatar">{{user.sur_name | computeText}}</v-avatar>
+                    <v-avatar :size="30" class="a_avatar">{{fullNames | computeText}}</v-avatar>
                 </div>
             </div>
             <div class="right">
                 <div class="comment">
-                    <h4 class="comment__name">Joshua Kingsley</h4>
-                    <div class="comment__time"><span>10:29 PM</span></div>
-                    <div class="comment__text">Who can support you without having
-                        the idea ?
+                    <h4 class="comment__name">{{fullNames}}</h4>
+                    <div class="comment__time"><span>{{elapsedTime}}</span></div>
+                    <div class="comment__text"> {{ content.content}}
                     </div>
                     <div class="comment__reply-icon" v-if="!commenting" @click="commenting = !commenting">
                         <div class="inner-icon">
@@ -20,8 +19,8 @@
                             </div><div class="text"><span>reply</span></div>
                         </div>
                     </div>
-                    <div class="reply-comment" v-else>
-                        <reply-comment />
+                    <div class="reply-comment mt-3" v-else>
+                        <reply-comment :reply_id="content._id"/>
                     </div>
                 </div>
             </div>
@@ -31,16 +30,24 @@
 
 <script>
     import ReplyComment from "./ReplyComment";
-    import {mapGetters} from 'vuex'
+    import {elapsedDuration} from '../../services/global_functions'
 
     export default {
         name: "Discussion",
+        props:{
+            content:{required:true,type:Object}
+        },
         components: {
             ReplyComment,
 
         },
         computed:{
-            ...mapGetters('user',['user'])
+            elapsedTime(){
+                return elapsedDuration(this.content.createdAt)
+            },
+            fullNames(){
+                return `${this.content.sender.sur_name} ${this.content.sender.other_names}`
+            }
         },
         data(){
             return{
@@ -69,13 +76,17 @@
             }
         }
         .right{
+            flex-grow: 1;
             .comment{
                 &__name{
 
                 }
                 &__time{
                     font-size: .7rem;
-                    color:lighten($font,50);
+
+                    span{
+                        color:lighten($font,35);
+                    }
                 }
                 &__text{
                     font-size: .9rem;
