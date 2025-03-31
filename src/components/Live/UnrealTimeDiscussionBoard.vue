@@ -5,7 +5,7 @@
                 <discussion-head content="Economics Basics part II" :live="true"/>
             </div>
             <div class="student-new-comment mb-5">
-                <student-new-comment-with-photo  />
+                <student-new-comment-with-photo @sent="sent" />
             </div>
             <div class="unreal-time-discussions-holder">
                 <!--                <div class="new-comment">-->
@@ -52,7 +52,9 @@
                 this.comments = comments.data.data
                 console.log(this.comments)
             },
-
+            sent(comment){
+                this.comments.unshift(comment)
+            }
         },
         mounted() {
             this.get_comments()
