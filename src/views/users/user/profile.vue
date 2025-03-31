@@ -24,7 +24,7 @@
             <h3>Students success rate</h3>
           </div>
           <div class="success-stats-card d-flex justify-center">
-            <success-score-chart/>
+            <success-score-chart :courses="info.courses"/>
           </div>
         </div>
         <div class="profile--user-profile-card--performing-class">
