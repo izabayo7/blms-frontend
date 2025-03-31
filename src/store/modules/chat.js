@@ -14,7 +14,7 @@ export default {
             ongoing:false,
             id:null,
             status:0
-        }
+        },
     },
     mutations:{
         //set the current user
@@ -46,7 +46,7 @@ export default {
         },
 
         //add incoming message
-        ADD_INCOMING_MESSAGE(state,newMessage){
+        ADD_INCOMING_MESSAGE(state, newMessage){
 
             //get last message from stored conversation
             store.dispatch('chat/lastMessageInCertainChatMessages',newMessage.sender._id).then(({lastMessage,groupIndex,userIndex}) => {
@@ -74,9 +74,22 @@ export default {
                     }
 
                 })
+
+            store.dispatch('chat/findIndexOfUserInIncomingMessages',newMessage.sender._id).then(idx => {
+                if(idx === null){
+                    //to be done later
+                }else {
+                    if(newMessage.sender._id === state.currentDisplayedUser.id)
+                        state.incomingMessages[idx].unreadMessagesLength = 0
+                    else
+                        state.incomingMessages[idx].unreadMessagesLength += 1
+
+                    state.incomingMessages[idx].last_message = newMessage
+                }
+            })
         },
         //store the message that we sent
-        ADD_ONGOING_MESSAGE(state,newMessage){
+        ADD_ONGOING_MESSAGE(state, newMessage){
 
             newMessage = {
                 content:newMessage,
@@ -104,7 +117,19 @@ export default {
                 }
 
             })
-        }
+
+            store.dispatch('chat/findIndexOfUserInIncomingMessages',state.currentDisplayedUser.id).then(idx => {
+                if(idx === null){
+                    //to be done later
+                }else {
+                    state.incomingMessages[idx].unreadMessagesLength = 0
+                    state.incomingMessages[idx].last_message = newMessage
+                }
+            })
+
+        },
+
+
 
     },
     actions:{
@@ -116,7 +141,6 @@ export default {
 
 
             state.loadedMessages.map((conversation,index) => {
-                console.log(conversation,id)
                 if(conversation.username === id){
                     lastGroupedMessageIndex = state.loadedMessages[index].conversation.length -1
                     let lastIndividualMessageIndex = state.loadedMessages[index].conversation[lastGroupedMessageIndex].messages.length -1
@@ -136,6 +160,7 @@ export default {
                 // console.log(contacts)
                 state.incomingMessages = contacts
                 emit('incoming_message_initially_loaded')
+                console.log(state.incomingMessages)
             });
         },
         //load user messages
@@ -151,7 +176,6 @@ export default {
 
             // Get messages
             getters.socket.on('receive_conversation', ({conversation}) => {
-                emit('conversation_loaded')
                 //check if returned conversation object has data
                 if(conversation.length > 0){
                     commit('STORE_LOADED_MESSAGES',{username:id,conversation:conversation})
@@ -162,6 +186,7 @@ export default {
 
                 state.request.id = null
                 state.request.ongoing = false
+                emit('conversation_loaded')
                 // console.log(conversation)
             })
         },
@@ -177,6 +202,16 @@ export default {
             })
 
         },
+
+        findIndexOfUserInIncomingMessages({state},id){
+            let index = null;
+            state.incomingMessages.map( (message,idx) => {
+                if(message.id === id)
+                    index = idx
+            })
+
+            return index
+        }
     },
     getters:{
         // connect to socket from sever side
@@ -216,7 +251,7 @@ export default {
         },
         conversationLoading(state){
             return state.request.ongoing
-        }
+        },
 
     },
 }

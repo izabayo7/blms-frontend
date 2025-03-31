@@ -1,6 +1,6 @@
 <script src="main.js"></script>
 <template>
-  <v-app>
+  <v-app class="home">
     <router-view />
     <app-dialog />
   </v-app>

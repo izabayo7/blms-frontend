@@ -11,7 +11,7 @@
     <div ref="messages-list" class="messages-list" >
       <div class="messages-container" id="chat-holder">
           <div class="messages-loading" v-if="conversationLoading"><div class="lds-ripple"><div></div><div></div></div></div>
-        <chat-messaging :data="currentMessages" id="scrollable-chat" v-else/>
+        <chat-messaging :data="currentMessages" v-else/>
       </div>
     </div>
     <div ref="send-message" class="send-message">
@@ -24,11 +24,13 @@
 import ChatHeader from '@/components/messages/Chat-header'
 import SendMessage from '@/components/messages/Send-message'
 import ChatMessaging from '@/components/messages/Chat-messaging'
-import {mapGetters, mapState, mapActions} from 'vuex'
+import {mapGetters, mapState, mapActions, mapMutations} from 'vuex'
 import {on} from "@/services/event_bus";
+import {chatMixins} from '@/services/mixins'
 
 export default {
   name: "Chat",
+  mixins:[chatMixins],
   components: {
     ChatHeader,
     SendMessage,
@@ -36,6 +38,7 @@ export default {
   },
   data(){
     return {
+
     }
   },
   computed:{
@@ -44,14 +47,10 @@ export default {
 
   },
   methods:{
-    ...mapActions('chat',['setUsername','loadMessages']),
-    scrollChatToBottom(){
-      let el = document.getElementById('chat-holder')
-      console.log(el.scrollTop,el.scrollHeight)
-      el.scrollTop = el.scrollHeight
-
-      console.log(el.scrollTop,el.scrollHeight)
-
+    ...mapActions('chat',['setUsername','loadMessages','isUsertyping']),
+    ...mapMutations('chat',['ADD_TYPIST','REMOVE_TYPIST']),
+    doneTyping(){
+      this.typing.typist = ''
     }
   },
   mounted() {
@@ -60,17 +59,15 @@ export default {
     })
     // Message from server
     this.socket.on('receive-message', (message) => {
-
+    this.scrollChatToBottom()
       if(this.loadedMessages.length > 0) // if messages have loaded
                 this.$store.commit('chat/ADD_INCOMING_MESSAGE',message)
-
-      // for groups
-
-
-      // Scroll down
-      // chatMessages.scrollTop = chatMessages.scrollHeight;
     });
+
+
+
   },
+
   beforeMount() {
     //load user since the route have changed
     this.setUsername(this.$route.params.username).then(username => {
@@ -111,14 +108,14 @@ export default {
     overflow-y: scroll;
     overscroll-behavior-y: contain;
     flex-grow: 1;
+    //height: 60%;
 
     .messages-container{
       position: absolute;
-      top: 0;
-      left: 0;
-      bottom: 0;
-      right: 0;
+      top:0;
       width: 100%;
+      height: 100%;
+
 
       .messages-loading{
         position: absolute;
@@ -162,25 +159,6 @@ export default {
       }
     }
 
-    &::-webkit-scrollbar {
-      width: 8px;
-    }
-
-    &::-webkit-scrollbar-track {
-      background-color: transparent;
-      border-radius: 10px;
-    }
-    &::-webkit-scrollbar-track:hover {
-      background-color: lighten($secondary,4);
-    }
-
-    &::-webkit-scrollbar-thumb {
-      background-color: lighten($font,40);
-      border-radius: 10px;
-    }
-    &::-webkit-scrollbar-thumb:hover {
-      background-color: lighten($font,30);
-    }
   }
 
   .send-message {
