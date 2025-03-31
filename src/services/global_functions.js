@@ -80,7 +80,7 @@ function logout() {
     store.commit("years/RESET_STATE");
 
     // redirect to login
-    router.$router.push("/login");
+    router.push("/login");
 }
 
 export {
