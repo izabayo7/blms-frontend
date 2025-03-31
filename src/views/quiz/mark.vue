@@ -5,16 +5,16 @@
   >
     <back class="mt-0 mb-6 ml-0 ml-md-n6"/>
 
-    <v-row v-if="selected_quiz_submission && (attempt.quiz || attempt.exam)" class="relative">
+    <v-row v-if="selected_quiz_submission && (attempt.quiz || attempt.exam)" class="relative mx-0">
       <v-col class="col-12 col-md-8 px-0">
         <navigation title="Submissions" :links="navigation_links"/>
         <v-row
             v-for="(question, i) in selected_quiz_submission[isExam?'exam':'quiz'].questions"
             :key="i"
-            class="col-12 col-md-12 px-0"
+            class="col-12 col-md-12 px-0 mx-0"
         >
           <v-col class="col-12">
-            <v-row>
+            <v-row class="mx-0">
               <v-col
                   class="px-0"
                   :class="question.type.includes('select') ? 'col-11' : 'col-12'"
@@ -244,6 +244,7 @@
               </v-col>
             </v-row>
             <v-row
+                class="mx-0"
                 v-if="selected_quiz_submission[isExam?'exam':'quiz'].status === 2 || selected_quiz_submission[isExam?'exam':'quiz'].status === 'RELEASED' || userCategory === 'INSTRUCTOR'">
               <v-col class="col-12 col-md-6 d-flex pb-0">
                 <div class="mr-3 marks-label">Award marks:</div>
