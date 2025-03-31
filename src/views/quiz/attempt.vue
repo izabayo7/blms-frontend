@@ -209,6 +209,7 @@ export default {
           this.$router.push("/quiz");
         } else if (category == "STUDENT") {
           this.markUndoneQuestions();
+          this.attempt.auto_submitted = true
           this.saveAttempt();
         }
       }
