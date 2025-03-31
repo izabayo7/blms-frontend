@@ -58,7 +58,7 @@ export default {
     //handle errors
     this.socket.on("error", (error) => {
       console.log(error);
-      alert(error);
+      // alert(error);
     });
   },
 };
