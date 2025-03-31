@@ -1,17 +1,13 @@
 <template>
-  <main class="incoming-chat" @click="handleClick">
+  <main class="incoming-chat" @click="handleClick" :class="{'active-chat':active}">
     <!--    slot for profile picture-->
-    <div class="pic col-3">
-      <img
-        v-if="data.image"
-        :src="data.image"
-        :alt="`${data.name}'s profile picture`"
-      />
-      <v-avatar @click="logout" v-else size="50" class="avatar">
+    <div class="pic col-xs-12 col-sm-2 col-md-3 col-lg-3">
+      <img v-if="data.image" :src="data.image" :alt="`${data.name}'s profile picture`"/>
+      <v-avatar v-else size="37" class="avatar">
         {{ data.name | computeText }}
       </v-avatar>
     </div>
-    <div class="content col-9">
+    <div class="content d-none d-xs-none d-sm-flex col-sm-9 col-md-9 col-lg-9">
       <div class="sender">
         <!--          slot for sender name-->
         <p :class="{ unread: !read }">{{ data.name }}</p>
@@ -54,6 +50,10 @@ export default {
     read() {
       return this.formatedIncomingMessagesLength <= 0;
     },
+    active(){
+      console.log(this.$route.params.username,this.data.id,this.$route.params.username === this.data.id)
+      return this.$route.params.username === this.data.id
+    }
   },
   methods: {
     handleClick() {
@@ -90,6 +90,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.active-chat{
+  border-left:4px solid $primary;
+}
 .incoming-chat {
   background-color: $main;
   display: flex;
@@ -97,14 +100,25 @@ export default {
   padding: 0.5rem;
   margin-top: 0.3rem;
   cursor: pointer;
+  transition: .1s ease-out;
+
   .pic {
     align-self: center;
     justify-self: center;
     padding: 0.5rem;
+    display: flex;
+    align-content: center;
+    justify-content: center;
+
     img {
       width: 40px;
       border-radius: 50%;
       margin: auto;
+    }
+
+    .avatar{
+      margin: auto ;
+
     }
   }
 
