@@ -1,22 +1,10 @@
 <template>
   <v-container class="live_video customScroll" fluid>
     <v-row>
-      <vue-plyr v-for="(item, i) in videosList" :key="i">
-        <video
-          controls
-          autoplay
-          playsinline
-          :srcObject.prop="item.srcObject"
-          :muted="item.muted"
-          :id="item.id"
-        ></video>
-      </vue-plyr>
-    </v-row>
-    <v-row>
       <v-col class="col-6 text-center mx-auto">
         <v-text-field
           v-model="name"
-          placeholder="Enter meeting name"
+          placeholder="Enter your name"
           class="text-field"
           solo
         />
@@ -25,7 +13,7 @@
           class="white--text next-chapter px-12"
           rounded
           @click="openOrJoinGroup"
-          >Open or join</v-btn
+          >Open or join Default room</v-btn
         ></v-col
       >
     </v-row>
@@ -34,7 +22,7 @@
 
 <script>
 import colors from "@/assets/sass/imports/_colors.scss";
-
+import { mapState, mapMutations } from "vuex";
 import * as io from "socket.io-client";
 window.io = io;
 import * as RTCMultiConnection from "../../assets/js/RTCMultiConnection";
@@ -47,17 +35,26 @@ export default {
     name: "",
     videosList: [],
   }),
+  computed: {
+    ...mapState("live", ["room"]),
+  },
   methods: {
-    addVideos(video_obj) {
-      console.log("kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk", video_obj);
-      this.videosList.push(video_obj);
-    },
-    resetVideos(videos) {
-      this.videosList = videos;
-    },
+    ...mapMutations("live", {
+      addParticipant: "ADD_PARTICIPANT",
+    }),
     openOrJoinGroup() {
+      const vm = this;
       if (this.name == "") alert("name is required");
-      this.connection.openOrJoin(this.name);
+      this.connection.extra.userFullName = name;
+      // this.connection.openOrJoin(this.name);
+      vm.connection.checkPresence(this.room.id, function (isRoomExist) {
+        vm.connection.isInitiator = false;
+        vm.addParticipant({
+          name: vm.name,
+          isInitiator: !isRoomExist,
+        });
+        vm.$router.push("/live/room");
+      });
     },
   },
   mounted() {
@@ -68,58 +65,18 @@ export default {
     // ......................................................
 
     // by default, socket.io server is assumed to be deployed on your own URL
-    this.connection.socketURL = `${process.env.VUE_APP_api_service_url}/`;
+    vm.connection.socketURL = `${process.env.VUE_APP_api_service_url}/`;
 
-    this.connection.socketMessageEvent = "video-conference-demo";
+    vm.connection.socketMessageEvent = this.room.id;
 
-    this.connection.session = {
-      audio: true,
-      video: true,
-    };
+    // keep room opened even if owner leaves
+    vm.connection.autoCloseEntireSession = true;
 
-    this.connection.sdpConstraints.mandatory = {
-      OfferToReceiveAudio: true,
-      OfferToReceiveVideo: true,
-    };
-
-    // https://www.rtcmulticonnection.org/docs/iceServers/
-    // use your own TURN-server here!
-    this.connection.iceServers = [
-      {
-        urls: [
-          "stun:stun.l.google.com:19302",
-          "stun:stun1.l.google.com:19302",
-          "stun:stun2.l.google.com:19302",
-          "stun:stun.l.google.com:19302?transport=udp",
-        ],
-      },
-    ];
-
-    this.connection.autoCreateMediaElement = false;
-
-    this.connection.onstream = (event) => {
-      try {
-        console.log(event);
-
-        vm.addVideos({
-          id: event.streamid,
-          srcObject: event.stream,
-          muted: event.type === "local",
-        });
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    this.connection.onstreamended = function (event) {
-      var newList = [];
-      vm.data().videosList.forEach(function (item) {
-        if (item.id !== event.streamid) {
-          newList.push(item);
-        }
+    vm.connection.connectSocket(function (socket) {
+      socket.on("disconnect", function () {
+        location.reload();
       });
-      vm.resetVideos(newList);
-    };
+    });
   },
 };
 </script>

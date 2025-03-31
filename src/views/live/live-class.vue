@@ -12,10 +12,19 @@
         ><v-icon>mdi-arrow-left</v-icon></v-btn
       >
       <kurious-page-actions class="hidden-md-and-up">
-        <kurious-discussion-board v-if="$store.state.user.type === 'student'" />
-        <kurious-instructor-action-board v-else />
+        <kurious-discussion-board
+          v-if="$store.state.user.user.category.name === 'STUDENT'"
+          :host="sender"
+        />
+        <kurious-instructor-action-board
+          v-else-if="$store.state.user.user.category.name === 'INSTRUCTOR'"
+          :participants="room.participants"
+        />
       </kurious-page-actions>
       <v-col class="col-12 col-md-8">
+        <v-row>
+          <h1></h1>
+        </v-row>
         <v-row>
           <v-col class="col-12" id="video">
             <vue-plyr>
@@ -28,6 +37,12 @@
             class="col-12 description"
           >
             <div id="broadcast-viewers-counter"></div>
+            <div class="more_actions">
+              <button>Mute sound</button>
+              <button>Mute video</button>
+              <button>Share screen</button>
+              <button>Exit</button>
+            </div>
             <p>
               JavaScript, often abbreviated as JS, is a programming language
               that conforms to the ECMAScript specification. JavaScript is
@@ -59,9 +74,11 @@
       <v-col class="col-4 hidden-sm-and-down pa-0">
         <kurious-discussion-board
           v-if="$store.state.user.user.category.name === 'STUDENT'"
+          :host="sender"
         />
         <kurious-instructor-action-board
           v-else-if="$store.state.user.user.category.name === 'INSTRUCTOR'"
+          :participants="room.participants"
         />
       </v-col>
     </v-row>
@@ -79,6 +96,7 @@ export default {
   data: () => ({
     connection: new RTCMultiConnection(),
     courseName: "Economy Basics",
+    sender: {},
   }),
   computed: {
     ...mapState("live", ["room"]),
@@ -109,34 +127,28 @@ export default {
       };
 
       vm.connection.getSocket(function (socket) {
-        try {
-          console.log("aha", new Date());
-          socket.emit(
-            "check-broadcast-presence",
-            broadcastId,
-            (isBroadcastExists) => {
-              console.log("ahwiiiiiiiii", new Date());
-              if (!isBroadcastExists) {
-                // the first person (i.e. real-broadcaster) MUST set his user-id
-                vm.connection.userid = broadcastId;
-              }
-
-              console.log(
-                "check-broadcast-presence",
-                broadcastId,
-                isBroadcastExists
-              );
-
-              socket.emit("join-broadcast", {
-                broadcastId: broadcastId,
-                userid: vm.connection.userid,
-                typeOfStreams: vm.connection.session,
-              });
+        socket.emit(
+          "check-broadcast-presence",
+          broadcastId,
+          (isBroadcastExists) => {
+            if (!isBroadcastExists) {
+              // the first person (i.e. real-broadcaster) MUST set his user-id
+              vm.connection.userid = broadcastId;
             }
-          );
-        } catch (error) {
-          console.log(error);
-        }
+
+            console.log(
+              "check-broadcast-presence",
+              broadcastId,
+              isBroadcastExists
+            );
+
+            socket.emit("join-broadcast", {
+              broadcastId: broadcastId,
+              userid: vm.connection.userid,
+              typeOfStreams: vm.connection.session,
+            });
+          }
+        );
       });
     },
   },
@@ -163,6 +175,12 @@ export default {
         ],
       },
     ];
+
+    vm.connection.extra.userFullName = `${vm.$store.state.user.user.sur_name} ${vm.$store.state.user.user.other_names}`;
+    vm.connection.extra.userProfile = `${vm.$store.state.user.user.profile}`;
+
+    /// make this room public
+    vm.connection.publicRoomIdentifier = vm.room.id;
 
     // its mandatory in v3
     vm.connection.enableScalableBroadcast = true;
@@ -251,7 +269,58 @@ export default {
       });
     });
 
-    var videoPreview = document.getElementById("video-preview");
+    let videoPreview = document.getElementById("video-preview"),
+      localStream;
+
+    document.querySelector("#btn-get-mixed-stream").onclick = function () {
+      // if (mixerOptions.value === 'camera-screen') {
+      // updateMediaHTML('Capturing screen');
+      // getMixedCameraAndScreen();
+      // }
+    };
+
+    document.querySelector("#btn-get-video-stream").onclick = function () {
+      // connection.addStream('video');
+      localStream = vm.connection.streamEvents.selectFirst({
+        local: true,
+      }).stream;
+      localStream.unmute("video");
+    };
+
+    document.querySelector("#btn-get-audio-stream").onclick = function () {
+      // connection.addStream('audio');
+      localStream = vm.connection.streamEvents.selectFirst({
+        local: true,
+      }).stream;
+      localStream.unmute();
+    };
+
+    // remove screen
+    document.querySelector("#btn-remove-mixed-stream").onclick = function () {
+      // connection.removeStream(mixedStream.id);
+      localStream = vm.connection.streamEvents.selectFirst({
+        local: true,
+      }).stream;
+      localStream.mute("screen");
+    };
+
+    // remove video
+    document.querySelector("#btn-remove-video-stream").onclick = function () {
+      // connection.removeStream('video');
+      localStream = vm.connection.streamEvents.selectFirst({
+        local: true,
+      }).stream;
+      localStream.mute("video");
+    };
+
+    // remove video
+    document.querySelector("#btn-remove-audio-stream").onclick = function () {
+      // connection.removeStream('audio');
+      localStream = vm.connection.streamEvents.selectFirst({
+        local: true,
+      }).stream;
+      localStream.mute("audio");
+    };
 
     vm.connection.onstream = function (event) {
       if (vm.connection.isInitiator && event.type !== "local") {
@@ -324,6 +393,46 @@ export default {
         vm.connection.sessionid
       );
     };
+
+    // show participants
+    vm.connection.onUserStatusChanged = function () {
+      vm.room.participants = [];
+      vm.connection.getAllParticipants().forEach(function (pid) {
+        getFullName(pid);
+      });
+    };
+
+    function getFullName(userid) {
+      var _userFullName = userid,
+        userProfile;
+      if (
+        vm.connection.peers[userid] &&
+        vm.connection.peers[userid].extra.userFullName
+      ) {
+        _userFullName = vm.connection.peers[userid].extra.userFullName;
+        userProfile = vm.connection.peers[userid].extra.userProfile;
+      }
+
+      if (vm.room.id == vm.connection.peers[userid].userid)
+        vm.sender = {
+          name: _userFullName,
+          profile: userProfile != "undefined" ? userProfile : undefined,
+        };
+      else {
+        const participant_found = vm.room.participants.filter(
+          (p) => p.name == _userFullName
+        );
+        if (
+          !participant_found.length &&
+          _userFullName != vm.connection.extra.userFullName
+        )
+          vm.room.participants.push({
+            name: _userFullName,
+            profile: userProfile != "undefined" ? userProfile : undefined,
+            attendance: 100,
+          });
+      }
+    }
 
     vm.connection.onstreamended = function () {};
 
@@ -413,8 +522,8 @@ export default {
   background-color: #f6f6f6;
   max-height: calc(100vh - 5rem);
   overflow-y: auto;
-  video{
-    max-height: 100px;
+  video {
+    max-height: 355px;
   }
 }
 </style>

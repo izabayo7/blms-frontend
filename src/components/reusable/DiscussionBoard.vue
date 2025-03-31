@@ -3,23 +3,20 @@
     <v-row>
       <!-- <v-col class="col-12 title mt-md-3 ml-n8 d-block">Discussion Board</v-col> -->
       <v-col class="col-12 pa-0">
-        <v-card
-          class="ml-sm-1 discussion_card pa-4"
-          tile
-          max-width="100%"
-        >
+        <v-card class="ml-sm-1 discussion_card pa-4" tile max-width="100%">
           <v-list>
             <v-list-item three-line class="px-0">
               <v-list-item-avatar>
-                <img
-                  src="@/assets/images/instructor.png"
-                />
+                <img v-if="host.profile" :src="host.profile" />
+                <v-avatar v-else size="37" class="avatar">
+                  {{ host.name | computeText }}
+                </v-avatar>
               </v-list-item-avatar>
 
               <v-list-item-content>
                 <v-list-item-title
                   class="font-weight-bold"
-                  v-text="instructor.name"
+                  v-text="host.name"
                 />
                 <v-list-item-subtitle class="font-weight-bold time mt-2"
                   >08:00 pm</v-list-item-subtitle
@@ -167,12 +164,16 @@
               </v-list-item-action>
             </v-list-item>
             <v-divider />
-            <v-list-item-group id="userMessages" v-model="item" color="primary">
+            <v-list-item-group id="userMessages" color="primary">
               <v-list-item v-for="(item, i) in messages" :key="i" three-line>
                 <v-list-item-avatar>
                   <img
-                    src="@/assets/images/instructor.png"
+                    v-if="item.profile"
+                    :src="item.profile"
                   />
+                  <v-avatar v-else size="37" class="avatar">
+                    {{ item.userNames | computeText }}
+                  </v-avatar>
                 </v-list-item-avatar>
                 <v-list-item-content>
                   <v-list-item-title v-text="item.userNames" />
@@ -210,8 +211,13 @@
 
 <script>
 export default {
+  props: {
+    host: {
+      tpe: Object,
+      required: true,
+    },
+  },
   data: () => ({
-    item: 1,
     instructor: {
       name: "Alice Rose",
       profile: "instructor.png",
@@ -245,11 +251,6 @@ export default {
       // { userProfile: 'student3.png', userNames: 'James Bond', content: 'When are we submitting the quiz?', time: '08:19 pm' },
       // { userProfile: 'student4.png', userNames: 'Uwicyeza Gift', content: 'This lesson is amazing', time: '08:29 pm' },
     ],
-    items: [
-      { text: "Real-Time", icon: "mdi-clock" },
-      { text: "Audience", icon: "mdi-account" },
-      { text: "Conversions", icon: "mdi-flag" },
-    ],
   }),
 };
 </script>
@@ -258,7 +259,13 @@ export default {
 .discussion_card {
   border-radius: 27px;
 }
-.live{
+.live {
   color: #979797;
 }
+  .avatar {
+    margin-top: 0px;
+    background-color: $primary;
+    color: white;
+    cursor: pointer;
+  }
 </style>
