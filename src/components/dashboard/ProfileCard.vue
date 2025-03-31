@@ -103,7 +103,19 @@ export default {
             }
         }
 
+        .profile-actions{
+            ul{
+                padding:0;
 
+                li{
+                    padding:.5rem 0;
+
+                    .icon{
+                        padding-right: 2rem;
+                    }
+                }
+            }
+        }
 
     }
 }
