@@ -45,6 +45,9 @@ export default {
       this.$emit("input", this.content);
     },
   },
+  created() {
+    this.handleInput()
+  }
 };
 </script>
 
