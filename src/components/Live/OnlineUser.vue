@@ -33,6 +33,7 @@ export default {
 .online-user{
   display: flex;
   padding:.1rem;
+  margin-bottom: 9.36px;
 
   &:hover{
     background-color: transparentize($grayish,.9);
@@ -69,12 +70,27 @@ export default {
       margin:.1rem 0;
     }
       &--name{
-        font-size:.8rem;
+        font-family: Montserrat;
+        font-style: normal;
+        font-weight: 500;
+        font-size: 11.3943px;
+        line-height: 14px;
+        /* identical to box height */
+
+
+        color: #3C3C3C;
       }
 
       &--attendance{
-        font-size: .6rem;
-        color:$grayish;
+        font-family: Montserrat;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 7.92644px;
+        line-height: 10px;
+        /* identical to box height */
+
+
+        color: #848484;
       }
   }
 }

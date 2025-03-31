@@ -27,12 +27,12 @@
       <!--        </div>-->
       <!--      </div>-->
       <!--    </div>-->
-
       <div class="live-class--video" :class="`--${$vuetify.breakpoint.name}`">
+        <back v-if="!participationInfo.isOfferingCourse" class="mt-6"/>
         <div class="head">
           <div class="text">
             <h2>Economics Basics: Chapter 8 part II</h2>
-            <span class="live">Live</span>
+            <span class="live" v-if="participationInfo.isOfferingCourse">Live</span>
           </div>
           <div class="time">
             00 : 00 : 36
@@ -40,7 +40,10 @@
         </div>
         <div class="video">
           <div class="video--wrapper">
-            <div class="video-el" :class="`--${$vuetify.breakpoint.name}`" @mouseenter="toggleMenu(true)" @mouseleave="toggleMenu(false)">
+            <div class="video-el"
+                 :class="`--${$vuetify.breakpoint.name} ${participationInfo.isOfferingCourse? '': sidebarOpen ? '' : 'viewer'}`"
+                 @mouseenter="toggleMenu(true)"
+                 @mouseleave="toggleMenu(false)">
               <div class="no-video" v-show="noVideo">
                 <div class="no-video--wrapper" :class="{presenting:isPresenting}">
                   <div class="instructor-info">
@@ -49,7 +52,9 @@
                         alt="profile picture" class="picture">
                     <h2 class="course">Economics Basics: Chapter 8 part II</h2>
                     <span class="source">by instuctor</span>
-                    <h2 class="name">{{ participationInfo.isOfferingCourse ? "YOU" : `${instructor ? instructor.sur_name + ' '+ instructor.other_names : ''}` }}</h2>
+                    <h2 class="name">{{
+                        participationInfo.isOfferingCourse ? "YOU" : `${instructor ? instructor.sur_name + ' ' + instructor.other_names : ''}`
+                      }}</h2>
                   </div>
                   <div class="screen-sharing-video" v-if="isPresenting">
                     <div class="screen-sharing-video--wrapper">
@@ -65,15 +70,16 @@
                 <!--                <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" >-->
               </video>
               <transition name="fade">
-                <div class="video-controls" v-if="(showMenu || noVideo) && participationInfo.isOfferingCourse">
-                  <div class="video-controls--wrapper">
-                    <button @click="toogleVideo" class="start-mute-video">
+                <div class="overlay" v-show="(showMenu || noVideo)">
+                  <div class="video-controls" v-if="participationInfo.isOfferingCourse">
+                    <div class="video-controls--wrapper">
+                      <button @click="toogleVideo" class="start-mute-video">
                       <span class="icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24"
                                               height="24"><path fill="none" d="M0 0h24v24H0z"/><path
                           d="M16 4a1 1 0 0 1 1 1v4.2l5.213-3.65a.5.5 0 0 1 .787.41v12.08a.5.5 0 0 1-.787.41L17 14.8V19a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h14zm-1 2H3v12h12V6zM7.4 8.829a.4.4 0 0 1 .215.062l4.355 2.772a.4.4 0 0 1 0 .674L7.615 15.11A.4.4 0 0 1 7 14.77V9.23c0-.221.18-.4.4-.4zM21 8.84l-4 2.8v.718l4 2.8V8.84z"/></svg></span>
-                      <span class="text">{{ videoEnabled ? 'Stop video' : 'Start video' }}</span>
-                    </button>
-                    <button @click="toogleAudio" class="start-mute-mic">
+                        <span class="text">{{ videoEnabled ? 'Stop video' : 'Start video' }}</span>
+                      </button>
+                      <button @click="toogleAudio" class="start-mute-mic">
                       <span class="icon">
                         <svg v-if="!audioEnabled" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24"
                              height="24"><path fill="none" d="M0 0h24v24H0z"/><path
@@ -83,33 +89,47 @@
     d="M12 3a3 3 0 0 0-3 3v4a3 3 0 0 0 6 0V6a3 3 0 0 0-3-3zm0-2a5 5 0 0 1 5 5v4a5 5 0 0 1-10 0V6a5 5 0 0 1 5-5zM3.055 11H5.07a7.002 7.002 0 0 0 13.858 0h2.016A9.004 9.004 0 0 1 13 18.945V23h-2v-4.055A9.004 9.004 0 0 1 3.055 11z"/></svg>
 
                       </span>
-                      <span class="text">{{ audioEnabled ? 'Mute' : 'Unmute' }}</span>
-                    </button>
-                    <button class="start-mute-sound">
+                        <span class="text">{{ audioEnabled ? 'Mute' : 'Unmute' }}</span>
+                      </button>
+                      <button class="start-mute-sound">
                       <span class="icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24"
                                               height="24"><path fill="none" d="M0 0h24v24H0z"/><path
                           d="M10 7.22L6.603 10H3v4h3.603L10 16.78V7.22zM5.889 16H2a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1h3.889l5.294-4.332a.5.5 0 0 1 .817.387v15.89a.5.5 0 0 1-.817.387L5.89 16zm14.525-4l3.536 3.536-1.414 1.414L19 13.414l-3.536 3.536-1.414-1.414L17.586 12 14.05 8.464l1.414-1.414L19 10.586l3.536-3.536 1.414 1.414L20.414 12z"/></svg></span>
-                      <span class="text">Mute</span>
-                    </button>
-                    <button class="start-share-screen">
+                        <span class="text">Mute</span>
+                      </button>
+                      <button class="start-share-screen">
                       <span class="icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24"
                                               height="24"><path fill="none" d="M0 0h24v24H0z"/><path
                           d="M9 3v2H4v14h16v-9h2v10a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h6zm9.95 2L16 2.05 17.414.636l5.34 5.34A.6.6 0 0 1 22.33 7H14a2 2 0 0 0-2 2v6h-2V9a4 4 0 0 1 4-4h4.95z"/></svg></span>
-                      <span class="text">Share screen</span>
-                    </button>
-                    <button class="start-settings">
+                        <span class="text">Share screen</span>
+                      </button>
+                      <button class="start-settings">
                       <span class="icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24"
                                               height="24"><path fill="none" d="M0 0h24v24H0z"/><path
                           d="M2.213 14.06a9.945 9.945 0 0 1 0-4.12c1.11.13 2.08-.237 2.396-1.001.317-.765-.108-1.71-.986-2.403a9.945 9.945 0 0 1 2.913-2.913c.692.877 1.638 1.303 2.403.986.765-.317 1.132-1.286 1.001-2.396a9.945 9.945 0 0 1 4.12 0c-.13 1.11.237 2.08 1.001 2.396.765.317 1.71-.108 2.403-.986a9.945 9.945 0 0 1 2.913 2.913c-.877.692-1.303 1.638-.986 2.403.317.765 1.286 1.132 2.396 1.001a9.945 9.945 0 0 1 0 4.12c-1.11-.13-2.08.237-2.396 1.001-.317.765.108 1.71.986 2.403a9.945 9.945 0 0 1-2.913 2.913c-.692-.877-1.638-1.303-2.403-.986-.765.317-1.132 1.286-1.001 2.396a9.945 9.945 0 0 1-4.12 0c.13-1.11-.237-2.08-1.001-2.396-.765-.317-1.71.108-2.403.986a9.945 9.945 0 0 1-2.913-2.913c.877-.692 1.303-1.638.986-2.403-.317-.765-1.286-1.132-2.396-1.001zM4 12.21c1.1.305 2.007 1.002 2.457 2.086.449 1.085.3 2.22-.262 3.212.096.102.195.201.297.297.993-.562 2.127-.71 3.212-.262 1.084.45 1.781 1.357 2.086 2.457.14.004.28.004.42 0 .305-1.1 1.002-2.007 2.086-2.457 1.085-.449 2.22-.3 3.212.262.102-.096.201-.195.297-.297-.562-.993-.71-2.127-.262-3.212.45-1.084 1.357-1.781 2.457-2.086.004-.14.004-.28 0-.42-1.1-.305-2.007-1.002-2.457-2.086-.449-1.085-.3-2.22.262-3.212a7.935 7.935 0 0 0-.297-.297c-.993.562-2.127.71-3.212.262C13.212 6.007 12.515 5.1 12.21 4a7.935 7.935 0 0 0-.42 0c-.305 1.1-1.002 2.007-2.086 2.457-1.085.449-2.22.3-3.212-.262-.102.096-.201.195-.297.297.562.993.71 2.127.262 3.212C6.007 10.788 5.1 11.485 4 11.79c-.004.14-.004.28 0 .42zM12 15a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm0-2a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/></svg></span>
-                      <span class="text">settings</span>
-                    </button>
+                        <span class="text">settings</span>
+                      </button>
+                    </div>
+                  </div>
+                  <div class="video-controls" v-else>
+                    <div class="video-controls--wrapper viewer">
+                      <span class="live">Live</span>
+                      <button class="ml-auto">
+                        <svg width="22" height="17" viewBox="0 0 22 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M6.72526 1H1.30859V6.41667" stroke="white" stroke-width="1.26923"/>
+                          <path d="M15.8906 1H21.3073V6.41667" stroke="white" stroke-width="1.26923"/>
+                          <path d="M21.3073 10.25V15.6667H15.8906" stroke="white" stroke-width="1.26923"/>
+                          <path d="M1.30859 10.25V15.6667H6.72526" stroke="white" stroke-width="1.26923"/>
+                        </svg>
+                      </button>
+                    </div>
                   </div>
                 </div>
               </transition>
             </div>
           </div>
         </div>
-        <div class="live-comments">
+        <div v-if="participationInfo.isOfferingCourse" class="live-comments">
           <div class="live-comments--wrapper">
             <div class="student-new-comment">
               <student-new-comment-with-photo v-model="comment"/>
@@ -124,8 +144,20 @@
             </div>
           </div>
         </div>
+        <div v-else class="live-class-details">
+          <div class="live-class-details--wrapper">
+            <div class="description">Learn about the basics of compound interest, with examples of basic compound
+              interest calculations. Created by professor Kubwimana Jean Damascene
+            </div>
+            <div class="quiz ml-auto mr-4">
+              <button>
+                Take quiz
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="live-class--attendance">
+      <div v-if="participationInfo.isOfferingCourse" class="live-class--attendance">
         <div class="live-class--attendance--wrapper">
           <h3>ONLINE USERS : {{ participants.length }} </h3>
           <div class="online-users">
@@ -167,6 +199,48 @@
           </div>
         </div>
       </div>
+      <div v-else class="live-class--attendance">
+        <div class="live-class--attendance--wrapper long">
+          <h3>DISCUSSION BOARD </h3>
+          <div class="online-users">
+            <!--            <online-user v-for="user in participants" :user="user.userInfo"-->
+            <!--                         :key="`${(Date.now() * Math.random())}${user.name}`"/>-->
+          </div>
+        </div>
+        <div v-if="participationInfo.isOfferingCourse" class="live-class--actions">
+          <div class="live-class--action attendance">
+            <button>
+            <span class="icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none"
+                                                                                                       d="M0 0h24v24H0z"/><path
+                  d="M21 8v12.993A1 1 0 0 1 20.007 22H3.993A.993.993 0 0 1 3 21.008V2.992C3 2.455 3.449 2 4.002 2h10.995L21 8zm-2 1h-5V4H5v16h14V9zM8 7h3v2H8V7zm0 4h8v2H8v-2zm0 4h8v2H8v-2z"/></svg>
+            </span>
+              <span class="text">CHECK ATTENDANCE</span>
+            </button>
+          </div>
+          <div class="live-class--action release-quiz">
+            <button>
+            <span class="icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none"
+                                                                                                       d="M0 0h24v24H0z"/><path
+                  d="M10 15.172l9.192-9.193 1.415 1.414L10 18l-6.364-6.364 1.414-1.414z"/></svg>
+            </span>
+              <span class="text">RELEASE QUIZ</span>
+            </button>
+          </div>
+          <div class="live-class--action end-class">
+            <button @click="leaveRoom">
+            <span class="icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none"
+                                                                                                       d="M0 0h24v24H0z"/><path
+                  d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm0-11.414L9.172 7.757 7.757 9.172 10.586 12l-2.829 2.828 1.415 1.415L12 13.414l2.828 2.829 1.415-1.415L13.414 12l2.829-2.828-1.415-1.415L12 10.586z"
+                  fill="rgba(255,255,255,1)"/></svg>
+            </span>
+              <span class="text">END CLASS</span>
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -175,14 +249,14 @@
 // import * as kurentoUtils from "../../../plugins/kurentoLive/kurento-utils.js"
 import Participant from "../../../plugins/kurentoLive/participants";
 import {WebRtcPeer} from 'kurento-utils'
-import {mapGetters} from 'vuex'
+import {mapGetters, mapState} from 'vuex'
 import OnlineUser from "../../../components/Live/OnlineUser";
 import StudentNewCommentWithPhoto from "../../../components/Live/StudentNewCommentWithPhoto";
 import Apis from '../../../services/apis'
 
 export default {
   name: "liveClass",
-  components: {StudentNewCommentWithPhoto, OnlineUser},
+  components: {StudentNewCommentWithPhoto, OnlineUser, back: () => import("@/components/shared/back-button"),},
   data() {
     return {
       ws: null,
@@ -202,141 +276,19 @@ export default {
           name: 'Ntwari liberi',
           attendance: 89,
         },
-        /*
-      {
-        img:'https://s3.amazonaws.com/cms-assets.tutsplus.com/uploads/users/810/profiles/19338/profileImage/profile-square-extra-small.png',
-        name:'Ntwari liberi',
-        attendance:45,
-      },{
-        img:'https://s3.amazonaws.com/cms-assets.tutsplus.com/uploads/users/810/profiles/19338/profileImage/profile-square-extra-small.png',
-        name:'Ntwari liberi',
-        attendance:37,
-      },{
-        img:'https://s3.amazonaws.com/cms-assets.tutsplus.com/uploads/users/810/profiles/19338/profileImage/profile-square-extra-small.png',
-        name:'Ntwari liberi',
-        attendance:16,
-      },{
-        img:'https://s3.amazonaws.com/cms-assets.tutsplus.com/uploads/users/810/profiles/19338/profileImage/profile-square-extra-small.png',
-        name:'Ntwari liberi',
-        attendance:78,
-      },{
-        img:'https://s3.amazonaws.com/cms-assets.tutsplus.com/uploads/users/810/profiles/19338/profileImage/profile-square-extra-small.png',
-        name:'Ntwari liberi',
-        attendance:44,
-      },{
-        img:'https://s3.amazonaws.com/cms-assets.tutsplus.com/uploads/users/810/profiles/19338/profileImage/profile-square-extra-small.png',
-        name:'Ntwari liberi',
-        attendance:58
-      },{
-        img:'https://s3.amazonaws.com/cms-assets.tutsplus.com/uploads/users/810/profiles/19338/profileImage/profile-square-extra-small.png',
-        name:'Ntwari liberi',
-        attendance:74,
-      },{
-        img:'https://s3.amazonaws.com/cms-assets.tutsplus.com/uploads/users/810/profiles/19338/profileImage/profile-square-extra-small.png',
-        name:'Ntwari liberi',
-        attendance:89,
-      },{
-        img:'https://s3.amazonaws.com/cms-assets.tutsplus.com/uploads/users/810/profiles/19338/profileImage/profile-square-extra-small.png',
-        name:'Ntwari liberi',
-        attendance:89,
-      },{
-        img:'https://s3.amazonaws.com/cms-assets.tutsplus.com/uploads/users/810/profiles/19338/profileImage/profile-square-extra-small.png',
-        name:'Ntwari liberi',
-        attendance:89,
-      },{
-        img:'https://s3.amazonaws.com/cms-assets.tutsplus.com/uploads/users/810/profiles/19338/profileImage/profile-square-extra-small.png',
-        name:'Ntwari liberi',
-        attendance:89,
-      },{
-        img:'https://s3.amazonaws.com/cms-assets.tutsplus.com/uploads/users/810/profiles/19338/profileImage/profile-square-extra-small.png',
-        name:'Ntwari liberi',
-        attendance:2,
-      },{
-        img:'https://s3.amazonaws.com/cms-assets.tutsplus.com/uploads/users/810/profiles/19338/profileImage/profile-square-extra-small.png',
-        name:'Ntwari liberi',
-        attendance:89,
-      },{
-        img:'https://s3.amazonaws.com/cms-assets.tutsplus.com/uploads/users/810/profiles/19338/profileImage/profile-square-extra-small.png',
-        name:'Ntwari liberi',
-        attendance:59,
-      },{
-        img:'https://s3.amazonaws.com/cms-assets.tutsplus.com/uploads/users/810/profiles/19338/profileImage/profile-square-extra-small.png',
-        name:'Ntwari liberi',
-        attendance:42,
-      },{
-        img:'https://s3.amazonaws.com/cms-assets.tutsplus.com/uploads/users/810/profiles/19338/profileImage/profile-square-extra-small.png',
-        name:'Ntwari liberi',
-        attendance:90,
-      },{
-        img:'https://s3.amazonaws.com/cms-assets.tutsplus.com/uploads/users/810/profiles/19338/profileImage/profile-square-extra-small.png',
-        name:'Ntwari liberi',
-        attendance:34,
-      },{
-        img:'https://s3.amazonaws.com/cms-assets.tutsplus.com/uploads/users/810/profiles/19338/profileImage/profile-square-extra-small.png',
-        name:'Ntwari liberi',
-        attendance:89,
-      },{
-        img:'https://s3.amazonaws.com/cms-assets.tutsplus.com/uploads/users/810/profiles/19338/profileImage/profile-square-extra-small.png',
-        name:'Ntwari liberi',
-        attendance:55,
-      },{
-        img:'https://s3.amazonaws.com/cms-assets.tutsplus.com/uploads/users/810/profiles/19338/profileImage/profile-square-extra-small.png',
-        name:'Ntwari liberi',
-        attendance:7,
-      },{
-        img:'https://s3.amazonaws.com/cms-assets.tutsplus.com/uploads/users/810/profiles/19338/profileImage/profile-square-extra-small.png',
-        name:'Ntwari liberi',
-        attendance:23,
-      },{
-        img:'https://s3.amazonaws.com/cms-assets.tutsplus.com/uploads/users/810/profiles/19338/profileImage/profile-square-extra-small.png',
-        name:'Ntwari liberi',
-        attendance:0,
-      },{
-        img:'https://s3.amazonaws.com/cms-assets.tutsplus.com/uploads/users/810/profiles/19338/profileImage/profile-square-extra-small.png',
-        name:'Ntwari liberi',
-        attendance:76,
-      },{
-        img:'https://s3.amazonaws.com/cms-assets.tutsplus.com/uploads/users/810/profiles/19338/profileImage/profile-square-extra-small.png',
-        name:'Ntwari liberi',
-        attendance:76,
-      },{
-        img:'https://s3.amazonaws.com/cms-assets.tutsplus.com/uploads/users/810/profiles/19338/profileImage/profile-square-extra-small.png',
-        name:'Ntwari liberi',
-        attendance:45,
-      },{
-        img:'https://s3.amazonaws.com/cms-assets.tutsplus.com/uploads/users/810/profiles/19338/profileImage/profile-square-extra-small.png',
-        name:'Ntwari liberi',
-        attendance:87,
-      },{
-        img:'https://s3.amazonaws.com/cms-assets.tutsplus.com/uploads/users/810/profiles/19338/profileImage/profile-square-extra-small.png',
-        name:'Ntwari liberi',
-        attendance:66,
-      },{
-        img:'https://s3.amazonaws.com/cms-assets.tutsplus.com/uploads/users/810/profiles/19338/profileImage/profile-square-extra-small.png',
-        name:'Ntwari JOhn',
-        attendance:12,
-      },{
-        img:'https://s3.amazonaws.com/cms-assets.tutsplus.com/uploads/users/810/profiles/19338/profileImage/profile-square-extra-small.png',
-        name:'Ntwari liberi',
-        attendance:99,
-      },{
-        img:'https://s3.amazonaws.com/cms-assets.tutsplus.com/uploads/users/810/profiles/19338/profileImage/profile-square-extra-small.png',
-        name:'Ntwari umwe',
-        attendance:54,
-      },{
-        img:'https://s3.amazonaws.com/cms-assets.tutsplus.com/uploads/users/810/profiles/19338/profileImage/profile-square-extra-small.png',
-        name:'Nomi Kazungu',
-        attendance:32,
-      },*/
       ]
     }
   },
   computed: {
     ...mapGetters('user', ['user']),
-    instructor(){
-      const el = this.participants.filter(e=>e.userInfo.category == "INSTRUCTOR")
+    ...mapState("sidebar_navbar", {sidebarOpen: "sidebar_expanded"}),
+    instructor() {
+      const el = this.participants.filter(e => e.userInfo.category == "INSTRUCTOR")
       return el[0] ? el[0].userInfo : undefined
-    }
+    },
+    userCategory() {
+      return this.$store.state.user.user.category.name;
+    },
   },
   methods: {
     async getUserInfo(id) {
@@ -380,8 +332,8 @@ export default {
       const result = this.participants.filter(e => e.name == name)
       return this.participants.indexOf(result[0]);
     },
-    removeParticipant(index){
-      this.participants.splice(index,1)
+    removeParticipant(index) {
+      this.participants.splice(index, 1)
     },
     receiveVideoResponse(result) {
       console.log('receiving video', result, this.participants)
@@ -498,10 +450,10 @@ export default {
       this.$router.push('/')
     },
 
-   async receiveVideo(sender) {
+    async receiveVideo(sender) {
       console.log(`\n\n\n\n\n receiving video for ${sender} \n\n\n\n\n`)
-     let participant = sender == this.participationInfo.name ? this.participants[this.participantIndex(sender)] : new Participant(sender, this, false, await this.getUserInfo(sender.split('_')[0]));
-console.log('\n\n\n\n\n\n',participant)
+      let participant = sender == this.participationInfo.name ? this.participants[this.participantIndex(sender)] : new Participant(sender, this, false, await this.getUserInfo(sender.split('_')[0]));
+      console.log('\n\n\n\n\n\n', participant)
       console.log("\n\n\n", sender, "\n\n\n", (!this.participationInfo.isOfferingCourse && sender != this.participationInfo.name))
       if (participant.userInfo.category == "INSTRUCTOR") {
         let video = participant.getVideoElement();
@@ -518,9 +470,9 @@ console.log('\n\n\n\n\n\n',participant)
               this.generateOffer(participant.offerToReceiveVideo.bind(participant));
             })
       }
-     if (sender != this.participationInfo.name) {
-       this.participants.push(participant);
-     }
+      if (sender != this.participationInfo.name) {
+        this.participants.push(participant);
+      }
     },
 
     onParticipantLeft(request) {
@@ -531,10 +483,10 @@ console.log('\n\n\n\n\n\n',participant)
       //
       // delete this.participants[request.name];
     },
-    toogleMedia(obj){
+    toogleMedia(obj) {
       console.log(obj)
-      if(obj.isVideo){
-        if(obj.enabled == this.noVideo){
+      if (obj.isVideo) {
+        if (obj.enabled == this.noVideo) {
           this.noVideo = !this.noVideo
         }
       }
@@ -627,6 +579,7 @@ console.log('\n\n\n\n\n\n',participant)
 .live-class {
   &--wrapper {
     display: flex;
+    width: fit-content;
 
     input[type=checkbox], input[type=radio] {
       border: 1px solid #c0c0c0;
@@ -960,10 +913,12 @@ console.log('\n\n\n\n\n\n',participant)
 
   &--video {
     flex-basis: 70%;
+
     &.--lg {
       padding-left: 3rem;
       padding-right: 3rem;
     }
+
     &.--sm, &.--md {
       padding-left: 2rem;
       padding-right: 2rem;
@@ -981,7 +936,15 @@ console.log('\n\n\n\n\n\n',participant)
         align-items: center;
 
         h2 {
-          font-size: 1.3rem;
+          font-family: Poppins;
+          font-style: normal;
+          font-weight: 500;
+          font-size: 17.7338px;
+          line-height: 27px;
+          /* identical to box height */
+
+
+          color: #4A4A4A;
         }
 
         span {
@@ -993,6 +956,31 @@ console.log('\n\n\n\n\n\n',participant)
           height: fit-content;
           color: $main;
         }
+
+      }
+
+      .time {
+        font-family: Segoe UI;
+        font-style: normal;
+        font-weight: bold;
+        font-size: 15.618px;
+        line-height: 21px;
+
+        color: #343434;
+      }
+
+      .live {
+        width: 65.38px;
+        height: 18.97px;
+        font-family: Poppins;
+        font-style: normal;
+        font-weight: 500;
+        font-size: 13.7449px;
+        line-height: 21px;
+        text-align: center;
+
+        color: #FFFFFF;
+
       }
     }
 
@@ -1004,22 +992,32 @@ console.log('\n\n\n\n\n\n',participant)
 
         .video-el {
           position: relative;
-          &.--lg {
+
+          &.--lg, &.--md {
             height: 320px;
             width: 568.89px;
+
+            &.viewer {
+              height: 402.1875px;
+              width: 715px;
+            }
           }
-          &.--md {
-            height: 253.1249px;
-            width: 450px;
-          }
-          &.--sm{
+
+          //&.--md {
+          //  height: 253.1249px;
+          //  width: 450px;
+          //}
+
+          &.--sm {
             height: 224.999px;
             width: 400px;
           }
-          &.--xs{
+
+          &.--xs {
             height: calc(100vw / 1.77777777778);
             width: 100vw;
           }
+
           background-color: #000;
 
           video {
@@ -1038,6 +1036,16 @@ console.log('\n\n\n\n\n\n',participant)
             opacity: 0;
           }
 
+          .overlay {
+            height: 100%;
+            width: 100%;
+            position: absolute;
+            background: linear-gradient(
+                    180deg, rgba(0, 0, 0, 0) 0%, #000000 100%);
+            display: block;
+            bottom: 0;
+          }
+
           //video controls
           .video-controls {
             position: absolute;
@@ -1048,9 +1056,29 @@ console.log('\n\n\n\n\n\n',participant)
             &--wrapper {
               display: flex;
               justify-content: space-evenly;
-              background-color: transparentize(#000, .4);
+              //background-color: transparentize(#000, .4);
               padding: .3rem 1rem;
               padding-top: .5rem;
+
+              &.viewer {
+                justify-content: left;
+                backgound-color: transparent;
+              }
+
+              .live {
+                width: 68.12px;
+                height: 19.77px;
+                font-family: Poppins;
+                font-style: normal;
+                font-weight: 500;
+                font-size: 14.1905px;
+                font-size: 14.1905px;
+
+                color: #FFFFFF;
+                text-align: center;
+                border-radius: 10rem;
+                background-color: $danger;
+              }
 
               button {
                 display: flex;
@@ -1167,23 +1195,76 @@ console.log('\n\n\n\n\n\n',participant)
     }
   }
 
+  .live-class-details {
+    background-color: white;
+    margin-left: -1.2rem;
+    padding-left: 19.2px;
+    margin-top: -2.6rem;
+    padding-top: 36.6px;
+    height: 24.6vh;
+
+    &--wrapper {
+      padding-top: 1rem;
+      display: flex;
+
+      .description {
+        font-family: Poppins;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 12px;
+        line-height: 18px;
+
+        color: #464646;
+        max-width: 390px;
+      }
+
+      .quiz {
+        button {
+          background: #193074;
+          filter: drop-shadow(0px 6.8487px 15.0671px rgba(152, 152, 152, 0.161));
+          height: 36.537025451660156px;
+          width: 154.19863891601562px;
+          border-radius: 50px;
+          font-family: Montserrat;
+          font-style: normal;
+          font-weight: normal;
+          font-size: 12px;
+          line-height: 15px;
+          align-items: center;
+          text-align: center;
+
+          color: #FFFFFF;
+        }
+      }
+    }
+  }
+
   &--attendance {
     flex-basis: 30%;
 
     &--wrapper {
       padding: .5rem;
       background-color: $main;
-      width: 20rem;
+      width: 303px;
+      height: 399px;
       border-radius: 4px;
       margin-top: 1rem;
 
+      &.long {
+        height: 490px;
+      }
     }
 
     h3 {
+      font-family: Montserrat;
+      font-style: normal;
+      font-weight: 600;
+      font-size: 12px;
+      line-height: 15px;
       text-align: center;
-      font-size: 1.1rem;
-      text-transform: capitalize;
-      margin-bottom: 1rem;
+
+      color: #141414;
+      margin-bottom: 16.39px;
     }
 
     .online-users {
@@ -1202,7 +1283,7 @@ console.log('\n\n\n\n\n\n',participant)
   &--action {
     border-radius: 3px;
     margin: 1rem 0;
-    max-width: 18rem;
+    width: 291px;
 
     button {
       display: flex;
@@ -1228,6 +1309,12 @@ console.log('\n\n\n\n\n\n',participant)
       button {
         span {
           color: $primary;
+          font-family: Montserrat;
+          font-style: normal;
+          font-weight: 500;
+          font-size: 9.74576px;
+          line-height: 12px;
+          text-align: center;
 
           svg {
             fill: $primary;
@@ -1250,6 +1337,12 @@ console.log('\n\n\n\n\n\n',participant)
       button {
         span {
           color: $main;
+          font-family: Montserrat;
+          font-style: normal;
+          font-weight: 500;
+          font-size: 9.74576px;
+          line-height: 12px;
+          text-align: center;
 
           svg {
             fill: $main;

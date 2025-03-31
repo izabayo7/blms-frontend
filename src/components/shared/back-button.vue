@@ -1,33 +1,37 @@
 <template>
-  <v-btn @click="$router.go(-1)" rounded color="#fff">
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="10.094"
-      height="17.189"
-      viewBox="0 0 10.094 17.189"
-    >
-      <path
-        id="Icon_feather-chevron-left"
-        data-name="Icon feather-chevron-left"
-        d="M19.973,21.946,13.5,15.473,19.973,9"
-        transform="translate(-12 -6.879)"
-        fill="none"
-        stroke="#717171"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        stroke-width="3"
-      />
+  <button @click="$router.go(-1)" rounded color="#fff">
+    <svg width="9" height="12" viewBox="0 0 9 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M7.80859 1L2.30859 6L7.80859 11" stroke="#4A4A4A" stroke-width="2"/>
     </svg>
+
     <span>Back</span>
-  </v-btn>
+  </button>
 </template>
 <script>
 </script>
 <style lang="scss" scoped>
-.v-btn {
-  height: 30px !important;
-  padding: 12px;
-  font-size: 11px;
+button{
+  width: 105px;
+  height: 28px;
+  padding-left: 11px;
+  background: #FFFFFF;
+  box-shadow: 0px 4px 10px rgba(25, 48, 116, 0.12);
+  &:hover{
+    box-shadow: 0px 4px 10px 5px rgba(25, 48, 116, 0.12);
+  }
+  border-radius: 10px;
+  font-family: Poppins;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 10px;
+  line-height: 15px;
+  /* identical to box height */
+
+  display: flex;
+  align-items: center;
+  text-align: center;
+
+  color: #4A4A4A;
   span {
     margin: 0 12px;
   }
