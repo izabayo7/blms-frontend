@@ -351,6 +351,7 @@ export default {
               status: "success",
               uptime: 2000,
             })
+            this.$emit('saved',this.addedStudentGroups.length)
             this.$emit('closeModal')
           } else
             this.addedStudentGroups = unsaved
