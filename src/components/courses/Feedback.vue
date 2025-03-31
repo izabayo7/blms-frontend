@@ -4,7 +4,9 @@
       <div class="col-9 pa-0">
         <div
           ref="feedback_input"
-          :class="`feedback_input ${content == '' ? 'empty_feedback' : ''}`"
+          :class="`feedback_input ${
+            content == '' ? 'empty_feedback' : 'saved_feedback'
+          }`"
           :contenteditable="
             $store.state.user.user.category.name === 'INSTRUCTOR'
           "
@@ -187,17 +189,16 @@ export default {
 <style lang="scss">
 .marking_feedback {
   .feedback_input {
-    color: #989898;
-    background-color: #f5f5f5;
-
+    border: 2px solid #d2d2d2;
     padding: 15px;
     border-radius: 9px;
     min-height: 140px;
     overflow-wrap: anywhere;
     max-width: 100%;
-    &.empty_feedback {
-      border: 2px solid #d2d2d2;
-      background-color: white;
+    &.saved_feedback {
+      color: #989898;
+      background-color: #f5f5f5;
+      border: none;
     }
   }
   .feedback_input:focus {
