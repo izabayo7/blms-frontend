@@ -619,6 +619,28 @@ export default {
       this.currentPresenter = undefined
       this.onViewerStopedPresenting(true)
     },
+    findRightSource() {
+      // console.clear()
+      console.log('finding the right src')
+      const video = document.getElementById("video_feed");
+      if (this.me) {
+        if ((this.currentPresenter ? this.currentPresenter._id == this.live_session.course.user : this.userCategory == "INSTRUCTOR") || this.isStudentPresenting) {
+          console.log('\n\n\ninner\n\n\n')
+          video.muted = true
+          this.me.rtcPeer.showLocalVideo();
+        } else {
+          video.muted = false
+          for (let i in this.participants) {
+            console.log(this.participants[i].userInfo._id, this.currentPresenter, this.currentPresenter ? this.currentPresenter._id : this.instructor._id)
+            if (this.participants[i].userInfo._id == this.currentPresenter ? this.currentPresenter._id : this.instructor._id) {
+              const video = this.me.getVideoElement();
+              video.srcObject = this.participants[i].rtcPeer.getRemoteStream()
+              break;
+            }
+          }
+        }
+      }
+    },
     stopped_presenting(forced) {
       if (forced) {
         this.$store.dispatch("app_notification/SET_NOTIFICATION", {
@@ -1121,14 +1143,14 @@ export default {
               video.srcObject = self.instructorParticipant ? self.instructorParticipant.rtcPeer.getRemoteStream() : undefined
               video.muted = false
             }
-            if(self.presenter_id){
+            if (self.presenter_id) {
               console.clear()
               self.presenterChanged(self.presenter_id)
               self.presenter_id = undefined
-              if(!self.participationInfo.isOfferingCourse){
-                setTimeout(()=>{
+              if (!self.participationInfo.isOfferingCourse) {
+                setTimeout(() => {
                   video.play()
-                },3000)
+                }, 3000)
               }
             }
           })
@@ -1235,9 +1257,10 @@ export default {
             if (error) {
               return console.error(error);
             }
-            if (self.participationInfo.isOfferingCourse) {
+            if (this.participationInfo.isOfferingCourse)
               self.onViewerStopedPresenting()
-            }
+            else
+              self.findRightSource()
             this.generateOffer(participant.offerToReceiveVideo.bind(participant));
           })
       // }
@@ -1273,8 +1296,7 @@ export default {
       this.participants[this.participantIndex(request.name)].dispose();
       this.removeParticipant(this.participantIndex(request.name))
 
-      if (this.isStudentPresenting)
-        this.me.rtcPeer.showLocalVideo()
+      this.findRightSource()
     },
     toogleMedia(obj) {
       if (obj.isVideo) {
