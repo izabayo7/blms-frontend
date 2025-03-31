@@ -61,7 +61,7 @@
                 @change="handleFileUpload"
             />
             <img @click="pickfile()" class="college_logo cursor-pointer" :src="state.logo" alt="">
-            <div v-if="editStatus[1]" class="current_value lable">Click on image to update the logo</div>
+            <div v-if="editStatus[1]" class="current_value lable"><span v-if="state.logo">Click on image to update the logo </span></div>
             <div v-else class="edit">
               <div class="actions">
                 <button class="save" @click="saveChanges(1)">Save</button>
@@ -71,7 +71,7 @@
           </div>
           <div class="col-12 col-md-4">
             <div class="action">
-              <button               @click="
+              <button     v-if="state.logo"          @click="
                 set_modal({
                   template: 'action_confirmation',
                   method: {
@@ -82,6 +82,7 @@
                     'Are you sure you want to delete the college logo?',
                 })
               " class="delete">Delete logo</button>
+              <button v-else @click="pickfile" class="upgrade">Upload logo</button>
             </div>
           </div>
           <div class="col-12 col-md-3">

@@ -94,7 +94,7 @@ export default {
     profile: () => import("./Profile"),
   },
   computed: {
-    ...mapState("sidebar_navbar", { state: "sidebar_expanded" }),
+    ...mapState("sidebar_navbar", { state: "sidebar_expanded", college: "college" }),
     showCreateCourseButton() {
       return (
         this.$store.state.user.user.category.name === "INSTRUCTOR" &&
@@ -105,6 +105,12 @@ export default {
   data: () => ({
     college_logo: "https://apis.kurious.rw/assets/images/image%204.png",
   }),
+  watch:{
+    college(){
+      if(this.college)
+        this.college_logo = this.college.logo
+    }
+  },
   methods: {
     ...mapMutations("sidebar_navbar", {
       toggle: "TOGGLE_SIDEBAR_EXPANSION",
