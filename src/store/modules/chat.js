@@ -346,7 +346,6 @@ export default {
 
                 state.request.id = null
                 state.request.ongoing = false
-                console.log(lastMessage)
                 if (!lastMessage)
                     emit('conversation_loaded')
 
