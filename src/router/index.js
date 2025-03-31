@@ -78,6 +78,12 @@ const routes = [
                             { path: '/messages/:username', component: () => import('@/views/chat/Chat.vue') }
                         ]
                     },
+                    //for users
+                    {
+                        path: '/users',
+                        name:"users",
+                        component: () => import('@/views/users/index.vue'),
+                    },
                     // for courses
                     {
                         path: '/courses',
