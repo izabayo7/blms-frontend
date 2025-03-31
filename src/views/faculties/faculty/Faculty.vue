@@ -76,20 +76,20 @@
             </article>
 
 <!--            row two for dean/instructor information-->
-            <article class="faculty--details--row__2 faculty--details--row">
-              <article class="faculty--dean-information">
-                <div class="faculty--dean-header">
-                  <h3>Dean Instructor</h3>
-                </div>
-                <div class="faculty--dean-name">
-                  <h3 v-if="true" class="instructor">Ntwari Clarance Liberi</h3>
-                  <h3 v-else class="no-instructor">Not assigned</h3>
-                </div>
-                <div class="faculty--dean-note">
-                  <p>Please visit the administration tab and assign a dean for this faculty</p>
-                </div>
-              </article>
-            </article>
+<!--            <article class="faculty&#45;&#45;details&#45;&#45;row__2 faculty&#45;&#45;details&#45;&#45;row">-->
+<!--              <article class="faculty&#45;&#45;dean-information">-->
+<!--                <div class="faculty&#45;&#45;dean-header">-->
+<!--                  <h3>Dean Instructor</h3>-->
+<!--                </div>-->
+<!--                <div class="faculty&#45;&#45;dean-name">-->
+<!--                  <h3 v-if="true" class="instructor">Ntwari Clarance Liberi</h3>-->
+<!--                  <h3 v-else class="no-instructor">Not assigned</h3>-->
+<!--                </div>-->
+<!--                <div class="faculty&#45;&#45;dean-note">-->
+<!--                  <p>Please visit the administration tab and assign a dean for this faculty</p>-->
+<!--                </div>-->
+<!--              </article>-->
+<!--            </article>-->
           </div>
         </article>
       </section>

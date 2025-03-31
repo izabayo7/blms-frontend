@@ -44,25 +44,25 @@
           </div>
         </div>
         <div class="col-12 col-lg-6">
-          <div class="input-group">
-            <div class="label">
-              <label for="faculty-name">Assign a dean (Optional) </label>
-              <!-- <span class="important">*</span> -->
-            </div>
-            <div class="input-container">
-              <select-ui
-                  label="Select dean instructor"
-                  name="role"
-                  id="user_category"
-                  :options="instructor_names"
-                  @input="
-                  (e) => {
-                    select_dean(e);
-                  }
-                "
-              />
-            </div>
-          </div>
+<!--          <div class="input-group">-->
+<!--            <div class="label">-->
+<!--              <label for="faculty-name">Assign a dean (Optional) </label>-->
+<!--              &lt;!&ndash; <span class="important">*</span> &ndash;&gt;-->
+<!--            </div>-->
+<!--            <div class="input-container">-->
+<!--              <select-ui-->
+<!--                  label="Select dean instructor"-->
+<!--                  name="role"-->
+<!--                  id="user_category"-->
+<!--                  :options="instructor_names"-->
+<!--                  @input="-->
+<!--                  (e) => {-->
+<!--                    select_dean(e);-->
+<!--                  }-->
+<!--                "-->
+<!--              />-->
+<!--            </div>-->
+<!--          </div>-->
           <div v-if="!editMode" class="input-group">
             <div class="label">
               <label for="faculty-description"
@@ -196,7 +196,7 @@
 </template>
 
 <script>
-import SelectUi from "@/components/reusable/ui/select-ui";
+// import SelectUi from "@/components/reusable/ui/select-ui";
 import Apis from "@/services/apis";
 import {mapGetters} from "vuex";
 
@@ -210,7 +210,7 @@ export default {
       type: String
     }
   },
-  components: {SelectUi},
+  // components: {SelectUi},
   data: () => ({
     closable: false,
     editingIndex: -1,
@@ -234,13 +234,13 @@ export default {
     visible() {
       return 1;
     },
-    instructor_names() {
-      const res = []
-      for (const i in this.instructors) {
-        res.push(`${this.instructors[i].sur_name} ${this.instructors[i].other_names}`)
-      }
-      return res
-    }
+    // instructor_names() {
+    //   const res = []
+    //   for (const i in this.instructors) {
+    //     res.push(`${this.instructors[i].sur_name} ${this.instructors[i].other_names}`)
+    //   }
+    //   return res
+    // }
   },
   async beforeMount() {
     setTimeout(() => {
@@ -250,8 +250,8 @@ export default {
       dialog.style.setProperty("min-height", "538px", "important");
     }, 0);
 
-    let res = await Apis.get(`user/college/${this.$store.state.user.user.college}/INSTRUCTOR`);
-    this.instructors = res.data.data;
+    // let res = await Apis.get(`user/college/${this.$store.state.user.user.college}/INSTRUCTOR`);
+    // this.instructors = res.data.data;
 
     if (this.editMode) {
       await this.$store.dispatch("faculties/getFaculty", this.facultyId)
