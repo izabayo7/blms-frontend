@@ -1,5 +1,5 @@
 <style lang="scss">
-#kurious--drag {
+.kurious--drag {
   background-color: #f8f8f8 !important;
   text-align: center;
   .filename {
@@ -51,7 +51,7 @@
 </style>
 
 <template>
-  <form ref="fileform" id="kurious--drag" class="yellow">
+  <form ref="fileform" class="kurious--drag yellow">
     <v-row>
       <v-col class="col-10">
         <div class="file-list-container d-flex">
@@ -72,6 +72,7 @@
                 class="preview"
                 v-bind:ref="'preview'+parseInt( key )"
               />
+
               <v-btn v-else width="200px" class="pa-6" color="deep-purple accent-4" outlined>
                 <v-icon color="#ffd248" x-large>mdi-file{{findIcon(file.type)}}-outline</v-icon>
                 <span class="filename text-truncate">{{file.name}}</span>
@@ -81,17 +82,20 @@
         </div>
       </v-col>
       <v-col v-if="files.length === 0" class="col-10">
-        <span>Drop the files here!</span>
+        <span>Drop the {{allowedTypes === undefined ? 'files' : 'video'}} here!</span>
       </v-col>
       <v-col class="col-2">
-        <v-btn class="mt-n2" @click="clickButton()" large icon><v-icon>mdi-paperclip</v-icon></v-btn>
+        <v-btn class="mt-n2" @click="clickButton()" large icon>
+          <v-icon>mdi-paperclip</v-icon>
+        </v-btn>
         <input
           type="file"
-          multiple
-          id="newFile"
+          :multiple="multiple"
+          class="newFile"
+          :accept="allowedTypes !== undefined ? 'video/*' : undefined"
           hidden
           @change="addFile()"
-        >
+        />
       </v-col>
     </v-row>
   </form>
@@ -103,6 +107,15 @@ export default {
   /*
       Variables used by the drag and drop component
     */
+  props: {
+    allowedTypes: {
+      type: Array,
+    },
+    multiple: {
+      type: Boolean,
+      default: false,
+    },
+  },
   data() {
     return {
       dragAndDropCapable: false,
@@ -168,7 +181,7 @@ export default {
             array.fileform
           */
           for (let i = 0; i < e.dataTransfer.files.length; i++) {
-              this.$emit('addFile',e.dataTransfer.files[i])
+            this.$emit("addFile", e.dataTransfer.files[i]);
             this.files.push(e.dataTransfer.files[i]);
             this.getImagePreviews();
           }
@@ -178,14 +191,15 @@ export default {
   },
 
   methods: {
-    clickButton () {
-      document.getElementById('newFile').click()
+    clickButton() {
+      document.querySelector(".newFile").click();
     },
-    addFile () {
-      for (const file of document.getElementById('newFile').files) {
-        this.files.push(file)
+    addFile() {
+      for (const file of document.querySelector(".newFile").files) {
+        this.files.push(file);
+        this.$emit("addFile", file);
       }
-      this.getImagePreviews()
+      this.getImagePreviews();
     },
     findIcon(type) {
       if (type.includes("video")) {
@@ -262,7 +276,6 @@ export default {
         }
       }
     },
-
     /*
         Submits the files to the server
       */
@@ -309,7 +322,7 @@ export default {
       */
     removeFile(key) {
       this.files.splice(key, 1);
-      this.$emit('removeFile',key)
+      this.$emit("removeFile", key);
     },
   },
 };

@@ -10,7 +10,6 @@
             color="#000"
             dark
             :class="`details-btn ${type=='details' ? 'new-active-btn' : ''}`"
-            @click="type='details'"
           >Course Details</v-btn>
           <v-btn
             rounded
@@ -18,7 +17,6 @@
             color="#000"
             dark
             :class="`chapters-btn ${type=='chapters' ? 'new-active-btn' : ''}`"
-            @click="type='chapters'"
           >Course Chapters</v-btn>
         </div>
       </v-col>
@@ -78,10 +76,11 @@
             <v-row>
               <v-col class="col-12">
                 <v-stepper v-model="e6" vertical>
-                  <v-stepper-step :complete="e6 > 1" step="1" editable>
-                    Fill chapter basic details
-                    <small>Summarize if needed</small>
-                  </v-stepper-step>
+                  <v-stepper-step
+                    :complete="e6 > 1"
+                    step="1"
+                    editable
+                  >Chapter {{chapters}} - add name & description</v-stepper-step>
 
                   <v-stepper-content step="1">
                     <v-card class="mb-12 pa-6 elevation-0" height="300px">
@@ -104,9 +103,34 @@
                     <v-btn color="primary" @click="e6 = 2">Continue</v-btn>
                   </v-stepper-content>
 
-                  <v-stepper-step :complete="e6 > 2" step="2" editable>Add chapter content</v-stepper-step>
+                  <v-stepper-step
+                    :complete="e6 > 2"
+                    step="2"
+                    editable
+                  >Chapter {{chapters}} - add video</v-stepper-step>
 
                   <v-stepper-content step="2">
+                    <v-card class="mb-12 pa-6 elevation-0" height="auto">
+                      <v-row>
+                        <v-col class="col-12">
+                          <kurious-file-picker
+                            :allowedTypes="['video']"
+                            @addFile="addVideo"
+                            @removeFile="removeVideo"
+                          />
+                        </v-col>
+                      </v-row>
+                    </v-card>
+                    <v-btn color="primary" @click="e6 = 3">Continue</v-btn>
+                  </v-stepper-content>
+
+                  <v-stepper-step
+                    :complete="e6 > 3"
+                    step="3"
+                    editable
+                  >Chapter {{chapters}} - add content</v-stepper-step>
+
+                  <v-stepper-content step="3">
                     <v-card class="mb-12 elevation-0">
                       <v-row>
                         <v-col class="col-12 actions-container">
@@ -134,8 +158,24 @@
                             :defaultContent="mode === 'edit' ? undefined : content"
                           />
                         </v-col>
+                      </v-row>
+                    </v-card>
+                    <v-btn color="primary" class="mr-4" @click="e6=4">Continue</v-btn>
+                    <v-btn text class="py-6 mt-n3" @click="reset('chapter')">Reset Chapter</v-btn>
+                  </v-stepper-content>
+
+                  <v-stepper-step
+                    :complete="e6 > 4"
+                    step="4"
+                    editable
+                  >Chapter {{chapters}} - add attachments</v-stepper-step>
+
+                  <v-stepper-content step="4">
+                    <v-card class="mb-12 elevation-0">
+                      <v-row>
                         <v-col class="col-12">
                           <kurious-file-picker
+                            multiple
                             @addFile="addAttachment"
                             @removeFile="removeAttachment"
                           />
@@ -178,6 +218,13 @@
                         </v-col>
                       </v-row>
                     </v-card>
+                    <v-btn color="primary" class="mr-4" @click="e6=5">Next</v-btn>
+                    <v-btn text class="py-6 mt-n3" @click="reset('chapter')">Reset Chapter</v-btn>
+                  </v-stepper-content>
+
+                  <v-stepper-step :complete="e6 > 5" step="5">Save Chapter {{chapters}}</v-stepper-step>
+
+                  <v-stepper-content step="5">
                     <v-btn color="primary" class="mr-4" @click="saveChapter()">Save Chapter</v-btn>
                     <v-btn text class="py-6 mt-n3" @click="reset('chapter')">Reset Chapter</v-btn>
                   </v-stepper-content>
@@ -221,6 +268,7 @@ export default {
     selectedQuizName: "None",
     quizes: [],
     attachments: [],
+    chapters: 1,
     modal: true,
     type: "details",
     mode: "edit",
@@ -239,6 +287,7 @@ export default {
       _id: "",
       name: "",
       description: "",
+      video: undefined,
     },
     content: "",
     nameRules: [
@@ -301,6 +350,12 @@ export default {
     },
     removeAttachment(index) {
       this.attachments.splice(index, 1);
+    },
+    addVideo(file) {
+      this.chapter.video = file;
+    },
+    removeVideo() {
+      this.chapter.video = undefined;
     },
     switchMode(mode) {
       this.mode = "";
@@ -397,7 +452,8 @@ export default {
         this.message = "";
         let response = await Apis.create("chapter", {
           name: this.chapter.name,
-          course: "5f2a2db8e1c8af0fd07ac541",
+          course: this.course._id,
+          // course: "5f410bc8f1cd91290c28a696",
           description: this.chapter.description,
         });
         this.message = "Course was saved successfuly";
@@ -411,21 +467,36 @@ export default {
             content: content,
           }
         );
+        this.chapters++;
         setTimeout(() => {
           this.message = "Chapter content was saved successfuly";
         }, 1000);
-        const formData = new FormData();
-        for (const i in this.attachments) {
-          formData.append("files[" + i + "]", this.attachments[i]);
+        if (this.attachments.length > 0) {
+          const formData = new FormData();
+          for (const i in this.attachments) {
+            formData.append("files[" + i + "]", this.attachments[i]);
+          }
+          response = await axios.post(
+            `http://localhost:7070/kurious/file/AddAttachments/${this.chapter._id}`,
+            formData,
+            { headers: { "Content-Type": "multipart/form-data" } }
+          );
+          setTimeout(() => {
+            this.message = "Attachments were saved successfuly";
+          }, 1000);
         }
-        response = await axios.post(
-          `http://localhost:7070/kurious/file/AddAttachments/${this.chapter._id}`,
-          formData,
-          { headers: { "Content-Type": "multipart/form-data" } }
-        );
-        setTimeout(() => {
-          this.message = "Attachments were saved successfuly";
-        }, 1000);
+        if (this.chapter.video) {
+          const formData = new FormData();
+          formData.append("file", this.chapter.video);
+          response = await axios.post(
+            `http://localhost:7070/kurious/file/addMainVideo/${this.chapter._id}`,
+            formData,
+            { headers: { "Content-Type": "multipart/form-data" } }
+          );
+          setTimeout(() => {
+            this.message = "Video was saved successfuly";
+          }, 1000);
+        }
         if (this.selectedQuizName !== "None") {
           this.attachQuiz("Chapter", this.chapter._id);
         }
@@ -460,6 +531,7 @@ export default {
         this.attachments = [];
         const closeButtons = document.querySelectorAll(".remove--button");
         this.mode = "";
+        this.e6 = 1;
         this.$nextTick(function () {
           this.mode = "edit";
         });

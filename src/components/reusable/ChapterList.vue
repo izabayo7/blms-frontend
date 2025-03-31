@@ -12,16 +12,21 @@
           <v-icon>mdi-chevron-left</v-icon>back to courses
         </v-btn>
         <span class="title mb-3 d-block">Course content</span>
-        <v-progress-linear :value="progress" color="#ffc100" height="25" class="mb-3 kurious--progressbar" />
+        <v-progress-linear
+          :value="progress"
+          color="#ffc100"
+          height="25"
+          class="mb-3 kurious--progressbar"
+        />
         <p class="text-caption">{{progress}}% completion</p>
         <span class="title mb-3 d-block">Chapters</span>
         <v-list subheader class="chapters-list ml-n3">
-          <!-- only in finished ones you should navigate -->
           <v-list-item
             v-for="(item, i) in chapters"
             :key="i"
             :disabled="i>maximumIndex"
-            @click="$emit('changeChapter',i)"
+            @click="$emit('changeChapter',i);activeIndex = i"
+            :class="activeIndex === i ? 'active--chapter' : ''"
           >
             <v-list-item-content>
               <v-list-item-title v-text="item.name"></v-list-item-title>
@@ -41,13 +46,6 @@
 
 <script>
 export default {
-  data: () => ({
-    items: [
-      { finished: true, title: "Photos" },
-      { title: "Recipes" },
-      { title: "Work" },
-    ],
-  }),
   props: {
     chapters: {
       type: Array,
@@ -62,5 +60,13 @@ export default {
       required: true,
     },
   },
+  data: () => ({
+    activeIndex: 0,
+  }),
 };
 </script>
+<style lang="scss">
+.active--chapter {
+  background: #0000001a !important;
+}
+</style>

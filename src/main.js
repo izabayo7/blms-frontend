@@ -9,14 +9,15 @@ import './plugins/kurious'
 import '@/assets/sass/styles.scss'
 import vuetify from './plugins/vuetify';
 import VueSession from 'vue-session'
+import VuePlyr from 'vue-plyr'
 
 const options = {
     persist: true,
 }
 
 Vue.use(VueSession, options)
-
 Vue.use(Vuetify)
+Vue.use(VuePlyr)
 
 const opts = {}
 

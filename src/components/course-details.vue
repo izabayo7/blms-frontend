@@ -19,6 +19,14 @@
           :maximumIndex="maximumIndex"
           :progress="progress"
         />
+        <!-- <kurious-inner-sidebar>
+          <kurious-chapter-list
+            @changeChapter="changeActiveChapter"
+            :chapters="chapters"
+            :maximumIndex="maximumIndex"
+            :progress="progress"
+          />
+        </kurious-inner-sidebar>-->
       </v-col>
       <kurious-page-actions
         v-on:hideActions="showActions = false"
@@ -34,17 +42,18 @@
       </kurious-page-actions>
       <v-col class="col-12 col-md-9 course-content pa-md-10 pb-md-0">
         <v-row>
-          <!-- <v-col class="col-12 title d-block">{{course.name}}</v-col> -->
-          <v-col v-if="1===0" class="col-12" id="video">
-            <kurious-video
-              poster="http://127.0.0.1:5500/Kurious-Frontend/src/assets/images/live.png"
-              src="https://player.vimeo.com/external/194837908.sd.mp4?s=c350076905b78c67f74d7ee39fdb4fef01d12420&profile_id=164"
-            />
+          <v-col v-if="course !== undefined" class="col-12 title d-block">{{course.name}}</v-col>
+          <v-col v-if="chapters[activeIndex].mainVideo" class="col-12" id="video">
+            <vue-plyr>
+              <video
+                :src="`http://localhost:7070/kurious/file/chapterMainVideo/${chapters[activeIndex]._id}`"
+              ></video>
+            </vue-plyr>
           </v-col>
         </v-row>
         <v-row>
           <v-col>
-            <span v-if="course !== undefined">{{course.name}}</span>
+            <!-- <span v-if="course !== undefined">{{course.name}}</span> -->
             <v-tabs background-color="white" color="#ffd248" right>
               <v-tab id="content-tab">
                 <v-icon class="mx-2">mdi-book-open-variant</v-icon>Chapter
@@ -59,7 +68,9 @@
               <v-tab-item v-for="n in 3" :key="n">
                 <v-container fluid>
                   <v-row v-if="chapters.length > 0 && n===1">
-                    <v-col class="col-12 title d-block">Chapter 1: {{chapters[activeIndex].name }}</v-col>
+                    <v-col
+                      class="col-12 title d-block"
+                    >Chapter {{activeIndex + 1}}: {{chapters[activeIndex].name }}</v-col>
                     <v-col class="col-12 description">
                       <p class="my-4">{{chapters[activeIndex].description}}</p>
                     </v-col>
@@ -72,14 +83,19 @@
                     <v-col class="col-12">
                       <v-row>
                         <v-col class="col-6">
-                          <v-btn v-if="activeIndex > 0" rounded @click="activeIndex--" elevation="0">Previous chapter</v-btn>
+                          <v-btn
+                            v-if="activeIndex > 0"
+                            rounded
+                            @click="changeActiveChapter(activeIndex - 1)"
+                            elevation="0"
+                          >Previous chapter</v-btn>
                         </v-col>
                         <v-col class="text-right col-6">
                           <v-btn
-                            v-if="activeIndex < maximumIndex"
+                            v-if="activeIndex < maximumIndex && activeIndex < chapters.length - 1"
                             color="#FFC100"
                             class="white--text next-chapter"
-                            @click="activeIndex++"
+                            @click="changeActiveChapter(activeIndex + 1)"
                             rounded
                           >Next chapter</v-btn>
                         </v-col>
@@ -117,9 +133,7 @@
                         </v-btn>
                       </div>
                     </div>
-                    <span v-else>
-                      {{message}}
-                    </span>
+                    <span v-else>{{message}}</span>
                   </v-row>
                 </v-container>
               </v-tab-item>
@@ -169,9 +183,6 @@ export default {
   watch: {
     chapters() {
       this.maximumIndex = (this.progress * this.chapters.length) / 100;
-      console.log(this.progress);
-      console.log(this.chapters.length);
-      console.log(this.maximumIndex);
     },
   },
   methods: {
@@ -203,7 +214,7 @@ export default {
             course: this.$route.params.id,
             chapter: this.chapters[this.activeIndex]._id,
           });
-          this.progressId = response.data._id
+          this.progressId = response.data._id;
         } else {
           response = await Apis.update("studentProgress", this.progressId, {
             student: this.$store.state.user._id,
@@ -213,7 +224,7 @@ export default {
         }
         this.progress = response.data.progress;
         this.maximumIndex++;
-        this.activeIndex++;
+        this.changeActiveChapter(this.activeIndex + 1);
       } catch (error) {
         if (error.response) {
           this.status = error.response.status;
@@ -258,10 +269,10 @@ export default {
       } catch (error) {
         if (error.response) {
           this.message = error.response.data;
-        } else if (error.request) {                                           
+        } else if (error.request) {
           this.message = "Service Unavailable";
         }
-      }                           
+      }
     },
     findIcon(name) {
       const type = name.split(".")[name.split(".").length - 1];
@@ -276,7 +287,6 @@ export default {
       }
     },
     changeActiveChapter(index) {
-      console.log(index);
       this.activeIndex = index;
       this.getChapterDocument();
       document.getElementById("content-tab").click();
