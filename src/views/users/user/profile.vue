@@ -1,6 +1,6 @@
 <template>
   <main class="profile">
-    <main class="profile--wrapper">
+    <main v-if="user" class="profile--wrapper">
       <div class="profile--user-profile-card profile--user-profile-card__1">
         <div class="profile--user-profile-card--profile">
           <user-profile-card :user="user" />

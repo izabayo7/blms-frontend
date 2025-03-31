@@ -103,7 +103,7 @@ const routes = [
                         component: () => import( /* webpackChunkName: "users-students" */ '@/views/users/students.vue'),
                     },
                     {
-                        path: '/users/user/:username',
+                        path: '/users/:username',
                         name: "student",
                         component: () => import( /* webpackChunkName: "user-by-name" */ '@/views/users/user/profile.vue'),
                     },

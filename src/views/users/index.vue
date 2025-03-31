@@ -138,7 +138,7 @@ export default {
       showInviteUsers: false,
       options: {
         link: {
-          routeTo: '/users/user/{id}',
+          routeTo: '/users/{id}',
           paramPropertyName: 'user_name'
         },
         keysToShow: ["names", "email", "user_name", "status", "gender"],

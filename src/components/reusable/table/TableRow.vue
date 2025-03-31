@@ -1,5 +1,5 @@
 <template>
-  <tr @click="options ? rowClicked(data[options.link.paramPropertyName] || null) : undefined" class="table-body-row table-row" >
+  <tr @click="options ? rowClicked(data[options.link.paramPropertyName] || null) : undefined" class="cursor-pointer table-body-row table-row" >
 <!--            select checkbox-->
     <td v-if="showSelect" class="select--wrapper">
       <div class="select select-one" >

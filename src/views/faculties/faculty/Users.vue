@@ -27,7 +27,7 @@
 
               <!--              rows-->
               <template #tableRows>
-                <table-row :selected="allSelected" @select="selectRow($event, user)" :data="user"
+                <table-row :options="options" :selected="allSelected" @select="selectRow($event, user)" :data="user"
                            v-for="user in usersOnFaculties" :key="user._id">
                   <template #cols>
                     <td class="row--image" @mouseenter="mouseOnPic($event,user.user_name,'user-profile-card')"
@@ -73,6 +73,10 @@ export default {
       allSelected: false,
       options: {
         coloredRows: false,
+        link: {
+          routeTo: '/users/{id}',
+          paramPropertyName: 'user_name'
+        },
         keysToShow: [" ", "sur_name", "other_names", "email", "gender"],
       },
       selectedUsers: [],

@@ -95,7 +95,7 @@
 
               <!--              rows-->
               <template v-if="statistics" #tableRows>
-                <table-row :data="user"
+                <table-row :options="options" :data="user"
                            v-for="(user, i) in statistics.students" :key="user._id" @select="handleRowSelect(i)"
                            :selected="selected_users.has(i)" :ref="`row${i}`">
                   <template #cols>
@@ -224,6 +224,10 @@ export default {
       selected_users: new Set([]),
       options: {
         coloredRows: false,
+        link: {
+          routeTo: '/users/{id}',
+          paramPropertyName: 'user_name'
+        },
         keysToShow: [" ", "User name", "Gender", "Course progress", "Perfomance (%)", "Attendace"],
       },
     }
