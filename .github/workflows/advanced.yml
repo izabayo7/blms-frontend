@@ -15,8 +15,8 @@ on:
         required: true
 #2
 env:
-  REGISTRY: "registry.digitalocean.com"
-  IMAGE_NAME: "Kurious Frontend"
+  REGISTRY: "registry.digitalocean.com/kuriousregistry"
+  IMAGE_NAME: "kuriousfrontend"
 
 #3
 jobs:
