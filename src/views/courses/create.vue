@@ -162,7 +162,7 @@
             },
         },
         created() {
-            this.getFacultyCollegeYears(this.$store.state.user.user.user_name);
+            this.getFacultyCollegeYears();
         },
     };
 </script>
