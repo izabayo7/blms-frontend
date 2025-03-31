@@ -312,9 +312,10 @@ div.remove-container a {
             </div>
           </div>
         </v-col>
-        <v-col v-if="files.length === 0 && (template === 'quiz-files' || template === 'attachment-files') && !defaultFiles.length"
-               class="col-12 quiz-details">
-          {{ template ==='quiz-files' ? 'Upload you images here' : 'Pick additional files' }}
+        <v-col
+            v-if="files.length === 0 && (template === 'quiz-files' || template === 'attachment-files') && !defaultFiles.length"
+            class="col-12 quiz-details">
+          {{ template === 'quiz-files' ? 'Upload you images here' : 'Pick additional files' }}
           <svg @click="clickButton()" class="cursor-pointer" width="22" height="22" viewBox="0 0 22 22" fill="none"
                xmlns="http://www.w3.org/2000/svg">
             <path
@@ -336,7 +337,9 @@ div.remove-container a {
           here!</span
         >
         </v-col>
-        <v-col v-if=" template === undefined || ((template === 'quiz-files' || template === 'attachment-files') && files.length)" class="col-2">
+        <v-col
+            v-if=" template === undefined || ((template === 'quiz-files' || template === 'attachment-files') && files.length)"
+            class="col-2">
           <v-btn class="mt-n2" @click="clickButton()" large icon>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
               <path fill="none" d="M0 0h24v24H0z"/>
@@ -614,6 +617,9 @@ export default {
         Removes a select file the user has uploaded
       */
     removeFile(key) {
+      if (this.defaultFiles.indexOf(this.files[key]) !== -1) {
+        this.defaultFiles.splice(key, 1);
+      }
       this.files.splice(key, 1);
       this.$emit("removeFile", key, this.boundIndex);
     },
