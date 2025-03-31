@@ -78,6 +78,80 @@
         </template>
       </v-data-table>
     </div>
+        <div class="table-one">
+      <h3>Classes</h3>
+      <v-data-table
+        :headers="courseHeaders"
+        :items="courses"
+        :items-per-page="5"
+        sort-by="dateOfSubmission"
+        class="data-table courses"
+      >
+        <template v-slot:item.course_name="{ item }">
+          <router-link
+            class="normal--text d-block"
+            to="/"
+            >Economic basics{{
+              '' + item ? '' : 'nope'
+            }}</router-link
+          >
+        </template>
+        <template v-slot:item.student_group="{ item }">
+          <router-link
+            class="normal--text"
+            to="/"
+            >CS Year 3{{
+              '' + item ? '' : 'nope'
+            }}</router-link
+          >
+        </template>
+        <template v-slot:item.total_students="{ item }">
+          <span
+            class="normal--text semi_bold_text"
+            to="/"
+            >65{{
+              '' + item ? '' : 'nope'
+            }}</span
+          >
+        </template>
+        <template v-slot:item.last_updated="{ item }">
+          <span
+            class="normal--text semi_bold_text"
+            to="/"
+            >October 15,  2020{{
+              '' + item ? '' : 'nope'
+            }}</span
+          >
+        </template>
+        <template v-slot:item.evaluations="{ item }">
+          <span
+            class="normal--text semi_bold_text"
+            >200 Marks{{
+              '' + item ? '' : 'nope'
+            }}</span
+          >
+        </template>
+        <template v-slot:item.success_rate="{ item }">
+          <span
+            class="normal--text semi_bold_text"
+            >65%{{
+              '' + item ? '' : 'nope'
+            }}</span
+          >
+        </template>
+        <template v-slot:item.actions="{ item }">
+          <v-row class="actions pa-0">
+           <v-col class="pa-0 py-1">
+            <v-btn class="white--text" :color="primary" :to="`/submissions/${item.name}`">
+              Make announcement
+            </v-btn></v-col>
+          </v-row>
+        </template>
+        <template v-slot:no-data>
+          <span class="text-h6">Oops You have no submissions.</span>
+        </template>
+      </v-data-table>
+    </div>
   </v-app>
 </template>
 <script>
@@ -99,20 +173,42 @@ export default {
         {
           text: "Chapter",
           value: "chapter_name",
-          align: "center",
         },
         {
           text: "Submissions",
           value: "total_submissions",
-          align: "center",
         },
         {
           text: "Maximum Marks",
           value: "total_marks",
-          align: "center",
         },
         { text: "Marking status", value: "marking_status", align: "center" },
-        { text: "", value: "actions", align: "center" },
+        { text: "", value: "actions", align: "center", sortable: false, },
+      ];
+    },
+    courseHeaders() {
+      return [
+        {
+          text: "Course name",
+          align: "start",
+          sortable: false,
+          value: "course_name",
+        },
+        {
+          text: "Students group",
+          value: "student_group",
+        },
+        {
+          text: "Students",
+          value: "total_students",
+        },
+        {
+          text: "Last Updated",
+          value: "last_updated",
+        },
+        { text: "Evaluations", value: "evaluations", align: "center" },
+        { text: "Success rate", value: "success_rate", align: "center" },
+        { text: "", value: "actions", align: "center", sortable: false, },
       ];
     },
     // get the userCategory
@@ -150,6 +246,17 @@ export default {
     font-weight: 500;
     &.small{
       font-size: 12px;
+    }
+  }
+  .data-table{
+    &.courses{
+      .normal--text{
+        font-size: 14px;
+        font-weight: 500;
+      }
+      .semi_bold_text{
+        font-weight: 700;
+      }
     }
   }
 }
