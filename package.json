@@ -10,7 +10,7 @@
     "ui": "vue ui"
   },
   "dependencies": {
-    "@mdi/font": "^6.3.95",
+    "@mdi/font": "5.9.55",
     "@tensorflow-models/face-landmarks-detection": "0.0.2",
     "@tensorflow/tfjs": "2.3.0",
     "animate.css": "^4.1.1",

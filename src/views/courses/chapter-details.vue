@@ -55,6 +55,11 @@
                       v-if="editorContent !== '' && editorContent"
                       :defaultContent="editorContent"
                   />
+                  <div v-if="course.chapters[activeIndex].uploaded_content" class="relative">
+                    <vue-pdf-app class="pdf-viewer" :config="config"
+                                 :pdf="`${course.chapters[activeIndex].uploaded_content_url}?token=${$session.get('jwt')}`">
+                    </vue-pdf-app>
+                  </div>
                 </v-col>
                 <v-col class="col-6 mx-auto text-center">
                   <v-btn
@@ -226,6 +231,55 @@ import colors from "@/assets/sass/imports/_colors.scss";
 import {emit} from "../../services/event_bus";
 import Apis from "../../services/apis";
 
+const getSidebar = () => ({
+  viewThumbnail: true,
+  viewOutline: true,
+  viewAttachments: true,
+});
+const getSecondaryToolbar = () => ({
+  secondaryPresentationMode: true,
+  secondaryOpenFile: true,
+  secondaryPrint: true,
+  secondaryDownload: true,
+  secondaryViewBookmark: true,
+  firstPage: true,
+  lastPage: true,
+  pageRotateCw: true,
+  pageRotateCcw: true,
+  cursorSelectTool: true,
+  cursorHandTool: true,
+  scrollVertical: true,
+  scrollHorizontal: true,
+  scrollWrapped: true,
+  spreadNone: true,
+  spreadOdd: true,
+  spreadEven: true,
+  documentProperties: true,
+});
+const getToolbarViewerLeft = () => ({
+  findbar: true,
+  previous: true,
+  next: true,
+  pageNumber: true,
+});
+const getToolbarViewerRight = () => ({
+  presentationMode: true,
+  openFile: false,
+  print: false,
+  download: false,
+  viewBookmark: false,
+});
+const getToolbarViewerMiddle = () => ({
+  zoomOut: true,
+  zoomIn: true,
+  scaleSelectContainer: true,
+});
+const getToolbar = () => ({
+  toolbarViewerLeft: getToolbarViewerLeft(),
+  toolbarViewerRight: getToolbarViewerRight(),
+  toolbarViewerMiddle: getToolbarViewerMiddle(),
+});
+
 export default {
   name: "chapter-details",
   components: {
@@ -241,7 +295,13 @@ export default {
       selectedTab: -1,
       primary: colors.primary,
       chapters: [],
-      recorded_video: ""
+      recorded_video: "",
+      config: {
+        sidebar: getSidebar(),
+        secondaryToolbar: getSecondaryToolbar(),
+        toolbar: getToolbar(),
+        errorWrapper: true,
+      },
     };
   },
   watch: {
@@ -387,4 +447,7 @@ export default {
 </script>
 
 <style scoped>
+.pdf-viewer {
+  height: 540px;
+}
 </style>

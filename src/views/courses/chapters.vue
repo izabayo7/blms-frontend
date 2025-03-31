@@ -207,7 +207,7 @@
                             "
                           />
                           <div v-if="course.chapters[activeChapter].uploaded_content" class="relative">
-                            <vue-pdf-app class="pdf-viewer"
+                            <vue-pdf-app class="pdf-viewer" :config="config"
                                          :pdf="`${course.chapters[activeChapter].uploaded_content_url}?token=${$session.get('jwt')}`">
                             </vue-pdf-app>
                           </div>
@@ -464,7 +464,54 @@
 import {mapActions, mapGetters} from "vuex";
 import '@/assets/js/mathlive'
 import colors from "@/assets/sass/imports/_colors.scss";
-
+const getSidebar = () => ({
+  viewThumbnail: true,
+  viewOutline: true,
+  viewAttachments: true,
+});
+const getSecondaryToolbar = () => ({
+  secondaryPresentationMode: true,
+  secondaryOpenFile: true,
+  secondaryPrint: true,
+  secondaryDownload: true,
+  secondaryViewBookmark: true,
+  firstPage: true,
+  lastPage: true,
+  pageRotateCw: true,
+  pageRotateCcw: true,
+  cursorSelectTool: true,
+  cursorHandTool: true,
+  scrollVertical: true,
+  scrollHorizontal: true,
+  scrollWrapped: true,
+  spreadNone: true,
+  spreadOdd: true,
+  spreadEven: true,
+  documentProperties: true,
+});
+const getToolbarViewerLeft = () => ({
+  findbar: true,
+  previous: true,
+  next: true,
+  pageNumber: true,
+});
+const getToolbarViewerRight = () => ({
+  presentationMode: true,
+  openFile: false,
+  print: false,
+  download: false,
+  viewBookmark: false,
+});
+const getToolbarViewerMiddle = () => ({
+  zoomOut: true,
+  zoomIn: true,
+  scaleSelectContainer: true,
+});
+const getToolbar = () => ({
+  toolbarViewerLeft: getToolbarViewerLeft(),
+  toolbarViewerRight: getToolbarViewerRight(),
+  toolbarViewerMiddle: getToolbarViewerMiddle(),
+});
 export default {
   name: "edit_chapters",
   props: {
@@ -493,6 +540,12 @@ export default {
       (v) => v.length > 2 || "Name is too short",
     ],
     simpleRules: [(v) => !!v || "This field is required"],
+    config: {
+      sidebar: getSidebar(),
+      secondaryToolbar: getSecondaryToolbar(),
+      toolbar: getToolbar(),
+      errorWrapper: true,
+    },
   }),
   components: {
     FilePicker: () => import("@/components/reusable/FilePicker"),
@@ -540,7 +593,12 @@ export default {
     },
     stepCounter() {
       if (this.stepCounter == 3) {
-        // document.querySelector(".ProseMirror").focus();
+        document.querySelector(".ProseMirror").focus();
+        window.addEventListener("click", event => {
+          event.preventDefault()
+          // Chrome requires returnValue to be set.
+          event.returnValue = ""
+        })
       }
       if (this.stepCounter == 4) {
         this.calculateQuizNames();
@@ -801,64 +859,6 @@ export default {
   },
 };
 </script>
-<style scoped>
-span.legend {
-  color: black;
-}
-
-button.secondary-toolbar-slot {
-  margin-left: 12px;
-}
-
-button.secondary-toolbar-slot span {
-  font-family: Arial, Helvetica, sans-serif;
-  padding-left: 5px;
-  font-size: 12px;
-}
-
-.append,
-.prepend {
-  font-family: pdf;
-  background: transparent;
-  outline: none;
-  border: none;
-  font-size: 1.1rem;
-  color: red;
-  margin: 5px;
-}
-
-.append:hover,
-.prepend:hover {
-  color: var(--pdf-button-hover-font-color);
-}
-
-#toolbarSidebar .prepend,
-#toolbarSidebar .append {
-  position: relative;
-  top: -10px;
-}
-
-.footer {
-  background: palevioletred;
-  color: var(--pdf-toolbar-font-color);
-  height: 40px;
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
->>> .secondaryToolbar.doorHangerRight {
-  right: 27px !important;
-}
-
->>> #outerContainer {
-  height: calc(100% - 40px) !important;
-}
-</style>
 <style lang="scss">
 .ProseMirror:focus {
   outline: none;
@@ -871,7 +871,7 @@ button.secondary-toolbar-slot span {
 }
 
 .pdf-viewer {
-  min-height: 200px;
+  height: 200px;
 }
 
 .chapter-badges {
