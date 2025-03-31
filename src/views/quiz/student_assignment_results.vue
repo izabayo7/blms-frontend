@@ -134,7 +134,7 @@
           </div>
           <Feedback
               class="mt-4 feedback_container"
-              v-if="(assignment_submission.feedback_src && assignment.status === 'RELEASED') || userCategory === 'INSTRUCTOR'"
+              v-if="(assignment_submission.feedback_src && assignment.status === 'RELEASED') || (assignment_submission._id &&userCategory === 'INSTRUCTOR')"
               :submission_id="assignment_submission._id"
               :feedback_name="assignment_submission.feedback_src"
               :feedbackId="
@@ -151,7 +151,7 @@
               }"
           />
           <div
-              v-if="(assignment_submission.marked && assignment.status === 'RELEASED') || userCategory === 'INSTRUCTOR' "
+              v-if="(assignment_submission.marked && assignment.status === 'RELEASED') || (assignment_submission._id && userCategory === 'INSTRUCTOR') "
               class="marks mt-6">
             <div class="label mb-2">Marks:</div>
             <div>
