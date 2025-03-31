@@ -1,11 +1,11 @@
 <template>
   <div class="live-class">
-    <div v-if="loaded && !error" class="live-class--wrapper">
+    <div class="live-class--wrapper">
       <div class="live-class--video" :class="`--${$vuetify.breakpoint.name}`">
         <back v-if="!participationInfo.isOfferingCourse" class="mt-6"/>
         <div class="head">
           <div class="text">
-            <h2>{{ live_session.course.name }}: Chapter </h2>
+            <h2>Economics Basics: Chapter 8 part II</h2>
             <span class="live" v-if="participationInfo.isOfferingCourse">Live</span>
           </div>
           <div class="time">
@@ -34,7 +34,7 @@
                     <div class="screen-sharing-video--wrapper">
                       <h4>You are presenting your screen</h4>
                       <video id="video_screen_feed">
-                        <!--                        <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">-->
+<!--                        <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">-->
                       </video>
                     </div>
                   </div>
@@ -43,8 +43,7 @@
               <video v-show="!noVideo && !isPresenting" id="video_feed">
                 <!--                <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" >-->
               </video>
-              <video v-if="!participationInfo.isOfferingCourse" v-show="!noVideo && isPresenting"
-                     id="viewer_screen_feed">
+              <video v-if="!participationInfo.isOfferingCourse" v-show="!noVideo && isPresenting" id="viewer_screen_feed">
                 <!--                <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" >-->
               </video>
               <transition name="fade">
@@ -112,7 +111,7 @@
           <div class="live-comments--wrapper">
             <div class="_title">LIVE COMMENTS</div>
             <div class="student-new-comment">
-              <student-new-comment-with-photo @sent="addComment" :isLive="true"/>
+<!--              <student-new-comment-with-photo @sent="addComment" :isLive="true"/>-->
             </div>
             <div class="live-comments-container">
               <discussion
@@ -196,7 +195,7 @@
             />
           </div>
           <div class="student-new-comment">
-            <student-new-comment-with-photo @sent="addComment" :isLive="true"/>
+<!--            <student-new-comment-with-photo @sent="addComment" :isLive="true"/>-->
           </div>
         </div>
         <div v-if="participationInfo.isOfferingCourse" class="live-class--actions">
@@ -234,10 +233,6 @@
         </div>
       </div>
     </div>
-    <div v-else>
-      <div v-if="!loaded" class="loading">Loading</div>
-      <div v-else class="not-found">Sorry {{ error }}</div>
-    </div>
   </div>
 </template>
 
@@ -246,17 +241,16 @@ import {WebRtcPeer} from "../../../plugins/kurentoLive/kurento-utils.js"
 import Participant from "../../../plugins/kurentoLive/participants";
 // import {WebRtcPeer} from 'kurento-utils'
 import {mapActions, mapGetters, mapState} from 'vuex'
-import Discussion from "../../../components/Live/Discussion";
-import { elapsedDuration, toLocal} from "@/services/global_functions"
+// import Discussion from "../../../components/Live/Discussion";
 import OnlineUser from "../../../components/Live/OnlineUser";
-import StudentNewCommentWithPhoto from "../../../components/Live/StudentNewCommentWithPhoto";
+// import StudentNewCommentWithPhoto from "../../../components/Live/StudentNewCommentWithPhoto";
 import Apis from '../../../services/apis'
 
 export default {
   name: "liveClass",
   components: {
-    Discussion,
-    StudentNewCommentWithPhoto,
+    // Discussion,
+    // StudentNewCommentWithPhoto,
     OnlineUser,
     back: () => import("@/components/shared/back-button"),
   },
@@ -280,45 +274,13 @@ export default {
           name: 'Ntwari liberi',
           attendance: 89,
         },
-      ],
-      live_session: null,
-      error: null,
-      loaded: false
+      ]
     }
   },
-  beforeMount() {
-    Apis.get(`live_session/${this.$route.params.liveSessionId}`).then(d => {
-      if (d.data.status == 404) {
-        this.error = d.data.message
-      } else {
-        const date = toLocal(new Date(d.data.data.date))
-        const remainingTime = elapsedDuration(date)
-
-        if (d.data.data.status == "FINISHED") {
-          this.error = "The meeting expired " + elapsedDuration(toLocal(new Date(d.data.data.updatedAt)))
-        } else {
-
-          if (remainingTime.includes('day') && remainingTime.includes('ago')) {
-            console.log(remainingTime)
-            this.error = "The meeting expired " + remainingTime
-            this.finishSession()
-          } else if (remainingTime.includes("in ")) {
-            // if (remainingTime.includes("day")) {
-            this.error = remainingTime
-            // }
-          } else {
-            this.live_session = d.data.data
-
-            this.initialiseSession()
-            this.loadComments()
-            let span = document.querySelector('.message-row span')
-            if (!this.participationInfo.isOfferingCourse && span)
-              span.className = "stud_span";
-          }
-        }
-      }
-      this.loaded = true
-    })
+  mounted() {
+    let span = document.querySelector('.message-row span')
+    if (!this.participationInfo.isOfferingCourse)
+      span.className = "stud_span";
   },
   computed: {
     ...mapGetters('user', ['user']),
@@ -334,125 +296,6 @@ export default {
   },
   methods: {
     ...mapActions("live_session", ["addParticipant"]),
-    async loadComments() {
-      Apis.get(`comment/live_session/${this.$route.params.liveSessionId}`).then(d => {
-        this.comments = d.data.data
-      })
-    },
-    initialiseSession() {
-      //know if this user has ability to give live class
-      this.participationInfo.isOfferingCourse = this.user.category.name === 'INSTRUCTOR'
-      console.log(this.user)
-
-      const self = this
-      this.participationInfo.name = `${this.user.other_names} ${this.user.sur_name}`
-      this.participationInfo.room = this.$route.params.liveSessionId
-
-      const host = 'stream.kurious.rw'
-      // const host = '169.254.107.40:8081'
-
-      this.ws = new WebSocket('wss://' + host + '/kurious_stream' + `?token=${this.$session.get("jwt")}`);
-
-      this.ws.addEventListener('open', () => {
-        self.register();
-      })
-
-      this.ws.onerror = function (evt) {
-        console.log("ERR: ", evt);
-      };
-
-      window.onbeforeunload = () => {
-        console.log("bibaye before unload")
-        this.ws.close();
-      };
-
-      this.ws.onmessage = (message) => {
-        let parsedMessage = JSON.parse(message.data);
-        console.info('Received message: ', message);
-
-        switch (parsedMessage.id) {
-          case 'userId':
-            self.id = parsedMessage.data;
-            self.participationInfo.name = self.id;
-            break;
-          case 'roomClosed':
-            if (!self.participationInfo.isOfferingCourse)
-              alert('Room Closed');
-            else
-              self.finishSession();
-
-            this.onCloseRoom();
-            break;
-          case 'screenAllowed':
-            this.onExistingParticipants({data: []});
-            break;
-          case 'initialScreenOff':
-            this.noVideo = true;
-            break;
-          case 'existingParticipants':
-            this.onExistingParticipants(parsedMessage);
-            break;
-          case 'newParticipantArrived':
-            this.onNewParticipant(parsedMessage);
-            break;
-          case 'participantLeft':
-            this.onParticipantLeft(parsedMessage);
-            break;
-          case 'toogleMedia':
-            this.toogleMedia(parsedMessage);
-            break;
-          case 'notification':
-            this.isPresenting = parsedMessage.screenStatus;
-            this.videoEnabled = parsedMessage.videoStatus;
-            this.audioEnabled = parsedMessage.audioStatus;
-            break;
-          case 'receiveVideoAnswer':
-            this.receiveVideoResponse(parsedMessage);
-            break;
-          case 'iceCandidate':
-            console.log(parsedMessage.name, self.participantIndex(parsedMessage.name), self.participants)
-            if (self.participantIndex(parsedMessage.name) != -1) {
-              self.participants[self.participantIndex(parsedMessage.name)].rtcPeer.addIceCandidate(parsedMessage.candidate, function (error) {
-                if (error) {
-                  console.error("Error adding candidate: " + error);
-                  return null;
-                }
-              });
-            }
-            break;
-          default:
-            console.error('Unrecognized message', parsedMessage);
-        }
-      }
-      this.ws.onclose = () => {
-        console.trace();
-        console.log("\n\n\n\nclosed\n\n\n\n", new Date())
-      }
-      self.socket.on("comment/new", (result) => {
-        // this.$store.commit(
-        //     "courses/SET_TOTAL_COMMENTS_ON_A_CHAPTER",
-        //     this.totalComments == "" ? 1 : this.totalComments + 1
-        // );
-        if (result.reply) {
-          const comments = self.comments.filter(e => e._id == result.reply)
-          if (comments.length) {
-            if (comments[0].replies == undefined) {
-              comments[0].replies = []
-            }
-            const replies = comments[0].replies.filter(e => e._id == result._id)
-            if (!replies.length)
-              self.replied({_id: result.reply, data: result});
-          }
-        } else {
-          const comments = self.comments.filter(e => e._id == result._id)
-          if (!comments.length)
-            self.comments.unshift(result);
-        }
-      });
-    },
-    async finishSession() {
-      await Apis.put(`live_session/${this.$route.params.liveSessionId}/status/FINISHED`)
-    },
     addComment(comment) {
       this.comments.unshift(comment)
     },
@@ -486,7 +329,7 @@ export default {
 
       this.sendMessage(message);
       this.isPresenting = !this.isPresenting;
-      if (!this.isPresenting) {
+      if(!this.isPresenting){
         this.sendMessage({
           id: "notifyUser",
           receiver: "ALL",
@@ -616,7 +459,7 @@ export default {
       msg.data.forEach(console.log)
       msg.data.forEach(this.receiveVideo);
 
-      if (self.isPresenting) {
+      if(self.isPresenting){
         self.sendMessage({
           id: "notifyUser",
           receiver: "ALL",
@@ -716,18 +559,123 @@ export default {
         }
       }
     }
-  }
-  ,
+  },
   created() {
+    //know if this user has ability to give live class
+    this.participationInfo.isOfferingCourse = this.user.category.name === 'INSTRUCTOR'
+    console.log(this.user)
 
-  }
-  ,
+    const self = this
+    this.participationInfo.name = `${this.user.other_names} ${this.user.sur_name}`
+    this.participationInfo.room = this.$route.params.courseId
+
+    const host = 'stream.kurious.rw'
+    // const host = '169.254.107.40:8081'
+
+    this.ws = new WebSocket('wss://' + host + '/kurious_stream' + `?token=${this.$session.get("jwt")}`);
+
+    this.ws.addEventListener('open', () => {
+      self.register();
+    })
+
+    this.ws.onerror = function (evt) {
+      console.log("ERR: ", evt);
+    };
+
+    window.onbeforeunload = () => {
+      console.log("bibaye before unload")
+      this.ws.close();
+    };
+
+    this.ws.onmessage = (message) => {
+      let parsedMessage = JSON.parse(message.data);
+      console.info('Received message: ', message);
+
+      switch (parsedMessage.id) {
+        case 'userId':
+          self.id = parsedMessage.data;
+          self.participationInfo.name = self.id;
+          break;
+        case 'roomClosed':
+          alert('Room Closed')
+          this.onCloseRoom();
+          break;
+        case 'screenAllowed':
+          this.onExistingParticipants({data: []});
+          break;
+        case 'initialScreenOff':
+          this.noVideo = true;
+          break;
+        case 'existingParticipants':
+          this.onExistingParticipants(parsedMessage);
+          break;
+        case 'newParticipantArrived':
+          this.onNewParticipant(parsedMessage);
+          break;
+        case 'participantLeft':
+          this.onParticipantLeft(parsedMessage);
+          break;
+        case 'toogleMedia':
+          this.toogleMedia(parsedMessage);
+          break;
+        case 'notification':
+          this.isPresenting = parsedMessage.screenStatus;
+          this.videoEnabled = parsedMessage.videoStatus;
+          this.audioEnabled = parsedMessage.audioStatus;
+          break;
+        case 'receiveVideoAnswer':
+          this.receiveVideoResponse(parsedMessage);
+          break;
+        case 'iceCandidate':
+          console.log(parsedMessage.name, self.participantIndex(parsedMessage.name), self.participants)
+          if (self.participantIndex(parsedMessage.name) != -1) {
+            self.participants[self.participantIndex(parsedMessage.name)].rtcPeer.addIceCandidate(parsedMessage.candidate, function (error) {
+              if (error) {
+                console.error("Error adding candidate: " + error);
+                return null;
+              }
+            });
+          }
+          break;
+        default:
+          console.error('Unrecognized message', parsedMessage);
+      }
+    }
+    this.ws.onclose = () => {
+      console.trace();
+      console.log("\n\n\n\nclosed\n\n\n\n", new Date())
+    }
+    self.socket.on("comment/new", (result) => {
+      // this.$store.commit(
+      //     "courses/SET_TOTAL_COMMENTS_ON_A_CHAPTER",
+      //     this.totalComments == "" ? 1 : this.totalComments + 1
+      // );
+      if (result.reply) {
+        const comments = self.comments.filter(e => e._id == result.reply)
+        if (comments.length) {
+          if (comments[0].replies == undefined) {
+            comments[0].replies = []
+          }
+          const replies = comments[0].replies.filter(e => e._id == result._id)
+          if (!replies.length)
+            self.replied({_id: result.reply, data: result});
+        }
+      } else {
+        const comments = self.comments.filter(e => e._id == result._id)
+        if (!comments.length)
+          self.comments.unshift(result);
+      }
+    });
+    // this.socket.on("res/comment/new", (result) => {
+    //   const comments = self.comments.filter(e => e._id == result._id)
+    //   if (!comments.length)
+    //     self.comments.push(result);
+    // });
+  },
   destroyed() {
     console.log("bibaye when destroyed")
-    if (this.ws)
-      this.ws.close();
-  }
-  ,
+    this.ws.close();
+  },
   watch: {
     videoEnabled() {
       this.noVideo = !this.videoEnabled

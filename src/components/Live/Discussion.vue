@@ -96,7 +96,7 @@
 
 <script>
 import NewReplyComment from "./NewReplyComment";
-import {elapsedDuration} from "../../services/global_functions";
+import {elapsedDuration, toLocal} from "../../services/global_functions";
 import ReplyComment from "./ReplyComment";
 
 export default {
@@ -136,7 +136,7 @@ export default {
   created(){
     // TODO increase interval on dates
     this.interval=setInterval(() => {
-      this.elapsedTime = elapsedDuration(this.content.createdAt);
+      this.elapsedTime = elapsedDuration(toLocal(this.content.createdAt));
     }, 1000)
 
   },
