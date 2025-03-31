@@ -8,6 +8,9 @@ const getDefaultState = () => ({
     selected_user: '',
     search_results: {
         data: []
+    },
+    usersBasedOnFaculties:{
+        data:"",
     }
 })
 
@@ -25,6 +28,9 @@ export default {
         },
         RESET_STATE(state) {
             Object.assign(state, getDefaultState())
+        },
+        SET_USERS_ON_FACULTIES(state,{data}){
+            state.usersBasedOnFaculties.data = data;
         }
     },
     actions: {
@@ -82,6 +88,14 @@ export default {
                 state.search_results.data = d.data.results
                 return d.data.results
             })
+        },
+
+        loadUsersBasedOnFaculties({commit},{facultyId,category}){
+            apis.get(`user/faculty/${facultyId}/${category}`)
+                .then(({data:{data}})=> {
+                    console.log(data);
+                    commit("SET_USERS_ON_FACULTIES",{data})
+                })
         }
     },
     getters: {
@@ -98,5 +112,8 @@ export default {
         selected_user: state => {
             return state.users.data.filter(user => user._id == state.selected_user)[0]
         },
+        usersOnFaculties: state => {
+            return state.usersBasedOnFaculties.data;
+        }
     },
 }

@@ -37,8 +37,8 @@
 @mixin admin-page-header{
       width:100%;
 
-    .header-wrapper{
-      margin-top:3rem;
+    .header-wrapper,.header--wrapper{
+      padding-top:1rem;
 
       .heading{
         .icon{
