@@ -203,6 +203,7 @@
                 </clipPath>
               </defs>
             </svg>
+            <div class="number">12</div>
           </div>
         </li>
         <li
@@ -315,6 +316,25 @@ export default {
         align-content: center;
 
         height: fit-content;
+        .number {
+          position: absolute;
+          width: 23.23px;
+          height: 23.23px;
+          margin-top: -15px;
+          text-align: center;
+          background: #193074;
+          border-radius: 50px;
+          font-family: Roboto;
+          font-style: normal;
+          font-weight: bold;
+          font-size: 9.04395px;
+          line-height: 11px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: #ffffff;
+          margin-left: 15px;
+        }
         .link-icon {
           display: flex;
           svg {
