@@ -108,7 +108,8 @@ export default {
               RouteTo:'/users/user/{id}',
               paramPropertyName:'_id'
             },
-          keysToShow:[ "sur_name", "other_names", "email", "user_name","status", "gender"]
+          keysToShow:[ "sur_name", "other_names", "email", "user_name","status", "gender"],
+        showSelect:true
         },
     }
   },
@@ -116,7 +117,6 @@ export default {
     loadUsers(){
       apis.get(`user/college/${this.$store.state.sidebar_navbar.college._id}/ALL`)
         .then(({data:{data}}) => {
-          console.log(data)
           let filteredUsers = [];
 
           data.map(user => {
