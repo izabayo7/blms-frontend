@@ -2,9 +2,9 @@
 <div class="my-faculties bg-one d-flex justify-center">
   <div class="faculties-container  ">
       <div class="tabular-users">
-        <div id="user-profile-card">
-          <user-simple-card >
-            <template #name>Ntwari Clarance</template>
+        <div id="user-profile-card" >
+          <user-simple-card :loading="userByUsernameLoading" >
+            <template #name>{{userByUsername.other_names + " " + userByUsername.sur_name}}</template>
             <template #type>Instructor</template>
             <template #image><img src="https://i2.wp.com/worldbusinessfitness.com/wp-content/uploads/2018/01/opulent-profile-square-07.jpg?ssl=1" alt=" profile pic"></template>
           </user-simple-card>
@@ -27,7 +27,7 @@
               <template #tableRows>
                 <table-row :selected="allSelected" @select="selectRow($event, user)" :data="user" v-for="user in usersOnFaculties" :key="user._id">
                   <template #cols>
-                    <td class="row--image" @mouseenter="mouseOnPic($event,user._id,'user-profile-card')" @mouseleave="mouseOutPic($event,'user-profile-card')"><img src="https://i2.wp.com/worldbusinessfitness.com/wp-content/uploads/2018/01/opulent-profile-square-07.jpg?ssl=1" alt=" profile pic"></td>
+                    <td class="row--image" @mouseenter="mouseOnPic($event,user.user_name,'user-profile-card')" @mouseleave="mouseOutPic($event,'user-profile-card')"><img src="https://i2.wp.com/worldbusinessfitness.com/wp-content/uploads/2018/01/opulent-profile-square-07.jpg?ssl=1" alt=" profile pic"></td>
                     <td >{{user.sur_name}}</td>
                     <td>{{user.other_names}}</td>
                     <td>{{user.email}}</td>
@@ -72,7 +72,7 @@ name: "FacultyUsers",
   },
   computed:{
     ...mapGetters('faculties',['faculty']),
-    ...mapGetters('users',['usersOnFaculties']),
+    ...mapGetters('users',['usersOnFaculties','userByUsername','userByUsernameLoading']),
   },
   methods:{
     hovered(){
