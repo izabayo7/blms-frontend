@@ -136,6 +136,10 @@ export default {
 
         .pic {
             height: 5rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
             .avatar {
                 width: 50px;
                 background-color: $primary;
