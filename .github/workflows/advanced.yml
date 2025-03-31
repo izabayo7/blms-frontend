@@ -17,6 +17,7 @@ on:
 env:
   REGISTRY: "izabayo7"
   IMAGE_NAME: "kurious"
+  GITHUB_SHA: "frontend_latest"
 
 #3
 jobs:
@@ -39,4 +40,4 @@ jobs:
       - name: Remove old container
         run: docker rm $(echo $IMAGE_NAME)
       - name: Run a new container from a new image
-        run: docker run -d --restart always --name $(echo $IMAGE_NAME) $(echo $REGISTRY)/$(echo $IMAGE_NAME):$(echo $GITHUB_SHA | head -c7)
+        run: docker run --network host -p 8081:8081/tcp -d --restart always --name $(echo $IMAGE_NAME) $(echo $REGISTRY)/$(echo $IMAGE_NAME):$(echo $GITHUB_SHA | head -c7)
