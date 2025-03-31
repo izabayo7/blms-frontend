@@ -1,6 +1,5 @@
 import apis from "@/services/apis";
 import router from '@/router'
-import {pick} from 'lodash'
 
 const getDefaultState = () => ({
     // storage for all courses
@@ -78,13 +77,13 @@ export default {
     },
     actions: {
         //get courses from backend
-        getCourses({state},load_new = true) {
+        getCourses({state}, load_new = true) {
 
             // if courses not loaded fetch them
             if (load_new) {
                 state.courses.data = []
                 state.courses.loaded = false
-              apis.get(`course/user`).then(d => {
+                apis.get(`course/user`).then(d => {
                     d.data = d.data.data
                     state.courses.data = d.data
                     //announce that data have been loaded
@@ -130,7 +129,8 @@ export default {
             return apis.create('course', course).then(d => {
                 d.data = d.data.data
 
-                courseObject = pick(d.data, ['_id', 'name', 'description', 'user_group', 'updatedAt'])
+                const {_id, name, description, user_group, updatedAt} = d.data
+                courseObject = {_id, name, description, user_group, updatedAt}
 
                 commit('set_selected_course', d.data._id)
 
