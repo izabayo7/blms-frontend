@@ -95,7 +95,7 @@
       <div class="input-container my-margin">
         <div class="label mb-2">Select time</div>
         <div class="d-flex">
-          <input :disabled="startNow" class="text-filed pa-4" v-model="time" type="time" />
+          <input :disabled="startNow" class="text-filed pa-4" v-model="time" type="time"/>
         </div>
       </div>
       <div class="input-container my-margin">
@@ -103,6 +103,7 @@
         <select-ui
             class="bold-border"
             name="role"
+            label="Select quiz"
             id="quiz"
             :options="quizNames"
             @input="
@@ -113,7 +114,7 @@
         />
       </div>
       <div class="input-container my-margin d-flex">
-        <div class="label mb-2">Record this live class </div>
+        <div class="label mb-2">Record this live class</div>
         <input v-model="record_session" class="mt-1 ml-2" type="checkbox">
       </div>
       <button class="submit" @click="validateForm()">Schedule class</button>
@@ -128,13 +129,13 @@
             <div class="detail">Date : <span>{{ date | formatDate }}</span></div>
             <div class="detail">Time : <span>{{ time }}</span></div>
           </div>
-<!--          <div>-->
-<!--            <div class="detail">Notification : <span>Urgent live anouncement</span></div>-->
-<!--            <div class="detail">Details : <span>Dear year 2 students,-->
-<!--you  are invite to this 20 minutes live class,-->
-<!--Attendance will not be accounted-->
-<!--thanks</span></div>-->
-<!--          </div>-->
+          <!--          <div>-->
+          <!--            <div class="detail">Notification : <span>Urgent live anouncement</span></div>-->
+          <!--            <div class="detail">Details : <span>Dear year 2 students,-->
+          <!--you  are invite to this 20 minutes live class,-->
+          <!--Attendance will not be accounted-->
+          <!--thanks</span></div>-->
+          <!--          </div>-->
         </div>
         <div class="mx-auto">
           <button class="action" @click="showModal = false">Cancel</button>
@@ -183,10 +184,10 @@ export default {
     selected_course() {
       this.selected_chapter = ""
     },
-    startNow(){
+    startNow() {
       const obj = getDateAndTime();
       this.date = obj.date
-      this.time= obj.time
+      this.time = obj.time
     }
   },
   computed: {
@@ -212,7 +213,10 @@ export default {
     },
     selectedQuiz() {
       if (this.selected_quiz && this.all_quiz.length && this.selected_quiz != "") {
-        return this.all_quiz.filter((quiz) => quiz.name == this.selected_quiz)[0]._id;
+        if (this.selected_quiz != "Select quiz")
+          return this.all_quiz.filter((quiz) => quiz.name == this.selected_quiz)[0]._id;
+        else
+          return undefined
       } else {
         return undefined;
       }
@@ -220,7 +224,8 @@ export default {
     quizNames() {
       let res = []
       for (const i in this.all_quiz) {
-        res.push(this.all_quiz[i].name)
+        if (!this.all_quiz[i].target)
+          res.push(this.all_quiz[i].name)
       }
       return res
     }
@@ -304,7 +309,7 @@ export default {
       user_name: this.$store.state.user.user.user_name,
     });
     console.log(this.$store.state.courses.selectedCourse, this.course)
-    if(this.course){
+    if (this.course) {
       console.log(this.course.name)
       this.selected_course = this.course.name
     }
