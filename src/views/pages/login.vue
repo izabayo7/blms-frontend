@@ -6,7 +6,7 @@
           <div class="heading">
             <div class="welcome">Welcome to</div>
             <div class="college-name">{{ institution }}.</div>
-            <img :src="image" alt="" class="logo mx-auto"/>
+            <img v-if="!$route.query.institution || collegeHasLogo" :src="image" alt="" class="logo mx-auto"/>
             <div :class="`message ${valid ? '' : 'red--text'}`">
               {{ message }}
             </div>
@@ -126,6 +126,7 @@ export default {
     password: "",
     message: "Please login to continue",
     image: "https://apis.kurious.rw/assets/images/logo.png",
+    collegeHasLogo: false,
     institution: "Kurious Learn",
   }),
   methods: {
@@ -191,8 +192,12 @@ export default {
           `college/open/${this.$route.query.institution}`
       );
       if (res.data.status != 404) {
-        this.institution = res.data.data.name;
-        this.image = res.data.data.logo || this.image;
+        this.institution = res.data.data.name
+        if(res.data.data.logo)
+        {
+          this.collegeHasLogo = true
+          this.image = res.data.data.logo;
+        }
       } else {
         this.$router.push("/login");
       }
@@ -259,13 +264,13 @@ export default {
 
     .input {
       &-container {
-        max-width: 299px;
+        max-width: 350px;
 
         height: 36px;
         margin: 24px auto;
         border: 1.34978px solid #bababc;
         box-sizing: border-box;
-        border-radius: 10px;
+        border-radius: 5px;
         display: flex;
 
         &.un_bordered {
@@ -278,7 +283,7 @@ export default {
             font-family: Inter;
             font-style: normal;
             font-weight: 500;
-            font-size: 15px;
+            font-size: 16px;
             line-height: 17px;
             text-align: center;
 
@@ -290,11 +295,11 @@ export default {
           font-family: Inter;
           font-style: normal;
           font-weight: normal;
-          font-size: 11.3404px;
+          font-size: 13px;
           line-height: 21px;
           text-align: left;
           padding-left: 10px;
-          color: #ababab;
+          color: black;
 
           &.wide {
             width: 70%;

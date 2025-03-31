@@ -116,7 +116,7 @@
             </div>
           </div>
           <div class="added-student-groups customScroll">
-            <div v-for="(item, i) in addedStudentGroups" :key="i" class="item">
+            <div v-for="(item, i) in addedStudentGroups" :key="i" :class="{'d-none': isEditing && editingIndex === i}" class="item">
               <div class="name">{{ item.name }}</div>
               <div class="actions ml-auto">
                 <button @click="edit(i)" class="edit mr-4">
@@ -396,7 +396,6 @@ export default {
 .v-dialog:not(.v-dialog--fullscreen) {
   height: fit-content !important;
   width: 100% !important;
-  max-width: 1078px;
   border-radius: 0 !important;
 
   .faculty-dialog-body {
@@ -462,10 +461,10 @@ export default {
         height: 45.9px;
         font-family: Source Sans Pro;
         font-style: normal;
-        font-weight: 600;
+        font-weight: 400;
         font-size: 15.2686px;
         line-height: 23px;
-        color: #6d7580;
+        color: black;
         padding: 11.5px;
       }
 
