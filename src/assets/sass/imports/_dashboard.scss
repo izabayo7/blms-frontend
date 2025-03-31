@@ -244,6 +244,15 @@
         font-style: normal;
         font-size: 14px;
 
+        .d-flex{
+          border-radius: 5px;
+          padding: 13px 5px 0px;
+          cursor: pointer ;
+          &:hover {
+            background: rgba(25, 48, 116, 0.15);
+          }
+        }
+
         .student-name {
           font-weight: bold;
           line-height: 4px;
@@ -357,8 +366,6 @@
       padding: 12px 5px;
 
       .d-flex {
-        border-radius: 5px;
-        padding: 4px 25px;
         align-items: center;
 
         &:hover {
