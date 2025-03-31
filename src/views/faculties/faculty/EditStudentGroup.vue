@@ -157,7 +157,24 @@
                 </div>
               </div>
               <div v-else class="d-flex justify-center align-center loader">
-                <img class="" src="https://kurious.rw/_nuxt/img/loader.059b462.gif" alt="lodading ...">
+                <div class="empty-faculties">
+                  <div class="wrapper">
+                    <div class="icon">
+                      <svg width="43" height="43" viewBox="0 0 43 43" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M8.95829 23.6142V30.7808L21.5 37.625L34.0416 30.7808V23.6142L21.5 30.4583L8.95829 23.6142ZM21.5 5.375L1.79163 16.125L21.5 26.875L37.625 18.0779V30.4583H41.2083V16.125L21.5 5.375Z"
+                            fill="#989899"/>
+                      </svg>
+                    </div>
+                    <div class="title">No users added</div>
+                    <div class="subtitle">You can add Users to this user group <br> by
+                      clicking on
+                    </div>
+                    <button @click="showAddUsers = true" class="action">
+                      Add users
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -179,11 +196,11 @@
                   </svg>
                 </div>
                 <div class="title">No courses created</div>
-                <div class="subtitle">You can invite instructors to this faculty <br> to start creating courses by
+                <div class="subtitle">You can add Users to this user group <br> to start creating courses by
                   clicking on
                 </div>
                 <button class="action">
-                  Invite users
+                  Add users
                 </button>
               </div>
             </div>

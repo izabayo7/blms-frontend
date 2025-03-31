@@ -53,7 +53,7 @@
                     <transition-group name="members">
                       <div
                           class="member"
-                          v-for="user in foundUsers"
+                          v-for="user in foundUsers.filter(e=>e.category == selected_user_category)"
                           @click="addMember(user)"
                           :key="user.email"
                       >
@@ -87,7 +87,7 @@
             <button class="add-email send cancel mr-4" @click="$emit('closeModal')">
               Cancel
             </button>
-            <button class="add-email send" @click="sendInvitations">
+            <button class="add-email send" @click="addUsers">
               Add users
             </button>
           </div>
@@ -142,7 +142,7 @@ export default {
     return {
       options: ["Principal", "Instructor", "Student"],
       emails: [],
-      sent_emails: [{}],
+      sent_emails: [],
       saved_users: [],
       failedUsers: [],
       foundUsers: [],
@@ -217,70 +217,26 @@ export default {
         });
       }
     },
-    async uploadFile() {
-      const formData = new FormData()
-      formData.append('file', this.file)
-
-      if (this.choice === 1) {
-        const res = await Apis.create("user/multiple", formData);
-        if (res.data.status === 201) {
-          res.data = res.data.data
-          if (res.data.savedUsers.length)
-            this.saved_users = res.data.savedUsers
-          if (res.data.creationErrors.length)
-            this.failedUsers = res.data.creationErrors
-        } else {
-          this.error = res.data.message
-        }
-      } else {
-        const res = await Apis.create("user_invitations/multiple", formData);
-        if (res.data.status === 201) {
-          res.data = res.data.data
-          if (res.data.savedInvitations.length)
-            this.saved_users = res.data.savedInvitations
-          if (res.data.creationErrors.length)
-            this.failedUsers = res.data.creationErrors
-        } else {
-          this.error = res.data.message
-        }
-      }
-    },
-    addEmail() {
-      if (this.validateEmail(this.email)) {
-        if (!this.emails.includes(this.email)) {
-          this.emails.unshift(this.email);
-          this.email = "";
-        }
-        this.$refs.email_input.$emit("clear");
-      }
-    },
-    validateEmail(email) {
-      const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-      return re.test(String(email).toLowerCase());
-    },
-    updateCurrentEmailValue(email) {
-      this.email = email;
-    },
-    async sendInvitations() {
-      if (this.selected_user_group === "Select user group" && this.selected_user_category !== "ADMIN") {
-        this.error = "user group is required"
-      } else if (this.selected_user_category === "Select user category") {
+    async addUsers() {
+      if (this.selected_user_category === "Select user category") {
         this.error = "user category is required";
-      } else if (!this.emails.length) {
-        this.error = "you must atleast select one email";
+      } else if (!this.users.length) {
+        this.error = "you must at least select one user";
       } else {
-        const res = await Apis.create("user_invitations", {
-          college: this.$store.state.user.user.college,
-          category: this.selected_user_category,
-          user_group: this.selected_user_group === "Select user group" ? undefined : this.selected_user_group,
-          emails: this.emails,
-        });
-        if (res.data.data) {
-          for (const obj of res.data.data) {
-            this.sent_emails.unshift(obj.email);
+        for (const i in this.users) {
+          try {
+            const res = await Apis.create("user_user_group", {
+              user: this.users[i].user_name,
+              user_group: this.user_group_id,
+            });
+            if (res.data.data) {
+                this.sent_emails.unshift(this.users[i].email);
+            } else {
+              this.error = res.data.message
+            }
+          } catch (e) {
+            console.log(e)
           }
-        } else {
-          this.error = res.data.message
         }
       }
     },
