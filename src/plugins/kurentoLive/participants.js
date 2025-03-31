@@ -23,7 +23,8 @@ export default function Participant(name, vm, offeringCourse = false, userInfo) 
 
     console.log(userInfo)
     if (userInfo.category == "INSTRUCTOR") {
-        video.setAttribute('poster','https://apis.kurious.rw/assets/images/video-loader.gif')
+        // video.setAttribute('poster','https://apis.kurious.rw/assets/images/video-loader.gif')
+        video.setAttribute('poster','https://apis.kurious.rw/assets/images/kurious_logos2.gif')
 
         video.onloadedmetadata = function(e) {
 

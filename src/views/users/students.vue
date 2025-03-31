@@ -1,5 +1,5 @@
 <template>
-  <div class="students-page bg-one d-flex justify-center">
+  <div v-if="selected_course" class="students-page bg-one d-flex justify-center">
     <div class="users-page-container d-flex flex-column">
       <div class="header">
         <div class="header-wrapper row ">
@@ -11,10 +11,10 @@
           </div>
           <div class=" hidden-sm-and-down col-12 col-md-4">
             <select-ui
-                label="Select course"
+                :label="selected_course"
                 name="role"
                 id="user_group"
-                :options="courses"
+                :options="courseNames"
                 @input="
                 (e) => {
                   selected_course = e;
@@ -58,20 +58,20 @@
           </div>
           <div class="col-12 mt-6 mt-md-0 col-md-3 d-flex">
             <div>
-              <div class="big">65%</div>
+              <div class="big">{{ statistics ? Math.round(statistics.total_attendance) : 0 }}%</div>
               <div class="small">Attendance</div>
             </div>
             <div class="ml-auto">
-              <div class="big">80%</div>
+              <div class="big">{{ statistics ? Math.round(statistics.total_perfomance) : 0 }}%</div>
               <div class="small">Performance</div>
             </div>
           </div>
           <div class=" hidden-md-and-up col-12 col-md-4">
             <select-ui
-                label="Select course"
+                :label="selected_course"
                 name="role"
-                id="user_group"
-                :options="courses"
+                id="user_group1"
+                :options="courseNames"
                 @input="
                 (e) => {
                   selected_course = e;
@@ -82,33 +82,21 @@
         </div>
       </div>
       <div class="tabular-users mb-14">
-        <div id="user-profile-card">
-          <user-simple-card :loading="userByUsernameLoading">
-            <template #name>{{ userByUsername.other_names + " " + userByUsername.sur_name }}</template>
-            <template #type>Instructor</template>
-            <template #image>
-              <img v-if="userByUsername.profile" :src="userByUsername.profile + '?width=50'" alt=" profile pic">
-              <v-avatar v-else :size="30" class="profile-avatar">
-                {{ `${userByUsername.sur_name} ${userByUsername.other_names}` | computeText }}
-              </v-avatar>
-            </template>
-          </user-simple-card>
-        </div>
         <div class="table-wrapper mt-6">
           <div class="table-header">
-            <table-header />
+            <table-header/>
           </div>
 
           <div class="table">
             <table-ui :options="options">
               <template #tableHeaderRow>
-                <table-head-row @select="selectAll" :cols="options.keysToShow"/>
+                <table-head-row :cols="options.keysToShow"/>
               </template>
 
               <!--              rows-->
-              <template #tableRows>
-                <table-row :selected="allSelected" @select="selectRow($event, user)" :data="user"
-                           v-for="user in users" :key="user._id">
+              <template v-if="statistics" #tableRows>
+                <table-row :data="user"
+                           v-for="user in statistics.students" :key="user._id">
                   <template #cols>
                     <td class="row--image" @mouseenter="mouseOnPic($event,user.user_name,'user-profile-card')"
                         @mouseleave="mouseOutPic($event,'user-profile-card')">
@@ -120,13 +108,13 @@
                     <td>{{ user.sur_name }} {{ user.other_names }}</td>
                     <td>{{ user.gender }}</td>
                     <td>
-                      <progress :value="56" max="100"></progress>
+                      <progress :value="user.progress" max="100"></progress>
                       <p class="text-caption mb-0 text-left ml-1">
-                        {{ Math.round(77.8) }}%
+                        {{ Math.round(user.progress) }}%
                       </p>
                     </td>
-                    <td>100</td>
-                    <td>10%</td>
+                    <td>{{ Math.round(user.perfomance) }}</td>
+                    <td>{{ Math.round(user.attendance) }}%</td>
                   </template>
                 </table-row>
               </template>
@@ -144,118 +132,55 @@ import TableUi from "../../components/reusable/table/TableUi";
 import TableHeadRow from "../../components/reusable/table/TableHeadRow";
 import SelectUi from "@/components/reusable/ui/select-ui";
 import TableRow from "../../components/reusable/table/TableRow";
-import UserSimpleCard from "../../components/reusable/user-simple-card";
-// import userSimpleCard from "../../../mixins/user-simple-card.mixin"
+import {mapActions, mapGetters} from "vuex";
+import Apis from '../../services/apis'
 
 export default {
   name: "Students",
-  components: {UserSimpleCard, TableRow, TableHeadRow, TableUi, TableHeader, SelectUi},
+  components: {TableRow, TableHeadRow, TableUi, TableHeader, SelectUi},
+  computed: {
+    ...mapGetters("courses", ["courses", "loaded"]),
+    courseNames() {
+      let res = [];
+      for (const i in this.courses) {
+        res.push(this.courses[i].name);
+      }
+      return res;
+    },
+  },
+  watch: {
+    selected_course() {
+      if (this.courseNames.includes(this.selected_course)) {
+        this.loadStatistics()
+      }
+    },
+    courses() {
+      if (this.courses.length)
+        this.selected_course = this.courses[0].name
+    }
+  },
+  methods: {
+    ...mapActions("courses", ["getCourses"]),
+    async loadStatistics() {
+      let course_id
+      for (const i in this.courses) {
+        if (this.courses[i].name === this.selected_course) {
+          course_id = this.courses[i]._id
+          break
+        }
+      }
+      console.log(course_id)
+      const res = await Apis.get(`course/statistics/course/${course_id}`)
+      this.statistics = res.data.data
+    }
+  },
+  created() {
+    this.getCourses(!this.loaded);
+  },
   data() {
     return {
-      users: [
-        {
-          "_id": "5f8f575947a26e209a466857",
-          "sur_name": "Manzi",
-          "other_names": "Mike",
-          "user_name": "user_404485",
-          "gender": "Male",
-          "profile": "https://apis.kurious.rw/api/user/user_404485/profile/profile_1621934433190.png",
-          "category": "STUDENT",
-          "status": {
-            "disabled": 0,
-            "active": 0
-          },
-          "email": "rich@gmail.com"
-        },
-        {
-          "_id": "5f8f5a6b47a26e209a466859",
-          "sur_name": "Cedric",
-          "other_names": "Izabayo",
-          "user_name": "user_238760",
-          "gender": "male",
-          "profile": "https://apis.kurious.rw/api/user/user_238760/profile/profile_1624208556426.png",
-          "category": "STUDENT",
-          "status": {
-            "disabled": 0,
-            "active": 0
-          },
-          "email": "cedro@gmail.com"
-        },
-        {
-          "_id": "5fd23b2502e1a5d1851aef49",
-          "sur_name": "Nadine",
-          "other_names": "Ingabire",
-          "user_name": "user_80282",
-          "gender": "female",
-          "profile": "https://apis.kurious.rw/api/user/user_80282/profile/profile_1612378152477.png",
-          "category": "STUDENT",
-          "status": {
-            "disabled": 0,
-            "active": 0
-          },
-          "email": "nadibire@gmail.com"
-        },
-        {
-          "_id": "5fd23b6902e1a5d1851aef4a",
-          "sur_name": "Isaac",
-          "other_names": "Rudakubana",
-          "user_name": "user_581278",
-          "gender": "male",
-          "profile": "https://apis.kurious.rw/api/user/user_581278/profile/profile_1612379477178.png",
-          "category": "STUDENT",
-          "status": {
-            "disabled": 0,
-            "active": 0
-          },
-          "email": "risaac@gmail.com"
-        },
-        {
-          "_id": "604e137dc67ea80e8bc71b9b",
-          "sur_name": "Mahoro",
-          "other_names": "Celine",
-          "user_name": "mamacece",
-          "gender": "female",
-          "profile": "https://apis.kurious.rw/api/user/mamacece/profile/profile_1615731574594.png",
-          "category": "STUDENT",
-          "status": {
-            "disabled": 0,
-            "active": 0
-          },
-          "email": "kuriouseclassroom@gmail.com"
-        },
-        {
-          "_id": "60acbce4b6f98372bf176ee5",
-          "sur_name": "Kabanda",
-          "other_names": "Bertrand",
-          "user_name": "kabanda",
-          "gender": "male",
-          "profile": "https://apis.kurious.rw/api/user/kabanda/profile/profile_1621933846931.png",
-          "category": "STUDENT",
-          "status": {
-            "disabled": 0,
-            "active": 0
-          },
-          "email": "kabanda@gmail.com"
-        },
-        {
-          "_id": "60acbc30b6f98372bf176ee3",
-          "sur_name": "Umugwaneza",
-          "other_names": "Dinah",
-          "user_name": "Umudynah",
-          "gender": "female",
-          "profile": "https://apis.kurious.rw/api/user/Umudynah/profile/profile_1621933518923.png",
-          "category": "STUDENT",
-          "status": {
-            "disabled": 0,
-            "active": 0
-          },
-          "email": "umudinah@gmail.com"
-        }
-      ],
-      courses: [
-        'test'
-      ],
-      selected_course: "",
+      statistics: undefined,
+      selected_course: undefined,
       options: {
         coloredRows: false,
         keysToShow: [" ", "User name", "Gender", "Course progress", "Perfomance (%)", "Attendace"],
@@ -269,7 +194,8 @@ export default {
 .students-page {
   height: 100%;
   width: 100%;
-padding-top: 24px;
+  padding-top: 24px;
+
   .users-page-container {
     height: 100%;
     width: 90%;
@@ -316,7 +242,7 @@ padding-top: 24px;
       }
     }
 
-    button{
+    button {
       font-family: Inter;
       font-style: normal;
       font-weight: bold;
@@ -329,7 +255,8 @@ padding-top: 24px;
 
       color: #193074;
     }
-    .big{
+
+    .big {
       font-family: Inter;
       font-style: normal;
       font-weight: 900;
@@ -339,10 +266,11 @@ padding-top: 24px;
 
       display: flex;
       align-items: center;
-margin-bottom: 15px;
+      margin-bottom: 15px;
       color: #343434;
     }
-    .small{
+
+    .small {
       font-family: Inter;
       font-style: normal;
       font-weight: 500;
@@ -353,7 +281,8 @@ margin-bottom: 15px;
 
       color: #343434;
     }
-    progress{
+
+    progress {
       max-width: 114px;
     }
   }
