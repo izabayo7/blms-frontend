@@ -338,7 +338,7 @@ export default {
       document.getElementById("video_feed").requestFullscreen()
     },
     playVideo() {
-      document.getElementById("video_feed").play()
+      document.querySelector("video.show").play()
       document.querySelector('.play_button').style.display = 'none'
     },
     ...mapActions("modal", ["set_modal"]),
