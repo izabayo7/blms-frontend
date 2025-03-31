@@ -1,5 +1,5 @@
 <template v-if="visible">
-<div class="shade">
+<div class="shade" v-if="visible">
   <div class="cropper-container" id="imageCropper" >
     <div class="inner-cropper" >
       <div class="img">
@@ -36,7 +36,7 @@ export default {
   data(){
     return{
       imgLoaded:false,
-      visible:true
+      visible:false
     }
   },
   methods:{
