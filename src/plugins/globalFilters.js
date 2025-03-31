@@ -36,11 +36,13 @@ const filters = [
         //format date
         name: 'formatDate',
         structure: (dateToFormat) => {
+            if (!dateToFormat) return
             const dateFormat = new Intl.DateTimeFormat("en", {
                 year: "numeric",
                 month: "short",
                 day: "2-digit",
             }); // format to format the date
+            console.log(dateToFormat)
             const formatedDate = dateFormat.formatToParts(new Date(dateToFormat)); //lets format date
             const [
                 { value: month },
