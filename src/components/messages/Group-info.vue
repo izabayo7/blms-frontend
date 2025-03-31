@@ -48,28 +48,30 @@
 
 <script>
 import GroupMember from "@/components/messages/Group-member";
+import a from "@/services/apis"
+
 export default {
   name: "Group-info",
   components: {GroupMember},
   data(){
     return {
       members:[
-          'Izabayo cedric',
-          'James cedric',
-          'Umukura Olivier',
-          'Liberi Ntwari',
-          'Marie divine Gervais Hirwa',
-          'Ange Sekata Moss',
-          'Divin Irakiza',
-          'Izabayo zakayo',
-          'Liberi Jama Se',
       ]
     }
+  },
+  computed:{
   },
   methods:{
     goToAddMember(){
       this.$router.push(`${this.$route.path}/add-member`)
+    },
+    async getGroupInfo(){
+      const group = await a.get(`chat_group/${this.$route.params.id}`)
+      console.log(group)
     }
+  },
+  mounted() {
+    this.getGroupInfo()
   }
 }
 </script>
