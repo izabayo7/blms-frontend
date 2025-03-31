@@ -17,9 +17,9 @@ const routes =  [
         path: '/',
         component: () => import( /* webpackChunkName: "messages" */ '@/views/chat/Messages.vue'),
         children: [
-            { path: '/group/:id', component: () => import( /* webpackChunkName: "messages-group" */ '@/views/chat/GroupSetting') },
-            { path: '/group/:id/add-member', component: () => import( /* webpackChunkName: "messages-add-member" */ '@/views/chat/AddMember') },
-            { path: '/:username', component: () => import( /* webpackChunkName: "messages-dm" */ '@/views/chat/Chat.vue') }
+            { path: '/messages/group/:id', component: () => import( /* webpackChunkName: "messages-group" */ '@/views/chat/GroupSetting') },
+            { path: '/messages/group/:id/add-member', component: () => import( /* webpackChunkName: "messages-add-member" */ '@/views/chat/AddMember') },
+            { path: '/messages/:username', component: () => import( /* webpackChunkName: "messages-dm" */ '@/views/chat/Chat.vue') }
         ]
     },
 ]

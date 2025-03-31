@@ -153,7 +153,7 @@
                 @fileClicked="handleOptionClick"
             />
           </div>
-          <div v-if="question.type.includes('file')" class="file-upload">
+          <div v-if="question.type == 'File upload'" class="file-upload">
             <label>Max file size 2 MB</label>
             <div class="allowed-files">
               <div class="type"><input type="radio"> Pdf</div>
@@ -165,6 +165,11 @@
               <div class="type"><input type="radio">Video</div>
               <div class="type"><input type="radio">All</div>
             </div>
+<!--            <checkbox-->
+<!--                :disabled="false"-->
+<!--                @check_it="toogleIsAdminStatus"-->
+<!--                v-model=""-->
+<!--            />-->
           </div>
 
         </div>
@@ -192,6 +197,7 @@ import {mapActions} from "vuex";
 export default {
   name: "CreateQuiz",
   components: {
+    // Checkbox: () => import("@/components/reusable/ui/Checkbox"),
     FilePicker: () => import("@/components/reusable/FilePicker"),
     Editor: () => import("@/components/reusable/Editor"),
     SelectUi: () => import("@/components/reusable/ui/select-ui"),
@@ -243,23 +249,23 @@ export default {
 
       for (const i in this.questions) {
         if (this.questions[i].details == "")
-          return this.error = `Question ${i + 1} must have question text`
+          return this.error = `Question ${parseInt(i) + 1} must have question text`
 
         if (this.questions[i].details.length < 5)
-          return this.error = `Question ${i + 1} question text too short`
+          return this.error = `Question ${parseInt(i) + 1} question text too short`
 
-        if (!this.questions_types.includes(this.questions[i].type))
-          return this.error = `Question ${i + 1} type is required`
+        if (this.questions[i].type == "Select question type")
+          return this.error = `Question ${parseInt(i) + 1} type is required`
 
         if (this.questions[i].marks == "")
-          return this.error = `Question ${i + 1} marks are required`
+          return this.error = `Question ${parseInt(i) + 1} marks are required`
 
         if (this.questions[i].type.includes('select')) {
           let right_choice_found = false;
 
           if (this.questions[i].type.includes('image')) {
             if (this.questions[i].options.choices.length < 2)
-              return this.error = `Question ${i + 1}, must have atleast options,pick files`
+              return this.error = `Question ${parseInt(i) + 1}, must have atleast options,pick files`
           }
 
           for (const k in this.questions[i].options.choices) {
@@ -269,14 +275,14 @@ export default {
 
             if (this.questions[i].type.includes('text')) {
               if (this.questions[i].options.choices[k].text == "")
-                return this.error = `Question ${i + 1}, option ${k + 1} text is required`
+                return this.error = `Question ${parseInt(i) + 1}, option ${parseInt(k) + 1} text is required`
 
               if (this.questions[i].options.choices[k].text.length < 3)
-                return this.error = `Question ${i + 1}, option ${k + 1} text is too short`
+                return this.error = `Question ${parseInt(i) + 1}, option ${parseInt(k) + 1} text is too short`
             }
           }
           if (!right_choice_found)
-            return this.error = `Question ${i + 1} must have a right choice`
+            return this.error = `Question ${parseInt(i) + 1} must have a right choice`
         }
 
 
@@ -333,7 +339,6 @@ export default {
       }
     },
     handleTypeChange(index) {
-      console.log("ngahoooo", index)
       if (this.questions[index].type.includes("text")) {
         this.questions[index].options = {
           choices: [
@@ -348,6 +353,9 @@ export default {
         this.questions[index].options = {
           choices: [],
         };
+      }
+      if(this.questions[index].type == "File upload"){
+        this.questions[index].allowed_files = ["All"]
       }
       this.pictures[index] = [];
     },
