@@ -80,7 +80,7 @@
             <article>
               <img
                 v-if="course.user.profile"
-                :src="course.user.profile"
+                :src="`${course.user.profile}?width=50`"
                 alt="profile picture"
               />
               <v-avatar v-else size="50" class="bg-color-one">
@@ -95,9 +95,10 @@
                 {{ `${course.user.sur_name} ${course.user.other_names}` }}
               </h3>
               <p class="faculty">
-                {{
+                <!-- {{
                   `${course.faculty_college_year.faculty_college.faculty.name} year ${course.faculty_college_year.college_year.digit}`
-                }}
+                }} -->
+                Instructor
               </p>
             </article>
           </div>

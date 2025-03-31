@@ -35,6 +35,14 @@ const routes = [
             allowAnonymous: true
         }
     },
+    // {
+    //     path: '/admin_demo',
+    //     component: () =>
+    //         import('@/views/dashboard/new'),
+    //     meta: {
+    //         allowAnonymous: true
+    //     }
+    // },
     {
         /**
          * DASHBOARD Parent
@@ -62,6 +70,14 @@ const routes = [
                 // for chat
                 children: [
                     {
+                        path: '/admin_demo',
+                        component: () =>
+                            import('@/views/dashboard/new'),
+                        meta: {
+                            allowAnonymous: true
+                        }
+                    },
+                    {
                         path: '/messages/start-conversation',
                         component: () => import('@/views/chat/StartConversation.vue'),
                     },
@@ -81,12 +97,12 @@ const routes = [
                     //for users
                     {
                         path: '/users',
-                        name:"users",
+                        name: "users",
                         component: () => import('@/views/users/index.vue'),
                     },
                     {
                         path: '/users/students',
-                        name:"students",
+                        name: "students",
                         component: () => import('@/views/users/students.vue'),
                     },
                     //for faculties

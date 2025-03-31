@@ -1,5 +1,11 @@
 @font-face {
     font-family: "Poppins";
     src: local("Poppins"),
-     url(../../fonts/Poppins/Poppins-Regular.ttf) format("truetype");
-  }
+        url(../../fonts/Poppins/Poppins-Regular.ttf) format("truetype");
+}
+
+@font-face {
+    font-family: "Inter";
+    src: local("Inter"),
+        url(../../fonts/Inter/Inter-VariableFont_slnt.ttf) format("truetype");
+}

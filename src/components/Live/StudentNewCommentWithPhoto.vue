@@ -7,7 +7,14 @@
         class="new-comment-with-photo"
       >
         <div class="profile-pic">
-          <v-avatar size="30">{{ user_full_names | computeText }} </v-avatar>
+          <v-avatar size="30">
+            <img
+              v-if="$store.state.user.user.profile"
+              :src="`${$store.state.user.user.profile}?width=30`"
+              alt="profile picture"
+            />
+            <div v-else class="text">{{ user_full_names | computeText }}</div>
+          </v-avatar>
         </div>
         <div class="input mx-3 px-3 py-1">
           <textarea
@@ -105,7 +112,9 @@ export default {
       .profile-pic {
         .v-avatar {
           background-color: $primary;
-          color: $main;
+          .text {
+            color: $main;
+          }
           width: 25px;
           height: 25px;
         }
