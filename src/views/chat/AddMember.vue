@@ -4,13 +4,25 @@
     <div class="add-member-center">
       <div class="row group-members">
         <label for="group_members_input">Add members</label>
-        <input @keyup.enter.prevent.stop="addMember" v-model="currentMember" type="text"
+        <input @input="getUsers" v-model="currentMember" type="text"
                id="group_members_input">
+        <transition name="member">
+          <div class="found-members" v-if="foundUsers.length > 0 || userLoading">
+            <svg v-if="userLoading" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"/><path d="M12 3a9 9 0 0 1 9 9h-2a7 7 0 0 0-7-7V3z"/></svg>
+            <div class="no-user" v-if="NotFoundText.length>0">{{ NotFoundText }}</div>
+            <transition-group name="members">
+              <div class="member" v-for="(user) in foundUsers" @click="addMember(user)" :key="user.email">
+                <member :disabled="disabled(user.email)"  :user="user"  />
+              </div>
+            </transition-group>
+          </div>
+        </transition>
         <div class="added-members-list" v-if="group.members.length > 0">
-          <chip-ui v-for="(member,i) in group.members" @closed="closed(i)" :key="i">
-            {{ member }}
-          </chip-ui>
-        </div>
+          <transition-group name="chips">
+            <chip v-for="(member,i) in group.members" @closed="closed(i)" :key="member.email">
+              {{ member.sur_name + ' ' + member.other_names }}
+            </chip>
+          </transition-group>
       </div>
       <div class="row action-buttons">
         <button class="create-group-button">Add</button>
@@ -19,33 +31,65 @@
     </div>
   </div>
 </div>
+</div>
 </template>
 
 <script>
-import ChipUi from "@/components/reusable/ui/Chip";
+import Chip from "@/components/reusable/ui/Chip";
+import Member from "@/components/messages/Member";
+import {mapActions} from "vuex";
 export default {
   name: "AddMember",
-  components: {ChipUi},
+  components: {Member, Chip},
   data(){
     return {
       currentMember:'',
+      foundUsers:[],
+      userLoading:false,
+      NotFoundText:'',
       group: {
-        name: '',
-        public: true,
         members: [],
       }
+
     }
   },
   methods:{
+    ...mapActions('users',['searchUser']),
     closed(i) {
       this.group.members.splice(i, 1)
     },
-    addMember() {
-      if(this.currentMember.length <=0)
-        return
-      this.group.members.unshift(this.currentMember)
-      this.currentMember = ''
+    disabled(email){
+      return this.group.members.some(member => member.email === email)
     },
+    getUsers(){
+      this.userLoading = true
+      this.NotFoundText = ''
+      const EmptyStringRegex = /^\s+$/g //regext to detect empty string
+
+      if(EmptyStringRegex.test(this.currentMember) || this.currentMember.length <= 0){
+        this.foundUsers = []
+        this.userLoading = false
+        return
+      }
+
+      this.searchUser({query: this.currentMember}).then(result => {
+        this.userLoading = false;
+        this.foundUsers= result;
+
+        //tell user that we didnt find the user with such id
+        this.NotFoundText = (result.length > 0) ? '' : "No user found"
+      })
+    },
+    addMember(user) {
+      const membersNotAvailable = this.foundUsers.length <= 0
+      const disabled = this.disabled(user.email)
+
+      if(membersNotAvailable || this.currentMember.length <= 0 || disabled)
+        return
+
+      this.group.members.unshift(user)
+    },
+
   }
 }
 </script>
