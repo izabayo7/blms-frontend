@@ -52,15 +52,15 @@
                   <div class="screen-sharing-video" v-if="isPresenting">
                     <div class="screen-sharing-video--wrapper">
                       <h4>You are presenting your screen</h4>
-                      <video >
-                        <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" autoplay>
+                      <video autoplay>
+                        <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" >
                       </video>
                     </div>
                   </div>
                 </div>
               </div>
-              <video v-else>
-                <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" autoplay>
+              <video v-else autoplay>
+                <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" >
               </video>
               <transition name="fade">
                 <div class="video-controls" v-if="showMenu || noVideo">
@@ -93,7 +93,17 @@
       </div>
       <div class="live-comments">
         <div class="live-comments--wrapper">
-          <unreal-time-discussion-board />
+          <div class="student-new-comment">
+            <student-new-comment-with-photo v-model="comment"/>
+          </div>
+          <div class="student-comments">
+<!--            <discussion-->
+<!--              :content="comment"-->
+<!--              :verified="comment.sender.category !== 'STUDENT'"-->
+<!--              @replied="replied"-->
+<!--            />-->
+
+          </div>
         </div>
       </div>
     </div>
@@ -141,14 +151,16 @@
   import {WebRtcPeer} from 'kurento-utils'
   import {mapGetters} from 'vuex'
   import OnlineUser from "../../../components/Live/OnlineUser";
-  import UnrealTimeDiscussionBoard from "../../../components/Live/UnrealTimeDiscussionBoard";
-export default {
+  import StudentNewCommentWithPhoto from "../../../components/Live/StudentNewCommentWithPhoto";
+
+  export default {
   name: "liveClass",
-  components: {UnrealTimeDiscussionBoard, OnlineUser},
+  components: { StudentNewCommentWithPhoto, OnlineUser},
   data(){
     return{
       ws:null,
       participants:[],
+      comment:"",
       noVideo:true,
       isPresenting:false,
       participationInfo:{name:"",room:"",isOfferingCourse:false},
