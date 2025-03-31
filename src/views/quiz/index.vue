@@ -78,7 +78,7 @@
               >
               <v-icon
                 color="warning"
-                @click="$router.push(`quiz/view/${item.name}`)"
+                @click="$router.push(`quiz/attempt/${item.name}`)"
                 >mdi-eye</v-icon
               >
               <v-icon
@@ -131,8 +131,8 @@ export default {
         formated_quiz.push({
           _id: quiz._id,
           name: quiz.name,
-          course: "under construction",
-          usage: 0,
+          course: quiz.course ? quiz.course.name : "Not yet Attached",
+          usage: quiz.usage,
           containedQuestions: quiz.questions.length,
           duration: new Date(quiz.duration * 1000).toISOString().substr(11, 8),
           date: quiz.createdAt.split("T")[0].split("-").reverse().join("/"),
