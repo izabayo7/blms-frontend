@@ -244,31 +244,6 @@ const routes = [
                     },
 
 
-                    // administration functionalities
-                    {
-                        path: '/administration',
-                        name: 'Administration',
-                        component: () =>
-                            import( /* webpackPrefetch: true */ '@/views/administration/admin')
-                    },
-                    {
-                        path: '/administration/faculties',
-                        name: 'Faculties',
-                        component: () =>
-                            import( /* webpackPrefetch: true */ '@/views/administration/faculty'),
-                        meta: {
-                            allowAnonymous: false
-                        }
-                    },
-                    {
-                        path: '/administration/studentgroup',
-                        name: 'Student Group',
-                        component: () =>
-                            import( /* webpackPrefetch: true */ '@/views/administration/studentGroup'),
-                        meta: {
-                            allowAnonymous: false
-                        }
-                    },
 
                     // live related
                     // {
@@ -291,47 +266,6 @@ const routes = [
                     // course
                     ...course
                 ]
-            },
-            // administration functionalities
-            {
-                path: '/administration/register/users',
-                name: 'Register Users',
-                component: () =>
-                    import( /* webpackPrefetch: true */ '@/views/administration/users/registration')
-            }, {
-                path: '/administration/register/users/student',
-                name: 'Register Student',
-                component: () =>
-                    import( /* webpackPrefetch: true */ '@/views/administration/users/registration/register')
-            }, {
-                path: '/administration/register/users/instructor',
-                name: 'Register Instructor',
-                component: () =>
-                    import( /* webpackPrefetch: true */ '@/views/administration/users/registration/register')
-            }, {
-                path: '/administration/register/users/admin',
-                name: 'Register Admin',
-                component: () =>
-                    import( /* webpackPrefetch: true */ '@/views/administration/admin/register')
-            }, {
-                path: '/administration/register/faculty',
-                name: 'Register Faculty',
-                component: () =>
-                    import( /* webpackPrefetch: true */ '@/views/administration/faculty/register')
-            }, {
-                path: '/administration/register/studentGroup',
-                name: 'Register StudentGroup',
-                component: () =>
-                    import( /* webpackPrefetch: true */ '@/views/administration/studentGroup/register')
-            },
-            {
-                path: '/administration/colleges/:name',
-                name: 'CollegeDetails',
-                component: () =>
-                    import( /* webpackPrefetch: true */ '@/views/administration/college'),
-                meta: {
-                    allowAnonymous: false
-                }
             },
         ],
     },
@@ -386,7 +320,7 @@ router.beforeEach((to, from, next) => {
 
     else if ((to.path === '/login' || to.path === '/') && store.state.user.isLoggedIn) {
         next({
-            path: `/${store.state.user.user.category.name === 'STUDENT' || store.state.user.user.category.name === 'INSTRUCTOR' ? 'courses' : 'administration'}`,
+            path: `/${store.state.user.user.category.name === 'STUDENT' || store.state.user.user.category.name === 'INSTRUCTOR' ? 'courses' : 'welcome'}`,
         })
     }
 
