@@ -1,5 +1,5 @@
 <style lang="scss">
-.kurious--drag {
+.filePicker {
   text-align: center;
   border: 1px solid #d9d9d9;
   form {
@@ -66,36 +66,49 @@ div.remove-container a {
   padding-left: 11px;
   width: 79px;
 }
+.file-list-container {
+  display: flex;
+  flex-wrap: wrap;
+}
 </style>
 
 <template>
-  <form ref="fileform" class="kurious--drag">
+  <form ref="fileform" :class="`filePicker picker${boundIndex}`">
     <v-row>
       <v-col class="col-10">
-        <div class="file-list-container d-flex">
-          <div v-for="(file, key) in files" :key="key" class="file-listing d-flex">
+        <div class="file-list-container">
+          <div
+            v-for="(file, key) in files"
+            :key="key"
+            class="file-listing d-flex"
+          >
             <v-badge overlap color="transparent">
               <v-btn
                 fab
                 color="error"
                 class="ml-n2 mt-n2 remove--button"
                 slot="badge"
-                @click="removeFile( key )"
+                @click="removeFile(key)"
               >
                 <v-icon color="#fff">mdi-window-close</v-icon>
               </v-btn>
 
-              <div class="attachment vertically--centered">
+              <div
+                @click="fileClicked(key)"
+                class="attachment vertically--centered"
+              >
                 <div class="file_figure">
                   <v-img
                     v-if="imageTypes.includes(file.type)"
                     class="preview"
-                    v-bind:ref="'preview'+parseInt( key )"
+                    v-bind:ref="'preview' + parseInt(key)"
                   />
-                  <v-icon v-else color="#000000" x-large>mdi-file{{findIcon(file.type)}}-outline</v-icon>
+                  <v-icon v-else color="#000000" x-large
+                    >mdi-file{{ findIcon(file.type) }}-outline</v-icon
+                  >
                 </div>
                 <div class="file_name">
-                  <span>{{file.name | trimString(12)}}</span>
+                  <span>{{ file.name | trimString(12) }}</span>
                 </div>
               </div>
             </v-badge>
@@ -103,7 +116,17 @@ div.remove-container a {
         </div>
       </v-col>
       <v-col v-if="files.length === 0" class="col-10">
-        <span>Drop the {{allowedTypes === undefined ? 'files' : allowedTypes.includes('image') ? 'images' : 'video'}} here!</span>
+        <span
+          >Drop the
+          {{
+            allowedTypes === undefined
+              ? "files"
+              : allowedTypes.includes("image")
+              ? "images"
+              : "video"
+          }}
+          here!</span
+        >
       </v-col>
       <v-col class="col-2">
         <v-btn class="mt-n2" @click="clickButton()" large icon>
@@ -112,8 +135,16 @@ div.remove-container a {
         <input
           type="file"
           :multiple="multiple"
-          class="newFile"
-          :accept="allowedTypes === undefined ? undefined : allowedTypes.includes('video') ? 'video/*' : allowedTypes.includes('image') ? 'image/*' : undefined"
+          :id="inputId"
+          :accept="
+            allowedTypes === undefined
+              ? undefined
+              : allowedTypes.includes('video')
+              ? 'video/*'
+              : allowedTypes.includes('image')
+              ? 'image/*'
+              : undefined
+          "
           hidden
           @change="addFile()"
         />
@@ -153,7 +184,11 @@ export default {
       uploadPercentage: 0,
     };
   },
-
+  computed: {
+    inputId() {
+      return `file_input_${this.boundIndex}`;
+    },
+  },
   mounted() {
     /*
         Determine if drag and drop functionality is capable in the browser
@@ -215,11 +250,30 @@ export default {
   },
 
   methods: {
+    fileClicked(index) {
+      this.$emit(
+        "fileClicked",
+        this.boundIndex,
+        index,
+        this.$route.name === "Edit Quiz" ? this.files[index].name : undefined
+      );
+    },
+    showRightFiles(index, indices) {
+      if (index == this.boundIndex) {
+        let divs = document.querySelectorAll(`.picker${index} .attachment`);
+        for (const i in this.files) {
+          const indexFound = indices.filter(_i => _i == i)
+
+          if (indexFound.length > 0) divs[i].style.border = "1px solid green";
+          else divs[i].style.border = "none";
+        }
+      }
+    },
     clickButton() {
-      document.querySelector(".newFile").click();
+      document.getElementById(this.inputId).click();
     },
     addFile() {
-      for (const file of document.querySelector(".newFile").files) {
+      for (const file of document.getElementById(this.inputId).files) {
         this.files.push(file);
         this.$emit("addFile", file, this.boundIndex);
       }

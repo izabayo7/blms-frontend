@@ -70,14 +70,11 @@ export default {
                             }
                         }).then((response) => {
                             quizObject = response.data
-                            state.quiz.data.push(quizObject)
-                            setTimeout(() => {
-                                dispatch('modal/reset_modal', null, { root: true })
-                            }, 1000);
+                            dispatch('modal/reset_modal', null, { root: true })
                         })
                     }
                 }
-
+                state.quiz.data.push(quizObject)
             })
 
         },
@@ -112,31 +109,42 @@ export default {
                             }
                         }).then((response) => {
                             quizObject = response.data
-                            state.quiz.data.push(quizObject)
-                            setTimeout(() => {
-                                dispatch('modal/reset_modal', null, { root: true })
-                            }, 1000);
+                            dispatch('modal/reset_modal', null, { root: true })
                         })
                     }
                 }
-                return
+
+                for (const i in state.quiz.data) {
+                    if (state.quiz.data[i]._id === state.selected_quiz) {
+                        state.quiz.data[i] = quizObject
+                    }
+                }
             })
 
         },
 
         //find a quiz by name
         findQuizByName({ state, commit }, { userCategory, userId, quizName }) {
-            if (!state.quiz.data.length) {
-                apis.get(`quiz/${userCategory}/${userId}/${quizName}`).then(d => {
-                    state.quiz.data = [d.data]
-                    commit('set_selected_quiz', d.data._id)
-                })
-            } else {
-                let quiz = state.quiz.data.filter(quiz => quiz.name == quizName)[0]
-                commit('set_selected_quiz', quiz._id)
+            let quizFound = false
+            if (state.quiz.loaded) {
+                let quiz = state.quiz.data.filter(quiz => quiz.name == quizName)
+                if (quiz.length > 0) {
+                    quizFound = true
+                    commit('set_selected_quiz', quiz[0]._id)
+                    return quiz[0]
+                }
             }
-
-
+            if (!quizFound) {
+                return apis.get(`quiz/${userCategory}/${userId}/${quizName}`).then(d => {
+                    if (state.quiz.loaded) {
+                        state.quiz.data.push(d.data)
+                    } else {
+                        state.quiz.data = [d.data]
+                    }
+                    commit('set_selected_quiz', d.data._id)
+                    return d.data
+                })
+            }
         },
         //delete a quiz
         delete_quiz({ state }, { id }) {
@@ -171,7 +179,7 @@ export default {
         quizNames: state => {
             let quizNames = []
             for (const element of state.quiz.data) {
-                if (!element.target) {
+                if (element.target == undefined) {
                     quizNames.push(element.name)
                 }
             }

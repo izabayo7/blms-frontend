@@ -1,5 +1,5 @@
 <template>
-  <main class="incoming-chat" @click="handleClick" :class="{'active-chat':active}">
+  <main class="incoming-chat" @click="handleClick">
     <!--    slot for profile picture-->
     <div class="pic col-xs-12 col-sm-2 col-md-3 col-lg-3">
       <img v-if="data.image" :src="data.image" :alt="`${data.name}'s profile picture`"/>
@@ -7,7 +7,7 @@
         {{ data.name | computeText }}
       </v-avatar>
     </div>
-    <div class="content d-none d-xs-none d-sm-flex col-sm-9 col-md-9 col-lg-9">
+    <div class="content col-9">
       <div class="sender">
         <!--          slot for sender name-->
         <p :class="{ unread: !read }">{{ data.name }}</p>

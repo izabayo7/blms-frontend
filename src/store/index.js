@@ -8,6 +8,7 @@ import quiz_submission from "@/store/modules/quiz_submission";
 import chat from "@/store/modules/chat";
 import user from "@/store/modules/user";
 import sidebar_navbar from "@/store/modules/sidebar_navbar";
+import notification from '@/store/modules/notification'
 
 Vue.use(Vuex)
 export default new Vuex.Store({
@@ -30,6 +31,7 @@ export default new Vuex.Store({
         quiz_submission,
         chat,
         user,
-        sidebar_navbar
+        sidebar_navbar,
+        notification
     }
 })

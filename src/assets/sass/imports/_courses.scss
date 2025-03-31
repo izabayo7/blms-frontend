@@ -6,8 +6,8 @@
         background-color: #F9FAFF;
         min-height: calc(100vh - 76px);
         .active-btn {
-            background-color: #fff !important;
-            color: #ffd248 !important;
+            background-color: $primary;
+            color: white;
             transition: none !important;
         }
 

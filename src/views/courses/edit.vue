@@ -73,8 +73,8 @@
               <v-btn
                 fab
                 small
-                color="#828282"
-                class="white--text course-image mt-4 mb-6 mr-4"
+                text
+                class="new-active-btn course-image mt-4 mb-6 mr-4"
                 @click="pickfile()"
               >
                 <v-icon>mdi-paperclip</v-icon>
@@ -99,10 +99,16 @@
             <v-col class="col-12 text-center">
               <v-btn
                 rounded
-                color="#3CE970"
-                class="white--text mb-6"
+                text
+                class="new-active-btn mb-6"
                 @click="saveCourseChanges"
                 >update Course</v-btn
+              >
+              <v-btn
+                color="transparent"
+                class="cancel-quiz mt-n6 mx-2"
+                @click="$router.push('/courses')"
+                >Cancel</v-btn
               >
             </v-col>
           </v-row>
@@ -175,10 +181,9 @@ export default {
       userCategory: this.$store.state.user.user.category.toLowerCase(),
       userId: this.$store.state.user.user._id,
       courseName: this.$route.params.name,
+    }).then((course) => {
+      this.selectedFacultyCollegeYearName = `${course.facultyCollegeYear.facultyCollege.faculty.name} ${course.facultyCollegeYear.collegeYear.digit}`;
     });
-    setTimeout(() => {
-      this.selectedFacultyCollegeYearName = `${this.course.facultyCollegeYear.facultyCollege.faculty.name} ${this.course.facultyCollegeYear.collegeYear.digit}`;
-    }, 1000);
   },
 };
 </script>

@@ -8,6 +8,8 @@ const filters = [
         // decrease a strings length
         name: 'trimString',
         structure: (string, length) => {
+            if (string.length < length)
+                return string
             let trimedString = string.substring(0, length);
             trimedString = trimedString.split(" ");
             trimedString.splice(trimedString.length - 1, trimedString.length > 1 ? 1 : 0);
@@ -21,9 +23,6 @@ const filters = [
         // (get short form of a string)
         name: 'computeText',
         structure: (string) => {
-            if(!string)
-                return
-
             let text = "";
             const forbiden = ["and", "of"];
             string.split(" ").forEach((val) => {
@@ -52,6 +51,37 @@ const filters = [
             ] = formatedDate; //lets destruct data from the formated date
 
             return `${day} ${month} ${year}`;
+        },
+    },
+    {
+        //get difference between two dates
+        name: 'getTimeDifference',
+        structure: (date1, date2 = new Date()) => {
+
+            let result
+
+            // make sure they are date objects
+            if (typeof date1 !== 'object') {
+                date1 = new Date(date1)
+            }
+            if (typeof date1 !== 'object') {
+                date2 = new Date(date2)
+            }
+
+            var diff = (date2.getTime() - date1.getTime());
+
+            // To calculate the no. of days between two dates
+            var Difference_In_Days = diff / (1000 * 3600 * 24);
+
+            if (Difference_In_Days > 1) {
+                result = date1.toISOString().substr(2, 8).split('-').reverse().join('/')
+            } else if (Difference_In_Days === 1) {
+                result = 'yesterday'
+            } else {
+                result = date1.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })
+            }
+
+            return result
         },
     }
 

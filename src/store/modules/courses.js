@@ -35,6 +35,10 @@ export default {
                 }
             }
         },
+        // add a new course
+        addCourse(state, value) {
+            state.courses.data.unshift(value)
+        },
         // update progress of a student in a course
         set_student_progress(state, { courseId, progress }) {
             for (const i in state.courses.data) {
@@ -107,9 +111,7 @@ export default {
                         }
                     }).then(courseData => {
                         courseObject.coverPicture = courseData.data.coverPicture
-                        setTimeout(() => {
-                            dispatch('modal/reset_modal', null, { root: true })
-                        }, 1000);
+                        dispatch('modal/reset_modal', null, { root: true })
                     })
                 }
                 courseObject.chapters = []
@@ -148,9 +150,7 @@ export default {
                         }
                     }).then(courseData => {
                         state.courses.data[courseIndex].coverPicture = courseData.data.coverPicture
-                        setTimeout(() => {
-                            dispatch('modal/reset_modal', null, { root: true })
-                        }, 1000);
+                        dispatch('modal/reset_modal', null, { root: true })
                     })
                 }
             })
@@ -193,7 +193,18 @@ export default {
                     quiz.__v = undefined
                     quiz.createdAt = undefined
                     quiz.updatedAt = undefined
-
+                    for (const k in quiz.questions) {
+                        if (quiz.questions[k].options) {
+                            for (const j in quiz.questions[k].options.choices) {
+                                if (quiz.questions[k].options.choices[j].src) {
+                                    if (quiz.questions[k].options.choices[j].src.includes('http')) {
+                                        const mediapath = quiz.questions[k].options.choices[j].src
+                                        quiz.questions[k].options.choices[j].src = mediapath.split("/")[mediapath.split("/").length - 1]
+                                    }
+                                }
+                            }
+                        }
+                    }
                     apis.update('quiz', quizId, quiz).then((quizResponse) => {
                         state.courses.data[courseIndex].chapters[chapterIndex].quiz.push(quizResponse.data)
                         commit('quiz/add_quiz_target', { id: quizId, target: quiz.target }, { root: true })
@@ -215,9 +226,7 @@ export default {
                         }
                     }).then((videoResponse) => {
                         state.courses.data[courseIndex].chapters[chapterIndex].mainVideo = videoResponse.data.filepath
-                        setTimeout(() => {
-                            dispatch('modal/reset_modal', null, { root: true })
-                        }, 1000);
+                        dispatch('modal/reset_modal', null, { root: true })
                     })
                 } if (attachments.length > 0) {
                     dispatch('modal/set_modal', { template: 'display_information', title: 'Updating Chapter', message: `uploading attachments` }, { root: true })
@@ -236,9 +245,7 @@ export default {
                         for (const i in chapterResponse.data) {
                             state.courses.data[courseIndex].chapters[chapterIndex].attachments.push(chapterResponse.data[i])
                         }
-                        setTimeout(() => {
-                            dispatch('modal/reset_modal', null, { root: true })
-                        }, 1000);
+                        dispatch('modal/reset_modal', null, { root: true })
                     })
 
                 }
@@ -246,7 +253,7 @@ export default {
 
         },
         //publish a course
-        tooglePublishCourse({ state, commit }, courseId) {
+        tooglePublishCourse({ state, commit, rootGetters }, courseId) {
             if (courseId)
                 commit('set_selected_course', courseId)
 
@@ -256,6 +263,9 @@ export default {
                         state.courses.data[i].published = d.data.published
                         break
                     }
+                }
+                if (d.data.published) {
+                    rootGetters['chat/socket'].emit('course-published', { courseId: d.data._id })
                 }
             })
         },
@@ -308,16 +318,27 @@ export default {
         },
         //find a course by name
         findCourseByName({ state, commit }, { userCategory, userId, courseName }) {
-            if (state.courses.data.length < 1) {
-                apis.get(`course/${userCategory}/${userId}/${courseName}`).then(d => {
-                    state.courses.data = [d.data]
-                    commit('set_selected_course', d.data._id)
-                })
-            } else {
-                let course = state.courses.data.filter(course => course.name == courseName)[0]
-                commit('set_selected_course', course._id)
-            }
+            let courseFound = false
+            if (state.courses.loaded) {
+                let courses = state.courses.data.filter(course => course.name == courseName)
 
+                if (courses.length > 0) {
+                    courseFound = true
+                    commit('set_selected_course', courses[0]._id)
+                    return courses[0]
+                }
+            }
+            if (!courseFound) {
+                return apis.get(`course/${userCategory}/${userId}/${courseName}`).then(d => {
+                    if (state.courses.loaded) {
+                        state.courses.data.push(d.data)
+                    } else {
+                        state.courses.data = [d.data]
+                    }
+                    commit('set_selected_course', d.data._id)
+                    return d.data
+                })
+            }
 
         },
         // create student progress in a lesson
@@ -379,7 +400,16 @@ export default {
                         id: d.data._id,
                         type: 'chapter'
                     }
-
+                    // for (const k in quiz.questions) {
+                    //     if (quiz.questions[k].options) {
+                    //         for (const j in quiz.questions[k].options.choices) {
+                    //             if (quiz.questions[k].options.choices[j].src.includes('http')) {
+                    //                 const mediapath = quiz.questions[k].options.choices[j].src
+                    //                 quiz.questions[k].options.choices[j].src = mediapath.split("/")[mediapath.split("/").length - 1]
+                    //             }
+                    //         }
+                    //     }
+                    // }
                     apis.update('quiz', quizId, quiz).then((quizResponse) => {
                         state.courses.data[courseIndex].chapters[chapterIndex].quiz.push(quizResponse.data)
                         commit('quiz/add_quiz_target', { id: quizId, target: quiz.target }, { root: true })
@@ -400,9 +430,7 @@ export default {
                         }
                     }).then((videoResponse) => {
                         state.courses.data[courseIndex].chapters[chapterIndex].mainVideo = videoResponse.data.filepath
-                        setTimeout(() => {
-                            dispatch('modal/reset_modal', null, { root: true })
-                        }, 1000);
+                        dispatch('modal/reset_modal', null, { root: true })
                     })
                 } if (attachments.length > 0) {
                     dispatch('modal/set_modal', { template: 'display_information', title: 'Saving Chapter', message: `uploading attachments` }, { root: true })
@@ -421,9 +449,7 @@ export default {
                         for (const i in chapterResponse.data) {
                             state.courses.data[courseIndex].chapters[chapterIndex].attachments.push(chapterResponse.data[i])
                         }
-                        setTimeout(() => {
-                            dispatch('modal/reset_modal', null, { root: true })
-                        }, 1000);
+                        dispatch('modal/reset_modal', null, { root: true })
                     })
 
                 }
