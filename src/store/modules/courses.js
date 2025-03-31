@@ -372,8 +372,8 @@ export default {
 
         },
         // create student progress in a lesson
-        startCourse({ state, commit }, studentId) {
-            apis.create(`user_progress`, { user: studentId, course: state.selectedCourse }).then(d => {
+        startCourse({ state, commit }, user_name) {
+            apis.create(`user_progress`, { user: user_name, course: state.selectedCourse }).then(d => {
                 d.data = d.data.data
                 commit('set_student_progress', { courseId: state.selectedCourse, progress: d.data })
                 for (const i in state.courses.data) {
@@ -385,7 +385,7 @@ export default {
             })
         },
         // update student progress
-        finish_chapter({ state, commit }, studentId) {
+        finish_chapter({ state, commit }, user_name) {
             let courseIndex
             for (const i in state.courses.data) {
                 if (state.courses.data[i]._id == state.selectedCourse) {
@@ -393,7 +393,7 @@ export default {
                     break
                 }
             }
-            return apis.update(`user_progress`, state.courses.data[courseIndex].progress.id, { user: studentId, course: state.selectedCourse, chapter: state.selectedChapter }).then(d => {
+            return apis.update(`user_progress`, state.courses.data[courseIndex].progress.id, { user: user_name, course: state.selectedCourse, chapter: state.selectedChapter }).then(d => {
                 d.data = d.data.data
                 commit('set_student_progress', { courseId: state.selectedCourse, progress: d.data })
 

@@ -112,7 +112,7 @@
                         :color="primary"
                         class="white--text"
                         @click="
-                          finish_chapter($store.state.user.user._id).then(
+                          finish_chapter($store.state.user.user.user_name).then(
                             (d) => {
                               maximumIndex = Math.round(
                                 (d.progress * course.chapters.length) / 100
