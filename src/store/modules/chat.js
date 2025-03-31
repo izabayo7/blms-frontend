@@ -164,7 +164,7 @@ export default {
             Object.assign(state, getDefaultState())
         },
 
-        //chenge msg status on read
+        //change msg status on read
         CHANGE_MESSAGE_READ_STATUS(state) {
             let idx;
 
