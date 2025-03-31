@@ -5,7 +5,7 @@
 <!--      if there are no messages-->
       <div class="no-msgs" v-if="!data">you have not yet started conversation with {{currentDisplayedUser.name}}.</div>
 
-<!--      block of messages-->
+<!--      block of messages -->
       <div class="msgs-block" v-for="(msgs,i) in data" :key="i"  :class="{sending:msgGoing(msgs.from),receiving:!msgGoing(msgs.from)}">
 <!--        picture of the message sender-->
         <div class="picture"><img src="@/assets/images/instructor.png" alt="sender profile picture" ></div>
@@ -81,8 +81,7 @@ export default {
 
     //when the chatting user send message let us scroll to the bottom
     on('message-sent',() => {
-      console.log('message sent')
-        this.scrollChatToBottom()
+        setTimeout(this.scrollChatToBottom,1)
     })
     /*
     when this component is mounted Immediately scroll to the bottom
