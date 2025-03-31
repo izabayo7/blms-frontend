@@ -6,7 +6,8 @@
 import {mapGetters, mapMutations, mapState} from "vuex";
 import {chatMixins} from "@/services/mixins";
 import apis from "@/services/apis";
-
+import {playSound} from "../../services/global_functions";
+const sound = require("../../assets/audio/msg.mp3");
 export default {
   name: "Index",
   mixins: [chatMixins],
@@ -53,18 +54,15 @@ export default {
       this.$store.commit("chat/ADD_ONGOING_MESSAGE", message);
     });
 
-    //when new message is received scroll to the bottom
-    this.socket.on("res/message/new", () => {
-      //scroll to bottom
-      setTimeout(this.scrollChatToBottom, 1);
-      this.CHANGE_MESSAGE_READ_STATUS(this.currentDisplayedUser.id); //read all messages
-    });
-
     // Message from server
     this.socket.on("res/message/new", (message) => {
       this.update_unread(this.unreads + 1)
-      if (this.$route.name === "chatingRoom")
-        this.scrollChatToBottom();
+      playSound(sound)
+      if (this.$route.name === "chatingRoom") {
+        //scroll to bottom
+        setTimeout(this.scrollChatToBottom, 1);
+        this.CHANGE_MESSAGE_READ_STATUS(this.currentDisplayedUser.id); //read all messages
+      }
       if (this.loadedMessages.length > 0)
           // if messages have loaded
         this.$store.commit("chat/ADD_INCOMING_MESSAGE", message);
