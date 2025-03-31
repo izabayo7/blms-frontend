@@ -569,6 +569,9 @@
 
           //no video card
           .no-video {
+            height: 100%;
+            display: grid;
+            place-content: center;
             &--wrapper {
               .avatar {
                 width: 3.9rem !important;

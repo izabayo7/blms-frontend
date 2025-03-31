@@ -15,7 +15,20 @@
               <div class="no-video"
                    v-show="(noVideo && !isPresenting) || (isPresenting && participationInfo.isOfferingCourse)">
                 <div class="no-video--wrapper" :class="{presenting:isPresenting}">
-                  <div v-if="instructor" class="instructor-info">
+                  <div v-if="isStudentPresenting || (currentPresenter ? currentPresenter.category == 'STUDENT': false)" class="instructor-info">
+                    <img
+                        v-if="currentPresenter.profile"
+                        :src="currentPresenter.profile + '?width=100'"
+                        alt="profile picture" class="picture">
+                    <v-avatar v-else class="avatar mr-0">
+                      {{ currentPresenter.sur_name | computeText }}
+                    </v-avatar>
+                    <h2 class="name">{{
+                        isStudentPresenting ? "YOU are" : `${currentPresenter ? currentPresenter.sur_name + ' ' + currentPresenter.other_names : ''}`
+                      }}</h2>
+                    <span class="source">presenting</span>
+                  </div>
+                  <div v-else-if="instructor" class="instructor-info">
                     <img
                         v-if="instructor.profile"
                         :src="instructor.profile + '?width=100'"
@@ -66,7 +79,7 @@
                     </div>
                   </div>
                   <div class="more-details">
-                    <div v-if="currentPresenter || (userCategory == 'STUDENT' && !isStudentPresenting && instructor)"
+                    <div v-if="currentPresenter != me.userInfo || (userCategory == 'STUDENT' && !isStudentPresenting && instructor)"
                          class="speaking-user">
                       <div class="d-flex">
                         <div class="profile">
@@ -713,6 +726,7 @@ export default {
         receivers,
         session_id
       });
+      this.currentPresenter = this.me.userInfo
     },
     stop_presenting() {
       let id = this.instructor._id;
