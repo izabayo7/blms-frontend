@@ -1,7 +1,7 @@
 <template>
   <v-container fluid class="reset-password-page">
     <v-row>
-      <v-col class="col-12 mx-auto col-md-6">
+      <v-col v-if="password_reset != {}" class="col-12 mx-auto col-md-6">
         <div class="reset-password-box mx-auto text-center">
           <div class="heading">
             <div class="college-name">{{ institution }}.</div>
@@ -12,7 +12,7 @@
                 <input
                   type="email"
                   placeholder="Email"
-                  v-model="obj.email"
+                  v-model="password_reset.user.email"
                   autocomplete="false"
                   disabled
                   class="wider"
@@ -156,6 +156,7 @@ export default {
     obj: {
       email: "cedricizabayo7@gmail.com",
     },
+    password_reset: {},
   }),
   watch: {
     message() {
@@ -173,7 +174,7 @@ export default {
         ? "passwords must match"
         : "";
       if (this.message == "") {
-        this.reset_password();
+        this.updatePasswordReset();
       }
     },
     validatePassword(password) {
@@ -181,60 +182,36 @@ export default {
       const re = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/;
       return re.test(password);
     },
-    async login() {
+    async updatePasswordReset() {
       try {
-        const credentials = {
-          email_user_name_or_phone: this.email_user_name_or_phone,
-          password: this.password,
-        };
         // call the login api
-        let response = await Apis.login(credentials);
-        console.log(response);
-        if (response.data.status != 200) {
-          this.message = response.data.message;
-          this.valid = false;
-        } else {
-          // set the token in axios headers
-          axios.defaults.headers.common.Authorization = `Bearer ${response.data.data}`;
-          // start the session
-          this.$session.start();
-          // set the token in the session
-          this.$session.set("jwt", response.data.data);
+        let response = await Apis.update("reset_password", {
+          email: this.email,
+          token: this.$route.query.token,
+          password: this.new_password,
+        });
 
-          const user = await jwt.decode(this.$session.get("jwt"));
-          const category = user.category.name;
-          // keep the decoded user in vuex
-          this.$store.dispatch("user/setUser", user);
-          if (this.$route.query.redirect) {
-            this.$router.push(this.$route.query.redirect);
-          }
-          // student and teacher land to courses
-          else {
-            if (category === "STUDENT" || category === "INSTRUCTOR") {
-              this.$router.push("/courses");
-            }
-            // others land to the dashboard
-            else if (category === "ADMIN") {
-              this.$router.push("/administration");
-            }
-          }
+        if (response.data.status != 200) {
+          this.valid = false;
+          this.message = response.data.data;
+        } else {
+          this.valid = true;
+          this.message = response.data.message + ", you can now login.";
         }
       } catch (error) {
-        this.message = "Service Unavailable";
         this.valid = false;
+        this.message = "Service Unavailable";
       }
     },
   },
   async beforeMount() {
-    if (this.$route.query.institution) {
-      const res = await Apis.get(
-        `college/open/${this.$route.query.institution}`
-      );
+    if (this.$route.query.token) {
+      const res = await Apis.get(`reset_password/${this.$route.query.token}`);
       if (res.data.status != 404) {
-        this.institution = res.data.data.name;
-        this.image = res.data.data.logo || this.image;
-      } else {
-        this.$router.push("/login");
+        this.password_reset = res.data.data;
+      }
+      if (this.$route.query.institution) {
+        this.institution = this.$route.query.institution;
       }
     }
   },

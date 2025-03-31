@@ -83,8 +83,8 @@ export default {
         let response = await Apis.create("reset_password", {
           email: this.email,
         });
-        console.log(response);
-        if (response.data.status != 201 ) {
+
+        if (response.data.status != 201) {
           this.valid = false;
           this.message = "Email is not registered";
         } else {
@@ -141,7 +141,7 @@ export default {
     text-align: center;
     font-family: Inter;
     form {
-      height: 60%;
+      height: 17rem;
       padding-top: 20px;
       // padding-bottom: 60px;
       justify-content: center;
@@ -233,7 +233,6 @@ export default {
       width: 100%;
       height: 46.25px;
       margin: 8px;
-      margin-bottom: 110px;
       background: #193074;
       border-radius: 4.36304px;
       display: flex;
