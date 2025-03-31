@@ -1,52 +1,43 @@
 <template>
-  <div class="profile">
-    <p class="name d-none d-md-flex">
-      <span
-        >{{ $store.state.user.user.sur_name }}
-        {{ $store.state.user.user.other_names }}</span
-      >
-      <v-icon>mdi-chevron-down</v-icon>
-    </p>
-    <img
-      @click="logout"
-      v-if="$store.state.user.user.profile"
-      :src="$store.state.user.user.profile"
-      alt="profile picture"
-    />
-    <v-avatar @click="logout" v-else size="50" class="avatar">
-      {{
-        `${$store.state.user.user.sur_name} ${$store.state.user.user.other_names}`
-          | computeText
-      }}
-    </v-avatar>
+  <div class="profile" ref="profile">
+    <div class="profile-container" @click="profile_card_active = !profile_card_active">
+      <img v-if="$store.state.user.user.profile" :src="$store.state.user.user.profile" alt="profile picture"/>
+      <v-avatar v-else size="50" class="avatar">
+        {{ `${$store.state.user.user.sur_name} ${$store.state.user.user.other_names}`| computeText }}
+      </v-avatar>
+      <v-icon>mdi-chevron-{{profile_card_active ? 'up':'down'}}</v-icon>
+      <div class="profile-card">
+        <div class="profile-card-wrapper" v-if="profile_card_active" >
+          <profile-card />
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 <script>
+import ProfileCard from "./ProfileCard";
 export default {
-  methods: {
-    logout() {
-      // clear the session
-      this.$session.destroy();
-      
-      // reset the modules
-      this.$store.dispatch("user/unsetUser");
-      this.$store.commit("users/RESET_STATE");
-      this.$store.commit("sidebar_navbar/RESET_STATE");
-      this.$store.commit("quiz/RESET_STATE");
-      this.$store.commit("quiz_submission/RESET_STATE");
-      this.$store.commit("notification/RESET_STATE");
-      this.$store.commit("modal/RESET_STATE");
-      this.$store.commit("faculties/RESET_STATE");
-      this.$store.commit("courses/RESET_STATE");
-      this.$store.commit("colleges/RESET_STATE");
-      this.$store.commit("chat/RESET_STATE");
-      this.$store.commit("years/RESET_STATE");
+  name:"Profile",
+  components: {ProfileCard},
+  data(){
+    return{
+      profile_card_active:false
+    }
+  },
+  methods:{
+    outsideClickDetector() {
+      let self = this
+      document.addEventListener("click", function (e) {
 
-      // redirect to login
-      this.$router.push("/login");
-      console.log('ark koko')
+        if (!self.$refs['profile'] || !self.$refs['profile'].contains(e.target)) {
+          self.profile_card_active = false;
+        }
+      });
     },
   },
+  mounted() {
+    this.outsideClickDetector();
+  }
 };
 </script>
 <style lang="scss" scoped>
@@ -57,29 +48,41 @@ export default {
   justify-content: center;
   padding: 1rem;
 
-  img {
-    width: 50px;
-    border-radius: 50%;
-    cursor: pointer;
-  }
-  .avatar {
-    margin-top: 0px;
-    background-color: $primary;
-    color: white;
-    cursor: pointer;
-  }
-  p {
-    height: fit-content;
-    width: fit-content;
-    margin: 0;
-    padding-right: 1.5rem;
-    cursor: pointer;
-
-    &:hover {
-      color: darken($font, 10);
+  .profile-container{
+    position: relative;
+    .profile-card{
+      position: absolute;
+      right:-1.5rem;
+      top:4rem
     }
-    span {
-      padding-right: 0.7rem;
+    img {
+      width: 50px;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+    .avatar {
+      margin-top: 0px;
+      background-color: $primary;
+      color: white;
+      cursor: pointer;
+    }
+    .v-icon{
+      padding-left: 1rem;
+    }
+
+    p {
+      height: fit-content;
+      width: fit-content;
+      margin: 0;
+      padding-right: 1.5rem;
+      cursor: pointer;
+
+      &:hover {
+        color: darken($font, 10);
+      }
+      span {
+        padding-right: 0.7rem;
+      }
     }
   }
 }

@@ -3,7 +3,9 @@ import VueRouter from 'vue-router'
 import store from '../store'
 import axios from 'axios'
 import jwt from "jsonwebtoken"
+
 Vue.use(VueRouter)
+
 const routes = [
     {
         path: '/',
