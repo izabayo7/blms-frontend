@@ -26,7 +26,7 @@
             :src="msgs.image"
             :alt="`${msgs.from}'s profile picture`"
           />
-          <v-avatar min-width="20px" @click="logout" v-else class="avatar">
+          <v-avatar min-width="20px" v-else class="avatar">
             {{ msgs.from | computeText }}
           </v-avatar>
         </div>

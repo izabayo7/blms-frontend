@@ -7,7 +7,7 @@
         :src="data.image"
         :alt="`${data.name}'s profile picture`"
       />
-      <v-avatar @click="logout" v-else size="50" class="avatar">
+      <v-avatar v-else size="50" class="avatar">
         {{ data.name | computeText }}
       </v-avatar>
     </div>

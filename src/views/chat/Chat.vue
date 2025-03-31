@@ -9,7 +9,7 @@
             :src="currentDisplayedUser.image"
             :alt="`${currentDisplayedUser.name}'s profile picture`"
           />
-          <v-avatar @click="logout" v-else size="50" class="avatar">
+          <v-avatar v-else size="50" class="avatar">
             {{ currentDisplayedUser.name | computeText }}
           </v-avatar></template
         >

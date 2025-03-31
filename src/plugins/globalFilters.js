@@ -21,6 +21,8 @@ const filters = [
         // (get short form of a string)
         name: 'computeText',
         structure: (string) => {
+            if (!string)
+                return
             let text = "";
             const forbiden = ["and", "of"];
             string.split(" ").forEach((val) => {
