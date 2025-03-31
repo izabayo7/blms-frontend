@@ -186,8 +186,15 @@
           <v-col class="col-12 mt-5 pl-0">
             <div class="more">More ...</div>
             <div class="mt-5">
-              <button class="lower_buttons mr-2" @click="showInviteUsers = true">Invite users</button>
-              <button class="lower_buttons">New Faculty</button>
+              <button
+                class="lower_buttons mr-2"
+                @click="showInviteUsers = true"
+              >
+                Invite users
+              </button>
+              <button class="lower_buttons" @click="showFacultyModal = true">
+                New Faculty
+              </button>
             </div>
           </v-col>
         </div>
@@ -289,6 +296,10 @@
       v-if="showInviteUsers"
       @closeModal="showInviteUsers = false"
     />
+    <faculty-dialog
+      v-if="showFacultyModal"
+      @closeModal="showInviteUsers = false"
+    />
   </v-container>
 </template>
 
@@ -298,9 +309,11 @@ export default {
   name: "ApplicationDashboard",
   data: () => ({
     showInviteUsers: false,
+    showFacultyModal: false,
   }),
   components: {
     InviteUsersDialog: () => import("@/components/dashboard/InviteUsersDialog"),
+    FacultyDialog: () => import("@/components/dashboard/addFaculty"),
     SmallCard: () => import("@/components/dashboard/information-card"),
     CombinedStatistics: () =>
       import("@/components/dashboard/combined-statistics"),
