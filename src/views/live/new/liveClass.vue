@@ -41,7 +41,7 @@
         <div class="video">
           <div class="video--wrapper">
             <div class="video-el" @mouseenter="toggleMenu(true)" @mouseleave="toggleMenu(false)">
-              <div class="no-video" v-if="noVideo">
+              <div class="no-video" v-show="noVideo">
                 <div class="no-video--wrapper" :class="{presenting:isPresenting}">
                   <div class="instructor-info">
                     <img
@@ -61,7 +61,7 @@
                   </div>
                 </div>
               </div>
-              <video v-else autoplay id="video_feed">
+              <video v-show="!noVideo" autoplay id="video_feed">
                 <!--                <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" >-->
               </video>
               <transition name="fade">
@@ -129,7 +129,8 @@
         <div class="live-class--attendance--wrapper">
           <h3>ONLINE USERS : 60 </h3>
           <div class="online-users">
-            <online-user v-for="user in users" :user="user" :key="`${(Date.now() * Math.random())}${user.name}`"/>
+            <online-user v-for="user in participants" :user="user.userInfo"
+                         :key="`${(Date.now() * Math.random())}${user.name}`"/>
           </div>
         </div>
         <div class="live-class--actions">
@@ -177,6 +178,7 @@ import {WebRtcPeer} from 'kurento-utils'
 import {mapGetters} from 'vuex'
 import OnlineUser from "../../../components/Live/OnlineUser";
 import StudentNewCommentWithPhoto from "../../../components/Live/StudentNewCommentWithPhoto";
+import Apis from '../../../services/apis'
 
 export default {
   name: "liveClass",
@@ -331,15 +333,12 @@ export default {
   },
   computed: {
     ...mapGetters('user', ['user']),
-    // videoStatus(){
-    //   let muted = false;
-    //   if (this.me){
-    //     muted = !this.me.rtcPeer.videoEnabled
-    //   }
-    //   return muted ? 'Mute video' : 'Unmute video'
-    // }
   },
   methods: {
+    async getUserInfo(id) {
+      const response = await Apis.get(`user/byId/${id}`)
+      return response.data.data
+    },
     toggleMenu(status) {
       this.showMenu = status
       const self = this;
@@ -373,10 +372,17 @@ export default {
       console.log('new participant', request, this.participants)
       this.receiveVideo(request.name);
     },
-
+    participantIndex(name) {
+      const result = this.participants.filter(e => e.name == name)
+      return this.participants.indexOf(result[0]);
+    },
+    removeParticipant(index){
+      this.participants.splice(index,1)
+    },
     receiveVideoResponse(result) {
       console.log('receiving video', result, this.participants)
-      this.participants[result.name].rtcPeer.processAnswer(result.sdpAnswer, function (error) {
+
+      this.participants[this.participantIndex(result.name)].rtcPeer.processAnswer(result.sdpAnswer, function (error) {
         if (error) return console.error(error);
       });
     },
@@ -393,7 +399,7 @@ export default {
       }
     },
 
-    onExistingParticipants(msg) {
+    async onExistingParticipants(msg) {
       const self = this
       console.log('existing participant', msg, this.participants)
       let constraints = {
@@ -411,15 +417,16 @@ export default {
         console.log('\n\n\n\n\n instructor joined \n\n\n\n\n')
       } else {
         console.log('\n\n\n\n\n student joined \n\n\n\n\n')
-        constraints = {audio: false, video: false}
+        // constraints = {audio: false, video: false}
+        constraints = null
       }
 
       console.log(this.participationInfo.name + " registered in room " + this.participationInfo.room);
 
 
-      let participant = new Participant(this.participationInfo.name, this, true);
+      let participant = new Participant(this.participationInfo.name, this, true, await this.getUserInfo(this.participationInfo.name.split('_')[0]));
 
-      this.participants[this.participationInfo.name] = participant;
+      this.participants.push(participant);
 
 
       let video = participant.getVideoElement();
@@ -429,7 +436,15 @@ export default {
         mediaConstraints: constraints,
         onicecandidate: participant.onIceCandidate.bind(participant)
       }
-      participant.rtcPeer = new WebRtcPeer.WebRtcPeerSendonly(options,
+      participant.rtcPeer = this.participationInfo.isOfferingCourse ? new WebRtcPeer.WebRtcPeerSendonly(options,
+          function (error) {
+            if (error) {
+              return console.error(error);
+            }
+            self.me = participant;
+            this.generateOffer(participant.offerToReceiveVideo.bind(participant));
+
+          }) : new WebRtcPeer.WebRtcPeerRecvonly(options,
           function (error) {
             if (error) {
               return console.error(error);
@@ -469,32 +484,37 @@ export default {
       this.ws.close();
     },
 
-    receiveVideo(sender) {
+   async receiveVideo(sender) {
       console.log(`\n\n\n\n\n receiving video for ${sender} \n\n\n\n\n`)
-      let participant = new Participant(sender, this);
-      this.participants[sender] = participant;
-      let video = participant.getVideoElement();
+     let participant = sender == this.participationInfo.name ? this.participants[this.participantIndex(sender)] : new Participant(sender, this, false, await this.getUserInfo(sender.split('_')[0]));
 
-      let options = {
-        remoteVideo: video,
-        onicecandidate: participant.onIceCandidate.bind(participant)
+     if (sender != this.participationInfo.name) {
+       this.participants.push(participant);
+     }
+      console.log("\n\n\n", sender, "\n\n\n", (!this.participationInfo.isOfferingCourse && sender != this.participationInfo.name))
+      if ((!this.participationInfo.isOfferingCourse && sender != this.participationInfo.name) || (this.participationInfo.isOfferingCourse && sender == this.participationInfo.name)) {
+        let video = participant.getVideoElement();
+        let options = {
+          remoteVideo: video,
+          onicecandidate: participant.onIceCandidate.bind(participant)
+        }
+
+        participant.rtcPeer = new WebRtcPeer.WebRtcPeerRecvonly(options,
+            function (error) {
+              if (error) {
+                return console.error(error);
+              }
+              this.generateOffer(participant.offerToReceiveVideo.bind(participant));
+            })
       }
-
-      participant.rtcPeer = new WebRtcPeer.WebRtcPeerRecvonly(options,
-          function (error) {
-            if (error) {
-              return console.error(error);
-            }
-            this.generateOffer(participant.offerToReceiveVideo.bind(participant));
-          })
-
     },
 
     onParticipantLeft(request) {
       console.log('Participant ' + request.name + ' left');
-      let participant = this.participants[request.name];
-      participant.dispose();
-      delete this.participants[request.name];
+      this.removeParticipant(this.participantIndex(request.name))
+      // let participant = this.participants[request.name];
+      // participant.dispose();
+      // delete this.participants[request.name];
     }
   },
   created() {
@@ -506,11 +526,10 @@ export default {
     this.participationInfo.name = `${this.user.other_names} ${this.user.sur_name}`
     this.participationInfo.room = this.$route.params.courseId
 
-
     const host = '198.211.107.132:8080'
     // const host = '169.254.107.40:8081'
 
-    this.ws = new WebSocket('wss://' + host + '/kurious_stream'+`?token=${this.$session.get("jwt")}`);
+    this.ws = new WebSocket('wss://' + host + '/kurious_stream' + `?token=${this.$session.get("jwt")}`);
 
     this.ws.addEventListener('open', () => {
       self.register();
@@ -546,7 +565,8 @@ export default {
           this.receiveVideoResponse(parsedMessage);
           break;
         case 'iceCandidate':
-          this.participants[parsedMessage.name].rtcPeer.addIceCandidate(parsedMessage.candidate, function (error) {
+          console.log(parsedMessage.name, self.participantIndex(parsedMessage.name), self.participants)
+          this.participants[self.participantIndex(parsedMessage.name)].rtcPeer.addIceCandidate(parsedMessage.candidate, function (error) {
             if (error) {
               console.error("Error adding candidate: " + error);
               return null;
@@ -557,7 +577,7 @@ export default {
           console.error('Unrecognized message', parsedMessage);
       }
     }
-    this.ws.onclose = ()=>{
+    this.ws.onclose = () => {
       console.log("\n\n\n\nclosed\n\n\n\n")
     }
 
@@ -565,8 +585,8 @@ export default {
   beforeDestroy() {
     this.ws.close();
   },
-  watch:{
-    videoEnabled(){
+  watch: {
+    videoEnabled() {
       this.noVideo = !this.videoEnabled
       console.log(this.noVideo, this.videoEnabled)
     }
