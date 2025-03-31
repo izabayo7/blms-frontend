@@ -152,7 +152,7 @@
           </div>
           <div class="confirm_nocheat mt-4">
             <div class="content">
-              <input type="checkbox" name="" id="">
+              <input v-model="proceed" type="checkbox" name="" id="">
               <div class="words">
                 I agree I will not use any cheating method if cough, I will
                 automatically fail this assessment
@@ -160,6 +160,8 @@
             </div>
           </div>
           <button
+              :disabled="!proceed"
+              :class="{disabled : !proceed}"
             class="start_quiz mt-5 mb-14 mb-md-0"
             @click="$router.push(`/quiz/attempt/${$route.params.name}`)"
           >
@@ -177,6 +179,7 @@ export default {
   data: () => ({
     quiz: {},
     attempt: {},
+    proceed: false,
     mode: "view",
   }),
   components: {
@@ -202,6 +205,11 @@ export default {
   min-height: 100%;
   .instructions {
     font-size: 1rem;
+  }
+  .disabled {
+    color: rgba(0, 0, 0, 0.26) !important;
+    background-color: rgba(0, 0, 0, 0.12) !important;
+    font-size: 14px !important;
   }
   .quiz_info {
     background-color: #d2d2d2;

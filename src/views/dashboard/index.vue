@@ -28,6 +28,11 @@ export default {
       this.addCourse(course);
     });
 
+    // listen to new course
+    this.socket.on("user_limit_reached", () => {
+      alert('upgrade papa !')
+    });
+
     // listen if the new message was sent
     this.socket.on("res/message/sent", (message) => {
       setTimeout(this.scrollChatToBottom, 1);

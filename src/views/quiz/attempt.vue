@@ -4,7 +4,8 @@
       fluid
       class="quiz-page px-4 px-md-16"
   >
-    <div v-if="!selected_quiz_submission">
+    <div
+        v-if="(!selected_quiz_submission || $store.state.user.user.category.name ==  'INSTRUCTOR') && filesToUpload.length">
       <h2>{{ selected_quiz.name }}</h2>
       <v-row>
         <v-col class="col-12 col-md-7 questions-side">
@@ -14,7 +15,7 @@
               class="col-12 col-md-12"
           >
             <p class="question_details col-md-12 col-12">
-              {{ `${i + 1}. ${question.details}` }}
+              {{ `${i + 1}. ${question.details}` }} <span v-if="question.required" class="red--text">*</span>
             </p>
             <div v-if="question.type === 'file_upload'" class="file-container d-flex">
               <div class="col-4 pa-0">
@@ -169,17 +170,17 @@
                         ></v-progress-circular>
                       </v-row>
                     </template>
-                    <v-icon
-                        v-if="
+
+                    <svg class="check-svg" v-if="
                         checkChoiceStatus(attempt.answers[i].choosed_options, {
                           src: choice.src,
                         })
-                      "
-                        class="white--text"
-                        size="50"
-                    >mdi-check
-                    </v-icon
-                    >
+                      " xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true"
+                         focusable="false" width="1em" height="1em"
+                         style="-ms-transform: rotate(360deg); -webkit-transform: rotate(360deg); transform: rotate(360deg);"
+                         preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
+                      <path d="M21 7L9 19l-5.5-5.5l1.41-1.41L9 16.17L19.59 5.59L21 7z"/>
+                    </svg>
                   </v-img>
                 </v-card>
               </div>
@@ -188,7 +189,7 @@
           <v-btn
               v-if="$store.state.user.user.category.name == 'STUDENT'"
               class="radio-btn d-block mb-4 submitt-attempt"
-              @click="saveAttempt()"
+              @click="validate"
               rounded
           >Submit Answers
           </v-btn
@@ -211,13 +212,8 @@
         </v-col>
       </v-row>
     </div>
-    <div v-else>
-      You arleady did this assignment, you can
-      <router-link
-          :to="`/quiz/${$route.params.name}/${$store.state.user.user.user_name}`"
-      >review your submission
-      </router-link
-      >
+    <div class="d-flex justify-center align-center full-height" v-else>
+      <img src="https://kurious.rw/_nuxt/img/loader.059b462.gif" alt="loading ..">
     </div>
   </v-container>
 </template>
@@ -257,6 +253,7 @@ export default {
     ],
     attempt: {},
     done: false,
+    error: "",
     filesToUpload: [],
     remaining_time: 0,
   }),
@@ -286,6 +283,16 @@ export default {
           this.saveAttempt();
         }
       }
+    },
+    error() {
+      if (this.error != "")
+        this.$store.dispatch("app_notification/SET_NOTIFICATION", {
+          message: this.error,
+          status: "danger",
+          uptime: 2000,
+        }).then(() => {
+          this.error = ""
+        })
     },
   },
   methods: {
@@ -426,6 +433,24 @@ export default {
         }
       }
     },
+    validate() {
+      for (const i in this.selected_quiz.questions) {
+
+        if (this.selected_quiz.questions[i].required) {
+          if (this.selected_quiz.questions[i].type.includes('select') && !this.attempt.answers[i].choosed_options.length)
+            return this.error = `Question ${parseInt(i) + 1} is required`
+
+          else if(this.selected_quiz.questions[i].type == 'open_ended' && !this.attempt.answers[i].text.length)
+            return this.error = `Question ${parseInt(i) + 1} is required`
+
+          else if(this.selected_quiz.questions[i].type == 'file_upload' && !this.attempt.answers[i].src.length)
+            return this.error = `Question ${parseInt(i) + 1} is required`
+
+        }
+      }
+
+      this.saveAttempt();
+    },
     async saveAttempt() {
       this.attempt.used_time =
           this.selected_quiz.duration - this.remaining_time;
@@ -487,12 +512,28 @@ export default {
           this.filesToUpload.push({file: ""});
         }
       });
+    } else if (this.$store.state.user.user.category.name == "INSTRUCTOR") {
+      for (let i = 0; i < this.selected_quiz.questions.length; i++) {
+        this.filesToUpload.push({file: ""});
+      }
     }
   },
 };
 </script>
 
 <style lang="scss">
+
+
+.full-height{
+  min-height: 62vh;
+}
+
+.check-svg {
+  fill: #FFFFFF;
+  height: 50px;
+  width: 50px;
+}
+
 .timer {
   width: 290px;
   height: 135px;

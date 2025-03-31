@@ -206,20 +206,35 @@
                               ></v-progress-circular>
                             </v-row>
                           </template>
-                          <v-icon
-                              v-if="
+                          <svg class="check-svg"
+                               v-if="
                               checkChoiceStatus(
                                 attempt.answers[i].choosed_options,
                                 {
                                   src: choice.src,
                                 }
-                              )
+                              ) && choice.right
                             "
-                              class="white--text"
-                              size="50"
-                          >mdi-{{ choice.right ? "check" : "close" }}
-                          </v-icon
-                          >
+                               xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                               aria-hidden="true" focusable="false" width="1em" height="1em"
+                               style="-ms-transform: rotate(360deg); -webkit-transform: rotate(360deg); transform: rotate(360deg);"
+                               preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
+                            <path d="M21 7L9 19l-5.5-5.5l1.41-1.41L9 16.17L19.59 5.59L21 7z"/>
+                          </svg>
+                          <svg v-else-if="checkChoiceStatus(
+                                attempt.answers[i].choosed_options,
+                                {
+                                  src: choice.src,
+                                }
+                              )" class="check-svg" xmlns="http://www.w3.org/2000/svg"
+                               xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" focusable="false"
+                               width="1em" height="1em"
+                               style="-ms-transform: rotate(360deg); -webkit-transform: rotate(360deg); transform: rotate(360deg);"
+                               preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
+                            <path
+                                d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12L19 6.41z"
+                                />
+                          </svg>
                         </v-img>
                       </v-card>
                     </div>
@@ -545,6 +560,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.check-svg{
+  fill: #FFFFFF;
+  height: 50px;
+  width: 50px;
+}
 .cool-box {
   padding: 4px 12px;
   text-align: center;

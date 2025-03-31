@@ -464,6 +464,19 @@ export default {
         if (!this.questions[index].type.includes("select")) {
           this.questions[index].options = undefined;
         }
+
+        // remove media path from src
+        else if (
+            this.questions[index].type.includes("image_select")
+        ) {
+          for (const i in this.questions[index].options.choices) {
+            const mediapath = this.questions[index].options
+                .choices[i].src;
+            this.questions[index].options.choices[
+                i
+                ].src = mediapath.split("/")[mediapath.split("/").length - 1];
+          }
+        }
         questions.push(this.questions[index]);
       }
 

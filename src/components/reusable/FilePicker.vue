@@ -93,7 +93,7 @@
   font-family: Inter;
   font-style: normal;
   font-weight: bold;
-  font-size:11.47759px;
+  font-size: 11.47759px;
   line-height: 26px;
   /* or 309% */
 
@@ -168,7 +168,7 @@ div.remove-container a {
                     v-if="files[key].src"
                     @click="fileClicked(key)"
                     class="attachment vertically--centered"
-                    :class="template"
+                    :class="template + ` ${files[key].right ? 'rightChoice' : ''}`"
                     :src="`${files[key].src}?width=100&token=${$session.get('jwt')}`"
                     v-bind:ref="'preview' + parseInt(key)"
                 />
@@ -180,7 +180,7 @@ div.remove-container a {
                     :class="template"
                     v-bind:ref="'preview' + parseInt(key)"
                 />
-                <div class="absolute">
+                <div class="absolute" :class="{'d-flex' : files[key].right}">
                   <svg width="38" height="39" viewBox="0 0 38 39" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <g filter="url(#filter0_d)">
                       <circle cx="19.1714" cy="12.7837" r="11.8686" fill="white" fill-opacity="0.5"/>
@@ -407,7 +407,7 @@ export default {
     }
 
     if (this.defaultFiles.length && !this.files.length)
-      this.files = this.defaultFiles
+      this.files = this.defaultFiles.filter(e => e.src)
   },
   watch: {
     files() {
@@ -439,10 +439,9 @@ export default {
       }
     },
     clickButton() {
-      if(!(this.template == "quiz-files" && this.files.length > 3) || this.template != "quiz-files"){
+      if (!(this.template == "quiz-files" && this.files.length > 3) || this.template != "quiz-files") {
         document.getElementById(this.inputId).click();
-      }
-      else{
+      } else {
         this.$store.dispatch("app_notification/SET_NOTIFICATION", {
           message: "You reached the limit of files on this question",
           status: "info",
