@@ -315,7 +315,7 @@ div.remove-container a {
         <v-col
             v-if="files.length === 0 && (template === 'quiz-files' || template === 'attachment-files') && !defaultFiles.length"
             class="col-12 quiz-details">
-          {{ template === 'quiz-files' ? 'Upload you images here' : 'Pick additional files' }}
+          {{ template === 'quiz-files' ? 'Upload you images here' : 'Pick files' }}
           <svg @click="clickButton()" class="cursor-pointer" width="22" height="22" viewBox="0 0 22 22" fill="none"
                xmlns="http://www.w3.org/2000/svg">
             <path
@@ -353,15 +353,7 @@ div.remove-container a {
             type="file"
             :multiple="multiple"
             :id="inputId"
-            :accept="
-            allowedTypes === undefined
-              ? undefined
-              : allowedTypes.includes('video')
-              ? 'video/*'
-              : allowedTypes.includes('image')
-              ? 'image/*'
-              : undefined
-          "
+            :accept="allowedTypes"
             hidden
             @change="addFile()"
         />
@@ -380,7 +372,7 @@ export default {
     */
   props: {
     allowedTypes: {
-      type: Array,
+      type: String,
     },
     boundIndex: {
       type: Number,

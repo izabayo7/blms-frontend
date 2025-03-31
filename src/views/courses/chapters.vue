@@ -130,7 +130,7 @@
                               v-if="this.mode != ''"
                               :ref="`picker${activeChapter}2`"
                               :boundIndex="activeChapter"
-                              :allowedTypes="['video']"
+                              allowedTypes="video/*"
                               :multiple="false"
                               @addFile="updateVideo"
                               @removeFile="removeVideo"

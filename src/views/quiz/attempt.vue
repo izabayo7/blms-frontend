@@ -100,7 +100,7 @@
                 type="file"
                 :id="`file${i}`"
                 hidden
-                :accept="findAcceptedFiles(i)"
+                :allowedTypes="findAcceptedFiles(i)"
                 @change="handleFileUpload(i)"
             />
 
