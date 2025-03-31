@@ -1,5 +1,6 @@
 .DS_Store
 node_modules
+kurento_test_code
 .dist
 dist
 *.zip
