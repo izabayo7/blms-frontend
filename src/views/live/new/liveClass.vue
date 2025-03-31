@@ -492,10 +492,9 @@ export default {
       })
 
       self.socket.on("res/live/checkAttendance", ({code}) => {
-        console.log(code)
         this.set_modal({
           template: 'live_related',
-          method: {action: 'live_session/answerAttendance', parameters: {user: {id: self.instructor._id}}},
+          method: {action: 'live_session/answerAttendance', parameters: {user: {id: self.instructor._id}, session_id: self.$route.params.liveSessionId, time: new Date()}},
           title: 'ATTENDANCE CHECK',
           message: 'Hey user, are you there ? Type the code bellow to confirm ',
           code: code,
