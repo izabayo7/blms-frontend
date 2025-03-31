@@ -1374,7 +1374,7 @@ export default {
               receivers: [{id: participant.userInfo._id}]
             });
         } else if (participant.userInfo.category == 'INSTRUCTOR' && !this.isStudentPresenting) {
-          // this.me.rtcPeer.enabled = false
+          this.me.rtcPeer.enabled = false
           this.displaySrcVideo()
         }
       }
