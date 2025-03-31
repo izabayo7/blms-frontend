@@ -19,14 +19,21 @@
 </template>
 
 <script>
-// import {emit} from '@/services/event_bus'
+import {mapGetters} from 'vuex'
+
 export default {
   name: "Incoming-chat",
   props:{
-      typing:{type:Boolean,default:false},
       data:{required:true}
   },
+  data(){
+    return {
+      typing:false,
+    }
+  },
   computed:{
+    ...mapGetters('chat',['socket']),
+
       formatedIncomingMessagesLength(){
         return this.data.unreadMessagesLength > 9 ? 9 : this.data.unreadMessagesLength
       },
@@ -44,6 +51,21 @@ export default {
   }
   },
   mounted() {
+    let timeout = undefined;
+
+    this.socket.on('typing', typist => {
+      //if the typist id and this incoming chat id are the same
+      if(this.data.id === typist){
+        console.log(typist)
+        this.typing = true
+        clearTimeout(timeout)
+
+        timeout = setTimeout(()=>{
+          this.typing = false
+        },5000)
+      }
+
+    });
   }
 }
 </script>

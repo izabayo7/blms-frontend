@@ -1,7 +1,7 @@
 <template>
-  <main class="my-chat-messaging">
+  <main class="my-chat-messaging" id="my-chat-messaging">
 <!--    messages container-->
-    <div class="msg-container" >
+    <div class="msg-container" id="msg-container" ref="msg-container">
 <!--      if there are no messages-->
       <div class="no-msgs" v-if="!data">you have not yet started conversation with {{currentDisplayedUser.name}}.</div>
 
@@ -26,10 +26,12 @@
 
 <script>
 import {mapState, mapGetters} from 'vuex'
-
+// import {on} from "@/services/event_bus";
+import {chatMixins} from '@/services/mixins'
 
 export default {
   name: "Chat-messaging",
+  mixins:[chatMixins],
   props:{
     data:{type:[Array,Boolean],required:true},
   },
@@ -49,29 +51,39 @@ export default {
     },
 
   },
-  beforeMount() {
-
-  },
-  mounted(){
+  mounted() {
     // Someone typing to me
     let timeout = undefined;
 
     this.socket.on('typing', typist => {
       //if the typist is the one we are chatting with
-      if (this.currentDisplayedUser.id === typist){
+      if (this.currentDisplayedUser.id === typist) {
 
         this.typing = true
 
         clearTimeout(timeout)// before setting new timeout lets create old one
 
         //if 5 seconds exceeds without new event of typing stop typing
-        timeout = setTimeout(()=>{
+        timeout = setTimeout(() => {
           this.typing = false
-        },5000)
+        }, 5000)
+
+        this.scrollChatToBottom()
       }
     });
 
+    //when new message is received scroll to the bottom
+    this.socket.on('receive-message', () => {
+      this.typing = false;
+      this.scrollChatToBottom()
+    })
 
+    /*
+    when this component is mounted Immediately scroll to the bottom
+    the reason we call this function the end is that we need to wait for the all message to be rendered
+    so that we can scroll them
+     */
+    this.scrollChatToBottom()
   }
 
 }
@@ -81,10 +93,32 @@ export default {
 .my-chat-messaging {
   display: block;
   overflow: auto;
+  position:relative;
+  height: 100%;
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: transparent;
+    border-radius: 10px;
+  }
+  &::-webkit-scrollbar-track:hover {
+    background-color: lighten($secondary,4);
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: lighten($font,40);
+    border-radius: 10px;
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background-color: lighten($font,30);
+  }
   .msg-container{
     margin: 0 10px;
     overflow: auto;
-    height: 100%;
+    //height: 100vh;
+
         .typing{
           height: fit-content;
           width: fit-content;
