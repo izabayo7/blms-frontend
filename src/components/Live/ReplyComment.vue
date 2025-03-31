@@ -3,9 +3,15 @@
     <div class="reply-comment-container">
       <div class="left">
         <div class="avatar">
-          <v-avatar :size="30" class="a_avatar">{{
-              fullNames | computeText
-            }}
+          <v-avatar :size="30" class="a_avatar">
+            <img
+                v-if="content.sender.profile"
+                :src="`${content.sender.profile}?width=30`"
+                alt="profile picture"
+            />
+            <div v-else class="text">
+              {{ fullNames | computeText }}
+            </div>
           </v-avatar>
         </div>
       </div>
