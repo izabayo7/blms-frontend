@@ -7,7 +7,7 @@
           v-if="userCategory === 'ADMIN'"
           @click="
             closeSidebar();
-            $router.push('/administration');
+            routeTo('/administration');
           "
           :class="{ active: activeRoute('administration') }"
         >
@@ -37,7 +37,7 @@
           v-if="userCategory === 'INSTRUCTOR'"
           @click="
             closeSidebar();
-            $router.push('/users');
+            routeTo('/users');
           "
           :class="{ active: activeRoute('users') }"
         >
@@ -131,7 +131,7 @@
           v-if="userCategory === 'STUDENT' || userCategory === 'INSTRUCTOR'"
           @click="
             closeSidebar();
-            $router.push('/courses');
+            routeTo('/courses');
           "
           :class="{ active: activeRoute('courses') }"
         >
@@ -156,7 +156,7 @@
           v-if="userCategory === 'STUDENT' || userCategory === 'INSTRUCTOR'"
           @click="
             closeSidebar();
-            $router.push('/reports');
+            routeTo('/reports');
           "
           :class="{ active: activeRoute('reports') }"
         >
@@ -205,7 +205,7 @@
         <li
           @click="
             closeSidebar();
-            $router.push('/messages');
+            routeTo('/messages');
           "
           :class="{ active: activeRoute('messages') }"
         >
@@ -246,7 +246,7 @@
           v-if="userCategory === 'INSTRUCTOR'"
           @click="
             closeSidebar();
-            $router.push('/quiz');
+            routeTo('/quiz');
           "
           :class="{ active: activeRoute('quiz') }"
         >
@@ -311,6 +311,10 @@ export default {
     },
   },
   methods: {
+    routeTo(path){
+      if(this.$route.path != path)
+        this.$router.push(path)
+    },
     ...mapMutations("sidebar_navbar", { toggle: "TOGGLE_SIDEBAR_EXPANSION" }),
     activeRoute(route) {
       const routeParts = this.$route.path.split("/");

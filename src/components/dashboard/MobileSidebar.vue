@@ -5,7 +5,7 @@
         <div class="active-link"></div>
         <li
           v-if="userCategory === 'ADMIN'"
-          @click="$router.push('/administration')"
+          @click="routeTo('/administration')"
           :class="{ active: activeRoute('administration') }"
         >
           <div class="link-icon">
@@ -26,7 +26,7 @@
         </li>
         <li
           v-if="userCategory === 'INSTRUCTOR'"
-          @click="$router.push('/users')"
+          @click="routeTo('/users')"
           :class="{ active: activeRoute('users') }"
         >
           <div class="link-icon">
@@ -78,7 +78,7 @@
         </li>
         <li
           v-if="userCategory === 'INSTRUCTOR'"
-          @click="$router.push('/faculties')"
+          @click="routeTo('/faculties')"
           :class="{ active: activeRoute('faculties') }"
         >
           <div class="link-icon">
@@ -105,7 +105,7 @@
         </li>
         <li
           v-if="userCategory === 'STUDENT' || userCategory === 'INSTRUCTOR'"
-          @click="$router.push('/courses')"
+          @click="routeTo('/courses')"
           :class="{ active: activeRoute('courses') }"
         >
           <div class="link-icon">
@@ -126,7 +126,7 @@
         </li>
         <li
           v-if="userCategory === 'STUDENT' || userCategory === 'INSTRUCTOR'"
-          @click="$router.push('/reports')"
+          @click="routeTo('/reports')"
           :class="{ active: activeRoute('reports') }"
         >
           <div class="link-icon">
@@ -171,7 +171,7 @@
         </li>
         -->
         <li
-          @click="$router.push('/messages')"
+          @click="routeTo('/messages')"
           :class="{ active: activeRoute('messages') }"
         >
           <div class="link-icon">
@@ -208,7 +208,7 @@
         </li>
         <li
           v-if="userCategory === 'INSTRUCTOR'"
-          @click="$router.push('/quiz')"
+          @click="routeTo('/quiz')"
           :class="{ active: activeRoute('quiz') }"
         >
           <div class="link-icon">
@@ -229,7 +229,7 @@
         </li>
         <!-- <li
           v-if="userCategory === 'STUDENT' || userCategory === 'INSTRUCTOR'"
-          @click="$router.push('/settings')"
+          @click="routeTo('/settings')"
           :class="{ active: activeRoute('settings') }"
         >
           <div class="link-icon">
@@ -264,6 +264,10 @@ export default {
     },
   },
   methods: {
+    routeTo(path){
+      if(this.$route.path != path)
+        this.$router.push(path)
+    },
     ...mapMutations("sidebar_navbar", { toggle: "TOGGLE_SIDEBAR_EXPANSION" }),
     activeRoute(route) {
       const routeParts = this.$route.path.split("/");
