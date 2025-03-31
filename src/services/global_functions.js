@@ -11,7 +11,7 @@ import vue from '../main'
  * @param key
  * @returns {boolean}
  */
-function hasOwn(obj, key){
+function hasOwn(obj, key) {
     if (obj === null || obj === undefined)
         return false
     return Object.prototype.hasOwnProperty.call(obj, key)
@@ -24,11 +24,11 @@ function hasOwn(obj, key){
  * @param base64
  * @param filename
  */
-async function getImgFile (base64,filename){
+async function getImgFile(base64, filename) {
     /* convert base 64 to blob */
     const blob = await (await fetch(base64)).blob()
     /* convert blob to file image  and return it*/
-    return  new File([blob],filename,{type:'image/png'})
+    return new File([blob], filename, { type: 'image/png' })
 }
 
 /**
@@ -36,7 +36,7 @@ async function getImgFile (base64,filename){
  * @param date_time
  * @returns {string}
  */
-function elapsedDuration(date_time){
+function elapsedDuration(date_time) {
     const now = moment()
 
     date_time = moment(date_time)
@@ -52,7 +52,7 @@ function elapsedDuration(date_time){
  * @param string
  * @returns {boolean}
  */
-function empty(string){
+function empty(string) {
     return /^\s*$/.test(string);
 }
 
@@ -60,7 +60,7 @@ function empty(string){
 /**
  * log out user and return him to login
  */
-function logout(){
+function logout() {
 
     // clear the session
     vue.$session.destroy();

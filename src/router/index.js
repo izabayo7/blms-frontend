@@ -124,7 +124,14 @@ const routes = [
                         name: 'Edit Quiz',
                         component: () =>
                             import('@/views/quiz/edit')
-                    }, {
+                    },
+                    {
+                        // path: '/quiz/start/:name',
+                        path: '/quiz/start',
+                        component: () =>
+                            import('@/views/quiz/intermediate')
+                    },
+                    {
                         path: '/quiz/attempt/:name',
                         name: 'TakeQuiz',
                         component: () =>

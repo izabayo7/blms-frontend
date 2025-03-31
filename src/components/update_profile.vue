@@ -7,13 +7,13 @@
         <v-row>
           <v-col class="col-7 mx-auto">
             <v-avatar
-              v-if="profile"
+              v-if="user.profile"
               width="auto"
               height="245"
               class="mt-4 d-block"
               id="user_pic"
             >
-              <img :src="profile" alt="avatar" />
+              <img :src="profile || user.profile" alt="avatar" />
             </v-avatar>
             <v-avatar
               v-else
@@ -310,7 +310,7 @@ export default {
     this.getCourses({
       user_name: this.$store.state.user.user.user_name,
     });
-    this.profile = this.user.profile;
+    // this.profile = this.user.profile;
   },
 };
 </script>

@@ -21,17 +21,20 @@ Api.interceptors.response.use(function (response) {
 
 
 Api.interceptors.request.use((config) => {
+    try {
+        //get token
+        const { jwt: token } = JSON.parse(localStorage.getItem('vue-session-key'))
 
-    //get token
-    const { jwt: token } = JSON.parse(localStorage.getItem('vue-session-key'))
+        //add token to headers
+        config.headers = {
+            'Authorization': `Bearer ${token}`,
+            'Accept': 'application/json',
+        }
 
-    //add token to headers
-    config.headers = {
-        'Authorization': `Bearer ${token}`,
-        'Accept': 'application/json',
+        return config
+    } catch (e) {
+        console.log(e)
     }
-
-    return config
 })
 
 
@@ -47,7 +50,7 @@ export default {
     },
     // post requests
     create(path, body, config) {
-        
+
         return Api.post(`/${path}`, body, config)
     },
     // put requests
