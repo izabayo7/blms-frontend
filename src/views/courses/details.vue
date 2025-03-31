@@ -145,11 +145,8 @@ export default {
       }
 
       const index = this.userCategory == "STUDENT" ? this.maximumIndex : 0;
-      console.log(index);
-
-      this.$router.push(
-        `/courses/${this.$route.params.name}/chapter/0/${course.chapters[index]._id}`
-      );
+      const path = `/courses/${this.$route.params.name}/chapter/0/${course.chapters[index]._id}`;
+      if (this.$route.fullPath !== path) this.$router.push(path);
       this.$store.commit(
         "courses/set_selected_chapter",
         course.chapters[index]._id
