@@ -4,7 +4,6 @@ import router from './router'
 import store from './store'
 
 import './plugins/globalFilters'
-import '@/assets/sass/styles.scss'
 import vuetify from './plugins/vuetify';
 import VueSession from 'vue-session'
 import VuePlyr from 'vue-plyr'
