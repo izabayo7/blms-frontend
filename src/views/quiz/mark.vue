@@ -1,12 +1,11 @@
 <template>
   <v-container
-      v-if="selected_quiz_submission && (attempt.quiz || attempt.exam)"
       fluid
       class="quiz-page white pl-lg-16"
   >
     <back class="mt-0 mb-6 ml-0 ml-md-n6"/>
 
-    <v-row class="relative">
+    <v-row v-if="selected_quiz_submission && (attempt.quiz || attempt.exam)" class="relative">
       <v-col class="col-12 col-md-8 px-0">
         <navigation title="Submissions" :links="navigation_links"/>
         <v-row
@@ -366,6 +365,9 @@
         </v-row>
       </v-col>
     </v-row>
+    <div v-else class="text-center">
+      Submission not found
+    </div>
   </v-container>
 </template>
 
@@ -540,32 +542,34 @@ export default {
       quizName: this.isExam ? this.$route.params.id : this.$route.params.quiz_name,
       isExam: this.isExam
     }).then(async () => {
-      this.attempt = {
-        auto_submitted: this.selected_quiz_submission.auto_submitted,
-        used_time: this.selected_quiz_submission.used_time,
-        answers: this.selected_quiz_submission.answers.map((x) => {
-              let y = JSON.parse(JSON.stringify(x))
-              y.feedback = undefined
-              return y
-            }
-        ),
-        marked: this.selected_quiz_submission.marked,
-        total_marks: this.selected_quiz_submission.totalMarks,
-      };
-      this.attempt[this.isExam ? 'exam' : 'quiz'] = this.selected_quiz_submission[this.isExam ? 'exam' : 'quiz']._id
-      if (this.userCategory === "INSTRUCTOR") {
-        this.mode = "edit";
-        for (let i = 0; i < this.selected_quiz_submission.answers.length; i++) {
-          this.questions_have_feedback.push(false)
+      if (this.selected_quiz_submission) {
+        this.attempt = {
+          auto_submitted: this.selected_quiz_submission.auto_submitted,
+          used_time: this.selected_quiz_submission.used_time,
+          answers: this.selected_quiz_submission.answers.map((x) => {
+                let y = JSON.parse(JSON.stringify(x))
+                y.feedback = undefined
+                return y
+              }
+          ),
+          marked: this.selected_quiz_submission.marked,
+          total_marks: this.selected_quiz_submission.totalMarks,
+        };
+        this.attempt[this.isExam ? 'exam' : 'quiz'] = this.selected_quiz_submission[this.isExam ? 'exam' : 'quiz']._id
+        if (this.userCategory === "INSTRUCTOR") {
+          this.mode = "edit";
+          for (let i = 0; i < this.selected_quiz_submission.answers.length; i++) {
+            this.questions_have_feedback.push(false)
+          }
         }
+        this.computeTotalMarks();
+        setTimeout(() => {
+          this.markResultsAsSeen({
+            course_id: this.isExam ? this.selected_quiz_submission.exam.course : this.selected_quiz_submission.quiz.target.course._id,
+            submission_id: this.selected_quiz_submission._id,
+          });
+        }, 5000);
       }
-      this.computeTotalMarks();
-      setTimeout(() => {
-        this.markResultsAsSeen({
-          course_id: this.isExam ? this.selected_quiz_submission.exam.course : this.selected_quiz_submission.quiz.target.course._id,
-          submission_id: this.selected_quiz_submission._id,
-        });
-      }, 5000);
     });
   },
 };
