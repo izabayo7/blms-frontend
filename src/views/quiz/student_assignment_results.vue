@@ -34,12 +34,13 @@
                 <div class="row ma-0" v-for="(attachment, i) in assignment.attachments" :key="i">
                   <div class="pick-file col-12 col-md-8 d-flex px-4">
                     <button
+                        @click="downloadAttachment(`${backend_url}/api/assignments/${$route.params.id}/attachment/${attachment.src}?&token=${$session.get('jwt')}`)"
                         class="file-name">
                       {{ attachment.src }}
                     </button>
-                    <div class="file-size mx-auto">
-                      26kb
-                    </div>
+<!--                    <div class="file-size mx-auto">-->
+<!--                      26kb-->
+<!--                    </div>-->
                     <div class="file-type ml-auto">
                       {{ attachment.src.split('.')[attachment.src.split('.').length - 1] }}
                     </div>
@@ -95,10 +96,10 @@
             />
           </div>
           <div id="quiz-actions" class=" d-flex mb-12 mt-6">
-            <button class="quiz-action cancel">
+            <button @click="$router.push('/quiz')" class="quiz-action cancel">
               Cancel
             </button>
-            <button class="quiz-action">Submitt assignment</button>
+            <button v-if="$store.state.user.user.category.name === 'STUDENT'" class="quiz-action">Submitt assignment</button>
           </div>
         </div>
       </v-col>
