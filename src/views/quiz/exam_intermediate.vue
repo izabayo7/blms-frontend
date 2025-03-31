@@ -42,7 +42,8 @@
           <div class="text-center">
             <button @click="set_modal({
                         template: 'exam_constraints',
-                      })">I Accept</button>
+                      })">I Accept
+            </button>
           </div>
         </div>
       </div>
@@ -55,11 +56,18 @@ import {mapActions} from "vuex";
 
 export default {
   name: "ExamIntermediate",
+  data:()=>({
+    exam: undefined
+  }),
   components: {
     back: () => import("@/components/shared/back-button"),
   },
-  methods:{
+  methods: {
     ...mapActions("modal", ["set_modal"]),
+    ...mapActions("quiz", ["getExam"]),
+  },
+  async created() {
+    this.exam = await this.getExam({id: this.$route.query.exam})
   }
 };
 </script>
@@ -122,6 +130,7 @@ export default {
         margin-bottom: 16px;
       }
     }
+
     button {
       margin-top: 16px;
       width: 145px;

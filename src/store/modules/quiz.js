@@ -110,7 +110,6 @@ export default {
             }
         },
         async getExam({state}, {id}) {
-            console.log(id)
             // when quiz is not loaded fetch quizes
             if (!state.exams.loaded) {
                 const d = await apis.get(`exams/${id}`)

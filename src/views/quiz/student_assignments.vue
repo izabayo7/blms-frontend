@@ -95,13 +95,16 @@
           <v-data-table
               :search="search"
               :headers="exam_headers"
-              :items="assignments"
+              :items="exams"
               sort-by="title"
           >
-            <template v-slot:item.target="{  }">
-              <div class="target">
-                test
+            <template v-slot:item.course="{ item }">
+              <div class="assignment_title">
+                {{ item.course.name }}
               </div>
+            </template>
+            <template v-slot:item.duration="{ item }">
+              <div>{{ new Date(item.duration * 1000).toISOString().substr(11, 8) }}</div>
             </template>
             <template v-slot:item.title="{ item }">
               <div class="assignment_title">
@@ -110,10 +113,10 @@
             </template>
             <template v-slot:item.dueDate="{ item }">
               <div class="assignment_td">
-                {{ item.dueDate | formatDate }}
+                {{ item.createdAt | formatDate }}
               </div>
               <div class="assignment_td">
-                {{ getTime(item.dueDate) }}
+                {{ getTime(item.createdAt) }}
               </div>
             </template>
             <template v-slot:item.marks="{ item }">
@@ -133,11 +136,11 @@
                 {{ item.status === 'RELEASED' ? item.submission ? item.submission.total_marks : 'N/A' : 'N / A' }}
               </div>
             </template>
-            <template v-slot:item.action="{ }">
-              <button class="attempt-exam disabled" @click=" disabled ?
+            <template v-slot:item.action="{ item }">
+              <button class="attempt-exam" :class="{disabled : disabled}" @click=" disabled ?
                       set_modal({
                         template: 'payment_err',
-                      }) : $router.push('/exam/instructions')">
+                      }) : $router.push('/exam/instructions?exam='+item._id)">
                 Attempt
               </button>
             </template>
@@ -175,10 +178,10 @@ export default {
         text: "Course",
         align: "start",
         sortable: false,
-        value: "title",
+        value: "course",
       },
       {text: "Date", value: "dueDate"},
-      {text: "Duration", value: "target"},
+      {text: "Duration", value: "duration"},
       {text: "Marks", value: "marks"},
       {text: "Status", value: "status", sortable: true},
       {text: "My grade", value: "grades", sortable: false, align: "center"},
@@ -187,14 +190,14 @@ export default {
   }),
   computed: {
     // get the current course
-    ...mapGetters("quiz", ["assignments"]),
+    ...mapGetters("quiz", ["assignments", "exams"]),
     ...mapGetters("user", ["paymentStatus"]),
     disabled() {
-      return this.paymentStatus.paid === false
+      return this.paymentStatus.paid !== false
     }
   },
   methods: {
-    ...mapActions("quiz", ["getAssignments"]),
+    ...mapActions("quiz", ["getAssignments", "getExams"]),
     ...mapActions("modal", ["set_modal"]),
     handleRowClick(value) {
       this.$router.push(`/assignments/${value._id}`)
@@ -219,6 +222,7 @@ export default {
   },
   created() {
     this.getAssignments()
+    this.getExams()
   },
 };
 </script>
