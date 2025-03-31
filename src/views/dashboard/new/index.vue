@@ -309,7 +309,7 @@ export default {
   name: "ApplicationDashboard",
   data: () => ({
     showInviteUsers: false,
-    showFacultyModal: false,
+    showFacultyModal: true,
   }),
   components: {
     InviteUsersDialog: () => import("@/components/dashboard/InviteUsersDialog"),
