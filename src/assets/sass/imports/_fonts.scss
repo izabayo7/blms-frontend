@@ -1,11 +1,14 @@
-@font-face {
-    font-family: "Poppins";
-    src: local("Poppins"),
-        url(../../fonts/Poppins/Poppins-Regular.ttf) format("truetype");
-}
-
-@font-face {
-    font-family: "Inter";
-    src: local("Inter"),
-        url(../../fonts/Inter/Inter-VariableFont_slnt.ttf) format("truetype");
-}
+//@font-face {
+//    font-family: "Poppins";
+//    src: local("Poppins"),
+//        url(/fonts/Poppins/Poppins-Regular.ttf) format("truetype");
+//}
+//
+//@font-face {
+//    font-family: "Inter";
+//    src: local("Inter"),
+//        url(/fonts/Inter/Inter-VariableFont_slnt.ttf) format("truetype");
+//}
+// TODO use local fonts only
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter&display=swap');
