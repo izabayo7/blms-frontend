@@ -1,7 +1,7 @@
 <template>
   <div class="profile" ref="profile">
     <div class="profile-container" @click="profile_card_active = !profile_card_active">
-      <img v-if="$store.state.user.user.profile" :src="$store.state.user.user.profile" alt="profile picture"/>
+      <img v-if="$store.state.user.user.profile" :src="$store.state.user.user.profile +'?height=50'" alt="profile picture"/>
       <v-avatar v-else size="50" class="avatar">
         {{ `${$store.state.user.user.sur_name} ${$store.state.user.user.other_names}`| computeText }}
       </v-avatar>

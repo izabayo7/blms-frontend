@@ -7,7 +7,7 @@
         <v-row>
           <v-col class="col-7 mx-auto">
             <v-avatar
-              v-if="user.profile"
+              v-if="profile ||user.profile"
               width="auto"
               height="245"
               class="mt-4 d-block"

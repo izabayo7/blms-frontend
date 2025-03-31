@@ -3,7 +3,7 @@
     <div class="profile-card-container">
       <div class="profile-information d-flex">
         <div class="profile-pic">
-          <img v-if="user.profile" :src="user.profile" alt="profile picture" />
+          <img v-if="user.profile" :src="user.profile + '?height=50'" alt="profile picture" />
           <v-avatar v-else size="50" class="avatar">
             {{ `${user.sur_name} ${user.other_names}` | computeText }}
           </v-avatar>

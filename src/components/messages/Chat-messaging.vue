@@ -24,7 +24,7 @@
         <div v-if="!systemMsg(msgs.from)" class="picture mt-4">
           <img
             v-if="msgs.image"
-            :src="msgs.image"
+            :src="msgs.image+'?height=50'"
             :alt="`${msgs.from}'s profile picture`"
           />
           <v-avatar min-width="40" min-height="40" v-else class="avatar">

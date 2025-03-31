@@ -5,7 +5,7 @@
       <div class="my-info">
         <div class="profile">
           <div class="photo">
-            <img v-if="image" :src="image" @change="image" :alt="`${group.name} group icon`">
+            <img v-if="image" :src="image +'?height=100' " @change="image" :alt="`${group.name} group icon`">
             <input type="file" @change="handleFileUpload" ref="file" />
             <div class="icon" @click="$refs.file.click()">
               <svg
