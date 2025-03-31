@@ -251,7 +251,7 @@ export default {
     }
 
     .course-image {
-      max-height: 112.74px;
+      height: 112.74px;
       width: 112.74px;
       border-radius: 90px;
       //margin-left: 8%;

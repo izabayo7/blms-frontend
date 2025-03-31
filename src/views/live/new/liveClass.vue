@@ -293,7 +293,7 @@ export default {
       me: null,
       interval: null,
       id: "",
-      displayQuiz: false,
+      displayQuiz: true,
       elapsed_time: "",
       comment: "",
       noVideo: false,
@@ -523,7 +523,6 @@ export default {
       }
     },
     register() {
-      console.log("harahiye")
       // document.getElementById('room-header').innerText = 'ROOM ' + this.participationInfo.room;
       // document.getElementById('join').style.display = 'none';
       // document.getElementById('room').style.display = 'block';
@@ -656,7 +655,11 @@ export default {
       }
 
     },
-
+    realesQuiz(){
+      this.displayQuiz = true
+      self.sendMessage({
+        id: "releaseQuiz"})
+    },
     toogleVideo() {
       let message = {
         id: 'toogleMedia',
