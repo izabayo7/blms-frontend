@@ -69,7 +69,7 @@ export default function Participant(name, vm, offeringCourse = false, userInfo) 
 
     this.dispose = function () {
         console.log('Disposing participant ' + this.name);
-        if (this.rtcpeer)
+        if (this.rtcPeer)
             this.rtcPeer.dispose();
     };
 }

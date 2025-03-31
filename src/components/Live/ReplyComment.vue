@@ -58,13 +58,23 @@ export default {
     content: {required: true},
     verified: {default: false, type: Boolean},
   },
+  data: ()=>({
+    elapsedTime: "",
+  }),
   computed: {
-    elapsedTime() {
-      return elapsedDuration(this.content.createdAt);
-    },
     fullNames() {
       return `${this.content.sender.sur_name} ${this.content.sender.other_names}`;
     },
+  },
+  created(){
+    // TODO increase interval on dates
+    this.interval=setInterval(() => {
+      this.elapsedTime = elapsedDuration(this.content.createdAt);
+    }, 1000)
+
+  },
+  destroyed(){
+    clearInterval(this.interval)
   },
 };
 </script>
