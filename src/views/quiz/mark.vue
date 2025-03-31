@@ -144,7 +144,7 @@
                       "
                       class="white--text"
                       size="50"
-                      >mdi-check</v-icon
+                      >mdi-{{ choice.right ? "check" : "close" }}</v-icon
                     >
                   </v-img>
                 </v-card>
@@ -173,9 +173,7 @@
             </div>
             <div v-else>
               <button
-                v-if="
-                  attempt.answers[i].marks == question.marks || mode == 'view'
-                "
+                v-if="attempt.answers[i].marks == question.marks"
                 :class="`${
                   attempt.answers[i].marks != question.marks ? 'd-none' : ''
                 } svg-check-marks`"
@@ -217,44 +215,7 @@
                 </svg>
               </button>
               <button
-                v-if="
-                  attempt.answers[i].marks != question.marks && mode == 'edit'
-                "
-                @click="attempt.answers[i].marks = question.marks"
-                :class="`${
-                  attempt.answers[i].marks == question.marks ? 'd-none' : ''
-                } svg-check-marks`"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="25"
-                  height="25"
-                  viewBox="0 0 42 42"
-                >
-                  <g
-                    id="Rectangle_903"
-                    data-name="Rectangle 903"
-                    fill="none"
-                    stroke="#3ce970"
-                    stroke-width="3"
-                  >
-                    <rect width="42" height="42" rx="8" stroke="none" />
-                    <rect
-                      x="1.5"
-                      y="1.5"
-                      width="39"
-                      height="39"
-                      rx="6.5"
-                      fill="none"
-                    />
-                  </g>
-                </svg>
-              </button>
-              <button
-                v-if="
-                  (attempt.answers[i].marks == 0 && mode == 'view') ||
-                  mode == 'edit'
-                "
+                v-else
                 @click="attempt.answers[i].marks = 0"
                 class="svg-check-marks"
               >
@@ -281,6 +242,15 @@
                   />
                 </svg>
               </button>
+              <div class="cool-box grey-bg ml-6 mt-n1">
+                <input
+                  class="marks-input"
+                  v-model="attempt.answers[i].marks"
+                  readonly
+                  type="text"
+                />
+                <span>{{ `/${question.marks}` }}</span>
+              </div>
             </div>
           </v-col>
         </v-row>
@@ -359,6 +329,88 @@ export default {
       }
       return false;
     },
+    async autoMarkChoiceQuestions() {
+      for (const i in this.selected_quiz_submission.quiz.questions) {
+        if (
+          this.selected_quiz_submission.quiz.questions[i].type.includes(
+            "select"
+          )
+        ) {
+          const rightChoices = this.selected_quiz_submission.quiz.questions[
+            i
+          ].options.choices.filter((choice) => choice.right);
+
+          if (
+            this.selected_quiz_submission.quiz.questions[i].type.includes(
+              "single"
+            )
+          ) {
+            if (
+              this.selected_quiz_submission.quiz.questions[i].type.includes(
+                "file"
+              )
+            ) {
+              if (
+                this.selected_quiz_submission.answers[i].choosedOptions[0]
+                  .src ==
+                rightChoices[0].src.split("/")[
+                  rightChoices[0].src.split("/").length - 1
+                ]
+              ) {
+                this.selected_quiz_submission.answers[
+                  i
+                ].marks = this.selected_quiz_submission.quiz.questions[i].marks;
+              }
+            } else {
+              if (
+                this.selected_quiz_submission.answers[i].choosedOptions[0]
+                  .text == rightChoices[0].text
+              ) {
+                this.selected_quiz_submission.answers[
+                  i
+                ].marks = this.selected_quiz_submission.quiz.questions[i].marks;
+              }
+            }
+          } else {
+            for (const k in this.selected_quiz_submission.answers[i]
+              .choosedOptions) {
+              if (
+                this.selected_quiz_submission.quiz.questions[i].type.includes(
+                  "file"
+                )
+              ) {
+                let checkStatus = rightChoices.filter(
+                  (choice) =>
+                    choice.src.split("/")[
+                      rightChoices[0].src.split("/").length - 1
+                    ] ==
+                    this.selected_quiz_submission.answers[i].choosedOptions[k]
+                      .src
+                );
+
+                if (checkStatus.length > 0) {
+                  this.selected_quiz_submission.answers[i].marks +=
+                    this.selected_quiz_submission.quiz.questions[i].marks /
+                    rightChoices.length;
+                }
+              } else {
+                let checkStatus = rightChoices.filter(
+                  (choice) =>
+                    choice.text ==
+                    this.selected_quiz_submission.answers[i].choosedOptions[k]
+                      .text
+                );
+                if (checkStatus.length > 0) {
+                  this.selected_quiz_submission.answers[i].marks +=
+                    this.selected_quiz_submission.quiz.questions[i].marks /
+                    rightChoices.length;
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     removeMediaPath(url) {
       return url.split("/")[url.split("/").length - 1];
     },
@@ -377,12 +429,13 @@ export default {
     this.findQuizSubmissionByStudentAndQuizNames({
       studentName: this.$route.params.student_name,
       quizName: this.$route.params.quiz_name,
-    }).then(() => {
+    }).then(async () => {
       if (!this.selected_quiz_submission.marked) {
         for (const answer of this.selected_quiz_submission.answers) {
           answer.marks = 0;
         }
       }
+      await this.autoMarkChoiceQuestions();
       this.attempt = {
         quiz: this.selected_quiz_submission.quiz._id,
         student: this.selected_quiz_submission.student._id,

@@ -64,6 +64,10 @@
                           v-model="option.text"
                           :placeholder="`Option ${k + 1}`"
                           class="question-options"
+                          @click:prepend="handleOptionClick(i, k)"
+                          :prepend-icon="
+                            option.right ? 'mdi-check' : 'mdi-close'
+                          "
                           solo
                           required
                         >
@@ -90,11 +94,13 @@
                         class="col-12 file-drop"
                       >
                         <kurious-file-picker
+                          :ref="`picker${i}`"
                           :boundIndex="i"
                           :allowedTypes="['image']"
                           :multiple="true"
                           @addFile="addPicture"
                           @removeFile="removePicture"
+                          @fileClicked="handleOptionClick"
                         />
                       </v-col>
                     </v-row>
@@ -142,7 +148,12 @@
       <v-btn class="white--text save-quiz" rounded @click="saveQuiz()"
         >Save</v-btn
       >
-      <v-btn color="transparent" class="cancel-quiz" @click="$router.push('/quiz')">Cancel</v-btn>
+      <v-btn
+        color="transparent"
+        class="cancel-quiz"
+        @click="$router.push('/quiz')"
+        >Cancel</v-btn
+      >
     </v-row>
   </v-app>
 </template>
@@ -186,7 +197,7 @@ export default {
     ...mapActions("quiz", ["create_quiz"]),
     addPicture(file, boundIndex) {
       this.pictures[boundIndex].push(file);
-      this.questions[boundIndex].options.choices.push({ src: file.name });
+      this.questions[boundIndex].options.choices.push({ src: file.name, right: false });
     },
     removePicture(index, boundIndex) {
       this.pictures[boundIndex].splice(index, 1);
@@ -214,10 +225,31 @@ export default {
       this.duration = { hh: "00", mm: "05", ss: "00" };
       this.pictures = [[], []];
     },
+    handleOptionClick(questionIndex, optionIndex) {
+      let rightChoices = [];
+
+      for (const k in this.questions[questionIndex].options.choices) {
+        if (k == optionIndex) {
+          this.questions[questionIndex].options.choices[k].right = !this
+            .questions[questionIndex].options.choices[k].right;
+        } else if (this.questions[questionIndex].type.includes("Single")) {
+          this.questions[questionIndex].options.choices[k].right = false;
+        }
+        if (this.questions[questionIndex].options.choices[k].right) {
+          rightChoices.push(k);
+        }
+      }
+      if (this.questions[questionIndex].type.includes("file")) {
+        this.$refs[`picker${questionIndex}`][0].showRightFiles(questionIndex,rightChoices);
+      }
+    },
     handleTypeChange(index) {
       if (this.questions[index].type.includes("text")) {
         this.questions[index].options = {
-          choices: [{ text: "" }, { text: "" }],
+          choices: [
+            { text: "", right: false },
+            { text: "", right: false },
+          ],
         };
       } else if (
         this.questions[index].type.includes("file") &&
@@ -227,6 +259,7 @@ export default {
           choices: [],
         };
       }
+      this.pictures[index] = []
     },
     addQuestion() {
       this.questions.push({
@@ -240,7 +273,7 @@ export default {
       this.pictures.push([]);
     },
     addOption(index) {
-      this.questions[index].options.choices.push({ text: "" });
+      this.questions[index].options.choices.push({ text: "", right: false });
     },
     removeOption(index, index1) {
       this.questions[index].options.choices.splice(index1, 1);
