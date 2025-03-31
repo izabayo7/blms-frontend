@@ -118,7 +118,7 @@
           <div class="added-student-groups customScroll">
             <div v-for="(item, i) in addedStudentGroups" :key="i" :class="{'d-none': isEditing && editingIndex === i}" class="item">
               <div class="name">{{ item.name }}</div>
-              <div class="actions ml-auto">
+              <div v-if="!item.isSaved" class="actions ml-auto">
                 <button @click="edit(i)" class="edit mr-4">
                   edit
                   <svg
@@ -255,7 +255,10 @@ export default {
 
     if (this.editMode) {
       await this.$store.dispatch("faculties/getFaculty", this.facultyId)
-      this.faculty = {name: this.state.name, description: this.state.description}
+      this.faculty = {name: this.state.name, description: this.state.description,student_groups: this.state.student_groups}
+      this.state.student_groups.map(x=>{
+        this.addedStudentGroups.push({name: x.name,isSaved: true})
+      })
     }
   },
   watch: {
@@ -325,9 +328,9 @@ export default {
           uptime: 2000,
         })
 
-        if (!this.editMode || this.addedStudentGroups.length) {
+        if (this.addedStudentGroups.filter(x=>!x.isSaved).length) {
           const unsaved = []
-          for (const i in this.addedStudentGroups) {
+          for (const i in this.addedStudentGroups.filter(x=>!x.isSaved)) {
             const response = await Apis.create("user_groups", {
               name: this.addedStudentGroups[i].name,
               faculty: res.data.data._id
