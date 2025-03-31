@@ -4,14 +4,14 @@
   <div class="row messages-section">
     <div class="side incoming col-3">
     <div class="message-search"> <search bg="#ffffff" placeholder="search message" :width="100" :fontSize="12" /> </div>
-    <div class="incoming-messages">
-      <incoming-chat v-for="(message,i) in incomingMessages" :read="message.read" :key="i" :username="message.username" :incoming-msgs="message.numberOfUnreadMessages" :typing="message.typing">
+    <div class="incoming-messages" v-if="incomingMessages.length > 0">
+      <incoming-chat v-for="(message,i) in incomingMessages" :read="message.unreadMessagesLength <= 0" :key="i" :username="message.id" :incoming-msgs="message.unreadMessagesLength" :typing="message.typing">
 <!--        profile picture of the sender-->
         <template #pic><img src="@/assets/images/instructor.png" alt="profile picture"></template>
 <!--        name of the sender-->
-        <template #sender>{{ message.sender }}</template>
+        <template #sender>{{ message.name }}</template>
 <!--        massage sent by sender-->
-        <template #massage> {{ message.latestMessage}}</template>
+        <template #massage> {{ message.last_message.content}}</template>
       </incoming-chat>
     </div>
   </div>
@@ -25,7 +25,8 @@
 <script>
 import search from '@/components/reusable/Search'
 import incomingChat from '@/components/messages/Incoming-chat'
-
+import {mapMutations,mapGetters,mapState} from 'vuex'
+// import {on} from '@/services/event_bus'
 
 export default {
   name: "Messages",
@@ -35,17 +36,42 @@ export default {
   },
   data(){
     return{
-      incomingMessages:[
-        {img:"",username:"liberi",sender:"Ntwari Liberi",numberOfUnreadMessages:2,latestMessage:"ubwo x woe urumva twabikora kweri",typing:false, read:false},
-        {img:"",username:"ntwari",sender:"Manzi Gustave",numberOfUnreadMessages:5,latestMessage:"i don't think that we have to make it that way",typing:true, read:false},
-        {img:"",username:"clarance.liberi",sender:"Hirwa Cedric",numberOfUnreadMessages:0,latestMessage:"🤣🤣🤣🤣🤣🤣",typing:false, read:true},
-        {img:"",username:"olivier",sender:"Umwari Clarance",numberOfUnreadMessages:0,latestMessage:"can you realize ",typing:false, read:true},
-        {img:"",username:"sangwa.gustave2",sender:"Izabayo Olivier",numberOfUnreadMessages:20,latestMessage:"rek shn mureke",typing:false, read:false},
-      ]
+      incomingMessages: [],
+      user:null,
     }
+  },
+  computed: {
+      ...mapGetters('chat',['socket']),
+      ...mapState('chat',['username'])
+
+  },
+  methods:{
+      ...mapMutations('chat',['SET_USERNAME','SET_DISPLAYED_USER']),
+    loadIncomingMessages(){
+        console.log('called')
+      // get contacts new style
+      this.socket.emit('request_user_contacts');
+
+      // Get contacts new style
+      this.socket.on('recieve_user_contacts', ({contacts}) => {
+        this.incomingMessages = contacts
+        this.goToMessages()
+      });
+    },
+    goToMessages(){
+      if(this.$route.params.username.length > 0)
+        return
+
+      this.SET_DISPLAYED_USER({ contactId: this.incomingMessages[0].id})
+      this.$router.push(`/messages/${this.incomingMessages[0].id}`)
+
+    }
+  },
+  mounted(){
+    this.loadIncomingMessages()
+    this.goToMessages()
+    // this.SET_USERNAME(this.$route.params.username).then(()=> this.goToMessages())
   }
-
-
 }
 </script>
 

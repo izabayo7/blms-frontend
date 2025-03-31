@@ -89,7 +89,7 @@ export default {
           axios.defaults.headers.common.Authorization = `${response.data}`;
           this.$session.start();
           this.$session.set("jwt", response.data);
-          this.$store.dispatch("setUser", jwt.decode(this.$session.get("jwt")));
+          this.$store.dispatch("user/setUser", jwt.decode(this.$session.get("jwt")));
 
           // if (userCategory === "student" || userCategory === "instructor") {
           //   this.$router.push({ name: "Courses" });

@@ -1,5 +1,5 @@
 <template>
-<main class="incoming-chat" @click="$router.push(username)">
+<main class="incoming-chat" @click="handleClick">
 <!--    slot for profile picture-->
       <div class="pic col-3"><slot name="pic"></slot></div>
       <div class="content col-9">
@@ -17,7 +17,9 @@
 </template>
 
 <script>
+import {emit} from '@/services/event_bus'
 export default {
+
 name: "Incoming-chat",
   props:{
       incomingMsgs:{type:Number,default:0}, // number of incoming massages, it
@@ -29,6 +31,13 @@ name: "Incoming-chat",
       formatedIncomingMsgs(){
         return this.incomingMsgs > 9 ? 9 : this.incomingMsgs
       }
+  },
+  methods:{
+  handleClick(){
+    this.$store.commit('chat/SET_DISPLAYED_USER',{contactId:this.username})
+    emit('chat_user_changed',this.username) //alert that user was changed so we need to fetch some new messages
+    this.$router.push(`/messages/${this.username}`)
+  }
   }
 }
 </script>

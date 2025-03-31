@@ -9,7 +9,7 @@
       </chat-header>
     </div>
     <div ref="messages-list" class="messages-list" >
-      <chat-messaging/>
+      <chat-messaging :data="messages"/>
     </div>
     <div ref="send-message" class="send-message">
       <send-message></send-message>
@@ -21,6 +21,8 @@
 import ChatHeader from '@/components/messages/Chat-header'
 import SendMessage from '@/components/messages/Send-message'
 import ChatMessaging from '@/components/messages/Chat-messaging'
+import {mapGetters, mapState} from 'vuex'
+import {emit,on} from '@/services/event_bus'
 
 export default {
   name: "Chat",
@@ -28,6 +30,15 @@ export default {
     ChatHeader,
     SendMessage,
     ChatMessaging
+  },
+  data(){
+    return {
+    messages:[]
+    }
+  },
+  computed:{
+    ...mapState('chat',['currentDisplayedUser']),
+    ...mapGetters('chat',['socket'])
   },
   methods:{
     // set the messages container's height according to the screen height
@@ -39,11 +50,39 @@ export default {
 
       const height = getComputedStyle(chatHolder)
       console.log(height.height)
-    }
+    },
+
+    //load user messages
+    loadMessages(){
+
+
+      // get messages new style
+      this.socket.emit('request_conversation',{ contactId: this.currentDisplayedUser.contactId});
+
+      // Get messages new style
+      this.socket.on('recieve_conversation', ({conversation,}) => {
+        console.log(conversation)
+        this.$store.commit('chat/STORE_LOADED_DATA',{username:this.currentDisplayedUser.contactId,messages:conversation})
+        this.messages = conversation
+      })
+    },
+
+  },
+  created() {
+    console.log('wee')
+    //let also announce the event since we are reloading the page
+    emit('chat_user_changed',this.$route.params.username)
   },
   mounted() {
-    //set height when component is mounted
-    this.setMessagesContainerHeight()
+    //listen if user to be display on chat was chenged
+    on('chat_user_changed',username => {
+      console.log('mwaa')
+      if(username !== this.$route.params.username || this.messages.length <= 0 ){
+        console.log('inner')
+        this.loadMessages();
+        this.$store.commit('chat/SET_USERNAME',this.$route.params.username)
+      }
+    })
   }
 }
 </script>
