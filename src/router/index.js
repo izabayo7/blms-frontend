@@ -112,17 +112,22 @@ const routes = [
                         component: () => import('@/views/faculties/index.vue'),
                     },
                     {
-                        path: '/faculties/groups/:facultyId',
+                        path: '/faculties/:facultyId',
+                        name:"faculty",
+                        component: () => import('@/views/faculties/faculty/Faculty.vue'),
+                    },
+                    {
+                        path: '/faculties/:facultyId/groups',
                         name:"facultyGroups",
                         component: () => import('@/views/faculties/groups/faculty.vue'),
                     },
                     {
-                        path: '/faculties/students/:facultyId',
+                        path: '/faculties/:facultyId/students',
                         name:"facultyStudents",
                         component: () => import('@/views/faculties/students/faculty.vue'),
                     },
                     {
-                        path: '/faculties/courses/:facultyId',
+                        path: '/faculties/:facultyId/courses',
                         name:"facultyCourses",
                         component: () => import('@/views/faculties/courses/faculty.vue'),
                     },
