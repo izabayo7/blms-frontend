@@ -92,15 +92,13 @@ export default {
         },
         //store the message that we sent
         ADD_ONGOING_MESSAGE(state, newMessage) {
-
-            newMessage = {
-                content: newMessage.content,
-                createdAt: new Date(),
-                _id: `${Math.random()}`
-            }
-
+            //
+            // newMessage = {
+            //     content: newMessage.content,
+            //     createdAt: new Date(),
+            //     _id: `${Math.random()}`
+            // }
             store.dispatch('chat/lastMessageInCertainChatMessages', state.username).then(({ lastMessage, groupIndex, userIndex }) => {
-
                 if (lastMessage._id !== newMessage._id) {
 
                     if (userIndex === undefined) {
@@ -132,8 +130,17 @@ export default {
         },
         RESET_STATE(state) {
             Object.assign(state, getDefaultState())
-        }
+        },
 
+        CHANGE_MESSAGE_READ_STATUS(state){
+            let idx ;
+
+            state.incomingMessages.map((val,i) =>{
+                if (val.id === state.currentDisplayedUser.id) idx = i;
+            })
+
+            if(idx) state.incomingMessages[idx].unreadMessagesLength = 0;
+        }
 
     },
     actions: {
