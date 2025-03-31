@@ -18,7 +18,7 @@
           receiving: !msgGoing(msgs.from),
         }"
       >
-        <div class="unread-indicator"><hr /></div>
+<!--        <div class="unread-indicator"><hr /></div>-->
         <!--        picture of the message sender-->
         <div class="picture">
           <img
