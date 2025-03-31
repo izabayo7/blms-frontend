@@ -100,7 +100,7 @@
                   message:
                     'Are you sure you want to remove your profile picture?',
                 })
-              " class="delete">Delete profile
+              " class="delete profile">Remove profile
               </button>
               <button v-else @click="pickfile" class="upgrade">Upload profile</button>
             </div>

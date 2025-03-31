@@ -81,7 +81,7 @@
                   message:
                     'Are you sure you want to delete the college logo?',
                 })
-              " class="delete">Delete logo</button>
+              " class="delete profile">Remove logo</button>
               <button v-else @click="pickfile" class="upgrade">Upload logo</button>
             </div>
           </div>
