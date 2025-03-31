@@ -13,7 +13,8 @@
               new Date(assignment_submission.createdAt).toLocaleTimeString()
             }}
           </div>
-          <div v-if="assignment_submission._id && assignment_submission.createdAt !== assignment_submission.updatedAt">
+          <div
+              v-if="assignment_submission._id && assignment_submission.createdAt !== assignment_submission.updatedAt && !assignment_submission.marked">
             Last edited on {{ assignment_submission.updatedAt | formatDate }}, at {{
               new Date(assignment_submission.updatedAt).toLocaleTimeString()
             }}
@@ -105,8 +106,10 @@
                 :defaultContent="assignment_submission.details || '<p>Type your answer here</p>'"
             />
           </div>
-          <div class="marks mt-6">
-            <div class="label mb-2">Marks: </div>
+          <div
+              v-if="(assignment_submission.marked && assignment.status === 'RELEASED') || userCategory === 'INSTRUCTOR' "
+              class="marks mt-6">
+            <div class="label mb-2">Marks:</div>
             <div>
               <div class="cool-box marks total grey-color mt-n1">
                 <input
@@ -228,7 +231,7 @@ export default {
     },
     validate() {
 
-      if(this.userCategory === 'INSTRUCTOR')
+      if (this.userCategory === 'INSTRUCTOR')
         return this.saveMarks()
 
       if (this.assignment.submissionMode === 'textInput') {
@@ -328,7 +331,7 @@ export default {
         }
       })
     },
-    saveMarks(){
+    saveMarks() {
       Apis.update('assignment_submission', this.assignment_submission._id, {
         total_marks: this.total_marks,
       }).then(async (res) => {
@@ -340,7 +343,7 @@ export default {
             status: "success",
             uptime: 5000,
           })
-          this.$router.push('/reports/'+this.$route.params.id)
+          this.$router.push('/reports/' + this.$route.params.id)
         }
       })
     },
@@ -432,6 +435,7 @@ export default {
 
   .lower {
     margin-left: 48px;
+
     .cool-box {
       padding: 4px 12px;
       text-align: center;
@@ -463,6 +467,7 @@ export default {
         margin: 0;
       }
     }
+
     .description {
       font-family: Inter;
       font-style: normal;
