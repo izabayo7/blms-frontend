@@ -8,7 +8,7 @@
       <v-row class="card-content">
         <v-col cols="5" class="course-image-side">
           <div class="live d-flex">
-            <div v-if="course.live">
+            <div v-if="nearestLiveSession">
               <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path
                     d="M7.12364 14.6692C11.0579 14.6692 14.2473 11.4798 14.2473 7.54552C14.2473 3.61124 11.0579 0.421875 7.12364 0.421875C3.18936 0.421875 0 3.61124 0 7.54552C0 11.4798 3.18936 14.6692 7.12364 14.6692Z"
@@ -145,10 +145,30 @@ export default {
       required: true,
     },
   },
+  computed: {
+    nearestLiveSession() {
+      let live_session = undefined
+      for (const i in this.course.chapters) {
+        if (this.course.chapters[i].live_sessions.length) {
+          if (!live_session && (new Date(this.course.chapters[i].live_sessions[0].date) >= new Date(this.currentDate))) {
+            live_session = this.course.chapters[i].live_sessions[0]
+          } else if (live_session) {
+            if (live_session.date < this.course.chapters[i].live_sessions[0].date) {
+              live_session = this.course.chapters[i].live_sessions[0]
+            }
+          }
+        }
+      }
+      return live_session;
+    }
+  }
+  ,
   data: () => ({
     primary: colors.primary,
+    currentDate: new Date().toISOString().substring(0,10)
   }),
-};
+}
+;
 </script>
 
 <style lang="scss" scoped>
@@ -156,10 +176,11 @@ export default {
   height: 208px;
 }
 
-.course-card:hover{
+.course-card:hover {
   box-shadow: 0px 4px 10px 3px rgba(25, 48, 116, 0.17);
   margin-top: -10px;
 }
+
 .course.completed:hover {
   filter: drop-shadow(0px 21.7761px 43.5522px rgba(138, 138, 138, 0.161));
   margin-top: -10px;
@@ -314,9 +335,9 @@ export default {
     font-size: 11.4611px;
     line-height: 17px;
     /* identical to box height */
-svg{
-  width: 15px;
-}
+    svg {
+      width: 15px;
+    }
 
     color: #9B9B9B;
   }
