@@ -25,7 +25,12 @@
           {{ content }}
         </div>
       </div>
-      <div v-if="mode == 'any'" class="col-4 vertically--centered">
+      <div
+        v-if="
+          mode == 'any' && $store.state.user.user.category.name === 'INSTRUCTOR'
+        "
+        class="col-4 vertically--centered"
+      >
         <div class="actions">
           <svg
             @click="removeFeedback()"
