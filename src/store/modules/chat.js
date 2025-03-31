@@ -148,17 +148,17 @@ export default {
             })
 
             store.dispatch('chat/findIndexOfUserInIncomingMessages', state.currentDisplayedUser.id).then(idx => {
+                console.log(idx)
                 if (idx === null) {
                     //to be done later
                 } else {
                     state.incomingMessages[idx].unreadMessagesLength = 0
                     state.incomingMessages[idx].last_message = newMessage
+
+                    // put conversation on the first place
+                    state.incomingMessages.splice(0, 0, state.incomingMessages.splice(idx, 1)[0])
                 }
             })
-
-            //put conversation on the first place
-            store.commit('chat/CHANGE_CONVERSATION_STAND', newMessage)
-
         },
         RESET_STATE(state) {
             Object.assign(state, getDefaultState())
@@ -233,8 +233,11 @@ export default {
             });
 
             // Get new contact
-            getters.socket.on('res/message/contacts/new', ({ contact }) => {
+            getters.socket.on('res/message/contacts/new', ({ contact, redirect }) => {
                 state.incomingMessages.unshift(contact)
+                console.log("redirect bro : ",redirect)
+                // if(redirect)
+                //     router.push(`/messages/${contact.id}`)
             });
         },
         removeMember({ state }, { groupId, member }) {
