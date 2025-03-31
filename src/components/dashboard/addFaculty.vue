@@ -15,8 +15,8 @@
       <!--          />-->
       <!--        </svg>-->
       <!--      </div>-->
-      <div class="tittle pa-6 pb-0">Create a faculty</div>
-      <div class="row px-6 pt-0">
+      <div class="tittle px-0 px-md-6 pa-6 pb-0">Create a faculty</div>
+      <div class="row px-0 px-md-6 pt-0">
         <div class="col-12 col-lg-6">
           <div class="input-group">
             <div class="label">
@@ -48,7 +48,7 @@
               </textarea>
             </div>
           </div>
-          <div class="send-container">
+          <div class=" hidden-sm-and-down send-container">
             <button class="add-email send cancel mr-4" @click="$emit('closeModal')">
               Cancel
             </button>
@@ -84,7 +84,7 @@
               </label>
               <span class="important">*</span>
             </div>
-            <div class="d-flex">
+            <div class="d-block d-md-flex">
               <div class="input-container coloured">
                 <input type="text" v-model="currentStudentGroup" id=""/>
                 <svg
@@ -192,6 +192,16 @@
                 </button>
               </div>
             </div>
+          </div>
+        </div>
+        <div class="col-12 hidden-md-and-up">
+          <div class="send-container">
+            <button class="add-email send cancel mr-4" @click="$emit('closeModal')">
+              Cancel
+            </button>
+            <button class="add-email send" @click="validate">
+              Save progress
+            </button>
           </div>
         </div>
       </div>
@@ -432,7 +442,7 @@ export default {
         border: 0.954286px solid #858c94;
         box-sizing: border-box;
         border-radius: 7.63429px;
-        width: 305.37px;
+        max-width: 305.37px;
         height: 45.9px;
         font-family: Source Sans Pro;
         font-style: normal;
@@ -446,6 +456,7 @@ export default {
       textarea {
         min-height: 122px;
         max-height: 200px;
+        max-width: 100%;
       }
 
       select:focus {
@@ -455,7 +466,7 @@ export default {
       &.coloured {
         border-radius: 21.63px;
         background: #eeeeee;
-        width: 305.37px;
+        max-width: 305.37px;
         display: flex;
 
         svg {
@@ -572,6 +583,19 @@ export default {
           margin-left: 11px;
           // width: 12px;
         }
+      }
+    }
+  }
+}
+
+/* Portrait phones and smaller */
+@media (max-width: 700px) {
+  .v-dialog:not(.v-dialog--fullscreen) .faculty-dialog-body {
+    .send-container {
+      display: flex;
+
+      .add-email.send {
+        width: 50%;
       }
     }
   }
