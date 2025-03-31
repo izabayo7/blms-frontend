@@ -178,7 +178,21 @@ const routes = [
                         meta: {
                             allowAnonymous: false
                         }
-                    },]
+                    },
+                    // live related
+                    {
+                        path: '/live',
+                        name: 'Live',
+                        component: () =>
+                            import('@/views/live')
+                    },
+                    {
+                        path: '/live/room',
+                        name: 'Live Room',
+                        component: () =>
+                            import('@/views/live/live-class')
+                    },
+                ]
             },
             // administration functionalities
             {
@@ -275,7 +289,7 @@ router.beforeEach((to, from, next) => {
 
     else if ((to.path === '/login' || to.path === '/') && store.state.user.isLoggedIn) {
         next({
-            path: `/${store.state.user.category.name === 'STUDENT' || store.state.user.category.name === 'INSTRUCTOR' ? 'courses' : 'administration'}`,
+            path: `/${store.state.user.user.category.name === 'STUDENT' || store.state.user.user.category.name === 'INSTRUCTOR' ? 'courses' : 'administration'}`,
         })
     }
 

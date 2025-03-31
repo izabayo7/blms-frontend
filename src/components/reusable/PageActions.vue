@@ -1,6 +1,7 @@
 <template>
   <v-navigation-drawer
-    v-model="show"
+    ref="pageActions"
+    v-model="visible"
     app
     :right="true"
     mobile-breakpoint="960"
@@ -14,28 +15,31 @@
 </template>
 
 <script>
-  export default {
-    props: {
-     visible: {
-         type: Boolean,
-         required: true
-     },
+import { mapMutations, mapState } from "vuex";
+export default {
+  data: ()=>({
+    visible: true
+  }),
+  computed: {
+    ...mapState("sidebar_navbar", { state: "page_actions_visible" }),
+    breakPoint() {
+      return this.$vuetify.breakpoint.name;
     },
-    computed: {
-      show(){
-        return this.visible
-      },
-      breakPoint () {
-        return this.$vuetify.breakpoint.name
-      },
+  },
+  methods: {
+    ...mapMutations("sidebar_navbar", {
+      toggle: "TOGGLE_PAGE_ACTIONS_VISIBILITY",
+    }),
+  },
+  watch: {
+    state() {
+      this.visible = this.state
     },
-    watch: {
-      show () {
-        if (this.show === false) {
-          this.$emit('hideActions');
-        }
-        
+    visible(){
+      if(!this.visible){
+        this.toggle()
       }
-    },
-  }
+    }
+  },
+};
 </script>

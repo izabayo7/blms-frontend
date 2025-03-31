@@ -116,10 +116,6 @@ export default {
     search(str) {
       this.foundUsers = [];
       this.searchUser({ query: str }).then((results) => {
-        // this.users.map((val, i) => {
-        //   if (val.names.search(new RegExp(str, "ig")) >= 0)
-        //     this.foundUsers.push(this.users[i]);
-        // });
         this.foundUsers = [];
         for (const i in results) {
           this.foundUsers.push({

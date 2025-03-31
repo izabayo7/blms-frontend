@@ -1,5 +1,5 @@
 <template>
-  <router-view />
+  <router-view v-if="$store.state.user.isLoggedIn" />
 </template>
 
 <script>

@@ -1,24 +1,7 @@
 #liveClass {
-    video#video {
-        width: 100%;
-        height: 350px;
-        object-fit: cover;
-        // border-radius: 26px;
-    }
-
-    #video i.v-icon.notranslate.play--button.mdi.mdi-play-circle-outline {
-        // margin: -18rem 0 0 -22rem;
-        // position: relative;
-        top: -45%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-    }
 
     .course-title {
         font-size: 1.6rem !important;
-    }
-    .v-card.v-sheet.theme--light.rounded-0{
-        // max-width: 340px !important;
     }
     button.white--text.mt-4.px-3.next-chapter.v-btn.v-btn--absolute.v-btn--contained.v-btn--rounded.theme--light.v-size--default {
         height: 24px !important;
@@ -43,6 +26,5 @@
     }
     .instructor-action{
         width: 254px !important;
-        text-align: left;
     }
 }

@@ -16,7 +16,7 @@
       >
         <h2 class="head-one">Kurious</h2>
         <h2 class="head-two">Online Class</h2>
-        <router-link to="/login" class="login-btn"><v-btn>Login</v-btn></router-link>
+        <router-link @click="$router.push('/login')" to="/login" class="login-btn"><v-btn>Login</v-btn></router-link>
       </v-col>
       <v-col
           cols="12"

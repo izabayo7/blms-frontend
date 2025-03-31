@@ -1,5 +1,5 @@
 <template>
-  <div class="sidebar">
+  <div class="sidebar hidden-sm-and-down">
     <div class="toggle-container">
       <div class="toggle">
         <v-icon large @click="toggle">mdi-menu</v-icon>

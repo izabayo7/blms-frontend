@@ -12,6 +12,7 @@ import notification from '@/store/modules/notification'
 import users from '@/store/modules/users'
 import colleges from '@/store/modules/colleges'
 import years from '@/store/modules/years'
+import live from '@/store/modules/live'
 
 Vue.use(Vuex)
 export default new Vuex.Store({
@@ -33,6 +34,7 @@ export default new Vuex.Store({
         notification,
         users,
         colleges,
-        years
+        years,
+        live
     }
 })

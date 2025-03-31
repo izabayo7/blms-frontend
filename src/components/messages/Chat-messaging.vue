@@ -383,7 +383,7 @@ export default {
     width: 30px !important;
     height: 30px !important;
     margin-right: 20px;
-    margin-top: 20px;
+    margin-top: 1px;
     background-color: $primary;
     color: white;
     cursor: pointer;
