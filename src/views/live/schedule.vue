@@ -134,7 +134,7 @@
     </div>
     <Popup v-show="showModal" :title="'You are about to schedule a live class with the following details'">
       <template v-if="isConfirming" v-slot:content>
-        <div class="d-md-flex mx-auto text-left">
+        <div class="col-12 mx-4 mt-0 mt-xs-4 mt-lg-0 ml-lg-14 text-left">
           <div class="mr-4">
             <div class="detail">Course name: <span>{{ selected_course }}</span></div>
             <div class="detail">Chapter name : <span>{{ selected_chapter }}</span></div>
@@ -142,13 +142,13 @@
             <div class="detail">Date : <span>{{ date | formatDate }}</span></div>
             <div class="detail">Time : <span>{{ time }}</span></div>
           </div>
-          <div>
-            <div class="detail">Notification : <span>Urgent live anouncement</span></div>
-            <div class="detail">Details : <span>Dear year 2 students,
-you  are invite to this 20 minutes live class,
-Attendance will not be accounted
-thanks</span></div>
-          </div>
+<!--          <div>-->
+<!--            <div class="detail">Notification : <span>Urgent live anouncement</span></div>-->
+<!--            <div class="detail">Details : <span>Dear year 2 students,-->
+<!--you  are invite to this 20 minutes live class,-->
+<!--Attendance will not be accounted-->
+<!--thanks</span></div>-->
+<!--          </div>-->
         </div>
         <div class="mx-auto">
           <button class="action" @click="showModal = false">Cancel</button>

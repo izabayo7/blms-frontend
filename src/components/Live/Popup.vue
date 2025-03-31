@@ -78,13 +78,15 @@ export default {
     font-weight: normal;
     font-size: 15px;
     line-height: 18px;
-    text-align: center;
-    margin-bottom: 16px;
-    color: #000000;
+
+    color: #828282;
 
     span {
-      font-weight: bold;
+      font-weight: 500;
+      color: #000000;
+      margin-left: 10px;
     }
+    margin-bottom: 15px;
   }
 
   .d-md-flex {
@@ -143,6 +145,16 @@ export default {
 @media (max-width: 1000px) {
   #schedule_live_class {
     padding: 0px;
+    .detail span{
+      display: block;
+      margin-left: 0;
+    }
+  }
+  .modal{
+    height: fit-content;
+    .action{
+      margin-bottom: 32.5px;
+    }
   }
 }
 </style>
