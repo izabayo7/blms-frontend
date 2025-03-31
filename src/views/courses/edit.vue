@@ -1,6 +1,6 @@
   <template>
   <v-app>
-    <v-row class="new-class-form ml-10 mt-10">
+    <v-row v-if="course != undefined" class="new-class-form ml-10 mt-10">
       <v-col class="col-12">
         <h1 class="d-block">EDIT COURSE</h1>
         <div class="new-class-btns mb-5">
@@ -23,7 +23,7 @@
         </div>
       </v-col>
       <v-col v-if="type=='details'" class="col-12">
-        <form>
+        <v-form>
           <v-row>
             <v-col class="col-12 col-md-8">
               <h3>Course Name</h3>
@@ -85,7 +85,7 @@
               >update Course</v-btn>
             </v-col>
           </v-row>
-        </form>
+        </v-form>
       </v-col>
       <v-col v-else class="col-12 pr-12">
         <v-row v-if="activeChapter > -1">
@@ -103,7 +103,7 @@
             </v-btn>
           </v-col>
           <v-col class="col-12 col-md-9 px-0">
-            <form>
+            <v-form>
               <div class="class-chapters">
                 <v-row>
                   <v-col class="col-12">
@@ -216,24 +216,48 @@
                         <v-card class="mb-12 elevation-0">
                           <v-row>
                             <v-col class="col-12">
-                              <div v-if="attachments.length > 0" class="attachments">
+                              <div
+                                v-if="course.chapters[activeChapter].attachments.length > 0"
+                                class="attachments"
+                              >
                                 <div
-                                  v-for="(attachment, key) in attachments"
+                                  v-for="(attachment, key) in course.chapters[activeChapter].attachments"
                                   :key="key"
                                   class="file-listing d-flex"
                                 >
-                                  <v-btn
-                                    class="pa-6 mb-4"
-                                    color="deep-purple accent-4"
-                                    outlined
-                                    @click="downloadAttachment(attachment._id)"
-                                  >
+                                  <div class="downloadable_attachment vertically--centered">
                                     <v-icon
-                                      color="#ffd248"
+                                      color="#000000"
                                       x-large
-                                    >mdi-file-outline</v-icon>
+                                    >mdi-file{{findIcon(attachment.name)}}-outline</v-icon>
                                     <span class="filename text-truncate">{{attachment.name}}</span>
-                                  </v-btn>
+                                    <button @click.prevent="deleteAttachment(attachment._id)">
+                                      <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        width="45"
+                                        height="45"
+                                        viewBox="0 0 69 69"
+                                      >
+                                        <circle
+                                          id="Ellipse_225"
+                                          data-name="Ellipse 225"
+                                          cx="34.5"
+                                          cy="34.5"
+                                          r="34.5"
+                                          fill="#fc6767"
+                                        />
+                                        <path
+                                          id="Icon_material-delete"
+                                          data-name="Icon material-delete"
+                                          d="M9,28.5a3.009,3.009,0,0,0,3,3H24a3.009,3.009,0,0,0,3-3v-18H9ZM28.5,6H23.25l-1.5-1.5h-7.5L12.75,6H7.5V9h21V6Z"
+                                          transform="translate(16.5 16.5)"
+                                          fill="none"
+                                          stroke="#fff"
+                                          stroke-width="2"
+                                        />
+                                      </svg>
+                                    </button>
+                                  </div>
                                 </div>
                               </div>
                             </v-col>
@@ -301,7 +325,7 @@
                   </v-col>
                 </v-row>
               </div>
-            </form>
+            </v-form>
           </v-col>
         </v-row>
       </v-col>
@@ -326,7 +350,7 @@ export default {
     attachments: [],
     type: "details",
     mode: "",
-    course: undefined,
+    // course: undefined,
     content: "",
     coverPicture: undefined,
     chapterVideo: undefined,
@@ -337,6 +361,8 @@ export default {
     simpleRules: [(v) => !!v || "This field is required"],
   }),
   computed: {
+    // get the current course
+    ...mapGetters("courses", ["course"]),
     ...mapGetters("faculties", ["facultyCollegeYearNames"]),
     ...mapGetters("quiz", ["quizNames"]),
     selectedFacultyCollegeYearCode() {
@@ -390,6 +416,7 @@ export default {
       "getChapterMainContent",
       "updateCourse",
       "updateChapter",
+      "deleteAttachment"
     ]),
     ...mapActions("faculties", ["getFacultyCollegeYears"]),
     // pick coverPicture
@@ -414,7 +441,7 @@ export default {
       this.attachments.splice(index, 1);
     },
     updateVideo(file) {
-      console.log(file)
+      console.log(file);
       this.chapterVideo = file;
     },
     removeVideo() {
@@ -446,7 +473,7 @@ export default {
       });
     },
     saveChapterChanges() {
-      console.log({
+      this.updateChapter({
         chapter: {
           name: this.course.chapters[this.activeChapter].name,
           number: this.activeChapter + 1,
@@ -456,22 +483,23 @@ export default {
         content: this.$refs.editor.getHTML(),
         video: this.chapterVideo,
         attachments: this.attachments,
+      }).then(() => {
+        this.course.chapters.length - 1 == this.activeChapter
+          ? (this.type = "course")
+          : (this.activeChapter += 1);
       });
-      // this.updateChapter({
-      //   chapter: {
-      //     name: this.course.chapters[this.activeChapter].name,
-      //     number: this.activeChapter + 1,
-      //     course: this.course._id,
-      //     description: this.course.chapters[this.activeChapter].description,
-      //   },
-      //   content: this.$refs.editor.getHTML(),
-      //   video: this.chapterVideo,
-      //   attachments: this.attachments,
-      // }).then(() => {
-      //   this.chapters.length - 1 == this.activeChapter
-      //     ? (this.type = "course")
-      //     : (this.activeChapter += 1);
-      // });
+    },
+    findIcon(name) {
+      const type = name.split(".")[name.split(".").length - 1];
+      if (type.includes("video")) {
+        return "-video";
+      } else if (type.includes("audio")) {
+        return "-music";
+      } else if (type.includes("word")) {
+        return "-word";
+      } else {
+        return "";
+      }
     },
   },
   created() {
@@ -480,8 +508,7 @@ export default {
       userCategory: this.$store.state.user.category.toLowerCase(),
       userId: this.$store.state.user._id,
       courseName: this.$route.params.name,
-    }).then((course) => {
-      this.course = course;
+    }).then(() => {
       this.selectedFacultyCollegeYearName = `${this.course.facultyCollegeYear.facultyCollege.faculty.name} ${this.course.facultyCollegeYear.collegeYear.digit}`;
     });
   },

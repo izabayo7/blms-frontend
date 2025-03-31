@@ -21,7 +21,6 @@ export default {
         },
         // update the progress
         update_progress(state, value) {
-            console.log(value)
             state.progress = value
         },
         // reset the progress

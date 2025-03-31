@@ -2,9 +2,6 @@
 .kurious--drag {
   text-align: center;
   border: 1px solid #d9d9d9;
-  .filename {
-    max-width: 160px;
-  }
   form {
     border-radius: 4px;
     background: #ccc;
@@ -14,24 +11,8 @@
     padding: 10px;
   }
 
-  div.file-listing img {
-    height: 100px;
-  }
-
   div.remove-container {
     text-align: center;
-  }
-
-  div.remove-container a {
-    color: red;
-    cursor: pointer;
-  }
-  .remove--button {
-    .v-icon {
-      font-size: 12px !important;
-    }
-    height: 21px !important;
-    width: 21px !important;
   }
   a.submit-button {
     display: block;
@@ -53,12 +34,37 @@
     margin-top: 20px;
     margin-bottom: 20px;
   }
-  .attachment {
-    background-color: #f8f8f8;
-    padding: 10px;
-    border-radius: 5px;
-    width: 140px;
+}
+.attachment {
+  background-color: #f8f8f8;
+  padding: 10px;
+  border-radius: 5px;
+  width: 140px;
+}
+// style the attachment
+div.remove-container a {
+  color: red;
+  cursor: pointer;
+}
+.remove--button {
+  .v-icon {
+    font-size: 12px !important;
   }
+  height: 21px !important;
+  width: 21px !important;
+}
+.file_figure {
+  .preview {
+    height: 40px;
+    width: 40px;
+    border-radius: 5px;
+    overflow: hidden;
+  }
+}
+.file_name {
+  font-size: 12px;
+  padding-left: 11px;
+  width: 79px;
 }
 </style>
 
@@ -78,15 +84,19 @@
               >
                 <v-icon color="#fff">mdi-window-close</v-icon>
               </v-btn>
-              <img
-                v-if="imageTypes.includes(file.type)"
-                class="preview"
-                v-bind:ref="'preview'+parseInt( key )"
-              />
 
-              <div v-else class="attachment vertically--centered">
-                <v-icon color="#000000" x-large>mdi-file{{findIcon(file.type)}}-outline</v-icon>
-                <span class="filename text-truncate">{{file.name}}</span>
+              <div class="attachment vertically--centered">
+                <div class="file_figure">
+                  <v-img
+                    v-if="imageTypes.includes(file.type)"
+                    class="preview"
+                    v-bind:ref="'preview'+parseInt( key )"
+                  />
+                  <v-icon v-else color="#000000" x-large>mdi-file{{findIcon(file.type)}}-outline</v-icon>
+                </div>
+                <div class="file_name">
+                  <span>{{file.name | trimString(12)}}</span>
+                </div>
               </div>
             </v-badge>
           </div>

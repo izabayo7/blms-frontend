@@ -205,7 +205,7 @@
 
     <!--      teacher preview-->
     <div class="teacher" v-if="userCategory === 'Instructor'">
-      <button class="back">back</button>
+      <button @click="$router.go(-1)" class="back">back</button>
       <div class="preview-card row">
         <div class="preview-image col-sm-12 col-md-12 col-lg-4 col-xl-4">
           <img
@@ -396,7 +396,9 @@
                   </g>
                 </svg>
               </div>
-              <div @click="tooglePublishCourse" class="act-btn upload">
+              <div @click="tooglePublishCourse().then(()=>{
+                  $router.push('/courses')
+                })" class="act-btn upload">
                 <svg
                   v-if="course.published"
                   xmlns="http://www.w3.org/2000/svg"
@@ -543,23 +545,20 @@
   </section>
 </template>
 <script>
-import { mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 
 export default {
   name: "Course-details",
   components: {
     preview: () => import("@/components/courses/Preview"),
   },
-  data() {
-    return {
-      course: undefined,
-    };
-  },
   computed: {
     // get the userCategory
     userCategory() {
       return this.$store.state.user.category;
     },
+    // get the current course
+    ...mapGetters("courses", ["course"])
   },
   methods: {
     ...mapActions("courses", [
@@ -573,9 +572,7 @@ export default {
       userCategory: this.$store.state.user.category.toLowerCase(),
       userId: this.$store.state.user._id,
       courseName: this.$route.params.name,
-    }).then((course) => {
-      this.course = course;
-    });
+    })
   },
 };
 </script>

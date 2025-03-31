@@ -8,10 +8,6 @@
 <script>
 export default {
   name: "App",
-  mounted() {
-    console.log(this.$el.style.height)
-
-  },
 };
 </script>
 <style lang="scss">

@@ -129,74 +129,70 @@
                         :key="key"
                         class="file-listing d-flex"
                       >
-                        <img
-                          v-if="imageTypes.includes(attachment.type)"
-                          class="preview"
-                          v-bind:ref="'preview'+parseInt( key )"
-                        />
-                        <v-btn v-else class="elevation-0 attachment" color="#F8F8F8">
+                        <div class="downloadable_attachment vertically--centered">
                           <v-icon
-                            color="#ffd248"
+                            color="#000000"
                             x-large
                           >mdi-file{{findIcon(attachment.name)}}-outline</v-icon>
                           <span class="filename text-truncate">{{attachment.name}}</span>
-                          <svg
-                            @click="downloadAttachment(attachment._id)"
-                            class="attachment-download"
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="45"
-                            height="45"
-                            viewBox="0 0 58 58"
-                          >
-                            <circle
-                              id="Ellipse_215"
-                              data-name="Ellipse 215"
-                              cx="29"
-                              cy="29"
-                              r="29"
-                              fill="#ffd248"
-                            />
-                            <g
-                              id="Icon_feather-download"
-                              data-name="Icon feather-download"
-                              transform="translate(16.954 16.954)"
+                          <button @click="downloadAttachment(attachment._id)">
+                            <svg
+                              class="attachment-download"
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="45"
+                              height="45"
+                              viewBox="0 0 58 58"
                             >
-                              <path
-                                id="Path_1937"
-                                data-name="Path 1937"
-                                d="M28.592,22.5v5.354a2.677,2.677,0,0,1-2.677,2.677H7.177A2.677,2.677,0,0,1,4.5,27.854V22.5"
-                                transform="translate(-4.5 -6.438)"
-                                fill="none"
-                                stroke="#fff"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="3"
+                              <circle
+                                id="Ellipse_215"
+                                data-name="Ellipse 215"
+                                cx="29"
+                                cy="29"
+                                r="29"
+                                fill="#ffd248"
                               />
-                              <path
-                                id="Path_1938"
-                                data-name="Path 1938"
-                                d="M10.5,15l6.692,6.692L23.885,15"
-                                transform="translate(-5.146 -5.631)"
-                                fill="none"
-                                stroke="#fff"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="3"
-                              />
-                              <path
-                                id="Path_1939"
-                                data-name="Path 1939"
-                                d="M18,20.562V4.5"
-                                transform="translate(-5.954 -4.5)"
-                                fill="none"
-                                stroke="#fff"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="3"
-                              />
-                            </g>
-                          </svg>
-                        </v-btn>
+                              <g
+                                id="Icon_feather-download"
+                                data-name="Icon feather-download"
+                                transform="translate(16.954 16.954)"
+                              >
+                                <path
+                                  id="Path_1937"
+                                  data-name="Path 1937"
+                                  d="M28.592,22.5v5.354a2.677,2.677,0,0,1-2.677,2.677H7.177A2.677,2.677,0,0,1,4.5,27.854V22.5"
+                                  transform="translate(-4.5 -6.438)"
+                                  fill="none"
+                                  stroke="#fff"
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                  stroke-width="3"
+                                />
+                                <path
+                                  id="Path_1938"
+                                  data-name="Path 1938"
+                                  d="M10.5,15l6.692,6.692L23.885,15"
+                                  transform="translate(-5.146 -5.631)"
+                                  fill="none"
+                                  stroke="#fff"
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                  stroke-width="3"
+                                />
+                                <path
+                                  id="Path_1939"
+                                  data-name="Path 1939"
+                                  d="M18,20.562V4.5"
+                                  transform="translate(-5.954 -4.5)"
+                                  fill="none"
+                                  stroke="#fff"
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                  stroke-width="3"
+                                />
+                              </g>
+                            </svg>
+                          </button>
+                        </div>
                       </div>
                     </div>
                     <span v-else>Chapter {{course.chapters[activeIndex].name}} have no attachments</span>
@@ -223,7 +219,7 @@
 
 <script>
 import Apis from "@/services/apis";
-import { mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 export default {
   name: "CourseDetails",
   data: () => ({
@@ -235,13 +231,13 @@ export default {
     progressId: "",
     modal: true,
     attachments: [],
-    imageTypes: ["image/jpeg", "image/png"],
     status: 200,
-    course: undefined,
     showActions: false,
     editorContent: "",
   }),
-  computed: {},
+  computed: {
+    ...mapGetters("courses", ["course"])
+    },
   watch: {
     activeIndex() {
       this.maximumIndex =
