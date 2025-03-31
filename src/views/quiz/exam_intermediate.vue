@@ -40,7 +40,7 @@
             </ul>
           </div>
           <div class="text-center">
-            <button @click="set_modal({
+            <button @click="exam.type === 'Open-book examination' ? $router.push(`/assessments/exams/attempt/${exam._id}`)  : set_modal({
                         template: 'exam_constraints',
                         link: `/assessments/exams/attempt/${exam._id}`
                       })">I Accept
@@ -57,7 +57,7 @@ import {mapActions} from "vuex";
 
 export default {
   name: "ExamIntermediate",
-  data:()=>({
+  data: () => ({
     exam: undefined
   }),
   components: {

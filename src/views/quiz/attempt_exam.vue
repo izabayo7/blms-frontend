@@ -307,18 +307,18 @@ export default {
   watch: {
     remaining_time() {
       if (this.remaining_time > 0) {
-        // setTimeout(() => {
-        //   this.remaining_time -= 1;
-        // }, 1000);
-        // if (this.remaining_time === this.exam.duration - 1)
-        //   this.initialiseQuiz();
+        setTimeout(() => {
+          this.remaining_time -= 1;
+        }, 1000);
+        if (this.remaining_time === this.exam.duration - 1)
+          this.initialiseQuiz();
 
         this.attempt.used_time = this.exam.duration - this.remaining_time;
       } else if (!this.done) {
         this.done = true;
         const category = this.$store.state.user.user.category.name;
         this.attempt.auto_submitted = true;
-        if (category == "STUDENT") {
+        if (category === "STUDENT") {
           this.markUndoneQuestions();
           this.saveAttempt();
         } else {
@@ -360,14 +360,15 @@ export default {
     ...mapActions("modal", ["set_modal"]),
     ...mapActions("quiz", ["getExam"]),
     endExam() {
-      if(!this.warned) {
+      if (!this.warned) {
         this.warned = true
         this.set_modal({
           template: `exam_constraints`,
         })
-      }
-      else {
-        console.log('failed')
+      } else {
+        console.log(
+            'twagiyeeeeee'
+        )
         this.saveAttempt(true)
       }
     },
@@ -662,7 +663,9 @@ export default {
       if (exam.submission)
         return this.$router.push(`/assessments/exams/${this.$route.params.id}/${this.$store.state.user.user.user_name}`)
 
-      this.setUp()
+      if (exam.type === 'Closed-book examination')
+        this.setUp()
+
       this.exam = exam
       this.remaining_time = exam.duration;
       this.attempt = {
