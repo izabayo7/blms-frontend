@@ -5,7 +5,9 @@
       <div class="shade" :class="{ iconActive: cardActive }">
         <div class="hold">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M16 17H7V10.5C7 8 9 6 11.5 6C14 6 16 8 16 10.5V17ZM18 16V10.5C18 7.43 15.86 4.86 13 4.18V3.5C13 3.10218 12.842 2.72064 12.5607 2.43934C12.2794 2.15804 11.8978 2 11.5 2C11.1022 2 10.7206 2.15804 10.4393 2.43934C10.158 2.72064 10 3.10218 10 3.5V4.18C7.13 4.86 5 7.43 5 10.5V16L3 18V19H20V18L18 16ZM11.5 22C12.0304 22 12.5391 21.7893 12.9142 21.4142C13.2893 21.0391 13.5 20.5304 13.5 20H9.5C9.5 20.5304 9.71071 21.0391 10.0858 21.4142C10.4609 21.7893 10.9696 22 11.5 22Z" fill="#626262"/>
+            <path
+                d="M16 17H7V10.5C7 8 9 6 11.5 6C14 6 16 8 16 10.5V17ZM18 16V10.5C18 7.43 15.86 4.86 13 4.18V3.5C13 3.10218 12.842 2.72064 12.5607 2.43934C12.2794 2.15804 11.8978 2 11.5 2C11.1022 2 10.7206 2.15804 10.4393 2.43934C10.158 2.72064 10 3.10218 10 3.5V4.18C7.13 4.86 5 7.43 5 10.5V16L3 18V19H20V18L18 16ZM11.5 22C12.0304 22 12.5391 21.7893 12.9142 21.4142C13.2893 21.0391 13.5 20.5304 13.5 20H9.5C9.5 20.5304 9.71071 21.0391 10.0858 21.4142C10.4609 21.7893 10.9696 22 11.5 22Z"
+                fill="#626262"/>
           </svg>
           <div v-if="unReads" class="number">{{ unReads }}</div>
         </div>
@@ -14,7 +16,7 @@
 
     <!-- notification card -->
     <transition
-      enter-active-class="animate__animated animate__fadeIn animate__faster"
+        enter-active-class="animate__animated animate__fadeIn animate__faster"
     >
       <div class="my-card" v-if="cardActive">
         <div class="customScroll">
@@ -25,11 +27,11 @@
           </div>
           <!-- notification item -->
           <div
-            v-for="(no, i) in formatedNotifications"
-            :key="i"
-            class="item"
-            @click="$route.path === no.link || !no.link ? undefined : $router.push(no.link)"
-            @click.stop="cardActive = false"
+              v-for="(no, i) in formatedNotifications"
+              :key="i"
+              class="item"
+              @click="handleNotificationClick(no,i)"
+              @click.stop="cardActive = false"
           >
             <!-- <img class="pic" src="@/assets/images/instructor.png" /> -->
             <div class="content">
@@ -45,7 +47,8 @@
   </div>
 </template>
 <script>
-import { mapGetters, mapActions } from "vuex";
+import {mapGetters, mapActions} from "vuex";
+import Apis from "@/services/apis";
 
 export default {
   name: "Notification",
@@ -55,11 +58,22 @@ export default {
       cardActive: false,
     };
   },
+  watch: {
+    cardActive() {
+      if (this.cardActive)
+        Apis.update('user_notification', 'allSeen').then(() => {
+          for (const i in this.notifications) {
+            if (this.notifications[i].status === 3)
+              this.notifications[i].status = 2
+          }
+        })
+    }
+  },
   computed: {
     number() {
       return this.numberOfNewNotifications > 9
-        ? "9+"
-        : `${this.numberOfNewNotifications}`;
+          ? "9+"
+          : `${this.numberOfNewNotifications}`;
     },
     ...mapGetters("notification", ["loaded", "notifications"]),
     formatedNotifications() {
@@ -67,6 +81,7 @@ export default {
       if (this.notifications.length > 0) {
         for (const i in this.notifications) {
           notifications.push({
+            id: this.notifications[i].notification._id,
             name: this.notifications[i].notification.user ? `${this.notifications[i].notification.user.sur_name} ${this.notifications[i].notification.user.other_names}` : 'System',
             msg: this.notifications[i].notification.content,
             time: this.notifications[i].notification.createdAt,
@@ -80,7 +95,7 @@ export default {
     unReads() {
       let total = 0;
       for (const i in this.notifications) {
-        if (this.notifications[i].status > 1) {
+        if (this.notifications[i].status > 2) {
           total++;
         }
       }
@@ -88,6 +103,13 @@ export default {
     },
   },
   methods: {
+    handleNotificationClick(no, index) {
+      Apis.update('user_notification', `${no.id}/read`).then(() => {
+        this.notifications.splice(index, 1)
+        if (no.link && this.$route.path !== no.link)
+          this.$router.push(no.link)
+      })
+    },
     ...mapActions("notification", ["getNotifications"]),
     outsideClickDetector() {
       let self = this;
@@ -131,6 +153,7 @@ export default {
       left: 10px;
     }
   }
+
   .shade {
     padding: 0.4rem;
     display: flex;
@@ -141,6 +164,7 @@ export default {
       background-color: $secondary;
       border-radius: 50%;
     }
+
     .hold {
       position: relative;
       align-items: center;
@@ -159,6 +183,7 @@ export default {
   .my-card {
     overflow-wrap: anywhere;
     z-index: 9;
+
     .customScroll {
       max-height: calc(100vh - 133px);
       overflow-y: auto;
@@ -172,6 +197,7 @@ export default {
     width: 20rem;
     box-shadow: 0px 0px 10px 0px lighten($color: $secondary, $amount: 4);
     border-radius: 10px;
+
     ::after {
       content: "";
       position: absolute;
@@ -192,7 +218,7 @@ export default {
       padding: 1rem;
     }
 
-    .n_item{
+    .n_item {
       text-align: center;
       padding: 20px 0;
     }
@@ -208,6 +234,7 @@ export default {
       &:hover {
         background-color: lighten($color: $secondary, $amount: 6);
       }
+
       img {
         width: 50px;
         height: 50px;

@@ -11,6 +11,7 @@
           v-model="input"
           :type="type"
           :name="name"
+          :placeholder="placeholder"
           :id="id"
         />
       </label>
@@ -28,6 +29,9 @@ export default {
     id: { required: true },
     type: { default: "text" },
     name: { required: true },
+    placeholder:{
+      type: String
+    },
     label: { require: true },
     value: String,
     valid: Boolean,
