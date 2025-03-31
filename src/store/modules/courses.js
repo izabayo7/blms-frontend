@@ -350,7 +350,7 @@ export default {
             })
         },
         //find a course by name
-        findCourseByName({ state, commit }, { userId, courseName }) {
+        findCourseByName({ state, commit }, { user_name, courseName }) {
             let courseFound = false
             if (state.courses.loaded) {
                 let courses = state.courses.data.filter(course => course.name == courseName)
@@ -362,7 +362,7 @@ export default {
                 }
             }
             if (!courseFound) {
-                return apis.get(`course/user/${userId}/${courseName}`).then(d => {
+                return apis.get(`course/user/${user_name}/${courseName}`).then(d => {
                     d.data = d.data.data
                     if (state.courses.loaded) {
                         state.courses.data.push(d.data)
