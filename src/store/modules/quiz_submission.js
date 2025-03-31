@@ -74,7 +74,7 @@ export default {
                 //announce that data have been loaded
                 state.quiz_submission.loaded = true
 
-                return d.data
+                return state.quiz_submission.data
             })
             // }
         },
