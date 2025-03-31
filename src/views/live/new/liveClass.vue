@@ -103,7 +103,8 @@
             </div>
           </div>
         </div>
-        <div v-if="participationInfo.isOfferingCourse" class="live-comments" :class="`--${$vuetify.breakpoint.name} ${sidebarOpen ? '' : 'viewer'}`">
+        <div v-if="participationInfo.isOfferingCourse" class="live-comments"
+             :class="`--${$vuetify.breakpoint.name} ${sidebarOpen ? '' : 'viewer'}`">
           <div class="live-comments--wrapper">
             <div class="_title">LIVE COMMENTS</div>
             <div class="student-new-comment">
@@ -456,11 +457,11 @@ export default {
       this.sendMessage({
         id: this.participationInfo.isOfferingCourse ? 'closeRoom' : 'leaveRoom'
       });
-      if(!this.participationInfo.isOfferingCourse){
+      if (!this.participationInfo.isOfferingCourse) {
         this.onCloseRoom();
       }
     },
-    onCloseRoom(){
+    onCloseRoom() {
       for (let key in this.participants) {
         this.participants[key].dispose();
       }
@@ -491,13 +492,15 @@ export default {
       if (sender != this.participationInfo.name) {
         this.participants.push(participant);
         this.addParticipant({id: participant.userInfo._id})
-        this.sendMessage({
-          id: "notifyUser",
-          receiver: participant.name,
-          videoStatus: this.videoEnabled,
-          audioStatus: this.audioEnabled,
-          screenStatus: this.isPresenting
-        })
+        if (this.participationInfo.isOfferingCourse) {
+          this.sendMessage({
+            id: "notifyUser",
+            receiver: participant.name,
+            videoStatus: this.videoEnabled,
+            audioStatus: this.audioEnabled,
+            screenStatus: this.isPresenting
+          })
+        }
       }
     },
 
