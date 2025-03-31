@@ -100,10 +100,13 @@
 
 <script>
 import {mapGetters, mapMutations, mapState, mapActions} from "vuex";
+import {convertUTCDateToLocalDate, elapsedDuration} from "../../services/global_functions";
 
 export default {
   data: () => ({
-    userCode: ""
+    userCode: "",
+    attendance: 100,
+    interval: null
   }),
   computed: {
     ...mapState("modal", ["confirmed"]),
@@ -123,6 +126,18 @@ export default {
       "message",
     ]),
   },
+  created() {
+    if(this.modal_template === "live_related"){
+      this.interval = setInterval(() => {
+        this.attendance -= 20
+        if(this.attendance < 0)
+          this.performAction()
+      }, 500)
+    }
+  },
+  destroyed() {
+    clearInterval(this.interval)
+  },
   methods: {
     ...mapMutations("modal", [
       "toogle_visibility",
@@ -141,6 +156,9 @@ export default {
     ...mapActions("modal", ['reset_modal']),
     performAction() {
       if (this.confirmation_method) {
+        if(this.modal_template === "live_related"){
+          this.confirmation_method.parameters.attendance = this.attendance > 0 ? this.attendance : 0
+        }
         this.$store
             .dispatch(
                 this.confirmation_method.action,

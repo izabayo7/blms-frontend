@@ -34,11 +34,10 @@ export default {
         change_confirmation({state}, {value}) {
             state.end_class = value
         },
-        answerAttendance({rootGetters}, {user,session_id, time}) {
-            console.log(time)
+        answerAttendance({rootGetters}, {user,session_id, attendance}) {
             rootGetters['chat/socket'].emit("res/live/checkAttendance",{
                 receivers: [user],
-                attendance: 100,
+                attendance,
                 session_id
             })
         },
