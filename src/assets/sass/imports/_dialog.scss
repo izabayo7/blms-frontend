@@ -1,0 +1,144 @@
+// resize the modal
+.v-dialog:not(.v-dialog--fullscreen) {
+  height: 432px !important;
+  width: 100% !important;
+  .dialog-body {
+    height: 100%;
+    padding: 30px;
+    background-color: white;
+    padding-top: 50px;
+    text-align: left;
+    &.invite-users {
+      max-width: 742px;
+      margin: auto
+    }
+    .close {
+      /* position: relative; */
+      float: right;
+      margin-top: -20px;
+    }
+    .hint {
+      font-family: Inter;
+      font-style: normal;
+      font-weight: 500;
+      font-size: 13.8279px;
+      /* or 143% */
+      margin-top: 6px;
+      color: #FC6767;
+      text-align: center;
+    }
+    .centered {
+      width: 60%;
+      .email-input {
+        width: 80%;
+      }
+      .add-email {
+        width: 79.24px;
+        height: 45.38px;
+        &.send {
+          width: 251.43px;
+          height: 40.38px;
+        }
+        cursor: pointer;
+        background: #193074;
+        &.cancel{
+          background: #ABABAB;
+        }
+        border-radius: 3.80952px;
+        font-family: Inter;
+        font-style: normal;
+        font-weight: 500;
+        font-size: 12.1905px;
+        /* identical to box height, or 125% */
+
+        text-align: center;
+
+        color: #ffffff;
+      }
+    }
+    .added-emails {
+      // display: flex;
+      // overflow-wrap: anywhere;
+      // flex-direction:row;
+      max-width: 100%;
+      margin: 1rem 0;
+      height: 5rem;
+      overflow-x: hidden;
+      overflow-y: auto;
+    }
+    .email {
+      place-items: center;
+      overflow-wrap: anywhere;
+      .text {
+        font-family: Inter;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 10.5736px;
+        color: #000000;
+        // width: 98%;
+      }
+      min-height: 25.38px;
+      background: rgba(196, 196, 196, 0.33);
+      border-radius: 24.3193px;
+      padding: 0.25rem 0.6rem;
+      margin: 0.3rem;
+      display: inline-flex;
+      border-radius: 20px;
+      transition: all 0.5s;
+    }
+    .send-container {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+    }
+    .non-centered {
+      .title {
+        font-family: Inter;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 20px;
+        /* or 126% */
+
+        text-align: center;
+
+        color: #000000;
+      }
+      .close {
+        width: 145px;
+        height: 38px;
+        background: #193074;
+        border-radius: 3.80952px;
+
+        font-family: Inter;
+        font-style: normal;
+        font-weight: bold;
+        font-size: 15px;
+
+        color: #ffffff;
+      }
+      .added-emails {
+        max-width: 80%;
+        height: 13rem;
+      }
+    }
+  }
+}
+// round the modal
+.v-dialog.v-dialog--active {
+  border-radius: none;
+}
+#kurious--dialog div {
+  background-color: white;
+  height: 100%;
+  width: 100px;
+}
+/* Portrait phones and smaller */
+@media (max-width: 700px) {
+  .v-dialog:not(.v-dialog--fullscreen) {
+    .dialog-body {
+      .centered {
+        width: 100%
+      }
+    }
+  }
+}

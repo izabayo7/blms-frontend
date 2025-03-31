@@ -20,7 +20,7 @@
       </div>
       <div class="col-12 col-md-6 justify-end d-flex align-center">
         <div class="action">
-          <button class="upgrade">Change password</button>
+          <button @click="showUpdatePassword = true" class="upgrade">Change password</button>
         </div>
       </div>
       <div class="col-12 col-md-10">
@@ -184,6 +184,10 @@
         </div>
       </div>
     </v-row>
+    <update-password
+        v-if="showUpdatePassword"
+        @closeModal="showUpdatePassword = false"
+    />
   </v-container>
 </template>
 
@@ -199,10 +203,12 @@ export default {
   data: () => ({
     editStatus: [true, true, true, true, true, true],
     img: "",
+    showUpdatePassword: false,
     largeDevices: ['md', 'lg', 'xl'],
     profile: undefined,
   }),
   components: {
+    UpdatePassword: () => import("@/components/dashboard/updatePasswordDialog"),
     cropper: () => import("@/components/reusable/ui/ImageCropper"),
   },
   computed: {
