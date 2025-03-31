@@ -5,9 +5,10 @@ const getDefaultState = () => ({
     page_actions_visible: true,
     group_model: false,
     college: {},
-    plan:{},
+    plan: {},
     showChatMobileNavbar: false,
-    total_unread_messages: 0
+    total_unread_messages: 0,
+    total_undone_assignments: 0,
 })
 
 export default {
@@ -19,8 +20,9 @@ export default {
             state.sidebar_expanded = !state.sidebar_expanded;
         },
 
-        SET_TOTAL_UNREAD(state, value) {
-            state.total_unread_messages = value
+        SET_TOTAL_UNREAD(state, {number, total_assignments}) {
+            state.total_unread_messages = number
+            state.total_undone_assignments = total_assignments
         },
 
         TOGGLE_CHAT_MOBILE_NAVBAR(state) {
@@ -44,10 +46,10 @@ export default {
         }
     },
     actions: {
-        async removeLogo({ state }) {
+        async removeLogo({state}) {
             const splited = state.college.logo.split("/");
             // set the dialog
-            await Apis.delete(`college/${state.college._id}/logo`,splited[splited.length - 1]);
+            await Apis.delete(`college/${state.college._id}/logo`, splited[splited.length - 1]);
             state.college.logo = undefined
         },
     },
