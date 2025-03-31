@@ -49,7 +49,7 @@
 </template>
 
 <script>
-//TODO adding row links
+//TODO auto flexible column based on length of data [liberi]
 export default {
   name: "table-ui",
   props:{
