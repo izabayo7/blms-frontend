@@ -536,6 +536,7 @@ export default {
                   ? undefined
                   : editorContent,
           duration: this.calculateSeconds(),
+          type: this.type,
           user: this.$store.state.user.user.user_name,
           starting_time: this.starting_time,
           questions: questions,
