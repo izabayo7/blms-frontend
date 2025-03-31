@@ -63,7 +63,7 @@
                       d="M2.41355 12.6584C2.86033 13.7301 4.03747 14.2926 5.15186 13.9669L8.24673 13.0627L6.23214 8.2303L3.4115 9.79227C2.39575 10.3546 1.96676 11.5867 2.41355 12.6584Z"
                       fill="#2D3E70"/>
                 </svg>
-                {{ (announcement.name || "Ntazina ndqdddddddddddddddddddddd") | trimString(18) }}
+                {{ announcement.name | trimString(18) }}
               </div>
               <div class="details">
                 <div class="time">{{ announcement.createdAt | formatDate }}</div>
