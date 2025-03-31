@@ -13,7 +13,7 @@
                 <!--                </div>-->
                 <loader v-if="commentsLoading"/>
                 <div v-else class="unreal-time-discussions">
-                    <div v-if="comments.length > 0"> class="discussions-container">
+                    <div v-if="comments.length > 0" class="discussions-container">
                         <div class="discussion" v-for="comment in comments" :key="comment._id">
                             <discussion :content="comment" @replied="replied"/>
                         </div>
@@ -65,6 +65,9 @@
                 this.commentsLoading = true
                 const comments = await api.get(`comment/chapter/${this.selectedChapter}`)
                 this.comments = comments.data.data
+
+                const total = this.comments.length > 0 ? this.comments.length : "";
+                this.$store.commit('courses/SET_TOTAL_COMMENTS_ON_A_CHAPTER',total) //set total comments number
                 this.commentsLoading =false
             },
             sent(comment){
