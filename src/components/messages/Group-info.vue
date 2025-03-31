@@ -14,7 +14,7 @@
       <div class="members">
         <div class="header">
           <p>22 members</p>
-          <div class="member-btn">
+          <div class="member-btn" @click="goToAddMember">
             <div class="icon">
               <svg id="user-add-line" xmlns="http://www.w3.org/2000/svg" width="33" height="33" viewBox="0 0 33 33">
                 <path id="Path_2152" data-name="Path 2152" d="M0,0H33V33H0Z" fill="none"/>
@@ -47,7 +47,6 @@
 </template>
 
 <script>
-
 import GroupMember from "@/components/messages/Group-member";
 export default {
   name: "Group-info",
@@ -65,6 +64,11 @@ export default {
           'Izabayo zakayo',
           'Liberi Jama Se',
       ]
+    }
+  },
+  methods:{
+    goToAddMember(){
+      this.$router.push(`${this.$route.path}/add-member`)
     }
   }
 }
