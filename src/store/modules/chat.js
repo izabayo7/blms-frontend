@@ -148,7 +148,6 @@ export default {
             })
 
             store.dispatch('chat/findIndexOfUserInIncomingMessages', state.currentDisplayedUser.id).then(idx => {
-                console.log(idx)
                 if (idx === null) {
                     //to be done later
                 } else {
@@ -180,7 +179,6 @@ export default {
         // change conversation to first if new message is sent or received
         CHANGE_CONVERSATION_STAND(state, msg) {
             let idx = -1;
-            console.log(msg)
             const id = msg.group ? msg.group : msg.sender.user_name;
             const message = {
                 content: msg.content,
@@ -193,8 +191,6 @@ export default {
                 if (val.id == id) idx = i
             })
 
-            console.log('id', idx)
-            // console.log(state.incomingMessages.splice(idx, 1))
             if (idx > -1) {
                 state.incomingMessages.splice(0, 0, state.incomingMessages.splice(idx, 1)[0])
                 state.incomingMessages[0].last_message = message
@@ -227,7 +223,6 @@ export default {
 
             // Get contacts new style
             getters.socket.on('res/message/contacts', ({ contacts }) => {
-                console.log(contacts)
                 state.incomingMessages = contacts
                 emit('incoming_message_initially_loaded')
             });
@@ -235,9 +230,8 @@ export default {
             // Get new contact
             getters.socket.on('res/message/contacts/new', ({ contact, redirect }) => {
                 state.incomingMessages.unshift(contact)
-                console.log("redirect bro : ",redirect)
-                // if(redirect)
-                //     router.push(`/messages/${contact.id}`)
+                if(redirect)
+                    router.push(`/messages/${contact.id}`)
             });
         },
         removeMember({ state }, { groupId, member }) {
@@ -257,8 +251,6 @@ export default {
                     if (state.incomingMessages[i].id == groupId) {
                         for (const k in state.incomingMessages[i].members) {
                             if (state.incomingMessages[i].members[k].id == member.id) {
-                                console.log('kbx')
-                                console.log(k)
                                 state.incomingMessages[i].members[k].isAdmin = !state.incomingMessages[i].members[k].isAdmin
                             }
                         }

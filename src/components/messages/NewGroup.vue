@@ -1,7 +1,7 @@
 <template>
   <div class="new-group" v-show="group_model">
     <div class="group-wrapper">
-      <cropper :img="img" @change="imageCropped" />
+      <cropper :img="img" @change="imageCropped"/>
       <div class="background-darkness"></div>
       <div id="form" class="col-xs-11 col-sm-10 col-md-8 col-lg-8 col-xl-6">
         <div class="group-card row flex flex-column-reverse flex-md-row">
@@ -14,45 +14,45 @@
               </transition>
               <div class="row group-name">
                 <label for="group_name_input">Group name</label>
-                <input type="text" id="group_name_input" v-model="group.name" />
+                <input type="text" id="group_name_input" v-model="group.name"/>
               </div>
               <div class="row group-members">
                 <label for="group_members_input">Add members</label>
                 <div class="members">
                   <input
-                    @input="getUsers"
-                    v-model="currentMember"
-                    type="text"
-                    id="group_members_input"
+                      @input="getUsers"
+                      v-model="currentMember"
+                      type="text"
+                      id="group_members_input"
                   />
                   <transition name="member">
                     <div
-                      class="found-members"
-                      v-if="foundUsers.length > 0 || userLoading"
+                        class="found-members"
+                        v-if="foundUsers.length > 0 || userLoading"
                     >
                       <svg
-                        v-if="userLoading"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                        width="24"
-                        height="24"
+                          v-if="userLoading"
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 24 24"
+                          width="24"
+                          height="24"
                       >
-                        <path fill="none" d="M0 0h24v24H0z" />
-                        <path d="M12 3a9 9 0 0 1 9 9h-2a7 7 0 0 0-7-7V3z" />
+                        <path fill="none" d="M0 0h24v24H0z"/>
+                        <path d="M12 3a9 9 0 0 1 9 9h-2a7 7 0 0 0-7-7V3z"/>
                       </svg>
                       <div class="no-user" v-if="NotFoundText.length > 0">
                         {{ NotFoundText }}
                       </div>
                       <transition-group name="members">
                         <div
-                          class="member"
-                          v-for="user in foundUsers"
-                          @click="addMember(user)"
-                          :key="user.email"
+                            class="member"
+                            v-for="user in foundUsers"
+                            @click="addMember(user)"
+                            :key="user.email"
                         >
                           <member
-                            :disabled="disabled(user.email)"
-                            :user="user"
+                              :disabled="disabled(user.email)"
+                              :user="user"
                           />
                         </div>
                       </transition-group>
@@ -62,9 +62,9 @@
                 <div class="added-members-list" v-if="group.members.length > 0">
                   <transition-group name="chips">
                     <chip
-                      v-for="(member, i) in group.members"
-                      @closed="closed(i)"
-                      :key="member.email"
+                        v-for="(member, i) in group.members"
+                        @closed="closed(i)"
+                        :key="member.email"
                     >
                       {{ member.sur_name + " " + member.other_names }}
                     </chip>
@@ -74,14 +74,14 @@
               <div class="group-privacy">
                 <label>Make Public</label>
                 <div class="switch">
-                  <switch-ui v-model="group.public" />
+                  <switch-ui v-model="group.public"/>
                 </div>
               </div>
               <div class="row action-buttons">
                 <button
-                  class="create-group-button"
-                  :class="{ disabled: btnDisabled }"
-                  @click="createGroup"
+                    class="create-group-button"
+                    :class="{ disabled: btnDisabled }"
+                    @click="createGroup"
                 >
                   Create group
                 </button>
@@ -95,76 +95,76 @@
             <div class="circle">
               <div class="pic">
                 <img
-                  id="preview"
-                  onerror="this.style.display = 'none'"
-                  src=""
-                  alt=""
+                    id="preview"
+                    onerror="this.style.display = 'none'"
+                    src=""
+                    alt=""
                 />
                 <div class="icon">
                   <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="83"
-                    height="58.1"
-                    viewBox="0 0 83 58.1"
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="83"
+                      height="58.1"
+                      viewBox="0 0 83 58.1"
                   >
                     <path
-                      id="Icon_awesome-users"
-                      data-name="Icon awesome-users"
-                      d="M12.45,27.15a8.3,8.3,0,1,0-8.3-8.3A8.308,8.308,0,0,0,12.45,27.15Zm58.1,0a8.3,8.3,0,1,0-8.3-8.3A8.308,8.308,0,0,0,70.55,27.15ZM74.7,31.3H66.4a8.276,8.276,0,0,0-5.849,2.412A18.97,18.97,0,0,1,70.291,47.9H78.85A4.146,4.146,0,0,0,83,43.75V39.6A8.308,8.308,0,0,0,74.7,31.3Zm-33.2,0A14.525,14.525,0,1,0,26.975,16.775,14.518,14.518,0,0,0,41.5,31.3Zm9.96,4.15H50.384a20.054,20.054,0,0,1-17.767,0H31.54A14.944,14.944,0,0,0,16.6,50.39v3.735a6.227,6.227,0,0,0,6.225,6.225h37.35A6.227,6.227,0,0,0,66.4,54.125V50.39A14.944,14.944,0,0,0,51.46,35.45ZM22.449,33.712A8.276,8.276,0,0,0,16.6,31.3H8.3A8.308,8.308,0,0,0,0,39.6v4.15A4.146,4.146,0,0,0,4.15,47.9H12.7A19.018,19.018,0,0,1,22.449,33.712Z"
-                      transform="translate(0 -2.25)"
-                      fill="#aaa"
+                        id="Icon_awesome-users"
+                        data-name="Icon awesome-users"
+                        d="M12.45,27.15a8.3,8.3,0,1,0-8.3-8.3A8.308,8.308,0,0,0,12.45,27.15Zm58.1,0a8.3,8.3,0,1,0-8.3-8.3A8.308,8.308,0,0,0,70.55,27.15ZM74.7,31.3H66.4a8.276,8.276,0,0,0-5.849,2.412A18.97,18.97,0,0,1,70.291,47.9H78.85A4.146,4.146,0,0,0,83,43.75V39.6A8.308,8.308,0,0,0,74.7,31.3Zm-33.2,0A14.525,14.525,0,1,0,26.975,16.775,14.518,14.518,0,0,0,41.5,31.3Zm9.96,4.15H50.384a20.054,20.054,0,0,1-17.767,0H31.54A14.944,14.944,0,0,0,16.6,50.39v3.735a6.227,6.227,0,0,0,6.225,6.225h37.35A6.227,6.227,0,0,0,66.4,54.125V50.39A14.944,14.944,0,0,0,51.46,35.45ZM22.449,33.712A8.276,8.276,0,0,0,16.6,31.3H8.3A8.308,8.308,0,0,0,0,39.6v4.15A4.146,4.146,0,0,0,4.15,47.9H12.7A19.018,19.018,0,0,1,22.449,33.712Z"
+                        transform="translate(0 -2.25)"
+                        fill="#aaa"
                     />
                   </svg>
                 </div>
                 <div class="img-icon" @click="$refs.filePicker.click()">
                   <div class="input">
                     <input
-                      ref="filePicker"
-                      @change="readURL"
-                      type="file"
-                      id="profile_img"
+                        ref="filePicker"
+                        @change="readURL"
+                        type="file"
+                        id="profile_img"
                     />
                   </div>
                   <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="30.621"
-                    height="30.621"
-                    viewBox="0 0 30.621 30.621"
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="30.621"
+                      height="30.621"
+                      viewBox="0 0 30.621 30.621"
                   >
                     <g
-                      id="Icon_feather-image"
-                      data-name="Icon feather-image"
-                      transform="translate(-3 -3)"
+                        id="Icon_feather-image"
+                        data-name="Icon feather-image"
+                        transform="translate(-3 -3)"
                     >
                       <path
-                        id="Path_2162"
-                        data-name="Path 2162"
-                        d="M7.5,4.5h21a3,3,0,0,1,3,3v21a3,3,0,0,1-3,3H7.5a3,3,0,0,1-3-3V7.5a3,3,0,0,1,3-3Z"
-                        fill="none"
-                        stroke="#fff"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="3"
+                          id="Path_2162"
+                          data-name="Path 2162"
+                          d="M7.5,4.5h21a3,3,0,0,1,3,3v21a3,3,0,0,1-3,3H7.5a3,3,0,0,1-3-3V7.5a3,3,0,0,1,3-3Z"
+                          fill="none"
+                          stroke="#fff"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="3"
                       />
                       <path
-                        id="Path_2163"
-                        data-name="Path 2163"
-                        d="M15,12.75a2.25,2.25,0,1,1-2.25-2.25A2.25,2.25,0,0,1,15,12.75Z"
-                        fill="none"
-                        stroke="#fff"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="3"
+                          id="Path_2163"
+                          data-name="Path 2163"
+                          d="M15,12.75a2.25,2.25,0,1,1-2.25-2.25A2.25,2.25,0,0,1,15,12.75Z"
+                          fill="none"
+                          stroke="#fff"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="3"
                       />
                       <path
-                        id="Path_2164"
-                        data-name="Path 2164"
-                        d="M31.5,22.5,24,15,7.5,31.5"
-                        fill="none"
-                        stroke="#fff"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="3"
+                          id="Path_2164"
+                          data-name="Path 2164"
+                          d="M31.5,22.5,24,15,7.5,31.5"
+                          fill="none"
+                          stroke="#fff"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="3"
                       />
                     </g>
                   </svg>
@@ -179,8 +179,8 @@
 </template>
 
 <script>
-import { emit, on } from "@/services/event_bus";
-import { mapMutations, mapState, mapActions, mapGetters } from "vuex";
+import {emit, on} from "@/services/event_bus";
+import {mapMutations, mapState, mapActions, mapGetters} from "vuex";
 import a from "@/services/apis";
 import Member from "@/components/messages/Member";
 
@@ -209,12 +209,12 @@ export default {
   },
   computed: {
     ...mapState("sidebar_navbar", ["group_model"]),
-    ...mapGetters("chat", ["groupError"]),
+    ...mapGetters("chat", ["groupError","socket"]),
     btnDisabled() {
       const test_empty = /^\s+$/g;
       const is_name_empty =
-        test_empty.test(this.group.name) || this.group.name.length <= 0;
-      const is_members_empty = this.group.members.length <= 0;
+          test_empty.test(this.group.name) || this.group.name.length <= 0;
+      const is_members_empty = this.group.members.length <= 1;
       return is_members_empty || is_name_empty;
     },
   },
@@ -236,20 +236,22 @@ export default {
       return this.group.members.some((member) => member.email === email);
     },
     getUsers() {
+      if (this.currentMember === "")
+        return
       this.userLoading = true;
       this.NotFoundText = "";
       const EmptyStringRegex = /^\s+$/g; //regext to detect empty string
 
       if (
-        EmptyStringRegex.test(this.currentMember) ||
-        this.currentMember.length <= 0
+          EmptyStringRegex.test(this.currentMember) ||
+          this.currentMember.length <= 0
       ) {
         this.foundUsers = [];
         this.userLoading = false;
         return;
       }
 
-      this.searchUser({ query: this.currentMember }).then((result) => {
+      this.searchUser({query: this.currentMember}).then((result) => {
         this.userLoading = false;
         this.foundUsers = result;
 
@@ -305,55 +307,55 @@ export default {
         college: this.$store.state.user.user.college,
       };
       const newGroup = await a.create("chat_group", body);
-      const { status, message, data } = newGroup.data;
+      console.log(newGroup)
+      const {status, message, data} = newGroup.data;
 
       //on error set an error
       if (status === 200 || status === 201) {
-        let response;
         if (this.b64Img !== "") {
-          response = await a.update(
-            "chat_group",
-            `${data.code}/profile`,
-            {
-              profile: this.b64Img,
-            }
-            // {
-            //   onUploadProgress: (progressEvent) => {
-            //     this.$store.dispatch(
-            //       "modal/set_progress",
-            //       parseInt(
-            //         Math.round(
-            //           (progressEvent.loaded / progressEvent.total) * 100
-            //         )
-            //       )
-            //     );
-            //   },
-            // }
+          await a.update(
+              "chat_group",
+              `${data.code}/profile`,
+              {
+                profile: this.b64Img,
+              }
+              // {
+              //   onUploadProgress: (progressEvent) => {
+              //     this.$store.dispatch(
+              //       "modal/set_progress",
+              //       parseInt(
+              //         Math.round(
+              //           (progressEvent.loaded / progressEvent.total) * 100
+              //         )
+              //       )
+              //     );
+              //   },
+              // }
           );
         }
 
-        const { code, createdAt, members, name } = newGroup.data.data;
-
-        // new group as contact
-        const newGroupAsContact = {
-          id: code,
-          is_group: true,
-          last_message: {
-            content: "This group was created by ",
-            time: createdAt,
-          },
-          members: members,
-          name: name,
-          unreadMessagesLength: 1,
-          image: response ? response.data.data.profile : undefined,
-        };
-
-        this.changeConversationStand({
-          msg: newGroupAsContact,
-          creation: true,
-        }); // add the group on top of other conversations
-        await this.$router.push(`/messages/${newGroup.data.data.code}`); //then go to group chat by changing route
-        this.setDisplayedUser(newGroupAsContact); //set this group as current displayed user on chat
+        // const {code, createdAt, members, name} = newGroup.data.data;
+        //
+        // // new group as contact
+        // const newGroupAsContact = {
+        //   id: code,
+        //   is_group: true,
+        //   last_message: {
+        //     content: "This group was created by ",
+        //     time: createdAt,
+        //   },
+        //   members: members,
+        //   name: name,
+        //   unreadMessagesLength: 1,
+        //   image: response ? response.data.data.profile : undefined,
+        // };
+        //
+        // this.changeConversationStand({
+        //   msg: newGroupAsContact,
+        //   creation: true,
+        // }); // add the group on top of other conversations
+        // await this.$router.push(`/messages/${newGroup.data.data.code}`); //then go to group chat by changing route
+        // this.setDisplayedUser(newGroupAsContact); //set this group as current displayed user on chat
         this.toggleGroup(); //then switch off/make it invisible group creation model
 
         //empty the group property
@@ -417,6 +419,7 @@ export default {
           .fade-leave-active {
             transition: 0.4s ease-in;
           }
+
           .fade-enter,
           .fade-leave-to {
             opacity: 0;
@@ -559,6 +562,7 @@ export default {
               height: 10rem;
               border-radius: 50%;
             }
+
             .icon {
               position: absolute;
               top: 50%;

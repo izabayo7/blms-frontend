@@ -93,9 +93,10 @@ export default {
             });
           }
         });
-      } else {
-        console.log('hhhhhhhhhhhhhhhhhhhhhhh kamobwe')
       }
+      // else {
+      //
+      // }
     });
   },
   beforeRouteUpdate(to, from, next) {

@@ -107,7 +107,7 @@ export default {
 
       if (user_found.length) return;
 
-      if (!groupRouteFound) {
+      if (!groupRouteFound && this.incomingMessages.length) {
         this.SET_DISPLAYED_USER(this.incomingMessages[0]);
         this.$router.push(`/messages/${this.incomingMessages[0].id}`);
       }
@@ -117,12 +117,14 @@ export default {
       on("incoming_message_initially_loaded", () => {
         if (!this.incomingMessages.length) {
           this.$router.push("/messages/no-conversation");
+        } else {
+          this.incomingMessages.map((d) => {
+            console.log(d)
+            if (this.$route.params.username === d.id.toString()) {
+              this.SET_DISPLAYED_USER(d);
+            }
+          });
         }
-        this.incomingMessages.map((d) => {
-          if (this.$route.params.username === d.id.toString()) {
-            this.SET_DISPLAYED_USER(d);
-          }
-        });
       });
 
       //when there is no event atleast try this
@@ -135,6 +137,7 @@ export default {
   },
   mounted() {
     this.storeCurrentDisplayedUser();
+
     //listen if recent chat contact was loaded
     on("incoming_message_initially_loaded", () => {
       this.goToMessages();
