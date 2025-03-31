@@ -215,7 +215,7 @@
           </div>
           <div class="link-name" v-show="state">Quiz</div>
         </li>
-        <li
+        <!-- <li
           v-if="userCategory === 'STUDENT' || userCategory === 'INSTRUCTOR'"
           @click="closeSidebar();$router.push('/settings')"
           :class="{ active: activeRoute('settings') }"
@@ -236,7 +236,7 @@
             </svg>
           </div>
           <div class="link-name" v-show="state">Settings</div>
-        </li>
+        </li> -->
       </ul>
     </div>
   </div>
