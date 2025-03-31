@@ -29,7 +29,7 @@
             <div class="filename ml-2 d-flex align-center">{{ file ? file.name : 'please pick a xlsx file' }}</div>
           </div>
           <div class="added-emails customScroll my-3">
-            The .xlsx file should contain the following columns on each row
+            The .xlsx file should contain the following columns
             <div v-if="choice === 4" class="columns">
               EMAIL, USER GROUP, USER CATEGORY
               <a href="https://docs.google.com/spreadsheets/d/1fY2596IFt-73vZmYX9bDfHWKgrGSd9DOlJDQkqJ-vZ8/edit?usp=sharing"
