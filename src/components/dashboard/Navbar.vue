@@ -3,7 +3,7 @@
     <div
       :class="`col-6 py-0 col-md-${
         showCreateCourseButton ? '7' : '8'
-      } d-flex top-left-contents`"
+      } d-flex top-left-contents mt-n6`"
     >
       <div class="toggle ml-2 my-auto">
         <button class="toogle" @click="toggle">
@@ -57,12 +57,12 @@
       </div>
       <div
         v-if="showCreateCourseButton"
-        class="create_course vertically--centered"
+        class="create_course vertically--centered mt-n6"
       >
         <v-btn
           rounded
           dark
-          class="add_course mt-3 white--text hidden-md-and-down"
+          class="add_course white--text hidden-md-and-down"
           to="/courses/new"
         >
           <svg
@@ -116,7 +116,7 @@
         </v-btn>
       </div>
       <v-spacer></v-spacer>
-      <div class="vertically--centered">
+      <div class="vertically--centered mt-n6">
         <notifications />
       </div>
       <div class="profile">
