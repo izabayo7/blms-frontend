@@ -196,6 +196,13 @@ export default {
     },
     async removeFeedback() {
       const response = await Apis.delete("comment", this.feedbackId);
+
+      let element = this.$refs.feedback_input;
+      element.innerHTML = "";
+      element.className = element.className.replace(
+        "saved_feedback",
+        "empty_feedback"
+      );
       this.message = "feedback successfuly removed";
       console.log(response);
     },
