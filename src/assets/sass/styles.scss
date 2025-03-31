@@ -60,3 +60,6 @@ input[type=number] {
     background-color: lighten($font, 30);
   }
 }
+div#app{
+  overflow-y: hidden;
+}
