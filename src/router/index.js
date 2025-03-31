@@ -24,6 +24,15 @@ const routes = [
             allowAnonymous: true
         }
     },
+        // the loader
+        {
+            path: '/loading',
+            component: () =>
+                import('@/components/loader'),
+            meta: {
+                allowAnonymous: true
+            }
+        },
     {
         /**
          * DASHBOARD Parent

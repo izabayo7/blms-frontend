@@ -103,7 +103,7 @@ export default {
   height: 90%;
 }
 .my-messages{
-  background-color: $secondary;
+  background-color: #f8f8f8;
   height: 100%;
   .side{
     .header{

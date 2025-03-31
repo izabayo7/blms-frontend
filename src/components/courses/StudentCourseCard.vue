@@ -3,7 +3,7 @@
     <v-card
       v-if="category == 'ongoing'"
       @click="$router.push(`/courses/preview/${course.name}`)"
-      class="course-card elevation-0 py-1 px-3"
+      class="course-card py-1 px-3"
     >
       <v-row class="card-content">
         <v-col cols="5" class="course-image-side">
@@ -88,21 +88,23 @@
           </h4>
           <div class="mt-4">
             <div class="svg">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="27"
-              viewBox="0 0 24 27"
-            >
-              <path
-                id="Icon_material-date-range"
-                data-name="Icon material-date-range"
-                d="M12.5,15.15H9.833v2.7H12.5Zm5.333,0H15.167v2.7h2.667Zm5.333,0H20.5v2.7h2.667ZM25.833,5.7H24.5V3H21.833V5.7H11.167V3H8.5V5.7H7.167A2.672,2.672,0,0,0,4.513,8.4L4.5,27.3A2.683,2.683,0,0,0,7.167,30H25.833A2.691,2.691,0,0,0,28.5,27.3V8.4A2.691,2.691,0,0,0,25.833,5.7Zm0,21.6H7.167V12.45H25.833Z"
-                transform="translate(-4.5 -3)"
-              />
-            </svg>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="27"
+                viewBox="0 0 24 27"
+              >
+                <path
+                  id="Icon_material-date-range"
+                  data-name="Icon material-date-range"
+                  d="M12.5,15.15H9.833v2.7H12.5Zm5.333,0H15.167v2.7h2.667Zm5.333,0H20.5v2.7h2.667ZM25.833,5.7H24.5V3H21.833V5.7H11.167V3H8.5V5.7H7.167A2.672,2.672,0,0,0,4.513,8.4L4.5,27.3A2.683,2.683,0,0,0,7.167,30H25.833A2.691,2.691,0,0,0,28.5,27.3V8.4A2.691,2.691,0,0,0,25.833,5.7Zm0,21.6H7.167V12.45H25.833Z"
+                  transform="translate(-4.5 -3)"
+                />
+              </svg>
             </div>
-            <div class="ml-4 date_finished">completed on {{ course.progress.lastUpdated | formatDate }}</div>
+            <div class="ml-4 date_finished">
+              completed on {{ course.progress.lastUpdated | formatDate }}
+            </div>
           </div>
         </v-col>
       </v-row>
@@ -133,22 +135,26 @@ export default {
 .bg-color-one.vertically--centered.text-center {
   height: 208px;
 }
-.course-card:hover,.course.completed:hover {
+.course-card:hover,
+.course.completed:hover {
   box-shadow: 0px 5px 15px rgb(199, 199, 199, 1.6) !important;
   margin-top: -10px;
 }
 
 // card animation
 /* Quick-zoom Container */
-.course-card,.course.completed {
+.course-card,
+.course.completed {
   margin-top: 0;
   transition: margin 0.25s, visibility 0.25s ease-out;
 }
 
 .course-card.v-card.v-sheet {
+  box-shadow: 3px 3px 3px rgb(183, 183, 183, 0.66);
   width: 560px;
   height: 189px;
-  border-radius: 24px;
+  // border-radius: 24px;
+  border-radius: 10px;
   .course-image-side {
     padding: 35px 0 0;
     .course-image {
@@ -192,11 +198,10 @@ export default {
     }
   }
 }
-.date_finished{
+.date_finished {
   margin: -31px 0 0 40px !important;
 }
 .course.completed {
-  box-shadow: none;
   min-height: 380px !important;
   max-width: 300px;
   border-radius: 0 !important;
