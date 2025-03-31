@@ -21,7 +21,7 @@ const routes = [
         path: '/login',
         name: 'Login',
         component: () =>
-            import('@/views/pages/login'),
+            import('@/views/pages/login_new'),
         meta: {
             allowAnonymous: true
         }
