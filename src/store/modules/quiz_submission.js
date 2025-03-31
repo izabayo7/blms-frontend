@@ -26,6 +26,24 @@ export default {
                 }
             }
         },
+        add_assignment_submission_marks(state, {id, submission_id, marks, feedback}) {
+            for (const i in state.quiz_submission.data) {
+                if (state.quiz_submission.data[i]._id === id) {
+                    for (const j in state.quiz_submission.data[i].submissions) {
+                        if (state.quiz_submission.data[i].submissions[j]._id === submission_id) {
+                            if (marks) {
+                                state.quiz_submission.data[i].submissions[j].total_marks = marks
+                                state.quiz_submission.data[i].submissions[j].marked = true
+                            }
+                            else if (feedback)
+                                state.quiz_submission.data[i].submissions[j].total_feedbacks = feedback
+                            break
+                        }
+                    }
+                    break
+                }
+            }
+        },
         // add feedback to answer
         add_answer_feedback(state, {answer_id, feedback}) {
             for (const i in state.quiz_submission.data) {
