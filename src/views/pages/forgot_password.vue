@@ -51,7 +51,7 @@
             <div class="lower-message">
               <div class="message-row">
                 Don’t have an account contact us ?
-                <a to="/register">Register</a>
+                <router-link to="/register">Register</router-link>
               </div>
               <div class="message-row">
                 Remembered your password ? <router-link to="/login" />

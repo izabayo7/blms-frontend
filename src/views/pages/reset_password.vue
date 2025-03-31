@@ -128,10 +128,11 @@
             <div class="lower-message">
               <div class="message-row">
                 Don’t have an account contact us ?
-                <a href="/register">Register</a>
+                <router-link href="/register">Register</router-link>
               </div>
               <div class="message-row">
-                Remembered your password ? <a href="/login">Login</a>
+                Remembered your password ?
+                <router-link href="/login">Login</router-link>
               </div>
               <div class="message-row">
                 Having trouble resseting your password ?
