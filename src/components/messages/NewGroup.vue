@@ -22,6 +22,7 @@
                   <input
                       @input="getUsers"
                       v-model="currentMember"
+                      @click="toogleshowFoundUsers"
                       type="text"
                       id="group_members_input"
                   />
@@ -46,6 +47,7 @@
                       <transition-group name="members">
                         <div
                             class="member"
+                            v-show="showFoundUsers"
                             v-for="user in foundUsers"
                             @click="addMember(user)"
                             :key="user.email"
@@ -199,6 +201,7 @@ export default {
       b64Img: "",
       currentMember: "",
       foundUsers: [],
+      showFoundUsers: false,
       userLoading: false,
       NotFoundText: "",
       group: {
@@ -210,7 +213,7 @@ export default {
   },
   computed: {
     ...mapState("sidebar_navbar", ["group_model"]),
-    ...mapGetters("chat", ["groupError","socket"]),
+    ...mapGetters("chat", ["groupError", "socket"]),
     btnDisabled() {
       const test_empty = /^\s+$/g;
       const is_name_empty =
@@ -220,6 +223,19 @@ export default {
     },
   },
   methods: {
+    outsideClickDetector() {
+      const self = this
+      let el = document.querySelector('.members')
+      document.addEventListener("click", function (e) {
+        if (e)
+          if (!el || !el.contains(e.target)) {
+            self.toogleshowFoundUsers()
+          }
+      });
+    },
+    toogleshowFoundUsers() {
+      this.showFoundUsers = !this.showFoundUsers
+    },
     ...mapMutations("sidebar_navbar", {
       toggleGroup: "TOGGLE_GROUP_MODEL_VISIBILITY",
     }),
@@ -373,6 +389,7 @@ export default {
     on("image_cropped", () => {
       document.getElementById("preview").style.display = "block";
     });
+    this.outsideClickDetector()
   },
 };
 </script>

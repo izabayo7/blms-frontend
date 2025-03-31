@@ -64,7 +64,7 @@
             </div>
             <input @input="searchIt" v-model="searchKey" type="text"/>
           </div>
-          <div v-if="searchKey !== '' || this.incomingMessages.length < 1" class="search-results">
+          <div v-if="searchKey !== '' || this.incomingMessages.length < 1" v-show="showFoundUsers" class="search-results">
             <ul class="searched-users" v-if="foundUsers.length > 0">
               <li
                   class="user d-flex align-center"
@@ -93,7 +93,7 @@
             </div>
           </div>
         </div>
-        <div v-show="searchKey === ''" class="incoming-messages" v-if="incomingMessages.length > 0">
+        <div v-show="searchKey === '' || !showFoundUsers" class="incoming-messages" v-if="incomingMessages.length > 0">
           <transition-group name="incoming-contacts" tag="div">
             <incoming-chat
                 v-for="message in incomingMessages"
@@ -137,6 +137,7 @@ export default {
       user: null,
       searchKey: "",
       foundUsers: [],
+      showFoundUsers: false,
     };
   },
   computed: {
@@ -154,6 +155,19 @@ export default {
     ...mapMutations("sidebar_navbar", {
       toggleGroup: "TOGGLE_GROUP_MODEL_VISIBILITY",
     }),
+    outsideClickDetector() {
+      const self = this
+      let el = document.querySelector('.search-results')
+      document.addEventListener("click", function (e) {
+        if (e)
+          if (!el || !el.contains(e.target)) {
+            self.toogleshowFoundUsers(false)
+          }
+      });
+    },
+    toogleshowFoundUsers(value) {
+      this.showFoundUsers = value
+    },
     search(str) {
       if (str === '')
         return
@@ -173,6 +187,7 @@ export default {
     },
     searchIt() {
       this.search(this.searchKey);
+      this.toogleshowFoundUsers(true);
     },
     //here we check if the current route has a selected chat if not we directly
     // select the latest contact in chat and we make it active
@@ -228,6 +243,7 @@ export default {
   },
   mounted() {
     this.initialise()
+    this.outsideClickDetector()
   },
 };
 </script>
