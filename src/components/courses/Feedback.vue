@@ -97,9 +97,9 @@
         </div>
       </div>
       <div v-else-if="isFileUpload" class="d-block d-md-flex  file-feedback col-12 pa-0">
-        <button class="pick-file saved file-picked mx-auto ml-0"
+        <button class="pick-file saved file-picked mx-auto ml-0" :title="feedback_name"
                 @click="downloadAttachment(`${backend_url}/api/${type ==='assignment' ? 'assignment_submission':'quiz_submission'}/${submission_id}/attachment/${feedback_name}/view?token=${$session.get('jwt')}`)">
-          {{ feedback_name }}
+          {{ feedback_name | trimString(20) }}
         </button>
         <button class="download-attachment mx-auto mr-0"
                 @click="downloadAttachment(`${backend_url}/api/${type ==='assignment' ? 'assignment_submission':'quiz_submission'}/${submission_id}/attachment/${feedback_name}/download?token=${$session.get('jwt')}`)">
@@ -210,6 +210,7 @@ export default {
       }).then(() => {
         this.upload_status = 2
         this.$emit("feedbackUploaded", this.file.name)
+        this.feedback_name = this.file.name
         this.file = undefined
         this.showSave = false;
       })
