@@ -3,7 +3,7 @@
   <section class="my-container">
     <!--      this is for student preview-->
     <v-row v-if="userCategory === 'STUDENT'">
-      <back class="ma-6" to="/courses" />
+      <back class="ma-6 mb-1 ml-16" to="/courses" />
       <v-col v-if="!loaded" class="col-12">
         <div class="ssc elevation-0 ssc-card student-card-skeleton ml mt-10">
           <div class="ssc-wrapper flex justify-between ml">
@@ -890,7 +890,7 @@ button.back {
   height: 100%;
   margin: 0;
   padding: 2rem;
-  padding-top: 5rem;
+  padding-top: 0rem;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
