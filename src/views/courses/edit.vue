@@ -90,15 +90,38 @@
       <v-col v-else class="col-12 pr-12">
         <v-row v-if="activeChapter > -1">
           <v-col class="col-12 col-md-3 px-0 text-left">
-            <v-btn
+            <!-- <v-btn
               v-for="(chapter, i) in course.chapters"
               :key="i"
               :color="activeChapter === i ? '#ffd248': ''"
               width="90%"
               :class="`${activeChapter === i ? 'white--text': ''} d-block my-4 pt-5 pb-8 text-wrap`"
               @click="activeChapter=i"
-            >{{chapter.name | trimString(20)}}</v-btn>
-            <v-btn width="90%" class="py-6" @click="addChapter()">
+            >{{chapter.name | trimString(20)}}</v-btn>-->
+            <v-badge
+              v-for="(chapter, i) in course.chapters"
+              :key="i"
+              overlap
+              color="transparent"
+              class="d-block mb-4 chapter-badges"
+            >
+              <v-btn
+                fab
+                color="error"
+                class="ml-n2 mt-n2 remove--button"
+                slot="badge"
+                @click="deleteChapter(chapter._id)"
+              >
+                <v-icon color="#fff">mdi-window-close</v-icon>
+              </v-btn>
+
+              <button
+                class="chapter-button"
+                :class="`${activeChapter === i ? 'white--text active-chapter': ''}`"
+                @click="activeChapter=i"
+              >{{chapter.name | trimString(20)}}</button>
+            </v-badge>
+            <v-btn width="90%" class="py-6" @click="addNewChapter">
               <v-icon>mdi-plus</v-icon>New Chapter
             </v-btn>
           </v-col>
@@ -155,6 +178,7 @@
                             </v-col>
                             <v-col class="col-12">
                               <kurious-file-picker
+                                v-if="mode !== ''"
                                 :allowedTypes="['video']"
                                 @addFile="updateVideo"
                                 @removeFile="removeVideo"
@@ -187,7 +211,10 @@
                               </v-row>
                             </v-col>
 
-                            <v-col v-if="mode === 'preview'" class="col-12 title">{{chapter.name}}</v-col>
+                            <v-col
+                              v-if="mode === 'preview'"
+                              class="col-12 title"
+                            >{{course.chapters[activeChapter].name}}</v-col>
                             <v-col
                               v-if="mode === 'preview'"
                               class="col-12 subtitle"
@@ -197,7 +224,7 @@
                                 v-if="mode !== ''"
                                 ref="editor"
                                 :mode="`${mode === 'edit' ? mode : 'preview'}`"
-                                :defaultContent="content"
+                                :defaultContent="course.chapters[activeChapter]._id ? content : undefined"
                               />
                             </v-col>
                           </v-row>
@@ -263,8 +290,9 @@
                             </v-col>
                             <v-col class="col-12">
                               <kurious-file-picker
+                                v-if="mode !== ''"
                                 multiple
-                                @addFile="adddAttachment"
+                                @addFile="addAttachment"
                                 @removeFile="removeAttachment"
                               />
                             </v-col>
@@ -282,9 +310,37 @@
                                 v-if="selectedQuizName !== ''"
                                 class="quiz-details pa-4 quiz-select"
                               >
+                                <v-col class="col-12 px-0">
+                                  <button @click.prevent="removeQuiz">
+                                    <svg
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      width="45"
+                                      height="45"
+                                      viewBox="0 0 69 69"
+                                    >
+                                      <circle
+                                        id="Ellipse_225"
+                                        data-name="Ellipse 225"
+                                        cx="34.5"
+                                        cy="34.5"
+                                        r="34.5"
+                                        fill="#fc6767"
+                                      />
+                                      <path
+                                        id="Icon_material-delete"
+                                        data-name="Icon material-delete"
+                                        d="M9,28.5a3.009,3.009,0,0,0,3,3H24a3.009,3.009,0,0,0,3-3v-18H9ZM28.5,6H23.25l-1.5-1.5h-7.5L12.75,6H7.5V9h21V6Z"
+                                        transform="translate(16.5 16.5)"
+                                        fill="none"
+                                        stroke="#fff"
+                                        stroke-width="2"
+                                      />
+                                    </svg>
+                                  </button>
+                                </v-col>
                                 <v-col class="col-6">
                                   Name
-                                  <span class="font-weight-bold">{{selectedQuiz.name}}</span>
+                                  <span class="font-weight-bold caption">{{selectedQuiz.name}}</span>
                                 </v-col>
                                 <v-col class="col-6">
                                   Number of questions
@@ -294,11 +350,13 @@
                                 </v-col>
                                 <v-col class="col-6">
                                   Course
-                                  <span class="font-weight-bold">{{course.name}}</span>
+                                  <span class="font-weight-bold caption">{{course.name}}</span>
                                 </v-col>
                                 <v-col class="col-6">
                                   Duration
-                                  <span class="font-weight-bold">{{selectedQuiz.duration}}</span>
+                                  <span
+                                    class="font-weight-bold caption"
+                                  >{{selectedQuiz.duration}}</span>
                                 </v-col>
                               </v-row>
                             </v-col>
@@ -315,10 +373,12 @@
 
                       <v-stepper-content step="5">
                         <v-btn
+                          v-if="course.chapters[activeChapter]._id"
                           color="primary"
                           class="mr-4"
                           @click="saveChapterChanges"
                         >update Chapter</v-btn>
+                        <v-btn v-else color="primary" class="mr-4" @click="saveChapter">save Chapter</v-btn>
                         <v-btn text class="py-6 mt-n3" @click="reset('chapter')">Reset Chapter</v-btn>
                       </v-stepper-content>
                     </v-stepper>
@@ -330,13 +390,14 @@
         </v-row>
       </v-col>
     </v-row>
-    <kurious-dialog template="info" />
+    <!-- <kurious-dialog template="information" /> -->
+    <!-- <kurious-dialog template="confirmation" :action="action" /> -->
   </v-app>
 </template>
 
   <script>
 // import Apis from "@/services/apis";
-import { mapActions, mapGetters } from "vuex";
+import { mapActions, mapGetters, mapMutations } from "vuex";
 export default {
   name: "editCourse",
 
@@ -350,7 +411,7 @@ export default {
     attachments: [],
     type: "details",
     mode: "",
-    // course: undefined,
+    action: "delete_chapter",
     content: "",
     coverPicture: undefined,
     chapterVideo: undefined,
@@ -364,37 +425,45 @@ export default {
     // get the current course
     ...mapGetters("courses", ["course"]),
     ...mapGetters("faculties", ["facultyCollegeYearNames"]),
-    ...mapGetters("quiz", ["quizNames"]),
     selectedFacultyCollegeYearCode() {
       return this.$store.getters["faculties/facultyCollegeYear"](
         this.selectedFacultyCollegeYearName
       )._id;
     },
+    quizNames() {
+      let quizNames = this.$store.getters["quiz/quizNames"];
+      if (this.course.chapters[this.activeChapter].quiz.length > 0) {
+        quizNames.push(this.course.chapters[this.activeChapter].quiz[0].name);
+      }
+      return quizNames;
+    },
     selectedQuiz() {
-      return this.$store.getters["quiz/quizNames"](this.selectedQuizName);
+      return this.$store.getters["quiz/quiz"](this.selectedQuizName);
     },
   },
   watch: {
     activeChapter() {
       this.mode = "";
       this.content = "";
-      this.getChapterMainContent(
-        this.course.chapters[this.activeChapter]._id
-      ).then((data) => {
+      this.selectedQuizName = "";
+      if (this.course.chapters[this.activeChapter]._id) {
+        this.getChapterMainContent(
+          this.course.chapters[this.activeChapter]._id
+        ).then((data) => {
+          this.mode = "edit";
+          this.content = data;
+        });
+      } else {
         this.mode = "edit";
-        this.content = data;
-      });
+      }
       if (this.course.chapters[this.activeChapter].quiz.length > 0) {
         this.selectedQuizName = this.course.chapters[
           this.activeChapter
         ].quiz[0].name;
-        //  this.selectedQuiz = this.$store.getters["faculties/facultyCollegeYear"](
-        //       this.selectedQuizName
-        //   );
       }
     },
     e6() {
-      if (this.e6 === 2) {
+      if (this.e6 === 3) {
         document.querySelector(".ProseMirror").focus();
       } else if (
         this.course.chapters[this.activeChapter].documentContent != this.content
@@ -416,9 +485,13 @@ export default {
       "getChapterMainContent",
       "updateCourse",
       "updateChapter",
-      "deleteAttachment"
+      "deleteAttachment",
+      "initialise_new_chapter",
+      "addChapter",
     ]),
     ...mapActions("faculties", ["getFacultyCollegeYears"]),
+    ...mapActions("quiz", ["getQuizes"]),
+    ...mapMutations("modal",["toogle_visibility","update_modal_template", "update_confirmation_action"]),
     // pick coverPicture
     pickfile() {
       document.getElementById("picture").click();
@@ -434,7 +507,7 @@ export default {
         this.displayPicture = true;
       });
     },
-    adddAttachment(file) {
+    addAttachment(file) {
       this.attachments.push(file);
     },
     removeAttachment(index) {
@@ -483,10 +556,33 @@ export default {
         content: this.$refs.editor.getHTML(),
         video: this.chapterVideo,
         attachments: this.attachments,
+        quiz: this.selectedQuiz,
       }).then(() => {
-        this.course.chapters.length - 1 == this.activeChapter
-          ? (this.type = "course")
-          : (this.activeChapter += 1);
+        this.chapterVideo = undefined;
+        this.attachments = [];
+        if (this.course.chapters.length - 1 == this.activeChapter)
+          this.type = "course";
+        else this.activeChapter += 1;
+      });
+    },
+    saveChapter() {
+      this.addChapter({
+        chapter: {
+          name: this.course.chapters[this.activeChapter].name,
+          number: this.activeChapter + 1,
+          course: this.course._id,
+          description: this.course.chapters[this.activeChapter].description,
+        },
+        content: this.$refs.editor.getHTML(),
+        video: this.chapterVideo,
+        attachments: this.attachments,
+        quiz: this.selectedQuiz,
+      }).then(() => {
+        this.chapterVideo = undefined;
+        this.attachments = [];
+        if (this.course.chapters.length - 1 == this.activeChapter)
+          this.type = "course";
+        else this.activeChapter += 1;
       });
     },
     findIcon(name) {
@@ -501,6 +597,21 @@ export default {
         return "";
       }
     },
+    addNewChapter() {
+      const len = this.course.chapters.length;
+      this.initialise_new_chapter().then(() => {
+        this.activeChapter = len - 1;
+      });
+    },
+    removeQuiz() {
+      this.selectedQuizName = "";
+      this.course.chapters[this.activeChapter].quiz = [];
+    },
+    deleteChapter(chapterId) {
+      this.update_confirmation_action('delete_chapter')
+      this.update_modal_template('')
+      console.log(chapterId);
+    },
   },
   created() {
     this.getFacultyCollegeYears(this.$store.state.user.college);
@@ -511,19 +622,32 @@ export default {
     }).then(() => {
       this.selectedFacultyCollegeYearName = `${this.course.facultyCollegeYear.facultyCollege.faculty.name} ${this.course.facultyCollegeYear.collegeYear.digit}`;
     });
+    this.getQuizes({
+      userCategory: this.$store.state.user.category.toLowerCase(),
+      userId: this.$store.state.user._id,
+    });
   },
 };
 </script>
 
-  <style>
+  <style lang="scss">
 .ProseMirror:focus {
   outline: none;
 }
 .chapter-button {
   background-color: #f5f5f5;
+  width: 100%;
+  height: 50px;
 }
-.chapter-active-button {
-  background-color: #ffd248;
-  color: #fff;
+.chapter-badges {
+  width: 85%;
+  height: 50px;
+  .chapter-active-button {
+    background-color: #ffd248;
+    color: #fff;
+  }
+  .active-chapter {
+    background-color: #ffd248;
+  }
 }
 </style>

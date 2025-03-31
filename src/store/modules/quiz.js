@@ -9,11 +9,19 @@ export default {
         },
     },
     mutations: {
+        // add quiz target
+        add_quiz_target(state, {id, target}) {
+            for (const i in state.quiz.data) {
+                if (state.quiz.data[i]._id === id) {
+                    state.quiz.data[i].target = target
+                }
+            }
+        },
     },
     actions: {
         //get quiz from backend
-        getQuizes({ state }, collegeId ) {
-            apis.get(`faculty-college-year/college/${collegeId}`).then(d => {
+        getQuizes({ state }, { userCategory, userId }) {
+            apis.get(`quiz/${userCategory}/${userId}`).then(d => {
                 state.quiz.data = d.data
                 //announce that data have been loaded
                 state.quiz.loaded = true
@@ -33,7 +41,9 @@ export default {
         quizNames: state => {
             let quizNames = []
             for (const element of state.quiz.data) {
-                quizNames.push(element.name)
+                if (!element.target) {
+                    quizNames.push(element.name)
+                }
             }
             return quizNames
         },

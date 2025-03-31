@@ -12,7 +12,14 @@ export default {
         // ability to close the modal
         closable: false,
         // request status
-        status: 200
+        status: 200,
+        // set user feedback on confirmations
+        confirmed: false,
+        // set current confirmation action
+        confirmation_action: '',
+        // set current modal template (information view, confirmation view, ...)
+        modal_template: '',
+
     },
     mutations: {
         // show or hide the modal
@@ -51,10 +58,22 @@ export default {
         update_status(state, value) {
             state.status = value
         },
+        // update the confirmation
+        update_confirmation(state, value) {
+            state.confirmed = value
+        },
+        // update the confirmation action
+        update_confirmation_action(state, value) {
+            state.confirmation_action = value
+        },
         // reset the status
         reset_status(state) {
             state.message = 200
         },
+        // update modal template
+        update_modal_template(state, value){
+            state.modal_template = value
+        }
     },
     actions: {
     },
@@ -82,6 +101,18 @@ export default {
         //get status
         status: state => {
             return state.status
+        },
+        //get confirmations
+        confirmed: state => {
+            return state.confirmed
+        },
+        //get current confirmation action
+        confirmation_action: state => {
+            return state.confirmation_action
+        },
+        //get current modal template
+        modal_template: state => {
+            return state.modal_template
         },
     },
 }

@@ -22,6 +22,19 @@ export default {
         set_selected_chapter(state, id) {
             state.selectedChapter = id
         },
+        // initialise a new chapter
+        initialise_new_chapter(state) {
+            for (const i in state.courses.data) {
+                if (state.courses.data[i]._id == state.selectedCourse) {
+                    state.courses.data[i].chapters.push({
+                        name: '',
+                        description: '',
+                        quiz: [],
+                        attachments: []
+                    })
+                }
+            }
+        },
         // update progress of a student in a course
         set_student_progress(state, { courseId, progress }) {
             for (const i in state.courses.data) {
@@ -77,6 +90,13 @@ export default {
         },
         //update a course
         updateCourse({ state, commit }, { course, coverPicture }) {
+            let courseIndex
+            for (const i in state.courses.data) {
+                if (state.courses.data[i]._id == state.selectedCourse) {
+                    courseIndex = i
+                    break
+                }
+            }
             commit('modal/update_title', "Updating course", { root: true })
             commit('modal/update_message', "uploading changes", { root: true })
             commit('modal/toogle_visibility', null, { root: true })
@@ -85,14 +105,12 @@ export default {
                     commit('modal/update_progress', parseInt(Math.round((progressEvent.loaded / progressEvent.total) * 100)), { root: true })
                 }
             }).then(d => {
-                for (const i in state.courses.data) {
-                    if (state.courses.data[i]._id == state.selectedCourse) {
-                        state.courses.data[i].name = d.data.name
-                        state.courses.data[i].description = d.data.description
-                        state.courses.data[i].facultyCollegeYear = d.data.facultyCollegeYear
-                        break
-                    }
-                }
+
+
+                state.courses.data[courseIndex].name = d.data.name
+                state.courses.data[courseIndex].description = d.data.description
+                state.courses.data[courseIndex].facultyCollegeYear = d.data.facultyCollegeYear
+
                 if (coverPicture) {
                     commit('modal/update_message', `uploading ${coverPicture.name}`, { root: true })
                     const formData = new FormData()
@@ -104,6 +122,8 @@ export default {
                         onUploadProgress: (progressEvent) => {
                             commit('modal/update_progress', parseInt(Math.round((progressEvent.loaded / progressEvent.total) * 100)), { root: true })
                         }
+                    }).then(courseData => {
+                        state.courses.data[courseIndex].coverPicture = courseData
                     })
                 }
                 setTimeout(() => {
@@ -117,9 +137,8 @@ export default {
 
         },
         //update a chapter
-        updateChapter({ state, commit }, { chapter, content, video, attachments }) {
+        updateChapter({ state, commit }, { chapter, content, video, attachments, quiz }) {
             commit('modal/update_title', "Updating chapter", { root: true })
-            commit('modal/update_message', "uploading changes", { root: true })
             commit('modal/toogle_visibility', null, { root: true })
             let courseIndex, chapterIndex
             for (const i in state.courses.data) {
@@ -134,27 +153,31 @@ export default {
                     break
                 }
             }
-            return apis.update('chapter', state.selectedChapter, chapter, {
-                onUploadProgress: (progressEvent) => {
-                    commit('modal/update_progress', parseInt(Math.round((progressEvent.loaded / progressEvent.total) * 100)), { root: true })
-                }
-            }).then(d => {
-
-                state.courses.data[courseIndex].chapters[chapterIndex].name = d.data.name
-                state.courses.data[courseIndex].chapters[chapterIndex].description = d.data.description
+            return apis.update('chapter', state.selectedChapter, chapter).then(() => {
 
                 if (content) {
-                    commit('modal/update_progress', 0, { root: true })
-                    commit('modal/update_message', `uploading content`, { root: true })
                     const formData = new FormData()
                     formData.append("file", video)
-                    apis.update('file/updateChapterContent', state.selectedChapter, { content: content }, {
-                        onUploadProgress: (progressEvent) => {
-                            commit('modal/update_progress', parseInt(Math.round((progressEvent.loaded / progressEvent.total) * 100)), { root: true })
-                        }
-                    }).then(()=>{
+                    apis.update('file/updateChapterContent', state.selectedChapter, { content: content }).then(() => {
                         state.courses.data[courseIndex].chapters[chapterIndex].documentContent = content
                     })
+                }
+                if (quiz) {
+                    const quizId = quiz._id
+                    // add quiz target
+                    quiz.target = {
+                        id: state.selectedChapter,
+                        type: 'chapter'
+                    }
+                    //   remove unnecessary fields
+                    quiz.createdAt = undefined
+                    quiz.updatedAt = undefined
+
+                    apis.update('quiz', quizId, quiz).then((quizResponse) => {
+                        state.courses.data[courseIndex].chapters[chapterIndex].quiz.push(quizResponse.data)
+                        commit('quiz/add_quiz_target', { id: quizId, target: quiz.target }, { root: true })
+                    })
+
                 }
                 if (video) {
                     commit('modal/update_progress', 0, { root: true })
@@ -166,8 +189,11 @@ export default {
                             'Content-Type': 'multipart/form-data'
                         },
                         onUploadProgress: (progressEvent) => {
+                            console.log(progressEvent)
                             commit('modal/update_progress', parseInt(Math.round((progressEvent.loaded / progressEvent.total) * 100)), { root: true })
                         }
+                    }).then((videoResponse) => {
+                        state.courses.data[courseIndex].chapters[chapterIndex].mainVideo = videoResponse.data.filepath
                     })
                 } if (attachments.length > 0) {
                     commit('modal/update_progress', 0, { root: true })
@@ -183,12 +209,12 @@ export default {
                         onUploadProgress: (progressEvent) => {
                             commit('modal/update_progress', parseInt(Math.round((progressEvent.loaded / progressEvent.total) * 100)), { root: true })
                         }
-                    }).then((chapterResponse)=>{
+                    }).then((chapterResponse) => {
                         for (const i in chapterResponse.data) {
                             state.courses.data[courseIndex].chapters[chapterIndex].attachments.push(chapterResponse.data[i])
                         }
                     })
-                    
+
                 }
                 setTimeout(() => {
                     commit('modal/toogle_visibility', null, { root: true })
@@ -264,6 +290,91 @@ export default {
                     }
                 }
             })
+        },
+        // initialise new chapter
+        initialise_new_chapter({ commit }) {
+            commit('initialise_new_chapter');
+        },
+        //save a new chapter
+        addChapter({ state, commit }, { chapter, content, video, attachments, quiz }) {
+            commit('modal/update_title', "Saving chapter", { root: true })
+            commit('modal/toogle_visibility', null, { root: true })
+            let courseIndex, chapterIndex
+            for (const i in state.courses.data) {
+                if (state.courses.data[i]._id == state.selectedCourse) {
+                    courseIndex = i
+                    chapterIndex = state.courses.data[i].chapters.length - 1
+                    break
+                }
+            }
+            return apis.create('chapter', chapter).then(d => {
+
+                if (content) {
+                    const formData = new FormData()
+                    formData.append("file", video)
+                    apis.update('file/updateChapterContent', d.data._id, { content: content }).then(() => {
+                        state.courses.data[courseIndex].chapters[chapterIndex].documentContent = content
+                    })
+                }
+                if (quiz) {
+                    const quizId = quiz._id
+                    // add quiz target
+                    quiz.target = {
+                        id: d.data._id,
+                        type: 'chapter'
+                    }
+
+                    apis.update('quiz', quizId, quiz).then((quizResponse) => {
+                        state.courses.data[courseIndex].chapters[chapterIndex].quiz.push(quizResponse.data)
+                        commit('quiz/add_quiz_target', { id: quizId, target: quiz.target }, { root: true })
+                    })
+
+                }
+                if (video) {
+                    commit('modal/update_progress', 0, { root: true })
+                    commit('modal/update_message', `uploading ${video.name}`, { root: true })
+                    const formData = new FormData()
+                    formData.append("file", video)
+                    apis.update('file/updateMainVideo', d.data._id, formData, {
+                        headers: {
+                            'Content-Type': 'multipart/form-data'
+                        },
+                        onUploadProgress: (progressEvent) => {
+                            commit('modal/update_progress', parseInt(Math.round((progressEvent.loaded / progressEvent.total) * 100)), { root: true })
+                        }
+                    }).then((videoResponse) => {
+                        state.courses.data[courseIndex].chapters[chapterIndex].mainVideo = videoResponse.data.filepath
+                    })
+                } if (attachments.length > 0) {
+                    commit('modal/update_progress', 0, { root: true })
+                    commit('modal/update_message', `uploading attachments`, { root: true })
+                    const formData = new FormData()
+                    for (const i in attachments) {
+                        formData.append("files[" + i + "]", attachments[i]);
+                    }
+                    apis.create(`file/addAttachments/${d.data._id}`, formData, {
+                        headers: {
+                            'Content-Type': 'multipart/form-data'
+                        },
+                        onUploadProgress: (progressEvent) => {
+                            commit('modal/update_progress', parseInt(Math.round((progressEvent.loaded / progressEvent.total) * 100)), { root: true })
+                        }
+                    }).then((chapterResponse) => {
+                        for (const i in chapterResponse.data) {
+                            state.courses.data[courseIndex].chapters[chapterIndex].attachments.push(chapterResponse.data[i])
+                        }
+                    })
+
+                }
+                setTimeout(() => {
+                    commit('modal/toogle_visibility', null, { root: true })
+                    commit('modal/reset_progress', null, { root: true })
+                    commit('modal/reset_message', null, { root: true })
+                    commit('modal/reset_title', null, { root: true })
+                }, 1000);
+
+            })
+
         },
     },
     getters: {
