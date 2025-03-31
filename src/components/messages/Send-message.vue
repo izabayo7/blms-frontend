@@ -243,12 +243,13 @@ export default {
       return res
     },
     uploadAudio(formData) {
-      apis.update('message', `voiceNote/${this.currentDisplayedUser.id}`, formData, {
+      apis.update('message', `voiceNote/${this.currentDisplayedUser.id}${this.replyMsg ? '?reply='+this.replyMsg.msg._id : ''}`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         },
       }).then(() => {
         this.recordingMode = false
+        this.setReplyMsg(undefined)
       })
     },
     sendMessage() {
@@ -256,7 +257,7 @@ export default {
       const attachments = this.makeAttachments()
 
       if (this.msg.length <= 0 && !attachments.length) return;
-      if (!this.msg.replace(/\s/g, '').length)
+      if (!this.msg.replace(/\s/g, '').length && !attachments.length)
         return;
       if (attachments.length) {
         // set the dialog
@@ -272,6 +273,7 @@ export default {
         let str = ""
         if (this.msg.length)
           str = `content=${this.msg}`
+        str += this.replyMsg ? `${str.length ? '&' : ''}reply=${this.replyMsg.msg._id}` : ''
         str += attachments.length ? `${str.length ? '&' : ''}attachments=${attachments.join('&attachments=')}` : ''
 
         apis.update('message', `${this.currentDisplayedUser.id}/attachements?${str}`, formData, {

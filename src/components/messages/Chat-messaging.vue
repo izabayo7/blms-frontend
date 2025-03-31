@@ -155,7 +155,7 @@
               </div>
               <div v-if="(msg.content || msg.attachments) && msgs.from !== 'SYSTEM'">
                 <div
-                    v-if="msg.content"
+                    v-if="msg.content || msg.reply"
                     class="msg"
                 >
                   <div v-if="msg.reply" class="reply">
@@ -164,7 +164,7 @@
                       {{ msg.reply.content || 'attachment' }}
                     </div>
                   </div>
-                  {{ msg.content | urlify }}
+                  <div v-if="msg.content">{{ msg.content | urlify }}</div>
                 </div>
                 <div
                     v-if="msg.attachments"
