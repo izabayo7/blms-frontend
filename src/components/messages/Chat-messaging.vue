@@ -429,7 +429,7 @@ export default {
         }
       }
       .announcement-container {
-        max-width: 486px;
+        max-width: 90%;
         width: 100%;
         margin-left: 18px;
         padding: 21px 15px;
