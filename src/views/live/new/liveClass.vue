@@ -49,8 +49,33 @@
       </div>
     </div>
     <div class="live-class--attendance">
+      <h3>ONLINE USERS : 60 </h3>
       <div class="online-users">
-
+        <online-user />
+        <online-user />
+        <online-user />
+        <online-user />
+        <online-user />
+        <online-user />
+        <online-user />
+        <online-user />
+        <online-user />
+        <online-user />
+        <online-user />
+        <online-user />
+        <online-user />
+        <online-user />
+        <online-user />
+        <online-user />
+        <online-user />
+        <online-user />
+        <online-user />
+        <online-user />
+        <online-user />
+        <online-user />
+        <online-user />
+        <online-user />
+        <online-user />
       </div>
     </div>
   </div>
@@ -62,8 +87,10 @@
   import Participant from "../../../plugins/kurentoLive/participants";
   import {WebRtcPeer} from 'kurento-utils'
   import {mapGetters} from 'vuex'
+  import OnlineUser from "../../../components/Live/OnlineUser";
 export default {
   name: "liveClass",
+  components: {OnlineUser},
   data(){
     return{
       ws:null,
@@ -278,7 +305,7 @@ export default {
 <style lang="scss" >
 .live-class{
   &--wrapper{
-
+    display: flex;
     input[type=checkbox], input[type=radio] {
       border: 1px solid #c0c0c0;
       margin: 0 0.1em 0 0;
@@ -649,6 +676,27 @@ export default {
       }
     }
   }
+  &--attendance{
+    background-color: $main;
+    padding:.5rem;
+    width: 20rem;
+
+    h3{
+      text-align: center;
+      font-size:1.1rem;
+      text-transform: capitalize;
+      margin-bottom: 1rem;
+    }
+
+    .online-users{
+      max-height: 21.5rem;
+      overflow-y: auto;
+
+      @include scroll-bar;
+    }
+  }
+
+
 }
 
 </style>
