@@ -160,16 +160,6 @@
                     this.type = "chapters";
                 });
             },
-            reset(type) {
-                if (type === "course") {
-                    this.course = {
-                        name: "",
-                        description: "",
-                    };
-                    (this.coverPicture = undefined),
-                        (this.selectedFacultyCollegeYearName = "");
-                }
-            },
         },
         created() {
             this.getFacultyCollegeYears(this.$store.state.user.user.user_name);
