@@ -5,7 +5,7 @@
       <v-avatar v-else size="50" class="avatar">
         {{ `${$store.state.user.user.sur_name} ${$store.state.user.user.other_names}`| computeText }}
       </v-avatar>
-      <v-icon>mdi-chevron-down</v-icon>
+      <v-icon>mdi-chevron-{{profile_card_active ? 'up':'down'}}</v-icon>
       <div class="profile-card">
         <div class="profile-card-wrapper" v-if="profile_card_active" >
           <profile-card />
