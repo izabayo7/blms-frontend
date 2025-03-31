@@ -38,6 +38,7 @@
               <v-btn
                   color="#02A617"
                   class="white--text"
+                  :disabled="item.status == 2"
                   @click.stop="
                   set_modal({
                     template: 'action_confirmation',
