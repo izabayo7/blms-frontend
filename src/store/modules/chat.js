@@ -187,7 +187,7 @@ export default {
             if(creation){
                 id = msg.id;
                 message = msg;
-            }else { //when it is message sent or recieved
+            }else { //when it is message sent or received
                 id = msg.sender._id;
 
                 message = {
