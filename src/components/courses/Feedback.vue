@@ -18,7 +18,7 @@
       <div class="col-11">
         <div
           ref="feedback_input"
-          class="feedback_input"
+          :class="`feedback_input ${content == '' ? 'empty_feedback' : ''}`"
           contenteditable="true"
           @keyup="computeFeedbackClass()"
         >
@@ -110,13 +110,13 @@ export default {
         : "";
     },
     computeFeedbackClass() {
-      if (this.element.innerHTML == "") {
-        this.element.className += " empty_feedback";
-      } else {
-        this.element.className = this.element.className.replace(
-          " empty_feedback",
-          ""
-        );
+      const element = this.$refs.feedback_input;
+      if (element) {
+        if (element.innerHTML == "") {
+          element.className += " empty_feedback";
+        } else {
+          element.className = element.className.replace(" empty_feedback", "");
+        }
       }
     },
     async addFeedback() {
@@ -137,9 +137,10 @@ export default {
     },
   },
   mounted() {
-    setTimeout(() => {
-      this.element = this.$refs.feedback_input;
-    }, 1000);
+    // this.computeFeedbackClass();
+    // setTimeout(() => {
+    //   this.element = this.$refs.feedback_input;
+    // }, 1000);
   },
 };
 </script>
