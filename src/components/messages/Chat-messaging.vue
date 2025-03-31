@@ -650,7 +650,7 @@ export default {
         position: relative;
 
         .reply {
-          width: 340px;
+          max-width: 100%;
           height: 64px;
           background: #E7ECF0;
 
@@ -704,7 +704,7 @@ export default {
 
       .msg-cntnr {
         align-items: center;
-
+        max-width: 100%;
         &:hover {
           .actions {
             display: initial;
