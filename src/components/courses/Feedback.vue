@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="marking_feedback">
     <div class="d-flex">
       <div class="col-9 pa-0">
         <div
@@ -57,12 +57,15 @@
     <div class="save_feedback d-flex">
       <v-btn
         v-if="$store.state.user.user.category.name === 'INSTRUCTOR' && showSave"
-        @click="answerId ? editFeedback() : addFeedback()"
+        @click="content == '' ? editFeedback() : addFeedback()"
         class="primary-bg px-6 py-4 mt-4"
         rounded
         >Save</v-btn
       >
-      <div v-show="message !== ''" class="mt-3 ml-5 text-right col-6">
+      <div
+        v-show="message != ''"
+        class="mt-3 ml-5 text-right col-6 message_place"
+      >
         {{ message }}
       </div>
     </div>
@@ -115,7 +118,7 @@ export default {
       if (this.message != "") {
         setTimeout(() => {
           this.message = "";
-        }, 1000);
+        }, 2000);
       }
     },
   },
@@ -182,22 +185,27 @@ export default {
 </script>
 
 <style lang="scss">
-.feedback_input {
-  border: 2px solid #d2d2d2;
-  padding: 15px;
-  border-radius: 9px;
-  min-height: 140px;
-  overflow-wrap: anywhere;
-  max-width: 100%;
-}
-.feedback_input:focus {
-  outline: none;
-}
-.empty_feedback::before {
-  content: "Write feedback here";
-}
-.primary-bg {
-  background-color: $primary !important;
-  color: white !important;
+.marking_feedback {
+  .feedback_input {
+    border: 2px solid #d2d2d2;
+    padding: 15px;
+    border-radius: 9px;
+    min-height: 140px;
+    overflow-wrap: anywhere;
+    max-width: 100%;
+  }
+  .feedback_input:focus {
+    outline: none;
+  }
+  .empty_feedback::before {
+    content: "Write feedback here";
+  }
+  .primary-bg {
+    background-color: $primary !important;
+    color: white !important;
+  }
+  .message_place {
+    color: $primary;
+  }
 }
 </style>
