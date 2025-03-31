@@ -206,8 +206,12 @@ console.log(this.currentDisplayedUser.id)
 
       .icon {
         border-radius: 50%;
-        padding: 0.2rem 0.3rem;
+        width: 2rem;
+        height: 2rem;
         background-color: $primary;
+        display: flex;
+        justify-content: center;
+        align-items: center;
         svg {
           width: 20px;
           height: 20px;
