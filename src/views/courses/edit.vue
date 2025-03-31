@@ -1,6 +1,6 @@
   <template>
   <v-app>
-    <v-row v-if="course != undefined" class="new-class-form ml-10 mt-10">
+    <v-row v-if="course != undefined" class="new-class-form ml-md-10 ml-2 mt-md-10 mt-4">
       <v-col class="col-12">
         <h1 class="d-block">EDIT COURSE</h1>
         <div class="new-class-btns mb-5">
