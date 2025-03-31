@@ -80,13 +80,13 @@
               <v-icon
                 small
                 color="warning"
-                @click="$router.push(`quiz/view/${item._id}`)"
+                @click="$router.push(`quiz/view/${item.name}`)"
                 >mdi-eye</v-icon
               >
               <v-icon
                 small
                 color="success"
-                @click="$router.push(`quiz/edit/${item._id}`)"
+                @click="$router.push(`quiz/edit/${item.name}`)"
                 >mdi-square-edit-outline</v-icon
               >
             </template>
@@ -133,7 +133,7 @@ export default {
           course: "under construction",
           usage: 0,
           containedQuestions: quiz.questions.length,
-          duration: new Date(quiz.duration * 1000).toISOString().substr(11, 8),
+          duration: new Date(quiz.duration * 100).toISOString().substr(11, 8),
           date: quiz.createdAt.split("T")[0].split("-").reverse().join("/"),
         });
       }

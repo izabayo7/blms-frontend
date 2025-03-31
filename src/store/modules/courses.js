@@ -78,16 +78,6 @@ export default {
             }
 
         },
-        //get a course by name from backend
-        getCourse({ state }, { userCategory, userId, courseName }) {
-            if (state.courses.data.length < 1) {
-                return apis.get(`course/${userCategory}/${userId}/${courseName}`).then(d => {
-                    state.courses.data = [d.data]
-                    return d.data
-                })
-            }
-            return state.courses.data.filter(course => course.name == courseName)[0]
-        },
         //create a course
         createCourse({ state, commit, dispatch }, { course, coverPicture }) {
             let courseObject = {}
@@ -316,14 +306,18 @@ export default {
             })
         },
         //find a course by name
-        findCourseByName({ commit, dispatch }, { userCategory, userId, courseName }) {
-            dispatch('getCourse', {
-                userCategory: userCategory,
-                userId: userId,
-                courseName: courseName
-            }).then((course) => {
+        findCourseByName({ state, commit }, { userCategory, userId, courseName }) {
+            if (state.courses.data.length < 1) {
+                apis.get(`course/${userCategory}/${userId}/${courseName}`).then(d => {
+                    state.courses.data = [d.data]
+                    commit('set_selected_course', d.data._id)
+                })
+            } else {
+                let course = state.courses.data.filter(course => course.name == courseName)[0]
                 commit('set_selected_course', course._id)
-            })
+            }
+            
+
         },
         // create student progress in a lesson
         startCourse({ state, commit }, studentId) {

@@ -9,7 +9,7 @@
       v-if="mode !== ''"
       ref="editor"
       :mode="mode"
-      :defaultContent="'Write Here You custom instructions'"
+      :defaultContent="'<ol><li><p>Write your custom instructions</p></li></ol>'"
       template="small"
     />
     <span class="quiz_lable my-6">Quiz duration</span>
@@ -137,20 +137,16 @@
       <v-icon>mdi-plus</v-icon>Add a question
     </v-btn>
     <v-row>
-      <v-btn
-        class="white--text save-quiz"
-        rounded
-        @click="saveQuiz()"
+      <v-btn class="white--text save-quiz" rounded @click="saveQuiz()"
         >Save</v-btn
       >
-      <v-btn color="#707070" class="cancel-quiz" text>Cancel</v-btn>
+      <v-btn color="#707070" class="cancel-quiz" text @click="recreate()">Cancel</v-btn>
     </v-row>
   </v-app>
 </template>
 
 <script>
-import axios from "axios";
-import Apis from "@/services/apis";
+import { mapActions } from "vuex";
 import VueTimepicker from "vue2-timepicker/src/vue-timepicker.vue";
 export default {
   components: {
@@ -180,15 +176,15 @@ export default {
     ],
     questions: [],
   }),
-  beforeMount() {
+  created() {
     this.mode = "edit";
     this.recreate();
   },
   methods: {
+    ...mapActions("quiz", ["create_quiz"]),
     addPicture(file, boundIndex) {
       this.pictures[boundIndex].push(file);
       this.questions[boundIndex].options.choices.push({ src: file.name });
-      console.log(this.pictures[boundIndex]);
     },
     removePicture(index, boundIndex) {
       this.pictures[boundIndex].splice(index, 1);
@@ -243,8 +239,6 @@ export default {
     },
     addOption(index) {
       this.questions[index].options.choices.push({ text: "" });
-      console.log(this.questions);
-      console.log(index);
     },
     removeOption(index, index1) {
       this.questions[index].options.choices.splice(index1, 1);
@@ -260,76 +254,37 @@ export default {
       const result = seconds + minutes * 60 + hours * 3600;
       return result;
     },
-    async uploadPictures(quizId) {
-      try {
-        const formData = new FormData();
-        for (const picturesGroup of this.pictures) {
-          for (const index in picturesGroup) {
-            formData.append("files[" + index + "]", picturesGroup[index]);
-          }
-        }
-        await axios.post(
-          `http://localhost:7070/kurious/file/quizAttachedFiles/${quizId}`,
-          formData,
-          { headers: { "Content-Type": "multipart/form-data" } }
-        );
-      } catch (error) {
-        if (error.response) {
-          this.status = error.response.status;
-          this.message = error.response.data;
-        } else if (error.request) {
-          this.status = 503;
-          this.message = "Service Unavailable";
-        }
-        console.log(error);
-        this.modal = false;
-        this.show = true;
-      }
-    },
     async saveQuiz() {
-      try {
-        console.log(this.questions);
-        console.log(this.pictures);
-        let questions = [];
-        for (const index in this.questions) {
-          this.questions[index].type = this.questions[index].type
-            .toLowerCase()
-            .split(" ")
-            .join("-");
-          console.log("this place is fine " + index);
-          if (!this.questions[index].type.includes("select")) {
-            this.questions[index].options = undefined;
-          }
-          questions.push(this.questions[index]);
+      let questions = [];
+      for (const index in this.questions) {
+        this.questions[index].type = this.questions[index].type
+          .toLowerCase()
+          .split(" ")
+          .join("-");
+        if (!this.questions[index].type.includes("select")) {
+          this.questions[index].options = undefined;
         }
-        const instructions = this.$refs.editor.getHTML();
-        let response = await Apis.create("quiz", {
+        questions.push(this.questions[index]);
+      }
+
+      const editorContent = this.$refs.editor.getHTML();
+
+      this.create_quiz({
+        quiz: {
           name: this.name,
-          instructions: instructions.includes(
+          instructions: editorContent.includes(
             "Write Here You custom instructions"
           )
             ? undefined
-            : instructions,
+            : editorContent,
           duration: this.toSeconds(this.duration),
-          instructor: this.$store.state.user._id,
+          instructor: this.$store.state.user.user._id,
           questions: questions,
-        });
-        this.uploadPictures(response.data._id);
-        this.status = 200;
-        this.message = "Quiz was saved successfully";
-        this.show = true;
-      } catch (error) {
-        if (error.response) {
-          this.status = error.response.status;
-          this.message = error.response.data;
-        } else if (error.request) {
-          this.status = 503;
-          this.message = "Service Unavailable";
-        }
-        console.log(error);
-        this.modal = false;
-        this.show = true;
-      }
+        },
+        pictures: this.pictures,
+      }).then(() => {
+        this.$router.push("/quiz");
+      });
     },
   },
 };
@@ -347,7 +302,8 @@ export default {
     width: 12px !important;
     max-width: 300px;
   }
-  .question_number,field_title {
+  .question_number,
+  field_title {
     font-size: 24px;
   }
   .mdi-plus::before {
@@ -385,20 +341,20 @@ export default {
 }
 </style>
 <style lang="scss">
-  // the shadows
-  .field_shadow_1.v-text-field.v-text-field--solo:not(.v-text-field--solo-flat)
-    > .v-input__control
-    > .v-input__slot {
-    box-shadow: 0px 10px 20px rgb(183, 183, 183, 0.16) !important;
-  }
+// the shadows
+.field_shadow_1.v-text-field.v-text-field--solo:not(.v-text-field--solo-flat)
+  > .v-input__control
+  > .v-input__slot {
+  box-shadow: 0px 10px 20px rgb(183, 183, 183, 0.16) !important;
+}
 
-  .field_shadow_2.v-text-field.v-text-field--solo:not(.v-text-field--solo-flat)
-    > .v-input__control
-    > .v-input__slot {
-    box-shadow: 0px 10px 40px rgb(199, 199, 199, 0.16) !important;
-  }
+.field_shadow_2.v-text-field.v-text-field--solo:not(.v-text-field--solo-flat)
+  > .v-input__control
+  > .v-input__slot {
+  box-shadow: 0px 10px 40px rgb(199, 199, 199, 0.16) !important;
+}
 
-  .v-menu__content {
-    box-shadow: 0px 10px 40px rgb(199, 199, 199, 0.16) !important;
-  }
+.v-menu__content {
+  box-shadow: 0px 10px 40px rgb(199, 199, 199, 0.16) !important;
+}
 </style>

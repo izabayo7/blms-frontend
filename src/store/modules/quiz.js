@@ -7,6 +7,8 @@ export default {
             data: [],
             loaded: false
         },
+        // keep the selected quiz
+        selected_quiz: ''
     },
     mutations: {
         // add quiz target
@@ -20,6 +22,10 @@ export default {
                 }
             }
         },
+        // update the selected_quiz
+        set_selected_quiz(state, id) {
+            state.selected_quiz = id
+        },
     },
     actions: {
         //get quiz from backend
@@ -32,30 +38,40 @@ export default {
             })
         },
         //create a quiz
-        create_qiuz({ state, commit, dispatch }, { quiz, pictures }) {
+        create_quiz({ state, commit, dispatch }, { quiz, pictures }) {
             let quizObject = {}
             // set the dialog
-            dispatch('modal/set_modal', { template: 'display_information', title: 'Creating Course', message: 'Saving information' }, { root: true })
+            dispatch('modal/set_modal', { template: 'display_information', title: 'Creating _quiz', message: 'Saving information' }, { root: true })
             return apis.create('quiz', quiz).then(d => {
                 quizObject = d.data
                 if (pictures.length > 0) {
-                    commit('modal/update_progress', 0, { root: true })
-                    commit('modal/update_message', `uploading pictures`, { root: true })
+                    let index = 0
+                    let pictureFound = false
                     const formData = new FormData()
                     for (const i in pictures) {
-                        formData.append("files[" + i + "]", pictures[i]);
-                    }
-                    apis.create(`http://localhost:7070/kurious/file/quizAttachedFiles/${d.data._id}`, formData, {
-                        headers: {
-                            'Content-Type': 'multipart/form-data'
-                        },
-                        onUploadProgress: (progressEvent) => {
-                            commit('modal/update_progress', parseInt(Math.round((progressEvent.loaded / progressEvent.total) * 100)), { root: true })
+                        for (const k in pictures[i]) {
+                            if (pictures[i][k] !== []) {
+                                pictureFound = true
+                                formData.append("files[" + index + "]", pictures[i][k]);
+                                index++
+                            }
                         }
-                    }).then((response) => {
-                        quizObject = response.data
-                    })
+                    }
+                    if (pictureFound) {
+                        commit('modal/update_progress', 0, { root: true })
+                        commit('modal/update_message', `uploading pictures`, { root: true })
 
+                        apis.create(`http://localhost:7070/kurious/file/quizAttachedFiles/${d.data._id}`, formData, {
+                            headers: {
+                                'Content-Type': 'multipart/form-data'
+                            },
+                            onUploadProgress: (progressEvent) => {
+                                commit('modal/update_progress', parseInt(Math.round((progressEvent.loaded / progressEvent.total) * 100)), { root: true })
+                            }
+                        }).then((response) => {
+                            quizObject = response.data
+                        })
+                    }
                 }
                 state.quiz.data.push(quizObject)
                 setTimeout(() => {
@@ -63,6 +79,64 @@ export default {
                 }, 3000);
 
             })
+
+        },
+        //update a quiz
+        update_quiz({ state, commit, dispatch }, { quiz, pictures }) {
+            let quizObject = {}
+            // set the dialog
+            dispatch('modal/set_modal', { template: 'display_information', title: 'Creating _quiz', message: 'Saving information' }, { root: true })
+            return apis.update('quiz', quiz).then(d => {
+                quizObject = d.data
+                if (pictures.length > 0) {
+                    let index = 0
+                    let pictureFound = false
+                    const formData = new FormData()
+                    for (const i in pictures) {
+                        for (const k in pictures[i]) {
+                            if (pictures[i][k] !== []) {
+                                pictureFound = true
+                                formData.append("files[" + index + "]", pictures[i][k]);
+                                index++
+                            }
+                        }
+                    }
+                    if (pictureFound) {
+                        commit('modal/update_progress', 0, { root: true })
+                        commit('modal/update_message', `uploading pictures`, { root: true })
+
+                        apis.create(`http://localhost:7070/kurious/file/quizAttachedFiles/${d.data._id}`, formData, {
+                            headers: {
+                                'Content-Type': 'multipart/form-data'
+                            },
+                            onUploadProgress: (progressEvent) => {
+                                commit('modal/update_progress', parseInt(Math.round((progressEvent.loaded / progressEvent.total) * 100)), { root: true })
+                            }
+                        }).then((response) => {
+                            quizObject = response.data
+                        })
+                    }
+                }
+                state.quiz.data.push(quizObject)
+                setTimeout(() => {
+                    dispatch('modal/reset_modal', null, { root: true })
+                }, 3000);
+
+            })
+
+        },
+        //find a quiz by name
+        findQuizByName({ state, commit }, { userCategory, userId, quizName }) {
+            if (state.quiz.data.length < 1) {
+                apis.get(`quiz/${userCategory}/${userId}/${quizName}`).then(d => {
+                    state.quiz.data = [d.data]
+                    commit('set_selected_quiz', d.data._id)
+                })
+            } else {
+                let quiz = state.quiz.data.filter(quiz => quiz.name == quizName)[0]
+                commit('set_selected_quiz', quiz._id)
+            }
+
 
         },
         //delete a quiz
@@ -81,6 +155,10 @@ export default {
         //get a specified quiz
         loaded: state => {
             return state.quiz.loaded
+        },
+        //get the selected_quiz
+        selected_quiz: state => {
+            return state.quiz.data.filter(quiz => quiz._id == state.selected_quiz)[0]
         },
         //get a specified quiz by name
         quiz: state => (name) => {

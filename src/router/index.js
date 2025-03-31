@@ -64,6 +64,11 @@ const routes = [
             component: () =>
                 import('@/views/quiz/create')
         }, {
+            path: '/quiz/edit/:name',
+            name: 'Edit Quiz',
+            component: () =>
+                import('@/views/quiz/edit')
+        }, {
             path: '/quiz/attempt/:id',
             name: 'TakeQuiz',
             component: () =>
