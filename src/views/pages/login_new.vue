@@ -1,6 +1,20 @@
 <template>
   <v-container fluid class="login-page">
-    
+    <v-row>
+      <v-col class="col-10 mx-auto col-lg-6">
+        <div class="login-box mx-auto text-center">
+          <div class="heading">
+            <div class="welcome">Welcome to</div>
+            <div class="college-name">Rwanda coding academy.</div>
+            <img
+              src="../../components/accountancy-logo 1.png"
+              alt=""
+              class="logo"
+            />
+          </div>
+        </div>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 <script>
@@ -90,7 +104,34 @@ export default {
 </script>
 
 <style lang="scss">
-.login-page{
-  background: radial-gradient(50% 50% at 50% 50%, #541974 0%, rgba(25, 48, 116, 0.96) 100%);
+.login {
+  &-page {
+    background: radial-gradient(
+      50% 50% at 50% 50%,
+      #541974 0%,
+      rgba(25, 48, 116, 0.96) 100%
+    );
+    height: 100vh;
+  }
+  &-box {
+    width: 395px;
+    height: 557px;
+    left: 485px;
+    top: 54px;
+    background-color: white;
+    border-radius: 33px;
+    .welcome {
+      font-family: Inter;
+      font-style: normal;
+      font-weight: 300;
+      font-size: 21.8152px;
+      line-height: 29px;
+      /* or 132% */
+
+      text-align: center;
+
+      color: #000000;
+    }
+  }
 }
 </style>
