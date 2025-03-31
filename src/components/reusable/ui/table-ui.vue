@@ -39,7 +39,7 @@
                 </div>
               </div>
             </div></td>
-            <td v-for="tabHead in tabHeads" :key="`${tabHead}${Date.now()*Math.random()}` ">{{content[tabHead]}}</td>
+            <td v-for="col in columnNames" :key="`${col}${Date.now()*Math.random()}` ">{{content[col]}}</td>
           </tr>
         </tbody>
       </table>
@@ -71,10 +71,7 @@ export default {
   },
   computed:{
     tabHeads(){
-      let tabHeadsCols;
-
-      const {keysToShow} = this.options;
-      tabHeadsCols = keysToShow || Object.keys(this.data[0]);
+      let tabHeadsCols = this.columnNames;
 
       tabHeadsCols = tabHeadsCols.map(aTabHead => {
         let s = S(aTabHead).humanize().s;
@@ -85,6 +82,10 @@ export default {
 
       return tabHeadsCols;
     },
+    columnNames(){
+      const {keysToShow} = this.options;
+      return keysToShow || Object.keys(this.data[0]);
+    }
   },
   methods:{
     inSelectedRows(idx){
