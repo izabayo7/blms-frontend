@@ -10,6 +10,11 @@
               name="role"
               id="user_category"
               :options="user_categories"
+              @input="
+                (e) => {
+                  selected_user_category = e;
+                }
+              "
             />
           </div>
           <div class="role my-2">
@@ -18,6 +23,11 @@
               name="role"
               id="user_group"
               :options="user_group_names"
+              @input="
+                (e) => {
+                  selected_user_group = e;
+                }
+              "
             />
           </div>
           <div class="d-flex my-1">
@@ -53,7 +63,9 @@
             </div>
           </div>
           <div class="send-container">
-            <button class="add-email send" @click="addEmail">Send</button>
+            <button class="add-email send" @click="sendInvitations">
+              Send
+            </button>
           </div>
         </div>
       </div>
@@ -103,6 +115,7 @@ export default {
       user_categories: [],
       user_groups: [],
       selected_user_group: "",
+      selected_user_category: "",
       email: "",
       closable: false,
     };
@@ -125,10 +138,8 @@ export default {
         if (!this.emails.includes(this.email)) {
           this.emails.unshift(this.email);
           this.email = "";
-        } else console.log("email exists");
+        }
         this.$refs.email_input.$emit("clear");
-      } else {
-        console.log("invalid email");
       }
     },
     validateEmail(email) {
@@ -138,6 +149,7 @@ export default {
     updateCurrentEmailValue(email) {
       this.email = email;
     },
+    sendInvitations() {},
   },
   async beforeMount() {
     const category_res = await Apis.get("user_category/open");
