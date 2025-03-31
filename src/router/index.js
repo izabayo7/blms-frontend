@@ -10,18 +10,6 @@ const routes = [{
     component: Home
 },
 {
-    path: '/shotcuts',
-    name: 'Shot cut',
-    component: () =>
-        import('@/views/pages/shotcut')
-},
-{
-    path: '/image',
-    name: 'Tip Tap',
-    component: () =>
-        import('@/views/pages/imageskills')
-},
-{
     path: '/login',
     name: 'Login',
     component: () =>
@@ -65,8 +53,10 @@ const routes = [{
             import('@/components/take-quiz.vue')
     }, {
         path: '/messages',
-        component: () =>
-            import('@/components/chat.vue')
+        component: () => import('@/views/Messages.vue'),
+        children:[
+            {path:'/messages/:username', component: () => import('@/views/Chat.vue')}
+        ]
     }, {
         path: '/reports',
         name: 'Reports',

@@ -8,7 +8,7 @@
         </div>
         
         <!-- notification card -->
-        <transition enter-active-class="animated fadeInDown">
+        <transition enter-active-class="animate__animated animate__fadeIn animate__faster">
         <div class="my-card" v-if="cardActive">
 
           <div class="head">Notifications</div>

@@ -10,7 +10,15 @@ import axios from "axios";
 import jwt from "jsonwebtoken";
 export default {
   name: "App",
+  mounted() {
+    console.log(this.$el.style.height)
+
+  },
   beforeMount: async function () {
+    let innerHeight = window.innerHeight
+    let app = document.getElementById('app')
+    app.style.height = innerHeight;
+
     if (!this.$session.exists()) {
       this.$router.push("/login");
       // keep the requested url then redirect after login
@@ -34,11 +42,12 @@ export default {
     padding: 0;
     margin: 0;
     box-sizing: border-box;
-    color:$font;
   }
   *{
     padding: 0;
     margin: 0;
+    color:$font;
+
   }
 
   input:focus, textarea:focus{
