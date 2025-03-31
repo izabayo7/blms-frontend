@@ -262,8 +262,8 @@ export default {
 
   data: () => ({
     e6: 1,
-    facilityCollegeYearNames: ["testing group"],
-    facilityCollegeYearCodes: ["5f0ab5f7deea002f14fd93a2"],
+    facilityCollegeYearNames: [],
+    facilityCollegeYearCodes: [],
     activeChapter: 0,
     quizNames: ["None"],
     selectedQuizName: "None",
@@ -271,7 +271,7 @@ export default {
     attachments: [],
     chapters: 1,
     modal: true,
-    type: "chapters",
+    type: "details",
     mode: "edit",
     show: false,
     message: "",
@@ -314,7 +314,28 @@ export default {
       }
     },
   },
+  beforeMount() {
+    this.getFaculties();
+  },
   methods: {
+    async getFaculties() {
+      try {
+        const response = await Apis.get(
+          `facility-college-year/college/${this.$store.state.user.college}`
+        );
+        for (const facultyCollegeYear of response.data) {
+          this.facilityCollegeYearNames.push(facultyCollegeYear.name);
+          this.facilityCollegeYearCodes.push(facultyCollegeYear._id);
+        }
+      } catch (error) {
+        if (error.request && !error.response) {
+          this.status = 503;
+          this.message = "Service Unavailable";
+          this.modal = false;
+          this.show = true;
+        }
+      }
+    },
     async getQuizes() {
       try {
         const response = await Apis.get("quiz");

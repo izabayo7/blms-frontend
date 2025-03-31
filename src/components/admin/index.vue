@@ -19,7 +19,7 @@
             </v-col>
           </v-row>
         </v-card>
-        <v-card class="details-card">
+        <v-card class="details-card" to="/classes">
           <v-row>
             <v-col class="col-4">
               <v-icon>mdi-table-chair</v-icon>
@@ -84,7 +84,7 @@
             </v-col>
             <v-col class="col-12">
               <h5>African Leadership University</h5>
-              <v-btn rounded>View school details</v-btn>
+              <v-btn rounded @click="$router.push('/school-details')">View school details</v-btn>
             </v-col>
           </v-row>
         </v-card>

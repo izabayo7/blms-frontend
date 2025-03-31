@@ -203,6 +203,7 @@ export default {
           choices: [{ text: "" }, { text: "" }],
         },
       });
+      this.pictures.push([]);
     },
     addOption(index) {
       this.questions[index].options.choices.push({ text: "" });
