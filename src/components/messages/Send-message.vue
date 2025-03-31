@@ -68,6 +68,7 @@ export default {
 
       //emit that we are message sent
       emit('message-sent')
+      console.log(this.$store.state.chat.incomingMessages)
     },
     inputMsg(){
       let input = this.$refs['input']
