@@ -140,16 +140,11 @@
 </template>
 <script>
 import Apis from "@/services/apis";
-import axios from "axios";
-import jwt from "jsonwebtoken";
 export default {
   name: "Login",
   data: () => ({
-    userCategory: "",
-    email_user_name_or_phone: "",
     showPassword1: false,
     showPassword2: false,
-    password: "",
     message: "",
     image: "https://apis.kurious.rw/assets/images/image%204.png",
     institution: "Kurious Learn",
@@ -162,7 +157,7 @@ export default {
     message() {
       setTimeout(() => {
         this.message = "";
-      }, 3000);
+      }, 10000);
     },
   },
   methods: {
@@ -185,18 +180,21 @@ export default {
     async updatePasswordReset() {
       try {
         // call the login api
-        let response = await Apis.update("reset_password", {
-          email: this.email,
+        let response = await Apis.update("reset_password", "", {
+          email: this.password_reset.user.email,
           token: this.$route.query.token,
-          password: this.new_password,
+          password: this.obj.new_password,
         });
 
         if (response.data.status != 200) {
           this.valid = false;
-          this.message = response.data.data;
+          this.message = response.data.message;
         } else {
           this.valid = true;
           this.message = response.data.message + ", you can now login.";
+          setTimeout(() => {
+            this.$router.push("/login");
+          }, 3000);
         }
       } catch (error) {
         this.valid = false;
