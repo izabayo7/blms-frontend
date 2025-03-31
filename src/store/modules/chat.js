@@ -47,6 +47,17 @@ export default {
 
         //add incoming message
         ADD_INCOMING_MESSAGE(state, newMessage){
+            let incoming_message = {
+                id: newMessage.sender._id,
+                last_message: {
+                    content: newMessage.content,
+                    sender: newMessage.sender._id,
+                    time: newMessage.createdAt,
+
+                },
+                name: `${newMessage.sender.surName} ${newMessage.sender.otherNames}`,
+                unreadMessagesLength: 1,
+            }
 
             //get last message from stored conversation
             store.dispatch('chat/lastMessageInCertainChatMessages',newMessage.sender._id).then(({lastMessage,groupIndex,userIndex}) => {
@@ -78,19 +89,7 @@ export default {
             store.dispatch('chat/findIndexOfUserInIncomingMessages',newMessage.sender._id).then(idx => {
 
                 if(idx === null){
-                    let incoming_message = {
-                        id: "5f53daf9d143be03eb33291f",
-                        last_message: {
-                            content: "apuuu",
-                            sender: "5f4e6f620b53af31a0bdf202",
-                            time: "2020-09-28T15:32:03.542Z",
-
-                        },
-                        name: "Teta Gaella",
-                        unreadMessagesLength: 67,
-                    }
-                    console.log(incoming_message,state.incomingMessages)
-                    // state.incomingMessages.unshift(incoming_message)
+                    state.incomingMessages.unshift(incoming_message)
                 }else {
                     let incomingMessage = state.incomingMessages[idx]
 
@@ -109,48 +108,45 @@ export default {
         //store the message that we sent
         ADD_ONGOING_MESSAGE(state, newMessage){
 
-            newMessage = {
-                content:newMessage,
-                createdAt: new Date(),
-                _id:`${Math.random()}`
-            }
+                store.dispatch('chat/lastMessageInCertainChatMessages',state.username).then(({lastMessage,groupIndex,userIndex}) => {
+                    console.log(lastMessage,newMessage)
+                    console.trace()
+                    if(lastMessage._id !== newMessage._id){
 
-            store.dispatch('chat/lastMessageInCertainChatMessages',state.username).then(({lastMessage,groupIndex,userIndex}) => {
+                        if(userIndex === undefined){
+                            state.loadedMessages.push({username:state.username,conversation:[{from:'me',messages:[newMessage]}]})
+                        }else {
+                            let userMessages = state.loadedMessages[userIndex].conversation
 
-                if(lastMessage._id !== newMessage._id){
-
-                    if(userIndex === undefined){
-                        state.loadedMessages.push({username:state.username,conversation:[{from:'me',messages:[newMessage]}]})
-                    }else {
-                        let userMessages = state.loadedMessages[userIndex].conversation
-
-                        if(userMessages[groupIndex].from.toLowerCase() !== 'me'){
-                            userMessages.push(
-                                {from:'me',messages:[newMessage]}
-                            )
-                        } else{
-                            userMessages[userMessages.length-1].messages.push(newMessage)
+                            if(userMessages[groupIndex].from.toLowerCase() !== 'me'){
+                                userMessages.push(
+                                    {from:'me',messages:[newMessage]}
+                                )
+                            } else{
+                                userMessages[userMessages.length-1].messages.push(newMessage)
+                            }
                         }
                     }
-                }
 
-            })
+                })
 
-            store.dispatch('chat/findIndexOfUserInIncomingMessages',state.currentDisplayedUser.id).then(idx => {
-                if(idx === null){
-                    //to be done later
-                }else {
-                    let incomingMessage = state.incomingMessages[idx]
-                    incomingMessage.unreadMessagesLength = 0
-                    incomingMessage.last_message = newMessage
+                store.dispatch('chat/findIndexOfUserInIncomingMessages',state.currentDisplayedUser.id).then(idx => {
+                    if(idx === null){
+                        //to be done later
+                    }else {
+                        let incomingMessage = state.incomingMessages[idx]
+                        incomingMessage.unreadMessagesLength = 0
+                        incomingMessage.last_message = newMessage
 
-                    //remove the message
-                    state.incomingMessages.splice(idx,1)
+                        //remove the message
+                        state.incomingMessages.splice(idx,1)
 
-                    //add the message to the first place
-                    state.incomingMessages.unshift(incomingMessage)
-                }
-            })
+                        //add the message to the first place
+                        state.incomingMessages.unshift(incomingMessage)
+                    }
+                })
+
+                emit('message-sent')
         },
 
         //change message read status and unread messages
