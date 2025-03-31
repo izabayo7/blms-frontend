@@ -38,7 +38,7 @@ export default {
     this.socket.on("new-notification", ({notification}) => {
       this.addNotification(notification);
 
-      if (notification.notification.content.includes('published a new  assignment')) {
+      if (notification.notification.content.includes('published a new')) {
         this.update_unread({total_assignments: this.assignments + 1})
       }
     });
