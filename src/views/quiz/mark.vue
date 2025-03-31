@@ -4,7 +4,7 @@
     fluid
     class="quiz-page white pl-lg-16"
   >
-    <back class="mt-0 mb-6 ml-n6" to="/reports" />
+    <back class="mt-0 mb-6 ml-n6" />
 
     <v-row class="relative">
       <v-col class="col-12 col-md-8">

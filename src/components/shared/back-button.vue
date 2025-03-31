@@ -1,5 +1,5 @@
 <template>
-  <v-btn :to="to" rounded color="#fff">
+  <v-btn @click="$router.go(-1)" rounded color="#fff">
     <svg
       xmlns="http://www.w3.org/2000/svg"
       width="10.094"
@@ -22,14 +22,6 @@
   </v-btn>
 </template>
 <script>
-export default {
-  props: {
-    to: {
-      type: String,
-      required: true,
-    },
-  },
-};
 </script>
 <style lang="scss" scoped>
 .v-btn {
