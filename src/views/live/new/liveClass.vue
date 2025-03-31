@@ -1,5 +1,5 @@
 <template>
-  <div class="live-class" :class="{'pt-7':!participationInfo.isOfferingCourse || isStudentPresenting}">
+  <div class="live-class" :class="{'pt-7':(!participationInfo.isOfferingCourse || isStudentPresenting) && !$vuetify.breakpoint.mobile}">
     <div v-if="loaded && !error" class="live-class--wrapper" :class="{'mx-auto':!participationInfo.isOfferingCourse || isStudentPresenting}">
       <back v-if="!participationInfo.isOfferingCourse || isStudentPresenting" class="mt-6 hidden-sm-and-down"/>
       <div class="live-class--video" :class="`--${$vuetify.breakpoint.name}`">
@@ -83,7 +83,7 @@
 <!--                        </div>-->
 <!--                      </div>-->
 <!--                    </div>-->
-                    <div v-if="isStudentPresenting" class="presenter d-flex">
+                    <div v-if="isStudentPresenting " class="presenter d-flex">
                       <div class="text">You are presenting</div>
                       <button class="stop-presenting">
                         <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -92,11 +92,11 @@
                         </svg>
                       </button>
                     </div>
-                    <div v-if="!participationInfo.isOfferingCourse" class="users">
+                    <div v-if="!participationInfo.isOfferingCourse && !$vuetify.breakpoint.mobile" class="users">
                       {{ participants.length }} watching
                     </div>
                   </div>
-                  <div class="live-comments-container">
+                  <div v-if="!$vuetify.breakpoint.mobile" class="live-comments-container">
                     <div class="heading d-flex">
                       <button class="toogle-comments">
                         <svg v-if="newComments" width="26" height="31" viewBox="0 0 26 31" fill="none"
@@ -155,7 +155,7 @@
                     </div>
                   </div>
                   <div class="video-controls" v-if="participationInfo.isOfferingCourse">
-                    <div class="video-controls--wrapper" :class="{'centered': !showComments}">
+                    <div class="video-controls--wrapper" :class="`${showComments?'':'centered'} ${$vuetify.breakpoint.mobile ? 'wide' : ''}`">
                       <button @click="toogleVideo" class="start-mute-video">
                       <span class="icon">
                         <svg width="26" height="18" viewBox="0 0 26 18" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -238,7 +238,7 @@
                       </span>
                         <span class="text">settings</span>
                       </button>
-                      <button v-if="isStudentPresenting" class="start-settings">
+                      <button v-if="isStudentPresenting && !$vuetify.breakpoint.mobile" class="start-settings">
                       <span class="icon">
 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path d="M10.09 15.59L11.5 17L16.5 12L11.5 7L10.09 8.41L12.67 11H3V13H12.67L10.09 15.59ZM19 3H5C3.89 3 3 3.9 3 5V9H5V5H19V19H5V15H3V19C3 20.1 3.89 21 5 21H19C20.1 21 21 20.1 21 19V5C21 3.9 20.1 3 19 3Z" fill="white"/>
@@ -249,7 +249,8 @@
                       </button>
                     </div>
                   </div>
-                  <div v-else class="live-class-details">
+
+                  <div v-else-if="!$vuetify.breakpoint.mobile && !isStudentPresenting" class="live-class-details">
                     <div class="live-class-details--wrapper">
                       <div class="description">{{ live_session.chapter.description }}
                       </div>
@@ -278,13 +279,82 @@ openQuiz">
                       </div>
                     </div>
                   </div>
+                  <div class="video-controls" v-else>
+                    <div class="video-controls--wrapper viewer wide centered">
+                      <span class="live">Live</span>
+                      <div class="time">
+                        {{ elapsed_time }}
+                      </div>
+                      <button @click="toogleFullScreen" class="ml-auto">
+                        <svg width="22" height="17" viewBox="0 0 22 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M6.72526 1H1.30859V6.41667" stroke="white" stroke-width="1.26923"/>
+                          <path d="M15.8906 1H21.3073V6.41667" stroke="white" stroke-width="1.26923"/>
+                          <path d="M21.3073 10.25V15.6667H15.8906" stroke="white" stroke-width="1.26923"/>
+                          <path d="M1.30859 10.25V15.6667H6.72526" stroke="white" stroke-width="1.26923"/>
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
                 </div>
               </transition>
             </div>
           </div>
         </div>
+        <div v-if="participationInfo.isOfferingCourse && !isStudentPresenting && $vuetify.breakpoint.mobile" class="live-comments"
+             :class="`--${$vuetify.breakpoint.name} ${sidebarOpen ? '' : 'viewer'}`">
+          <div class="live-comments--wrapper">
+            <div class="_title">LIVE COMMENTS</div>
+            <div class="student-new-comment">
+              <student-new-comment-with-photo @sent="addComment" :isLive="true"/>
+            </div>
+            <div class="live-comments-container">
+              <discussion
+                  v-for="(comment, i) in comments"
+                  :key="i"
+                  :content="comment"
+                  :verified="comment.sender.category !== 'STUDENT'"
+                  :is-live="true"
+                  @replied="replied"
+              />
+
+            </div>
+          </div>
+        </div>
+        <div v-else-if="$vuetify.breakpoint.mobile" class="live-class-details non-absolute">
+          <div class="live-class-details--wrapper white">
+            <h2 class="hidden-md-and-up">{{ live_session.course.name }}: Chapter </h2>
+            <div class="description">{{ live_session.chapter.description }}
+            </div>
+            <div class="d-flex">
+            <div v-if="displayQuiz && quiz" class="quiz ml-auto ">
+              <button @click="
+openQuiz">
+                Take quiz
+              </button>
+            </div>
+            <div class="quiz d-flex align-center" v-else>
+              <button disabled class="disabled mt-0">
+                Take quiz
+              </button>
+
+            </div>
+              <button @click="                      set_modal({
+                        template: 'presentation_request',
+                        method: { action: 'live_session/change_confirmation',parameters: { value: 'accept_presenting'} },
+                      })" class="raise-hand darken-1">
+              <div class="icon d-flex justify-center">
+                <svg width="37" height="46" viewBox="0 0 37 46" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M29.5586 31.7678L30.0518 31.773L30.0637 31.2799L30.2786 22.3733C30.314 20.9045 31.5356 19.7244 33.0047 19.7398C34.4685 19.7551 35.6245 20.9517 35.5892 22.4152L35.3232 33.4392C35.1681 39.8674 29.8081 45.0453 23.3784 44.978L23.3738 45.4221L23.3784 44.978L12.428 44.8635C6.00355 44.7964 0.904173 39.5176 1.05913 33.0946L1.62 9.84719C1.65544 8.37842 2.87707 7.19831 4.34619 7.21367C5.80997 7.22897 6.96593 8.4256 6.93062 9.88904L6.62229 22.6691L6.61006 23.1759L7.11691 23.1812L8.0449 23.1909L8.53808 23.196L8.54998 22.703L8.9396 6.55641L8.9396 6.55639C8.97498 5.08771 10.1967 3.90753 11.6658 3.92288C13.1296 3.93819 14.2855 5.13482 14.2502 6.59825L14.717 6.60951L14.2502 6.59825L13.8607 22.7448L13.8485 23.2515L14.3554 23.2568L15.2833 23.2665L15.7765 23.2717L15.7884 22.7786L16.2522 3.55717C16.2876 2.08839 17.5092 0.908284 18.9784 0.923641C20.4421 0.938943 21.5981 2.13558 21.5628 3.59901L21.099 22.8206L21.0868 23.3273L21.5937 23.3326L22.5217 23.3423L23.0148 23.3475L23.0267 22.8544L23.4163 6.70781C23.4517 5.23903 24.6734 4.05892 26.1425 4.07428C27.6063 4.08958 28.7622 5.28621 28.7269 6.74965L28.136 31.2461L28.1238 31.7528L28.6306 31.7581L29.5586 31.7678Z" stroke="#BABABC"/>
+                </svg>
+
+              </div>
+              <div class="text">raise hand</div>
+            </button>
+            </div>
+          </div>
+        </div>
       </div>
-      <div v-if="participationInfo.isOfferingCourse && !isStudentPresenting" class="live-class--attendance">
+      <div v-if="participationInfo.isOfferingCourse && !isStudentPresenting" class="live-class--attendance" :class="{'mt-0': userCategory == 'STUDENT' && $vuetify.breakpoint.mobile}">
         <div class="live-class--attendance--wrapper">
           <h3>ONLINE USERS : {{ participants.length }} </h3>
           <div class="online-users">
@@ -324,6 +394,58 @@ openQuiz">
                         title: 'End live session',
                         message: 'Are you sure you want to end this live session?'
                       })">
+            <span class="icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none"
+                                                                                                       d="M0 0h24v24H0z"/><path
+                  d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm0-11.414L9.172 7.757 7.757 9.172 10.586 12l-2.829 2.828 1.415 1.415L12 13.414l2.828 2.829 1.415-1.415L13.414 12l2.829-2.828-1.415-1.415L12 10.586z"
+                  fill="rgba(255,255,255,1)"/></svg>
+            </span>
+              <span class="text">END CLASS</span>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div v-if="(!participationInfo.isOfferingCourse || isStudentPresenting) && $vuetify.breakpoint.mobile" class="live-class--attendance" :class="{'mt-0': userCategory == 'STUDENT' && $vuetify.breakpoint.mobile}">
+        <div class="live-class--attendance--wrapper long mb-13">
+          <h3>DISCUSSION BOARD </h3>
+          <h3 class="hidden-md-and-up">ONLINE USERS : {{ participants.length }} </h3>
+          <div class="live-comments-container viewer">
+            <discussion
+                v-for="(comment, i) in comments"
+                :key="i"
+                :content="comment"
+                :verified="comment.sender.category !== 'STUDENT'"
+                :is-live="true"
+                @replied="replied"
+            />
+          </div>
+          <div class="student-new-comment">
+            <student-new-comment-with-photo @sent="addComment" :isLive="true"/>
+          </div>
+        </div>
+        <div v-if="participationInfo.isOfferingCourse && !isStudentPresenting" class="live-class--actions">
+          <div class="live-class--action attendance">
+            <button>
+            <span class="icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none"
+                                                                                                       d="M0 0h24v24H0z"/><path
+                  d="M21 8v12.993A1 1 0 0 1 20.007 22H3.993A.993.993 0 0 1 3 21.008V2.992C3 2.455 3.449 2 4.002 2h10.995L21 8zm-2 1h-5V4H5v16h14V9zM8 7h3v2H8V7zm0 4h8v2H8v-2zm0 4h8v2H8v-2z"/></svg>
+            </span>
+              <span class="text">CHECK ATTENDANCE</span>
+            </button>
+          </div>
+          <div class="live-class--action release-quiz">
+            <button>
+            <span class="icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none"
+                                                                                                       d="M0 0h24v24H0z"/><path
+                  d="M10 15.172l9.192-9.193 1.415 1.414L10 18l-6.364-6.364 1.414-1.414z"/></svg>
+            </span>
+              <span class="text">RELEASE QUIZ</span>
+            </button>
+          </div>
+          <div class="live-class--action end-class">
+            <button @click="leaveRoom">
             <span class="icon">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none"
                                                                                                        d="M0 0h24v24H0z"/><path
