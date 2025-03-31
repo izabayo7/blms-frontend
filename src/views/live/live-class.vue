@@ -100,6 +100,22 @@
                     />
                   </svg>
                 </button>
+                <button @click="enterFullScreen">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="23.632"
+                    height="23.632"
+                    viewBox="0 0 23.632 23.632"
+                  >
+                    <path
+                      id="Icon_map-fullscreen"
+                      data-name="Icon map-fullscreen"
+                      d="M1.44,8.508V1.44H8.786l2.7,2.055H6.984l4.731,5.013L8.786,11.2,4.009,6.706v4.505ZM17.752,1.44h7.32V8.534l-2.055,2.7v-4.5l-5.139,4.731-2.756-2.8,4.432-4.651H15.049Zm7.32,16.312v7.32H17.726l-2.7-2.055h4.505L14.8,17.878l2.929-2.756L22.5,19.554V15.049ZM8.76,25.072H1.44V17.726l2.055-2.7v4.505L8.634,14.8l2.756,2.929L6.958,22.5h4.505Z"
+                      transform="translate(-1.44 -1.44)"
+                      fill="#fff"
+                    />
+                  </svg>
+                </button>
                 <button
                   @click="toogleVideo"
                   :class="{ muted: !videoMuted && videoMuted !== undefined }"
@@ -279,7 +295,7 @@ export default {
     screenSharingStream: undefined,
     isScreenShared: undefined,
     playerHovered: false,
-    screenStream: undefined
+    screenStream: undefined,
   }),
   computed: {
     ...mapState("live", ["room"]),
@@ -584,7 +600,7 @@ export default {
 
     document.querySelector("#toogleScreenShare").onclick = function () {
       if (vm.isScreenShared) {
-        vm.screenStream.stop()
+        vm.screenStream.stop();
       } else {
         getMixedCameraAndScreen();
       }
@@ -615,7 +631,7 @@ export default {
           videoPreview.play();
 
           vm.isScreenShared = true;
-          vm.screenStream = screenStream
+          vm.screenStream = screenStream;
           addStreamStopListener(screenStream, function () {
             mixer.releaseStreams();
             vm.isScreenShared = false;
@@ -853,6 +869,7 @@ export default {
       background-color: #9e0000;
     }
   }
+  
   .overlay {
     position: absolute;
     height: 100%;
