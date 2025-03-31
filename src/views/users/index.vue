@@ -186,12 +186,16 @@ export default {
           message: `Are you sure you want to delete ${this.selected_users.has(-1) ? 'All' : this.selected_users.size} user${this.selected_users.size > 1 || this.selected_users.has(-1) ? 's' : ''}?`,
         })
       }
-      this.loadUsers()
+      setTimeout(() => {
+        this.loadUsers();
+      }, 5000);
     },
     handleSelect(value) {
       this.selected_users = value
     },
     loadUsers() {
+      console.log('loading broda')
+      this.users = []
       apis.get(`user/college/ALL`)
           .then(({data: {data}}) => {
             let filteredUsers = [];
