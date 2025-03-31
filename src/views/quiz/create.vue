@@ -72,7 +72,8 @@
             </div>
             <div class="col-12 col-md-1">
               <div v-if="questions.length > 1" class="delete-question mb-15px">
-                <svg @click="removeQuestion(i)" class="cursor-pointer" width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <svg @click="removeQuestion(i)" class="cursor-pointer" width="28" height="28" viewBox="0 0 28 28"
+                     fill="none" xmlns="http://www.w3.org/2000/svg">
                   <g clip-path="url(#clip0)">
                     <path
                         d="M7.0026 22.1657C7.0026 23.449 8.0526 24.499 9.33594 24.499H18.6693C19.9526 24.499 21.0026 23.449 21.0026 22.1657V8.16569H7.0026V22.1657ZM22.1693 4.66569H18.0859L16.9193 3.49902H11.0859L9.91927 4.66569H5.83594V6.99902H22.1693V4.66569Z"
@@ -115,7 +116,8 @@
               <div class="status mx-auto">
                 <label>Correct</label>
                 <!--                <transition name="fade" >-->
-                <svg v-if="option.right" @click="handleOptionClick(i, k)" width="18" height="20" viewBox="0 0 18 20" fill="none"
+                <svg v-if="option.right" @click="handleOptionClick(i, k)" width="18" height="20" viewBox="0 0 18 20"
+                     fill="none"
                      xmlns="http://www.w3.org/2000/svg">
                   <rect x="0.613894" y="5.7721" width="13.5057" height="13.5057" rx="1.84168" stroke="#828282"
                         stroke-width="1.22779"/>
@@ -123,14 +125,17 @@
                         stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
 
-                <svg v-else @click="handleOptionClick(i, k)" width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <svg v-else @click="handleOptionClick(i, k)" width="15" height="15" viewBox="0 0 15 15" fill="none"
+                     xmlns="http://www.w3.org/2000/svg">
                   <rect x="0.613894" y="0.72034" width="13.5057" height="13.5057" rx="1.84168" stroke="#828282"
                         stroke-width="1.22779"/>
                 </svg>
 
                 <!--                </transition>-->
               </div>
-              <button v-if="question.options.choices.length > 2" class="delete" @click="removeOption(i, k)">Delete option</button>
+              <button v-if="question.options.choices.length > 2" class="delete" @click="removeOption(i, k)">Delete
+                option
+              </button>
             </div>
             <button class="add-option" @click="addOption(i)">Add option</button>
           </div>
@@ -167,7 +172,14 @@
     </div>
     <button @click="addQuestion()" class="quiz-action full mt-4" v-if="questions.length">Add question</button>
     <div id="quiz-actions" class=" d-flex mb-12 mt-6">
-      <button class="quiz-action cancel">Cancel</button>
+      <button class="quiz-action cancel" @click="
+                      set_modal({
+                        template: 'action_confirmation',
+                        title: 'Cancel quiz',
+                        message: 'Are you sure you want to Cancel this quiz?',
+                      })
+">Cancel
+      </button>
       <button class="quiz-action" v-if="!questions.length" @click="recreate">Add questions</button>
       <button class="quiz-action" v-else @click="validate">Save quiz</button>
     </div>
@@ -198,24 +210,75 @@ export default {
     hours: 0,
     minutes: 0,
     questions: [],
+    error: "",
     title: "",
     passMarks: 0
   }),
+  watch: {
+    error() {
+      if (this.error != "")
+        this.$store.dispatch("app_notification/SET_NOTIFICATION", {
+          message: this.error,
+          status: "danger",
+          uptime: 2000,
+        }).then(() => {
+          this.error = ""
+        })
+    },
+  },
   methods: {
-    validate(){
-      if(this.title == "")
+    ...mapActions("modal", ["set_modal"]),
+    validate() {
+      if (this.title == "")
         return this.error = "Title is required"
 
-      if(this.title.length < 3)
+      if (this.title.length < 3)
         return this.error = "Title is too short"
 
-      if(this.hours == 0 && this.minutes == 0 )
+      if (this.hours == 0 && this.minutes == 0)
         return this.error = "Duration is required"
 
-      if(this.passMarks == 0)
-        return this.error = "PassMarks is too short"
+      if (this.passMarks == 0)
+        return this.error = "PassMarks is required"
 
       for (const i in this.questions) {
+        if (this.questions[i].details == "")
+          return this.error = `Question ${i + 1} must have question text`
+
+        if (this.questions[i].details.length < 5)
+          return this.error = `Question ${i + 1} question text too short`
+
+        if (!this.questions_types.includes(this.questions[i].type))
+          return this.error = `Question ${i + 1} type is required`
+
+        if (this.questions[i].marks == "")
+          return this.error = `Question ${i + 1} marks are required`
+
+        if (this.questions[i].type.includes('select')) {
+          let right_choice_found = false;
+
+          if (this.questions[i].type.includes('image')) {
+            if (this.questions[i].options.choices.length < 2)
+              return this.error = `Question ${i + 1}, must have atleast options,pick files`
+          }
+
+          for (const k in this.questions[i].options.choices) {
+
+            if (this.questions[i].options.choices[k].right)
+              right_choice_found = true;
+
+            if (this.questions[i].type.includes('text')) {
+              if (this.questions[i].options.choices[k].text == "")
+                return this.error = `Question ${i + 1}, option ${k + 1} text is required`
+
+              if (this.questions[i].options.choices[k].text.length < 3)
+                return this.error = `Question ${i + 1}, option ${k + 1} text is too short`
+            }
+          }
+          if (!right_choice_found)
+            return this.error = `Question ${i + 1} must have a right choice`
+        }
+
 
       }
 
@@ -236,7 +299,7 @@ export default {
     recreate() {
       this.questions = [
         {
-          type: "",
+          type: "Open ended",
           marks: 0,
           required: false,
           details: "",
@@ -245,8 +308,6 @@ export default {
           },
         },
       ];
-      this.hours = 0
-      this.minutes = 0
       this.pictures = [[], []];
     },
     handleOptionClick(questionIndex, optionIndex) {
@@ -272,7 +333,7 @@ export default {
       }
     },
     handleTypeChange(index) {
-      console.log("ngahoooo",index)
+      console.log("ngahoooo", index)
       if (this.questions[index].type.includes("text")) {
         this.questions[index].options = {
           choices: [
@@ -292,7 +353,7 @@ export default {
     },
     addQuestion() {
       this.questions.push({
-        type: "",
+        type: "Open ended",
         marks: 0,
         details: "",
         options: {
@@ -340,11 +401,12 @@ export default {
           duration: this.calculateSeconds(),
           user: this.$store.state.user.user.user_name,
           questions: questions,
+          passMarks: this.passMarks
         },
         pictures: this.pictures,
       }).then(() => {
         this.$router.push("/quiz");
-      }).catch((e)=>{
+      }).catch((e) => {
         this.$store.dispatch("app_notification/SET_NOTIFICATION", {
           message: e.message,
           status: "danger",
