@@ -22,8 +22,6 @@
 <script>
 import TableHeader from "../../../components/reusable/ui/table-header";
 import TableUi from "../../../components/reusable/ui/table-ui";
-import apis from "../../../services/apis";
-import moment from "moment";
 import {mapGetters} from "vuex";
 
 export default {
@@ -45,50 +43,11 @@ name: "FacultyCourses",
     }
   },
   methods:{
-    /**
-     * getting faculty information based on faculty id provided in query parameters
-     */
-    getFacultyInformation(){
-      const {facultyId} = this.$route.params;
 
-      apis.get(`faculty/${facultyId}`)
-        .then(({data}) => {
-          this.faculty = data;
-        })
-    },
-
-    /**
-     * get courses from specific faculty, faculty id passed in route params
-     */
-    getFacultyCourses(){
-      const {facultyId} = this.$route.params;
-      let filteredCourses = [];
-
-      apis.get(`course/faculty/${facultyId}`)
-        .then(({data:{data}}) => {
-
-           data.map(course => {
-
-            course.createdAt = moment(course.createdAt).format("DD MMM  YYYY")
-            course.updatedAt = moment(course.updatedAt).format("DD MMM YYYY")
-            //TODO finalising courses
-
-            filteredCourses.push(course)
-          })
-
-          console.log(filteredCourses)
-
-          this.courses = filteredCourses;
-           console.log(this.courses)
-        })
-
-      console.log(this.courses)
-    }
   },
   mounted(){
     this.$store.dispatch('faculties/changeHeader',{head:this.faculty.name,title:"Courses List"})
-    this.getFacultyCourses();
-    this.getFacultyInformation();
+
   }
 }
 </script>
