@@ -1,0 +1,345 @@
+#create-quiz {
+  background-color: white;
+  padding: 26px 94px;
+
+  #quiz-info {
+    .label {
+      font-family: Inter;
+      font-style: normal;
+      font-weight: bold;
+      font-size: 20px;
+      line-height: 25px;
+      /* identical to box height, or 125% */
+
+
+      color: #000000;
+      margin-bottom: 36px;
+    }
+
+  }
+
+  .input-group {
+    label {
+      font-family: Inter;
+      font-style: normal;
+      font-weight: 500;
+      font-size: 20px;
+      line-height: 15px;
+      display: block;
+      color: #000000;
+      margin-bottom: 11px;
+    }
+
+    input, .quiz-instructions, .duration-input {
+      border: 1.54684px solid #626262;
+      box-sizing: border-box;
+      border-radius: 4px;
+      margin-bottom: 25px;
+      padding: 4px 12px;
+
+      &.inner-input {
+        border: none;
+        width: 30%;
+        margin-bottom: 0;
+        padding: 0px 12px;
+      }
+    }
+
+    .duration-input {
+      max-width: 185px;
+      width: 100%;
+      padding: 0px;
+    }
+
+    .duration-input {
+      display: flex;
+    }
+
+    #quiz-title {
+      height: 35px;
+    }
+
+    #quiz-title, .quiz-instructions {
+      max-width: 531px;
+      width: 100%;
+    }
+
+    .quiz-instructions {
+      min-height: 134px;
+      height: fit-content;
+      padding: 12px;
+
+      .ProseMirror {
+        min-height: 70px;
+      }
+
+      .menubar {
+        margin-bottom: 0px !important;
+        height: 37px !important;
+      }
+    }
+  }
+
+  .flex {
+    display: flex;
+    max-width: 531px;
+    width: 100%;
+
+    label {
+      font-family: Inter;
+      font-style: normal;
+      font-weight: 500;
+      font-size: 13px;
+      line-height: 15px;
+      /* identical to box height, or 119% */
+
+
+      color: #000000;
+    }
+  }
+
+  .quiz-action {
+    width: 146.73px;
+    height: 42px;
+    border-radius: 6.23641px;
+    background: #193074;
+    margin-right: 28px;
+    color: white;
+&.full{
+  width: 100%;
+}
+    &.cancel {
+      background: #BABABC;
+    }
+  }
+
+  #quiz-questions {
+    .question {
+      display: flex;
+
+      &-number {
+        font-family: Inter;
+        font-style: normal;
+        font-weight: 500;
+        font-size: 20px;
+        line-height: 26px;
+        /* or 131% */
+
+        text-align: center;
+
+        color: #3C3C3C;
+        margin-right: 10px;
+      }
+
+      &-content {
+        .col-12 {
+          padding-top: 0px;
+          padding-bottom: 0px;
+          height: fit-content;
+        }
+
+        border: 1px solid #C4C4C4;
+        box-sizing: border-box;
+        border-radius: 9px;
+        padding: 19px;
+        max-width: 690px;
+        width: 100%;
+
+        .my-select {
+          max-width: 275px;
+          width: 100%;
+        }
+
+        .my-select {
+          margin-top: 9px;
+        }
+
+        .required {
+          margin-top: 20px;
+        }
+
+        .delete-question {
+          margin-top: 16px;
+        }
+
+        .marks {
+          label {
+            font-family: Inter;
+            font-style: normal;
+            font-weight: 500;
+            font-size: 11.96px;
+            line-height: 26px;
+            /* or 219% */
+
+
+            color: #000000;
+            margin-bottom: 0px;
+          }
+
+          input {
+            max-width: 62px;
+            height: 34px;
+            border: 1.69552px solid #828282;
+          }
+        }
+
+        .required {
+          .text {
+            margin-right: 22px;
+          }
+        }
+
+        .mb-15px {
+          margin-bottom: 15px;
+        }
+
+        textarea {
+          max-width: 610px;
+          width: 100%;
+          height: 47px;
+          padding: 8px 13px;
+          border: 1.69552px solid #C4C4C4;
+          box-sizing: border-box;
+          border-radius: 3.39104px;
+        }
+
+        .question-details {
+          label {
+            font-family: Inter;
+            font-style: normal;
+            font-weight: bold;
+            font-size: 15px;
+            line-height: 26px;
+            /* or 175% */
+
+
+            color: #3C3C3C;
+
+          }
+        }
+        .text-select{
+          .option {
+            max-width: 610px;
+            width: 100%;
+            margin-bottom: 10px;
+            .details{
+              textarea{
+                width: 347px;
+              }
+            }
+            .status{
+              label{
+                display: block;
+                font-family: Inter;
+                font-style: normal;
+                font-weight: 500;
+                font-size: 10px;
+                line-height: 26px;
+                /* or 262% */
+
+
+                color: #000000;
+
+              }
+              text-align: center;
+              svg{
+                margin: auto;
+              }
+            }
+            .delete {
+              font-family: Inter;
+              font-style: normal;
+              font-weight: bold;
+              font-size: 10px;
+              line-height: 26px;
+              /* identical to box height, or 262% */
+
+
+              color: #3C3C3C;
+            }
+          }
+          .add-option{
+            font-family: Inter;
+            font-style: normal;
+            font-weight: bold;
+            font-size: 13.5641px;
+            line-height: 26px;
+            /* or 193% */
+
+
+            color: #717171;
+          }
+        }
+        .image-select{
+          label{
+            font-family: Inter;
+            font-style: normal;
+            font-weight: 500;
+            font-size: 8.47759px;
+            line-height: 26px;
+            /* or 309% */
+
+            display: flex;
+            align-items: center;
+
+            color: #3C3C3C;
+          }
+        }
+        .file-upload{
+          .allowed-files{
+            .type{
+              input{
+                margin-right: 5px;
+                &:checked:after {
+                  width: 15px;
+                  height: 15px;
+                  border-radius: 15px;
+                  top: -2px;
+                  left: -1px;
+                  position: relative;
+                  background-color: #193074;
+                  content: '';
+                  display: inline-block;
+                  visibility: visible;
+                  border: 2px solid white;
+                }
+              }
+              font-family: Inter;
+              font-style: normal;
+              font-weight: normal;
+              font-size: 14.6538px;
+              line-height: 25px;
+              /* or 309% */
+
+              display: flex;
+              align-items: center;
+
+              color: #193074;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+/* Portrait phones and smaller */
+@media (max-width: 700px) {
+  #create-quiz {
+    padding: 26px 20px;
+
+    .input-group .quiz-instructions {
+      min-height: 164px;
+    }
+
+    #quiz-questions {
+      .question {
+        display: block;
+
+        input {
+          margin-bottom: 0;
+        }
+      }
+    }
+  }
+}

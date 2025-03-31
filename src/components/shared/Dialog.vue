@@ -67,15 +67,7 @@
           >
           <v-btn
             @click="
-              $store
-                .dispatch(
-                  confirmation_method.action,
-                  confirmation_method.parameters
-                )
-                .then(() => {
-                  update_confirmation(true)
-                  reset_modal();
-                })
+            performAction
             "
             outlined
             class="mx-2 action-button-outlined"
@@ -111,7 +103,24 @@ export default {
       "toogle_visibility",
       "update_confirmation"
     ]),
-    ...mapActions("modal", ['reset_modal'])
+    ...mapActions("modal", ['reset_modal']),
+    performAction(){
+      if(this.confirmation_method){
+        this.$store
+            .dispatch(
+                this.confirmation_method.action,
+                this.confirmation_method.parameters
+            )
+            .then(() => {
+              this.update_confirmation(true)
+              this.reset_modal();
+            })
+      }
+      else{
+        this.reset_modal();
+        this.$router.go(-1)
+      }
+    }
   },
 };
 </script>
