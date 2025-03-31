@@ -74,7 +74,7 @@
         </template>
         <template v-slot:item.student_group="{ item }">
           <router-link class="normal--text" to="/">{{
-            `${item.faculty_college_year.faculty_college.faculty.name} year ${item.faculty_college_year.college_year.digit}`
+            item.user_group.name
           }}</router-link>
         </template>
         <template v-slot:item.total_students="{ item }">

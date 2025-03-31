@@ -11,16 +11,14 @@
         class="data-table"
       >
         <template v-slot:item.target="{ item }">
-          <span class="normal--text d-block">{{
-            item.quiz.target.chapter.name
-          }}</span>
+          <span class="d-block">{{ item.quiz.target.chapter.name }}</span>
         </template>
         <template v-slot:item.date="{ item }">
-          <span class="normal--text">{{ item.createdAt | formatDate }}</span>
+          <span>{{ item.createdAt | formatDate }}</span>
         </template>
         <template v-slot:item.total_marks="{ item }">
-          <span class="normal--text">{{
-            `${item.marked ? item.total_marks : ''} / ${item.quiz.total_marks}`
+          <span>{{
+            `${item.marked ? item.total_marks : ""} / ${item.quiz.total_marks}`
           }}</span>
         </template>
         <template v-slot:item.marking_status="{ item }">
@@ -32,10 +30,10 @@
           </span>
         </template>
         <template v-slot:item.attachments="{ item }">
-          <span class="normal--text">{{ item ? "0" : "" }}</span>
+          <span>{{ item ? "0" : "" }}</span>
         </template>
         <template v-slot:item.feedback="{ item }">
-          <span class="normal--text">
+          <span>
             {{ item.total_feedbacks }}
           </span>
           <svg
@@ -53,7 +51,7 @@
             />
           </svg>
         </template>
-        <template v-slot:item.actions="{item}">
+        <template v-slot:item.actions="{ item }">
           <v-btn
             color="warning"
             :to="`/quiz/${item.quiz.name}/${$store.state.user.user.user_name}`"
@@ -66,7 +64,6 @@
           <span class="text-h6">Oops You have no submissions.</span>
         </template>
       </v-data-table>
-      
     </div>
   </v-app>
 </template>
