@@ -173,9 +173,21 @@
         <div>{{ college.phone }}</div>
       </div>
     </div>
-    <div class="testimonials"></div>
+    <div class="testimonials">
+      <div class="title">
+        What our customers say
+      </div>
+      <carousel
+        :slides="testimonies"
+        :interval="3000"
+        controls
+        indicators
+      ></carousel>
+    </div>
     <div class="identity"></div>
-    <div class="footer"></div>
+    <div class="footer">
+      <Footer />
+    </div>
   </div>
 </template>
 
@@ -183,7 +195,8 @@
 export default {
   name: "SchoolProfile",
   components: {
-    // appDialog: () => import("@/components/shared/Dialog"),
+    Carousel: () => import("@/components/college_profile/carousel/Carousel"),
+    Footer: () => import("@/components/college_profile/footer"),
   },
   data() {
     return {
@@ -242,6 +255,50 @@ export default {
               coverPicture: "https://i.ibb.co/cFW9Dcp/Rectangle-2992.png",
             },
           ],
+        },
+      ],
+      testimonies:[
+        {
+          user_profile: "https://i.ibb.co/sHhk01j/Rectangle-2988.png",
+          user_names: "John Doe",
+          course_name: "Web Design",
+          content: "I love this course. It's very easy to understand and I love it.",
+        },
+        {
+          user_profile: "https://i.ibb.co/sHhk01j/Rectangle-2988.png",
+          user_names: "John Doe",
+          course_name: "Web Design",
+          content: "I love this course. It's very easy to understand and I love it.",
+        },
+        {
+          user_profile: "https://picsum.photos/id/1036/900/400",
+          user_names: "John Doe",
+          course_name: "Web Design",
+          content: "I love this course. It's very easy to understand and I love it.",
+        },
+        {
+          user_profile: "https://picsum.photos/id/1035/900/400",
+          user_names: "John Doe",
+          course_name: "Web Design",
+          content: "I love this course. It's very easy to understand and I love it.",
+        },
+        {
+          user_profile: "https://picsum.photos/id/1037/900/400",
+          user_names: "John Doe",
+          course_name: "Web Design",
+          content: "I love this course. It's very easy to understand and I love it.I love this course. It's very easy to understand and I love it.I love this course. It's very easy to understand and I love it.I love this course. It's very easy to understand and I love it.",
+        },
+        {
+          user_profile: "https://picsum.photos/id/1033/900/400",
+          user_names: "John Doe",
+          course_name: "Web Design",
+          content: "I love this course. It's very easy to understand and I love it.",
+        },
+        {
+          user_profile: "https://picsum.photos/id/1032/900/400",
+          user_names: "John Doe",
+          course_name: "Web Design",
+          content: "I love this course. It's very easy to understand and I love it.",
         },
       ],
     };
@@ -455,6 +512,20 @@ export default {
         margin-bottom: 15px;
       }
     }
+  }
+  .testimonials .title{
+    font-family: 'Inter';
+font-style: normal;
+font-weight: 700;
+font-size: 35px;
+line-height: 36px;
+
+/* identical to box height, or 103% */
+text-align: center;
+
+color: #000000;
+
+margin: 37px 27px;
   }
 }
 
