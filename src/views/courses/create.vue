@@ -176,7 +176,7 @@ export default {
           uptime: 2000,
         });
         setTimeout(() => {
-          this.type == 'chapters'
+          this.type = 'chapters'
         }, 2000);
       });
     },
