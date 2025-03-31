@@ -257,9 +257,7 @@ export default {
                         }
                     })
 
-                    for (const i in chapterResponse.data) {
-                        state.courses.data[courseIndex].chapters[chapterIndex].attachments.push(chapterResponse.data[i])
-                    }
+                    state.courses.data[courseIndex].chapters[chapterIndex].attachments = chapterResponse.data.data.attachments
 
                 }
 
