@@ -5,7 +5,7 @@
       <div id="wrapper">
         <div id="join" class="animate join">
           <h1>Join a Room</h1>
-          <form onsubmit="register(); return false;" accept-charset="UTF-8">
+          <form @submit.prevent="register" accept-charset="UTF-8">
             <p>
               <input type="text" name="name" value="" id="name"
                 placeholder="Username" required>
@@ -32,9 +32,9 @@
 </template>
 
 <script>
-  import "../../../plugins/kurentoLive/kurento-utils"
+  // import * as kurentoUtils from "../../../plugins/kurentoLive/kurento-utils.js"
   import Participant from "../../../plugins/kurentoLive/participants";
-  import "../../../plugins/kurentoLive/"
+  import {WebRtcPeer} from 'kurento-utils'
 
 export default {
   name: "liveClass",
@@ -49,23 +49,23 @@ export default {
   methods:{
      register() {
       this.name = document.getElementById('name').value;
-      let room = document.getElementById('roomName').value;
+      this.room = document.getElementById('roomName').value;
 
-      document.getElementById('room-header').innerText = 'ROOM ' + room;
+      document.getElementById('room-header').innerText = 'ROOM ' + this.room;
       document.getElementById('join').style.display = 'none';
       document.getElementById('room').style.display = 'block';
 
       let message = {
         id : 'joinRoom',
         name : this.name,
-        room : room,
+        room : this.room,
       }
       this.sendMessage(message);
     },
     sendMessage(message) {
       let jsonMessage = JSON.stringify(message);
       console.log('Sending message: ' + jsonMessage);
-      this.this.ws.send(jsonMessage);
+      this.ws.send(jsonMessage);
     },
 
     onNewParticipant(request) {
@@ -83,7 +83,7 @@ export default {
         console.info('Call not accepted by peer. Closing call');
         stop();
       } else {
-        webRtcPeer.processAnswer(message.sdpAnswer, function (error) {
+        WebRtcPeer.processAnswer(message.sdpAnswer, function (error) {
           if (error) return console.error (error);
         });
       }
@@ -101,8 +101,8 @@ export default {
         }
       };
 
-      console.log(this.name + " registered in room " + room);
-      let participant = new Participant(this.name);
+      console.log(this.name + " registered in room " + this.room);
+      let participant = new Participant(this.name,this);
       this.participants[this.name] = participant;
       let video = participant.getVideoElement();
 
@@ -111,7 +111,7 @@ export default {
             mediaConstraints: constraints,
             onicecandidate: participant.onIceCandidate.bind(participant)
           }
-      participant.rtcPeer = new kurentoUtils.WebRtcPeer.WebRtcPeerSendonly(options,
+      participant.rtcPeer = new WebRtcPeer.WebRtcPeerSendonly(options,
         function (error) {
           if(error) {
             return console.error(error);
@@ -123,6 +123,7 @@ export default {
     },
 
     leaveRoom() {
+       alert('leaving room')
       this.sendMessage({
         id : 'leaveRoom'
       });
@@ -147,7 +148,7 @@ export default {
           onicecandidate: participant.onIceCandidate.bind(participant)
         }
 
-      participant.rtcPeer = new kurentoUtils.WebRtcPeer.WebRtcPeerRecvonly(options,
+      participant.rtcPeer = new WebRtcPeer.WebRtcPeerRecvonly(options,
           function (error) {
             if(error) {
               return console.error(error);
@@ -166,15 +167,22 @@ export default {
   },
   created(){
 
-  const host = 'https://198.211.107.132:8443/'
+
+    const host = '198.211.107.132:8443'
     
     this.ws = new WebSocket('wss://' + host + '/groupcall');
-    
+
+    this.onerror = function(er){
+      console.log("error ", er)
+    }
+
+    console.log(this.ws)
+
     window.onbeforeunload = function() {
       this.ws.close();
     };
     
-    this.ws.onmessage = function(message) {
+    this.ws.onmessage = (message) => {
       let parsedMessage = JSON.parse(message.data);
       console.info('Received message: ' + message.data);
     
