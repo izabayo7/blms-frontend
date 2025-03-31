@@ -28,14 +28,20 @@
               <div class="d-flex">
                 <div class="users-info">
                   <div>
-                    <div class="number">3</div>
+                    <div class="number">{{ facultyCollegeYear.total_instructors }}</div>
                     <div class="label">Instructors</div>
                   </div>
                 </div>
                 <div class="users-info">
                   <div>
-                    <div class="number">26</div>
+                    <div class="number">{{ facultyCollegeYear.total_students }}</div>
                     <div class="label">Students</div>
+                  </div>
+                </div>
+                <div class="users-info">
+                  <div>
+                    <div class="number">{{ facultyCollegeYear.total_courses }}</div>
+                    <div class="label">Courses</div>
                   </div>
                 </div>
               </div>
@@ -179,9 +185,9 @@
             </div>
           </div>
           <div v-else>
-            <div v-if="courses.length > 0" class="faculties-container  row">
-              <div class="col-12 col-md-4"
-                   v-for="(course, i) in courses"
+            <div v-if="coursesByUserGroup.length > 0" class="faculties-container  row">
+              <div class="col-12 col-md-6"
+                   v-for="(course, i) in coursesByUserGroup"
                    :key="i">
                 <student-course-card category="ongoing" :course="course"/>
               </div>
@@ -199,7 +205,7 @@
                 <div class="subtitle">You can add Users to this user group <br> to start creating courses by
                   clicking on
                 </div>
-                <button class="action">
+                <button @click="showAddUsers = true" class="action">
                   Add users
                 </button>
               </div>
@@ -235,6 +241,7 @@ export default {
     TableHeader,
     // Search,
     tableActionBurner, TableRow, TableHeadRow, TableUi,
+    StudentCourseCard: () => import("@/components/courses/StudentCourseCard"),
     AddUsersToStudentGroupDialog: () => import("@/components/dashboard/AddUsersToStudentGroupDialog")
   },
   mixins: [userSimpleCard],
@@ -300,6 +307,9 @@ export default {
         category: "ALL"
       })
     },
+    loadCourses(){
+      this.$store.dispatch('courses/getCourseByUserGroup',{Id:this.facultyCollegeYear._id})
+    },
     handleRowSelect(index) {
       const found = this.selected_users.has(index)
       if (found) {
@@ -355,6 +365,7 @@ export default {
       return filteredUsers;
     },
     ...mapGetters('users', ['usersOnUserGroups']),
+    ...mapGetters('courses',['coursesByUserGroup']),
     options() {
       const options = {
         link: {
@@ -374,6 +385,7 @@ export default {
     facultyCollegeYear() {
       this.name = this.facultyCollegeYear.name
       this.loadUsers();
+      this.loadCourses();
     },
     showAddUsers() {
       if (!this.showAddUsers)
