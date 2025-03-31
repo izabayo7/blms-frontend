@@ -13,7 +13,7 @@
           <span
             class="normal--text d-block"
             >{{
-              item ? 'Uwamariya Jeanette' : ''
+              `${item.user.sur_name} ${item.user.other_names}`
             }}</span >
         </template>
         <template v-slot:item.date="{ item }">
