@@ -2,7 +2,7 @@
   <!-- preview container -->
   <div class="preview-container pb-3">
     <!-- preview image -->
-    <v-img v-if="image" class="preview-media" :src="image">
+    <v-img v-if="image" class="preview-media" :src="`${image}?token=${$session.get('jwt')}`">
       <template v-slot:placeholder>
         <v-row class="fill-height ma-0" align="center" justify="center">
           <v-progress-circular
