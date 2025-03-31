@@ -247,7 +247,7 @@ import Participant from "../../../plugins/kurentoLive/participants";
 // import {WebRtcPeer} from 'kurento-utils'
 import {mapActions, mapGetters, mapState} from 'vuex'
 import Discussion from "../../../components/Live/Discussion";
-import {convertUTCDateToLocalDate, elapsedDuration} from "@/services/global_functions"
+import { elapsedDuration, toLocal} from "@/services/global_functions"
 import OnlineUser from "../../../components/Live/OnlineUser";
 import StudentNewCommentWithPhoto from "../../../components/Live/StudentNewCommentWithPhoto";
 import Apis from '../../../services/apis'
@@ -291,11 +291,11 @@ export default {
       if (d.data.status == 404) {
         this.error = d.data.message
       } else {
-        const date = convertUTCDateToLocalDate(new Date(d.data.data.date))
+        const date = toLocal(new Date(d.data.data.date))
         const remainingTime = elapsedDuration(date)
 
         if (d.data.data.status == "FINISHED") {
-          this.error = "The meeting expired " + elapsedDuration(convertUTCDateToLocalDate(new Date(d.data.data.updatedAt)))
+          this.error = "The meeting expired " + elapsedDuration(toLocal(new Date(d.data.data.updatedAt)))
         } else {
 
           if (remainingTime.includes('day') && remainingTime.includes('ago')) {

@@ -15,7 +15,7 @@
                     fill="#FFD248"/>
               </svg>
 
-              Live in {{ rem_time }}
+              Live {{ rem_time }}
             </div>
             <div v-else-if="nearestLiveSession && isLive" class="vertically--centered justify-start">
               <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -141,7 +141,8 @@
 
 <script>
 import colors from "@/assets/sass/imports/_colors.scss";
-import {convertUTCDateToLocalDate} from "@/services/global_functions"
+import {toLocal} from "@/services/global_functions"
+import {convertUTCDateToLocalDate, elapsedDuration} from "../../services/global_functions";
 
 export default {
   props: {
@@ -157,6 +158,7 @@ export default {
   computed: {
     isLive() {
       if (!this.nearestLiveSession) return false;
+      console.log(this.nearestLiveSession)
       for (const i in this.course.chapters) {
         if (this.course.chapters[i].live_sessions.length) {
           // if()
@@ -176,34 +178,45 @@ export default {
     rem_time: "",
     currentDate: new Date().toISOString().substring(0, 10),
     startTimer: false,
-    nearestLiveSession: undefined
+    nearestLiveSession: undefined,
+    interval:null
   }),
   methods: {
+    toLocal,
     calculateNearestLiveSession() {
       let live_session = undefined
       for (const i in this.course.chapters) {
         if (this.course.chapters[i].live_sessions.length) {
-          console.log(
-              new Date(this.course.chapters[i].live_sessions[0].date),
-              new Date(this.currentDate),
-              new Date(this.course.chapters[i].live_sessions[0].date) >= new Date(this.currentDate))
-          if (!live_session && (new Date(this.course.chapters[i].live_sessions[0].date) >= new Date(this.currentDate))) {
-            live_session = this.course.chapters[i].live_sessions[0]
-          } else if (live_session) {
-            if (live_session.date < this.course.chapters[i].live_sessions[0].date) {
-              live_session = this.course.chapters[i].live_sessions[0]
-            }
+          live_session = this.course.chapters[i].live_sessions.filter(e=>e.status == "PENDING")
+          if(live_session.length){
+            live_session = live_session[0]
+          } else {
+            live_session = undefined
           }
+        console.log(live_session)
+          //
+          // if (!live_session && (new Date(this.course.chapters[i].live_sessions[0].date) >= new Date(this.currentDate))) {
+          //   live_session = this.course.chapters[i].live_sessions[0]
+          // } else if (live_session) {
+          //   if (live_session.date < this.course.chapters[i].live_sessions[0].date) {
+          //     live_session = this.course.chapters[i].live_sessions[0]
+          //   }
+          // }
+          break;
         }
       }
       this.nearestLiveSession = live_session;
       if (live_session && this.rem_time == "") {
-        console.log("before", this.nearestLiveSession.date, this.nearestLiveSession.time)
-        let date = new Date(this.nearestLiveSession.date.replace("00:00", this.nearestLiveSession.time))
-        console.log("utc", date)
-        date = convertUTCDateToLocalDate(date)
-        console.log("loca", date)
-        this.setClock(date / 1000)
+        // console.log("before", this.nearestLiveSession.date, this.nearestLiveSession.time)
+        // let date = new Date(this.nearestLiveSession.date.replace("00:00", this.nearestLiveSession.time))
+        // console.log("utc", date)
+        // date = toLocal(date)
+        // console.log("loca", date)
+        // this.setClock(date / 1000)
+        // TODO increase interval on dates
+        this.interval=setInterval(() => {
+          this.rem_time = elapsedDuration(convertUTCDateToLocalDate(new Date(this.nearestLiveSession.date.replace("00:00", this.nearestLiveSession.time))));
+        }, 1000)
       }
     },
     setClock(endTime) {
@@ -245,8 +258,11 @@ export default {
       }
     }
   },
+  destroyed(){
+    clearInterval(this.interval)
+  },
   created() {
-    this.calculateNearestLiveSession()
+    this.calculateNearestLiveSession();
   }
 }
 ;
