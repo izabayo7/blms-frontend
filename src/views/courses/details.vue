@@ -112,7 +112,7 @@
                         :color="primary"
                         class="white--text"
                         @click="
-                          finish_chapter($store.state.user.user._id).then(
+                          finish_chapter($store.state.user.user.user_name).then(
                             (d) => {
                               maximumIndex = Math.round(
                                 (d.progress * course.chapters.length) / 100
@@ -287,21 +287,25 @@ export default {
       }
     },
     activeIndex() {
-      this.$store.commit(
-        "quiz_submission/set_selected_quiz_submission",
-        undefined
-      );
-      this.editorContent = "";
-      this.getChapterMainContent(
-        this.course.chapters[this.activeIndex]._id
-      ).then((data) => {
-        this.editorContent = data;
-      });
-      if (this.course.chapters[this.activeIndex].quiz.length > 0) {
-        this.findQuizSubmissionByUserAndQuizNames({
-          userName: this.$store.state.user.user.user_name,
-          quizName: this.course.chapters[this.activeIndex].quiz[0].name,
+      if (this.activeIndex == this.course.chapters.length) {
+        this.$router.push("/courses");
+      } else {
+        this.$store.commit(
+          "quiz_submission/set_selected_quiz_submission",
+          undefined
+        );
+        this.editorContent = "";
+        this.getChapterMainContent(
+          this.course.chapters[this.activeIndex]._id
+        ).then((data) => {
+          this.editorContent = data;
         });
+        if (this.course.chapters[this.activeIndex].quiz.length > 0) {
+          this.findQuizSubmissionByUserAndQuizNames({
+            userName: this.$store.state.user.user.user_name,
+            quizName: this.course.chapters[this.activeIndex].quiz[0].name,
+          });
+        }
       }
     },
   },
@@ -335,8 +339,7 @@ export default {
   },
   created() {
     this.findCourseByName({
-      userCategory: this.userCategory.toLowerCase(),
-      userId: this.$store.state.user.user._id,
+      user_name: this.$store.state.user.user.user_name,
       courseName: this.$route.params.name,
     }).then((course) => {
       const total_chapters = course.chapters.length;

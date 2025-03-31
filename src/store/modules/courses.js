@@ -180,9 +180,7 @@ export default {
             return apis.update('chapter', state.selectedChapter, chapter).then(async () => {
 
                 if (content) {
-                    const formData = new FormData()
-                    formData.append("file", video)
-                    apis.update('file/updateChapterContent', state.selectedChapter, { content: content }).then(() => {
+                    apis.update(`chapter/${state.selectedChapter}`, 'document', { content: content }).then(() => {
                         state.courses.data[courseIndex].chapters[chapterIndex].documentContent = content
                     })
                 }
@@ -250,7 +248,7 @@ export default {
                     for (const i in attachments) {
                         formData.append("files[" + i + "]", attachments[i]);
                     }
-                    const chapterResponse = await apis.create(`file/addAttachments/${state.selectedChapter}`, formData, {
+                    const chapterResponse = await apis.create(`chapter/${state.selectedChapter}/attachments`, formData, {
                         headers: {
                             'Content-Type': 'multipart/form-data'
                         },
@@ -259,9 +257,7 @@ export default {
                         }
                     })
 
-                    for (const i in chapterResponse.data) {
-                        state.courses.data[courseIndex].chapters[chapterIndex].attachments.push(chapterResponse.data[i])
-                    }
+                    state.courses.data[courseIndex].chapters[chapterIndex].attachments = chapterResponse.data.data.attachments
 
                 }
 
@@ -270,7 +266,7 @@ export default {
                     dispatch('modal/set_modal', { template: 'display_information', title: 'Updating Chapter', message: `uploading ${video.name}` }, { root: true })
                     const formData = new FormData()
                     formData.append("file", video)
-                    apis.update('file/updateMainVideo', state.selectedChapter, formData, {
+                    apis.update(`chapter/${state.selectedChapter}`, 'video', formData, {
                         headers: {
                             'Content-Type': 'multipart/form-data'
                         },
@@ -278,7 +274,7 @@ export default {
                             dispatch('modal/set_progress', parseInt(Math.round((progressEvent.loaded / progressEvent.total) * 100)), { root: true })
                         }
                     }).then((videoResponse) => {
-                        state.courses.data[courseIndex].chapters[chapterIndex].mainVideo = videoResponse.data.data.filepath
+                        state.courses.data[courseIndex].chapters[chapterIndex].uploaded_video = videoResponse.data.data.uploaded_video
                     })
                 }
             })
@@ -331,14 +327,14 @@ export default {
             })
         },
         //delete an attachment
-        deleteAttachment({ state }, attachmentId) {
-            apis.delete('file/removeAttachment', attachmentId).then(() => {
+        deleteAttachment({ state }, attachmentName) {
+            apis.delete(`chapter/${state.selectedChapter}/attachment`, attachmentName).then(() => {
                 for (const i in state.courses.data) {
                     if (state.courses.data[i]._id == state.selectedCourse) {
                         for (const k in state.courses.data[i].chapters) {
                             if (state.courses.data[i].chapters[k]._id == state.selectedChapter) {
                                 for (const l in state.courses.data[i].chapters[k].attachments) {
-                                    if (state.courses.data[i].chapters[k].attachments[l]._id == attachmentId) {
+                                    if (state.courses.data[i].chapters[k].attachments[l].name == attachmentName) {
                                         state.courses.data[i].chapters[k].attachments.splice(l, 1)
                                         return
                                     }
@@ -376,8 +372,8 @@ export default {
 
         },
         // create student progress in a lesson
-        startCourse({ state, commit }, studentId) {
-            apis.create(`user_progress`, { user: studentId, course: state.selectedCourse }).then(d => {
+        startCourse({ state, commit }, user_name) {
+            apis.create(`user_progress`, { user: user_name, course: state.selectedCourse }).then(d => {
                 d.data = d.data.data
                 commit('set_student_progress', { courseId: state.selectedCourse, progress: d.data })
                 for (const i in state.courses.data) {
@@ -389,7 +385,7 @@ export default {
             })
         },
         // update student progress
-        finish_chapter({ state, commit }, studentId) {
+        finish_chapter({ state, commit }, user_name) {
             let courseIndex
             for (const i in state.courses.data) {
                 if (state.courses.data[i]._id == state.selectedCourse) {
@@ -397,7 +393,7 @@ export default {
                     break
                 }
             }
-            return apis.update(`user_progress`, state.courses.data[courseIndex].progress.id, { user: studentId, course: state.selectedCourse, chapter: state.selectedChapter }).then(d => {
+            return apis.update(`user_progress`, state.courses.data[courseIndex].progress.id, { user: user_name, course: state.selectedCourse, chapter: state.selectedChapter }).then(d => {
                 d.data = d.data.data
                 commit('set_student_progress', { courseId: state.selectedCourse, progress: d.data })
 
@@ -425,7 +421,7 @@ export default {
                 if (content) {
                     const formData = new FormData()
                     formData.append("file", video)
-                    apis.update('file/updateChapterContent', d.data._id, { content: content }).then(() => {
+                    apis.update(`chapter/${d.data._id}`, 'document', { content: content }).then(() => {
                         state.courses.data[courseIndex].chapters[chapterIndex].documentContent = content
                     })
                 }
@@ -458,7 +454,7 @@ export default {
                     for (const i in attachments) {
                         formData.append("files[" + i + "]", attachments[i]);
                     }
-                    const chapterResponse = await apis.create(`file/addAttachments/${state.selectedChapter}`, formData, {
+                    const chapterResponse = await apis.create(`chapter/${d.data._id}/attachments`, formData, {
                         headers: {
                             'Content-Type': 'multipart/form-data'
                         },
@@ -467,9 +463,7 @@ export default {
                         }
                     })
 
-                    for (const i in chapterResponse.data.data) {
-                        state.courses.data[courseIndex].chapters[chapterIndex].attachments.push(chapterResponse.data[i])
-                    }
+                    state.courses.data[courseIndex].chapters[chapterIndex].attachments = chapterResponse.data.data.attachments
 
                 }
 
@@ -478,7 +472,7 @@ export default {
                     dispatch('modal/set_modal', { template: 'display_information', title: 'Updating Chapter', message: `uploading ${video.name}` }, { root: true })
                     const formData = new FormData()
                     formData.append("file", video)
-                    apis.update('file/updateMainVideo', state.selectedChapter, formData, {
+                    apis.update(`chapter/${d.data._id}`, 'video', formData, {
                         headers: {
                             'Content-Type': 'multipart/form-data'
                         },
@@ -486,7 +480,7 @@ export default {
                             dispatch('modal/set_progress', parseInt(Math.round((progressEvent.loaded / progressEvent.total) * 100)), { root: true })
                         }
                     }).then((videoResponse) => {
-                        state.courses.data[courseIndex].chapters[chapterIndex].mainVideo = videoResponse.data.data.filepath
+                        state.courses.data[courseIndex].chapters[chapterIndex].uploaded_video = videoResponse.data.data.uploaded_video
                     })
                 }
             })

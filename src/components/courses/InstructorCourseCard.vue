@@ -22,7 +22,7 @@
             }`"
             v-if="course.published"
           >
-            Published on {{ course.publishedOn | formatDate }}
+            Published on {{ course.published_on | formatDate }}
           </p>
           <v-btn
             v-else
@@ -59,8 +59,12 @@
           </v-menu>
           <v-img
             v-if="course.cover_picture"
-            :src="`${course.cover_picture}?height=300&width=300&token=${$session.get('jwt')}`"
-            :lazy-src="`${course.cover_picture}?height=300&width=300&token=${$session.get('jwt')}`"
+            :src="`${
+              course.cover_picture
+            }?height=300&width=300&token=${$session.get('jwt')}`"
+            :lazy-src="`${
+              course.cover_picture
+            }?height=300&width=300&token=${$session.get('jwt')}`"
             class="course-image hidden-md-and-down"
           >
             <template v-slot:placeholder>
@@ -76,7 +80,7 @@
             class="course-image white--text bg-color-one text-h2 hidden-md-and-down"
             size="106"
             v-else
-          >{{ course.name | computeText }}</v-avatar
+            >{{ course.name | computeText }}</v-avatar
           >
           <p class="course-students" v-if="course.published">
             {{
