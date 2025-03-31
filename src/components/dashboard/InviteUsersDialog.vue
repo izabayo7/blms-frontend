@@ -201,6 +201,7 @@ export default {
 // resize the modal
 .v-dialog:not(.v-dialog--fullscreen) {
   height: 432px !important;
+  width: 100% !important;
   max-width: 742px;
   border-radius: 0 !important;
   .dialog-body {
