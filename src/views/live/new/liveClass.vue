@@ -9,7 +9,7 @@
             <span class="live" v-if="participationInfo.isOfferingCourse">Live</span>
           </div>
           <div v-if="participationInfo.isOfferingCourse" class="time">
-            {{elapsed_time}}
+            {{ elapsed_time }}
           </div>
           <div v-else class="users">
             {{ participants.length }} watching
@@ -96,7 +96,7 @@
                     <div class="video-controls--wrapper viewer">
                       <span class="live">Live</span>
                       <div class="time">
-                        {{elapsed_time}}
+                        {{ elapsed_time }}
                       </div>
                       <button class="ml-auto">
                         <svg width="22" height="17" viewBox="0 0 22 17" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -110,6 +110,21 @@
                   </div>
                 </div>
               </transition>
+              <div class="speaking-user">
+                <div class="d-flex">
+                  <div class="profile">
+                    <img
+                        :src="instructor ? instructor.profile + '?width=100' : ''"
+                        alt="profile picture" class="picture">
+                  </div>
+                  <div class="user">
+                    <div class="names">{{
+                        participationInfo.isOfferingCourse ? "YOU" : `${instructor ? instructor.sur_name + ' ' + instructor.other_names : ''}`
+                      }}</div>
+                    <div class="vocal"></div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -253,11 +268,12 @@ import Participant from "../../../plugins/kurentoLive/participants";
 // import {WebRtcPeer} from 'kurento-utils'
 import {mapActions, mapGetters, mapState} from 'vuex'
 import Discussion from "../../../components/Live/Discussion";
-import { elapsedDuration, toLocal} from "@/services/global_functions"
+import {elapsedDuration, toLocal} from "@/services/global_functions"
 import OnlineUser from "../../../components/Live/OnlineUser";
 import StudentNewCommentWithPhoto from "../../../components/Live/StudentNewCommentWithPhoto";
 import Apis from '../../../services/apis'
 import {convertUTCDateToLocalDate, playSound} from "../../../services/global_functions";
+
 const sound = require("@/assets/audio/Comment.wav");
 
 export default {
@@ -274,7 +290,7 @@ export default {
       participants: [],
       comments: [],
       me: null,
-      interval:null,
+      interval: null,
       id: "",
       elapsed_time: "",
       comment: "",
@@ -450,10 +466,10 @@ export default {
               comments[0].replies = []
             }
             const replies = comments[0].replies.filter(e => e._id == result._id)
-            if (!replies.length){
+            if (!replies.length) {
               playSound(sound)
               self.replied({_id: result.reply, data: result});
-          }
+            }
           }
         } else {
           const comments = self.comments.filter(e => e._id == result._id)
@@ -731,8 +747,8 @@ export default {
       }
     }
   },
-  created(){
-    this.interval=setInterval(() => {
+  created() {
+    this.interval = setInterval(() => {
       this.elapsed_time = elapsedDuration(convertUTCDateToLocalDate(new Date(this.live_session.date.replace("00:00", this.live_session.time))));
     }, 1000)
   },
