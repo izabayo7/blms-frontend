@@ -92,10 +92,13 @@ const filters = [
         structure(text) {
             if (!text)
                 return
+            else if(text !== "")
+                return text
             // return text.replace(urlRegex, '<a href="$1" target="_blank">$1</a>')
             return text.replace(urlRegex, (d) => {
                 return `<a href="${d}" target="_blank" >${d} </a>`
             })
+
         }
     },
     {
@@ -105,7 +108,7 @@ const filters = [
                 return
             const regex = /^__time__(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+Z)/i
             const segments = text.split(" ")
-            
+
             for (const i in segments) {
                 if (regex.test(segments[i]))
                     segments[i] = segments[i].replace(/^__time__(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+Z)/i, (d) => {
