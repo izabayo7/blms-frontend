@@ -256,7 +256,7 @@
           {{ selected_quiz_submission.user.other_names }}
         </v-row>
         <v-row class="mb-6">
-          <div class="mr-3">Total marks:</div>
+          <div class="mr-3 title font-weight-bold">Total marks</div>
           <div>
             <div class="cool-box marks total grey-color mt-n1">
               <input
@@ -273,14 +273,14 @@
           <v-btn
             v-if="userCategory === 'INSTRUCTOR'"
             class="red-bg mr-3 px-8"
-            @click="updateSubmission"
+            to="/reports"
             >Cancel</v-btn
           >
           <v-btn
             v-if="userCategory === 'INSTRUCTOR'"
             class="primary-bg"
             @click="updateSubmission"
-            >Save Marks</v-btn
+            >Save progress</v-btn
           >
         </v-row>
       </v-col>
@@ -500,7 +500,7 @@ export default {
         marked: this.selected_quiz_submission.marked,
         total_marks: this.selected_quiz_submission.totalMarks,
       };
-      if (!this.attempt.marked && this.userCategory === "Instructor") {
+      if (this.userCategory === "INSTRUCTOR") {
         this.mode = "edit";
       }
     });
