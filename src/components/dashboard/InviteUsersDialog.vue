@@ -211,11 +211,11 @@ export default {
     this.user_categories = category_res.data.data;
     const user_groups_res = await Apis.get(`user_groups/college/ALL`);
     this.user_groups = user_groups_res.data.data;
-    setTimeout(() => {
-      const dialog = document.querySelector(".v-dialog--active");
-      dialog.style.maxWidth = "742px";
-      dialog.style.setProperty("height", "432px", "important");
-    }, 0);
+    // setTimeout(() => {
+    //   const dialog = document.querySelector(".v-dialog--active");
+    //   dialog.style.maxWidth = "742px";
+    //   dialog.style.setProperty("height", "432px", "important");
+    // }, 0);
   },
 };
 </script>
