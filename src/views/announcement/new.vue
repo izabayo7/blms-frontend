@@ -208,7 +208,7 @@
 <script>
 import SelectUi from "@/components/reusable/ui/select-ui";
 import Apis from "@/services/apis";
-import {mapActions, mapGetters} from "vuex";
+import {mapActions, mapGetters, mapMutations, mapState} from "vuex";
 
 export default {
   name: "CreateAnnouncement",
@@ -219,7 +219,10 @@ export default {
     SelectUi
   },
   computed: {
-    ...mapGetters("users", ["selected_users"])
+    ...mapGetters("users", ["selected_users"]),
+    ...mapState("sidebar_navbar", {
+      confirmed: "send_confirmation",
+    }),
   },
   data: () => ({
     announcement: {
@@ -245,7 +248,9 @@ export default {
   }),
   methods: {
     ...mapActions("users", ["searchUser"]),
+    ...mapActions("modal", ["set_modal"]),
     ...mapActions("announcement", ["addAnnouncement"]),
+    ...mapMutations("sidebar_navbar", {setConfirmation: "SET_SEND_CONFIRMATION"}),
     addMember(user) {
       const membersNotAvailable = this.foundUsers.length <= 0;
       const disabled = this.disabled(user.email);
@@ -350,7 +355,15 @@ export default {
         this.announcement.specific_receivers = this.users.map(x => x.user_name)
         this.announcement.target = undefined
       }
-      this.saveAnnouncement();
+      this.set_modal({
+        template: 'action_confirmation',
+        method: {
+          action: 'sidebar_navbar/SET_SEND_CONFIRMATION',
+          parameters: true,
+        },
+        title: 'Change Exam Status',
+        message: `Are you sure you want to send this announcement to ${this.target_type == 'individual' ? this.selected_users.length :'all '} users ${this.target_type != 'individual' ? 'in '+this.selected_target_type+' ('+this.selected_target_id+')':''}`,
+      })
     },
     findId() {
       if (this.selected_target_type === 'college')
@@ -398,6 +411,12 @@ export default {
     }
   },
   watch: {
+    confirmed(){
+      if(this.confirmed) {
+        this.saveAnnouncement();
+        this.setConfirmation(false)
+      }
+    },
     selected_target_type() {
       this.computeOptions()
     },

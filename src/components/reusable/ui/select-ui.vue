@@ -1,9 +1,9 @@
 <template>
-  <div class="my-select">
+  <div ref="select" class="my-select">
     <div class="select-container" @click="showOptions = !showOptions">
       <label :for="id" class="d-flex">
         <div class="select" :name="name" :id="id">
-          {{content}}
+          {{ content }}
         </div>
         <div v-show="showOptions" class="options">
           <div @click="handleInput(option)" class="option" v-for="(option, i) in options" :value="option" :key="i">
@@ -48,9 +48,23 @@ export default {
       this.content = value
       this.$emit("input", value);
     },
+    outsideClickDetector() {
+      let self = this;
+      document.addEventListener("click", function (e) {
+        if (
+            !self.$refs["select"] ||
+            !self.$refs["select"].contains(e.target)
+        ) {
+          self.showOptions = false;
+        }
+      });
+    },
   },
   created() {
     this.handleInput(this.content)
+  },
+  mounted() {
+    this.outsideClickDetector();
   }
 };
 </script>
@@ -76,24 +90,28 @@ export default {
         color: #313131;
 
       }
-.options{
-  padding: 18px;
-  position: absolute;
-  width: 100%;
-  border-radius: 6px;
-  margin-top: 28px;
-  z-index: 9;
-  background: white;
-  box-shadow: 0px 5.9px 13.2px rgba(0, 0, 0, 0.1);
-  .option{
-    &:hover{
-      background: rgba(208, 205, 205, 0.68);
-    }
-    font-family: Inter;
-    color: #7c7c7c;
-    font-size: 12.6667px;
-  }
-}
+
+      .options {
+        padding: 18px;
+        position: absolute;
+        width: 100%;
+        border-radius: 6px;
+        margin-top: 28px;
+        z-index: 9;
+        background: white;
+        box-shadow: 0px 5.9px 13.2px rgba(0, 0, 0, 0.1);
+
+        .option {
+          &:hover {
+            background: rgba(208, 205, 205, 0.68);
+          }
+
+          font-family: Inter;
+          color: #7c7c7c;
+          font-size: 12.6667px;
+        }
+      }
+
       .drop-down-icon {
         margin: auto;
       }
