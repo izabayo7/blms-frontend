@@ -1,7 +1,7 @@
 <template>
   <div id="create-quiz">
     <div id="quiz-info">
-      <div class="label">Quiz creation wizzard</div>
+      <div class="label">{{ isExam ? 'Exam' : 'Quiz' }} creation wizzard</div>
       <div class="input-group assesment_type">
         <label>Title</label>
         <input v-model="title" class="quiz-title" type="text">
@@ -16,6 +16,21 @@
               defaultContent="<ol><li><p>Write your custom instructions</p></li></ol>"
           />
         </div>
+      </div>
+      <div v-if="isExam" class="input-group my-margin">
+        <label>Examination type</label>
+        <select-ui
+            class="bold-border"
+            name="role"
+            :options="['Open-book examination','Closed-book examination']"
+            id="exam_type"
+            label="Select exam type"
+            @input="
+            (e) => {
+              type = e;
+            }
+          "
+        />
       </div>
       <div class="flex d-block d-md-flex">
         <div class="input-group">
@@ -239,6 +254,7 @@
 
 <script>
 import {mapActions} from "vuex";
+import Apis from "@/services/apis";
 
 export default {
   name: "CreateQuiz",
@@ -249,7 +265,13 @@ export default {
     SelectUi: () => import("@/components/reusable/ui/select-ui"),
     SwitchUi: () => import("@/components/reusable/ui/switcher")
   },
+  computed: {
+    isExam() {
+      return this.$route.path.includes('exams')
+    }
+  },
   data: () => ({
+    type: "",
     questions_types: [
       "Open ended",
       "Single text select",
@@ -306,6 +328,9 @@ export default {
 
       if (this.title.length < 3)
         return this.error = "Title is too short"
+
+      if (this.isExam && this.type == "")
+        return this.error = "Type is required"
 
       if (this.hours == 0 && this.minutes == 0)
         return this.error = "Duration is required"
@@ -462,32 +487,75 @@ export default {
       }
 
       const editorContent = this.$refs.editor.getHTML();
+      if (this.isExam)
+        Apis.create('exam', this.assignment).then(async (res) => {
+          if (res.data.status !== 201) {
+            this.$store.dispatch("app_notification/SET_NOTIFICATION", {
+              message: res.data.message,
+              status: "danger",
+              uptime: 5000,
+            }).then(() => {
+              this.error = ""
+            })
+          } else {
+            if (this.assignmentAttachments.length) {
+              const formData = new FormData()
+              let index = 0;
+              for (const i in this.assignmentAttachments) {
+                formData.append("files[" + index + "]", this.assignmentAttachments[i]);
+                index++
+              }
+              // set the dialog
+              this.$store.dispatch('modal/set_modal', {
+                template: 'display_information',
+                title: 'Creating assignment',
+                message: 'uploading attachments'
+              })
 
-      this.create_quiz({
-        quiz: {
-          name: this.title,
-          instructions:
-              editorContent ==
-              `<ol><li><p>Write your custom instructions</p></li></ol>`
-                  ? undefined
-                  : editorContent,
-          duration: this.calculateSeconds(),
-          user: this.$store.state.user.user.user_name,
-          questions: questions,
-          passMarks: this.passMarks
-        },
-        pictures: this.pictures,
-      }).then(() => {
-        this.$router.push("/quiz");
-      }).catch((e) => {
-        this.$store.dispatch("app_notification/SET_NOTIFICATION", {
-          message: e.message,
-          status: "danger",
-          uptime: 5000,
-        }).then(() => {
-          this.error = ""
+              await Apis.create(`exams/${res.data.data._id}/attachment`, formData, {
+                headers: {
+                  'Content-Type': 'multipart/form-data'
+                },
+                onUploadProgress: (progressEvent) => {
+                  this.$store.dispatch('modal/set_progress', parseInt(Math.round((progressEvent.loaded / progressEvent.total) * 100)))
+                }
+              })
+            }
+            this.addAssignment(res.data.data)
+            this.$store.dispatch("app_notification/SET_NOTIFICATION", {
+              message: "Assignment creation succeded",
+              status: "success",
+              uptime: 5000,
+            })
+            this.$router.push('/quiz')
+          }
         })
-      })
+      else
+        this.create_quiz({
+          quiz: {
+            name: this.title,
+            instructions:
+                editorContent ==
+                `<ol><li><p>Write your custom instructions</p></li></ol>`
+                    ? undefined
+                    : editorContent,
+            duration: this.calculateSeconds(),
+            user: this.$store.state.user.user.user_name,
+            questions: questions,
+            passMarks: this.passMarks
+          },
+          pictures: this.pictures,
+        }).then(() => {
+          this.$router.push("/quiz");
+        }).catch((e) => {
+          this.$store.dispatch("app_notification/SET_NOTIFICATION", {
+            message: e.message,
+            status: "danger",
+            uptime: 5000,
+          }).then(() => {
+            this.error = ""
+          })
+        })
     },
   }
 };

@@ -6,8 +6,13 @@ import jwt from "jsonwebtoken"
 
 import live from '@/router/modules/live.router'
 import quiz from '@/router/modules/quiz.router'
+import exams from '@/router/modules/exams.router'
+import assignments from '@/router/modules/assignments.router'
 import chat from '@/router/modules/chat.router'
 import course from '@/router/modules/course.router'
+
+let assessmentRoutes = quiz.concat(exams)
+assessmentRoutes = assessmentRoutes.concat(assignments)
 
 Vue.use(VueRouter)
 
@@ -127,21 +132,6 @@ const routes = [
                         component: () => import( /* webpackChunkName: "exams" */ '@/views/quiz/attempt_exam.vue'),
                         meta: {
                             allowedUsers: ["STUDENT","INSTRUCTOR"]
-                        },
-                    },
-                    {
-                        path: '/assignments/new',
-                        component: () => import( /* webpackChunkName: "assignments" */ '@/views/quiz/create_assignment.vue'),
-                        meta: {
-                            allowedUsers: ["INSTRUCTOR"]
-                        },
-                    },
-
-                    {
-                        path: '/assignments/edit/:id',
-                        component: () => import( /* webpackChunkName: "assignments" */ '@/views/quiz/edit_assignment.vue'),
-                        meta: {
-                            allowedUsers: ["INSTRUCTOR"]
                         },
                     },
 
@@ -319,8 +309,7 @@ const routes = [
                     // course routes
                     ...course,
 
-                    // quiz routes
-                    ...quiz,
+                    ...assessmentRoutes,
 
                     // chat routes
                     ...chat,
@@ -352,6 +341,7 @@ const router = new VueRouter({
 })
 // before navigating to any route
 router.beforeEach((to, from, next) => {
+    console.log(to)
     if (to.path !== from.path || to.path === "/") {
         // if the session exist and the vuex store is not set
         if (Vue.prototype.$session.exists() && (!store.state.user.isLoggedIn || !axios.defaults.headers.common.Authorization)) {

@@ -2,7 +2,7 @@
 // NOTE: make sure you don't start with '/live' on your file path as it may lead to confusion
 //          or inconsistency in you routes
 
-const prefix = '/quiz'
+const prefix = '/assessments/quiz'
 
 const routes =  [
     {
