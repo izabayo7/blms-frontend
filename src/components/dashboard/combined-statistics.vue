@@ -4,10 +4,10 @@
       <div class="selection col-12 col-lg-5" :class="{'px-0': $vuetify.breakpoint.width < 700 }">
         <div class="title mb-6">Select data</div>
         <button
-          v-for="(obj, i) in data_categories"
-          :key="i"
-          :class="`choice ${obj.name == selected_category ? 'active' : ''}`"
-          @click="selected_category = obj.name"
+            v-for="(obj, i) in data_categories"
+            :key="i"
+            :class="`choice ${obj.name == selected_category ? 'active' : ''}`"
+            @click="selected_category = obj.name"
         >
           {{ obj.name }}
         </button>
@@ -17,11 +17,11 @@
         <div class="chart">
           <chart
               v-if="loaded"
-            type="line"
-            class="my-chart ml-n6"
-            width="390px"
-            :options="chartOptions"
-            :series="series"
+              type="line"
+              class="my-chart ml-n6"
+              width="390px"
+              :options="chartOptions"
+              :series="series"
           ></chart>
         </div>
       </div>
@@ -39,11 +39,11 @@ export default {
     userJoins: undefined,
     loaded: false,
     data_categories: [
-      { name: "User joins" },
-      { name: "Course user access" },
-      { name: "Courses created" },
-      { name: "Quizes done" },
-      { name: "Live classes attendees" },
+      {name: "Users online"},
+      {name: "User joins"},
+      {name: "Course access"},
+      {name: "Quizes submitted"},
+      {name: "Live classes attendees"},
     ],
     series: undefined,
     chartOptions: {
@@ -87,15 +87,35 @@ export default {
   components: {
     chart: Apexcharts,
   },
-  methods:{
-    async fetchData(){
+  methods: {
+    async fetchData() {
       this.loaded = false
       let response
-      if(this.selected_category === "User joins") {
+      if (this.selected_category === "User joins") {
         response = await Apis.get(`user/statistics/user_joins?start_date=${this.$store.state.sidebar_navbar.college.createdAt}&end_date=${new Date().toISOString()}`);
         this.series = [
           {
             name: "Users",
+            data: response.data.data.map(x => x.total_users),
+          },
+        ]
+        this.chartOptions.xaxis.categories = response.data.data.map(x => x._id)
+        this.loaded = true
+      } else if (this.selected_category === "Quizes submitted") {
+        response = await Apis.get(`quiz_submission/statistics/submitted?start_date=${this.$store.state.sidebar_navbar.college.createdAt}&end_date=${new Date().toISOString()}`);
+        this.series = [
+          {
+            name: "Submissions",
+            data: response.data.data.map(x => x.total_submissions),
+          },
+        ]
+        this.chartOptions.xaxis.categories = response.data.data.map(x => x._id)
+        this.loaded = true
+      } else if (this.selected_category === "Users online") {
+        response = await Apis.get(`user_logs/statistics/online?start_date=${this.$store.state.sidebar_navbar.college.createdAt}&end_date=${new Date().toISOString()}`);
+        this.series = [
+          {
+            name: "Submissions",
             data: response.data.data.map(x => x.total_users),
           },
         ]
@@ -107,8 +127,8 @@ export default {
 
     }
   },
-  watch:{
-    selected_category(){
+  watch: {
+    selected_category() {
       this.fetchData();
     }
   },
@@ -137,8 +157,10 @@ export default {
     color: #494949;
     padding-left: 20%;
   }
+
   .selection {
     width: 40%;
+
     .choice {
       display: block;
       padding-left: 20%;
@@ -146,20 +168,31 @@ export default {
       width: 100%;
 
       font-family: Inter;
-      font-size: 11px;
       font-style: normal;
-      font-weight: 700;
+      font-weight: normal;
+      font-size: 11.7572px;
       line-height: 17px;
-      letter-spacing: 0em;
-      text-align: left;
+      /* or 154% */
+
+
+      color: #494949;
 
       height: 23px;
+
       &.active {
-        box-shadow: 0px 0px 5px rgba(25, 48, 116, 0.69);
-        border-radius: 4px;
+        font-family: Inter;
+        font-style: normal;
+        font-weight: bold;
+        font-size: 13px;
+        line-height: 17px;
+        /* or 138% */
+
+
+        color: #193074;
       }
     }
   }
+
   .result-view {
     width: 60%;
   }

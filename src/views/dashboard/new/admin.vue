@@ -188,7 +188,7 @@
             </div>
           </v-col>
           <v-col class="col-12 mt-5 pl-0">
-            <div class="more">More ...</div>
+            <router-link class="more text-right" to="/users">More ...</router-link>
             <div class="mt-5 d-flex">
               <button
                 class="lower_buttons mr-2"
