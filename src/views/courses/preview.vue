@@ -3,7 +3,7 @@
   <section class="my-container">
     <!--      this is for student preview-->
     <v-row v-if="userCategory === 'STUDENT'">
-      <back class="ma-6 mb-1 ml-16" to="/courses"/>
+      <div class="white back-container"><back class="ma-6 mb-1 ml-16" to="/courses"/></div>
       <v-col v-if="!loaded" class="col-12">
         <div class="ssc elevation-0 ssc-card student-card-skeleton ml mt-10">
           <div class="ssc-wrapper d-md-flex justify-between ml">
@@ -568,6 +568,12 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+.my-container{
+  padding: 40px;
+}
+.back-container{
+  width: 100%;
+}
 button.back {
   margin: 2rem;
   padding: 0.2rem 2rem;
@@ -638,7 +644,7 @@ button.back {
     }
 
     &.preview {
-      padding-right: 5rem;
+      //padding-right: 5rem;
     }
   }
 }
@@ -889,7 +895,9 @@ button.back {
 
 /* Portrait phones and smaller */
 @media (max-width: 700px) {
-
+  .my-container{
+    padding: 20px;
+  }
   .instructor_preview {
     padding: 0 0 60px;
 
@@ -939,6 +947,9 @@ button.back {
   .student main {
     margin-top: 22px;
     margin-bottom: 32px;
+    &.description{
+      padding-left: 0;
+    }
     &.preview {
     }
 
