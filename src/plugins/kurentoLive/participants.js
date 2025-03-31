@@ -21,21 +21,22 @@ export default function Participant(name,vm,offeringCourse = false) {
     container.className = isPresentMainParticipant() ? PARTICIPANT_CLASS : PARTICIPANT_MAIN_CLASS;
     container.id = name;
     let span = document.createElement('span');
-    let video = document.createElement('video');
+    // let video = document.createElement('video');
+    let video = document.getElementById("video_feed");
     let rtcPeer;
     this.vm = vm;
     this.offeringCourse = offeringCourse
 
-    container.appendChild(video);
-    container.appendChild(span);
-    container.onclick = switchContainerClass;
-    document.getElementById('participants').appendChild(container);
-
-    span.appendChild(document.createTextNode(name));
-
-    video.id = 'video-' + name;
-    video.autoplay = true;
-    video.controls = false;
+    // container.appendChild(video);
+    // container.appendChild(span);
+    // container.onclick = switchContainerClass;
+    // document.getElementById('participants').appendChild(container);
+    //
+    // span.appendChild(document.createTextNode(name));
+    //
+    // video.id = 'video-' + name;
+    // video.autoplay = true;
+    // video.controls = false;
 
 
     this.getElement = function () {
@@ -46,18 +47,18 @@ export default function Participant(name,vm,offeringCourse = false) {
         return video;
     }
 
-    function switchContainerClass() {
-        if (container.className === PARTICIPANT_CLASS) {
-            let elements = Array.prototype.slice.call(document.getElementsByClassName(PARTICIPANT_MAIN_CLASS));
-            elements.forEach(function (item) {
-                item.className = PARTICIPANT_CLASS;
-            });
-
-            container.className = PARTICIPANT_MAIN_CLASS;
-        } else {
-            container.className = PARTICIPANT_CLASS;
-        }
-    }
+    // function switchContainerClass() {
+    //     if (container.className === PARTICIPANT_CLASS) {
+    //         let elements = Array.prototype.slice.call(document.getElementsByClassName(PARTICIPANT_MAIN_CLASS));
+    //         elements.forEach(function (item) {
+    //             item.className = PARTICIPANT_CLASS;
+    //         });
+    //
+    //         container.className = PARTICIPANT_MAIN_CLASS;
+    //     } else {
+    //         container.className = PARTICIPANT_CLASS;
+    //     }
+    // }
 
     function isPresentMainParticipant() {
         return ((document.getElementsByClassName(PARTICIPANT_MAIN_CLASS)).length !== 0);

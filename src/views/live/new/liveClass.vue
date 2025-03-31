@@ -52,15 +52,15 @@
                   <div class="screen-sharing-video" v-if="isPresenting">
                     <div class="screen-sharing-video--wrapper">
                       <h4>You are presenting your screen</h4>
-                      <video autoplay>
+                      <video id="video_feed_screen" autoplay>
                         <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" >
                       </video>
                     </div>
                   </div>
                 </div>
               </div>
-              <video v-else autoplay>
-                <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" >
+              <video  v-else autoplay id="video_feed">
+<!--                <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" >-->
               </video>
               <transition name="fade">
                 <div class="video-controls" v-if="showMenu || noVideo">
@@ -313,9 +313,9 @@
     },
     register() {
       console.log("harahiye")
-      document.getElementById('room-header').innerText = 'ROOM ' + this.participationInfo.room;
-      document.getElementById('join').style.display = 'none';
-      document.getElementById('room').style.display = 'block';
+      // document.getElementById('room-header').innerText = 'ROOM ' + this.participationInfo.room;
+      // document.getElementById('join').style.display = 'none';
+      // document.getElementById('room').style.display = 'block';
 
       let message = {
         id : 'joinRoom',
