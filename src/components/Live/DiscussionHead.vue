@@ -1,8 +1,8 @@
 <template>
     <div class="my-discussion-head">
         <div class="discussion-head-container">
-            <h1>Economics Basics Part II</h1>
-            <div class="live">
+            <h1>{{content}}</h1>
+            <div class="live" v-if="live">
                 <span>live</span>
             </div>
         </div>
@@ -11,10 +11,14 @@
 
 <script>
     export default {
-        name: "DiscussionHead"
+        name: "DiscussionHead",
+        props:{
+            content:{required:true,type:String},
+            live:{type:Boolean,default:false}
+        }
     }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 
 </style>
