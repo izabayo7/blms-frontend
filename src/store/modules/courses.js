@@ -406,21 +406,19 @@ export default {
                 }
                 // attach quiz
                 if (quiz) {
-                    let quizCopy = JSON.parse(JSON.stringify(quiz))
-                    const quizId = quizCopy._id
                     // add quiz target
                     const target = {
                         id: d.data._id,
                         type: 'chapter'
                     }
                     state.courses.data[courseIndex].assignmentsLength++;
-                    apis.update('quiz', `${quizId}/target`, target).then((quizResponse) => {
+                    apis.update('quiz', `${quiz._id}/target`, target).then((quizResponse) => {
                         if (state.courses.data[courseIndex].chapters[chapterIndex].quiz.length > 0) {
                             commit('quiz/update_quiz_target', { id: state.courses.data[courseIndex].chapters[chapterIndex].quiz[0]._id, target: undefined }, { root: true })
                             state.courses.data[courseIndex].chapters[chapterIndex].quiz.splice(0, 1)
                         }
                         state.courses.data[courseIndex].chapters[chapterIndex].quiz.push(quizResponse.data.data)
-                        commit('quiz/update_quiz_target', { id: quizId, target: quizCopy.target }, { root: true })
+                        commit('quiz/update_quiz_target', { id: quiz._id, target: target }, { root: true })
                     })
                 }
                 if (attachments.length > 0) {
