@@ -36,8 +36,8 @@
                   <div class="pick-file file-picked col-12 col-md-8 d-flex px-4">
                     <button
                         @click="downloadAttachment(`${backend_url}/api/quiz_submission/${selected_quiz_submission._id}/attachment/${attempt.answers[i].src}/view?token=${$session.get('jwt')}`)"
-                        class="file-name">
-                      {{ attempt.answers[i].src }}
+                        class="file-name" :title="attempt.answers[i].src">
+                      {{ attempt.answers[i].src | trimString(30) }}
                     </button>
                     <div class="file-size">
 
