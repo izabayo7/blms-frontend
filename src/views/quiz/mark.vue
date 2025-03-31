@@ -270,6 +270,7 @@
                       ? attempt.answers[i].feedback[0].content
                       : ''
                   "
+                  :answerId="attempt.answers[i]._id"
                 />
               </v-col>
             </v-row>

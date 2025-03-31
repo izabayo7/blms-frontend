@@ -63,6 +63,7 @@
       v-if="
         $store.state.user.user.category.name === 'INSTRUCTOR' && mode == 'any'
       "
+      @click="addFeedback()"
       class="primary-bg px-6 py-4 mt-4"
       rounded
       >Save</v-btn
@@ -71,9 +72,14 @@
 </template>
 
 <script>
+import Apis from "@/services/apis";
 export default {
   props: {
     content: {
+      type: String,
+      required: true,
+    },
+    answerId: {
       type: String,
       required: true,
     },
@@ -112,6 +118,22 @@ export default {
           ""
         );
       }
+    },
+    async addFeedback() {
+      const content = this.feedbackContent();
+      if (content == "") {
+        console.log("reka genda");
+        return;
+      }
+      const response = await Apis.create("comment", {
+        sender: this.$store.state.user.user.user_name,
+        target: {
+          type: "quiz_submission_answer",
+          id: this.answerId,
+        },
+        content: content,
+      });
+      console.log(response);
     },
   },
   mounted() {
