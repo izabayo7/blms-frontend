@@ -2,6 +2,7 @@ import io from 'socket.io-client'
 import { emit } from '@/services/event_bus'
 import user from '@/store/modules/user'
 import store from '@/store'
+import router from '@/router'
 
 const getDefaultState = () => ({
     username: null,
@@ -212,8 +213,16 @@ export default {
                 console.log(state.incomingMessages)
             });
         },
-        start_conversation({ getters }, user_name) {
-            getters.socket.emit('message/start_conversation', { conversation_id: user_name });
+        start_conversation({ state, getters }, user_name) {
+
+            // search if conversation exist
+            const contact_found = state.incomingMessages.filter(c => c.id == user_name)
+
+            // if found go to it
+            if (contact_found.length) router.push(`/messages/${user_name}`);
+            
+            // else initialise it
+            else getters.socket.emit('message/start_conversation', { conversation_id: user_name });
         },
         //load user messages
         loadMessages({ getters, state, commit }, id) {

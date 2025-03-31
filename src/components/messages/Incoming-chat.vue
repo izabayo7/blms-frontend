@@ -32,7 +32,13 @@
           <div :class="{ 'pl-1': data.is_group || is_mine }">
             {{
               data.last_message.content
-                | trimString(data.is_group ? 15 : is_mine ? 50 : 100)
+                | trimString(
+                  data.is_group
+                    ? 15
+                    : is_mine || !data.last_message.sender
+                    ? 50
+                    : 100
+                )
             }}
           </div>
         </div>
@@ -81,7 +87,9 @@ export default {
       return this.$route.params.username === this.data.id;
     },
     is_mine() {
-      return this.data.last_message.sender.sur_name == "You";
+      return this.data.last_message.sender
+        ? this.data.last_message.sender.sur_name == "You"
+        : undefined;
     },
     typing_members() {
       let names = [];
@@ -91,7 +99,7 @@ export default {
         );
         names.push(user[0].data.sur_name);
       }
-      console.log(names)
+      console.log(names);
       return names;
     },
   },
@@ -113,7 +121,7 @@ export default {
   mounted() {
     let timeout = undefined;
 
-    this.socket.on("message/typing", (typist, group) => {
+    this.socket.on("res/message/typing", (typist, group) => {
       //if the typist id and this incoming chat id are the same
       if (!this.data.is_group && group) return;
 
@@ -131,7 +139,7 @@ export default {
       }
     });
     //when message came stop typing
-    this.socket.on("message/new", (message) => {
+    this.socket.on("res/message/new", (message) => {
       //if the typist id and this incoming chat id are the same
       if (this.data.id === message.sender.user_name) {
         this.typing = false;

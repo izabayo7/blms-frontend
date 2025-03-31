@@ -34,7 +34,7 @@
                 <ul class="searched-users" v-if="foundUsers.length > 0">
                   <li
                     class="user"
-                    v-for="(user, i) in foundUsers"
+                    v-for="(user, i) in foundUsers.filter((u) => !u.selected)"
                     :key="i"
                     @click="selectUser(i)"
                   >
@@ -88,7 +88,7 @@
             <button
               :disabled="!foundUser"
               :class="`start-conversation-btn ${!foundUser ? 'disabled' : ''}`"
-              @click="begin_conversation(foundUser.user_name)"
+              @click="start_conversation(foundUser.user_name)"
             >
               Start conversation
             </button>
@@ -100,7 +100,7 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex";
+import { mapActions } from "vuex";
 export default {
   name: "StartConversation",
   data() {
@@ -110,11 +110,9 @@ export default {
       foundUser: null,
     };
   },
-  computed: {
-    ...mapGetters("courses", ["user_search_results"]),
-  },
   methods: {
     ...mapActions("users", ["searchUser"]),
+    ...mapActions("chat", ["start_conversation"]),
     search(str) {
       this.foundUsers = [];
       this.searchUser({ query: str }).then((results) => {
@@ -122,13 +120,14 @@ export default {
         //   if (val.names.search(new RegExp(str, "ig")) >= 0)
         //     this.foundUsers.push(this.users[i]);
         // });
-        this.foundUsers = []
+        this.foundUsers = [];
         for (const i in results) {
           this.foundUsers.push({
             names: `${results[i].sur_name} ${results[i].other_names}`,
             pic: results[i].profile,
             category: results[i].category.name,
-            user_name: results[i].user_name
+            user_name: results[i].user_name,
+            selected: false,
           });
         }
       });
@@ -137,10 +136,11 @@ export default {
       this.search(this.query);
     },
     selectUser(idx) {
+      this.foundUsers[idx].selected = true;
       this.foundUser = this.foundUsers[idx];
-      console.log(this.foundUser);
     },
     erase() {
+      this.foundUsers[this.foundUsers.indexOf(this.foundUser)].selected = false;
       this.foundUser = "";
     },
   },

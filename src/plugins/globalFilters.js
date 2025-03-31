@@ -28,6 +28,7 @@ const filters = [
         // (get short form of a string)
         name: 'computeText',
         structure: (string) => {
+            if (!string) return;
             return string[0].toUpperCase();
         },
     },

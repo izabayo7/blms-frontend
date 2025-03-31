@@ -113,6 +113,9 @@ export default {
     storeCurrentDisplayedUser() {
       //listen when the user contacts/incoming messages are loaded
       on("incoming_message_initially_loaded", () => {
+        if (!this.incomingMessages.length) {
+          this.$router.push("/messages/no-conversation");
+        }
         this.incomingMessages.map((d) => {
           if (this.$route.params.username === d.id) {
             this.SET_DISPLAYED_USER(d);
@@ -135,10 +138,6 @@ export default {
       this.goToMessages();
     });
     this.$store.dispatch("chat/loadIncomingMessages");
-
-    if (!this.incomingMessages.length) {
-      this.$router.push("/messages/no-conversation");
-    }
     // this.SET_USERNAME(this.$route.params.username).then(()=> this.goToMessages())
   },
 };
@@ -146,7 +145,7 @@ export default {
 
 <style  lang="scss" scoped>
 #messages-section {
-  height: 90%;
+  height: calc(100vh - 82px);
 }
 .my-messages {
   background-color: #f8f8f8;

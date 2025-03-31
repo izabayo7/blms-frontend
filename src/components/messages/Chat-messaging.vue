@@ -15,12 +15,13 @@
         :key="i"
         :class="{
           sending: msgGoing(msgs.from),
+          system_message: systemMsg(msgs.from),
           receiving: !msgGoing(msgs.from),
         }"
       >
         <!--        <div class="unread-indicator"><hr /></div>-->
         <!--        picture of the message sender-->
-        <div class="picture">
+        <div v-if="!systemMsg(msgs.from)" class="picture">
           <img
             v-if="msgs.image"
             :src="msgs.image"
@@ -107,6 +108,9 @@ export default {
     msgGoing(owner) {
       return owner && owner.toLowerCase() === "me";
     },
+    systemMsg(owner) {
+      return owner && owner === "SYSTEM";
+    },
     //read messages
     readMessages() {
       const e = document.getElementById("my-chat-messaging");
@@ -130,7 +134,7 @@ export default {
     // Someone typing to me
     let timeout = undefined;
 
-    this.socket.on("message/typing", (typist, group) => {
+    this.socket.on("res/message/typing", (typist, group) => {
       if (this.currentDisplayedUser.is_group) {
         // const user = this.currentDisplayedUser.members.some(el => el._id === typist)
       }
@@ -161,7 +165,7 @@ export default {
     scrollableDiv.addEventListener("scroll", this.readMessages);
 
     //when message came stop typing
-    this.socket.on("message/new", () => {
+    this.socket.on("res/message/new", () => {
       this.typing = false;
     });
 
@@ -183,7 +187,8 @@ export default {
   height: 100%;
   scrollbar-track-color: transparent;
   scrollbar-face-color: red;
-
+  
+  // design sender name
   .sender_name {
     font-size: 11px;
     color: #00000066;
@@ -304,6 +309,16 @@ export default {
         word-break: break-word;
       }
     }
+
+   // design system message
+  .msgs-block.system_message.receiving {
+    text-align: center;
+    .msg{
+      background-color: #fff;
+      max-width: 100%;
+    }
+
+  }
 
     //css for the only sending msgs
     .sending {
