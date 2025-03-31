@@ -6,7 +6,7 @@
         <div class="lower">Anouncements</div>
       </div>
       <div class="col-8 col-md-6 text-right">
-        <button class="button" @click="$router.push('/announcements/new')">
+        <button v-if="userCategory === 'ADMIN' || userCategory === 'INSTRUCTOR'" class="button" @click="$router.push('/announcements/new')">
           <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
             <g clip-path="url(#clip0)">
               <path
