@@ -53,7 +53,7 @@
               <!--              </div>-->
             </div>
           </div>
-          <div class="message-search">
+          <div class="message-search mb-4">
             <div class="search-input">
               <div v-if="searchKey === ''" class="placeholder vertically--centered">
                 <svg width="11" height="11" viewBox="0 0 11 11" fill="none" xmlns="http://www.w3.org/2000/svg">
