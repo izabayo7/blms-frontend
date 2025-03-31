@@ -229,11 +229,7 @@
                 </div>
               </v-col>
             </v-row>
-            <v-row
-                v-if="
-                selected_quiz_submission.marked || userCategory === 'INSTRUCTOR'
-              "
-            >
+            <v-row>
               <v-col class="col-12 col-md-6 d-flex pb-0">
                 <div class="mr-3 marks-label">Award marks:</div>
                 <div class="d-flex align-center">
@@ -254,9 +250,9 @@
 
               <v-col class="col-12 pt-0">
                 <feedback
-                    v-if="
+                    v-if="(
                     selected_quiz_submission.answers[i].feedback_src ||
-                    selected_quiz_submission.answers[i].feedback ||
+                    selected_quiz_submission.answers[i].feedback) ||
                     userCategory === 'INSTRUCTOR'
                   "
                     :content="

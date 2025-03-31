@@ -9,6 +9,7 @@
           Instructor feedback
         </div>
         <div
+            v-if="$store.state.user.user.category.name == 'INSTRUCTOR' || content != ''"
             ref="feedback_input"
             :class="`feedback_input ${
             content == '' ? 'empty_feedback' : 'saved_feedback'
@@ -25,7 +26,7 @@
           v-if="
           mode == 'any' && $store.state.user.user.category.name === 'INSTRUCTOR'
         "
-          class="col-3 vertically--centered pa-0"
+          class="col-3 col-md-1 vertically--centered pa-0"
       >
         <div v-if="content !== '' || showDelete" class="actions">
           <svg
@@ -62,8 +63,8 @@
         </div>
       </div>
     </div>
-    <div class="save_feedback d-flex">
-      <div v-if="isFileUpload" class="d-flex file-feedback">
+    <div class="save_feedback d-flex col-12 col-md-9 pa-0">
+      <div v-if="isFileUpload && $store.state.user.user.category.name === 'INSTRUCTOR'" class="d-flex file-feedback">
         <div>
           <div>
             <button class="pick-file file-picked" @click="pickfile(index)">
@@ -77,7 +78,10 @@
             />
           </div>
           <div v-if="!feedback_name" class="hint">Upload a file (optional )</div>
-          <button v-else class="hint" @click="downloadAttachment(`${backend_url}/api/quiz_submission/${submission_id}/attachment/${feedback_name}/download?token=${$session.get('jwt')}`)">{{ feedback_name }}</button>
+          <button v-else class="hint"
+                  @click="downloadAttachment(`${backend_url}/api/quiz_submission/${submission_id}/attachment/${feedback_name}/download?token=${$session.get('jwt')}`)">
+            {{ feedback_name }}
+          </button>
         </div>
         <div v-if="file">
           <div class="file-name">{{ file.name }}</div>
@@ -93,6 +97,16 @@
             Saved successfuly
           </div>
         </div>
+      </div>
+      <div v-else-if="isFileUpload" class="d-block d-md-flex  file-feedback col-12 pa-0">
+        <button class="pick-file saved file-picked mx-auto ml-0"
+                @click="downloadAttachment(`${backend_url}/api/quiz_submission/${submission_id}/attachment/${feedback_name}/view?token=${$session.get('jwt')}`)">
+          {{ feedback_name }}
+        </button>
+        <button class="download-attachment mx-auto mr-0"
+                @click="downloadAttachment(`${backend_url}/api/quiz_submission/${submission_id}/attachment/${feedback_name}/download?token=${$session.get('jwt')}`)">
+          Download attachment
+        </button>
       </div>
       <v-btn
           v-if="$store.state.user.user.category.name === 'INSTRUCTOR' && showSave"
@@ -123,7 +137,7 @@ export default {
       type: String,
       required: true,
     },
-    feedback_name:{
+    feedback_name: {
       type: String
     },
     answerId: {
@@ -138,7 +152,7 @@ export default {
       type: Number,
       default: 0
     },
-    submission_id:{
+    submission_id: {
       type: String
     },
     isFileUpload: {
@@ -187,7 +201,7 @@ export default {
   },
   methods: {
     downloadAttachment,
-    upoadFeedback(){
+    upoadFeedback() {
       const formData = new FormData()
       formData.append("file", this.file)
       this.upload_status = 1;
@@ -413,6 +427,40 @@ export default {
     box-sizing: border-box;
     box-shadow: 0px 5.33333px 5.33333px rgba(25, 48, 116, 0.25);
     border-radius: 9.33333px;
+
+    &.saved {
+      font-style: normal;
+      font-weight: 500;
+      font-size: 13.0899px;
+      line-height: 34px;
+      /* or 262% */
+      border: none;
+      display: flex;
+      align-items: center;
+      box-shadow: none;
+      color: #193074;
+
+
+      width: 214px;
+      height: 29px;
+
+      background: rgba(25, 48, 116, 0.14);
+      border-radius: 8px;
+    }
+  }
+
+  .download-attachment {
+    font-family: Inter;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 15px;
+    line-height: 34px;
+    /* or 229% */
+
+    display: flex;
+    align-items: center;
+
+    color: #193074;
   }
 }
 </style>
