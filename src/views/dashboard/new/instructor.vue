@@ -86,7 +86,7 @@
               <div>
                 <button
                     class="lower_buttons"
-                    @click="$router.push('/course/new')"
+                    @click="$router.push('/courses/new')"
                 >
                   Create course
                 </button>
