@@ -482,6 +482,28 @@
                   <div
                     @click="
                       course.chapters.length
+                        ? $router.push(`/schedule_live`)
+                        : undefined
+                    "
+                    :class="`act-btn preview ${
+                      course.chapters.length ? '' : 'disabled'
+                    }`"
+                    v-bind="attrs"
+                    v-on="on"
+                  >
+                    <svg width="32" height="21" viewBox="0 0 32 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M23.6389 7.875V10.1405V10.8595V13.125V19.25C23.6389 19.5037 23.4172 19.75 23.1111 19.75H1.77778C1.47172 19.75 1.25 19.5037 1.25 19.25V1.75C1.25 1.49634 1.47172 1.25 1.77778 1.25H23.1111C23.4172 1.25 23.6389 1.49634 23.6389 1.75V7.875ZM25.7658 12.2342L24.0041 10.5L25.7658 8.76582L30.75 3.85948V17.1405L25.7658 12.2342Z" stroke="white" stroke-width="2.5"/>
+</svg>
+
+                  </div>
+                </template>
+                <span class="tooltip-content">Schedule live</span>
+              </v-tooltip>
+              <v-tooltip content-class="top tooltip" top>
+                <template v-slot:activator="{ attrs, on }">
+                  <div
+                    @click="
+                      course.chapters.length
                         ? $router.push(`/courses/${course.name}`)
                         : undefined
                     "
