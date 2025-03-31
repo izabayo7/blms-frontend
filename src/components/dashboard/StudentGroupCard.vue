@@ -15,7 +15,7 @@
           enter-active-class="animate__animated animate__fadeIn animate__faster"
       >
         <div v-if="cardActive" class="content">
-          <button>Edit</button>
+          <button @click="$router.push($route.path +'/'+ item._id)">Edit</button>
           <button>Delete</button>
         </div>
       </transition>

@@ -20,6 +20,7 @@ export default {
   data() {
     return {
       facultyId: this.$route.params.facultyId,
+      mode: 'view',
       options: {
         keysToShow: ["name", "total_courses", "total_instructors", "total_students"]
       }
