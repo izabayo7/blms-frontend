@@ -39,12 +39,12 @@
             The .xlsx file should contain the following columns
             <div v-if="choice === 4" class="columns">
               EMAIL, USER GROUP, USER CATEGORY
-              <a href="https://docs.google.com/spreadsheets/d/1fY2596IFt-73vZmYX9bDfHWKgrGSd9DOlJDQkqJ-vZ8/edit?usp=sharing"
+              <a :href="multipleUserInviteUrl"
                  target="_blank">find sample here</a>
             </div>
             <div v-if="choice === 1" class="columns">
               FIRST NAME, LAST NAME, GENDER, PASSWORD, USER GROUP, USER CATEGORY
-              <a href="http://docs.google.com/spreadsheets/d/15ZJ6ZYaxihVz2XpiV8Ub-cMMoBZZW74Tbxg6i9xgBu0/edit?usp=sharing"
+              <a :href="multipleUserImportUrl"
                  target="_blank">find sample here</a>
             </div>
           </div>
@@ -238,7 +238,9 @@ export default {
       email: "",
       error: "",
       closable: false,
-      file: undefined
+      file: undefined,
+      multipleUserImportUrl: `${process.env.VUE_APP_api_service_url}/assets/Multiple user import file example.xlsx`,
+      multipleUserInviteUrl: `${process.env.VUE_APP_api_service_url}/assets/Multiple user invitation file example.xlsx`
     };
   },
   computed: {
