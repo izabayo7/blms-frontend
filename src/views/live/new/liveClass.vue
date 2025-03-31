@@ -261,7 +261,7 @@ openQuiz">
         </div>
       </div>
     </div>
-    <div v-else>
+    <div class="no-live" v-else>
       <div v-if="!loaded" class="loading">Loading</div>
       <div v-else class="not-found">Sorry {{ error }}</div>
     </div>
@@ -752,6 +752,12 @@ export default {
             audioStatus: this.audioEnabled,
             screenStatus: this.isPresenting
           })
+
+          // notify new user if quiz was released
+          this.socket.emit("live/releaseQuiz", {
+            quiz: this.live_session.quiz,
+            receivers: [{id: participant.userInfo._id}]
+          });
         }
       }
     },
