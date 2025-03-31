@@ -467,6 +467,13 @@
     }
 
     .live-comments {
+        &.--lg, &.--md {
+            width: 568.89px;
+
+            &.viewer {
+                width: 715px;
+            }
+        }
         background-color: white;
         //margin-left: -1.2rem;
         padding-left: 19.2px;
@@ -644,7 +651,7 @@
          span{
              border: none;
              border-radius: 0;
-             max-width: calc(100% - 42px);
+             overflow-wrap: anywhere;
              &:focus{
                  outline: none;
                  border-bottom: 1px solid #3C3C3C;
@@ -660,6 +667,7 @@
              color: #ABABAB;
              &.stud_span:focus{
                  border: 1px solid #3C3C3C;
+                 //max-width: calc(100% - 42px);
              }
          }
      }

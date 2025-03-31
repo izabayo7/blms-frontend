@@ -103,7 +103,7 @@
             </div>
           </div>
         </div>
-        <div v-if="participationInfo.isOfferingCourse" class="live-comments">
+        <div v-if="participationInfo.isOfferingCourse" class="live-comments" :class="`--${$vuetify.breakpoint.name}`">
           <div class="live-comments--wrapper">
             <div class="_title">LIVE COMMENTS</div>
             <div class="student-new-comment">
@@ -273,6 +273,11 @@ export default {
       ]
     }
   },
+  mounted() {
+    let span = document.querySelector('.message-row span')
+    if (!this.participationInfo.isOfferingCourse)
+      span.className = "stud_span";
+  },
   computed: {
     ...mapGetters('user', ['user']),
     ...mapGetters("chat", ["socket"]),
@@ -293,7 +298,7 @@ export default {
     replied(data) {
       this.comments.map((comment) => {
         if (comment._id === data._id) {
-          if(!comment.replies) {
+          if (!comment.replies) {
             comment.replies = []
           }
           comment.replies.push(data.data)
@@ -581,10 +586,10 @@ export default {
       if (result.reply) {
         const comments = self.comments.filter(e => e._id == result.reply)
         if (comments.length) {
-          if(comments[0].replies == undefined){
+          if (comments[0].replies == undefined) {
             comments[0].replies = []
           }
-          const replies = comments[0].replies.filter(e=>e._id == result._id)
+          const replies = comments[0].replies.filter(e => e._id == result._id)
           if (!replies.length)
             self.replied({_id: result.reply, data: result});
         }
