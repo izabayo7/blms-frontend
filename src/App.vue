@@ -48,4 +48,7 @@ input:focus,
 textarea:focus {
   outline: none;
 }
+.home{
+  overflow: hidden;
+}
 </style>
