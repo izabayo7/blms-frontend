@@ -56,7 +56,7 @@ export default {
   },
   data(){
     return{
-      selected_all:true,
+      selected_all:false,
       selected:[],
     }
   },
@@ -77,14 +77,18 @@ export default {
 
       this.selected_all = !this.selected_all
 
+      this.$emit('select',{index:-1})
+
     },
     select(i){
       const selected = new Set(this.selected)
 
       if(selected.has(i))
         selected.delete(i)
-      else
+      else{
         selected.add(i)
+        this.$emit('select',{index:i,data:this.data[i]})
+      }
 
       this.selected = selected
     }
