@@ -3,7 +3,7 @@ const getDefaultState = () => ({
     // storage for all facultyCollegeYears
     facultyCollegeYears: {
         data: [],
-        loaded: false
+        loaded: false,
     },
     faculties: {
         data: [],
@@ -13,6 +13,10 @@ const getDefaultState = () => ({
         data: [],
         loaded: false
     },
+    header:{
+        head:"",
+        title:""
+    }
 })
 
 export default {
@@ -21,6 +25,11 @@ export default {
     mutations: {
         RESET_STATE(state) {
             Object.assign(state, getDefaultState())
+        },
+
+        //mutating page header
+        SET_HEADER(state,header){
+            this.state.header = header;
         }
     },
     actions: {
@@ -90,6 +99,11 @@ export default {
                 }
             })
         },
+
+        //page header
+        changeHeader({commit},header){
+            commit("SET_HEADER",header)
+        }
     },
     getters: {
 
@@ -127,5 +141,10 @@ export default {
             }
             return facultyCollegeYearNames
         },
+
+        // getting page header
+        header: state => {
+            return state.header
+        }
     },
 }
