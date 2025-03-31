@@ -591,6 +591,11 @@ export default {
           self.comments.push(result);
       }
     });
+    this.socket.on("res/comment/new", (result) => {
+      const comments = self.comments.filter(e => e._id == result._id)
+      if (!comments.length)
+        self.comments.push(result);
+    });
   },
   destroyed() {
     console.log("bibaye when destroyed")

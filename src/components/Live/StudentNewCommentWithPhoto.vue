@@ -127,17 +127,7 @@ export default {
             receivers: this.participants,
             comment: this.comment_object,
           });
-          this.socket.on("res/comment/new", (result) => {
-            console.log("\n\n\nyagiye weeeeeeeeeeeeeeeeeeeee\n\n\n", result)
-            // this.$store.commit(
-            //     "courses/SET_TOTAL_COMMENTS_ON_A_CHAPTER",
-            //     this.totalComments == "" ? 1 : this.totalComments + 1
-            // );
-            result.replies = [];
-            console.log(result)
-            this.$emit("sent", result);
-            this.comment = "";
-          });
+          this.comment = "";
         }
         let span = document.querySelector('.message-row span')
         span.innerText = 'write comment'
