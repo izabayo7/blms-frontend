@@ -61,7 +61,6 @@ function empty(string){
  * log out user and return him to login
  */
 function logout(){
-    console.log(router,vue,store)
 
     // clear the session
     vue.$session.destroy();
