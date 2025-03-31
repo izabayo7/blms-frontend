@@ -41,7 +41,7 @@
                 <!-- <v-col class="col-6"></v-col> -->
                 <v-col class="col-12">
                   <loader
-                    v-if="editorContent === undefined"
+                    v-if="editorContent === undefined || editorContent == ''"
                     type="2"
                     class="vertically--centered"
                   />
