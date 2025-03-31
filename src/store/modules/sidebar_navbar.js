@@ -36,6 +36,7 @@ export default {
         },
         SET_COLLEGE_INFO(state, college) {
             state.college = college
+            document.querySelector('title').innerHTML = `${college.name}`
         },
         SET_COLLEGE_PLAN(state, plan) {
             state.plan = plan
