@@ -43,6 +43,8 @@
               },
               title: 'Delete member',
               message: 'Are you sure you want to delete this member?',
+            }).then(() => {
+              $emit('removeMember', member);
             })
           "
         >
@@ -85,7 +87,6 @@
 <script>
 import Checkbox from "@/components/reusable/ui/Checkbox";
 import { mapActions } from "vuex";
-import apis from "@/services/apis";
 export default {
   name: "Group-member",
   components: { Checkbox },
@@ -108,13 +109,6 @@ export default {
   methods: {
     ...mapActions("chat", ["start_conversation"]),
     ...mapActions("modal", ["set_modal"]),
-    async removeMember() {
-      await apis.update(
-        "chat_group",
-        `${this.$route.params.id}/remove_member/${this.member.data.user_name}`
-      );
-      this.$emit("removeMember", this.member);
-    },
   },
 };
 </script>
