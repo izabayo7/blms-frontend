@@ -1,5 +1,5 @@
 <template>
-  <div :class="`sidebar ${onPhone ? (state ? 'absolute' : 'd-none') : ''}`">
+  <div :class="`sidebar ${onPhone ? (state ? 'absolute' : 'd-none') : ''} mt-n4 pt-6`">
     <div class="routes">
       <ul ref="nav">
         <div class="active-link"></div>
