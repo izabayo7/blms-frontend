@@ -50,6 +50,7 @@ export default {
 
             return apis.create('quiz', quiz).then(d => {
                 d.data = d.data.data
+                d.data.usage = 0
                 if (pictures.length > 0) {
                     let index = 0
                     let pictureFound = false
