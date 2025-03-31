@@ -30,11 +30,11 @@
       <div class="my-title my-margin">Live class details</div>
       <div class="input-container my-margin">
         <select-ui
-            label="Select course"
             class="bold-border"
             name="role"
             id="user_group"
             :options="courseNames"
+            :label="selected_course == ''? 'Select course' : selected_course"
             @input="
             (e) => {
               selected_course = e;
@@ -178,7 +178,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters("courses", ["courses", "loaded"]),
+    ...mapGetters("courses", ["courses", "loaded", "course"]),
     ...mapGetters("quiz", ["all_quiz"]),
     courseNames() {
       let res = [];
@@ -284,6 +284,10 @@ export default {
     this.getQuizes({
       user_name: this.$store.state.user.user.user_name,
     });
+    if(this.course){
+      console.log(this.course.name)
+      this.selected_course = this.course.name
+    }
   },
 };
 </script>
