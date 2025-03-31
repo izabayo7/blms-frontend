@@ -191,6 +191,7 @@ export default {
     }
   },
   computed: {
+    ...mapGetters("chat", ["socket"]),
     ...mapGetters("courses", ["courses", "loaded", "course"]),
     ...mapGetters("quiz", ["all_quiz"]),
     courseNames() {
@@ -285,6 +286,20 @@ export default {
           quiz: this.selectedQuiz ? this.selectedQuiz : undefined
         },
       }).then(() => {
+        let user_group = "";
+        for (const i in this.courses) {
+          if (this.courses[i].name == this.selected_course) {
+            user_group = this.courses[i].user_group._id
+          }
+        }
+
+        // notify students that session is scheduled
+        this.socket.emit('live-session', {
+          user_group,
+          content: `scheduled a live session on ${this.data} at ${this.time}`,
+          route: '/'
+        })
+
         this.showModal = false;
         this.$store.dispatch("app_notification/SET_NOTIFICATION", {
           message: "Live session created",
@@ -310,7 +325,6 @@ export default {
     });
     console.log(this.$store.state.courses.selectedCourse, this.course)
     if (this.course) {
-      console.log(this.course.name)
       this.selected_course = this.course.name
     }
   },
