@@ -287,10 +287,10 @@ import { mapMutations, mapState } from "vuex";
 export default {
   name: "Sidebar",
   computed: {
-    ...mapState("sidebar_navbar", { state: "sidebar_expanded" }),
     userCategory() {
       return this.$store.state.user.user.category.name;
     },
+    ...mapState("sidebar_navbar", {state: "sidebar_expanded", unreads: "total_unread_messages"}),
   },
   methods: {
     routeTo(path){

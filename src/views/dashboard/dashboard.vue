@@ -59,7 +59,7 @@ export default {
   },
   mixins: [userSimpleCard],
   created() {
-    console.log(this.$route)
+    this.redirect()
   },
   computed: {
     ...mapState("sidebar_navbar", {state: "showChatMobileNavbar"}),
@@ -73,6 +73,17 @@ export default {
         return true
       else
         return this.$route.name ? this.$route.name.includes('chating') || this.$route.name.includes('Settings') : false
+    }
+  },
+  watch: {
+    $route() {
+      this.redirect()
+    }
+  },
+  methods:{
+    redirect(){
+      if (this.disableFunctionalities && this.$route.name ? !(this.$route.name.includes('chating') || this.$route.name.includes('Settings')) : true)
+        this.$router.push('/settings/payments')
     }
   },
   data() {
