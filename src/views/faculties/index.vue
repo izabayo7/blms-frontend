@@ -58,6 +58,7 @@ import TableHeader from "../../components/reusable/ui/table-header";
 import TableUi from "../../components/reusable/ui/table-ui";
 import apis from "../../services/apis";
 import moment from "moment";
+import {mapGetters} from 'vuex'
 
 export default {
 name: "Faculties",
@@ -66,13 +67,16 @@ name: "Faculties",
     return{
       faculties:[],
       options:{
-        keysToShow:[ "name", "updatedAt", "createdAt"]
+        keysToShow:[ "name", "attendants", "total_courses", "total_student_groups", "total_students", "createdAt"]
       },
     }
   },
+  computed:{
+    ...mapGetters('user',['user'])
+  },
   methods:{
     loadFaculties(){
-      apis.get("faculty")
+      apis.get(`faculty/college/${this.user.college}`)
         .then(({data:{data}}) => {
           let filteredFaculties = [];
 
