@@ -95,7 +95,9 @@
                 {{ `${course.user.sur_name} ${course.user.other_names}` }}
               </h3>
               <p class="faculty">
-                {{ `${course.faculty_college_year.faculty_college.faculty.name} year ${course.faculty_college_year.college_year.digit }` }}
+                {{
+                  `${course.faculty_college_year.faculty_college.faculty.name} year ${course.faculty_college_year.college_year.digit}`
+                }}
               </p>
             </article>
           </div>
@@ -794,7 +796,7 @@ button.back {
   .preview-card {
     background-color: $main;
     overflow-wrap: anywhere;
-    margin: auto;
+    margin: 0 3%;
     max-width: 80%;
     display: flex;
     flex-direction: row;
