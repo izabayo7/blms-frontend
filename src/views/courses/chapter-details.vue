@@ -314,8 +314,6 @@ export default {
         user_name: this.$store.state.user.user.user_name,
         courseName: this.$route.params.name,
       }).then((course) => {
-        const total_chapters = course.chapters.length;
-
         let index = 0;
         for (const i in course.chapters) {
           if (course.chapters[i]._id == this.$route.params.id) {
@@ -323,6 +321,7 @@ export default {
             break;
           }
         }
+        console.log(index);
         this.activeIndex = index;
       });
 

@@ -136,14 +136,15 @@ export default {
         }
       }
 
+      const index = this.userCategory == "STUDENT" ? this.maximumIndex : 0;
+      console.log(index);
+
       this.$router.push(
-        `/courses/${this.$route.params.name}/chapter/0/${
-          course.chapters[this.maximumIndex]._id
-        }`
+        `/courses/${this.$route.params.name}/chapter/0/${course.chapters[index]._id}`
       );
       this.$store.commit(
         "courses/set_selected_chapter",
-        course.chapters[0]._id
+        course.chapters[index]._id
       );
     });
   },
