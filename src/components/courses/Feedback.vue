@@ -28,6 +28,7 @@
       <div v-if="mode == 'any'" class="col-4 vertically--centered">
         <div class="actions">
           <svg
+            @click="removeFeedback()"
             xmlns="http://www.w3.org/2000/svg"
             width="20.57"
             height="20.57"
@@ -43,6 +44,7 @@
             />
           </svg>
           <svg
+            @click="editFeedback()"
             xmlns="http://www.w3.org/2000/svg"
             width="20.57"
             height="20.57"
@@ -80,6 +82,10 @@ export default {
       required: true,
     },
     answerId: {
+      type: String,
+      required: true,
+    },
+    feedbackId: {
       type: String,
       required: true,
     },
@@ -131,6 +137,17 @@ export default {
           type: "quiz_submission_answer",
           id: this.answerId,
         },
+        content: content,
+      });
+      console.log(response);
+    },
+    async editFeedback() {
+      const content = this.feedbackContent();
+      if (content == "") {
+        console.log("reka genda");
+        return;
+      }
+      const response = await Apis.update("comment", this.feedbackId, {
         content: content,
       });
       console.log(response);

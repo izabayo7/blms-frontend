@@ -271,6 +271,11 @@
                       : ''
                   "
                   :answerId="attempt.answers[i]._id"
+                  :feedbackId="
+                    attempt.answers[i].feedback.length
+                      ? attempt.answers[i].feedback[0]._id
+                      : ''
+                  "
                 />
               </v-col>
             </v-row>
