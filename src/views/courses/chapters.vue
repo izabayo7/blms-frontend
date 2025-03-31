@@ -206,6 +206,7 @@
                                 : undefined
                             "
                           />
+                          <pdf src="http://www.africau.edu/images/default/sample.pdf"></pdf>
                         </v-col>
                       </v-row>
                     </v-card>
@@ -459,6 +460,7 @@ export default {
   components: {
     FilePicker: () => import("@/components/reusable/FilePicker"),
     Editor: () => import("@/components/reusable/Editor"),
+    pdf: () => import("vue-pdf")
   },
   computed: {
     // get the current course
@@ -501,7 +503,7 @@ export default {
     },
     stepCounter() {
       if (this.stepCounter == 3) {
-        document.querySelector(".ProseMirror").focus();
+        // document.querySelector(".ProseMirror").focus();
       }
       if (this.stepCounter == 4) {
         this.calculateQuizNames();
@@ -533,6 +535,18 @@ export default {
       newElement.setAttribute('virtual-keyboard-mode', 'manual')
       newElement.setAttribute('role', 'textbox')
       newElement.setAttribute('tabindex', '0')
+      setTimeout(() => {
+        console.log('harahiye', newElement)
+        console.log(
+            newElement.addEventListener('input', (ev) => {
+              console.log(newElement.innerHTML, ev.target.value)
+              newElement.innerText = ev.target.value
+              console.log(newElement.innerHTML, ev.target.value)
+            })
+        )
+        console.log(newElement)
+        newElement.innerText = "x=\\frac{-b\\pm \\sqrt{b^2-4ac}}{2a}"
+      }, 10000)
       const paragraphElement = document.createElement('p')
       paragraphElement.appendChild(newElement)
       el.appendChild(paragraphElement)

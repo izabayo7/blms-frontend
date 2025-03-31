@@ -35,6 +35,7 @@
     "vue-awesome-swiper": "^4.1.1",
     "vue-flutterwave": "^1.0.0",
     "vue-internet-checker": "^2.0.1",
+    "vue-pdf": "^4.3.0",
     "vue-plyr": "^6.0.4",
     "vue-router": "^3.2.0",
     "vue-session": "^1.0.0",
