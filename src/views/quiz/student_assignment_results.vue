@@ -136,6 +136,7 @@
               class="mt-4 feedback_container"
               v-if="(assignment_submission.feedback && assignment.status === 'RELEASED') || userCategory === 'INSTRUCTOR'"
               :submission_id="assignment_submission._id"
+              :feedback_name="assignment_submission.feedback_src"
               :feedbackId="
                     assignment_submission.feedback
                       ? assignment_submission.feedback._id
@@ -144,6 +145,10 @@
               :content="assignment_submission.feedback ? assignment_submission.feedback.content : ''"
               type="assignment"
               :isFileUpload="assignment.submissionMode === 'fileUpload'"
+              @feedbackDeleted="assignment_submission.feedback_src = undefined"
+              @feedbackUploaded="(name)=>{
+                assignment_submission.feedback_src = name
+              }"
           />
           <div
               v-if="(assignment_submission.marked && assignment.status === 'RELEASED') || userCategory === 'INSTRUCTOR' "

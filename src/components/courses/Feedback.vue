@@ -65,8 +65,8 @@
       <div v-if="isFileUpload && $store.state.user.user.category.name === 'INSTRUCTOR'" class="d-flex file-feedback">
         <div>
           <div>
-            <button class="pick-file file-picked" @click="pickfile(index)">
-              Choose file
+            <button class="pick-file file-picked" @click="feedback_name ? removeFile() : pickfile(index)">
+              {{ feedback_name ? 'Remove' : 'Choose' }} file
             </button>
             <input
                 type="file"
@@ -77,7 +77,7 @@
           </div>
           <div v-if="!feedback_name" class="hint">Upload a file (optional )</div>
           <button v-else class="hint"
-                  @click="downloadAttachment(`${backend_url}/api/quiz_submission/${submission_id}/attachment/${feedback_name}/download?token=${$session.get('jwt')}`)">
+                  @click="downloadAttachment(`${backend_url}/api/${type ==='assignment' ? 'assignment_submission':'quiz_submission'}/${submission_id}/attachment/${feedback_name}/download?token=${$session.get('jwt')}`)">
             {{ feedback_name }}
           </button>
         </div>
@@ -98,11 +98,12 @@
       </div>
       <div v-else-if="isFileUpload" class="d-block d-md-flex  file-feedback col-12 pa-0">
         <button class="pick-file saved file-picked mx-auto ml-0"
-                @click="downloadAttachment(`${backend_url}/api/quiz_submission/${submission_id}/attachment/${feedback_name}/view?token=${$session.get('jwt')}`)">
+                @click="downloadAttachment(`${backend_url}/api/${type ==='assignment' ? 'assignment_submission':'quiz_submission'}/${submission_id}/attachment/${feedback_name}/view?token=${$session.get('jwt')}`)">
           {{ feedback_name }}
         </button>
+        moose
         <button class="download-attachment mx-auto mr-0"
-                @click="downloadAttachment(`${backend_url}/api/quiz_submission/${submission_id}/attachment/${feedback_name}/download?token=${$session.get('jwt')}`)">
+                @click="downloadAttachment(`${backend_url}/api/${type ==='assignment' ? 'assignment_submission':'quiz_submission'}/${submission_id}/attachment/${feedback_name}/download?token=${$session.get('jwt')}`)">
           Download attachment
         </button>
       </div>
@@ -193,26 +194,34 @@ export default {
   },
   methods: {
     downloadAttachment,
+    removeFile() {
+      Apis.delete(this.type === 'assignment' ? `assignment_submission/feedback/${this.submission_id}/${this.feedback_name}` : `quiz_submission/feedback/${this.submission_id}/${this.answerId}/${this.feedback_name}`).then(() => {
+        this.message = "feedback attachment deleted";
+        this.$emit("feedbackDeleted", this.index, true)
+      })
+    },
     upoadFeedback() {
       const formData = new FormData()
       formData.append("file", this.file)
       this.upload_status = 1;
-      Apis.create(`quiz_submission/feedback/${this.submission_id}/${this.answerId}`, formData, {
+      Apis.create(this.type === 'assignment' ? `assignment_submission/feedback/${this.submission_id}` : `quiz_submission/feedback/${this.submission_id}/${this.answerId}`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         },
       }).then(() => {
         this.upload_status = 2
-        this.$emit("feedbackSent", this.index, true)
+        this.$emit("feedbackUploaded", this.file.name)
+        this.file = undefined
+        this.showSave = false;
       })
     },
     saveChanges() {
       if (this.file) {
         this.upoadFeedback()
       }
-      if (this.content != '')
+      if (this.feedbackId !== '')
         this.editFeedback()
-      else
+      else if(this.content.replace(/\s/g, '').length)
         this.addFeedback()
     },
     pickfile(index) {
