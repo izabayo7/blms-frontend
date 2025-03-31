@@ -137,38 +137,38 @@
               sort-by="title"
               @click:row="handleRowClick"
           >
-            <template v-slot:item.target="{ }">
+            <template v-slot:item.target="{ item }">
               <div class="target">
-                <div class="title">Course</div>
-                <div class="subtitle">Chapter 1</div>
+                <div v-if="item.target.course" class="title">{{ item.target.course.name }}</div>
+                <div v-if="item.target.chapter" class="subtitle">{{ item.target.chapter.name }}</div>
               </div>
             </template>
-            <template v-slot:item.title="{ }">
+            <template v-slot:item.title="{ item }">
               <div class="assignment_title">
-                First assignment
+                {{ item.title }}
               </div>
             </template>
-            <template v-slot:item.created="{ }">
+            <template v-slot:item.created="{ item }">
               <div class="assignment_td">
-                June 22, 2021
+                {{ item.createdAt | formatDate }}
               </div>
             </template>
-            <template v-slot:item.dueDate="{ }">
+            <template v-slot:item.dueDate="{ item }">
               <div class="assignment_td">
-                July 22, 2021
+                {{ item.dueDate }}
               </div>
             </template>
-            <template v-slot:item.marks="{ }">
+            <template v-slot:item.marks="{ item }">
               <div class="assignment_td">
-                15 Marks
+                {{ item.total_marks }} Marks
               </div>
             </template>
-            <template v-slot:item.status="{ }">
+            <template v-slot:item.status="{ item }">
               <div class="assignment_td">
-                Draft
+                {{ item.status }}
               </div>
             </template>
-            <template v-slot:item.actions="{ }">
+            <template v-slot:item.actions="{ item }">
               <div class="d-flex justify-center">
                 <div class="tooltip">
                   <svg width="39" height="39" viewBox="0 0 39 39" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -197,7 +197,17 @@
                     Edit
                   </div>
                 </div>
-                <div class="tooltip">
+                <div @click.stop="
+                  set_modal({
+                    template: 'action_confirmation',
+                    method: {
+                      action: 'quiz/delete_assignment',
+                      parameters: { id: item._id },
+                    },
+                    title: 'Delete Assignment',
+                    message: 'Are you sure you want to delete this assignment?',
+                  })
+                " class="tooltip">
                   <svg width="39" height="39" viewBox="0 0 39 39" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <circle cx="19.5" cy="19.5" r="19.5" fill="#FC6767"/>
                     <path
@@ -227,7 +237,6 @@
 
 <script>
 import {mapActions, mapGetters} from "vuex";
-import Apis from "@/services/apis";
 
 export default {
   data: () => ({
@@ -261,11 +270,10 @@ export default {
       {text: "Status", value: "status"},
       {text: "Action", value: "actions", sortable: false, align: "center"},
     ],
-    assignments: [],
   }),
   computed: {
     // get the current course
-    ...mapGetters("quiz", ["all_quiz"]),
+    ...mapGetters("quiz", ["all_quiz","assignments"]),
     // format the quiz to fit in the table
     formated_quiz() {
       let formated_quiz = [];
@@ -287,16 +295,11 @@ export default {
     },
   },
   methods: {
-    ...mapActions("quiz", ["getQuizes"]),
+    ...mapActions("quiz", ["getQuizes","getAssignments"]),
     ...mapActions("modal", ["set_modal"]),
     handleRowClick(value) {
       this.$router.push(`quiz/attempt/${value.name}`)
     },
-    async getAssignments() {
-      Apis.get('assignments').then((res) => {
-        this.assignments = res.data.data
-      })
-    }
   },
   created() {
     // load formated_quiz
