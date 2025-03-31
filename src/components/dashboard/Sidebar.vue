@@ -4,7 +4,7 @@
       <ul ref="nav">
         <div class="active-link"></div>
         <li
-            v-if="userCategory === 'ADMIN' || userCategory === 'INSTRUCTOR'"
+            v-if="!disableFunctionalities&&(userCategory === 'ADMIN' || userCategory === 'INSTRUCTOR')"
             @click="
             closeSidebar();
             routeTo('/welcome');
@@ -33,7 +33,7 @@
           </div>
         </li>
         <li
-            v-if="userCategory === 'ADMIN' || userCategory === 'INSTRUCTOR'"
+            v-if="!disableFunctionalities&&(userCategory === 'ADMIN' || userCategory === 'INSTRUCTOR')"
             @click="
             closeSidebar();
             routeTo(userCategory === 'ADMIN' ? '/users' : '/students');
@@ -128,7 +128,7 @@
           </div>
         </li>
         <li
-            v-if="userCategory === 'STUDENT' || userCategory === 'INSTRUCTOR'"
+            v-if="!disableFunctionalities&&(userCategory === 'STUDENT' || userCategory === 'INSTRUCTOR')"
             @click="
             closeSidebar();
             routeTo('/courses');
@@ -153,7 +153,7 @@
           <div class="link-name" v-show="state">Courses</div>
         </li>
         <li
-            v-if="userCategory === 'ADMIN' || userCategory === 'INSTRUCTOR'"
+            v-if="!disableFunctionalities&&(userCategory === 'ADMIN' || userCategory === 'INSTRUCTOR')"
             @click="
             closeSidebar();
             routeTo('/announcements');
@@ -186,7 +186,7 @@
           <div class="link-name" v-show="state">Announcements</div>
         </li>
         <li
-            v-if="userCategory === 'STUDENT' || userCategory === 'INSTRUCTOR'"
+            v-if="!disableFunctionalities&&(userCategory === 'STUDENT' || userCategory === 'INSTRUCTOR')"
             @click="
             closeSidebar();
             routeTo('/reports');
@@ -276,7 +276,7 @@
           <div class="link-name" v-show="state">Messages</div>
         </li>
         <li
-            v-if="userCategory === 'INSTRUCTOR'"
+            v-if="!disableFunctionalities&&(userCategory === 'INSTRUCTOR')"
             @click="
             closeSidebar();
             routeTo('/quiz');
@@ -306,6 +306,7 @@
 </template>{
 <script>
 import {mapGetters, mapMutations, mapState} from "vuex";
+import userPayment from "../../mixins/user-payments.mixin";
 
 export default {
   name: "Sidebar",
@@ -314,6 +315,7 @@ export default {
       this.socket.emit("messages/unread");
     }
   },
+  mixins: [userPayment],
   computed: {
     ...mapState("sidebar_navbar", {state: "sidebar_expanded", unreads: "total_unread_messages"}),
     ...mapGetters("chat", ["socket"]),

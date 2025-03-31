@@ -47,6 +47,7 @@ import navbar from "@/components/dashboard/Navbar";
 import {mapGetters, mapState} from "vuex";
 import UserSimpleCard from "../../components/reusable/user-simple-card";
 import userSimpleCard from "../../mixins/user-simple-card.mixin";
+import userPayment from "../../mixins/user-payments.mixin";
 
 export default {
   name: "Dashboard",
@@ -57,33 +58,20 @@ export default {
     UserSimpleCard,
     Notification: () => import("@/components/shared/Notification"),
   },
-  mixins: [userSimpleCard],
+  mixins: [userSimpleCard,userPayment],
   created() {
     this.redirect()
   },
   computed: {
     ...mapState("sidebar_navbar", {state: "showChatMobileNavbar"}),
     ...mapGetters('users', ['userByUsername', 'userByUsernameLoading']),
-    ...mapGetters('user', ['disableFunctionalities']),
     isMobile() {
       return this.$vuetify.breakpoint.width < 960
     },
-    showPage() {
-      if (!this.disableFunctionalities)
-        return true
-      else
-        return this.$route.name ? this.$route.name.includes('chating') || this.$route.name.includes('Settings') : false
-    }
   },
   watch: {
     $route() {
       this.redirect()
-    }
-  },
-  methods:{
-    redirect(){
-      if (this.disableFunctionalities && this.$route.name ? !(this.$route.name.includes('chating') || this.$route.name.includes('Settings')) : true)
-        this.$router.push('/settings/payments')
     }
   },
   data() {
