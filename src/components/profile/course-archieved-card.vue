@@ -4,7 +4,7 @@
   <div class="ccc">
     <div class="ccc--wrapper d-flex justify-space-between">
       <!--      col 1 with tittle-->
-      <div class="ccc--col ccc--col__1 ccc--title">
+      <div class="ccc--col ccc--col__1 ccc--title  col-4 pa-0">
         <div class="ccc--title--name">
           <h3>{{ data.name }}</h3>
         </div>
@@ -13,14 +13,14 @@
         </div>
       </div>
       <!--      col 2 with success rate-->
-      <div class="ccc--col ccc--col__2 ccc--class">
+      <div class="ccc--col ccc--col__2 ccc--class  col-4 pa-0">
         <div class="ccc--class--name">
           <p>{{ data.user_group.name }}</p>
         </div>
       </div>
       <!--      col 3 with last attempted quiz infos-->
-      <div class="ccc--col ccc--col__3 ccc--students">
-        <div class="ccc--students--title">
+      <div class="ccc--col ccc--col__3 ccc--students  col-4 pa-0">
+        <div class="ccc--students--title text-center">
           <h5>{{ data.total_chapters }} Chapters</h5>
         </div>
       </div>
