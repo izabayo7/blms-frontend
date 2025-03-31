@@ -17,7 +17,7 @@
                       two-line
                     >
                       <v-list-item-avatar>
-                        <img :src="`http://127.0.0.1:5500/Kurious-Frontend/src/assets/images/${student.userProfile}`">
+                        <img src="@/assets/images/instructor.png">
                       </v-list-item-avatar>
                       <v-list-item-content>
                           <v-list-item-title v-text="student.userNames" />

@@ -11,9 +11,7 @@
         fixed
         ><v-icon>mdi-arrow-left</v-icon></v-btn
       >
-      <kurious-page-actions
-        class="hidden-md-and-up"
-      >
+      <kurious-page-actions class="hidden-md-and-up">
         <kurious-discussion-board v-if="$store.state.user.type === 'student'" />
         <kurious-instructor-action-board v-else />
       </kurious-page-actions>
@@ -111,32 +109,34 @@ export default {
       };
 
       vm.connection.getSocket(function (socket) {
-        // try {
-        console.log(broadcastId, socket, vm.connection.socketURL);
-        socket.emit("check-broadcast-presence", broadcastId, function (
-          isBroadcastExists
-        ) {
-          console.log("byibura", isBroadcastExists);
-          if (!isBroadcastExists) {
-            // the first person (i.e. real-broadcaster) MUST set his user-id
-            vm.connection.userid = broadcastId;
-          }
-
-          console.log(
+        try {
+          console.log("aha", new Date());
+          socket.emit(
             "check-broadcast-presence",
             broadcastId,
-            isBroadcastExists
-          );
+            (isBroadcastExists) => {
+              console.log("ahwiiiiiiiii", new Date());
+              if (!isBroadcastExists) {
+                // the first person (i.e. real-broadcaster) MUST set his user-id
+                vm.connection.userid = broadcastId;
+              }
 
-          socket.emit("join-broadcast", {
-            broadcastId: broadcastId,
-            userid: vm.connection.userid,
-            typeOfStreams: vm.connection.session,
-          });
-        });
-        // } catch (error) {
-        //   console.log(error);
-        // }
+              console.log(
+                "check-broadcast-presence",
+                broadcastId,
+                isBroadcastExists
+              );
+
+              socket.emit("join-broadcast", {
+                broadcastId: broadcastId,
+                userid: vm.connection.userid,
+                typeOfStreams: vm.connection.session,
+              });
+            }
+          );
+        } catch (error) {
+          console.log(error);
+        }
       });
     },
   },
@@ -146,12 +146,6 @@ export default {
     // ......................................................
     // ..................RTCMultiConnection Code.............
     // ......................................................
-
-    // by default, socket.io server is assumed to be deployed on your own URL
-    vm.connection.socketURL = `${process.env.VUE_APP_api_service_url}/`;
-
-    // auto create or join default room
-    vm.open_or_join_room();
 
     // recording is disabled because it is resulting for browser-crash
     // if you enable below line, please also uncomment above "RecordRTC.js"
@@ -181,6 +175,12 @@ export default {
     vm.connection.autoCloseEntireSession = true;
 
     vm.connection.socketMessageEvent = "scalable-media-broadcast-demo";
+
+    // by default, socket.io server is assumed to be deployed on your own URL
+    vm.connection.socketURL = `${process.env.VUE_APP_api_service_url}/`;
+
+    // auto create or join default room
+    vm.open_or_join_room();
 
     // user need to connect server, so that others can reach him.
     vm.connection.connectSocket(function (socket) {
@@ -411,7 +411,10 @@ export default {
 <style lang="scss" scoped>
 .live_video {
   background-color: #f6f6f6;
-  max-height: calc(100vh - 76px);
+  max-height: calc(100vh - 5rem);
   overflow-y: auto;
+  video{
+    max-height: 100px;
+  }
 }
 </style>
