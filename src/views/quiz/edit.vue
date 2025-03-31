@@ -501,7 +501,7 @@ export default {
               ? undefined
               : editorContent,
           duration: this.toSeconds(this.duration),
-          instructor: this.$store.state.user.user._id,
+          user: this.$store.state.user.user.user_name,
           questions: questions,
         },
         pictures: this.pictures,
