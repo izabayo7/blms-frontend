@@ -45,6 +45,16 @@ export default {
         SET_DISPLAYED_USER(state, data) {
             state.currentDisplayedUser = data;
         },
+
+        UPDATE_CONTACT_STATUS(state, {id, status}) {
+            for (const i in state.incomingMessages) {
+                if (state.incomingMessages[i].id === id) {
+                    state.incomingMessages[i].online = status
+                    break
+                }
+            }
+        },
+
         ADD_INCOMING_CONTACT(state, data) {
             let FOUND = false;
 
