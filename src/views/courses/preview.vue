@@ -640,7 +640,7 @@ button.back {
 }
 
 .instructor_preview {
-  padding: 68px 30px 0;
+  padding: 8px 30px 0;
 
   .tabs-container {
     max-width: 407px;

@@ -177,7 +177,6 @@ export default {
     primary: colors.primary,
     rem_time: "",
     currentDate: new Date().toISOString().substring(0, 10),
-    startTimer: false,
     nearestLiveSession: undefined,
     interval:null
   }),
@@ -225,6 +224,7 @@ export default {
   box-shadow: 0px 4px 10px 3px rgba(25, 48, 116, 0.05);
   max-width: 355px;
   height: 170px;
+  cursor: pointer;
   // border-radius: 24px;
   background: white;
   //border-radius: 10px;

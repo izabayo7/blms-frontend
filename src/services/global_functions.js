@@ -42,7 +42,7 @@ function elapsedDuration(date_time) {
     date_time = moment(date_time)
 
     let elapsed = date_time.diff(now)
-    elapsed = moment.duration(elapsed).humanize(true)
+    elapsed = moment.duration(elapsed).humanize(true);
 
     return elapsed
 }
@@ -116,6 +116,10 @@ function convertUTCDateToLocalDate(date) {
     return newDate;
 }
 
+function playSound(url) {
+    const audio = new Audio(url);
+    audio.play();
+}
 
 export {
     hasOwn,
@@ -125,5 +129,6 @@ export {
     logout,
     calculateNearestLiveSession,
     convertUTCDateToLocalDate,
-    toLocal
+    toLocal,
+    playSound
 }
