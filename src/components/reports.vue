@@ -33,7 +33,12 @@
           <v-btn v-else rounded small color="#8ceda9">passed</v-btn>
         </template>
         <template v-slot:item.progress="{ item }">
-          <v-progress-linear :active="false" :value="item.progress" color="#ffc100" class="mt-6 kurious--progressbar" />
+          <v-progress-linear
+            :active="false"
+            :value="item.progress"
+            color="#ffc100"
+            class="mt-6 kurious--progressbar"
+          />
           <p class="text-caption mb-0 text-left ml-1">{{item.progress}}%</p>
         </template>
       </v-data-table>
