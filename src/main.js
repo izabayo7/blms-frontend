@@ -27,13 +27,10 @@ Vue.use(VueSession, options)
 Vue.use(Vuetify)
 Vue.use(VuePlyr)
 
-const opts = {}
-
-export default new Vuetify(opts)
 
 Vue.config.productionTip = false
 
-new Vue({
+export default new Vue({
     store,
     router,
     mdi,
