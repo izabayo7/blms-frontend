@@ -204,7 +204,7 @@ export default {
         "empty_feedback"
       );
       this.message = "feedback successfuly removed";
-      console.log(response);
+      this.showDelete = false;
     },
   },
   mounted() {
