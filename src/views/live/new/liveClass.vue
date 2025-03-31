@@ -251,6 +251,8 @@ import { elapsedDuration, toLocal} from "@/services/global_functions"
 import OnlineUser from "../../../components/Live/OnlineUser";
 import StudentNewCommentWithPhoto from "../../../components/Live/StudentNewCommentWithPhoto";
 import Apis from '../../../services/apis'
+import {playSound} from "../../../services/global_functions";
+const sound = require("@/assets/audio/Comment.wav");
 
 export default {
   name: "liveClass",
@@ -440,13 +442,17 @@ export default {
               comments[0].replies = []
             }
             const replies = comments[0].replies.filter(e => e._id == result._id)
-            if (!replies.length)
+            if (!replies.length){
+              playSound(sound)
               self.replied({_id: result.reply, data: result});
+          }
           }
         } else {
           const comments = self.comments.filter(e => e._id == result._id)
-          if (!comments.length)
+          if (!comments.length) {
+            playSound(sound)
             self.comments.unshift(result);
+          }
         }
       });
     },

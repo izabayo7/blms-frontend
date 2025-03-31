@@ -116,6 +116,10 @@ function convertUTCDateToLocalDate(date) {
     return newDate;
 }
 
+function playSound(url) {
+    const audio = new Audio(url);
+    audio.play();
+}
 
 export {
     hasOwn,
@@ -125,5 +129,6 @@ export {
     logout,
     calculateNearestLiveSession,
     convertUTCDateToLocalDate,
-    toLocal
+    toLocal,
+    playSound
 }
