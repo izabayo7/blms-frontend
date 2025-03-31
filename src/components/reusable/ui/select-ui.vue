@@ -37,7 +37,7 @@ export default {
   },
   data() {
     return {
-      content: this.label,
+      content: !!this.label > 0 ? this.label : this.options[0],
     };
   },
   methods: {
