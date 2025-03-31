@@ -53,6 +53,8 @@ export default {
 <style lang="scss" scoped>
 .user-card{
   width:20rem;
+  border-radius:.55rem;
+  box-shadow:0 0 10px  lighten($primary,65);
 
   &--wrapper{
     background-color:$main;
