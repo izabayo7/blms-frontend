@@ -286,7 +286,7 @@ router.beforeEach((to, from, next) => {
             })
         }
         if (to.meta.allowedUsers && !to.meta.allowedUsers.includes(store.state.user.user.category.name))
-            next({path: '/wambebaweeeeee'})
+            next({path: '/unauthorized'})
         next()
     }
 })
