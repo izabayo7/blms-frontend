@@ -103,7 +103,6 @@ export default {
                 commit('set_selected_course', d.data._id)
 
                 if (coverPicture) {
-                    console.log(coverPicture)
                     commit('modal/update_message', `uploading ${coverPicture.name}`, { root: true })
                     const formData = new FormData()
                     formData.append("file", coverPicture)

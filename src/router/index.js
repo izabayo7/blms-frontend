@@ -27,7 +27,9 @@ const routes = [
             children: [
                 { path: '/messages/:username', component: () => import('@/views/Chat.vue') }
             ]
-        }, {
+        },
+        // for courses
+        {
             path: '/courses',
             component: () => import('@/views/courses'),
         },
@@ -49,26 +51,35 @@ const routes = [
         {
             path: '/courses/:name',
             component: () => import('@/views/courses/details')
+        },
+        // for quiz
+        {
+            path: '/quiz',
+            name: 'Quiz',
+            component: () =>
+                import('@/views/quiz')
         }, {
             path: '/quiz/new-quiz',
             name: 'Set Quiz',
             component: () =>
-                import('@/components/set-quiz.vue')
+                import('@/views/quiz/create')
         }, {
             path: '/quiz/attempt/:id',
             name: 'TakeQuiz',
             component: () =>
                 import('@/components/take-quiz.vue')
+        },
+        // for reports
+        {
+            path: '/reports',
+            name: 'Reports',
+            component: () =>
+                import('@/components/reports.vue')
         }, {
             path: '/reports/submission/:id',
             name: 'MarkQuiz',
             component: () =>
                 import('@/components/mark-quiz.vue')
-        }, {
-            path: '/reports',
-            name: 'Reports',
-            component: () =>
-                import('@/components/reports.vue')
         }, {
             path: '/library',
             name: 'Library',
@@ -89,11 +100,6 @@ const routes = [
             name: 'User Profile',
             component: () =>
                 import('@/components/profile.vue')
-        }, {
-            path: '/quiz',
-            name: 'Quiz',
-            component: () =>
-                import('@/components/quiz/index.vue')
         }, {
             path: '/users',
             name: 'Users',

@@ -9,9 +9,14 @@
         <li
           v-if="userCategory == 'Admin'"
           @click="$router.push('/courses')"
-          :class="{active:activeRoute.includes('/courses')}"
+          :class="{ active: activeRoute.includes('/courses') }"
         >
-          <svg xmlns="http://www.w3.org/2000/svg" width="35" height="23" viewBox="0 0 35 23">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="35"
+            height="23"
+            viewBox="0 0 35 23"
+          >
             <path
               id="Icon_material-people"
               data-name="Icon material-people"
@@ -24,7 +29,7 @@
         <li
           v-if="userCategory == 'Student' || userCategory == 'Instructor'"
           @click="$router.push('/courses')"
-          :class="{active:activeRoute.includes('/courses')}"
+          :class="{ active: activeRoute.includes('/courses') }"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -43,7 +48,7 @@
         <li
           v-if="userCategory == 'Student' || userCategory == 'Instructor'"
           @click="$router.push('/reports')"
-          :class="{active:activeRoute.includes('/reports')}"
+          :class="{ active: activeRoute.includes('/reports') }"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -62,7 +67,7 @@
         <li
           v-if="userCategory == 'Student' || userCategory == 'Instructor'"
           @click="$router.push('/library')"
-          :class="{active:activeRoute.includes('/library')}"
+          :class="{ active: activeRoute.includes('/library') }"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -78,8 +83,16 @@
             />
           </svg>
         </li>
-        <li @click="$router.push('/messages')" :class="{active:activeRoute.includes('/messages')}">
-          <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100">
+        <li
+          @click="$router.push('/messages')"
+          :class="{ active: activeRoute.includes('/messages') }"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="100"
+            height="100"
+            viewBox="0 0 100 100"
+          >
             <path
               id="Icon_material-message"
               data-name="Icon material-message"
@@ -90,8 +103,8 @@
         </li>
         <li
           v-if="userCategory == 'Student' || userCategory == 'Instructor'"
-          @click="$router.push('/quiz')"
-          :class="{active:activeRoute.includes('/quiz')}"
+          @click="$router.push('/sinz kbx')"
+          :class="{ active: activeRoute.includes('/sinz kbx') }"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -104,6 +117,25 @@
               data-name="Icon ionic-md-settings"
               d="M91.347,58.374a31.268,31.268,0,0,0,.255-5c0-1.75-.255-3.249-.255-5l10.737-8.249a2.3,2.3,0,0,0,.512-3.249L92.368,19.625a2.49,2.49,0,0,0-3.069-1l-12.785,5a37.216,37.216,0,0,0-8.692-5L66.032,5.375a2.74,2.74,0,0,0-2.557-2H43.019a2.74,2.74,0,0,0-2.557,2L38.416,18.624a43.3,43.3,0,0,0-8.695,5l-12.785-5a2.4,2.4,0,0,0-3.069,1L3.64,36.876a3.019,3.019,0,0,0,.512,3.249l11,8.249c0,1.75-.255,3.249-.255,5s.255,3.249.255,5L4.41,66.623A2.3,2.3,0,0,0,3.9,69.873L14.125,87.124a2.49,2.49,0,0,0,3.069,1l12.785-5a37.211,37.211,0,0,0,8.692,5l2.045,13.249a2.478,2.478,0,0,0,2.557,2H63.73a2.74,2.74,0,0,0,2.557-2l2.048-13.249a43.275,43.275,0,0,0,8.692-5l12.785,5a2.4,2.4,0,0,0,3.069-1l10.228-17.251a3.015,3.015,0,0,0-.512-3.249Zm-38.1,12.5a17.5,17.5,0,1,1,0-35,17.5,17.5,0,1,1,0,35Z"
               transform="translate(-3.375 -3.375)"
+            />
+          </svg>
+        </li>
+        <li
+          v-if="userCategory == 'Instructor'"
+          @click="$router.push('/quiz')"
+          :class="{ active: activeRoute.includes('/quiz') }"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="36"
+            height="36"
+            viewBox="0 0 36 36"
+          >
+            <path
+              id="Icon_metro-question"
+              data-name="Icon metro-question"
+              d="M17.883,25.991h4.375v4.375H17.883Zm8.75-15.313a2.188,2.188,0,0,1,2.188,2.188v6.563L22.258,23.8H17.883V21.616l6.562-4.375V15.053H13.508V10.678H26.633ZM20.071,5.209A14.219,14.219,0,1,0,30.125,9.374,14.126,14.126,0,0,0,20.071,5.209Zm0-3.281a17.5,17.5,0,1,1-17.5,17.5,17.5,17.5,0,0,1,17.5-17.5Z"
+              transform="translate(-2.071 -1.428)"
             />
           </svg>
         </li>

@@ -6,8 +6,8 @@
     <div v-if="$store.state.user.user.category === 'Instructor' && $route.name !== 'Create course'" class="create_course col-2">
       <v-btn
         rounded
-        color="#ffd248"
-        class="mt-3 white--text"
+        dark
+        class="add_course mt-3 white--text"
         to="/courses/new-course"
       >
         <v-icon>mdi-plus</v-icon>Create new class
@@ -50,6 +50,9 @@ export default {
   .my-search {
     // padding-left: 5rem;
     margin: auto;
+  }
+  .add_course{
+    background-color: $primary !important;
   }
 }
 </style>
