@@ -220,6 +220,9 @@ const routes = [
                             {
                                 path: '/settings/institution',
                                 name: "institutionSettings",
+                                meta: {
+                                    allowedUsers: ["ADMIN"]
+                                },
                                 component: () => import( /* webpackChunkName: "settings" */ '@/views/settings/institution'),
                             },
                             {
