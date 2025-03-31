@@ -121,6 +121,7 @@ export default {
 <style lang="scss">
 .combined-statistics {
   max-width: 734px;
+  overflow-x: auto;
   background: #ffffff;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.25);
   border-radius: 4.14px;

@@ -443,6 +443,7 @@ export default {
         box-sizing: border-box;
         border-radius: 7.63429px;
         max-width: 305.37px;
+        width: 100%;
         height: 45.9px;
         font-family: Source Sans Pro;
         font-style: normal;

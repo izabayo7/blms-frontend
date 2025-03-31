@@ -175,15 +175,15 @@
           <v-col class="col-12 mt-5 px-0">
             <div class="heading">Recently joined users</div>
             <div class="recent mt-5">
-              <div class="record">
-                <div class="name">Manzi gustave</div>
-                <div class="category">Instructor</div>
-                <div class="time">2 minutes ago</div>
-              </div>
-              <div class="record">
-                <div class="name">Mukamana Goreth</div>
-                <div class="category">Student</div>
-                <div class="time">2 weeks a go</div>
+              <loader
+                  v-if="!recentJoinedUsers.length"
+                  type="2"
+                  class="vertically--centered"
+              />
+              <div v-for="(user, i) in recentJoinedUsers" :key="i" class="record">
+                <div class="name">{{ user.sur_name + ' ' + user.other_names }}</div>
+                <div class="category">{{ user.category.name }}</div>
+                <div class="time">{{ elapsedDuration(user.createdAt) }}</div>
               </div>
             </div>
           </v-col>
@@ -318,26 +318,33 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import {mapActions, mapGetters} from "vuex";
 import Apis from "@/services/apis";
+import {elapsedDuration} from "../../../services/global_functions";
 export default {
   name: "ApplicationDashboard",
   data: () => ({
     showInviteUsers: false,
     showFacultyModal: false,
+    recentJoinedUsers: [],
     user_statistics: {},
     total_faculties: 0,
     total_courses: 0,
     total_student_groups: 0,
   }),
+  computed:{
+    ...mapGetters("chat", ["socket"]),
+  },
   components: {
     InviteUsersDialog: () => import("@/components/dashboard/InviteUsersDialog"),
     FacultyDialog: () => import("@/components/dashboard/addFaculty"),
     SmallCard: () => import("@/components/dashboard/information-card"),
+    loader: () => import("@/components/loaders"),
     CombinedStatistics: () =>
       import("@/components/dashboard/combined-statistics"),
   },
   methods: {
+    elapsedDuration,
     ...mapActions("modal", ["set_modal"]),
     computeUserSeries() {
       const res = [];
@@ -366,6 +373,21 @@ export default {
 
     res = await Apis.get("user_groups/statistics");
     this.total_student_groups = res.data.data.total_student_groups;
+
+    this.socket.emit("users/recentlyJoined");
+
+    this.socket.on("res/users/recentlyJoined",(users)=>{
+      this.recentJoinedUsers = users;
+    });
+
+    this.socket.on("res/users/new", ({user}) => {
+      console.log(this.recentJoinedUsers, user)
+      if(this.recentJoinedUsers.indexOf(user) == -1) {
+        this.recentJoinedUsers.unshift(user)
+        this.recentJoinedUsers.pop()
+      }
+    });
+
   },
 };
 </script>
