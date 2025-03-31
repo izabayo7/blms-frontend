@@ -134,7 +134,7 @@ function playSound(url) {
 }
 
 async function downloadAttachment(url) {
-    window.location.href = url;
+    window.open(url, "_blank");
 }
 
 export {

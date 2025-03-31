@@ -511,7 +511,7 @@
             </div>
             <div class="d-flex detail">
               <div class="subtitle">Chapter :</div>
-              <div class="sub-text"> 1.2.0 Introduction</div>
+              <div class="sub-text"> {{chapterIndex > -1 ? course.chapters[chapterIndex].name : ''}}</div>
             </div>
             <div class="d-flex detail">
               <div class="subtitle">Scheduled date :</div>
@@ -633,6 +633,7 @@ export default {
   data: () => ({
     panel1: true,
     student_list: [],
+    chapterIndex: -1,
     nearestLiveSession: undefined
   }),
   components: {
@@ -697,6 +698,14 @@ export default {
       courseName: this.$route.params.name,
     }).then(() => {
       this.nearestLiveSession = calculateNearestLiveSession(this.course)
+      if(this.nearestLiveSession) {
+        for (const i in this.course.chapters) {
+          if (this.course.chapters[i]._id == this.nearestLiveSession.target.id) {
+            this.chapterIndex = i;
+            break;
+          }
+        }
+      }
       console.log(this.nearestLiveSession)
     })
   },
