@@ -89,7 +89,7 @@
                       />
                     </v-col>
                     <v-col
-                      v-if="Math.round(maximumIndex) === activeIndex && ready"
+                      v-if="Math.round(maximumIndex) === activeIndex"
                       class="col-6 mx-auto"
                     >
                       <v-btn
@@ -265,7 +265,6 @@ export default {
     activeIndex: -1,
     progressId: "",
     maximumIndex: -1,
-    ready: false,
     attachments: [],
     showActions: false,
     editorContent: "",
@@ -284,7 +283,7 @@ export default {
       }
     },
     activeIndex() {
-      this.ready = false;
+      this.$store.commit('quiz_submission/set_selected_quiz_submission', undefined)
       this.editorContent = "";
       console.log(this.activeIndex);
       this.getChapterMainContent(
@@ -296,9 +295,7 @@ export default {
         this.findQuizSubmissionByStudentAndQuizNames({
           studentName: `${this.$store.state.user.user.surName}_${this.$store.state.user.user.otherNames}`,
           quizName: this.course.chapters[this.activeIndex].quiz[0].name,
-        }).then(() => {
-          this.ready = true;
-        });
+        })
       }
     },
   },

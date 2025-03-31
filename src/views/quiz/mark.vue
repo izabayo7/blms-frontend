@@ -4,6 +4,7 @@
     fluid
     class="quiz-page white px-16"
   >
+  <back class="mt-0 mb-6 ml-n6" to="/reports" />
     <v-row>
       <v-col class="col-12" v-if="userCategory === 'Instructor'">
         <v-row class="pa-0">
@@ -211,10 +212,7 @@
                   />
                 </svg>
               </button>
-              <button
-                v-else
-                class="svg-check-marks"
-              >
+              <button v-else class="svg-check-marks">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="25"
@@ -298,6 +296,9 @@ export default {
     attempt: {},
     mode: "view",
   }),
+  components: {
+    back: () => import("@/components/shared/back-button"),
+  },
   computed: {
     ...mapGetters("quiz_submission", ["selected_quiz_submission"]),
     userCategory() {

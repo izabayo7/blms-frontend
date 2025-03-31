@@ -28,7 +28,7 @@ export default {
         set_selected_quiz_submission(state, id) {
             state.selected_quiz_submission = id
         },
-        RESET_STATE(state) {
+                RESET_STATE(state) {
             Object.assign(state, getDefaultState())
         }
     },
