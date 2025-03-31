@@ -317,7 +317,7 @@ export default {
     questions: [],
     error: "",
     title: "",
-    passMarks: 0,
+    passMarks: 50,
   }),
   watch: {
     error() {
