@@ -3,16 +3,18 @@
     <div class="faculties-container  ">
       <div class="tabular-users">
         <div id="user-profile-card">
-          <user-simple-card :loading="userByUsernameLoading">
-            <template #name>{{ userByUsername.other_names + " " + userByUsername.sur_name }}</template>
-            <template #type>Instructor</template>
-            <template #image>
-              <img v-if="userByUsername.profile" :src="userByUsername.profile + '?width=50'" alt=" profile pic">
-              <v-avatar v-else :size="30" class="profile-avatar">
-                {{ `${userByUsername.sur_name} ${userByUsername.other_names}` | computeText }}
-              </v-avatar>
-            </template>
-          </user-simple-card>
+          <transition name="fade" >
+            <user-simple-card :loading="userByUsernameLoading" @close="mouseOutPic($event,'user-profile-card')">
+              <template #name>{{ userByUsername.other_names + " " + userByUsername.sur_name }}</template>
+              <template #type>Instructor</template>
+              <template #image>
+                <img v-if="userByUsername.profile" :src="userByUsername.profile + '?width=50'" alt=" profile pic">
+                <v-avatar v-else :size="30" class="profile-avatar">
+                  {{ `${userByUsername.sur_name} ${userByUsername.other_names}` | computeText }}
+                </v-avatar>
+              </template>
+            </user-simple-card>
+          </transition>
         </div>
         <div class="table-wrapper mt-6">
           <div class="table-header">
@@ -37,8 +39,8 @@
                         {{ `${user.sur_name} ${user.other_names}` | computeText }}
                       </v-avatar>
                     </td>
-                    <td>{{ user.sur_name }}</td>
-                    <td>{{ user.other_names }}</td>
+                    <td @mouseenter="mouseOnPic($event,user.user_name,'user-profile-card')"
+                        @mouseleave="mouseOutPic($event,'user-profile-card')">{{ user.sur_name }} {{ user.other_names }}</td>
                     <td>{{ user.email }}</td>
                     <td>{{ user.gender }}</td>
                   </template>
@@ -77,7 +79,7 @@ export default {
           routeTo: '/users/{id}',
           paramPropertyName: 'user_name'
         },
-        keysToShow: [" ", "sur_name", "other_names", "email", "gender"],
+        keysToShow: [" ", "names", "email", "gender"],
       },
       selectedUsers: [],
       timeout: "",
@@ -127,7 +129,12 @@ export default {
     .header {
       @include admin-page-header;
     }
-
+    .fade-enter-active, .fade-leave-active {
+      transition: opacity .5s;
+    }
+    .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+      opacity: 0;
+    }
     #user-profile-card {
       position: absolute;
       display: none;

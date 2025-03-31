@@ -1,11 +1,11 @@
 <template>
-<article class="user-card">
+<article @mouseleave="$emit('close')" v-if="!loading" class="user-card">
 
   <article class="user-card--wrapper" >
-    <div class="loader" v-if="loading">
-      <p>Loading</p>
-    </div>
-    <div v-else>
+<!--    <div class="loader" v-if="loading">-->
+<!--      <p>Loading</p>-->
+<!--    </div>-->
+    <div v-if="!loading">
       <div class="user-card--row user-card--info user-card--row__1 d-flex">
         <div class="user-card--info--col user-card--info--names-and-type user-card--info--col__1 col-8">
           <h2> <slot name="name"></slot></h2>
@@ -19,7 +19,7 @@
       </div>
       <div class="user-card--row user-card--actions user-card--row__2 d-flex">
         <div class="user-card--actions--col user-card--actions--col__2">
-          <router-link to="">
+          <router-link :to="`/messages/${userByUsername.user_name}`">
             <button-ui rounded fill :class-list="'px-4 py-2'" class="user-card--actions--button__message user-card--actions--button">
               <template #content>
                 <span>Message</span>
@@ -29,7 +29,7 @@
         </div>
 
         <div class="user-card--actions--col user-card--actions--col__1 ">
-          <router-link to="">
+          <router-link :to="`/users/${userByUsername.user_name}`">
             <button-ui rounded :class-list="'px-2 py-2'"  class="user-card--actions--button__visit-profile user-card--actions--button">
               <template #content>
                 <span>Visit profile</span>
@@ -47,10 +47,14 @@
 
 <script>
 import ButtonUi from "./ui/button-ui";
+import {mapGetters} from "vuex";
 export default {
   name: "user-simple-card",
   props:{
     loading:{type:Boolean,default:false}
+  },
+  computed:{
+    ...mapGetters('users', ['userByUsername']),
   },
   components: {ButtonUi}
 }
@@ -59,6 +63,7 @@ export default {
 <style lang="scss" scoped>
 .user-card{
   width:18rem;
+  height: 161px;
   border-radius:.55rem;
   box-shadow:0 0 10px  lighten($primary,65);
 
