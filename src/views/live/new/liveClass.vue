@@ -286,6 +286,24 @@ export default {
     },
   },
   methods: {
+    handleComment(comment){
+      // this.$store.commit(
+      //     "courses/SET_TOTAL_COMMENTS_ON_A_CHAPTER",
+      //     this.totalComments == "" ? 1 : this.totalComments + 1
+      // );
+      if (comment.reply) {
+        const comments = this.comments.filter(e => e._id == comment.reply)
+        if (comments.length) {
+          const replies = comments[0].replies.filter(e=>e._id == comment._id)
+          if (!replies.length)
+            this.replied({_id: comment.reply, data: comment});
+        }
+      } else {
+        const comments = this.comments.filter(e => e._id == comment._id)
+        if (!comments.length)
+          this.comments.push(comment);
+      }
+    },
     ...mapActions("live_session", ["addParticipant"]),
     addComment(comment) {
       this.comments.push(comment)
@@ -574,27 +592,10 @@ export default {
       console.log("\n\n\n\nclosed\n\n\n\n", new Date())
     }
     self.socket.on("comment/new", (result) => {
-      // this.$store.commit(
-      //     "courses/SET_TOTAL_COMMENTS_ON_A_CHAPTER",
-      //     this.totalComments == "" ? 1 : this.totalComments + 1
-      // );
-      if (result.reply) {
-        const comments = self.comments.filter(e => e._id == result.reply)
-        if (comments.length) {
-          const replies = comments[0].replies.filter(e=>e._id == result._id)
-          if (!replies.length)
-            self.replied({_id: result.reply, data: result});
-        }
-      } else {
-        const comments = self.comments.filter(e => e._id == result._id)
-        if (!comments.length)
-          self.comments.push(result);
-      }
+      return self.handleComment(result)
     });
     this.socket.on("res/comment/new", (result) => {
-      const comments = self.comments.filter(e => e._id == result._id)
-      if (!comments.length)
-        self.comments.push(result);
+      return self.handleComment(result)
     });
   },
   destroyed() {
