@@ -250,7 +250,11 @@
           </v-col>
         </v-row>
       </v-col>
-      <v-col class="col-12 col-md-4 fixed right-0 mt-16">
+      <v-col
+        :class="`col-12 col-md-4 mt-16 ${
+          $vuetify.breakpoint.name == 'lg' ? 'fixed right-0' : ''
+        }`"
+      >
         <v-row class="font-weight-black color-primary student_name mb-8">
           {{ selected_quiz_submission.user.sur_name }}
           {{ selected_quiz_submission.user.other_names }}
