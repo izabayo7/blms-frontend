@@ -70,7 +70,7 @@
               </div>
               <div class="col-6">
                 <div class="text-right">
-                  <button @click="$router.push(`/quiz/new${currentView === 'quiz' ? '' : '?assignment=true'}`)"
+                  <button @click="$router.push(`${currentView === 'quiz' ? '/quiz/new' : '/assignments/new'}`)"
                           class="create">
                     Create new
                   </button>
