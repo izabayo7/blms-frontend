@@ -170,12 +170,12 @@
             </template>
             <template v-slot:item.actions="{ item }">
               <div class="d-flex justify-center">
-                <div @click.stop="
+                <div v-if="item.status !== 'RELEASED'" @click.stop="
                   set_modal({
                     template: 'action_confirmation',
                     method: {
                       action: 'quiz/change_assignment_status',
-                      parameters: { id: item._id, status: item.status === 'DRAFT' ? 'PUBLISHED' : 'DRAFT' },
+                      parameters: { id: item._id, status: item.status === 'DRAFT' ? 'PUBLISHED' : 'DRAFT', user_group: item.target.course.user_group._id, name: item.title },
                     },
                     title: 'Change Assignment Status',
                     message: `Are you sure you want to ${item.status === 'DRAFT' ? 'Publish' : 'Un publish'} this assignment?`,
