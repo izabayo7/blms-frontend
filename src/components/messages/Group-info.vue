@@ -83,6 +83,7 @@ import GroupMember from "@/components/messages/Group-member";
 import a from "@/services/apis";
 import { mapMutations } from "vuex";
 import {cropperMixin} from "../../services/mixins"
+import apis from "../../services/apis";
 
 export default {
   name: "Group-info",
@@ -94,7 +95,8 @@ export default {
       members: [],
       group: {},
       profile:'',
-      img:''
+      img:'',
+      uploaded:false
     };
   },
   mixins:[cropperMixin],
@@ -107,13 +109,36 @@ export default {
     },
     // get image either base64 or profile image
     image(){
-      return this.img.length > 0 ? this.img : (this.profile.length > 0) ? this.profile : false
+      return (this.profile.length > 0) ? this.profile : this.img.length > 0 ? this.img : false
     }
   },
   methods: {
     ...mapMutations("modal", ["update_confirmation"]),
     goToAddMember() {
       this.$router.push(`${this.$route.path}/add-member`);
+    },
+    async uploadImage(){
+
+      //profile may be assigned late because of the effect of image size
+      //as image have largest size the long it take for it to be assigned to our local variable profile
+      //so for the reason that we need to wait for profile to be cropped
+      //we have to use recursion loop so that we can wait until profile
+      //is filled with something
+
+       //to wait for profile to be filled with something and make sure that no image has been uploaded
+      //before
+        if(this.profile.length > 0 && !this.uploaded){
+          const res = await apis.put(`chat_group/${this.group.code}/profile`,{profile:this.profile})
+
+          this.uploaded = true;
+          console.log(res)
+        }
+        //call the function again
+        else{
+          await this.uploadImage()
+        }
+
+        return 0
     },
     async getGroupInfo() {
       const group = await a.get(`chat_group/${this.$route.params.id}`);
@@ -142,6 +167,11 @@ export default {
   },
   mounted() {
     this.getGroupInfo();
+
+    //listen on cropped image
+    this.$on('image_cropped',()=>{
+      this.uploadImage()
+    })
   },
 };
 </script>

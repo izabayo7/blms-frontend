@@ -31,6 +31,9 @@ const cropperMixin = {
             const image = document.getElementById("preview");
             image.src = img;
 
+            //emit event on component that we have cropped image
+            this.$emit("image_cropped")
+
             this.profile = img;
         },
         handleFileUpload(e) {
