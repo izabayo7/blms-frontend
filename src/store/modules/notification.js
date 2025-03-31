@@ -20,11 +20,11 @@ export default {
     },
     actions: {
         //get notifications from backend
-        getNotifications({ state }, userId) {
+        getNotifications({ state }) {
             // when faculty college years not loaded fetch them
             if (!state.notifications.loaded) {
-                apis.get(`user_notification/user/${userId}`).then(d => {
-                    state.notifications.data = d.data
+                apis.get(`user_notification/user`).then(d => {
+                    state.notifications.data = d.data.data
                     //announce that data have been loaded
                     state.notifications.loaded = true
                 })
