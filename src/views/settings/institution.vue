@@ -249,6 +249,8 @@ export default {
         this.college.location = this.state.location
       if (this.state.email)
         this.college.email = this.state.email
+      if (this.state.users_verification_link)
+        this.college.users_verification_link = this.state.users_verification_link
       if (this.state.phone)
         this.college.phone = this.state.phone
     },

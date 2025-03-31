@@ -120,6 +120,8 @@
       font-weight: normal;
       font-size: 15.3584px;
       color: #193074;
+      max-width: 100%;
+      overflow-wrap: anywhere;
 
       &.predefined {
         font-size: 11px;

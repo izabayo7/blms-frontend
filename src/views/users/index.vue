@@ -21,7 +21,7 @@
           </div>
           <div class="search col">
             <div class="search-wrapper">
-<!--              <search placeholder="Search user"/>-->
+              <!--              <search placeholder="Search user"/>-->
             </div>
           </div>
           <div class="add-user col d-flex justify-end">
@@ -131,11 +131,14 @@
                         @mouseenter="mouseOnPic($event,user.user_name,'user-profile-card')"
                         @mouseleave="mouseOutPic($event,'user-profile-card')">{{ user.sur_name }} {{ user.other_names }}
                     </td>
-                    <td @click="$router.push(`/users/${user.user_name}`)" :title="user.email">{{ user.email | trimString(18) }}</td>
+                    <td @click="$router.push(`/users/${user.user_name}`)" :title="user.email">
+                      {{ user.email | trimString(18) }}
+                    </td>
                     <td @click="$router.push(`/users/${user.user_name}`)">{{ user.user_name }}</td>
-                    <td>
-                      <div :class="`payment-status ${user.category === 'STUDENT' ? user.paid ? 'paid' : 'pending' : 'free'}`">
-                        {{ user.category === 'STUDENT' ? user.paid ? "Paid" : "Pending" : "Free"}}
+                    <td v-if="$store.state.sidebar_navbar.college.users_verification_link">
+                      <div
+                          :class="`payment-status ${user.category === 'STUDENT' ? user.paid ? 'paid' : 'pending' : 'free'}`">
+                        {{ user.category === 'STUDENT' ? user.paid ? "Paid" : "Pending" : "Free" }}
                       </div>
                     </td>
                     <td @click="$router.push(`/users/${user.user_name}`)">{{ user.status }}</td>
@@ -186,17 +189,22 @@ export default {
       size: 0,
       selected_users: new Set([]),
       showInviteUsers: false,
-      options: {
+    }
+  },
+  computed: {
+    options() {
+      const options = {
         link: {
           routeTo: '/users/{id}',
           paramPropertyName: 'user_name'
         },
-        keysToShow: [" ", "names", "email", "user_name","Payment status", "status", "gender"],
+        keysToShow: this.$store.state.sidebar_navbar.college.users_verification_link ? [" ", "names", "email", "user_name", "Payment status", "status", "gender"] : [" ", "names", "email", "user_name", "status", "gender"],
         showSelect: true
-      },
+      }
+
+      return options
     }
   },
-  computed: {},
   mixins: [userSimpleCard],
   methods: {
     ...mapActions("modal", ["set_modal"]),
@@ -331,13 +339,15 @@ export default {
     }
   }
 }
+
 /* Portrait phones and smaller */
 @media (max-width: 700px) {
   .my-users-page {
     .users-page-container {
-      .all-users-table{
+      .all-users-table {
         overflow: auto;
-        .table-wrapper{
+
+        .table-wrapper {
           min-width: 945px;
           overflow: auto;
         }
