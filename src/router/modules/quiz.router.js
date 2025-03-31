@@ -7,33 +7,53 @@ const prefix = '/courses'
 const routes =  [
     {
         path: '/',
-        component: () => import( /* webpackPrefetch: true */ '@/views/courses'),
-    },
-    {
-        path: '/preview/:name',
-        component: () => import( /* webpackPrefetch: true */ '@/views/courses/preview')
-    },
-    {
-        path: '/edit/:name/:type',
-        name: 'Edit Course',
+        name: 'Quiz',
         component: () =>
-            import( /* webpackPrefetch: true */ '@/views/courses/edit')
+            import( /* webpackPrefetch: true */ '@/views/quiz')
     },
     {
         path: '/new',
-        name: 'Create course',
+        name: 'Set Quiz',
         component: () =>
-            import( /* webpackPrefetch: true */ '@/views/courses/create')
+            import( /* webpackPrefetch: true */ '@/views/quiz/create')
     },
     {
-        path: '/:name',
-        component: () => import( /* webpackPrefetch: true */ '@/views/courses/details'),
-        children: [
-            {
-                path: '/courses/:name/chapter/:index/:id',
-                component: () => import( /* webpackPrefetch: true */ '@/views/courses/chapter-details')
-            }
-        ]
+        path: '/edit/:name',
+        name: 'Edit Quiz',
+        component: () =>
+            import( /* webpackPrefetch: true */ '@/views/quiz/edit')
+    },
+    {
+        path: '/preview/:name',
+        component: () =>
+            import( /* webpackPrefetch: true */ '@/views/quiz/intermediate')
+    },
+    {
+        path: '/timeout',
+        component: () =>
+            import( /* webpackPrefetch: true */ '@/views/quiz/pre_submission')
+    },
+    {
+        path: '/submitted',
+        component: () =>
+            import( /* webpackPrefetch: true */ '@/views/quiz/pre_submission')
+    },
+    {
+        path: '/:name/results',
+        component: () =>
+            import( /* webpackPrefetch: true */ '@/views/quiz/results')
+    },
+    {
+        path: '/attempt/:name',
+        name: 'TakeQuiz',
+        component: () =>
+            import( /* webpackPrefetch: true */ '@/views/quiz/attempt')
+    },
+    {
+        path: '/:quiz_name/:user_name',
+        name: 'MarkQuiz',
+        component: () =>
+            import( /* webpackPrefetch: true */ '@/views/quiz/mark')
     },
 ]
 

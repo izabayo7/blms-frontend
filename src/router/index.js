@@ -5,6 +5,7 @@ import axios from 'axios'
 import jwt from "jsonwebtoken"
 
 import live from '@/router/modules/live.router'
+import chat from '@/router/modules/chat.router'
 import course from '@/router/modules/course.router'
 
 Vue.use(VueRouter)
@@ -85,23 +86,10 @@ const routes = [
                             allowAnonymous: true
                         }
                     },
-                    {
-                        path: '/messages/start-conversation',
-                        component: () => import( /* webpackPrefetch: true */ '@/views/chat/StartConversation.vue'),
-                    },
-                    {
-                        path: '/messages/no-conversation',
-                        component: () => import( /* webpackPrefetch: true */ '@/views/chat/NoConversation.vue'),
-                    },
-                    {
-                        path: '/messages',
-                        component: () => import( /* webpackPrefetch: true */ '@/views/chat/Messages.vue'),
-                        children: [
-                            { path: '/messages/group/:id', component: () => import( /* webpackPrefetch: true */ '@/views/chat/GroupSetting') },
-                            { path: '/messages/group/:id/add-member', component: () => import( /* webpackPrefetch: true */ '@/views/chat/AddMember') },
-                            { path: '/messages/:username', component: () => import( /* webpackPrefetch: true */ '@/views/chat/Chat.vue') }
-                        ]
-                    },
+
+                    // chat routes
+                    ...chat,
+
                     //for users
                     {
                         path: '/users',
@@ -158,56 +146,7 @@ const routes = [
 
 
                     // for quiz
-                    {
-                        path: '/quiz',
-                        name: 'Quiz',
-                        component: () =>
-                            import( /* webpackPrefetch: true */ '@/views/quiz')
-                    },
-                    {
-                        path: '/quiz/new',
-                        name: 'Set Quiz',
-                        component: () =>
-                            import( /* webpackPrefetch: true */ '@/views/quiz/create')
-                    },
-                    {
-                        path: '/quiz/edit/:name',
-                        name: 'Edit Quiz',
-                        component: () =>
-                            import( /* webpackPrefetch: true */ '@/views/quiz/edit')
-                    },
-                    {
-                        path: '/quiz/preview/:name',
-                        component: () =>
-                            import( /* webpackPrefetch: true */ '@/views/quiz/intermediate')
-                    },
-                    {
-                        path: '/quiz/timeout',
-                        component: () =>
-                            import( /* webpackPrefetch: true */ '@/views/quiz/pre_submission')
-                    },
-                    {
-                        path: '/quiz/submitted',
-                        component: () =>
-                            import( /* webpackPrefetch: true */ '@/views/quiz/pre_submission')
-                    },
-                    {
-                        path: '/quiz/:name/results',
-                        component: () =>
-                            import( /* webpackPrefetch: true */ '@/views/quiz/results')
-                    },
-                    {
-                        path: '/quiz/attempt/:name',
-                        name: 'TakeQuiz',
-                        component: () =>
-                            import( /* webpackPrefetch: true */ '@/views/quiz/attempt')
-                    },
-                    {
-                        path: '/quiz/:quiz_name/:user_name',
-                        name: 'MarkQuiz',
-                        component: () =>
-                            import( /* webpackPrefetch: true */ '@/views/quiz/mark')
-                    },
+
 
 
                     // for reports
