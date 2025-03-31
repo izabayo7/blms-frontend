@@ -1,11 +1,11 @@
-<template>
-<div class="shade">
-  <div class="cropper-container" id="imageCropper" v-if="visible">
+<template v-if="visible">
+<div class="shade" v-if="visible">
+  <div class="cropper-container" id="imageCropper" >
     <div class="inner-cropper" >
       <div class="img">
         <div class="cropper-holder">
           <h3 v-if="imgLoaded">Crop image</h3>
-          <cropper max-height="30vh" @change="changed" ref="cropper" class="cropper" :src="img" :stencil-props="{aspectRatio: 1}" ></cropper>
+          <cropper max-height="300px" @change="changed" ref="cropper" class="cropper" :src="img" :stencil-props="{aspectRatio: 1}" ></cropper>
         </div>
         <div class="preview" v-show="imgLoaded">
           <h3>Image preview</h3>
@@ -35,8 +35,8 @@ export default {
   },
   data(){
     return{
-      visible:false,
-      imgLoaded:false
+      imgLoaded:false,
+      visible:false
     }
   },
   methods:{
@@ -71,8 +71,8 @@ export default {
 /* Medium (md) */
 @media (max-width: 768px) {
   .cropper-container{
-    width:90%;
-    max-width: 90%;
+    width:fit-content;
+    height: fit-content;
 
     .cropper-holder{
       width:100% !important;
@@ -81,10 +81,16 @@ export default {
         width:100% !important;
       }
     }
+
+    .preview{
+      display: none;
+    }
   }
 }
 
 .shade{
+  width: 100%;
+  height: 100%;
 
   .cropper-container{
     position: absolute;
@@ -92,10 +98,8 @@ export default {
     left:50%;
     transform: translate(-50%,-50%);
     padding:1rem ;
+    width: 90%;
     height: fit-content;
-    min-width: 50%;
-    max-width: 80%;
-    width: fit-content;
     background-color: $main;
     z-index: 101;
     box-shadow:  0 0 20px 4px #4ac1c62e;
@@ -105,9 +109,10 @@ export default {
       justify-content: center;
 
       button{
-        min-width: 10rem;
-        padding:1rem 2rem;
+        min-width: 8rem;
+        padding:.5rem 1rem;
         margin:1rem;
+        font-size: .9rem;
         width: fit-content;
 
         &.done{
@@ -115,7 +120,7 @@ export default {
           color:$main;
 
           &:hover{
-            background-color: lighten($success,10);
+            background-color: darken($success,10);
           }
 
         }
@@ -130,9 +135,6 @@ export default {
       }
     }
     .inner-cropper{
-      max-height: 80vh;
-      height: 100% !important;
-      width: 100% !important;
       position: relative;
       display: flex;
       flex-direction: column;
@@ -164,32 +166,33 @@ export default {
           }
         }
 
-        .preview{
-          box-sizing: border-box;
-          align-self: center;
-          padding: 1rem;
-          min-width: 10rem;
-          width: 20%;
-          img{
-            width: 100%;
+          .preview{
+            box-sizing: border-box;
+            align-self: center;
+            padding: 1rem;
+            min-width: 10rem;
+            width: 20%;
+            img{
+              width: 100%;
+            }
           }
-        }
+
 
       }
 
       .cropper-holder{
         padding: 1rem;
         .cropper{
+          max-height: 500px;
+          border: 1px solid lighten($font,60);
 
           .vue-advanced-cropper__image{
             width:100%;
             object-fit: contain;
 
-            img{
-              width: 100% !important;
-              object-fit: contain;
-              max-height: 50vh !important;
-            }
+          }
+
+          .vue-advanced-cropper__stretcher{
           }
         }
       }

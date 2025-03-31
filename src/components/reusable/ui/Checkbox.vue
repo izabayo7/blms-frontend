@@ -2,8 +2,8 @@
 <div class="my-checkbox">
   <div class="checkbox-container" @click="toggle">
     <transition name="fade" >
-      <svg v-if="checked" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"/><path d="M4 3h16a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zm7.003 13l7.07-7.071-1.414-1.414-5.656 5.657-2.829-2.829-1.414 1.414L11.003 16z"/></svg>
-      <svg v-if="!checked" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"/><path d="M4 3h16a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zm1 2v14h14V5H5z"/></svg>
+      <svg v-if="check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"/><path d="M4 3h16a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zm7.003 13l7.07-7.071-1.414-1.414-5.656 5.657-2.829-2.829-1.414 1.414L11.003 16z"/></svg>
+      <svg v-if="!check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"/><path d="M4 3h16a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zm1 2v14h14V5H5z"/></svg>
     </transition>
   </div>
 </div>
@@ -12,16 +12,18 @@
 <script>
 export default {
   name: "Checkbox",
-  data(){
-    return {
-      checked:false
-    }
+  props:['check'],
+  model:{
+    prop:'check',
+    event:'check_it'
   },
   methods:{
     toggle(){
-      this.checked = !this.checked
-      this.$emit('input',this.checked)
+      this.$emit('check_it',!this.check)
     }
+  },
+  mounted() {
+    console.log(this)
   }
 }
 </script>

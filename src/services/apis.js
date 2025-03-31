@@ -1,4 +1,21 @@
 import Api from './server'
+import axios from 'axios'
+const a = axios;
+
+/* interceptors */
+a.interceptors.response.use((response) => {
+    return response
+}, (error) => {
+    return new Promise.reject(error)
+})
+a.interceptors.request.use((config) => {
+    console.log('in request fullfilled', config)
+    return config
+}, error => {
+    console.log('in request error', (error))
+    return new Promise.reject(error)
+})
+
 export default {
     // users login
     login(body) {

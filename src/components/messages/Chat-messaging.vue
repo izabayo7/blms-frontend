@@ -31,12 +31,12 @@
             {{ msgs.from | computeText }}
           </v-avatar>
         </div>
-        <div>
-          <div
-            v-if="!msgGoing(msgs.from) && currentDisplayedUser.is_group && !systemMsg(msgs.from)"
-            class="sender_name"
-          >
+        <div class="msg-block">
+          <div v-if="!msgGoing(msgs.from) && currentDisplayedUser.is_group && !systemMsg(msgs.from)" class="sender_name">
             {{ msgs.from }} {{ msgs.messages[0].createdAt | getTimeDifference }}
+          </div>
+          <div v-else class="sender_name" :class="msgs.from.toLowerCase()">
+            <p>{{ msgs.messages[0].createdAt | getTimeDifference }}</p>
           </div>
           <!--        list of messages sent or received-->
           <div class="msgs">
@@ -192,10 +192,15 @@ export default {
   .sender_name {
     font-size: 11px;
     color: #00000066;
-    font-weight: 600;
+    font-weight: 500;
     margin-bottom: 6px;
     font-family: Poppins;
     width: 100%;
+
+    p{
+      margin: 0;
+      color:inherit;
+    }
   }
 
   @include scroll-bar;
@@ -295,19 +300,20 @@ export default {
           margin-right: 20px;
         }
       }
-      //whole msg bar css
-      .msg {
-        max-width: 20rem;
-        padding: 0.5rem 1.7rem;
-        margin: 1.5px;
-        width: -webkit-fit-content;
-        width: -moz-fit-content;
-        width: fit-content;
-        font-size: 0.8rem;
-        font-weight: 400;
-        font-family: Poppins;
-        word-break: break-word;
-      }
+
+        //whole msg bar css
+        .msg {
+          max-width: 20rem;
+          padding: 0.5rem 1.7rem;
+          margin: 1.5px;
+          width: -webkit-fit-content;
+          width: -moz-fit-content;
+          width: fit-content;
+          font-size: 0.8rem;
+          font-weight: 400;
+          font-family: Poppins;
+          word-break: break-word;
+        }
     }
 
    // design system message
@@ -325,30 +331,38 @@ export default {
       .picture {
         display: none;
       }
-      .msgs {
-        align-self: flex-end;
-        display: flex;
-        flex-direction: column;
+      .msg-block{
 
-        .msg {
-          align-self: flex-end;
-          background-color: $primary;
-          color: $main;
-          border-radius: 15px 0 0 15px;
-
-          div {
-            color: inherit;
-          }
-          &:last-child {
-            border-bottom-right-radius: 15px;
-          }
-
-          &:first-child {
-            border-top-right-radius: 15px;
-          }
+        .sender_name{
+          display: flex;
+          justify-content: flex-end;
+          padding-right: .4rem;
         }
+        .msgs {
+          align-self: flex-end;
+          display: flex;
+          flex-direction: column;
 
-        &:last-child {
+          .msg {
+            align-self: flex-end;
+            background-color: $primary;
+            color: $main;
+            border-radius: 15px 0 0 15px;
+
+            div {
+              color: inherit;
+            }
+            &:last-child {
+              border-bottom-right-radius: 15px;
+            }
+
+            &:first-child {
+              border-top-right-radius: 15px;
+            }
+          }
+
+          &:last-child {
+          }
         }
       }
     }

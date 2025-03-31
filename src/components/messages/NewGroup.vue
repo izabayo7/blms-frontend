@@ -1,7 +1,7 @@
 <template>
   <div class="new-group"  v-show="group_model">
     <div class="group-wrapper">
-      <cropper 	min-height="500" min-width="500" :img="img" @change="imageCropped"/>
+      <cropper :img="img" @change="imageCropped"/>
       <div class="background-darkness"></div>
       <div id="form" class="col-xs-11 col-sm-10 col-md-8 col-lg-8 col-xl-6">
         <div class="group-card row flex flex-column-reverse flex-md-row">
@@ -13,12 +13,27 @@
               </div>
               <div class="row group-members">
                 <label for="group_members_input">Add members</label>
-                <input @keyup.enter.prevent.stop="addMember" v-model="currentMember" type="text"
-                       id="group_members_input">
+                <div class="members">
+                  <input @input="getUsers" v-model="currentMember" type="text"
+                         id="group_members_input">
+                  <transition name="member">
+                    <div class="found-members" v-if="foundUsers.length > 0 || userLoading">
+                      <svg v-if="userLoading" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"/><path d="M12 3a9 9 0 0 1 9 9h-2a7 7 0 0 0-7-7V3z"/></svg>
+                      <div class="no-user" v-if="NotFoundText.length>0">{{ NotFoundText }}</div>
+                      <transition-group name="members">
+                        <div class="member" v-for="(user) in foundUsers" @click="addMember(user)" :key="user.email">
+                          <member :disabled="disabled(user.email)"  :user="user"  />
+                        </div>
+                      </transition-group>
+                    </div>
+                  </transition>
+                </div>
                 <div class="added-members-list" v-if="group.members.length > 0">
-                  <chip-ui v-for="(member,i) in group.members" @closed="closed(i)" :key="i">
-                    {{ member }}
-                  </chip-ui>
+                  <transition-group name="chips">
+                    <chip v-for="(member,i) in group.members" @closed="closed(i)" :key="member.email">
+                      {{ member.sur_name + ' ' + member.other_names }}
+                    </chip>
+                  </transition-group>
                 </div>
               </div>
               <div class="group-privacy">
@@ -28,7 +43,7 @@
                 </div>
               </div>
               <div class="row action-buttons">
-                <button class="create-group-button">Create group</button>
+                <button class="create-group-button" :class="{disabled:btnDisabled}" @click="createGroup">Create group</button>
                 <button class="cancel-group-creation" @click="toggleGroup">Cancel</button>
               </div>
             </div>
@@ -69,19 +84,27 @@
 </template>
 
 <script>
-import {emit, on} from '@/services/event_bus'
-import {mapMutations, mapState} from "vuex";
+import {emit, on} from '@/services/event_bus';
+import {mapMutations, mapState, mapActions} from "vuex";
+import a from '@/services/apis'
+import Member from "@/components/messages/Member";
+
 export default {
   name: "NewGroup",
   components: {
+    Member,
     switchUi: () => import('@/components/reusable/ui/switcher'),
-    chipUi: () => import('@/components/reusable/ui/Chip'),
+    chip: () => import('@/components/reusable/ui/Chip'),
     cropper: () => import('@/components/reusable/ui/ImageCropper')
   },
   data() {
     return {
       img:'',
+      b64Img:'',
       currentMember: '',
+      foundUsers:[],
+      userLoading:false,
+      NotFoundText:'',
       group: {
         name: '',
         public: true,
@@ -90,19 +113,51 @@ export default {
     }
   },
   computed:{
-    ...mapState('sidebar_navbar',['group_model'])
+    ...mapState('sidebar_navbar',['group_model']),
+    btnDisabled(){
+      const test_empty = /^\s+$/g
+      const is_name_empty = test_empty.test(this.group.name) || this.group.name.length <= 0
+      const is_members_empty = this.group.members.length <= 0
+      return is_members_empty || is_name_empty
+    }
   },
   methods: {
     ...mapMutations('sidebar_navbar',{toggleGroup:'TOGGLE_GROUP_MODEL_VISIBILITY'}),
+    ...mapActions('users',['searchUser']),
 
     closed(i) {
       this.group.members.splice(i, 1)
     },
-    addMember() {
-      if(this.currentMember.length <=0)
+    disabled(email){
+      return this.group.members.some(member => member.email === email)
+    },
+    getUsers(){
+      this.userLoading = true
+      this.NotFoundText = ''
+      const EmptyStringRegex = /^\s+$/g //regext to detect empty string
+
+      if(EmptyStringRegex.test(this.currentMember) || this.currentMember.length <= 0){
+          this.foundUsers = []
+          this.userLoading = false
         return
-      this.group.members.unshift(this.currentMember)
-      this.currentMember = ''
+      }
+
+      this.searchUser({query: this.currentMember}).then(result => {
+        this.userLoading = false;
+        this.foundUsers= result;
+
+        //tell user that we didnt find the user with such id
+        this.NotFoundText = (result.length > 0) ? '' : "No user found"
+      })
+    },
+    addMember(user) {
+      const membersNotAvailable = this.foundUsers.length <= 0
+      const disabled = this.disabled(user.email)
+
+      if(membersNotAvailable || this.currentMember.length <= 0 || disabled)
+        return
+
+      this.group.members.unshift(user)
     },
     readURL(input) {
       const self = this;
@@ -122,15 +177,26 @@ export default {
     imageCropped(img){
       const image  = document.getElementById('preview')
       image.src = img;
-      console.log(img)
+      this.b64Img = img
     },
     toggleDiv(e){
       const thisDoc = e.target
-      console.log(e)
       // const thisDoc = document.getElementById('form')
       const clickInside = thisDoc.contains(e.target) //is what we clicked inside of component
       //if not inside the make img empty to hide this component
       if(!clickInside) this.toggleGroup()
+    },
+   async createGroup(){
+
+        const body = {
+          name:this.group.name,
+          // description:'',
+          members:this.group.members.map(member => ({user_name:member.user_name})),
+          // private:!this.group.public,
+          // profile: await getImgFile(this.b64Img,`${this.group.name}_cover_photo.png`),
+          college:this.$store.state.user.user.college
+        }
+        await a.create('chat_group',body)
     }
   },
   mounted() {
@@ -199,6 +265,23 @@ export default {
               overflow-y: auto;
 
               @include scroll-bar;
+
+              /* aniamation of chips */
+              .chips-enter-active, .chips-leave-active{
+                //transition: all .4s;
+              }
+
+              .chips-enter, .chips-leave-to{
+                  opacity: 0;
+              }
+            }
+
+            .members{
+              width: 100%;
+
+              input{
+                width: 100%;
+              }
 
             }
           }

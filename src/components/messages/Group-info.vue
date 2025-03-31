@@ -9,12 +9,12 @@
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"/><path d="M15.728 9.686l-1.414-1.414L5 17.586V19h1.414l9.314-9.314zm1.414-1.414l1.414-1.414-1.414-1.414-1.414 1.414 1.414 1.414zM7.242 21H3v-4.243L16.435 3.322a1 1 0 0 1 1.414 0l2.829 2.829a1 1 0 0 1 0 1.414L7.243 21z"/></svg>
             </div>
         </div>
-        <p>Kurious</p>
+        <p>{{group.name}}</p>
       </div>
       <div class="members">
         <div class="header">
-          <p>22 members</p>
-          <div class="member-btn">
+          <p>{{group.members.length+1}} members</p>
+          <div class="member-btn" @click="goToAddMember">
             <div class="icon">
               <svg id="user-add-line" xmlns="http://www.w3.org/2000/svg" width="33" height="33" viewBox="0 0 33 33">
                 <path id="Path_2152" data-name="Path 2152" d="M0,0H33V33H0Z" fill="none"/>
@@ -25,16 +25,7 @@
           </div>
         </div>
         <div class="members-list">
-          <group-member v-for="(name,i) in members" :key="i" >
-            <template #pic>
-              <v-avatar size="35" class="avatar">
-                {{ name | computeText }}
-              </v-avatar>
-            </template>
-            <template #names >
-              {{ name }}
-            </template>
-          </group-member>
+          <group-member v-for="(member,i) in group.members" :key="i" :member="member" />
         </div>
         <div class="action-btn">
           <button class="save">Save changes</button>
@@ -47,25 +38,32 @@
 </template>
 
 <script>
-
 import GroupMember from "@/components/messages/Group-member";
+import a from "@/services/apis"
+
 export default {
   name: "Group-info",
   components: {GroupMember},
   data(){
     return {
       members:[
-          'Izabayo cedric',
-          'James cedric',
-          'Umukura Olivier',
-          'Liberi Ntwari',
-          'Marie divine Gervais Hirwa',
-          'Ange Sekata Moss',
-          'Divin Irakiza',
-          'Izabayo zakayo',
-          'Liberi Jama Se',
-      ]
+      ],
+      group:{}
     }
+  },
+  computed:{
+  },
+  methods:{
+    goToAddMember(){
+      this.$router.push(`${this.$route.path}/add-member`)
+    },
+    async getGroupInfo(){
+      const group = await a.get(`chat_group/${this.$route.params.id}`)
+      this.group = group.data.data
+    }
+  },
+  mounted() {
+    this.getGroupInfo()
   }
 }
 </script>
