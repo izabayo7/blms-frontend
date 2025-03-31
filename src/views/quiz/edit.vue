@@ -469,7 +469,7 @@ export default {
         ].type
           .toLowerCase()
           .split(" ")
-          .join("-");
+          .join("_");
 
         // remove options for non select questions
         if (!this.selected_quiz.questions[index].type.includes("select")) {

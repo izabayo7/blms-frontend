@@ -128,6 +128,7 @@ export default {
     formated_quiz() {
       let formated_quiz = [];
       for (const quiz of this.all_quiz) {
+        console.log(quiz);
         formated_quiz.push({
           _id: quiz._id,
           name: quiz.name,
