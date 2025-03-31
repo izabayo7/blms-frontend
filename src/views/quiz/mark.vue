@@ -1,16 +1,15 @@
 <template>
   <v-container
-      v-if="selected_quiz_submission && attempt.quiz"
       fluid
       class="quiz-page white pl-lg-16"
   >
     <back class="mt-0 mb-6 ml-0 ml-md-n6"/>
 
-    <v-row class="relative">
+    <v-row v-if="selected_quiz_submission && (attempt.quiz || attempt.exam)" class="relative">
       <v-col class="col-12 col-md-8 px-0">
         <navigation title="Submissions" :links="navigation_links"/>
         <v-row
-            v-for="(question, i) in selected_quiz_submission.quiz.questions"
+            v-for="(question, i) in selected_quiz_submission[isExam?'exam':'quiz'].questions"
             :key="i"
             class="col-12 col-md-12 px-0"
         >
@@ -23,7 +22,7 @@
                 <p class="question-details col-md-12 col-12 px-0">
                   {{ `${i + 1}. ${question.details}` }}
                 </p>
-                <div v-if="question.type === 'file_upload'" class="file-container row">
+                <div v-if="question.type === 'file_upload' && attempt.answers[i].src" class="file-container row">
                   <div class="indicator mb-2 col-12 pa-0">
                     <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path
@@ -43,7 +42,7 @@
                     <div class="file-size">
 
                     </div>
-                    <div class="file-type ml-auto">
+                    <div v-if="attempt.answers[i].src" class="file-type ml-auto">
                       {{ attempt.answers[i].src.split('.')[attempt.answers[i].src.split('.').length - 1] }}
                     </div>
 
@@ -256,7 +255,7 @@
                         type="number"
                         v-model="attempt.answers[i].marks"
                         :readonly="mode === 'view' || question.type.includes('select')"
-                        @keyup="computeTotalMarks()"
+                        @mouseleave="computeTotalMarks()"
                     />
                     <span>{{ `/${question.marks}` }}</span>
                   </div>
@@ -284,6 +283,7 @@
                       ? selected_quiz_submission.answers[i].feedback._id
                       : ''
                   "
+                    :type="isExam ? 'exam' : undefined"
                     :isFileUpload="question.type === 'file_upload'"
                     :index="i"
                     @feedbackDeleted="selected_quiz_submission.answers[i].feedback_src = undefined"
@@ -315,7 +315,7 @@
                   readonly
                   type="text"
               />
-              <span>{{ `/${selected_quiz_submission.quiz.total_marks}` }}</span>
+              <span>{{ `/${selected_quiz_submission[isExam ? 'exam' : 'quiz'].total_marks}` }}</span>
             </div>
           </div>
         </v-row>
@@ -351,7 +351,7 @@
           <v-btn
               v-if="userCategory === 'INSTRUCTOR'"
               class="red-bg mr-3 px-8"
-              to="/reports"
+              :to="`/reports/${selected_quiz_submission[isExam ? 'exam' : 'quiz']._id}/${isExam ? 'exams': ''}`"
           >Cancel
           </v-btn
           >
@@ -365,6 +365,12 @@
         </v-row>
       </v-col>
     </v-row>
+    <div class="d-flex justify-center align-center full-height" v-else-if="loading">
+      <img src="https://kurious.rw/_nuxt/img/loader.059b462.gif" alt="loading ..">
+    </div>
+    <div v-else class="text-center">
+      Submission not found
+    </div>
   </v-container>
 </template>
 
@@ -402,6 +408,7 @@ export default {
       "Y",
       "Z",
     ],
+    loading: true,
     quiz: {},
     attempt: {},
     questions_have_feedback: [],
@@ -415,6 +422,9 @@ export default {
     navigation: () => import("@/components/shared/simple_navigation"),
   },
   computed: {
+    isExam() {
+      return this.$route.path.includes('/assessments/exams')
+    },
     ...mapGetters("chat", ["socket"]),
     backend_url() {
       return process.env.VUE_APP_api_service_url
@@ -424,41 +434,44 @@ export default {
       return this.$store.state.user.user.category.name;
     },
     navigation_links() {
-      return [
+      const links = [
         {
           text: "reports",
           link: "/reports",
         },
         {
-          text: this.selected_quiz_submission.quiz.target.course.name,
+          text: this.isExam ? this.selected_quiz_submission.exam.course.name : this.selected_quiz_submission.quiz.target.course.name,
           link:
-              this.userCategory == "INSTRUCTOR"
-                  ? "/reports/" + this.selected_quiz_submission.quiz._id
+              this.userCategory === "INSTRUCTOR"
+                  ? `/reports/${this.isExam ? this.selected_quiz_submission.exam._id : this.selected_quiz_submission.quiz._id}/${this.isExam ? 'exams' : ''}`
                   : "/reports",
-        },
-        {
-          text: this.selected_quiz_submission.quiz.name,
-          link:
-              this.userCategory == "INSTRUCTOR"
-                  ? "/reports/" + this.selected_quiz_submission.quiz._id
-                  : "/reports",
-        },
-        {
-          text: this.selected_quiz_submission.user.sur_name
-              ? `${this.selected_quiz_submission.user.sur_name} ${this.selected_quiz_submission.user.other_names}`
-              : `${this.$store.state.user.user.sur_name} ${this.$store.state.user.user.other_names}`,
-          link: this.$route.fullPath,
         },
       ];
+      if (!this.isExam)
+        links.push({
+          text: this.selected_quiz_submission.quiz.name,
+          link:
+              this.userCategory === "INSTRUCTOR"
+                  ? "/reports/" + this.selected_quiz_submission.quiz._id
+                  : "/reports",
+        })
+      links.push({
+        text: this.selected_quiz_submission.user.sur_name
+            ? `${this.selected_quiz_submission.user.sur_name} ${this.selected_quiz_submission.user.other_names}`
+            : `${this.$store.state.user.user.sur_name} ${this.$store.state.user.user.other_names}`,
+        link: this.$route.fullPath,
+      },)
+      return links
     },
   },
   watch: {
     async selected_quiz_submission() {
-      if (!this.selected_quiz_submission.marked) {
-        for (const answer of this.selected_quiz_submission.answers) {
-          if (!answer.marks) answer.marks = 0;
+      if (this.selected_quiz_submission)
+        if (!this.selected_quiz_submission.marked) {
+          for (const answer of this.selected_quiz_submission.answers) {
+            if (!answer.marks) answer.marks = 0;
+          }
         }
-      }
     },
   },
   methods: {
@@ -480,9 +493,9 @@ export default {
     },
     computeTotalMarks() {
       let result = 0;
-      for (const i in this.selected_quiz_submission.answers) {
+      for (const i in this.attempt.answers) {
         result = parseInt(
-            result + parseInt(this.selected_quiz_submission.answers[i].marks || 0)
+            result + parseInt(this.attempt.answers[i].marks || 0)
         );
       }
       this.computedTotalMarks = result;
@@ -510,54 +523,58 @@ export default {
       this.update_quiz_submission({
         submission: this.attempt,
       }).then(() => {
-        if (this.selected_quiz_submission.quiz.status == 2) {
+        if (this.isExam ? this.selected_quiz_submission.status === 'RELEASED' : this.selected_quiz_submission.quiz.status === 2) {
           for (const i in this.questions_have_feedback) {
             if (this.questions_have_feedback[i]) {
               this.socket.emit('chapter-comment', {
                 userName: this.selected_quiz_submission.user.user_name,
-                route: `/quiz/${this.selected_quiz_submission.quiz.name}/${this.selected_quiz_submission.user.user_name}`,
-                content: 'gave feed back on your submission on quiz ' + this.selected_quiz_submission.quiz.name
+                route: this.$route.path,
+                content: `gave feed back on your submission on ${this.isExam ? 'exam' : 'quiz'} ${this.selected_quiz_submission[this.isExam ? 'exam' : 'quiz'].name}`
               })
               break
             }
           }
         }
-        this.$router.push(`/reports/${this.selected_quiz_submission.quiz._id}`);
+        this.$router.push(`/reports/${this.selected_quiz_submission[this.isExam ? 'exam' : 'quiz']._id}/${this.isExam ? 'exams' : ''}`);
       });
     },
   },
   created() {
+
     this.findQuizSubmissionByUserAndQuizNames({
       userName: this.$route.params.user_name,
-      quizName: this.$route.params.quiz_name,
+      quizName: this.isExam ? this.$route.params.id : this.$route.params.quiz_name,
+      isExam: this.isExam
     }).then(async () => {
-      this.attempt = {
-        quiz: this.selected_quiz_submission.quiz._id,
-        user: this.selected_quiz_submission.user.user_name,
-        auto_submitted: this.selected_quiz_submission.auto_submitted,
-        used_time: this.selected_quiz_submission.used_time,
-        answers: this.selected_quiz_submission.answers.map((x) => {
-              let y = JSON.parse(JSON.stringify(x))
-              y.feedback = undefined
-              return y
-            }
-        ),
-        marked: this.selected_quiz_submission.marked,
-        total_marks: this.selected_quiz_submission.totalMarks,
-      };
-      if (this.userCategory === "INSTRUCTOR") {
-        this.mode = "edit";
-        for (let i = 0; i < this.selected_quiz_submission.answers.length; i++) {
-          this.questions_have_feedback.push(false)
+      this.loading = false
+      if (this.selected_quiz_submission) {
+        this.attempt = {
+          auto_submitted: this.selected_quiz_submission.auto_submitted,
+          used_time: this.selected_quiz_submission.used_time,
+          answers: this.selected_quiz_submission.answers.map((x) => {
+                let y = JSON.parse(JSON.stringify(x))
+                y.feedback = undefined
+                return y
+              }
+          ),
+          marked: this.selected_quiz_submission.marked,
+          total_marks: this.selected_quiz_submission.totalMarks,
+        };
+        this.attempt[this.isExam ? 'exam' : 'quiz'] = this.selected_quiz_submission[this.isExam ? 'exam' : 'quiz']._id
+        if (this.userCategory === "INSTRUCTOR") {
+          this.mode = "edit";
+          for (let i = 0; i < this.selected_quiz_submission.answers.length; i++) {
+            this.questions_have_feedback.push(false)
+          }
         }
+        this.computeTotalMarks();
+        setTimeout(() => {
+          this.markResultsAsSeen({
+            course_id: this.isExam ? this.selected_quiz_submission.exam.course : this.selected_quiz_submission.quiz.target.course._id,
+            submission_id: this.selected_quiz_submission._id,
+          });
+        }, 5000);
       }
-      this.computeTotalMarks();
-      setTimeout(() => {
-        this.markResultsAsSeen({
-          course_id: this.selected_quiz_submission.quiz.target.course._id,
-          submission_id: this.selected_quiz_submission._id,
-        });
-      }, 5000);
     });
   },
 };
