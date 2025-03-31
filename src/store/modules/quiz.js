@@ -339,7 +339,7 @@ export default {
                             uptime: 5000,
                         }, {root: true});
                     }
-                    for (const i in state.quiz.data) {
+                    for (const i in state.exams.data) {
                         if (state.exams.data[i]._id === id) {
                             state.exams.data[i].status = status
                             break
