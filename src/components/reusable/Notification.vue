@@ -21,14 +21,14 @@
           v-for="(no, i) in formatedNotifications"
           :key="i"
           class="item"
-          @click="$router.push(no.to)"
+          @click="$router.push(no.link)"
         >
           <img class="pic" src="@/assets/images/instructor.png" />
           <div class="content">
             <p class="msg">
               <span>{{ no.name }}</span> {{ no.msg }}
             </p>
-            <p class="time">{{ no.time }}</p>
+            <p class="time">{{ no.time | getTimeDifference}}</p>
           </div>
         </div>
       </div>
