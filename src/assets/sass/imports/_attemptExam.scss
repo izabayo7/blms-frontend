@@ -90,11 +90,12 @@
       margin-top: 3%;
 
       .webcam, .webcam video, canvas {
-        width: 186px;
-        height: 104.6px;
+        width: 209px;
+        height: 156px;
       }
 
       .webcam {
+        margin: auto;
         position: relative;
 
         video, canvas {
