@@ -1,4 +1,4 @@
-@mixin scroll-bar {
+@mixin scroll-bar{
   &::-webkit-scrollbar {
     width: 8px;
   }
@@ -23,18 +23,18 @@
 
 }
 
-@mixin fit-content {
+@mixin fit-content{
   width: fit-content;
   height: fit-content;
 }
 
-@mixin flex-center {
+@mixin flex-center{
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-@mixin users-page-header{
+@mixin admin-page-header{
       width:100%;
 
     .header-wrapper{
@@ -60,7 +60,9 @@
       .add-user{
 
         .add-user-button{
-          max-width: 10rem;
+          max-width: 15rem;
+          width:fit-content;
+          min-width: fit-content;
         }
       }
     }
@@ -92,5 +94,5 @@
     @apply px-4 py-2;
     outline: none;
   }
-  
+
 }

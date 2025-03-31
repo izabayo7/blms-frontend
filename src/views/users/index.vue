@@ -32,7 +32,7 @@
         </div>
       </div>
       <div class="tabular-users">
-        <div class="table-wrapper mt-6">
+        <div class="table-wrapper mt-6" v-if="users.length > 0">
           <div class="table-header">
             <table-header />
           </div>
@@ -50,38 +50,44 @@ import buttonUi from '@/components/reusable/ui/button-ui'
 import Search from '@/components/reusable/Search2'
 import tableUi from '@/components/reusable/ui/table-ui'
 import TableHeader from "../../components/reusable/ui/table-header";
+import apis from "../../services/apis"
+import _ from "lodash"
+import moment from 'moment'
+
 export default {
   name: "Users",
   components:{TableHeader, buttonUi,Search,tableUi},
   data(){
-    return{
-      users:[
-        {username:"liberi",status:"pending", "User type":"Student",gender:"M",Faculty:"Economics","S group":"Year 2","Date added":"today","Date joined":"pending"},
-        {username:"ntwari",status:"registered", "User type":"Student",gender:"M",Faculty:"Economics","S group":"Year 1","Date added":"today","Date joined":"pending"},
-        {username:"clarance",status:"pending", "User type":"Student",gender:"M",Faculty:"Agriculture","S group":"Year 2","Date added":"today","Date joined":"pending"},
-        {username:"benon",status:"pending", "User type":"Student",gender:"F",Faculty:"Science","S group":"Year 2","Date added":"today","Date joined":"pending"},
-        {username:"jamapack",status:"pending", "User type":"Instructor",gender:"M",Faculty:"Telecommunic Systems","S group":"Year 2","Date added":"today","Date joined":"pending"},
-        {username:"olivier",status:"pending", "User type":"Student",gender:"M",Faculty:"Economics","S group":"Year 1","Date added":"today","Date joined":"pending"},
-        {username:"cedro",status:"pending", "User type":"Student",gender:"M",Faculty:"Economics","S group":"Year 2","Date added":"today","Date joined":"pending"},
-        {username:"umukura",status:"registered", "User type":"Instructor",gender:"M",Faculty:"Economics","S group":"Year 2","Date added":"today","Date joined":"pending"},
-        {username:"izabayo",status:"pending", "User type":"Instructor",gender:"F",Faculty:"Science","S group":"Year 2","Date added":"today","Date joined":"pending"},
-        {username:"clever",status:"pending", "User type":"Student",gender:"M",Faculty:"Economics","S group":"Year 2","Date added":"today","Date joined":"pending"},
-        {username:"anne",status:"pending", "User type":"Student",gender:"F",Faculty:"Electronics","S group":"Year 3","Date added":"today","Date joined":"pending"},
-        {username:"anitaMarie",status:"registered", "User type":"Student",gender:"M",Faculty:"Economics","S group":"Year 2","Date added":"today","Date joined":"pending"},
-        {username:"faustion",status:"pending", "User type":"Student",gender:"M",Faculty:"Science","S group":"Year 2","Date added":"today","Date joined":"pending"},
-        {username:"liberi",status:"pending", "User type":"Student",gender:"M",Faculty:"Economics","S group":"Year 3","Date added":"today","Date joined":"pending"},
-        {username:"liberi",status:"pending", "User type":"Instructor",gender:"F",Faculty:"Iot","S group":"Year 2","Date added":"today","Date joined":"pending"},
-        {username:"liberi",status:"pending", "User type":"Instructor",gender:"F",Faculty:"Economics","S group":"Year 3","Date added":"today","Date joined":"pending"},
-        {username:"liberi",status:"registered", "User type":"Instructor",gender:"M",Faculty:"Economics","S group":"Year 3","Date added":"today","Date joined":"pending"},
-        {username:"liberi",status:"pending", "User type":"Student",gender:"F",Faculty:"Ict","S group":"Year 1","Date added":"today","Date joined":"pending"},
-        {username:"liberi",status:"pending", "User type":"Student",gender:"F",Faculty:"Economics","S group":"Year 1","Date added":"today","Date joined":"pending"},
-        {username:"liberi",status:"pending", "User type":"Admin",gender:"M",Faculty:"Ict","S group":"Year 2","Date added":"today","Date joined":"pending"},
-        {username:"liberi",status:"registered", "User type":"Student",gender:"M",Faculty:"Economics","S group":"Year 2","Date added":"today","Date joined":"pending"},
-        {username:"liberi",status:"registered", "User type":"Student",gender:"F",Faculty:"Ict","S group":"Year 2","Date added":"today","Date joined":"pending"},
-        {username:"liberi",status:"registered", "User type":"Admin",gender:"M",Faculty:"Electronics","S group":"Year 2","Date added":"today","Date joined":"pending"},
-        {username:"liberi",status:"pending", "User type":"Student",gender:"M",Faculty:"Economics","S group":"Year 2","Date added":"today","Date joined":"pending"},
-      ]
+    return {
+      users:[]
     }
+  },
+  methods:{
+    loadUsers(){
+      apis.get("user")
+        .then(({data:{data}}) => {
+          const attributesToPick = [ "sur_name", "other_names", "email", "user_name","status", "gender",  "updatedAt", "createdAt"]
+          let filteredUsers = [];
+
+          data.map(user => {
+            console.log();
+
+            user.createdAt = moment(user.createdAt).format("DD MMM  YYYY")
+            user.updatedAt = moment(user.updatedAt).format("DD MMM YYYY")
+            //TODO beautifying status
+            user.status = user.status.disabled && user.status.active;
+
+            filteredUsers.push(_.pick(user,attributesToPick))
+          })
+          this.users = filteredUsers;
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    }
+  },
+  created(){
+    this.loadUsers();
   }
 }
 </script>
@@ -96,7 +102,7 @@ export default {
     width:90%;
 
     .header{
-      @include users-page-header;
+      @include admin-page-header;
 
     }
 
