@@ -10,77 +10,88 @@
             <div :class="`message ${valid ? '' : 'red--text'}`">
               {{ message }}
             </div>
-            <div class="input-container">
-              <div class="input-icon">
-                <svg
-                  width="15"
-                  height="18"
-                  viewBox="0 0 15 18"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M13.8 16.1999V14.5999C13.8 13.7512 13.4629 12.9373 12.8627 12.3372C12.2626 11.737 11.4487 11.3999 10.6 11.3999H4.2C3.35131 11.3999 2.53737 11.737 1.93726 12.3372C1.33714 12.9373 1 13.7512 1 14.5999V16.1999"
-                    stroke="#BABABC"
-                    stroke-width="1.8"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                  <path
-                    d="M7.39995 8.1998C9.16726 8.1998 10.6 6.76712 10.6 4.9998C10.6 3.23249 9.16726 1.7998 7.39995 1.7998C5.63264 1.7998 4.19995 3.23249 4.19995 4.9998C4.19995 6.76712 5.63264 8.1998 7.39995 8.1998Z"
-                    stroke="#BABABC"
-                    stroke-width="1.8"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
+            <form @submit.prevent="login">
+              <div class="input-container">
+                <div class="input-icon">
+                  <svg
+                    width="15"
+                    height="18"
+                    viewBox="0 0 15 18"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M13.8 16.1999V14.5999C13.8 13.7512 13.4629 12.9373 12.8627 12.3372C12.2626 11.737 11.4487 11.3999 10.6 11.3999H4.2C3.35131 11.3999 2.53737 11.737 1.93726 12.3372C1.33714 12.9373 1 13.7512 1 14.5999V16.1999"
+                      stroke="#BABABC"
+                      stroke-width="1.8"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                    <path
+                      d="M7.39995 8.1998C9.16726 8.1998 10.6 6.76712 10.6 4.9998C10.6 3.23249 9.16726 1.7998 7.39995 1.7998C5.63264 1.7998 4.19995 3.23249 4.19995 4.9998C4.19995 6.76712 5.63264 8.1998 7.39995 8.1998Z"
+                      stroke="#BABABC"
+                      stroke-width="1.8"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </div>
+                <input
+                  type="text"
+                  placeholder="Email or Username"
+                  v-model="email_user_name_or_phone"
+                  autocomplete="false"
+                  class="wide"
+                  @keyup="validate"
+                  required
+                />
               </div>
-              <input
-                type="text"
-                placeholder="Email or Username"
-                v-model="email_user_name_or_phone"
-                autocomplete="false"
-                @keyup="validate"
-              />
-            </div>
-            <div class="input-container">
-              <div class="input-icon">
-                <svg
-                  width="17"
-                  height="18"
-                  viewBox="0 0 17 18"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M13.3001 8.2998H3.5001C2.7269 8.2998 2.1001 8.92661 2.1001 9.6998V14.5998C2.1001 15.373 2.7269 15.9998 3.5001 15.9998H13.3001C14.0733 15.9998 14.7001 15.373 14.7001 14.5998V9.6998C14.7001 8.92661 14.0733 8.2998 13.3001 8.2998Z"
-                    stroke="#BABABC"
-                    stroke-width="1.8"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                  <path
-                    d="M4.8999 8.3V5.5C4.8999 4.57174 5.26865 3.6815 5.92503 3.02513C6.58141 2.36875 7.47164 2 8.3999 2C9.32816 2 10.2184 2.36875 10.8748 3.02513C11.5312 3.6815 11.8999 4.57174 11.8999 5.5V8.3"
-                    stroke="#BABABC"
-                    stroke-width="1.8"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
+              <div class="input-container">
+                <div class="input-icon">
+                  <svg
+                    width="17"
+                    height="18"
+                    viewBox="0 0 17 18"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M13.3001 8.2998H3.5001C2.7269 8.2998 2.1001 8.92661 2.1001 9.6998V14.5998C2.1001 15.373 2.7269 15.9998 3.5001 15.9998H13.3001C14.0733 15.9998 14.7001 15.373 14.7001 14.5998V9.6998C14.7001 8.92661 14.0733 8.2998 13.3001 8.2998Z"
+                      stroke="#BABABC"
+                      stroke-width="1.8"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                    <path
+                      d="M4.8999 8.3V5.5C4.8999 4.57174 5.26865 3.6815 5.92503 3.02513C6.58141 2.36875 7.47164 2 8.3999 2C9.32816 2 10.2184 2.36875 10.8748 3.02513C11.5312 3.6815 11.8999 4.57174 11.8999 5.5V8.3"
+                      stroke="#BABABC"
+                      stroke-width="1.8"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </div>
+                <input
+                  type="password"
+                  v-model="password"
+                  @keyup="validate"
+                  autocomplete="false"
+                  class="wide"
+                  placeholder="Password"
+                  required
+                />
               </div>
-              <input
-                type="password"
-                v-model="password"
-                @keyup="validate"
-                autocomplete="false"
-                placeholder="Password"
-              />
-            </div>
-            <div class="input-container un_bordered">
-              <input type="checkbox" />
-              <div class="text">Remember me</div>
-            </div>
-            <div class="login-button">LOGIN</div>
+              <div class="input-container un_bordered">
+                <input type="checkbox" />
+                <div class="text">Remember me</div>
+              </div>
+              <button
+                :disabled="!valid"
+                :class="`login-button ${valid ? '' : 'disabled'}`"
+              >
+                LOGIN
+              </button>
+            </form>
             <div class="forgot-password mx-auto">Forgot password</div>
           </div>
         </div>
@@ -116,6 +127,9 @@ export default {
       this.valid = this.message == "Please login to continue";
     },
     async login() {
+      console.log("ahooooooooo");
+      return;
+      // eslint-disable-next-line no-unreachable
       try {
         const credentials = {
           email_user_name_or_phone: this.email_user_name_or_phone.toLowerCase(),
@@ -284,14 +298,18 @@ export default {
           text-align: left;
           padding-left: 10px;
           color: #ababab;
+          &.wide {
+            width: 70%;
+          }
         }
       }
       &-icon {
-        padding: 10px 5px 10px 33px;
+        padding: 10px 20px 10px 20px;
       }
     }
     .login-button {
       max-width: 298.04px;
+      width: 100%;
       height: 46.25px;
       left: 533.96px;
       top: 427px;
