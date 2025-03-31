@@ -199,7 +199,7 @@ export default {
 
 <style lang="scss" scoped>
 .quiz_intermediate_page {
-  min-height: 100%j;
+  min-height: 100%;
   .instructions {
     font-size: 1rem;
   }
