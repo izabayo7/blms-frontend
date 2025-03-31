@@ -154,7 +154,7 @@
           <div class="added-emails customScroll my-5">
             <div v-for="(email, i) in emails" :key="i" class="email">
               <div class="text">{{ email }}</div>
-              <button class="pl-1">
+              <button @click="emails=emails.filter(x=>x!=email)" class="pl-1">
                 <svg
                     width="9"
                     height="9"
