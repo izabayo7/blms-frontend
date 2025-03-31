@@ -80,11 +80,20 @@ const routes = [
                 // for chat
                 children: [
                     {
-                        path: '/welcome',
+                        path: '/admin',
                         component: () =>
-                            import( /* webpackPrefetch: true */ /* webpackChunkName: "welcome" */ '@/views/dashboard/new'),
+                            import( /* webpackPrefetch: true */ /* webpackChunkName: "dashboard" */ '@/views/dashboard/new'),
                         meta: {
-                            allowAnonymous: true
+                            allowAnonymous: false
+                        }
+                    },
+
+                    {
+                        path: '/instructor',
+                        component: () =>
+                            import( /* webpackPrefetch: true */ /* webpackChunkName: "dashboard" */ '@/views/dashboard/new/instructor'),
+                        meta: {
+                            allowAnonymous: false
                         }
                     },
 
@@ -101,7 +110,7 @@ const routes = [
                     },
                     {
                         path: '/users/user/:username',
-                        name: "students",
+                        name: "student",
                         component: () => import( /* webpackChunkName: "user-by-name" */ '@/views/users/user/profile.vue'),
                     },
                     //for faculties
@@ -201,7 +210,7 @@ const router = new VueRouter({
 })
 // before navigating to any route
 router.beforeEach((to, from, next) => {
-    if(to.path != from.path) {
+    if(to.path != from.path || to.path == "/") {
         // if the session exist and the vuex store is not set
         if (Vue.prototype.$session.exists() && (!store.state.user.isLoggedIn || !axios.defaults.headers.common.Authorization)) {
             // get the token
