@@ -81,7 +81,7 @@ export default {
 
         if (response.data.status == 200) {
           // set the token in axios headers
-          axios.defaults.headers.common.Authorization = `${response.data.data}`;
+          axios.defaults.headers.common.Authorization = `Bearer ${response.data.data}`;
           // start the session
           this.$session.start();
           // set the token in the session
