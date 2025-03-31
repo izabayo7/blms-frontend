@@ -630,7 +630,7 @@ export default {
     this.ws = new WebSocket('wss://' + host + '/kurious_stream' + `?token=${this.$session.get("jwt")}`);
 
     this.ws.addEventListener('open', () => {
-      // self.register();
+      self.register();
     })
 
     this.ws.onerror = function (evt) {
@@ -1510,9 +1510,11 @@ export default {
       margin-top: 1rem;
 
       &.long {
+        width: 378px;
         height: 490px;
         .online-users{
           max-height: 94%;
+          padding: 31px
         }
       }
     }
