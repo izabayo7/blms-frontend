@@ -327,14 +327,14 @@ export default {
             })
         },
         //delete an attachment
-        deleteAttachment({ state }, attachmentId) {
-            apis.delete('file/removeAttachment', attachmentId).then(() => {
+        deleteAttachment({ state }, attachmentName) {
+            apis.delete(`chapter/${state.selectedChapter}/attachment`, attachmentName).then(() => {
                 for (const i in state.courses.data) {
                     if (state.courses.data[i]._id == state.selectedCourse) {
                         for (const k in state.courses.data[i].chapters) {
                             if (state.courses.data[i].chapters[k]._id == state.selectedChapter) {
                                 for (const l in state.courses.data[i].chapters[k].attachments) {
-                                    if (state.courses.data[i].chapters[k].attachments[l]._id == attachmentId) {
+                                    if (state.courses.data[i].chapters[k].attachments[l].name == attachmentName) {
                                         state.courses.data[i].chapters[k].attachments.splice(l, 1)
                                         return
                                     }

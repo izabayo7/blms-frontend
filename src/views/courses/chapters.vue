@@ -235,7 +235,7 @@
                                 }}</span>
                                                                 <button
                                                                         @click.prevent="
-                                    deleteAttachment(attachment._id)
+                                    deleteAttachment(attachment.name)
                                   "
                                                                 >
                                                                     <svg
