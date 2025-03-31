@@ -166,6 +166,7 @@ export default {
       let element = this.$refs.feedback_input;
       element.className += " saved_feedback";
       this.message = "feedback successfuly saved";
+      this.showSave = false;
     },
     async editFeedback() {
       const content = this.feedbackContent();
