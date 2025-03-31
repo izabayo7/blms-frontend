@@ -172,6 +172,9 @@ export default {
     if (this.data) {
       this.chartOptions.colors = this.data.colors
       // this.chartOptions.legend.show = true
+      this.chartOptions.tooltip = {
+        enabled: false
+      }
       this.chartOptions.plotOptions.pie = {
         donut: {
           labels: {
