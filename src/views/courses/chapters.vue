@@ -39,7 +39,7 @@
             }`"
             @click="activeChapter = i"
           >
-            {{ course.chapters[activeChapter].name | trimString(20) }}
+            {{ course.chapters[i].name | trimString(20) }}
           </button>
         </v-badge>
         <v-btn width="90%" class="py-6" @click="addNewChapter">
@@ -430,11 +430,11 @@ export default {
       } else {
         this.mode = "edit";
       }
-      // if (this.course.chapters[this.activeChapter].quiz.length > 0) {
-      //   this.selectedQuizName = this.course.chapters[
-      //     this.activeChapter
-      //   ].quiz[0].name;
-      // }
+      if (this.course.chapters[this.activeChapter].quiz.length > 0) {
+        this.selectedQuizName = this.course.chapters[
+          this.activeChapter
+        ].quiz[0].name;
+      }
       this.video = undefined;
       this.attachments = [];
       this.calculateQuizNames();

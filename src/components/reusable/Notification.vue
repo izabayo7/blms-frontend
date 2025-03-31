@@ -59,31 +59,6 @@ export default {
     formatedNotifications() {
       let notifications = [];
       if (this.notifications.length > 0) {
-        console.log(this.notifications);
-        for (const i in this.notifications) {
-          notifications.push({
-            name: `${this.notifications[i].notification.doer.surName} ${this.notifications[i].notification.doer.otherNames}`,
-            msg: this.notifications[i].notification.content,
-            time: this.notifications[i].notification.createdAt,
-            link: this.notifications[i].notification.link,
-          });
-        }
-        for (const i in this.notifications) {
-          notifications.push({
-            name: `${this.notifications[i].notification.doer.surName} ${this.notifications[i].notification.doer.otherNames}`,
-            msg: this.notifications[i].notification.content,
-            time: this.notifications[i].notification.createdAt,
-            link: this.notifications[i].notification.link,
-          });
-        }
-        for (const i in this.notifications) {
-          notifications.push({
-            name: `${this.notifications[i].notification.doer.surName} ${this.notifications[i].notification.doer.otherNames}`,
-            msg: this.notifications[i].notification.content,
-            time: this.notifications[i].notification.createdAt,
-            link: this.notifications[i].notification.link,
-          });
-        }
         for (const i in this.notifications) {
           notifications.push({
             name: `${this.notifications[i].notification.doer.surName} ${this.notifications[i].notification.doer.otherNames}`,

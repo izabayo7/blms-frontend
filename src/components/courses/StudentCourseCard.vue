@@ -15,9 +15,9 @@
           >{{course.name | computeText}}</v-avatar>
         </v-col>
         <v-col class="col-7 coure-details-side pt-6">
-          <p class="course-title">{{course.name}}</p>
+          <p class="course-title">{{course.name | trimString(30)}}</p>
           <p class="course-instructor">{{course.instructor.surName}}</p>
-          <p class="course-description">{{course.description | trimString(100)}}</p>
+          <p class="course-description">{{course.description | trimString(50)}}</p>
           <v-progress-linear
             v-if="course.progress"
             :value="course.progress.progress"
