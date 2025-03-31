@@ -248,7 +248,7 @@ export default {
                     for (const i in attachments) {
                         formData.append("files[" + i + "]", attachments[i]);
                     }
-                    const chapterResponse = await apis.create(`file/addAttachments/${state.selectedChapter}`, formData, {
+                    const chapterResponse = await apis.create(`chapter/${state.selectedChapter}/attachments`, formData, {
                         headers: {
                             'Content-Type': 'multipart/form-data'
                         },
@@ -456,7 +456,7 @@ export default {
                     for (const i in attachments) {
                         formData.append("files[" + i + "]", attachments[i]);
                     }
-                    const chapterResponse = await apis.create(`file/addAttachments/${state.selectedChapter}`, formData, {
+                    const chapterResponse = await apis.create(`chapter/${d.data._id}/attachments`, formData, {
                         headers: {
                             'Content-Type': 'multipart/form-data'
                         },
