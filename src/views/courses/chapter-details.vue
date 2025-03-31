@@ -329,16 +329,17 @@ export default {
         }
         this.activeIndex = index;
       });
-
-      // find quiz_submission
-      this.findQuizSubmissionByUserAndQuizNames({
-        userName: this.$store.state.user.user.user_name,
-        quizName: this.course.chapters[this.activeIndex].quiz[0].name,
-      });
-
+      if (this.course.chapters[this.activeIndex].quiz.length) {
+        // find quiz_submission
+        this.findQuizSubmissionByUserAndQuizNames({
+          userName: this.$store.state.user.user.user_name,
+          quizName: this.course.chapters[this.activeIndex].quiz[0].name,
+        });
+      }
       this.editorContent = "";
       //getting chapter content
       this.getChapterMainContent(id).then((d) => {
+        console.log(d);
         this.editorContent = d;
       });
 
