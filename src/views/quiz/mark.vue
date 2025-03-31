@@ -353,11 +353,11 @@ export default {
           link: "/reports",
         },
         {
-          text: this.selected_quiz_submission.quiz._id,
+          text: this.selected_quiz_submission.quiz.target.course.name,
           link: "/reports/" + this.selected_quiz_submission.quiz._id,
         },
         {
-          text: this.selected_quiz_submission.quiz._id,
+          text: this.selected_quiz_submission.quiz.name,
           link: "/reports/" + this.selected_quiz_submission.quiz._id,
         },
         {
