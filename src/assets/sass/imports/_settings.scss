@@ -195,6 +195,100 @@
           border: none;
           color: #FFFFFF;
         }
+
+        &.upgrade {
+          width: 183.92px;
+          height: 44.44px;
+          background: #193074;
+          border: none;
+          color: #FFFFFF;
+        }
+      }
+    }
+
+    .modes {
+      margin-top: 19px;
+      display: flex;
+
+      button {
+        font-family: Inter;
+        font-style: normal;
+        font-weight: bold;
+        font-size: 14.8125px;
+        line-height: 35px;
+        /* identical to box height, or 234% */
+        margin-right: 39px;
+        display: flex;
+        align-items: center;
+
+        color: #828282;
+
+        &.active {
+          color: #193074;
+        }
+      }
+    }
+
+    .current {
+      width: 450px;
+      height: 100px;
+      border: 1px solid #C4C4C4;
+      box-sizing: border-box;
+      display: flex;
+      div {
+        font-family: Inter;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 10px;
+        line-height: 20px;
+        /* or 200% */
+
+
+        color: #193074 !important;
+        &.d-flex{
+          div{
+            margin-right: 5px;
+          }
+        }
+      }
+      .user_name{
+        font-weight: bold;
+        font-size: 13px;
+      }
+      button{
+        font-size: 13px;
+        width: 76px;
+        height: 40px;
+        background: rgba(25, 48, 116, 0.1);
+        border-radius: 5px;
+      }
+    }
+
+    .history {
+      height: 12rem;
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+
+    .record {
+      display: flex;
+
+      .normal {
+        font-family: Inter;
+        font-style: normal;
+        font-weight: 500;
+        font-size: 12.3438px;
+        line-height: 35px;
+        /* identical to box height, or 281% */
+
+        display: flex;
+        align-items: center;
+        margin-right: 12px;
+        color: #193074;
+
+        &.bold {
+          font-weight: bold;
+        }
       }
     }
   }
