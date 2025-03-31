@@ -644,7 +644,7 @@
          span{
              border: none;
              border-radius: 0;
-             max-width: 100%;
+             max-width: calc(100% - 42px);
              &:focus{
                  outline: none;
                  border-bottom: 1px solid #3C3C3C;
