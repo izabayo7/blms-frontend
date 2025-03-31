@@ -8,6 +8,8 @@ const filters = [
         // decrease a strings length
         name: 'trimString',
         structure: (string, length) => {
+            if (string.length < length)
+                return string
             let trimedString = string.substring(0, length);
             trimedString = trimedString.split(" ");
             trimedString.splice(trimedString.length - 1, trimedString.length > 1 ? 1 : 0);
@@ -74,8 +76,8 @@ const filters = [
             var Difference_In_Days = diff / (1000 * 3600 * 24);
 
             if (Difference_In_Days > 1) {
-                result = date1.toISOString().substr(2,8).split('-').reverse().join('/')
-            } else if(Difference_In_Days === 1){
+                result = date1.toISOString().substr(2, 8).split('-').reverse().join('/')
+            } else if (Difference_In_Days === 1) {
                 result = 'yesterday'
             } else {
                 result = date1.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })
