@@ -94,7 +94,10 @@ const filters = [
     {
         name:'urlify',
         structure(text){
-            return text.replace(urlRegex, '<a href="$1" target="_blank">$1</a>')
+            // return text.replace(urlRegex, '<a href="$1" target="_blank">$1</a>')
+            return text.replace(urlRegex, (d) => {
+               return `<a href="${d}" target="_blank" >${d} </a>`
+            })
         }
     }
 
@@ -109,3 +112,5 @@ const MyPlugin = {
     },
 }
 Vue.use(MyPlugin)
+
+

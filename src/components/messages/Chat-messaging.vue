@@ -142,14 +142,6 @@ export default {
     scrollableDiv.addEventListener('scroll',this.readMessages)
 
 
-    this.$store.getters['chat/socket'].on('message-sent',sentMessage => {
-      this.$store.commit('chat/ADD_ONGOING_MESSAGE',sentMessage)
-    })
-    // this.socket.on('message-sent',message => {
-    //   setTimeout(this.scrollChatToBottom, 1);
-    //   this.$store.commit('chat/ADD_ONGOING_MESSAGE',message)
-    // })
-
     /*
     when this component is mounted Immediately scroll to the bottom
     the reason we call this function the end is that we need to wait for the all message to be rendered

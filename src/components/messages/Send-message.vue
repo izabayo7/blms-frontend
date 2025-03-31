@@ -57,9 +57,8 @@ export default {
       if(this.msg.length <= 0)
         return
       this.socket.emit('send-message', {
-        recipients:[{id:this.currentDisplayedUser.id}],
+        recipient:this.currentDisplayedUser.id,
         msg: this.msg,
-        group: undefined
       });
 
       //after sending message let us make the div empty

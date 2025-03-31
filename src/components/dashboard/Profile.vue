@@ -29,7 +29,7 @@ export default {
       this.$session.destroy();
       
       // reset the modules
-      this.$store.commit("user/unsetUser");
+      this.$store.dispatch("user/unsetUser");
       this.$store.commit("users/RESET_STATE");
       this.$store.commit("sidebar_navbar/RESET_STATE");
       this.$store.commit("quiz/RESET_STATE");

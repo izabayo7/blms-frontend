@@ -25,8 +25,10 @@ export default {
     this.socket.on("new-course", (course) => {
       this.addCourse(course);
     });
+
     // listen to if the new message was sent
     this.socket.on("message-sent", (message) => {
+      console.log('in index.js')
       setTimeout(this.scrollChatToBottom, 1);
       this.$store.commit("chat/ADD_ONGOING_MESSAGE", message);
     });
