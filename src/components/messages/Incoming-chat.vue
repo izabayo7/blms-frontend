@@ -38,7 +38,7 @@ export default {
   handleClick(){
     console.log(this.data.id)
     this.$store.commit('chat/SET_DISPLAYED_USER',this.data)
-    this.$store.dispatch('chat/loadMessages',this.data.id)
+    // this.$store.dispatch('chat/displayMessages',this.data.id)
     // emit('chat_user_changed',this.data.id) //alert that user was changed so we need to fetch some new messages
     this.$router.push({path:`/messages/${this.data.id}`,params:{username:this.data.id}})
   }

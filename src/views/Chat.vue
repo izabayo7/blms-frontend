@@ -10,7 +10,8 @@
     </div>
     <div ref="messages-list" class="messages-list" >
       <div class="messages-container" id="chat-holder">
-        <chat-messaging :data="currentChatMessages" id="scrollable-chat"/>
+          <div class="messages-loading" v-if="conversationLoading"><div class="lds-ripple"><div></div><div></div></div></div>
+        <chat-messaging :data="currentMessages" id="scrollable-chat" v-else/>
       </div>
     </div>
     <div ref="send-message" class="send-message">
@@ -38,31 +39,37 @@ export default {
     }
   },
   computed:{
-    ...mapState('chat',['currentDisplayedUser','currentChatMessages','username']),
-    ...mapGetters('chat',['socket']),
+    ...mapState('chat',['currentDisplayedUser','username','loadedMessages']),
+    ...mapGetters('chat',['socket','conversationLoading','currentMessages']),
+
   },
   methods:{
     ...mapActions('chat',['setUsername','loadMessages']),
     scrollChatToBottom(){
-      let el = document.getElementById('scrollable-chat')
+      let el = document.getElementById('chat-holder')
       console.log(el.scrollTop,el.scrollHeight)
-      el.scrollTop =el.scrollHeight
+      el.scrollTop = el.scrollHeight
+
       console.log(el.scrollTop,el.scrollHeight)
 
     }
   },
-  created() {
-    console.log('created')
-    //if there  are no current loaded messages, loads them
-    if(this.currentChatMessages.length <=0){
-      this.$store.dispatch('chat/loadMessages')
-    }
-  },
   mounted() {
-    on('conversation_loaded',()=>{
-      // this.scrollChatToBottom()
-      // console.log('loaded')
+    on('message-received',()=>{
+      this.scrollChatToBottom()
     })
+    // Message from server
+    this.socket.on('receive-message', (message) => {
+
+      if(this.loadedMessages.length > 0) // if messages have loaded
+                this.$store.commit('chat/ADD_INCOMING_MESSAGE',message)
+
+      // for groups
+
+
+      // Scroll down
+      // chatMessages.scrollTop = chatMessages.scrollHeight;
+    });
   },
   beforeMount() {
     //load user since the route have changed
@@ -72,7 +79,9 @@ export default {
   },
   beforeRouteUpdate(to,from,next){
     //since username has changed let us also load new chat
-    this.setUsername(to.params.username)
+    this.setUsername(to.params.username).then(username => {
+      console.log(username)
+    })
 
     next()
   }
@@ -109,8 +118,48 @@ export default {
       left: 0;
       bottom: 0;
       right: 0;
-
       width: 100%;
+
+      .messages-loading{
+        position: absolute;
+        top:50%;
+        left:50%;
+        transform: translate(-50%,-50%);
+
+        .lds-ripple {
+          display: inline-block;
+          position: relative;
+          width: 80px;
+          height: 80px;
+        }
+        .lds-ripple div {
+          position: absolute;
+          border: 4px solid $primary;
+          opacity: 1;
+          border-radius: 50%;
+          animation: lds-ripple 1s cubic-bezier(0, 0.2, 0.8, 1) infinite;
+        }
+        .lds-ripple div:nth-child(2) {
+          animation-delay: -0.5s;
+        }
+        @keyframes lds-ripple {
+          0% {
+            top: 36px;
+            left: 36px;
+            width: 0;
+            height: 0;
+            opacity: 1;
+          }
+          100% {
+            top: 0px;
+            left: 0px;
+            width: 72px;
+            height: 72px;
+            opacity: 0;
+          }
+        }
+
+      }
     }
 
     &::-webkit-scrollbar {

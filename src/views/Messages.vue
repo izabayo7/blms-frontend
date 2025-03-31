@@ -57,7 +57,7 @@ export default {
           this.incomingMessages.map(d => {
             if(this.$route.params.username === d.id){
               this.SET_DISPLAYED_USER(d)
-              console.log(d)
+              // console.log(d)
             }
           })
         })

@@ -121,7 +121,7 @@ export default {
   computed: {
     // get the userCategory
     userCategory() {
-      return this.$store.state.user.category;
+      return this.$store.state.user.user.category;
     },
     // get courses published and unpublished
     ...mapGetters("courses", [

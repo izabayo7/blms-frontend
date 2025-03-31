@@ -3,7 +3,7 @@
 <!--    messages container-->
     <div class="msg-container" >
 <!--      if there are no messages-->
-      <div class="no-msgs" v-if="data.length <= 0">you have not yet started conversation with {{currentDisplayedUser.name}}.</div>
+      <div class="no-msgs" v-if="!data">you have not yet started conversation with {{currentDisplayedUser.name}}.</div>
 
 <!--      block of messages-->
       <div class="msgs-block" v-for="(msgs,i) in data" :key="i"  :class="{sending:msgGoing(msgs.from),receiving:!msgGoing(msgs.from)}">
@@ -11,7 +11,7 @@
         <div class="picture"><img src="@/assets/images/instructor.png" alt="sender profile picture" ></div>
 <!--        list of messages sent or received-->
         <div class="msgs">
-          <div class="msg" v-for="(msg,i) in msgs.messages" :key="i">{{msg.message}}</div>
+          <div class="msg" v-for="(msg,i) in msgs.messages" :key="i">{{msg.content}}</div>
         </div>
 
       </div>
@@ -22,13 +22,14 @@
 <script>
 import {mapState} from 'vuex'
 
+
 export default {
   name: "Chat-messaging",
   props:{
-    data:{type:Array,required:true}
+    data:{type:[Array,Boolean],required:true}
   },
   computed:{
-    ...mapState('chat',['currentDisplayedUser'])
+    ...mapState('chat',['currentDisplayedUser']),
   },
   methods: {
     // is message going or comming
@@ -38,6 +39,10 @@ export default {
 
   },
   beforeMount() {
+
+  },
+  mounted(){
+
 
   }
 
