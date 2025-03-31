@@ -124,7 +124,7 @@
             @click="
               $store.state.user.user.category.name == 'STUDENT'
                 ? saveAttempt()
-                : $router.push('quiz/submitted')
+                : $router.push('/quiz/submitted')
             "
             rounded
             >Submit Answers</v-btn
@@ -334,8 +334,8 @@ export default {
       this.create_quiz_submission({
         submission: this.attempt,
         attachments: this.filesToUpload,
-      }).then((d) => {
-        if (d.is_selection_only) {
+      }).then((is_selection_only) => {
+        if (is_selection_only) {
           this.$router.push(`/quiz/${this.selected_quiz.name}/results`);
         } else {
           this.$router.push(
