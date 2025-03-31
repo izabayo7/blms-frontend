@@ -293,10 +293,11 @@ export default {
     },
   },
   created() {
-    this.getCourses();
+    this.getCourses(!this.loaded);
     this.getQuizes({
       user_name: this.$store.state.user.user.user_name,
     });
+    console.log(this.$store.state.courses.selectedCourse, this.course)
     if(this.course){
       console.log(this.course.name)
       this.selected_course = this.course.name

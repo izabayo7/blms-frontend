@@ -117,3 +117,10 @@
     color: $primary;
     background-color: #e1e1e1;
 }
+
+/* Portrait phones and smaller */
+@media (max-width: 700px) {
+    #reports-page {
+        padding: 10px
+    }
+}

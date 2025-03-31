@@ -64,7 +64,7 @@ wrong date in recorder
                       !selected_quiz_submission
                     "
                       :color="primary"
-                      class="white--text next-chapter"
+                      class="white--text next-chapter mb-8"
                       :to="`/quiz/preview/${course.chapters[activeIndex].quiz[0].name}`"
                       rounded
                   >Take Quiz
@@ -221,6 +221,7 @@ wrong date in recorder
 <script>
 import {mapActions, mapGetters} from "vuex";
 import UnrealTimeDiscussionBoard from "../../components/Live/UnrealTimeDiscussionBoard";
+import {downloadAttachment} from "@/services/global_functions"
 import colors from "@/assets/sass/imports/_colors.scss";
 import {emit} from "../../services/event_bus";
 
@@ -262,6 +263,7 @@ export default {
     },
   },
   methods: {
+    downloadAttachment,
     ...mapActions("courses", [
       "findCourseByName",
       "getChapterMainContent",
@@ -292,9 +294,6 @@ export default {
       if (this.$route.fullPath != path) {
         this.$router.push(path);
       }
-    },
-    async downloadAttachment(url) {
-      window.location.href = url;
     },
     nextChapter(idx) {
       return idx < this.course.chapters.length

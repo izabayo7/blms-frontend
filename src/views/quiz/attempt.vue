@@ -2,7 +2,7 @@
   <v-container
     v-if="selected_quiz && attempt !== {}"
     fluid
-    class="quiz-page px-16"
+    class="quiz-page px-4 px-md-16"
   >
     <div v-if="!selected_quiz_submission">
       <h2>{{ selected_quiz.name }}</h2>
@@ -52,7 +52,7 @@
                   v-for="(choice, k) in question.options.choices"
                   :key="k"
                   @click="handleOptionClick(i, k)"
-                  :class="`text-selection ${
+                  :class="`text-selection cursor-pointer ${
                     checkChoiceStatus(attempt.answers[i].choosed_options, {
                       text: choice.text,
                     })
@@ -331,7 +331,7 @@ export default {
         this.selected_quiz.duration - this.remaining_time;
       this.create_quiz_submission({
         submission: this.attempt,
-        attachments: this.filesToUpload,
+        attachments: this.filesToUpload.filter(e=>e.file != ""),
       }).then((is_selection_only) => {
         if (is_selection_only) {
           this.$router.push(`/quiz/${this.selected_quiz.name}/results`);
@@ -373,10 +373,10 @@ export default {
             this.attempt.answers.push({ text: "" });
           } else if (question.type === "file_upload") {
             this.attempt.answers.push({ src: "" });
-            this.filesToUpload.push({ file: "" });
           } else {
             this.attempt.answers.push({ choosed_options: [] });
           }
+          this.filesToUpload.push({ file: "" });
         }
       });
     }

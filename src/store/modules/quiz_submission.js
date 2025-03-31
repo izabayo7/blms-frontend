@@ -112,13 +112,12 @@ export default {
                 if (attachments.length > 0) {
                     const formData = new FormData()
                     for (const i in attachments) {
-                        formData.append("files[" + i + "]", attachments[i]);
+                        formData.append("files[" + i + "]", attachments[i].file);
                     }
 
                     // set the dialog
                     dispatch('modal/set_modal', { template: 'display_information', title: 'Creating submission', message: 'Uploading attachments' }, { root: true })
-
-                    apis.create(`file/submissionAttachedFiles/${d.data._id}`, formData, {
+                    apis.create(`quiz_submission/${d.data.document._id}/attachment`, formData, {
                         headers: {
                             'Content-Type': 'multipart/form-data'
                         },

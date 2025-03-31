@@ -4,45 +4,34 @@
     fluid
     class="quiz-page white pl-lg-16"
   >
-    <back class="mt-0 mb-6 ml-n6" />
+    <back class="mt-0 mb-6 ml-0 ml-md-n6" />
 
     <v-row class="relative">
-      <v-col class="col-12 col-md-8">
+      <v-col class="col-12 col-md-8 px-0">
         <navigation title="Submissions" :links="navigation_links" />
         <v-row
           v-for="(question, i) in selected_quiz_submission.quiz.questions"
           :key="i"
-          class="col-12 col-md-12"
+          class="col-12 col-md-12 px-0"
         >
           <v-col class="col-12">
             <v-row>
               <v-col
+                  class="px-0"
                 :class="question.type.includes('select') ? 'col-11' : 'col-12'"
               >
-                <p class="question-details col-md-12 col-12">
+                <p class="question-details col-md-12 col-12 px-0">
                   {{ `${i + 1}. ${question.details}` }}
                 </p>
                 <v-btn
                   v-if="question.type === 'file_upload'"
                   rounded
                   color="#ffd248"
-                  disabled
                   class="white--text course-image mt-4 mb-6 d-block"
-                  @click="pickfile(i)"
+                  @click="downloadAttachment(`${backend_url}/api/quiz_submission/${selected_quiz_submission._id}/attachment/${attempt.answers[i].src}?token=${$session.get('jwt')}`)"
                 >
-                  <v-icon>mdi-arrow-expand-up</v-icon>
-                  <span>{{
-                    attempt.answers[i].src === ""
-                      ? "Upload file"
-                      : attempt.answers[i].src
-                  }}</span>
+                  {{ attempt.answers[i].src }}
                 </v-btn>
-                <input
-                  v-if="question.type === 'file_upload'"
-                  type="file"
-                  :id="`file${i}`"
-                  hidden
-                />
                 <textarea
                   v-if="question.type === 'open_ended'"
                   v-model="attempt.answers[i].text"
@@ -229,7 +218,7 @@
                       }`"
                       type="number"
                       v-model="attempt.answers[i].marks"
-                      :readonly="mode === 'view'"
+                      :readonly="mode === 'view' || question.type.includes('select')"
                       @keyup="computeTotalMarks()"
                     />
                     <span>{{ `/${question.marks}` }}</span>
@@ -332,6 +321,7 @@
 
 <script>
 import { mapGetters, mapActions } from "vuex";
+import {downloadAttachment} from "@/services/global_functions"
 import { omit } from "lodash";
 export default {
   data: () => ({
@@ -375,6 +365,9 @@ export default {
     navigation: () => import("@/components/shared/simple_navigation"),
   },
   computed: {
+    backend_url(){
+      return process.env.VUE_APP_api_service_url
+    },
     ...mapGetters("quiz_submission", ["selected_quiz_submission"]),
     userCategory() {
       return this.$store.state.user.user.category.name;
@@ -418,6 +411,7 @@ export default {
     },
   },
   methods: {
+    downloadAttachment,
     ...mapActions("quiz_submission", [
       "update_quiz_submission",
       "findQuizSubmissionByUserAndQuizNames",
@@ -459,9 +453,6 @@ export default {
     removeMediaPath(url) {
       return url.split("/")[url.split("/").length - 1];
     },
-    pickfile(index) {
-      document.getElementById(`file${index}`).click();
-    },
     async updateSubmission() {
       this.update_quiz_submission({
         submission: this.attempt,
@@ -475,6 +466,7 @@ export default {
       userName: this.$route.params.user_name,
       quizName: this.$route.params.quiz_name,
     }).then(async () => {
+      console.log(this.selected_quiz_submission)
       this.attempt = {
         quiz: this.selected_quiz_submission.quiz._id,
         user: this.selected_quiz_submission.user.user_name,

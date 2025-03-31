@@ -15,7 +15,7 @@
 
     .questions-side {
         .question-details {
-            width: 315px;
+            width: 315px
         }
 
         .radio-btn1 {
@@ -32,5 +32,15 @@
             width: 190px;
             height: 45px;
         }
+    }
+    .question-details{
+        font-weight: 600
+    }
+}
+
+/* Portrait phones and smaller */
+@media (max-width: 700px) {
+    .quiz-page {
+        padding: 10px;
     }
 }

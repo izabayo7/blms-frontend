@@ -78,17 +78,19 @@ export default {
     },
     actions: {
         //get courses from backend
-        getCourses({state}) {
-            state.courses.data = []
+        getCourses({state},load_new = true) {
+
             // if courses not loaded fetch them
-            // if (!state.courses.loaded) {
-                apis.get(`course/user`).then(d => {
+            if (load_new) {
+                state.courses.data = []
+                state.courses.loaded = false
+              apis.get(`course/user`).then(d => {
                     d.data = d.data.data
                     state.courses.data = d.data
                     //announce that data have been loaded
                     state.courses.loaded = true
                 })
-            // }
+            }
         },
 
         // get faculty courses

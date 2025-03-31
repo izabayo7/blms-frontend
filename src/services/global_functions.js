@@ -133,6 +133,10 @@ function playSound(url) {
     audio.play();
 }
 
+async function downloadAttachment(url) {
+    window.open(url, "_blank");
+}
+
 export {
     hasOwn,
     getImgFile,
@@ -143,5 +147,6 @@ export {
     convertUTCDateToLocalDate,
     toLocal,
     playSound,
-    getDateAndTime
+    getDateAndTime,
+    downloadAttachment
 }

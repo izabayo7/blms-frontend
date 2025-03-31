@@ -47,7 +47,7 @@
           <v-col
             v-for="(course, i) in ongoingCourses"
             :key="i"
-            class="n-padding col-12 col-md-4 pa-0"
+            class="n-padding col-12 col-md-auto pa-0"
           >
             <student-course-card category="ongoing" :course="course" />
           </v-col>
@@ -261,7 +261,6 @@ export default {
   name: "courses",
   data: () => ({
     type: "published",
-    loaded: false
   }),
   components: {
     InstructorCourseCard: () =>
@@ -278,7 +277,7 @@ export default {
       "publishedCourses",
       "unpublishedCourses",
       "courses",
-      // "loaded",
+      "loaded",
     ]),
     finishedCourses() {
       return this.courses.filter((course) =>
@@ -295,13 +294,9 @@ export default {
     ...mapActions("courses", ["getCourses"]),
   },
   mounted() {
-    this.loaded = false;
-    console.log(this.loaded)
     // if (!this.loaded) {
       //get courses on page load
-      this.getCourses().then(()=>{
-        this.loaded = true;
-      })
+      this.getCourses()
     // }
   },
 };
