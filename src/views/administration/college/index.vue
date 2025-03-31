@@ -115,7 +115,7 @@
           <v-btn
             color="transparent"
             class="cancel-quiz mx-2"
-            @click="$router.push('/users')"
+            @click="$router.push('/administration')"
             >Cancel</v-btn
           >
         </v-form>

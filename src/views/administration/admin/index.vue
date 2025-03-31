@@ -268,7 +268,7 @@
                   $router.push(`/administration/colleges/${college.name}`)
                 "
                 class="mt-2"
-                >View school details</v-btn
+                >View college details</v-btn
               >
             </v-col>
           </v-row>

@@ -19,7 +19,7 @@ const routes = [
         path: '/login',
         name: 'Login',
         component: () =>
-            import('@/components/login'),
+            import('@/views/pages/login'),
         meta: {
             allowAnonymous: true
         }
@@ -28,7 +28,7 @@ const routes = [
         {
             path: '/loading',
             component: () =>
-                import('@/components/skeleton'),
+                import('@/components/loaders'),
             meta: {
                 allowAnonymous: true
             }
@@ -149,13 +149,13 @@ const routes = [
                         path: '/administration',
                         name: 'Users',
                         component: () =>
-                            import('@/components/admin/users.vue')
+                            import('@/views/administration/admin')
                     },
                     {
                         path: '/administration/faculties',
                         name: 'Faculties',
                         component: () =>
-                            import('@/components/faculty'),
+                            import('@/views/administration/faculty'),
                         meta: {
                             allowAnonymous: false
                         }
@@ -164,7 +164,7 @@ const routes = [
                         path: '/administration/studentgroup',
                         name: 'Student Group',
                         component: () =>
-                            import('@/components/studentGroup'),
+                            import('@/views/administration/studentGroup'),
                         meta: {
                             allowAnonymous: false
                         }
@@ -175,33 +175,33 @@ const routes = [
                 path: '/administration/register/users',
                 name: 'Register Users',
                 component: () =>
-                    import('@/views/administration/registration/users/panel')
+                    import('@/views/administration/users')
             }, {
                 path: '/administration/register/users/student',
                 name: 'Register Student',
                 component: () =>
-                    import('@/views/administration/registration/users')
+                    import('@/views/administration/users/register')
             }, {
                 path: '/administration/register/users/instructor',
                 name: 'Register Instructor',
                 component: () =>
-                    import('@/views/administration/registration/users')
+                    import('@/views/administration/users/register')
             }, {
                 path: '/administration/register/users/admin',
                 name: 'Register Admin',
                 component: () =>
-                    import('@/views/administration/registration/admin/admin')
+                    import('@/views/administration/admin/register')
             }, {
                 path: '/administration/register/faculty',
                 name: 'Register Faculty',
                 component: () =>
-                    import('@/views/administration/registration/faculty')
+                    import('@/views/administration/faculty/register')
             },
             {
                 path: '/administration/colleges/:name',
-                name: 'SchoolDetails',
+                name: 'CollegeDetails',
                 component: () =>
-                    import('@/components/school-details'),
+                    import('@/views/administration/college'),
                 meta: {
                     allowAnonymous: false
                 }
