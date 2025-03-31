@@ -7,6 +7,7 @@ import {mapGetters, mapMutations, mapState} from "vuex";
 import {chatMixins} from "@/services/mixins";
 import apis from "@/services/apis";
 import {playSound} from "../../services/global_functions";
+
 const sound = require("../../assets/audio/msg.mp3");
 export default {
   name: "Index",
@@ -62,6 +63,12 @@ export default {
         //scroll to bottom
         setTimeout(this.scrollChatToBottom, 1);
         this.CHANGE_MESSAGE_READ_STATUS(this.currentDisplayedUser.id); //read all messages
+
+        if (message.sender !== "SYSTEM")
+          if (this.$route.params.username === message.sender.user_name)
+            this.socket.emit("message/all_messages_read", {
+              conversation_id: this.currentDisplayedUser.id,
+            });
       }
       if (this.loadedMessages.length > 0)
           // if messages have loaded
