@@ -37,8 +37,10 @@ export default function Participant(name, vm, offeringCourse = false, userInfo) 
     //
     // video.id = 'video-' + name;
     console.log(userInfo)
-    if (userInfo.category == "INSTRUCTOR")
+    if (userInfo.category == "INSTRUCTOR") {
         video.autoplay = true;
+        video.play();
+    }
     // video.controls = false;
 
 

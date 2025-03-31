@@ -505,7 +505,7 @@ export default {
      let participant = sender == this.participationInfo.name ? this.participants[this.participantIndex(sender)] : new Participant(sender, this, false, await this.getUserInfo(sender.split('_')[0]));
 console.log('\n\n\n\n\n\n',participant)
       console.log("\n\n\n", sender, "\n\n\n", (!this.participationInfo.isOfferingCourse && sender != this.participationInfo.name))
-      if ((!this.participationInfo.isOfferingCourse && sender != this.participationInfo.name) || (this.participationInfo.isOfferingCourse && sender == this.participationInfo.name)) {
+      if (participant.userInfo.category == "INSTRUCTOR") {
         let video = participant.getVideoElement();
         let options = {
           remoteVideo: video,
@@ -607,7 +607,8 @@ console.log('\n\n\n\n\n\n',participant)
       }
     }
     this.ws.onclose = () => {
-      console.log("\n\n\n\nclosed\n\n\n\n")
+      console.trace();
+      console.log("\n\n\n\nclosed\n\n\n\n", new Date())
     }
 
   },
