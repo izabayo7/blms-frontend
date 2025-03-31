@@ -147,7 +147,7 @@ export default {
                 d.data = d.data.data
                 state.courses.data[courseIndex].name = d.data.name
                 state.courses.data[courseIndex].description = d.data.description
-                state.courses.data[courseIndex].facultyCollegeYear = d.data.facultyCollegeYear
+                state.courses.data[courseIndex].user_group = d.data.user_group
 
                 if (coverPicture) {
                     // set the dialog
