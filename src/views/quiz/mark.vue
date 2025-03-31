@@ -143,10 +143,10 @@
                       :class="`marks-input ${
                         question.type === 'open_ended' ? 'editable' : ''
                       }`"
+                      type="number"
                       v-model="attempt.answers[i].marks"
                       :readonly="mode === 'view'"
-                      @change="computeTotalMarks"
-                      type="text"
+                      @change="computeTotalMarks()"
                     />
                     <span>{{ `/${question.marks}` }}</span>
                   </div>
@@ -379,6 +379,7 @@ export default {
       "findQuizSubmissionByUserAndQuizNames",
     ]),
     computeTotalMarks() {
+      console.log('ahooooooooooooooo')
       let result = 0;
       for (const i in this.selected_quiz_submission.answers) {
         result = parseInt(
