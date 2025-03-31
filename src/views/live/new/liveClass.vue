@@ -28,7 +28,7 @@
                     <img
                         :src="instructor ? instructor.profile + '?width=100' : ''"
                         alt="profile picture" class="picture">
-                    <h2 class="course">Economics Basics: Chapter 8 part II</h2>
+                    <h2 class="course">{{ live_session.course.name }}: {{ live_session.chapter.name }}</h2>
                     <span class="source">by instuctor</span>
                     <h2 class="name">{{
                         participationInfo.isOfferingCourse ? "YOU" : `${instructor ? instructor.sur_name + ' ' + instructor.other_names : ''}`
@@ -151,11 +151,10 @@
         </div>
         <div v-else class="live-class-details">
           <div class="live-class-details--wrapper">
-            <div class="description">Learn about the basics of compound interest, with examples of basic compound
-              interest calculations. Created by professor Kubwimana Jean Damascene
+            <div class="description">{{ live_session.chapter.description }}
             </div>
-            <div v-if="displayQuiz" class="quiz ml-auto ">
-              <button>
+            <div v-if="displayQuiz && live_session.quiz" class="quiz ml-auto ">
+              <button :to="`/quiz/preview/${live_session.quiz.name}`">
                 Take quiz
               </button>
             </div>
