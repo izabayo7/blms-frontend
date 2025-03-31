@@ -96,12 +96,11 @@ function calculateNearestLiveSession(course) {
     let live_session = undefined
     for (const i in course.chapters) {
         if (course.chapters[i].live_sessions.length) {
-            if (!live_session && (new Date(course.chapters[i].live_sessions[0].date) >= new Date(new Date().toISOString().substring(0, 10)))) {
-                live_session = course.chapters[i].live_sessions[0]
-            } else if (live_session) {
-                if (live_session.date < course.chapters[i].live_sessions[0].date) {
-                    live_session = course.chapters[i].live_sessions[0]
-                }
+            live_session = course.chapters[i].live_sessions.filter(e => e.status == "PENDING")
+            if (live_session.length) {
+                live_session = live_session[0]
+            } else {
+                live_session = undefined
             }
         }
     }
@@ -115,7 +114,6 @@ function convertUTCDateToLocalDate(date) {
     newDate.setHours(hours - Math.abs(offset));
     return newDate;
 }
-
 
 
 export {
