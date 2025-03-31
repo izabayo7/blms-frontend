@@ -4,13 +4,13 @@
     <!--      teacher preview-->
     <div class="teacher instructor_preview">
       <div class="tabs-container d-flex">
-        <div class="item active">Course details</div>
-        <div class="item">Students list</div>
+        <div class="item cursor-pointer" @click="panel1=true" :class="panel1? 'active' : ''">Course details</div>
+        <div class="item cursor-pointer" @click="panel1=false">Students list</div>
       </div>
       <div class="tabs-body">
         <div class="tab d-md-flex">
           <div class="cover" :style="`background-image: url(/img/image1.2346869b.png);`"></div>
-          <div class="content">
+          <div v-show="panel1" class="content">
             <div class="course-title">
               Economic basics
             </div>
@@ -156,6 +156,20 @@
               </div>
             </div>
           </div>
+          <div v-show="!panel1" class="content second">
+            <div class="title">Advanced car repair</div>
+            <div class="subtitle">38 Attendees</div>
+            <div class="students customScroll">
+              <div v-for="(stud, i) in 17" :key="i" class="individual d-flex">
+                <div class="name mr-auto">Rita clemence Mugunga</div>
+                <div class="progress ml-auto">
+                  <div class="text mx-auto">78 %</div>
+                  <progress value="78" max="100"></progress>
+                </div>
+                <div class="joinedon ml-auto">Joined on 15 July 2020</div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -165,9 +179,16 @@
 <script>
 export default {
   name: "new_preview_course",
+  data: () => ({
+    panel1: true,
+  })
 };
 </script>
 <style lang="scss" scoped>
+.cursor-pointer {
+  cursor: pointer;
+}
+
 .my-container {
   background: #F3F6FF;
   width: 100%;
@@ -192,6 +213,11 @@ export default {
         line-height: 135.02%;
         color: #343434;
         padding: 16px 26px;
+        width: 50%;
+
+        &:hover {
+          background: #B0C2F9;
+        }
 
         &.active {
           font-weight: bold;
@@ -212,11 +238,16 @@ export default {
 
       .content {
         max-width: 698px;
+        width: 100%;
         min-height: 428px;
         left: 455px;
         top: 199px;
-        padding: 20px 69.17px;
+        padding: 20px 69.17px 0;
         background: #FFFFFF;
+
+        &.second{
+          padding: 31px 45px 0;
+        }
 
         .course-title {
           font-family: Poppins;
@@ -265,6 +296,91 @@ export default {
 
           svg {
             margin: auto 15px;
+          }
+        }
+
+        .title {
+          font-family: Inter;
+          font-style: normal;
+          font-weight: bold;
+          font-size: 30px;
+          line-height: 36px;
+          display: flex;
+          align-items: center;
+          margin-bottom: 6px;
+          color: #000000;
+        }
+
+        .subtitle {
+          font-family: Inter;
+          font-style: normal;
+          font-weight: normal;
+          font-size: 15px;
+          line-height: 18px;
+          display: flex;
+          align-items: center;
+          margin-bottom: 16px;
+          color: #000000;
+        }
+
+        .students {
+          height: 300px;
+          overflow-y: auto;
+          .name {
+            font-family: Inter;
+            font-style: normal;
+            font-weight: 500;
+            font-size: 15px;
+            line-height: 18px;
+            display: flex;
+            align-items: center;
+
+            color: #3C3C3C;
+          }
+
+          .progress {
+            width: 103px;
+
+            progress {
+              width: 100%;
+              height: 10px;
+              border: none;
+            }
+
+            progress[value]::-webkit-progress-value {
+              background: #193074;
+
+              border-radius: 6px;
+            }
+
+            progress[value]::-webkit-progress-bar {
+              background-color: #DEDEDE;
+              border-radius: 6px;
+            }
+          }
+
+          .text {
+            font-family: Montserrat;
+            font-style: normal;
+            font-weight: bold;
+            font-size: 10px;
+            line-height: 12px;
+            width: 100%;
+            text-align: center;
+
+            color: #343434;
+          }
+
+          .joinedon {
+            font-family: Inter;
+            font-style: normal;
+            font-weight: 500;
+            font-size: 15px;
+            line-height: 18px;
+            display: flex;
+            align-items: center;
+
+            color: #000000;
           }
         }
       }
@@ -319,10 +435,12 @@ export default {
     opacity: 1;
   }
 }
+
 /* Portrait phones and smaller */
 @media (max-width: 700px) {
   .my-container {
     padding: 0;
+
     .instructor_preview .tabs-body {
 
       .cover {
@@ -332,17 +450,22 @@ export default {
 
       .content {
         padding: 14px 33.4px;
+
         .course-description {
-          font-size: 12px ;
+          font-size: 12px;
         }
+
         .course-title {
           font-size: 21px;
         }
+
         .details .col {
           font-size: 10px;
         }
+
         .actions {
           margin-top: 20px;
+
           svg {
             margin: auto 10px;
           }
