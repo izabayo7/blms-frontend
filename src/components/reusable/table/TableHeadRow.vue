@@ -15,10 +15,10 @@
     </th>
 
 <!--            table header-->
-    <th class="" v-for="(col,i) in cols" @click="clickHandler($event,i)" :key="`${col}${Date.now()}` ">
+    <th :class="{small : col === ' '}" v-for="(col,i) in cols" @click="clickHandler($event,i)" :key="`${col}${Date.now()}` ">
       <div class="head-tab-wrapper d-flex justify-space-between" :class="{sorting:ascendingCol === col}">
         <div class="content">{{col}}</div>
-        <div class="icon">
+        <div class="icon" v-if="col !== ' '">
           <svg xmlns="http://www.w3.org/2000/svg" width="17" height="11" viewBox="0 0 17 11" fill="none">
             <path d="M6.61983 10.4368H10.0767V8.7084H6.61983V10.4368ZM0.570312 0.0662231V1.79466H16.1262V0.0662231H0.570312ZM3.16296 6.11574H13.5336V4.38731H3.16296V6.11574Z" fill="black"/>
           </svg>
@@ -70,5 +70,9 @@ export default {
 <style lang="scss" scoped>
 .table-header-row{
   @include table-row;
+
+  .small{
+    width:3rem;
+  }
 }
 </style>
