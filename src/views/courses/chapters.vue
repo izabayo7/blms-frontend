@@ -100,13 +100,13 @@
                                         <v-card class="mb-12 pa-6 elevation-0" height="auto">
                                             <v-row>
                                                 <v-col
-                                                        v-if="course.chapters[activeChapter].mainVideo"
+                                                        v-if="course.chapters[activeChapter].uploaded_video"
                                                         class="col-12"
                                                         id="video"
                                                 >
                                                     <vue-plyr>
                                                         <video
-                                                                :src="course.chapters[activeChapter].mainVideo"
+                                                                :src="course.chapters[activeChapter].uploaded_video"
                                                         ></video>
                                                     </vue-plyr>
                                                 </v-col>
