@@ -50,7 +50,7 @@
                     <h2 class="name">Rubogora Emanuel</h2>
                   </div>
                   <div class="screen-sharing-video">
-                    <div class="screen-sharing-video-wrapper">
+                    <div class="screen-sharing-video--wrapper">
                       <h4>You are presenting the screen</h4>
                       <video >
                         <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" autoplay>
@@ -938,6 +938,9 @@ export default {
           //no video card
           .no-video{
             &--wrapper{
+
+
+
               .instructor-info{
                 display:flex;
                 flex-direction: column;
@@ -957,6 +960,16 @@ export default {
                 }
                 span{
                   color:$main;
+                }
+              }
+
+              .screen-sharing-video{
+                &--wrapper{
+                  width:13.125rem;
+
+                  h4{
+                    color:$main;
+                  }
                 }
               }
             }
