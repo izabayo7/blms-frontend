@@ -146,6 +146,26 @@ const routes = [
                         ]
                     },
 
+                    {
+                        path: '/announcements',
+                        name: "announcements",
+                        component: () => import( /* webpackChunkName: "announcements */ '@/views/announcement/index.vue'),
+                        children: [
+                            {
+                                path: '/announcements/new',
+                                component: () => import( /* webpackChunkName: "announcements" */ '@/views/announcement/new.vue'),
+                            },
+                            {
+                                path: '/announcements/view/:id',
+                                component: () => import( /* webpackChunkName: "announcements" */ '@/views/announcement/view.vue'),
+                            },
+                            {
+                                path: '/announcements/edit/:id',
+                                component: () => import( /* webpackChunkName: "announcements" */ '@/views/announcement/edit.vue'),
+                            },
+                        ]
+                    },
+
                     // for reports
                     {
                         path: '/reports',
