@@ -46,7 +46,7 @@
                   <div class="screen-sharing-video" v-if="isPresenting">
                     <div class="screen-sharing-video--wrapper">
                       <h4>You are presenting your screen</h4>
-                      <video id="video_screen_feed">
+                      <video id="video_screen_feed" class="show">
                         <!--                        <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">-->
                       </video>
                     </div>
@@ -54,8 +54,8 @@
                 </div>
               </div>
               <div v-show="!noVideo && !isPresenting" class="video-container">
-                <video  id="video_feed" class="show"
-                        poster="https://apis.kurious.rw/assets/images/video-loader.gif">
+                <video id="video_feed" class="show"
+                       poster="https://apis.kurious.rw/assets/images/video-loader.gif">
                   <!--                <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" >-->
                 </video>
               </div>
@@ -68,7 +68,7 @@
                 </svg>
               </button>
               <video v-if="!participationInfo.isOfferingCourse" v-show="isPresenting"
-                     id="viewer_screen_feed">
+                     id="viewer_screen_feed" class="show">
                 <!--                <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" >-->
               </video>
               <transition name="fade">
@@ -626,16 +626,19 @@ export default {
         message: 'cancel_presenting'
       });
       this.currentPresenter = undefined
-      this.onViewerStopedPresenting(true)
+      this.onViewerStopedPresenting()
     },
-    displaySrcVideo(){
+    displaySrcVideo() {
       if (this.me) {
-        document.querySelector('video.show').className = ''
+        let displayedVid = document.querySelector('video.show')
+        if (displayedVid)
+          displayedVid.className = '';
+
         if ((this.currentPresenter ? this.currentPresenter._id == this.live_session.course.user : this.userCategory == "INSTRUCTOR") || this.isStudentPresenting) {
           console.log('\n\n\ninner\n\n\n')
           let video = this.me.getVideoElement()
           video.muted = true
-          video.setAttribute('class','show')
+          video.setAttribute('class', 'show')
         } else {
           console.log('twageze aha')
           for (let i in this.participants) {
@@ -645,7 +648,7 @@ export default {
               console.log(`\n\nparticipantId: ${this.participants[i].userInfo._id}\ncurrentPresenter: ${this.currentPresenter ? this.currentPresenter._id : this.instructor._id}\n`)
               const video = this.participants[i].getVideoElement();
               video.muted = false
-              video.setAttribute('class','show')
+              video.setAttribute('class', 'show')
               break;
             }
           }
@@ -674,7 +677,7 @@ export default {
         }
       }
     },
-      stopped_presenting(forced) {
+    stopped_presenting(forced) {
       if (forced) {
         this.$store.dispatch("app_notification/SET_NOTIFICATION", {
           message: 'Sorry your the instructor canceled your presentation',
@@ -697,10 +700,10 @@ export default {
       for (let i in this.participants) {
         if (this.participants[i].userInfo._id == id) {
           let vid = document.querySelector(`video#video_feed${id}`)
-          vid.setAttribute('class','show')
-          setTimeout(()=>{
+          vid.setAttribute('class', 'show')
+          setTimeout(() => {
             vid.play()
-          },3000)
+          }, 3000)
           this.currentPresenter = this.participants[i].userInfo;
           break;
         }
@@ -758,21 +761,8 @@ export default {
       });
       this.onHandRaisedOrLowerd(id, false)
     },
-    onViewerStopedPresenting(force) {
-      console.log(force)
-      if (this.me) {
-        this.me.rtcPeer.enabled = true
-
-        if (!this.audioEnabled)
-          this.me.rtcPeer.audioEnabled = false
-
-        if (!this.videoEnabled)
-          this.me.rtcPeer.videoEnabled = false
-
-        if (force) {
-          this.start_presenting()
-        }
-      }
+    onViewerStopedPresenting() {
+        this.start_presenting()
     },
     start_presenting() {
       this.participationInfo.isOfferingCourse = true;
@@ -784,6 +774,13 @@ export default {
           receivers.push({id: x.userInfo._id})
         } else {
           this.me.rtcPeer.enabled = true
+
+          if (!this.audioEnabled)
+            this.me.rtcPeer.audioEnabled = false
+
+          if (!this.videoEnabled)
+            this.me.rtcPeer.videoEnabled = false
+
           this.displaySrcVideo()
           this.me.getVideoElement().play()
         }
@@ -958,7 +955,7 @@ export default {
         else if (message === 'currentPresenter')
           this.presenter_id = sender
         else
-          this.onViewerStopedPresenting(true)
+          this.onViewerStopedPresenting()
         console.log(message)
       })
       self.socket.on("live/presenterChanged", ({id, session_id}) => {
@@ -1107,7 +1104,15 @@ export default {
       return this.participants.indexOf(result[0]);
     },
     removeParticipant(index) {
+      if (this.currentPresenter._id == this.participants[index].userInfo._id) {
+        this.currentPresenter = undefined
+      }
       this.participants.splice(index, 1)
+      if (this.live_session.course.user == this.me.userInfo._id) {
+        this.onViewerStopedPresenting()
+      } else {
+        document.querySelector('video').setAttribute('class', 'show')
+      }
     },
     receiveVideoResponse(result) {
 
@@ -1299,10 +1304,6 @@ export default {
             if (error) {
               return console.error(error);
             }
-            // if (this.participationInfo.isOfferingCourse)
-            //   self.onViewerStopedPresenting()
-            // else
-            //   self.findRightSource()
             this.generateOffer(participant.offerToReceiveVideo.bind(participant));
           })
       // }
@@ -1335,10 +1336,12 @@ export default {
     },
 
     onParticipantLeft(request) {
-      this.participants[this.participantIndex(request.name)].dispose();
-      this.removeParticipant(this.participantIndex(request.name))
-
       this.displaySrcVideo();
+      console.log(this.participants)
+      this.participants[this.participantIndex(request.name)].dispose();
+      console.log(this.participants)
+      this.removeParticipant(this.participantIndex(request.name))
+      console.log(this.participants)
     },
     toogleMedia(obj) {
       if (obj.isVideo) {
