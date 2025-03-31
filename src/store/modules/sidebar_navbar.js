@@ -1,3 +1,5 @@
+import Apis from "@/services/apis";
+
 const getDefaultState = () => ({
     sidebar_expanded: true,
     page_actions_visible: true,
@@ -37,7 +39,14 @@ export default {
             Object.assign(state, getDefaultState())
         }
     },
-    actions: {},
+    actions: {
+        async removeLogo({ state }) {
+            const splited = state.college.logo.split("/");
+            // set the dialog
+            await Apis.delete(`college/${state.college._id}/logo`,splited[splited.length - 1]);
+            state.college.logo = undefined
+        },
+    },
     getters: {
         showChatMobileNavbar: (state) => state.showChatMobileNavbar,
     },

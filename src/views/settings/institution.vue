@@ -71,7 +71,17 @@
           </div>
           <div class="col-12 col-md-4">
             <div class="action">
-              <button class="delete">Delete logo</button>
+              <button               @click="
+                set_modal({
+                  template: 'action_confirmation',
+                  method: {
+                    action: 'sidebar_navbar/removeLogo',
+                  },
+                  title: 'Remove college logo',
+                  message:
+                    'Are you sure you want to delete the college logo?',
+                })
+              " class="delete">Delete logo</button>
             </div>
           </div>
           <div class="col-12 col-md-3">
@@ -168,7 +178,7 @@
 <script>
 
 import Apis from "@/services/apis";
-import {mapMutations, mapState} from "vuex";
+import {mapActions, mapMutations, mapState} from "vuex";
 
 export default {
   name: "Settings",
@@ -203,6 +213,7 @@ export default {
     }
   },
   methods: {
+    ...mapActions("modal", ["set_modal"]),
     pickfile() {
       document.getElementById("picture").click();
     },
