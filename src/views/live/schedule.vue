@@ -56,7 +56,7 @@
           "
         />
       </div>
-      <div class="d-flex y-centered">
+      <div class="d-md-flex y-centered">
         <div class="input-container my-margin">
           <div class="select-date d-flex" @click="toogleMenu()">
             <div class="value">{{ date }}</div>
@@ -86,7 +86,7 @@
             <v-btn text color="primary" @click="menu = false"> OK </v-btn>
           </v-date-picker>
         </div>
-        <div class="start-now d-flex">
+        <div class="start-now d-flex mb-4 my-margin ml-0 ml-md-7">
           <input type="checkbox" :v-model="startNow" />
           Start Live class now
         </div>
@@ -299,6 +299,12 @@ export default {
     /* identical to box height */
 
     color: #ffffff;
+  }
+}
+/* Portrait phones and smaller */
+@media (max-width: 1000px) {
+  #schedule_live_class {
+    padding: 0px;
   }
 }
 </style>
