@@ -467,7 +467,7 @@ export default {
         self.quiz = quiz;
         self.displayQuiz = true
         this.$store.dispatch("app_notification/SET_NOTIFICATION", {
-          message: self.participationInfo.isOfferingCourse ? 'Quiz was released' : 'You have a quiz',
+          message: self.participationInfo.isOfferingCourse ? 'Quiz was released' : 'Quiz time !',
           status: "info",
           uptime: 5000,
         });
