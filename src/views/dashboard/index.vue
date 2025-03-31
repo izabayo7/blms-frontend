@@ -77,7 +77,9 @@ export default {
 
     // listen if the new conversation was created
     this.socket.on("res/message/conversation_created", (conversation_id) => {
-      this.$router.push(`/messages/${conversation_id}`);
+      setTimeout(() => {
+        this.$router.push(this.$route.path !== `/messages/${conversation_id}` ? `/messages/${conversation_id}` : '/messages');
+      }, 500)
     });
 
     //handle errors

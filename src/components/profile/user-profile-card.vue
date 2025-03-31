@@ -37,7 +37,7 @@
       <article class="upc--cat--buttons d-flex justify-space-between">
         <!--        msg button-->
         <div class="upc--cat--message">
-          <button-ui @click="start_conversation(user.user_name)" fill class-list="px-16 py-3">
+          <button-ui @click="$router.push(`/messages/${user.user_name}`)" fill class-list="px-16 py-3">
             <template #content>Message</template>
           </button-ui>
         </div>
@@ -54,14 +54,10 @@
 
 <script>
 import ButtonUi from "../reusable/ui/button-ui";
-import {mapActions} from "vuex";
 
 export default {
   name: "user-profile-card",
   components: {ButtonUi},
-  methods:{
-    ...mapActions("chat", ["start_conversation"]),
-  },
   props: {
     user: {
       type: Object,

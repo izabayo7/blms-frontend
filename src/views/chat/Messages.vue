@@ -191,7 +191,8 @@ export default {
       if (this.$route.path === "/messages")
         if (!groupRouteFound && this.incomingMessages.length) {
           this.SET_DISPLAYED_USER(this.incomingMessages[0]);
-          this.$router.push(`/messages/${this.incomingMessages[0].id}`);
+          if (this.$route.path !== `/messages/${this.incomingMessages[0].id}`)
+            this.$router.push(`/messages/${this.incomingMessages[0].id}`);
         }
     },
     storeCurrentDisplayedUser() {
@@ -199,7 +200,9 @@ export default {
       on("incoming_message_initially_loaded", () => {
         if (!this.incomingMessages.length) {
           if (this.$route.path === "/messages")
-            this.$router.push("/messages/no-conversation");
+            this.$router.push("/messages/no-conversation")
+          else
+            this.start_conversation(this.$route.params.username)
         } else {
           this.incomingMessages.map((d) => {
             console.log(d)
@@ -218,7 +221,6 @@ export default {
       });
     },
     initialise() {
-      this.start_conversation(this.$route.params.username)
       this.storeCurrentDisplayedUser();
 
       //listen if recent chat contact was loaded
