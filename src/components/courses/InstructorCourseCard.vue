@@ -1,6 +1,6 @@
 <template>
   <div class="class-view">
-    <v-card :class="`class-card ${course.published ? '' : 'unpublished-card'}`">
+    <div :class="`class-card ${course.published ? '' : 'unpublished-card'}`">
       <v-row class="first-row">
         <v-col class="col-md-7 col-7 content-side">
           <p class="instructor-course-title">
@@ -10,16 +10,12 @@
             {{ course.chapters.length }} Chapters
           </p>
           <p
-            :class="`instructor-course-description ${
-              course.published ? 'hidden-md-and-down' : ''
-            }`"
+            class="instructor-course-description hidden-sm-and-down"
           >
             {{ course.description | trimString(50) }}
           </p>
           <p
-            :class="`published-date ${
-              course.published ? 'hidden-md-and-down' : ''
-            }`"
+            class="published-date"
             v-if="course.published"
           >
             Published on {{ course.published_on | formatDate }}
@@ -34,39 +30,16 @@
           </v-btn>
         </v-col>
         <v-col class="col-md-5 col-5 image-side">
-          <v-menu bottom left>
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn
-                icon
-                v-bind="attrs"
-                v-on="on"
-                class="hidden-md-and-up menu-btn"
-              >
-                <v-icon>mdi-dots-vertical</v-icon>
-              </v-btn>
-            </template>
-            <v-list class="mt-10">
-              <v-list-item
-                v-for="(item, i) in course.published
-                  ? publishedList
-                  : unPublishedList"
-                :key="i"
-                class="menu-list"
-              >
-                <v-list-item-title>{{ item.title }}</v-list-item-title>
-              </v-list-item>
-            </v-list>
-          </v-menu>
           <v-img
             v-if="course.cover_picture"
             :src="`${
               course.cover_picture
             }?height=300&width=300&token=${$session.get('jwt')}`"
-            class="course-image hidden-md-and-down"
+            class="course-image"
           >
           </v-img>
           <v-avatar
-            class="course-image white--text bg-color-one text-h2 hidden-md-and-down"
+            class="course-image white--text bg-color-one text-h2"
             size="106"
             v-else
             >{{ course.name | computeText }}</v-avatar
@@ -82,7 +55,7 @@
       </v-row>
       <v-row
         v-if="course.published"
-        class="second-row hidden-md-and-down text-center"
+        class="second-row text-center"
       >
         <v-col class="col-md-6">
           <v-btn
@@ -90,16 +63,16 @@
             text
             color="error"
             class="action-btn"
-            >Unpublish Course</v-btn
+            >Unpublish <span class="hidden-sm-and-down">Course</span></v-btn
           >
         </v-col>
         <v-col class="col-md-6 text-right">
           <v-btn :to="`/courses/preview/${course.name}`" text class="action-btn"
-            >Preview Course</v-btn
+            >Preview <span class="hidden-sm-and-down">Course</span></v-btn
           >
         </v-col>
       </v-row>
-    </v-card>
+    </div>
   </div>
 </template>
 
@@ -133,11 +106,9 @@ export default {
 
 <style lang="scss" scoped>
 .class-view {
-  .v-card.v-sheet.theme--light.class-card {
-    width: 400px;
-  }
   .class-card {
-    width: 40px;
+    max-width: 400px;
+    width: 100%;
     margin-top: 40px;
     border-radius: 15px;
     background-color: #eee;
@@ -153,7 +124,7 @@ export default {
     .first-row {
       background-color: #fff !important;
       box-shadow: 0px 17px 34px rgba(116, 113, 113, 0.16);
-      width: 400px;
+      //width: 400px;
       margin-left: 0;
       border-radius: 10px;
       padding-left: 10px;
@@ -207,7 +178,7 @@ export default {
       }
     }
     .second-row {
-      width: 400px;
+      //width: 400px;
       margin-left: 0;
       height: 38px;
       .action-btn {
@@ -215,27 +186,27 @@ export default {
       }
     }
   }
-  @media (max-width: 800px) {
-    .class-view {
-      .class-card {
-        width: 280px !important;
-        .first-row {
-          height: 155px;
-          .menu-btn {
-            margin-left: 85px;
-          }
-        }
-      }
-    }
-    .class-card {
-      width: 280px !important;
-      .first-row {
-        height: 180px;
-        .menu-btn {
-          margin-left: 85px;
-        }
-      }
-    }
-  }
+  //@media (max-width: 800px) {
+  //  .class-view {
+  //    .class-card {
+  //      width: 280px !important;
+  //      .first-row {
+  //        height: 155px;
+  //        .menu-btn {
+  //          margin-left: 85px;
+  //        }
+  //      }
+  //    }
+  //  }
+  //  .class-card {
+  //    width: 280px !important;
+  //    .first-row {
+  //      height: 180px;
+  //      .menu-btn {
+  //        margin-left: 85px;
+  //      }
+  //    }
+  //  }
+  //}
 }
 </style>

@@ -22,7 +22,7 @@
                 <div class="no-video--wrapper" :class="{presenting:isPresenting}">
                   <div class="instructor-info">
                     <img
-                        :src="instructor ? instructor.profile : ''"
+                        :src="instructor ? instructor.profile + '?width=100' : ''"
                         alt="profile picture" class="picture">
                     <h2 class="course">Economics Basics: Chapter 8 part II</h2>
                     <span class="source">by instuctor</span>

@@ -30,11 +30,11 @@
       <div class="my-title my-margin">Live class details</div>
       <div class="input-container my-margin">
         <select-ui
-            label="Select course"
             class="bold-border"
             name="role"
             id="user_group"
             :options="courseNames"
+            :label="selected_course == ''? 'Select course' : selected_course"
             @input="
             (e) => {
               selected_course = e;
@@ -94,26 +94,7 @@
       <div class="input-container my-margin">
         <div class="label mb-2">Select time</div>
         <div class="d-flex">
-          <div class="text-filed mr-5" @click="showTimePicker(false)">
-            {{ hours }}
-          </div>
-          <div class="text-filed" @click="showTimePicker(true)">
-            {{ minutes }}
-          </div>
-        </div>
-        <div ref="timepicker" class="time_pckr">
-          <TimePicker
-              @update="updateTime"
-              class="mt-4"
-              v-if="showPicker"
-              format="24hr"
-              scrollable
-              min="9:30"
-              :no-title="true"
-              :use-seconds="useSeconds"
-              max="22:15"
-              @close="showPicker = false"
-          ></TimePicker>
+          <input class="text-filed pa-4" v-model="time" type="time" />
         </div>
       </div>
       <div class="input-container my-margin">
@@ -134,7 +115,7 @@
     </div>
     <Popup v-show="showModal" :title="'You are about to schedule a live class with the following details'">
       <template v-if="isConfirming" v-slot:content>
-        <div class="d-md-flex mx-auto text-left">
+        <div class="col-12 mx-4 mt-0 mt-xs-4 mt-lg-0 ml-lg-14 text-left">
           <div class="mr-4">
             <div class="detail">Course name: <span>{{ selected_course }}</span></div>
             <div class="detail">Chapter name : <span>{{ selected_chapter }}</span></div>
@@ -142,13 +123,13 @@
             <div class="detail">Date : <span>{{ date | formatDate }}</span></div>
             <div class="detail">Time : <span>{{ time }}</span></div>
           </div>
-          <div>
-            <div class="detail">Notification : <span>Urgent live anouncement</span></div>
-            <div class="detail">Details : <span>Dear year 2 students,
-you  are invite to this 20 minutes live class,
-Attendance will not be accounted
-thanks</span></div>
-          </div>
+<!--          <div>-->
+<!--            <div class="detail">Notification : <span>Urgent live anouncement</span></div>-->
+<!--            <div class="detail">Details : <span>Dear year 2 students,-->
+<!--you  are invite to this 20 minutes live class,-->
+<!--Attendance will not be accounted-->
+<!--thanks</span></div>-->
+<!--          </div>-->
         </div>
         <div class="mx-auto">
           <button class="action" @click="showModal = false">Cancel</button>
@@ -172,20 +153,17 @@ thanks</span></div>
 <script>
 import SelectUi from "@/components/reusable/ui/select-ui";
 import {mapActions, mapGetters} from "vuex";
-import TimePicker from "@/components/TimePicker";
 import Popup from "@/components/Live/Popup";
 
 export default {
-  components: {SelectUi, TimePicker, Popup},
+  components: {SelectUi, Popup},
   data() {
     return {
       user_group_names: ["Principal", "Instructor", "Student"],
       date: new Date().toISOString().substring(0, 10),
       menu: false,
       time: "00:00",
-      useSeconds: false,
       startNow: false,
-      showPicker: false,
       counter: 0,
       selected_course: "",
       selected_chapter: "",
@@ -200,15 +178,8 @@ export default {
     }
   },
   computed: {
-    ...mapGetters("courses", ["courses", "loaded"]),
+    ...mapGetters("courses", ["courses", "loaded", "course"]),
     ...mapGetters("quiz", ["all_quiz"]),
-    hours() {
-      return this.time.split(":")[0];
-    },
-    minutes() {
-      console.log(this.time.toString());
-      return this.time.split(":")[1];
-    },
     courseNames() {
       let res = [];
       for (const i in this.courses) {
@@ -246,20 +217,6 @@ export default {
     ...mapActions("live_session", ["createLiveSession"]),
     ...mapActions("courses", ["getCourses"]),
     ...mapActions("quiz", ["getQuizes"]),
-    updateTime(value) {
-      // console.log(value, this.counter);
-      if (value) {
-        this.time = value;
-        if (
-            this.hours &&
-            this.minutes &&
-            this.hours != "00" &&
-            this.minutes != "00"
-        ) {
-          this.showPicker = false;
-        }
-      }
-    },
     toogleMenu() {
       this.menu = true;
     },
@@ -280,10 +237,6 @@ export default {
         this.isConfirming = true;
         this.showModal = true
       }
-    },
-    showTimePicker(showSeconds) {
-      this.useSeconds = showSeconds;
-      this.showPicker = true;
     },
     studentGroup() {
       for (const i in this.courses) {
@@ -331,6 +284,10 @@ export default {
     this.getQuizes({
       user_name: this.$store.state.user.user.user_name,
     });
+    if(this.course){
+      console.log(this.course.name)
+      this.selected_course = this.course.name
+    }
   },
 };
 </script>
@@ -439,7 +396,7 @@ export default {
   }
 
   .text-filed {
-    width: 79px;
+    //width: 79px;
     height: 41px;
     border: 1.54684px solid #bababc;
     display: flex;
