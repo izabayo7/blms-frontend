@@ -126,7 +126,7 @@
                           </vue-plyr>
                         </v-col>
                         <v-col class="col-12">
-                          <kurious-file-picker
+                          <file-picker
                               v-if="this.mode != ''"
                               :ref="`picker${activeChapter}2`"
                               :boundIndex="activeChapter"
@@ -195,7 +195,7 @@
                         >{{ course.chapters[activeChapter].name }}
                         </v-col>
                         <v-col class="col-12">
-                          <kurious-editor
+                          <editor
                               v-if="mode !== ''"
                               ref="editor"
                               :mode="`${mode === 'edit' ? mode : 'preview'}`"
@@ -294,7 +294,7 @@
                           </div>
                         </v-col>
                         <v-col class="col-12">
-                          <kurious-file-picker
+                          <file-picker
                               v-if="this.mode != ''"
                               :ref="`picker${activeChapter}1`"
                               :boundIndex="activeChapter"
@@ -454,6 +454,10 @@ export default {
     ],
     simpleRules: [(v) => !!v || "This field is required"],
   }),
+  components: {
+    FilePicker: () => import("@/components/reusable/FilePicker"),
+    Editor: () => import("@/components/reusable/Editor"),
+  },
   computed: {
     // get the current course
     ...mapGetters("courses", ["course"]),

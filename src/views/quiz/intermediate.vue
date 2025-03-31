@@ -7,7 +7,7 @@
         <div class="instructions mt-6">
           <!-- In this quiz, pay attention to the question number 4 as it has more
           marks than others. please notice it. -->
-          <kurious-editor
+          <editor
             v-if="selected_quiz.instructions"
             :defaultContent="selected_quiz.instructions"
           />
@@ -184,6 +184,7 @@ export default {
   }),
   components: {
     back: () => import("@/components/shared/back-button"),
+    Editor: () => import("@/components/reusable/Editor"),
   },
   computed: {
     ...mapGetters("quiz", ["selected_quiz"]),

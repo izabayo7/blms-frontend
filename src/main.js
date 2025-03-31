@@ -3,7 +3,6 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 
-import './plugins/kurious'
 import './plugins/globalFilters'
 import '@/assets/sass/styles.scss'
 import vuetify from './plugins/vuetify';
