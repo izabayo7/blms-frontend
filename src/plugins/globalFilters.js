@@ -94,11 +94,6 @@ const filters = [
     {
         name:'urlify',
         structure(text){
-            // return text.replace(urlRegex, function(url) {
-            //   return '<a href="' + url + '">' + url + '</a>';
-            // })
-            // // or alternatively
-            console.log('hee')
             return text.replace(urlRegex, '<a href="$1" target="_blank">$1</a>')
         }
     }
