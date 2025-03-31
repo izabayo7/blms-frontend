@@ -163,6 +163,7 @@
 <script>
 import {mapGetters, mapState} from "vuex";
 import {emit} from "@/services/event_bus";
+import apis from "@/services/apis";
 
 export default {
   name: "Send-message",
@@ -181,6 +182,40 @@ export default {
     ...mapGetters("chat", ["socket"]),
     ...mapState("chat", ["currentDisplayedUser"]),
   },
+  created() {
+    // listen if the new message was sent
+    this.socket.on("res/message/sent", (message) => {
+      if(message.attachments.length)
+      {
+        // set the dialog
+        this.$store.dispatch('modal/set_modal', {
+          template: 'display_information',
+          title: 'Creating Course',
+          message: `uploading attachments`
+        })
+        const formData = new FormData()
+        for (const k in this.files) {
+            formData.append("files[" + k + "]", this.files[k]);
+        }
+        apis.update('course', `${message._id}/attachements`, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          },
+          onUploadProgress: (progressEvent) => {
+            this.$store.dispatch('modal/set_progress', parseInt(Math.round((progressEvent.loaded / progressEvent.total) * 100)))
+          }
+        }).then(res => {
+          if(res.data.status === 200)
+            this.socket.emit("message/notify-users", {
+              message
+            });
+        })
+      }
+      setTimeout(this.scrollChatToBottom, 1);
+      message.sender.sur_name = "You";
+      this.$store.commit("chat/ADD_ONGOING_MESSAGE", message);
+    });
+  },
   methods: {
     pickFile() {
       this.$refs["picker"].clickButton()
@@ -198,11 +233,24 @@ export default {
       // let placeholder = this.$refs['placeholder']
       input.focus();
     },
+    makeAttachments() {
+      const res = []
+      if (this.files.length)
+        for (const i in this.files) {
+          res.push({src: this.files[i].name})
+        }
+      return res
+    },
     sendMessage() {
-      if (this.msg.length <= 0) return;
+
+      const attachements = this.makeAttachments()
+
+      if (this.msg.length <= 0 && !attachements.length) return;
+
       this.socket.emit("message/create", {
         receiver: this.currentDisplayedUser.id,
         content: this.msg,
+        attachements
       });
 
       //after sending message let us make the div empty
