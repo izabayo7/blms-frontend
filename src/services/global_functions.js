@@ -43,4 +43,18 @@ function elapsedDuration(date_time){
     return elapsed
 }
 
-export {hasOwn,getImgFile,elapsedDuration}
+/**
+ * know if string is empty
+ * @param string
+ * @returns {boolean}
+ */
+function empty(string){
+    return /^\s*$/.test(string);
+}
+
+export {
+    hasOwn,
+    getImgFile,
+    elapsedDuration,
+    empty
+}
