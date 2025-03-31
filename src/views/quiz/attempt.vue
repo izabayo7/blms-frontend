@@ -120,9 +120,12 @@
             </div>
           </v-row>
           <v-btn
-            v-if="$store.state.user.user.category.name == 'STUDENT'"
             class="radio-btn d-block mb-4 submitt-attempt"
-            @click="saveAttempt"
+            @click="
+              $store.state.user.user.category.name == 'STUDENT'
+                ? saveAttempt
+                : $router.push('quiz/submitted')
+            "
             rounded
             >Submit Answers</v-btn
           >
@@ -338,7 +341,7 @@ export default {
         attachments: this.filesToUpload,
       }).then(() => {
         this.$router.push(
-          `${this.attempt.auto_submitted ? "/quiz/timeout" : "/reports"}`
+          `${this.attempt.auto_submitted ? "/quiz/timeout" : "/quiz/submitted"}`
         );
       });
     },
