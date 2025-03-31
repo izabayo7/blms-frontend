@@ -128,7 +128,11 @@ export default {
   },
   watch: {
     error() {
-      console.log(this.error);
+      this.$store.dispatch("app_notification/SET_NOTIFICATION", {
+        message: this.error,
+        status: "danger",
+        uptime: 2000,
+      });
     },
   },
   methods: {
@@ -167,13 +171,13 @@ export default {
         coverPicture: this.coverPicture,
       }).then(() => {
         this.$store.dispatch("app_notification/SET_NOTIFICATION", {
-          message: "Course successfully updated",
+          message: "Course successfully created",
           status: "success",
-          uptime: 3000,
+          uptime: 2000,
         });
         setTimeout(() => {
-          this.$router.push(`/courses/edit/${this.course.name}/chapters`)
-        }, 3000);
+          this.type == 'chapters'
+        }, 2000);
       });
     },
   },
