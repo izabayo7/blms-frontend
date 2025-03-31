@@ -1,7 +1,7 @@
 <template>
   <div v-if="facultyCollegeYear" class="edit-student-group-container row">
     <div class="col-3">
-      <button class="back">Back</button>
+      <button class="back" @click="$router.push(`/faculties/${$route.params.facultyId}/groups`)">Back</button>
     </div>
     <div class="col-9">
       <div class="name">{{ facultyCollegeYear.name }}</div>
@@ -17,7 +17,7 @@
         <button class="add-email send cancel mr-4" @click="$emit('closeModal')">
           Cancel
         </button>
-        <button class="add-email send" @click="validate">
+        <button class="add-email send" @click="editStudentGroup">
           Save
         </button>
       </div>
@@ -27,6 +27,7 @@
 <script>
 
 import {mapGetters} from "vuex";
+import Apis from "@/services/apis";
 
 export default {
   name: "EditStudentGroup",
@@ -34,10 +35,31 @@ export default {
     return {
       numberOfNewNotifications: 4,
       cardActive: false,
-      name:""
+      name:"",
+      error: ""
     };
   },
-  methods: {},
+  methods: {
+    async editStudentGroup(){
+      if(this.name === "")
+        return this.error = "name is required"
+      if(this.name.length < 5)
+        return this.error = "name is too short"
+
+      const res = await Apis.update("user_groups", this.$route.params.groupId, {
+        name: this.name
+      })
+      if (res.data.status !== 200 && res.data.status !== 201) {
+        this.error = res.data.message
+      } else {
+        this.$store.dispatch("app_notification/SET_NOTIFICATION", {
+          message: "Changes were successfuly saved",
+          status: "success",
+          uptime: 2000,
+        })
+      }
+    }
+  },
   computed: {
     ...mapGetters('faculties', ['faculty']),
     ...mapGetters('faculty_college_year', ['facultyCollegeYear']),
@@ -45,6 +67,16 @@ export default {
   watch:{
     facultyCollegeYear(){
       this.name = this.facultyCollegeYear.name
+    },
+    error() {
+      if (this.error != "")
+        this.$store.dispatch("app_notification/SET_NOTIFICATION", {
+          message: this.error,
+          status: "danger",
+          uptime: 2000,
+        }).then(() => {
+          this.error = ""
+        })
     }
   },
   async mounted() {
