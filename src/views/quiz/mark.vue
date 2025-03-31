@@ -504,7 +504,7 @@ export default {
       this.update_quiz_submission({
         submission: this.attempt,
       }).then(() => {
-        this.$router.push("/reports");
+        this.$router.push(`/reports/${this.selected_quiz_submission.quiz._id}`);
       });
     },
   },

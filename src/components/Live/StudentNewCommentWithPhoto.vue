@@ -55,7 +55,7 @@ export default {
   },
   computed: {
     ...mapGetters("user", ["user_full_names", "username"]),
-    ...mapGetters("courses", ["selectedChapter"]),
+    ...mapGetters("courses", ["selectedChapter", "totalComments"]),
     comment_object() {
       return {
         sender: this.username,
@@ -74,6 +74,10 @@ export default {
       try {
         let { data } = await api.create("comment", this.comment_object);
         data.data.replies = [];
+        this.$store.commit(
+          "courses/SET_TOTAL_COMMENTS_ON_A_CHAPTER",
+          this.totalComments == "" ? 1 : this.totalComments + 1
+        );
         this.$emit("sent", data.data);
         this.comment = "";
       } catch (err) {

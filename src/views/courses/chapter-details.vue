@@ -41,7 +41,7 @@
                 <!-- <v-col class="col-6"></v-col> -->
                 <v-col class="col-12">
                   <loader
-                    v-if="editorContent === undefined"
+                    v-if="editorContent === undefined || editorContent == ''"
                     type="2"
                     class="vertically--centered"
                   />
@@ -317,15 +317,20 @@ export default {
         let index = 0;
         for (const i in course.chapters) {
           if (course.chapters[i]._id == this.$route.params.id) {
+            this.$store.commit(
+              "courses/SET_TOTAL_COMMENTS_ON_A_CHAPTER",
+              course.chapters[i].commentsLength
+            );
             index = parseInt(i);
             break;
           }
         }
         this.activeIndex = index;
       });
-
+      this.editorContent = "";
       //getting chapter content
       this.getChapterMainContent(id).then((d) => {
+        console.log(d);
         this.editorContent = d;
       });
 
