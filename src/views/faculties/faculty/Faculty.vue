@@ -1,9 +1,9 @@
 <template>
-<div class="faculty">
-  <div class="faculty--wrapper">
+<main class="faculty">
+  <main class="faculty--wrapper">
 
 <!--    faculty page header-->
-    <div class="faculty--header header ">
+    <section class="faculty--header header ">
       <div class="header--wrapper d-flex">
         <div class="heading col d-flex align-center">
             <div class="icon">
@@ -38,21 +38,21 @@
             </div>
           </div>
       </div>
-    </div>
+    </section>
 
 <!--    faculty page links/navbar-->
-    <div class="faculty--links links">
-      <div class="links--wrapper">
+    <section class="faculty--links links">
+      <section class="links--wrapper">
         <subpage-navbar/>
-      </div>
-    </div>
+      </section>
+    </section>
 
 <!--    faculty page information/overview-->
-    <div class="faculty--information information">
-      <div class="faculty--information--wrapper d-flex ">
+    <section class="faculty--information information">
+      <section class="faculty--information--wrapper d-flex ">
 
 <!--        column 1-->
-        <div class="faculty--information--col__1 faculty--information--col col-4">
+        <article class="faculty--information--col__1 faculty--information--col col-4">
           <div class="information--faculty-details">
             <div class="information--faculty-details--header">
               <h2>Communication design</h2>
@@ -61,15 +61,15 @@
               <p>Communication Design and Management Program aims to train creative and fully-equipped professionals who are able to manage the outcomes of communication, design and management areas for the benefit of end-users. </p>
             </div>
           </div>
-        </div>
+        </article>
 
 <!--        column 2-->
-        <div class="faculty--information--col__2 faculty--information--col col-8">
+        <article class="faculty--information--col__2 faculty--information--col col-8">
           <div class="faculty--details">
 
 <!--            row one for cards-->
-            <div class="faculty--details--row__1 faculty--details--row">
-              <div class="faculty--information-cards d-flex justify-space-around">
+            <article class="faculty--details--row__1 faculty--details--row">
+              <div class="faculty--information-cards d-flex justify-space-between">
 
 <!--                card 1-->
                 <div class="faculty--information-card__1 faculty--information-card">
@@ -110,29 +110,29 @@
                   </div>
                 </div>
               </div>
-            </div>
+            </article>
 
 <!--            row two for dean/instructor information-->
-            <div class="faculty--details--row__2 faculty--details--row">
-              <div class="faculty--dean-information">
+            <article class="faculty--details--row__2 faculty--details--row">
+              <article class="faculty--dean-information">
                 <div class="faculty--dean-header">
                   <h3>Dean Instructor</h3>
                 </div>
                 <div class="faculty--dean-name">
-                  <h3>Ntwari Clarance Liberi</h3>
-                  <h3>Not assigned</h3>
+                  <h3 v-if="true" class="instructor">Ntwari Clarance Liberi</h3>
+                  <h3 v-else class="no-instructor">Not assigned</h3>
                 </div>
                 <div class="faculty--dean-note">
                   <p>Please visit the administration tab and assign a dean for this faculty</p>
                 </div>
-              </div>
-            </div>
+              </article>
+            </article>
           </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+        </article>
+      </section>
+    </section>
+  </main>
+</main>
 </template>
 
 <script>
@@ -148,6 +148,7 @@ name: "Faculty",
 <style lang="scss" scoped>
 .faculty{
   &--wrapper{
+    background:$tertiary;
 
   }
 
@@ -165,6 +166,9 @@ name: "Faculty",
 
   &--information{
     &--wrapper{
+      background-color:$main;
+      padding-top:5rem;
+      padding-left:3rem;
 
     }
 
@@ -180,6 +184,8 @@ name: "Faculty",
 
   }
 
+
+
   &--details--row{
     &__1{
 
@@ -190,14 +196,23 @@ name: "Faculty",
   }
 
   &--information-cards{
-
+    padding:0 5rem;
   }
 
+
+
   &--information-card{
-    width:10rem;
+    width:12rem;
+    height:12rem;
     border:2px solid $secondary;
     cursor: pointer;
-    padding:2rem 0;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+
+    &--wrapper{
+
+    }
 
     &--inner-row{
       padding:.5rem 0;
@@ -223,5 +238,45 @@ name: "Faculty",
     }
   }
 
+  &--dean-information{
+    padding:0 5rem;
+  }
+
+
+  &--dean-information{
+    margin-top:3rem;
+  }
+
+  &--dean-header{
+    h3{
+      font-weight: 500;
+      text-decoration: underline;
+    }
+  }
+
+  &--dean-name{
+    margin:.7rem 0;
+    h3{
+      font-size:1.1rem;
+      font-weight:normal;
+    }
+  }
+
+  &--dean-note{
+    p{
+      font-size:.6rem;
+    }
+  }
+
+}
+.information{
+  &--faculty-details{
+    &--header{
+      h2{
+        font-size:2rem;
+        margin-bottom: 1rem;
+      }
+    }
+  }
 }
 </style>
