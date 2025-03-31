@@ -1,6 +1,6 @@
 <template>
   <div class="my-users-page bg-one d-flex justify-center">
-    <div class="users-page-container d-flex ">
+    <div class="users-page-container d-flex flex-column">
       <div class="header">
         <div class="header-wrapper d-flex justify-space-between">
           <div class="heading d-flex align-center">
@@ -32,7 +32,9 @@
         </div>
       </div>
       <div class="tabular-users">
-
+        <div class="table-wrapper">
+          <table-ui :data="users"/>
+        </div>
       </div>
     </div>
   </div>
@@ -41,9 +43,25 @@
 <script>
 import buttonUi from '@/components/reusable/ui/button-ui'
 import Search from '@/components/reusable/Search2'
+import tableUi from '@/components/reusable/ui/table-ui'
 export default {
   name: "Users",
-  components:{buttonUi,Search}
+  components:{buttonUi,Search,tableUi},
+  data(){
+    return{
+      users:[
+        {username:"liberi",status:"pending", "User type":"Student",gender:"M",Faculty:"Economics"},
+        {username:"liberi",status:"pending", "User type":"Student",gender:"M",Faculty:"Economics"},
+        {username:"liberi",status:"pending", "User type":"Student",gender:"M",Faculty:"Economics"},
+        {username:"liberi",status:"pending", "User type":"Student",gender:"M",Faculty:"Economics"},
+        {username:"liberi",status:"pending", "User type":"Student",gender:"M",Faculty:"Economics"},
+        {username:"liberi",status:"pending", "User type":"Student",gender:"M",Faculty:"Economics"},
+        {username:"liberi",status:"pending", "User type":"Student",gender:"M",Faculty:"Economics"},
+        {username:"liberi",status:"pending", "User type":"Student",gender:"M",Faculty:"Economics"},
+        {username:"liberi",status:"pending", "User type":"Student",gender:"M",Faculty:"Economics"},
+      ]
+    }
+  }
 }
 </script>
 
