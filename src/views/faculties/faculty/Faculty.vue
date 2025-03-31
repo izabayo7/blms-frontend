@@ -153,7 +153,7 @@ name: "Faculty",
       background-color:$main;
       padding-top:5rem;
       padding-left:3rem;
-
+      min-height: 66vh;
     }
 
     &--col{

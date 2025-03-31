@@ -50,18 +50,18 @@
                     <template #text>Notify</template>
                   </table-action-burner>
                 </div>
-<!--                <div class="action mx-2" @click="click('invite')">-->
-<!--                  <table-action-burner>-->
-<!--                    <template #icon>-->
-<!--                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="11" viewBox="0 0 14 11" fill="none">-->
-<!--                        <path-->
-<!--                            d="M12.0394 0.725159H1.84074C1.13959 0.725159 0.572292 1.29883 0.572292 1.99999L0.565918 9.64895C0.565918 10.3501 1.13959 10.9238 1.84074 10.9238H12.0394C12.7405 10.9238 13.3142 10.3501 13.3142 9.64895V1.99999C13.3142 1.29883 12.7405 0.725159 12.0394 0.725159ZM12.0394 3.27481L6.94005 6.46188L1.84074 3.27481V1.99999L6.94005 5.18705L12.0394 1.99999V3.27481Z"-->
-<!--                            fill="#193074"/>-->
-<!--                      </svg>-->
-<!--                    </template>-->
-<!--                    <template #text>Send invitations</template>-->
-<!--                  </table-action-burner>-->
-<!--                </div>-->
+                <!--                <div class="action mx-2" @click="click('invite')">-->
+                <!--                  <table-action-burner>-->
+                <!--                    <template #icon>-->
+                <!--                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="11" viewBox="0 0 14 11" fill="none">-->
+                <!--                        <path-->
+                <!--                            d="M12.0394 0.725159H1.84074C1.13959 0.725159 0.572292 1.29883 0.572292 1.99999L0.565918 9.64895C0.565918 10.3501 1.13959 10.9238 1.84074 10.9238H12.0394C12.7405 10.9238 13.3142 10.3501 13.3142 9.64895V1.99999C13.3142 1.29883 12.7405 0.725159 12.0394 0.725159ZM12.0394 3.27481L6.94005 6.46188L1.84074 3.27481V1.99999L6.94005 5.18705L12.0394 1.99999V3.27481Z"-->
+                <!--                            fill="#193074"/>-->
+                <!--                      </svg>-->
+                <!--                    </template>-->
+                <!--                    <template #text>Send invitations</template>-->
+                <!--                  </table-action-burner>-->
+                <!--                </div>-->
                 <div class="action mx-2" @click="click('delete')">
                   <table-action-burner>
                     <template #icon>
@@ -86,11 +86,24 @@
                     <template #text>Hold account</template>
                   </table-action-burner>
                 </div>
+
+                <div class="action mx-2" @click="click('unhold')">
+                  <table-action-burner>
+                    <template #icon>
+                      <svg width="15" height="14" viewBox="0 0 15 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M7.34168 1.30865C4.2141 1.30865 1.67578 3.84698 1.67578 6.97455C1.67578 10.1021 4.2141 12.6404 7.34168 12.6404C10.4693 12.6404 13.0076 10.1021 13.0076 6.97455C13.0076 3.84698 10.4693 1.30865 7.34168 1.30865ZM2.80896 6.97455C2.80896 4.47023 4.83735 2.44183 7.34168 2.44183C8.38987 2.44183 9.35307 2.79879 10.118 3.39937L3.7665 9.75084C3.16591 8.98595 2.80896 8.02274 2.80896 6.97455ZM7.34168 11.5073C6.29349 11.5073 5.33028 11.1503 4.56539 10.5497L10.9169 4.19826C11.5174 4.96316 11.8744 5.92636 11.8744 6.97455C11.8744 9.47888 9.846 11.5073 7.34168 11.5073Z"
+                            fill="#FFAE34"/>
+                      </svg>
+                    </template>
+                    <template #text>Unhold account</template>
+                  </table-action-burner>
+                </div>
               </template>
             </table-header>
           </div>
           <div class="table">
-            <table-ui :options="options" :data="users"/>
+            <table-ui :options="options" @select="handleSelect" :data="users"/>
           </div>
         </div>
       </div>
@@ -110,6 +123,7 @@ import TableHeader from "../../components/reusable/ui/table-header";
 import apis from "../../services/apis"
 import tableActionBurner from '../../components/reusable/ui/table-action-burner'
 import moment from 'moment'
+import {mapActions} from "vuex";
 
 export default {
   name: "Users",
@@ -120,6 +134,7 @@ export default {
   data() {
     return {
       users: [],
+      selected_users: [],
       showInviteUsers: false,
       options: {
         link: {
@@ -132,8 +147,56 @@ export default {
     }
   },
   methods: {
+    ...mapActions("modal", ["set_modal"]),
+    click(value) {
+      if (!this.selected_users.size)
+        return this.$store.dispatch("app_notification/SET_NOTIFICATION", {
+          message: "please select atleast one user",
+          status: "info",
+          uptime: 5000,
+        })
+
+      console.log(value)
+
+      if (value.includes('hold')) {
+        const ids = []
+
+        for (const item of this.selected_users) {
+          ids.push(this.users[item].user_name)
+        }
+
+        this.set_modal({
+          template: 'action_confirmation',
+          title: "Hold accounts",
+          method: {action: 'users/holdAccounts', parameters: {usernames: ids, hold: value === 'hold'}},
+          message: `Are you sure you want to ${value === 'hold' ? '' : 'un'}hold ${this.selected_users.has(-1) ? 'All' : this.selected_users.size} user${this.selected_users.size > 1 || this.selected_users.has(-1) ? 's' : ''}?`,
+        })
+
+      } else if (value === 'delete') {
+        const ids = []
+
+        for (const item of this.selected_users) {
+          ids.push(this.users[item]._id)
+        }
+
+        this.set_modal({
+          template: 'action_confirmation',
+          title: "Delete accounts",
+          method: {action: 'users/deleteAccounts', parameters: {ids}},
+          message: `Are you sure you want to delete ${this.selected_users.has(-1) ? 'All' : this.selected_users.size} user${this.selected_users.size > 1 || this.selected_users.has(-1) ? 's' : ''}?`,
+        })
+      }
+      setTimeout(() => {
+        this.loadUsers();
+      }, 5000);
+    },
+    handleSelect(value) {
+      this.selected_users = value
+    },
     loadUsers() {
-      apis.get(`user/college/${this.$store.state.sidebar_navbar.college._id}/ALL`)
+      console.log('loading broda')
+      this.users = []
+      apis.get(`user/college/ALL`)
           .then(({data: {data}}) => {
             let filteredUsers = [];
 

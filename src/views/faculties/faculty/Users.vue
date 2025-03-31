@@ -16,7 +16,7 @@
         </div>
         <div class="table-wrapper mt-6">
           <div class="table-header">
-            <table-header />
+            <table-header/>
           </div>
 
           <div class="table">
@@ -96,8 +96,8 @@ export default {
       map.add()
     }
   },
-  watch:{
-    faculty(){
+  watch: {
+    faculty() {
       this.$store.dispatch('users/loadUsersBasedOnFaculties', {facultyId: this.faculty._id, category: "STUDENT"})
     }
   },
@@ -105,7 +105,8 @@ export default {
 
     await this.$store.dispatch("faculties/getFaculty", this.facultyId)
     await this.$store.dispatch('faculties/changeHeader', {title: "Users List"})
-
+    if (this.faculty)
+      this.$store.dispatch('users/loadUsersBasedOnFaculties', {facultyId: this.faculty._id, category: "STUDENT"})
   }
 }
 </script>

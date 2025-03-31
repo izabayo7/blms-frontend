@@ -128,7 +128,6 @@ export default {
       background-color: $main;
       padding-top: 5rem;
       padding-left: 3rem;
-
     }
 
     &--col {

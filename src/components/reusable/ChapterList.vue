@@ -3,13 +3,13 @@
     <v-row class="fill-height">
       <v-col class="chapters px-8">
         <v-btn
-          @click="$router.push('/courses')"
+          @click="userCategory === 'ADMIN' ? $router.go(-1) : $router.push('/courses')"
           rounded
           color="#fff"
           elevation="0"
           class="mt-13 mb-6 hidden-sm-and-down d-block"
         >
-          <v-icon>mdi-chevron-left</v-icon>back to courses
+          <v-icon>mdi-chevron-left</v-icon>back {{ userCategory === 'ADMIN' ? '' : 'to courses' }}
         </v-btn>
         <span class="title mb-3 d-block">Course content</span>
         <v-progress-linear
@@ -110,6 +110,9 @@ export default {
   computed: {
     activeIndex() {
       return this.currentIndex + 0;
+    },
+    userCategory() {
+      return this.$store.state.user.user.category.name;
     },
     primary() {
       return colors.primary;
