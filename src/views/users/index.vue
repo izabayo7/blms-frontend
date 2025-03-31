@@ -86,6 +86,19 @@
                     <template #text>Hold account</template>
                   </table-action-burner>
                 </div>
+
+                <div class="action mx-2" @click="click('unhold')">
+                  <table-action-burner>
+                    <template #icon>
+                      <svg width="15" height="14" viewBox="0 0 15 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M7.34168 1.30865C4.2141 1.30865 1.67578 3.84698 1.67578 6.97455C1.67578 10.1021 4.2141 12.6404 7.34168 12.6404C10.4693 12.6404 13.0076 10.1021 13.0076 6.97455C13.0076 3.84698 10.4693 1.30865 7.34168 1.30865ZM2.80896 6.97455C2.80896 4.47023 4.83735 2.44183 7.34168 2.44183C8.38987 2.44183 9.35307 2.79879 10.118 3.39937L3.7665 9.75084C3.16591 8.98595 2.80896 8.02274 2.80896 6.97455ZM7.34168 11.5073C6.29349 11.5073 5.33028 11.1503 4.56539 10.5497L10.9169 4.19826C11.5174 4.96316 11.8744 5.92636 11.8744 6.97455C11.8744 9.47888 9.846 11.5073 7.34168 11.5073Z"
+                            fill="#FFAE34"/>
+                      </svg>
+                    </template>
+                    <template #text>Unhold account</template>
+                  </table-action-burner>
+                </div>
               </template>
             </table-header>
           </div>
@@ -145,7 +158,7 @@ export default {
 
       console.log(value)
 
-      if (value === 'hold') {
+      if (value.includes('hold')) {
         const ids = []
 
         for (const item of this.selected_users) {
@@ -155,8 +168,8 @@ export default {
         this.set_modal({
           template: 'action_confirmation',
           title: "Hold accounts",
-          method: {action: 'users/holdAccounts', parameters: {usernames: ids, hold: true}},
-          message: `Are you sure you want to hold ${this.selected_users.has(-1) ? 'All' : this.selected_users.size} user${this.selected_users.size > 1 || this.selected_users.has(-1) ? 's' : ''}?`,
+          method: {action: 'users/holdAccounts', parameters: {usernames: ids, hold: value === 'hold'}},
+          message: `Are you sure you want to ${value === 'hold' ? '' : 'un'}hold ${this.selected_users.has(-1) ? 'All' : this.selected_users.size} user${this.selected_users.size > 1 || this.selected_users.has(-1) ? 's' : ''}?`,
         })
 
       } else if (value === 'delete') {
