@@ -268,7 +268,7 @@ export default {
                     dispatch('modal/set_modal', { template: 'display_information', title: 'Updating Chapter', message: `uploading ${video.name}` }, { root: true })
                     const formData = new FormData()
                     formData.append("file", video)
-                    apis.update('file/updateMainVideo', state.selectedChapter, formData, {
+                    apis.update(`chapter/${state.selectedChapter}`, 'video', formData, {
                         headers: {
                             'Content-Type': 'multipart/form-data'
                         },
