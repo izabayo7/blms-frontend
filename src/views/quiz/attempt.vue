@@ -81,7 +81,9 @@
               <div v-else class="col-8 d-flex py-0">
                 <div class="file-name ">{{ filesToUpload[i].file.name }}</div>
                 <div class="file-size mx-auto">{{ filesToUpload[i].file.size }}</div>
-                <div class="file-type mx-auto">{{ filesToUpload[i].file.name.split('.')[filesToUpload[i].file.name.split('.').length - 1] }}</div>
+                <div class="file-type mx-auto">
+                  {{ filesToUpload[i].file.name.split('.')[filesToUpload[i].file.name.split('.').length - 1] }}
+                </div>
                 <div class="save-status hidden-sm-and-down d-md-flex justify-sm-center align-center">
                   <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path
@@ -259,6 +261,7 @@ export default {
     remaining_time: 0,
   }),
   computed: {
+    ...mapGetters("chat", ["socket"]),
     // get the current course
     ...mapGetters("quiz", ["selected_quiz"]),
     ...mapGetters("quiz_submission", ["selected_quiz_submission", "loaded"]),
@@ -330,27 +333,30 @@ export default {
     pickfile(index) {
       document.getElementById(`file${index}`).click();
     },
-    findAcceptedFiles(index){
-        let allowed_types = []
-      if(this.selected_quiz.questions[index].allowed_files.includes('image'))
+    findAcceptedFiles(index) {
+      if (!this.selected_quiz.questions[index].allowed_files)
+        return "*"
+
+      let allowed_types = []
+      if (this.selected_quiz.questions[index].allowed_files.includes('image'))
         allowed_types.push('image/*')
 
-      if(this.selected_quiz.questions[index].allowed_files.includes('Pdf'))
+      if (this.selected_quiz.questions[index].allowed_files.includes('Pdf'))
         allowed_types.push('application/pdf')
 
-      if(this.selected_quiz.questions[index].allowed_files.includes('Word document'))
+      if (this.selected_quiz.questions[index].allowed_files.includes('Word document'))
         allowed_types.push('application/msword')
 
-      if(this.selected_quiz.questions[index].allowed_files.includes('Powerpoint file'))
+      if (this.selected_quiz.questions[index].allowed_files.includes('Powerpoint file'))
         allowed_types.push('application/vnd.ms-powerpoint')
 
-      if(this.selected_quiz.questions[index].allowed_files.includes('Zip'))
+      if (this.selected_quiz.questions[index].allowed_files.includes('Zip'))
         allowed_types.push('application/zip,application/x-zip,application/x-zip-compressed,application/octet-stream')
 
-      if(this.selected_quiz.questions[index].allowed_files.includes('image'))
+      if (this.selected_quiz.questions[index].allowed_files.includes('image'))
         allowed_types.push('.txt')
 
-      if(this.selected_quiz.questions[index].allowed_files.includes('Video'))
+      if (this.selected_quiz.questions[index].allowed_files.includes('Video'))
         allowed_types.push('video/*')
 
       return allowed_types.join(',')
@@ -427,6 +433,12 @@ export default {
         submission: this.attempt,
         attachments: this.filesToUpload.filter(e => e.file != ""),
       }).then((is_selection_only) => {
+        // notify instructor
+        this.socket.emit('student-submitted', {
+          userId: this.selected_quiz.user,
+          route: `/quiz/${this.$route.params.name}/${this.$store.state.user.user.user_name}`,
+          content: 'submitted quiz ' + this.selected_quiz.name
+        })
         if (is_selection_only) {
           this.$router.push(`/quiz/${this.selected_quiz.name}/results`);
         } else {
@@ -446,7 +458,10 @@ export default {
         this.findQuizSubmissionByUserAndQuizNames({
           userName: this.$store.state.user.user.user_name,
           quizName: this.$route.params.name,
-        });
+        }).then(() => {
+          if (this.selected_quiz_submission != undefined)
+            this.$router.push(`/quiz/${this.$route.params.name}/${this.$store.state.user.user.user_name}`)
+        })
       }
 
       this.findQuizByName({
@@ -645,22 +660,26 @@ export default {
 
   color: #289448;
 }
-.file-container{
+
+.file-container {
   width: 100%;
 }
+
 /* Portrait phones and smaller */
 @media (max-width: 700px) {
   .pick-file {
-    &.file-not-picked{
+    &.file-not-picked {
       width: 308px;
     }
+
     margin-bottom: 0px;
   }
   .file-container {
     box-shadow: 0px 0px 10px 2px rgba(25, 48, 116, 0.25);
     border-radius: 8px;
     width: 100%;
-    .allowed-files{
+
+    .allowed-files {
       position: absolute;
       margin-top: 12px;
     }

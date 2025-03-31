@@ -201,6 +201,7 @@ const router = new VueRouter({
 })
 // before navigating to any route
 router.beforeEach((to, from, next) => {
+    console.log(from,to,to.query)
     // if the session exist and the vuex store is not set
     if (Vue.prototype.$session.exists() && (!store.state.user.isLoggedIn || !axios.defaults.headers.common.Authorization)) {
         // get the token

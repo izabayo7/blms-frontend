@@ -44,7 +44,7 @@
                     template: 'action_confirmation',
                     method: {
                       action: 'quiz/release_marks',
-                      parameters: { id: item._id },
+                      parameters: { id: item._id, quizName: item.name,user_group: item.target.course.user_group._id},
                     },
                     title: 'Release Marks',
                     message: 'Are you sure you want to release marks for this quiz?',

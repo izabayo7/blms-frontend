@@ -316,6 +316,7 @@ export default {
                         break
                     }
                 }
+                console.log(d.data.published)
                 if (d.data.published) {
                     rootGetters['chat/socket'].emit('course-published', {courseId: d.data._id})
                 }

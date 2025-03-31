@@ -89,8 +89,13 @@ export default {
             })
 
         },
-        release_marks({ dispatch }, {id}){
+        release_marks({ dispatch, rootGetters }, {id,quizName,user_group}){
             apis.update('quiz/release_marks',id).then(()=>{
+                rootGetters['chat/socket'].emit('marksReleased', {
+                    route: `/quiz/attempt/${quizName}`,
+                    user_group,
+                    content: `released marks for quiz ${quizName}`
+                })
                 dispatch("app_notification/SET_NOTIFICATION", {
                     message: "Marks released",
                     status: "success",
