@@ -1,22 +1,159 @@
 <template>
   <div id="create-quiz">
     <div id="quiz-info">
-      <div class="label">Quiz creation wizzard</div>
-      <div class="input-group">
+      <div class="label">Assesment creation wizzard</div>
+      <div class="input-group assesment_type">
+        <label>Select assesment type</label>
+        <div class="d-flex">
+          <button @click="assessment_type = 'quiz'" :class="{active:assessment_type === 'quiz'}">Quiz</button>
+          <button @click="assessment_type = 'assignment'" :class="{active:assessment_type === 'assignment'}">
+            Assignment
+          </button>
+        </div>
+      </div>
+      <div class="input-group assesment_type">
         <label for="quiz-title">Title</label>
         <input v-model="title" id="quiz-title" type="text">
       </div>
-      <div class="input-group">
+      <div v-if="assessment_type === 'assignment'" class="input-group my-margin">
+        <select-ui
+            class="bold-border"
+            name="role"
+            :options="courseNames"
+            id="course"
+            label="Select course"
+            @input="
+            (e) => {
+              selected_course = e;
+            }
+          "
+        />
+      </div>
+      <div v-if="assessment_type === 'assignment'" class="input-group my-margin">
+        <select-ui
+            label="Select chapter"
+            class="bold-border"
+            id="chapter"
+            name="role"
+            :options="chapterNames"
+            @input="
+            (e) => {
+              selected_chapter = e;
+            }
+          "
+        />
+      </div>
+      <div v-if="assessment_type === 'assignment'" class="input-group assesment_type">
+        <label for="assessment-time">Expiration date & time</label>
+        <input id="assessment-time" type="datetime-local">
+      </div>
+      <div v-if="assessment_type === 'quiz'" class="input-group">
         <label>Instructions</label>
         <div class="quiz-instructions">
           <Editor
+              v-if="showEditor"
               ref="editor"
               mode="edit"
-              :defaultContent="'<ol><li><p>Write your custom instructions</p></li></ol>'"
+              defaultContent="<ol><li><p>Write your custom instructions</p></li></ol>"
           />
         </div>
       </div>
-      <div class="flex d-block d-md-flex">
+      <div v-else class="input-group">
+        <div class="quiz-instructions">
+          <Editor
+              v-if="showEditor"
+              ref="editor"
+              mode="edit"
+              defaultContent="<p>Type in your assignments information</p>"
+          />
+        </div>
+      </div>
+      <div v-if="assessment_type === 'assignment'" class="input-group assesment_type">
+        <label class="assessment-label">Upload a file with assigment tasks</label>
+        <div class="col-4 pa-0">
+          <div class="indicator mb-2">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path
+                  d="M9 0C4.03763 0 0 4.03763 0 9C0 13.9624 4.03763 18 9 18C13.9624 18 18 13.9624 18 9C18 4.03763 13.9624 0 9 0ZM9 16.875C4.6575 16.875 1.125 13.3425 1.125 9C1.125 4.6575 4.6575 1.125 9 1.125C13.3425 1.125 16.875 4.6575 16.875 9C16.875 13.3425 13.3425 16.875 9 16.875Z"
+                  fill="#193074"/>
+              <path d="M9 4.1543L9 10.1543" stroke="#193074" stroke-width="1.5" stroke-linecap="round"/>
+              <circle cx="9" cy="13" r="1" fill="#193074"/>
+            </svg>
+            <span class="ml-1">no file chosen</span>
+          </div>
+          <div>
+            <button class="pick-file file-picked" @click="pickfile(i)">
+              Choose file
+            </button>
+          </div>
+        </div>
+      </div>
+      <div v-if="assessment_type === 'assignment'" class="input-group mb-4">
+        <div class="type align-center d-flex hint">
+          <checkbox
+              @check_it="fileTypeClicked('Word document', -1)"
+              :check="allowed_submission_file_types.includes('Word document')"
+          />
+          allow student to submit multiple files
+        </div>
+      </div>
+      <div v-if="assessment_type === 'assignment'" class="input-group">
+        <div class="file-upload">
+          <label>Choose file types that students can upload</label>
+          <div class="allowed-files">
+            <div class="type">
+              <checkbox
+                  @check_it="fileTypeClicked('Pdf', -1)"
+                  :check="allowed_submission_file_types.includes('Pdf')"
+              />
+              Pdf
+            </div>
+            <div class="type">
+              <checkbox
+                  @check_it="fileTypeClicked('Word document', -1)"
+                  :check="allowed_submission_file_types.includes('Word document')"
+              />
+              Word document
+            </div>
+            <div class="type">
+              <checkbox
+                  @check_it="fileTypeClicked('Powerpoint file', -1)"
+                  :check="allowed_submission_file_types.includes('Powerpoint file')"
+              />
+              Powerpoint file
+            </div>
+            <div class="type">
+              <checkbox
+                  @check_it="fileTypeClicked('text', -1)"
+                  :check="allowed_submission_file_types.includes('text')"
+              />
+              text
+            </div>
+            <div class="type">
+              <checkbox
+                  @check_it="fileTypeClicked('Zip', -1)"
+                  :check="allowed_submission_file_types.includes('Zip')"
+              />
+              Zip
+            </div>
+            <div class="type">
+              <checkbox
+                  @check_it="fileTypeClicked('image', -1)"
+                  :check="allowed_submission_file_types.includes('image')"
+              />
+              image
+            </div>
+            <div class="type">
+              <checkbox
+                  @check_it="fileTypeClicked('Video', -1)"
+                  :check="allowed_submission_file_types.includes('Video')"
+              />
+              Video
+            </div>
+          </div>
+        </div>
+      </div>
+      <div v-if="assessment_type === 'quiz'" class="flex d-block d-md-flex">
         <div class="input-group">
           <label for="quiz-duration">Duration</label>
           <div class="duration-input" id="quiz-duration">
@@ -30,7 +167,7 @@
         </div>
       </div>
     </div>
-    <div id="quiz-questions">
+    <div v-if="assessment_type === 'quiz'" id="quiz-questions">
       <div v-for="(question, i) in questions" :key="question.name" class="question mb-5">
         <div class="question-number">{{ i + 1 }}</div>
         <div class="question-content">
@@ -216,7 +353,7 @@
         </div>
       </div>
     </div>
-    <button @click="addQuestion()" class="quiz-action full mt-4" v-if="questions.length">Add question</button>
+    <button @click="addQuestion()" class="quiz-action full mt-4" v-if="questions.length && assessment_type === 'quiz'">Add question</button>
     <div id="quiz-actions" class=" d-flex mb-12 mt-6">
       <button class="quiz-action cancel" @click="
                       set_modal({
@@ -227,13 +364,14 @@
 ">Cancel
       </button>
       <button class="quiz-action" v-if="!questions.length" @click="recreate">Add questions</button>
-      <button class="quiz-action" v-else @click="validate">Save quiz</button>
+      <button class="quiz-action" v-else @click="validate">Save {{ assessment_type }}</button>
+      <button class="quiz-action success" v-if="assessment_type === 'assignment'" @click="validate">Publish assignment</button>
     </div>
   </div>
 </template>
 
 <script>
-import {mapActions} from "vuex";
+import {mapActions, mapGetters} from "vuex";
 
 export default {
   name: "CreateQuiz",
@@ -253,15 +391,25 @@ export default {
       "Multiple image select",
       "File upload",
     ],
+    allowed_submission_file_types: [],
     pictures: [[], []],
+    assessment_type: "quiz",
     hours: 0,
+    selected_course: "",
     minutes: 0,
+    showEditor: true,
     questions: [],
     error: "",
     title: "",
     passMarks: 0
   }),
   watch: {
+    assessment_type() {
+      this.showEditor = false
+      setTimeout(() => {
+        this.showEditor = true
+      }, 500)
+    },
     error() {
       if (this.error != "")
         this.$store.dispatch("app_notification/SET_NOTIFICATION", {
@@ -273,12 +421,44 @@ export default {
         })
     },
   },
+  computed: {
+    ...mapGetters("courses", ["courses", "loaded"]),
+    courseNames() {
+      let res = [];
+      for (const i in this.courses) {
+        res.push(this.courses[i].name);
+      }
+      return res;
+    },
+    chapterNames() {
+      let res = [];
+      for (const i in this.courses) {
+        if (this.courses[i].name === this.selected_course) {
+          for (const k in this.courses[i].chapters) {
+            res.push(this.courses[i].chapters[k].name);
+          }
+        }
+      }
+      return res;
+    },
+  },
+  created() {
+    this.getCourses(!this.loaded);
+  },
   methods: {
+    ...mapActions("courses", ["getCourses"]),
     fileTypeClicked(type, index) {
-      if (this.questions[index].allowed_files.includes(type)) {
-        this.questions[index].allowed_files.splice(this.questions[index].allowed_files.indexOf(type), 1)
+      if (index === -1) {
+        if (this.allowed_submission_file_types.includes(type))
+          this.allowed_submission_file_types.splice(this.allowed_submission_file_types.indexOf(type), 1)
+        else
+          this.allowed_submission_file_types.push(type)
       } else {
-        this.questions[index].allowed_files.push(type)
+        if (this.questions[index].allowed_files.includes(type)) {
+          this.questions[index].allowed_files.splice(this.questions[index].allowed_files.indexOf(type), 1)
+        } else {
+          this.questions[index].allowed_files.push(type)
+        }
       }
     },
     ...mapActions("modal", ["set_modal"]),
