@@ -211,7 +211,7 @@
           <div class="link-name" v-show="state">Reports</div>
         </li>
         <li
-            v-if="!disableFunctionalities&&(userCategory === 'STUDENT' || userCategory === 'INSTRUCTOR')"
+            v-if="!disableFunctionalities&&(userCategory === 'STUDENT')"
             @click="
             closeSidebar();
             routeTo('/assignments');
