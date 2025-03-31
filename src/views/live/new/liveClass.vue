@@ -103,7 +103,7 @@
             </div>
           </div>
         </div>
-        <div v-if="participationInfo.isOfferingCourse" class="live-comments" :class="`--${$vuetify.breakpoint.name}`">
+        <div v-if="participationInfo.isOfferingCourse" class="live-comments" :class="`--${$vuetify.breakpoint.name} ${sidebarOpen ? '' : 'viewer'}`">
           <div class="live-comments--wrapper">
             <div class="_title">LIVE COMMENTS</div>
             <div class="student-new-comment">

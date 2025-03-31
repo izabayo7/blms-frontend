@@ -1,12 +1,17 @@
 <template>
 <div class="online-user">
   <div class="online-user--pic">
-    <figure class="online-user--pic--wrapper" >
-      <img :src="user.profile+'?width=100'" :class="status" :alt="`${user.sur_name} ${user.other_names} profile picture`">
-    </figure>
+    <v-avatar size="30">
+      <img
+          v-if="user.profile"
+          :src="`${user.profile}?width=100`"
+          alt="profile picture"
+      />
+      <div v-else class="text">{{ user_full_names | computeText }}</div>
+    </v-avatar>
   </div>
   <div class="online-user--details">
-    <p class="online-user--details--name">{{`${user.sur_name} ${user.other_names}`}}</p>
+    <p class="online-user--details--name">{{user_full_names}}</p>
     <p class="online-user--details--attendance"> Attendance {{user.attendance}}%</p>
   </div>
 
@@ -24,6 +29,9 @@ export default {
     status(){
       const a = this.user.attendance
       return (a >= 80 )? "cool" : (a >= 55) ? "warn" : "danger"
+    },
+    user_full_names() {
+      return `${this.user.sur_name} ${this.user.other_names}`
     }
   }
 }
@@ -32,7 +40,8 @@ export default {
 <style lang="scss" scoped>
 .online-user{
   display: flex;
-  padding:.1rem;
+  //padding:.1rem;
+  padding: 0.3rem 0.1rem 0.1rem;
   margin-bottom: 9.36px;
 
   &:hover{
@@ -42,25 +51,11 @@ export default {
   &--pic{
     display: grid;
     place-items: center;
-
-    figure{
-      display: grid;
-      place-items: center;
-      img{
-        width:2.1rem;
-        height: 2.1rem;
-        border-radius: 50%;
-
-        &.cool{
-          border:2px solid $success;
-        }
-        &.warn{
-          border:2px solid $warn;
-        }
-        &.danger{
-          border:2px solid $danger;
-        }
-      }
+    .v-avatar {
+      background-color: $primary;
+    }
+    .text {
+      color: $main;
     }
   }
 
