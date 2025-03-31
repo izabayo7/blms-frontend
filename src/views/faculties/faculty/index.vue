@@ -60,12 +60,15 @@ import SubpageNavbar from "../../../components/reusable/subpage-navbar";
 import Search from "../../../components/reusable/Search2";
 import ButtonUi from "../../../components/reusable/ui/button-ui";
 export default {
-name: "Faculty",
+name: "FacultyIndex",
   components: {ButtonUi, Search, SubpageNavbar},
   data(){
     return{
       facultyId:this.$route.params.facultyId
     }
+  },
+  created(){
+    this.$router.replace({path:`/faculties/${this.facultyId}/details`})
   }
 }
 </script>
