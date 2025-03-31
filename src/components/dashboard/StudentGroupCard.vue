@@ -54,7 +54,7 @@ export default {
 </script>
 <style lang="scss">
 .student-group-container {
-  width: 347px;
+  max-width: 347px;
   height: 160px;
   padding: 18px 21px;
   background: #FFFFFF;
