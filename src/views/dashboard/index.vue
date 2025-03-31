@@ -55,6 +55,11 @@ export default {
       this.$router.push(`/messages/${conversation_id}`);
     });
 
+    // listen if the new conversation was created
+    this.socket.on("res/users/new", ({user}) => {
+      console.log(user)
+    });
+
     //handle errors
     this.socket.on("error", (error) => {
       console.log(error);
