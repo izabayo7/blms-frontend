@@ -212,7 +212,7 @@ export default {
         this.done = true;
         const category = this.$store.state.user.user.category.name;
         if (category == "INSTRUCTOR") {
-          this.$router.push("/quiz");
+          this.$router.push("/quiz/timeout");
         } else if (category == "STUDENT") {
           this.markUndoneQuestions();
           this.attempt.auto_submitted = true;
@@ -337,7 +337,9 @@ export default {
         submission: this.attempt,
         attachments: this.filesToUpload,
       }).then(() => {
-        this.$router.push("/reports");
+        this.$router.push(
+          `${this.attempt.auto_submitted ? "/quiz/timeout" : "/reports"}`
+        );
       });
     },
   },
