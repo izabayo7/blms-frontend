@@ -84,10 +84,14 @@
             >
               <!--            //for better html elements readability-->
               <div
+                class="msg mx-auto"
+                v-if="msg.content && msgs.from === 'SYSTEM'"
+                :inner-html.prop="msg.content | injectTime"
+              />
+              <div
                 class="msg"
-                :class="{'mx-auto': msgs.from === 'SYSTEM'}"
-                v-if="msg.content"
-                :inner-html.prop="msg.content | urlify | injectTime"
+                v-else-if="msg.content"
+                :inner-html.prop="msg.content | urlify "
               />
               <div
                 v-if="msg.attachments"

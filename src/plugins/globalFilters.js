@@ -103,13 +103,15 @@ const filters = [
         structure(text) {
             if (!text)
                 return
+            const regex = /^__time__(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+Z)/i
             const segments = text.split(" ")
+            
             for (const i in segments) {
-                if (/^__time__(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+Z)/i.test(segments[i]))
+                if (regex.test(segments[i]))
                     segments[i] = segments[i].replace(/^__time__(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+Z)/i, (d) => {
                         return elapsedDuration(d.split('__time__')[1])
                     })
-                else if(segments[i] === 'at')
+                else if (segments[i] === 'at')
                     segments[i] = ''
             }
             return segments.join(" ")
