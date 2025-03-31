@@ -3,10 +3,7 @@ import VueRouter from 'vue-router'
 import store from '../store'
 import axios from 'axios'
 import jwt from "jsonwebtoken"
-
 Vue.use(VueRouter)
-
-
 const routes = [
     {
         path: '/',
@@ -102,8 +99,7 @@ const routes = [
             name: 'Users',
             component: () =>
                 import('@/components/admin/users.vue')
-        },
-        ]
+        },        ]
     },
     // the login page
     {
@@ -203,7 +199,7 @@ const routes = [
     //         component: () =>
     //             import('@/components/admin/users.vue')
     //     },]
-    // }, 
+    // },
     {
         path: '/register/users',
         name: 'Register Users',
@@ -267,18 +263,14 @@ const routes = [
         component: () => import("@/views/pages/notFound.vue")
     }
 ]
-
 const router = new VueRouter({
     mode: 'history',
     hash: false,
     base: process.env.BASE_URL,
     routes
 })
-
-
 // before navigating to any route
 router.beforeEach((to, from, next) => {
-
     // if the session exist and the vuex store is not set
     if (Vue.prototype.$session.exists() && !store.state.isLoggedIn) {
         // get the token
@@ -288,11 +280,10 @@ router.beforeEach((to, from, next) => {
         // set the token in axios headers
         axios.defaults.headers.common.Authorization = `${token}`;
         // keep the decoded user in vuex store
-        store.dispatch("setUser", jwt.decode(token));
+        store.dispatch("user/setUser", jwt.decode(token));
     }
-
     // check if the destination route is protected
-    if (!to.meta.allowAnonymous && !store.state.isLoggedIn) {
+    if (!to.meta.allowAnonymous && !store.state.user.isLoggedIn) {
         // go to login
         next({
             path: '/login',
@@ -313,5 +304,4 @@ router.beforeEach((to, from, next) => {
         next()
     }
 })
-
 export default router

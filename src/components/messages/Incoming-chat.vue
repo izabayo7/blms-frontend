@@ -1,15 +1,17 @@
 <template>
-<main class="incoming-chat" @click="$router.push(`/messages/${username}`)">
+<main class="incoming-chat" @click="handleClick">
 <!--    slot for profile picture-->
-      <div class="pic col-3"><slot name="pic"></slot></div>
+      <div class="pic col-3">
+        <img src="@/assets/images/instructor.png" alt="profile picture">
+      </div>
       <div class="content col-9">
         <div class="sender">
 <!--          slot for sender name-->
-          <p :class="{'unread':!read}"> <slot name="sender"></slot></p> <div v-if="formatedIncomingMsgs > 0" ><span >{{formatedIncomingMsgs}}</span></div>
+          <p :class="{'unread':!read}"> {{data.name}}</p> <div v-if="formatedIncomingMessagesLength > 0" ><span >{{formatedIncomingMessagesLength}}</span></div>
         </div>
 <!--        slot for the sent massage-->
         <div class="sender-message">
-          <slot :class="{'unread-msg':!read}" name="massage" v-if="!typing"></slot>
+          <div :class="{'unread-msg':!read}" v-if="!typing">{{data.last_message.content}}</div>
           <span v-else>Typing...</span>
         </div>
       </div>
@@ -17,18 +19,31 @@
 </template>
 
 <script>
+// import {emit} from '@/services/event_bus'
 export default {
-name: "Incoming-chat",
+  name: "Incoming-chat",
   props:{
-      incomingMsgs:{type:Number,default:0}, // number of incoming massages, it
       typing:{type:Boolean,default:false},
-      read:{type:Boolean,default:false},
-      username:{type:String, required:true}
+      data:{required:true}
   },
   computed:{
-      formatedIncomingMsgs(){
-        return this.incomingMsgs > 9 ? 9 : this.incomingMsgs
-      }
+      formatedIncomingMessagesLength(){
+        return this.data.unreadMessagesLength > 9 ? 9 : this.data.unreadMessagesLength
+      },
+    read(){
+        return this.formatedIncomingMessagesLength <= 0
+    }
+  },
+  methods:{
+  handleClick(){
+    console.log(this.data.id)
+    this.$store.commit('chat/SET_DISPLAYED_USER',this.data)
+    // this.$store.dispatch('chat/displayMessages',this.data.id)
+    // emit('chat_user_changed',this.data.id) //alert that user was changed so we need to fetch some new messages
+    this.$router.push({path:`/messages/${this.data.id}`,params:{username:this.data.id}})
+  }
+  },
+  mounted() {
   }
 }
 </script>
@@ -39,7 +54,7 @@ name: "Incoming-chat",
   display: flex;
   flex-direction: row;
   padding: .5rem;
-  margin-top: 1rem;
+  margin-top: .3rem;
   cursor: pointer;
   .pic{
     align-self: center;
