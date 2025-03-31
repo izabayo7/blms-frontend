@@ -6,7 +6,7 @@
   >
     <back class="mt-0 mb-6 ml-lg-n6" />
     <v-row>
-      <div class="title ml-2 mt-5">Automatic Submission ( Timed)</div>
+      <div class="title ml-2 mt-5">{{`${$route.fullPath == '/quiz/timeout' ? 'Automatic Submission ( Timed)' : 'Submission successful'}`}}</div>
       <v-col class="col-12 col-md-7">
         <div class="mt-8 text_1">
           Your assessment time is up , all your answers have been saved and
