@@ -31,6 +31,7 @@ export default {
     background-color:$primary;
     transition:.3s ease;
 
+
     &:hover{
       background-color:lighten($primary,10)
     }
@@ -44,6 +45,16 @@ export default {
 
     button{
       color:$main;
+      display:flex;
+      align-items:center;
+
+      span{
+        margin:0 .3rem;
+        display:flex;
+        justify-content:center;
+        align-items:center;
+      }
+
     }
   }
 }
