@@ -84,6 +84,10 @@ export default {
     position: absolute;
     top: 20px;
     right: 21px;
+    button{
+      width: 20px;
+      height: 20px;
+    }
 
     .content {
       z-index: 6;
