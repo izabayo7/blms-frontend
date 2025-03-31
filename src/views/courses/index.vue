@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="courses-container">
     <!-- view of the student -->
     <v-container v-if="userCategory == 'Student'" id="courses" fluid>
       <v-row>
@@ -8,7 +8,30 @@
         </v-col>
       </v-row>
       <v-col class="col-12 pa-0">
-        <v-row v-if="ongoingCourses.length">
+        <v-row v-if="!loaded" class="loaders ml-3">
+          <v-col class="col-4" v-for="n in 5" :key="n">
+            <div class="ssc ssc-card student-card-skeleton ongoing">
+              <div class="ssc-wrapper flex justify-between">
+                <div class="w-40">
+                  <div class="ssc-circle mb"></div>
+                  <div
+                    v-if="type == 'published'"
+                    class="ssc-line w-60 ml"
+                  ></div>
+                </div>
+                <div class="w-60 mr">
+                  <div class="ssc-head-line mb w-80"></div>
+                  <div class="ssc-line w-30 mb"></div>
+                  <div class="ssc-line w-90"></div>
+                  <div class="ssc-line w-70 mb"></div>
+                  <div class="ssc-line w-80"></div>
+                  <div class="ssc-line w-60 mb"></div>
+                </div>
+              </div>
+            </div>
+          </v-col>
+        </v-row>
+        <v-row v-else-if="loaded && ongoingCourses.length">
           <v-col
             v-for="(course, i) in ongoingCourses"
             :key="i"
@@ -29,7 +52,37 @@
         <h2 class="second-title course-group-title">Completed Courses</h2>
       </v-col>
       <v-col class="col-12 px-0">
-        <v-row v-if="finishedCourses.length">
+        <v-row v-if="!loaded" class="loaders">
+          <v-col class="col-4" v-for="n in 3" :key="n">
+            <div class="ssc ssc-card student-card-skeleton finished">
+              <div class="ssc-wrapper pa-0">
+                <div class="ssc-square w-100"></div>
+              </div>
+              <div class="ssc-wrapper ml">
+                <div class="ssc-head-line mb w-80"></div>
+                <div class="ssc-line w-60 mb"></div>
+                <div class="ssc-line w-50 mb"></div>
+              </div>
+              <div class="ssc-wrapper flex ml">
+                <div class="w-20">
+                  <div class="ssc-circle mb"></div>
+                </div>
+                <div class="w-50 mt-2 mr">
+                  <div class="ssc-line w-90"></div>
+                </div>
+              </div>
+              <div class="ssc-wrapper flex ml pt-0">
+                <div class="w-20">
+                  <div class=" w-60 ssc-square mb"></div>
+                </div>
+                <div class="w-50 mt-2 mr">
+                  <div class="ssc-line w-90"></div>
+                </div>
+              </div>
+            </div>
+          </v-col>
+        </v-row>
+        <v-row v-if="loaded && finishedCourses.length">
           <v-col
             v-for="(course, i) in finishedCourses"
             :key="i"
@@ -86,55 +139,43 @@
               >Published Classes</v-btn
             >
           </div>
-          <div
-            v-if="loading"
-            class="ssc ssc-card instructor-card-skeleton"
-            :style="`
-              max-width: 400px;
-              max-height: ${type == 'published' ? 222 : 187}px;
-              margin-top: 40px;
-              box-shadow: 0px 17px 34px rgba(116, 113, 113, 0.16);
-            `"
-          >
-            <div class="ssc-wrapper flex justify-between">
-              <div class="w-60 mr">
-                <div class="ssc-head-line mb w-80"></div>
-                <div class="ssc-line w-40 mb"></div>
-                <div class="ssc-line w-90"></div>
-                <div class="ssc-line w-70 mb"></div>
-
-                <div v-if="type == 'published'" class="ssc-line w-60"></div>
-                <div
-                  v-else
-                  class="ssc-head-line mb w-60"
-                ></div>
-              </div>
-              <div class="w-40">
-                <div
-                  class="ssc-circle mb"
-                  style="height: 100px; width: 100px"
-                ></div>
-                <div v-if="type == 'published'" class="ssc-line w-50 ml"></div>
-              </div>
-            </div>
-            <div v-if="type == 'published'" class="ssc-hr"></div>
+          <div v-if="!loaded" class="loaders">
             <div
-              v-if="type == 'published'"
-              class="ssc-wrapper flex justify-between"
+              v-for="n in 3"
+              :key="n"
+              :class="`ssc ssc-card instructor-card-skeleton ${type}`"
             >
+              <div class="ssc-wrapper flex justify-between">
+                <div class="w-60 mr">
+                  <div class="ssc-head-line mb w-80"></div>
+                  <div class="ssc-line w-40 mb"></div>
+                  <div class="ssc-line w-90"></div>
+                  <div class="ssc-line w-70 mb"></div>
+
+                  <div v-if="type == 'published'" class="ssc-line w-60"></div>
+                  <div v-else class="ssc-head-line mb w-60"></div>
+                </div>
+                <div class="w-40">
+                  <div class="ssc-circle mb"></div>
+                  <div
+                    v-if="type == 'published'"
+                    class="ssc-line w-60 ml"
+                  ></div>
+                </div>
+              </div>
+              <div v-if="type == 'published'" class="ssc-hr"></div>
               <div
-                class="search-ssc-lg__tag ssc-square w-20 ml"
-                style="height: 20px"
-              ></div>
-              <div
-                class="search-ssc-lg__tag ssc-square w-20 mr"
-                style="height: 20px"
-              ></div>
+                v-if="type == 'published'"
+                class="ssc-wrapper flex justify-between"
+              >
+                <div class="search-ssc-lg__tag ssc-square w-20 ml"></div>
+                <div class="search-ssc-lg__tag ssc-square w-20 mr"></div>
+              </div>
             </div>
           </div>
           <div
             v-else-if="
-              !loading && type == 'unpublished'
+              loaded && type == 'unpublished'
                 ? unpublishedCourses.length > 0
                 : publishedCourses.length > 0
             "
@@ -206,17 +247,11 @@ export default {
   name: "courses",
   data: () => ({
     type: "unpublished",
-    loading: true,
   }),
   components: {
     InstructorCourseCard: () =>
       import("@/components/courses/InstructorCourseCard"),
     StudentCourseCard: () => import("@/components/courses/StudentCourseCard"),
-  },
-  watch: {
-    publishedCourses() {
-      this.loading = false;
-    },
   },
   computed: {
     // get the userCategory
@@ -255,11 +290,55 @@ export default {
     background-color: $primary !important;
     color: white;
   }
+}
+.courses-container {
   .instructor-card-skeleton {
-    .ssc-circle {
-      height: 200px !important;
-      width: 200px !important;
+    &.published {
+      max-height: 222px;
     }
+    &.unpublished {
+      max-height: 187px;
+    }
+    max-width: 400px;
+    margin-top: 40px;
+    box-shadow: 0px 17px 34px rgba(116, 113, 113, 0.16);
+    .ssc-circle {
+      height: 110px;
+      width: 110px;
+    }
+    .ssc-square {
+      height: 20px;
+    }
+  }
+  .student-card-skeleton {
+    &.ongoing {
+      max-height: 181px !important;
+      width: 349.891px;
+      .ssc-square {
+        height: 20px;
+      }
+      .ssc-circle {
+        height: 110px;
+        width: 110px;
+        margin-top: 25px;
+      }
+    }
+    &.finished {
+      max-height: 400px !important;
+      width: 300px;
+      .ssc-square {
+        height: 161px;
+      }
+      .ssc-square.mb {
+        height: 30px;
+      }
+      .ssc-circle {
+        height: 30px;
+        width: 30px;
+      }
+    }
+    margin-top: 40px;
+    box-shadow: 0px 17px 34px rgba(116, 113, 113, 0.16);
   }
 }
 </style>
