@@ -41,10 +41,8 @@ export default {
       axios.defaults.headers.common.Authorization = `${this.$session.get('jwt')}`
       this.$store.dispatch('user/setUser', jwt.decode(this.$session.get('jwt')))
       this.$store.state.isLoggedIn = true
-      if (this.$store.state.user.category === 'Student' || this.$store.state.user.category === 'Instructor') {
-        this.$router.push({ name: 'Courses' })
-      } else {
-        alert('not in mvp')
+      if (this.$store.state.user.user.category === 'Student' || this.$store.state.user.user.category === 'Instructor') {
+        this.$router.push('/courses')
       }
     }
   }

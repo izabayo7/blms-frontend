@@ -7,22 +7,22 @@
           <v-btn
             rounded
             text
-            color="#000"
-            dark
-            :class="`details-btn ${type=='details' ? 'new-active-btn' : ''}`"
-            @click="type='details'"
-          >Course Details</v-btn>
+            :class="`details-btn ${type == 'details' ? 'new-active-btn' : ''}`"
+            @click="type = 'details'"
+            >Course Details</v-btn
+          >
           <v-btn
             rounded
             text
-            color="#000"
-            dark
-            :class="`chapters-btn ${type=='chapters' ? 'new-active-btn' : ''}`"
-            @click="type='chapters'"
-          >Course Chapters</v-btn>
+            :class="`chapters-btn ${
+              type == 'chapters' ? 'new-active-btn' : ''
+            }`"
+            @click="type = 'chapters'"
+            >Course Chapters</v-btn
+          >
         </div>
       </v-col>
-      <v-col v-if="type=='details'" class="col-12">
+      <v-col v-if="type == 'details'" class="col-12">
         <v-form>
           <v-row>
             <v-col class="col-12 col-md-8">
@@ -56,7 +56,11 @@
               <v-avatar
                 v-if="course.coverPicture"
                 size="245"
-                :class="course.coverPicture ? 'user-profile ml-2 mt-6 d-block' : 'course-image white--text bg-color-one text-h2'"
+                :class="
+                  course.coverPicture
+                    ? 'user-profile ml-2 mt-6 d-block'
+                    : 'course-image white--text bg-color-one text-h2'
+                "
               >
                 <img :src="course.coverPicture" alt="avatar" />
               </v-avatar>
@@ -64,7 +68,8 @@
                 class="course-image white--text bg-color-one text-h2 d-block vertically--centered"
                 size="245"
                 v-else
-              >{{course.name | computeText}}</v-avatar>
+                >{{ course.name | computeText }}</v-avatar
+              >
               <v-btn
                 fab
                 small
@@ -74,7 +79,13 @@
               >
                 <v-icon>mdi-paperclip</v-icon>
               </v-btn>
-              <span>{{course.coverPicture === undefined ? 'Upload Course CoverPicture' : coverPicture ? coverPicture.name : "Update Course CoverPicture" }}</span>
+              <span>{{
+                course.coverPicture === undefined
+                  ? "Upload Course CoverPicture"
+                  : coverPicture
+                  ? coverPicture.name
+                  : "Update Course CoverPicture"
+              }}</span>
               <input
                 ref="file"
                 type="file"
@@ -91,7 +102,8 @@
                 color="#3CE970"
                 class="white--text mb-6"
                 @click="saveCourseChanges"
-              >update Course</v-btn>
+                >update Course</v-btn
+              >
             </v-col>
           </v-row>
         </v-form>
@@ -130,13 +142,6 @@ export default {
       )._id;
     },
   },
-  watch: {
-    course() {
-      if (this.selectedFacultyCollegeYearName === "") {
-        this.selectedFacultyCollegeYearName = `${this.course.facultyCollegeYear.facultyCollege.faculty.name} ${this.course.facultyCollegeYear.collegeYear.digit}`;
-      }
-    },
-  },
   methods: {
     ...mapActions("courses", ["findCourseByName", "updateCourse"]),
     ...mapActions("faculties", ["getFacultyCollegeYears"]),
@@ -171,6 +176,9 @@ export default {
       userId: this.$store.state.user.user._id,
       courseName: this.$route.params.name,
     });
+    setTimeout(() => {
+      this.selectedFacultyCollegeYearName = `${this.course.facultyCollegeYear.facultyCollege.faculty.name} ${this.course.facultyCollegeYear.collegeYear.digit}`;
+    }, 1000);
   },
 };
 </script>

@@ -5,9 +5,10 @@
         height: 36px;
         border-radius: 20px;
         display: flex;
+        color: black !important;
 
         .new-active-btn {
-            background-color: #ffd248 !important;
+            background-color: $primary;
             color: #fff !important;
         }
     }

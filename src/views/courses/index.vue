@@ -1073,12 +1073,24 @@
       </v-col>
       <v-col class="col-12">
         <v-row v-if="finishedCourses.length">
-          <v-col v-for="(course, i) in finishedCourses" :key="i" cols="12" sm="6" md="4">
+          <v-col
+            v-for="(course, i) in finishedCourses"
+            :key="i"
+            cols="12"
+            sm="6"
+            md="4"
+          >
             <student-course-card category="completed" :course="course" />
           </v-col>
         </v-row>
         <v-row v-else>
-          <svg class="mx-auto" xmlns="http://www.w3.org/2000/svg" width="352" height="360" viewBox="0 0 452 460">
+          <svg
+            class="mx-auto"
+            xmlns="http://www.w3.org/2000/svg"
+            width="352"
+            height="360"
+            viewBox="0 0 452 460"
+          >
             <text
               id="Hurray"
               transform="translate(161 447)"
@@ -2116,7 +2128,7 @@
               </g>
             </g>
           </svg>
-                    <div class="col-12">
+          <div class="col-12">
             <p class="text-center">You have no finsihed courses</p>
             <p class="text-center">You can finish ongoing courses.</p>
           </div>
@@ -2124,10 +2136,20 @@
       </v-col>
     </v-container>
     <!-- view of instructor -->
-    <v-container v-else-if="userCategory == 'Instructor'" class="courses-home" fluid>
+    <v-container
+      v-else-if="userCategory == 'Instructor'"
+      class="courses-home"
+      fluid
+    >
       <v-row>
         <v-col cols="12" md="6" class="courses-header mt-5">
-          <h2>Hey Mr{{`${$store.state.user.gender === 'Male' ? '' : 's'} ${$store.state.user.surName}`}},</h2>
+          <h2>
+            Hey Mr{{
+              `${$store.state.user.gender === "Male" ? "" : "s"} ${
+                $store.state.user.surName
+              }`
+            }},
+          </h2>
           <h3>Ready to start your courses?</h3>
           <div class="class-btns">
             <v-btn
@@ -2135,23 +2157,35 @@
               text
               color="#000"
               dark
-              :class="`unpublished-btn ${type=='unpublished' ? 'active-btn' : ''}`"
-              @click="type='unpublished'"
-            >Unpublished Classes</v-btn>
+              :class="`unpublished-btn ${
+                type == 'unpublished' ? 'active-btn' : ''
+              }`"
+              @click="type = 'unpublished'"
+              >Unpublished Classes</v-btn
+            >
             <v-btn
               rounded
               text
               color="#000"
               dark
-              :class="`published-btn ${type=='published' ? 'active-btn' : ''}`"
-              @click="type='published'"
-            >Published Classes</v-btn>
+              :class="`published-btn ${
+                type == 'published' ? 'active-btn' : ''
+              }`"
+              @click="type = 'published'"
+              >Published Classes</v-btn
+            >
           </div>
           <div
-            v-if="type=='unpublished' ? unpublishedCourses.length > 0 : publishedCourses.length > 0"
+            v-if="
+              type == 'unpublished'
+                ? unpublishedCourses.length > 0
+                : publishedCourses.length > 0
+            "
           >
             <instructor-course-card
-              v-for="(course, i) in type == 'unpublished' ? unpublishedCourses : publishedCourses"
+              v-for="(course, i) in type == 'unpublished'
+                ? unpublishedCourses
+                : publishedCourses"
               :key="i"
               :course="course"
             />
@@ -2161,18 +2195,30 @@
               src="@/assets/images/Blank canvas-rafiki.svg"
               class="courses-not-found-image mt-4"
             ></v-img>
-            <div class="text-h5 text-center courses-not-found-image pa-12 ml-n4">
-              <span
-                class="d-block ml-n-12"
-              >Oops You {{`${type == 'published' ? 'have not yet published any course' : 'dont have unpublished courses'}`}}.</span>
+            <div
+              class="text-h5 text-center courses-not-found-image pa-12 ml-n4"
+            >
+              <span class="d-block ml-n-12"
+                >Oops You
+                {{
+                  `${
+                    type == "published"
+                      ? "have not yet published any course"
+                      : "dont have unpublished courses"
+                  }`
+                }}.</span
+              >
               <v-btn
                 rounded
                 color="#ffd248"
                 class="mt-3 white--text px-12"
                 x-large
                 :to="type == 'published' ? undefined : '/courses/new-course'"
-                @click="type = 'unpublished' "
-              >{{`${type == 'published' ? 'Publish one' : 'Create one'}`}}</v-btn>
+                @click="type = 'unpublished'"
+                >{{
+                  `${type == "published" ? "Publish one" : "Create one"}`
+                }}</v-btn
+              >
             </div>
           </div>
         </v-col>

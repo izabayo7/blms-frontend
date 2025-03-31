@@ -1,7 +1,10 @@
 <template>
   <v-dialog id="kurious--dialog" v-model="visible" :persistent="!closable">
     <!-- view for information display ex(showing progress or a message) -->
-    <div v-if="modal_template == 'display_information'" class="dialog-body dialog_t_1">
+    <div
+      v-if="modal_template == 'display_information'"
+      class="dialog-body dialog_t_1"
+    >
       <div class="close-dialog">
         <svg
           v-if="closable"
@@ -20,14 +23,22 @@
         </svg>
       </div>
       <div class="content">
-        <h4 v-if="title" class="title">{{title}}....</h4>
+        <h4 v-if="title" class="title">{{ title }}....</h4>
         <span v-if="title" class="sub-title">Please wait</span>
-        <p class="unconfirmed">{{message}}</p>
-        <v-progress-linear v-if="title" :value="progress" color="#ffc100" class="request-progress" />
+        <p class="unconfirmed">{{ message }}</p>
+        <v-progress-linear
+          v-if="title"
+          :value="progress"
+          color="#ffc100"
+          class="request-progress"
+        />
       </div>
     </div>
     <!-- view for action confirmation -->
-    <div v-else-if="modal_template == 'action_confirmation'" class="dialog-body dialog_t_1">
+    <div
+      v-else-if="modal_template == 'action_confirmation'"
+      class="dialog-body dialog_t_1"
+    >
       <div class="close-dialog">
         <svg
           @click="toogle_visibility"
@@ -46,16 +57,26 @@
       </div>
       <!-- show confirmations according to the set action -->
       <div class="content confirmation-dialog">
-        <h4 class="title">{{title}}</h4>
-        <span class="sub-title">{{message}}</span>
+        <h4 class="title">{{ title }}</h4>
+        <span class="sub-title">{{ message }}</span>
         <div class="actions">
-          <v-btn @click="toogle_visibility" class="mx-2 white--text" color="#ffd248">Cancel</v-btn>
           <v-btn
-            @click="$store.dispatch(confirmation_method.action, confirmation_method.parameters); toogle_visibility(); "
+            @click="toogle_visibility"
+            class="mx-2 white--text action-button"
+            >Cancel</v-btn
+          >
+          <v-btn
+            @click="
+              $store.dispatch(
+                confirmation_method.action,
+                confirmation_method.parameters
+              );
+              toogle_visibility();
+            "
             outlined
-            class="mx-2"
-            color="#ffd248"
-          >Delete</v-btn>
+            class="mx-2 action-button-outlined"
+            >Delete</v-btn
+          >
         </div>
       </div>
     </div>
@@ -138,6 +159,14 @@ export default {
     h4.title {
       margin-bottom: 45px;
     }
+  }
+  .action-button-outlined {
+    color: $primary !important;
+    caret-color: $primary;
+  }
+  .action-button {
+    background-color: $primary !important;
+    border-color: $primary;
   }
 }
 #panel--btn {

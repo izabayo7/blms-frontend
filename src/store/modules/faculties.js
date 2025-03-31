@@ -12,15 +12,18 @@ export default {
     },
     actions: {
         //get facultyCollegeYears from backend (currently I'm fetching all for faster development but in future we'll fetch according to the current logged in user)
-        getFacultyCollegeYears({ state }, collegeId ) {
-            apis.get(`faculty-college-year/college/${collegeId}`).then(d => {
-                for (const i in d.data) {
-                    d.data[i].name = `${d.data[i].facultyCollege.faculty.name} ${d.data[i].collegeYear.digit}`
-                }
-                state.facultyCollegeYears.data = d.data
-                //announce that data have been loaded
-                state.facultyCollegeYears.loaded = true
-            })
+        getFacultyCollegeYears({ state }, collegeId) {
+            // when faculty college years not loaded fetch them
+            if (!state.facultyCollegeYears.loaded) {
+                apis.get(`faculty-college-year/college/${collegeId}`).then(d => {
+                    for (const i in d.data) {
+                        d.data[i].name = `${d.data[i].facultyCollege.faculty.name} ${d.data[i].collegeYear.digit}`
+                    }
+                    state.facultyCollegeYears.data = d.data
+                    //announce that data have been loaded
+                    state.facultyCollegeYears.loaded = true
+                })
+            }
         },
     },
     getters: {
