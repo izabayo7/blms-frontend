@@ -33,10 +33,10 @@
         </template>
         <template v-slot:item.marking_status="{ item }">
           <span
-            :class="`normal--text ${guess() ? 'marked' : 'not_marked' }`"
+            :class="`normal--text ${item.marked ? 'marked' : 'not_marked' }`"
             to="/"
           >
-            {{ item? guess() ? 'Marked' : 'Not marked' : '' }}
+            {{ item.marked ? 'Marked' : 'Not marked' }}
           </span>
         </template>
         <template v-slot:item.attachments="{ item }">
@@ -149,10 +149,10 @@ export default {
       font-size: 12px;
     }
     &.marked{
-      color: #3CE970;
+      color: #3CE970 !important;
     }
     &.not_marked{
-      color: #FC6767;
+      color: #FC6767 !important;
     }
   }
   .data-table{
