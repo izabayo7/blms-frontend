@@ -50,7 +50,7 @@
 
 <!--    table of faculties-->
       <div class="tabular-faculties">
-        <div class="table-wrapper" v-if="faculties">
+        <div class="table-wrapper" v-if="formatedFaculties.length > 0">
 
 <!--          table header-->
           <div class="table-header">
@@ -112,7 +112,6 @@ name: "Faculties",
   methods:{
   },
   async mounted(){
-    console.log('mounted',this.faculties);
     await this.$store.dispatch('faculties/getFaculties',"ALL");
   },
 }
