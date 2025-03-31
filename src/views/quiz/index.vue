@@ -54,7 +54,7 @@
                         </defs>
                       </svg>
                     </div>
-                    <div>Assignments {{ formated_quiz.length }}</div>
+                    <div>Assignments {{ assignments.length }}</div>
                   </div>
                 </div>
               </div>
@@ -132,7 +132,7 @@
               v-else
               :search="search"
               :headers="assignments_headers"
-              :items="[1,2,3,4]"
+              :items="assignments"
               sort-by="title"
               @click:row="handleRowClick"
           >
@@ -226,6 +226,7 @@
 
 <script>
 import {mapActions, mapGetters} from "vuex";
+import Apis from "@/services/apis";
 
 export default {
   data: () => ({
@@ -259,6 +260,7 @@ export default {
       {text: "Status", value: "status"},
       {text: "Action", value: "actions", sortable: false, align: "center"},
     ],
+    assignments: [],
   }),
   computed: {
     // get the current course
@@ -289,12 +291,18 @@ export default {
     handleRowClick(value) {
       this.$router.push(`quiz/attempt/${value.name}`)
     },
+    async getAssignments(){
+      Apis.get('assignments').then((res)=>{
+        this.assignments = res.data.data
+      })
+    }
   },
   created() {
     // load formated_quiz
     this.getQuizes({
       user_name: this.$store.state.user.user.user_name,
     });
+    this.getAssignments();
   },
 };
 </script>
