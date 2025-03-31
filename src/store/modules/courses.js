@@ -111,7 +111,6 @@ export default {
                         }
                     }).then(courseData => {
                         courseObject.coverPicture = courseData.data.coverPicture
-                        // dispatch('modal/reset_modal', null, { root: true })
                     })
                 }
                 courseObject.chapters = []
@@ -150,7 +149,6 @@ export default {
                         }
                     }).then(courseData => {
                         state.courses.data[courseIndex].coverPicture = courseData.data.coverPicture
-                        // dispatch('modal/reset_modal', null, { root: true })
                     })
                 }
             })
@@ -485,7 +483,6 @@ export default {
         },
     },
     getters: {
-        //get a specified courses
         loaded: state => {
             return state.courses.loaded
         },

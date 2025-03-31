@@ -235,13 +235,21 @@
         <v-card class="school-card">
           <v-row>
             <v-col class="col-12">
-              <h1>A</h1>
+              <img
+                v-if="college.logo"
+                :alt="college.name + ' logo photo'"
+                class="preview-media"
+                :src="college.logo"
+              />
+              <h1 v-else>{{ college.name.toUpperCase()[0] }}</h1>
             </v-col>
             <v-col class="col-12">
-              <h5>African Leadership University</h5>
+              <h5>{{ college.name | trimString(25) }}</h5>
               <v-btn
                 rounded
-                @click="$router.push('/administration/school-details')"
+                @click="
+                  $router.push(`/administration/colleges/${college.name}`)
+                "
                 class="mt-2"
                 >View school details</v-btn
               >
@@ -278,6 +286,27 @@
           :search="search"
           sort-by="name"
         >
+          <template v-slot:item.name="{ item }">
+            {{ `${item.surName} ${item.otherNames}` }}
+          </template>
+          <template v-slot:item.faculty="{ item }">
+            {{
+              item.category === "Instructor"
+                ? "-"
+                : item.studentFacultyCollegeYear.facultyCollegeYear
+                    .facultyCollege.faculty.name
+            }}
+          </template>
+          <template v-slot:item.group="{ item }">
+            {{
+              item.category === "Instructor"
+                ? "Teachers"
+                : `Year ${item.studentFacultyCollegeYear.facultyCollegeYear.collegeYear.digit}`
+            }}
+          </template>
+          <template v-slot:item.date="{ item }">
+            {{ item.createdAt | formatDate }}
+          </template>
           <template v-slot:item.actions="{ item }">
             <v-icon
               small
@@ -308,7 +337,7 @@
 </template>
 
 <script>
-import Apis from "@/services/apis";
+import { mapActions, mapGetters } from "vuex";
 export default {
   data: () => ({
     search: "",
@@ -319,91 +348,54 @@ export default {
         sortable: false,
         value: "name",
       },
-      { text: "Type", value: "type" },
-      { text: "Gender", value: "gender" },
-      { text: "Faculty", value: "faculty" },
+      { text: "User type", value: "category" },
+      { text: "User gender", value: "gender" },
+      { text: "User's faculty", value: "faculty" },
       { text: "Group", value: "group" },
-      { text: "Date Added", value: "date" },
+      { text: "Date added", value: "date" },
       { text: "Action", value: "actions", sortable: false, align: "center" },
     ],
-    items: [
-      {
-        name: "Twahirwa Tonny",
-        type: "Teacher",
-        gender: "Male",
-        faculty: "Business Management",
-        group: "Teachers",
-        date: "02/12/2020",
-      },
-      {
-        name: "Umutoni Fredine",
-        type: "Student",
-        gender: "Female",
-        faculty: "Business Management",
-        group: "Year 1",
-        date: "26/12/2020",
-      },
-      {
-        name: "Mugabo James",
-        type: "Student",
-        gender: "Male",
-        faculty: "Language and Literature",
-        group: "Year 3",
-        date: "22/11/2020",
-      },
-      {
-        name: "Mutamba Fred",
-        type: "Teacher",
-        gender: "Male",
-        faculty: "Computer Science",
-        group: "Teachers",
-        date: "13/11/2020",
-      },
-    ],
-    users: [],
   }),
-  beforeMount() {
-    this.getUsers();
+  computed: {
+    // get the userCategory
+    userCategory() {
+      return this.$store.state.user.user.category;
+    },
+    // get users
+    ...mapGetters("users", ["users", "loaded"]),
+    ...mapGetters("colleges", ["college", "c_loaded"]),
   },
   methods: {
-    async getUsers() {
-      try {
-        let response = await Apis.get(
-          `student/college/${this.$store.state.user.college}`
-        );
-        for (const student of response.data) {
-          this.users.push({
-            name: `${student.surName} ${student.otherNames}`,
-            gender: student.gender,
-            type: student.category,
-            faculty: "Business Management",
-            group: "Teachers",
-            date: "02/12/2020",
-          });
-        }
-
-        response = await Apis.get(
-          `instructor/college/${this.$store.state.user.college}`
-        );
-        for (const instructor of response.data) {
-          this.users.push({
-            name: `${instructor.surName} ${instructor.otherNames}`,
-            gender: instructor.gender,
-            type: instructor.category,
-            faculty: "-",
-            group: "-",
-            date: "02/12/2020",
-          });
-        }
-      } catch (error) {
-        if (error.request && !error.response) {
-          this.status = 503;
-          this.message = "Service Unavailable";
-          this.modal = false;
-          this.show = true;
-        }
-      }
-    },
+    ...mapActions("users", ["getUsers"]),
+    ...mapActions("colleges", ["getCollegeById"]),
+  },
+  created() {
+    if (!this.loaded) {
+      //get users on page load
+      this.getUsers({
+        collegeId: this.$store.state.user.user.college,
+      });
+    }
+    if (!this.c_loaded) {
+      //get college on page load
+      this.getCollegeById({
+        collegeId: this.$store.state.user.user.college,
+      });
+    }
   },
 };
 </script>
+<style lang="scss" scoped>
+.preview-media {
+  margin-left: 27%;
+  border: 1px solid $primary;
+  color: black;
+  width: 100px;
+  padding: 6px;
+  height: 100px;
+  border-radius: 180px;
+  padding: 0;
+  align-self: stretch;
+  object-fit: cover;
+}
+</style>

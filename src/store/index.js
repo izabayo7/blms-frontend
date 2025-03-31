@@ -9,6 +9,8 @@ import chat from "@/store/modules/chat";
 import user from "@/store/modules/user";
 import sidebar_navbar from "@/store/modules/sidebar_navbar";
 import notification from '@/store/modules/notification'
+import users from '@/store/modules/users'
+import colleges from '@/store/modules/colleges'
 
 Vue.use(Vuex)
 export default new Vuex.Store({
@@ -32,6 +34,8 @@ export default new Vuex.Store({
         chat,
         user,
         sidebar_navbar,
-        notification
+        notification,
+        users,
+        colleges
     }
 })

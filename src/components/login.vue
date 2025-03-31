@@ -106,7 +106,7 @@ export default {
           }
           // others land to the dashboard
           else if (this.userCategory === "admin") {
-            this.$router.push("/users");
+            this.$router.push("/administration");
           }
         }
       } catch (error) {

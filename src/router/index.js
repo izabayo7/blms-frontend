@@ -189,7 +189,7 @@ const routes = [
                     import('@/views/administration/registration/faculty')
             },
             {
-                path: '/administration/school-details',
+                path: '/administration/colleges/:name',
                 name: 'SchoolDetails',
                 component: () =>
                     import('@/components/school-details'),
