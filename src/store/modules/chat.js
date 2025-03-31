@@ -50,8 +50,10 @@ export default {
         //add incoming message
         ADD_INCOMING_MESSAGE(state, newMessage) {
 
+            const id = newMessage.group ? newMessage.group : newMessage.sender._id
+            console.log(newMessage)
             //get last message from stored conversation
-            store.dispatch('chat/lastMessageInCertainChatMessages', newMessage.sender._id).then(({ lastMessage, groupIndex, userIndex }) => {
+            store.dispatch('chat/lastMessageInCertainChatMessages', id).then(({ lastMessage, groupIndex, userIndex }) => {
 
                 //if conversation was found and message not duplicated
                 if (userIndex === undefined || lastMessage._id === newMessage._id)
@@ -77,7 +79,7 @@ export default {
 
             })
 
-            store.dispatch('chat/findIndexOfUserInIncomingMessages', newMessage.sender._id).then(idx => {
+            store.dispatch('chat/findIndexOfUserInIncomingMessages', id).then(idx => {
                 if (idx === null) {
                     //to be done later
                 } else {
@@ -205,10 +207,13 @@ export default {
         },
         //load user messages
         loadMessages({ getters, state, commit }, id) {
+            // const group = user.is_group
+
             // get messages
-            //first check if we have ongoing requested data withe the same id as this
+            //first check if we have ongoing requested data with the same id as this
             if (state.request.id !== id) {
-                getters.socket.emit('request_conversation', { contactId: id });
+
+                getters.socket.emit('request_conversation', { conversation_id: id });
                 state.request.ongoing = true
                 state.request.id = id
             }
@@ -256,7 +261,6 @@ export default {
     getters: {
         // connect to socket from sever side
         socket() {
-            console.log(io)
             // io.socket.removeAllListeners()
             return io(process.env.VUE_APP_api_service_url, {
                 query: {
