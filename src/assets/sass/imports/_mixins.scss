@@ -31,3 +31,36 @@
   justify-content: center;
   align-items: center;
 }
+
+
+@mixin users-page-header{
+      width:100%;
+
+    .header-wrapper{
+      margin-top:3rem;
+
+      .heading{
+        .icon{
+          margin-right:1.55rem;
+        }
+        .text-content{
+
+          h2,h4{
+            color:$font;
+          }
+        }
+      }
+      .search{
+        .search-wrapper{
+          width:20rem;
+        }
+      }
+
+      .add-user{
+
+        .add-user-button{
+          max-width: 10rem;
+        }
+      }
+    }
+}
