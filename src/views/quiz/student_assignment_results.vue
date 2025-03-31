@@ -101,16 +101,29 @@
           <div v-else class="text-input">
             <Editor
                 ref="editor"
-                mode="edit"
+                :mode="userCategory === 'STUDENT'? 'edit': 'view'"
                 :defaultContent="assignment_submission.details || '<p>Type your answer here</p>'"
             />
+          </div>
+          <div class="marks mt-6">
+            <div class="label mb-2">Marks: </div>
+            <div>
+              <div class="cool-box marks total grey-color mt-n1">
+                <input
+                    class="marks-input"
+                    v-model="total_marks"
+                    type="text"
+                />
+                <span>{{ `/${assignment.total_marks}` }}</span>
+              </div>
+            </div>
           </div>
           <div id="quiz-actions" class=" d-flex mb-12 mt-6">
             <button @click="$router.push(`/${userCategory==='STUDENT' ? 'assignments':'quiz'}`)"
                     class="quiz-action cancel">
               Cancel
             </button>
-            <button v-if="userCategory === 'STUDENT'" class="quiz-action" @click="validate">
+            <button v-if="userCategory === 'STUDENT' || $route.params.user_name" class="quiz-action" @click="validate">
               {{ assignment_submission._id ? 'Save' : 'Submit' }}
             </button>
             <button v-if="userCategory === 'STUDENT' && assignment_submission._id && !assignment_submission.marked"
@@ -143,6 +156,7 @@ export default {
   data: () => ({
     assignment: undefined,
     error: "",
+    total_marks: 0,
     submissionAttachments: [],
     assignment_submission: {
       assignment: "",
@@ -170,7 +184,7 @@ export default {
     backend_url() {
       return process.env.VUE_APP_api_service_url
     },
-    ...mapGetters("user", ["userCategory","username"]),
+    ...mapGetters("user", ["userCategory", "username"]),
     // get the current course
     ...mapGetters("quiz", ["all_quiz"]),
     // format the quiz to fit in the table
@@ -196,16 +210,15 @@ export default {
     ...mapActions("modal", ["set_modal"]),
     async getSubmission() {
       const res = await Apis.get(`assignment_submission/user/${this.userCategory === 'STUDENT' ? this.username : this.$route.params.user_name}/${this.$route.params.id}`, this.assignment_submission)
-      console.log(res)
       if (res.data.data) {
         this.assignment_submission = res.data.data
         this.submissionAttachments = res.data.data.attachments.map(x => {
           return {name: x.src}
         })
+        this.total_marks = res.data.data.total_marks
       }
 
       this.assignment = await this.getAssignment({id: this.$route.params.id})
-      console.log(this.assignment)
       if (this.assignment) {
         let date = new Date(this.assignment.dueDate)
         date.setMinutes(date.getUTCMinutes())
@@ -214,6 +227,10 @@ export default {
       }
     },
     validate() {
+
+      if(this.userCategory === 'INSTRUCTOR')
+        return this.saveMarks()
+
       if (this.assignment.submissionMode === 'textInput') {
         if (this.$refs.editor.getHTML() === "<p>Type your answer here</p>")
           return this.error = "Please provide the requested details"
@@ -276,13 +293,7 @@ export default {
         })
       Apis.create('assignment_submission', this.assignment_submission).then(async (res) => {
         if (res.data.status !== 201) {
-          this.$store.dispatch("app_notification/SET_NOTIFICATION", {
-            message: res.data.message,
-            status: "danger",
-            uptime: 5000,
-          }).then(() => {
-            this.error = ""
-          })
+          this.error = res.data.message
         } else {
           if (this.submissionAttachments.length) {
             const formData = new FormData()
@@ -317,6 +328,22 @@ export default {
         }
       })
     },
+    saveMarks(){
+      Apis.update('assignment_submission', this.assignment_submission._id, {
+        total_marks: this.total_marks,
+      }).then(async (res) => {
+        if (res.data.status !== 200) {
+          this.error = res.data.message
+        } else {
+          this.$store.dispatch("app_notification/SET_NOTIFICATION", {
+            message: "Submission marks were saved successfully",
+            status: "success",
+            uptime: 5000,
+          })
+          this.$router.push('/reports/'+this.$route.params.id)
+        }
+      })
+    },
     saveAssignmentSubmission() {
       this.assignment_submission.assignment = this.$route.params.id
       if (this.assignment.submissionMode === 'textInput')
@@ -333,13 +360,7 @@ export default {
         attachments: this.assignment_submission.attachments
       }).then(async (res) => {
         if (res.data.status !== 200) {
-          this.$store.dispatch("app_notification/SET_NOTIFICATION", {
-            message: res.data.message,
-            status: "danger",
-            uptime: 5000,
-          }).then(() => {
-            this.error = ""
-          })
+          this.error = res.data.message
         } else {
           if (this.submissionAttachments.filter(x => x.size).length) {
             const formData = new FormData()
@@ -411,7 +432,37 @@ export default {
 
   .lower {
     margin-left: 48px;
+    .cool-box {
+      padding: 4px 12px;
+      text-align: center;
+      font-size: 1.3rem;
+      //width: 31.02px;
+      //height: 21.71px;
 
+      border: 0.775483px solid #717171;
+      box-sizing: border-box;
+      border-radius: 4.6529px;
+
+      * {
+        color: $primary;
+      }
+
+      display: inline-flex;
+      font-weight: bold;
+      // border-radius: 13px;
+      &.marks {
+        // border: 2px solid #cbcbcb;
+        box-shadow: 0px 3px 6px rgb(0, 0, 0, 0.16);
+      }
+
+      &.total {
+        border-radius: 11px;
+      }
+
+      p {
+        margin: 0;
+      }
+    }
     .description {
       font-family: Inter;
       font-style: normal;
