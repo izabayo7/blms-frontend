@@ -63,7 +63,7 @@
               />
             </div>
           </div>
-          <div class="input-group">
+          <div v-if="!editMode" class="input-group">
             <div class="label">
               <label for="faculty-description"
               >Add a student group to faculty
@@ -231,7 +231,6 @@ export default {
   }),
   computed: {
     ...mapGetters('faculties', {state: "faculty"}),
-    ...mapGetters('faculty_college_year', ['facultyCollegeYears']),
     visible() {
       return 1;
     },
@@ -257,12 +256,6 @@ export default {
     if (this.editMode) {
       await this.$store.dispatch("faculties/getFaculty", this.facultyId)
       this.faculty = {name: this.state.name, description: this.state.description}
-      await this.$store.dispatch('faculty_college_year/getFacultyCollegeYearsByFaculty', {facultyId: this.facultyId})
-      this.facultyCollegeYears.map(x => {
-        this.addedStudentGroups.push({
-          name: x.name
-        })
-      })
     }
   },
   watch: {
@@ -322,7 +315,7 @@ export default {
     }
     ,
     async createFaculty() {
-      const res = await Apis.create("faculty", this.faculty);
+      const res = this.editMode ? await Apis.update("faculty", this.facultyId, this.faculty) : await Apis.create("faculty", this.faculty);
       if (res.data.status != 200 && res.data.status != 201) {
         this.$store.dispatch("app_notification/SET_NOTIFICATION", {
           message: res.data.message,
@@ -331,34 +324,38 @@ export default {
         })
       } else {
         this.$store.dispatch("app_notification/SET_NOTIFICATION", {
-          message: "Faculty successfully created",
+          message: this.editMode ? "Changes saved" : "Faculty successfully created",
           status: "success",
           uptime: 2000,
         })
-        const unsaved = []
-        for (const i in this.addedStudentGroups) {
-          const response = await Apis.create("user_groups", {
-            name: this.addedStudentGroups[i].name,
-            faculty: res.data.data._id
-          });
-          if (response.data.status != 200 && response.data.status != 201) {
+        if (!this.editMode) {
+          const unsaved = []
+          for (const i in this.addedStudentGroups) {
+            const response = await Apis.create("user_groups", {
+              name: this.addedStudentGroups[i].name,
+              faculty: res.data.data._id
+            });
+            if (response.data.status != 200 && response.data.status != 201) {
+              this.$store.dispatch("app_notification/SET_NOTIFICATION", {
+                message: response.data.message,
+                status: "danger",
+                uptime: 2000,
+              })
+              unsaved.push(this.addedStudentGroups[i])
+            }
+          }
+          if (!unsaved.length) {
             this.$store.dispatch("app_notification/SET_NOTIFICATION", {
-              message: response.data.message,
-              status: "danger",
+              message: "User groups added successfully",
+              status: "success",
               uptime: 2000,
             })
-            unsaved.push(this.addedStudentGroups[i])
-          }
-        }
-        if (!unsaved.length) {
-          this.$store.dispatch("app_notification/SET_NOTIFICATION", {
-            message: "User groups added successfully",
-            status: "success",
-            uptime: 2000,
-          })
+            this.$emit('closeModal')
+          } else
+            this.addedStudentGroups = unsaved
+        } else {
           this.$emit('closeModal')
-        } else
-          this.addedStudentGroups = unsaved
+        }
       }
     }
     ,
@@ -376,6 +373,9 @@ export default {
       if (this.faculty.description.length < 10) {
         return this.error = "Faculty description too short"
       }
+      if (!this.editMode && !this.addedStudentGroups.length)
+        return this.error = "Please enter atleast one student group"
+
       this.createFaculty()
     }
   }

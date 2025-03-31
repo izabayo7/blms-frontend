@@ -70,7 +70,7 @@
                   <template #cols>
                     <td>
                       <div class="first">{{ faculty.name }}</div>
-                      <div class="second">{{ faculty.updatedAt }}</div>
+                      <div class="second">Updated {{ faculty.updatedAt }}</div>
                     </td>
                     <td class="center">{{ faculty.total_student_groups }}</td>
                     <td>
@@ -102,6 +102,7 @@ import TableRow from "../../components/reusable/table/TableRow";
 import TableHeadRow from "../../components/reusable/table/TableHeadRow";
 import moment from "moment";
 import {mapGetters} from 'vuex'
+import {elapsedDuration} from "../../services/global_functions";
 
 export default {
   name: "Faculties",
@@ -137,7 +138,7 @@ export default {
       this.faculties.map(faculty => {
 
         faculty.createdAt = moment(faculty.createdAt).format("DD MMM  YYYY")
-        faculty.updatedAt = moment(faculty.updatedAt).format("DD MMM YYYY")
+        faculty.updatedAt = elapsedDuration(faculty.updatedAt)
         //TODO finalising faculties
 
         filteredFaculties.push(faculty)
