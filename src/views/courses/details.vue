@@ -220,7 +220,7 @@
 <script>
 import { mapActions, mapGetters } from "vuex";
 export default {
-  name: "CourseDetails",
+  name: "course_details",
   data: () => ({
     activeIndex: -1,
     maximumIndex: 0,

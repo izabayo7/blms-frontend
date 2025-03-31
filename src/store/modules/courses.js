@@ -88,6 +88,46 @@ export default {
             }
             return state.courses.data.filter(course => course.name == courseName)[0]
         },
+        //create a course
+        createCourse({ state, commit, dispatch }, { course, coverPicture }) {
+            let courseObject = {}
+            // set the dialog
+            dispatch('modal/set_modal', { template: 'display_information', title: 'Creating Course', message: 'Saving information' }, { root: true })
+            return apis.create('course', course).then(d => {
+
+                courseObject._id = d.data._id
+                courseObject.name = d.data.name
+                courseObject.description = d.data.description
+                courseObject.facultyCollegeYear = d.data.facultyCollegeYear
+
+                commit('set_selected_course', d.data._id)
+
+                if (coverPicture) {
+                    console.log(coverPicture)
+                    commit('modal/update_message', `uploading ${coverPicture.name}`, { root: true })
+                    const formData = new FormData()
+                    formData.append("file", coverPicture)
+                    apis.update('file/updateCourseCoverPicture', d.data._id, formData, {
+                        headers: {
+                            'Content-Type': 'multipart/form-data'
+                        },
+                        onUploadProgress: (progressEvent) => {
+                            commit('modal/update_progress', parseInt(Math.round((progressEvent.loaded / progressEvent.total) * 100)), { root: true })
+                        }
+                    }).then(courseData => {
+                        courseObject.coverPicture = courseData.data.coverPicture
+                    })
+                }
+                courseObject.chapters = []
+                state.courses.data.push(courseObject)
+                commit('initialise_new_chapter')
+                setTimeout(() => {
+                    dispatch('modal/reset_modal', null, { root: true })
+                }, 3000);
+
+            })
+
+        },
         //update a course
         updateCourse({ state, commit, dispatch }, { course, coverPicture }) {
             let courseIndex
@@ -216,8 +256,11 @@ export default {
 
         },
         //publish a course
-        tooglePublishCourse({ state }, courseId) {
-            apis.update('course/tooglePublishment', state.selectedCourse || courseId).then(d => {
+        tooglePublishCourse({ state, commit }, courseId) {
+            if (courseId)
+                commit('set_selected_course', courseId)
+
+            apis.update('course/tooglePublishment', state.selectedCourse).then(d => {
                 for (const i in state.courses.data) {
                     if (state.courses.data[i]._id == state.selectedCourse) {
                         state.courses.data[i].published = d.data.published
@@ -227,7 +270,7 @@ export default {
             })
         },
         //delete a course
-        deleteCourse({ state }) {
+        delete_course({ state }) {
             apis.delete('course', state.selectedCourse).then(() => {
                 for (const i in state.courses.data) {
                     if (state.courses.data[i]._id == state.selectedCourse) {
@@ -304,7 +347,7 @@ export default {
                     break
                 }
             }
-            apis.update(`studentProgress`, state.courses.data[courseIndex].progress.id , { student: studentId, course: state.selectedCourse, chapter: state.selectedChapter }).then(d => {
+            apis.update(`studentProgress`, state.courses.data[courseIndex].progress.id, { student: studentId, course: state.selectedCourse, chapter: state.selectedChapter }).then(d => {
                 commit('set_student_progress', { courseId: state.selectedCourse, progress: d.data })
 
                 state.courses.data[courseIndex].progress = { id: d.data._id, progress: d.data.progress, dateStarted: d.data.createdAt }
@@ -315,8 +358,8 @@ export default {
         initialise_new_chapter({ commit }) {
             commit('initialise_new_chapter');
         },
-        //save a new chapter
-        addChapter({ state, commit, dispatch }, { chapter, content, video, attachments, quiz }) {
+        //create a new chapter
+        createChapter({ state, commit, dispatch }, { chapter, content, video, attachments, quiz }) {
             // set the dialog
             dispatch('modal/set_modal', { template: 'display_information', title: 'Saving Chapter', message: 'Saving content' }, { root: true })
             let courseIndex, chapterIndex

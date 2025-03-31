@@ -1,6 +1,6 @@
 <template>
   <!-- details container -->
-  <section v-if="course != undefined" class="my-container">
+  <section v-if="course !== undefined" class="my-container">
     <!--      this is for student preview-->
     <div class="student" v-if="userCategory === 'Student'">
       <!-- <button class="back">back</button> -->
@@ -10,7 +10,7 @@
 
         <div class="instructor-profile">
           <article>
-            <img v-if="course.instructor.profile" :src="instructor.profile" alt="profile picture" />
+            <img v-if="course.instructor.profile" :src="course.instructor.profile" alt="profile picture" />
             <v-avatar v-else size="50" class="bg-color-one">
               <span
                 class="white--text"
@@ -214,7 +214,11 @@
             class="preview-media"
             :src="course.coverPicture"
           />
-          <div v-else class="bg-color-one vertically--centered text-center preview-image" style="height: 100%">
+          <div
+            v-else
+            class="bg-color-one vertically--centered text-center preview-image"
+            style="height: 100%"
+          >
             <span class="text-h1 white--text">{{course.name | computeText}}</span>
           </div>
         </div>
@@ -396,9 +400,12 @@
                   </g>
                 </svg>
               </div>
-              <div @click="tooglePublishCourse().then(()=>{
+              <div
+                @click="tooglePublishCourse().then(()=>{
                   $router.push('/courses')
-                })" class="act-btn upload">
+                })"
+                class="act-btn upload"
+              >
                 <svg
                   v-if="course.published"
                   xmlns="http://www.w3.org/2000/svg"
@@ -523,7 +530,10 @@
                   </g>
                 </svg>
               </div>
-              <div @click="deleteCourse" class="act-btn delete">
+              <div
+                @click="set_modal({ template: 'action_confirmation', method: { action: 'courses/delete_course' }, title: 'Delete Course', message: 'Are you sure you want to delete this course?'})"
+                class="act-btn delete"
+              >
                 <svg xmlns="http://www.w3.org/2000/svg" width="23" height="29" viewBox="0 0 23 29">
                   <path
                     id="Icon_material-delete"
@@ -548,7 +558,7 @@
 import { mapActions, mapGetters } from "vuex";
 
 export default {
-  name: "Course-details",
+  name: "preview_course",
   components: {
     preview: () => import("@/components/courses/Preview"),
   },
@@ -558,7 +568,7 @@ export default {
       return this.$store.state.user.user.category;
     },
     // get the current course
-    ...mapGetters("courses", ["course"])
+    ...mapGetters("courses", ["course"]),
   },
   methods: {
     ...mapActions("courses", [
@@ -566,13 +576,14 @@ export default {
       "tooglePublishCourse",
       "deleteCourse",
     ]),
+    ...mapActions("modal", ["set_modal"]),
   },
   created() {
     this.findCourseByName({
       userCategory: this.userCategory.toLowerCase(),
       userId: this.$store.state.user.user._id,
       courseName: this.$route.params.name,
-    })
+    });
   },
 };
 </script>

@@ -30,11 +30,11 @@
       </v-col>
     </v-container>
     <!-- view of instructor -->
-    <v-container v-else-if="userCategory == 'Instructor'" class="classes-home">
+    <v-container v-else-if="userCategory == 'Instructor'" class="courses-home" fluid>
       <v-row>
-        <v-col cols="12" md="6" class="classes-header mt-5">
+        <v-col cols="12" md="6" class="courses-header mt-5">
           <h2>Hey Mr{{`${$store.state.user.gender === 'Male' ? '' : 's'} ${$store.state.user.surName}`}},</h2>
-          <h3>Ready to start your classes?</h3>
+          <h3>Ready to start your courses?</h3>
           <div class="class-btns">
             <v-btn
               rounded
@@ -78,7 +78,6 @@
                 x-large
                 :to="type == 'published' ? undefined : '/courses/new-course'"
                 @click="type = 'unpublished' "
-                v-if="$route.name=='Courses' && $store.state.user.category === 'Instructor'"
               >{{`${type == 'published' ? 'Publish one' : 'Create one'}`}}</v-btn>
             </div>
           </div>
@@ -109,7 +108,7 @@
 import { mapActions, mapGetters } from "vuex";
 
 export default {
-  name: "Courses",
+  name: "courses",
   data: () => ({
     type: "unpublished",
   }),
