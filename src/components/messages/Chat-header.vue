@@ -3,10 +3,10 @@
   <div class="pic"> <slot name="pic"></slot></div>
   <div class="user-info">
     <p class="name"><slot name="name"> </slot></p>
-    <p class="online">{{userOnline}}</p>
+    <p class="online" >{{userOnline}}</p>
   </div>
   <div class="action-icons">
-    <div class="icon add-member">
+    <div class="icon add-member" v-if="currentDisplayedUser.is_group">
       <svg id="user-add-line" xmlns="http://www.w3.org/2000/svg" width="33" height="33" viewBox="0 0 33 33">
         <path id="Path_2152" data-name="Path 2152" d="M0,0H33V33H0Z" fill="none"/>
         <path id="Path_2153" data-name="Path 2153" d="M17.75,19.222V22.1a8.25,8.25,0,0,0-11,7.78H4A11,11,0,0,1,17.75,19.22ZM15,17.5a8.25,8.25,0,1,1,8.25-8.25A8.248,8.248,0,0,1,15,17.5Zm0-2.75a5.5,5.5,0,1,0-5.5-5.5A5.5,5.5,0,0,0,15,14.75ZM23.25,23V18.875H26V23h4.125v2.75H26v4.125H23.25V25.75H19.125V23Z" transform="translate(1.5 0.375)"/>
@@ -20,7 +20,7 @@
       </svg>
 
     </div>
-    <div class="icon settings">
+    <div class="icon settings" @click="$router.push(`/messages/group/${currentDisplayedUser.id}`)" v-if="currentDisplayedUser.is_group">
       <svg id="Icon_feather-settings" data-name="Icon feather-settings" xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36">
         <path id="Path_1919" data-name="Path 1919" d="M22.5,18A4.5,4.5,0,1,1,18,13.5,4.5,4.5,0,0,1,22.5,18Z" fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/>
         <path id="Path_1920" data-name="Path 1920" d="M29.1,22.5a2.475,2.475,0,0,0,.495,2.73l.09.09a3,3,0,1,1-4.245,4.245l-.09-.09a2.5,2.5,0,0,0-4.23,1.77V31.5a3,3,0,1,1-6,0v-.135A2.475,2.475,0,0,0,13.5,29.1a2.475,2.475,0,0,0-2.73.495l-.09.09A3,3,0,1,1,6.435,25.44l.09-.09a2.5,2.5,0,0,0-1.77-4.23H4.5a3,3,0,1,1,0-6h.135A2.475,2.475,0,0,0,6.9,13.5a2.475,2.475,0,0,0-.5-2.73l-.09-.09A3,3,0,1,1,10.56,6.435l.09.09a2.475,2.475,0,0,0,2.73.495h.12A2.475,2.475,0,0,0,15,4.755V4.5a3,3,0,0,1,6,0v.135a2.5,2.5,0,0,0,4.23,1.77l.09-.09a3,3,0,1,1,4.245,4.245l-.09.09a2.475,2.475,0,0,0-.5,2.73v.12A2.475,2.475,0,0,0,31.245,15H31.5a3,3,0,0,1,0,6h-.135A2.475,2.475,0,0,0,29.1,22.5Z" fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/>
@@ -31,14 +31,23 @@
 </template>
 
 <script>
+import {mapState} from "vuex";
+
 export default {
   name: "Chat-header",
   props:{
     online:{type:Boolean,default:false}
   },
   computed:{
+    ...mapState("chat", ["currentDisplayedUser"]),
     userOnline(){
      return this.online ? 'Online' : 'Away'
+    },
+    members(){
+      return this.currentDisplayedUser.members
+    },
+    group(){
+      return this.currentDisplayedUser.is_group
     }
   }
 }
@@ -73,12 +82,21 @@ export default {
       padding: 0;
       margin: 0;
       font-weight: 500;
+
     }
-    .online{
+    .online, .group{
       padding: 0;
       margin: 0;
       font-size: .8rem;
-      color:lighten($font,40)
+      color:lighten($font,50)
+    }
+
+    .group{
+      max-width: 20rem;
+      display: -webkit-box;
+      -webkit-line-clamp: 1;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
     }
 
   }
