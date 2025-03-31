@@ -82,11 +82,13 @@
 import GroupMember from "@/components/messages/Group-member";
 import a from "@/services/apis";
 import { mapMutations } from "vuex";
-import {cropper} from "../../services/mixins"
+import {cropperMixin} from "../../services/mixins"
 
 export default {
   name: "Group-info",
-  components: { GroupMember },
+  components: {
+    GroupMember ,
+    cropper: () => import("@/components/reusable/ui/ImageCropper"),},
   data() {
     return {
       members: [],
@@ -95,7 +97,7 @@ export default {
       img:''
     };
   },
-  mixins:[cropper],
+  mixins:[cropperMixin],
   computed: {
     IamAdmin() {
       const me = this.group.members.filter(
@@ -116,6 +118,8 @@ export default {
     async getGroupInfo() {
       const group = await a.get(`chat_group/${this.$route.params.id}`);
       this.group = group.data.data;
+      if(group.data.data.profile)
+        this.profile = group.data.data.profile
     },
     // aha
     removeMember(member) {
@@ -160,6 +164,12 @@ export default {
           border-radius: 50%;
           background-image: linear-gradient(#8456fe, #fe5bc8);
           position: relative;
+
+          img{
+            width: inherit;
+            height: inherit;
+            border-radius: 50%;
+          }
 
           input {
             display: none;
