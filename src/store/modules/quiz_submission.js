@@ -73,6 +73,21 @@ export default {
             }
         },
 
+        //get quiz_submissions  in a quiz
+        async getQuizSubmissionsInQuiz({ state }, { quiz_id }) {
+            let quiz_submissions = state.quiz_submission.data
+
+            // if submission not loaded fetch them
+            if (!quiz_submissions.length) {
+                quiz_submissions = await this.getQuizSubmissions()
+            }
+
+            let result = quiz_submissions.filter(e => e._id == quiz_id)
+
+            return result[0]
+
+        },
+
         //create a quiz_submission
         create_quiz_submission({ state, commit, dispatch }, { submission, attachments }) {
             let submissionObject = {}

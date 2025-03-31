@@ -51,9 +51,9 @@
           <span class="normal--text">
             {{item ? 1 : 8}} 
           </span>
-<svg xmlns="http://www.w3.org/2000/svg" width="21.214" height="21.214" viewBox="0 0 21.214 21.214">
-  <path id="Icon_material-feedback" data-name="Icon material-feedback" d="M22.092,3H5.121A2.119,2.119,0,0,0,3.011,5.121L3,24.214l4.243-4.243h14.85a2.128,2.128,0,0,0,2.121-2.121V5.121A2.128,2.128,0,0,0,22.092,3ZM14.668,15.728H12.546V13.607h2.121Zm0-4.243H12.546V7.243h2.121Z" transform="translate(-3 -3)" fill="#fc6767"/>
-</svg>
+          <svg xmlns="http://www.w3.org/2000/svg" width="21.214" height="21.214" viewBox="0 0 21.214 21.214">
+            <path id="Icon_material-feedback" data-name="Icon material-feedback" d="M22.092,3H5.121A2.119,2.119,0,0,0,3.011,5.121L3,24.214l4.243-4.243h14.85a2.128,2.128,0,0,0,2.121-2.121V5.121A2.128,2.128,0,0,0,22.092,3ZM14.668,15.728H12.546V13.607h2.121Zm0-4.243H12.546V7.243h2.121Z" transform="translate(-3 -3)" fill="#fc6767"/>
+          </svg>
         </template>
         <template v-slot:no-data>
           <span class="text-h6">Oops You have no submissions.</span>
