@@ -1,11 +1,12 @@
 <template>
   <div v-if="facultyCollegeYear" class="edit-student-group-container row">
-    <div class="col-12">
+    <div class="col-2 pt-0">
       <button class="back" @click="$router.push(`/faculties/${$route.params.facultyId}/groups`)">Back</button>
     </div>
-    <div class="col-12">
-      <div class="d-md-flex">
-        <div class="col-md-3">
+    <div class="col-10">
+      <div class="d-md-flex row">
+        <div class="col-12 pa-0"><div class="name">{{ facultyCollegeYear.name }}</div></div>
+        <div class="col-md-2 mt-6 pa-0">
           <div class="sgroup-tabs">
             <button @click="activeTab = 1" :class="{'active':activeTab==1}">Details</button>
           </div>
@@ -16,9 +17,8 @@
             <button @click="activeTab = 3" :class="{'active':activeTab==3}">Courses</button>
           </div>
         </div>
-        <div class="col-md-9">
+        <div class="col-md-10 pa-0">
           <div v-if="activeTab == 1">
-            <div class="name">{{ facultyCollegeYear.name }}</div>
             <div class="input-group">
               <div class="label">student group name</div>
               <input class="input" v-model="name" type="text"/>
@@ -68,7 +68,7 @@
                 <div class="table-header">
                   <table-header>
                     <template #actions>
-                      <div :class="{invisible:!size}" class="d-flex">
+                      <div :class="{invisible:!size}" class="d-flex mt-n12">
                         <div class="action mx-2" @click="click('announce')">
                           <table-action-burner>
                             <template #icon>
@@ -186,7 +186,7 @@
           </div>
           <div v-else>
             <div v-if="coursesByUserGroup.length > 0" class="faculties-container  row">
-              <div class="col-12 col-md-6"
+              <div class="col-12 col-md-6 px-0"
                    v-for="(course, i) in coursesByUserGroup"
                    :key="i">
                 <student-course-card category="ongoing" :course="course"/>
@@ -418,7 +418,8 @@ export default {
   padding: 46px 52px;
 
   .back {
-    width: 184px;
+    max-width: 184px;
+    width: 100%;
     height: 25.33px;
     background: #F8F8F8;
     border-radius: 4.75155px;
@@ -431,7 +432,9 @@ export default {
     color: #193074;
 
   }
-
+.table .table--wrapper{
+  padding: 0;
+}
   .users-info {
     margin-right: 25px;
     width: 81px;
