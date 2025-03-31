@@ -1,6 +1,12 @@
 <template>
   <v-container id="view-assignments" class="px-6 pl-lg-14 pr-md-2 pt-6" fluid>
-    <v-row v-if="!(disabled && !assignment_submission._id)">
+    <div v-if="disabled && !assignment_submission._id">
+      <ErrorPage
+          title="You are not allowed to  do assignments"
+          subtitle="You must first pay your school fees to regain access"
+      />
+    </div>
+    <v-row v-else>
       <v-col v-if="assignment" class="col-12">
         <div class="upper">
           <div>Assignments</div>
@@ -193,12 +199,6 @@
         </div>
       </v-col>
     </v-row>
-    <div v-else>
-      <ErrorPage
-          title="You are not allowed to  do assignments"
-          subtitle="You must first pay your school fees to regain access"
-      />
-    </div>
   </v-container>
 </template>
 
