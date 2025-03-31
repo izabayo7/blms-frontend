@@ -41,7 +41,7 @@
       <div class="video">
         <div class="video--wrapper" >
             <div class="video-el" @mouseenter="toggleMenu(true)" @mouseleave="toggleMenu(false)">
-              <div class="no-video">
+              <div class="no-video" v-if="noVideo">
                 <div class="no-video--wrapper">
                   <img src="https://s3.amazonaws.com/cms-assets.tutsplus.com/uploads/users/810/profiles/19338/profileImage/profile-square-extra-small.png" alt="profile picture" class="picture">
                   <h2 class="course">Economics Basics: Chapter 8 part II</h2>
@@ -49,11 +49,11 @@
                   <h2 class="name">Rubogora Emanuel</h2>
                 </div>
               </div>
-              <video v-if="false">
+              <video v-else>
                 <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" autoplay>
               </video>
               <transition name="fade">
-                <div class="video-controls" v-if="showMenu">
+                <div class="video-controls" v-if="showMenu || noVideo">
                   <div class="video-controls--wrapper">
                     <button class="start-mute-video">
                       <span class="icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"/><path d="M16 4a1 1 0 0 1 1 1v4.2l5.213-3.65a.5.5 0 0 1 .787.41v12.08a.5.5 0 0 1-.787.41L17 14.8V19a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h14zm-1 2H3v12h12V6zM7.4 8.829a.4.4 0 0 1 .215.062l4.355 2.772a.4.4 0 0 1 0 .674L7.615 15.11A.4.4 0 0 1 7 14.77V9.23c0-.221.18-.4.4-.4zM21 8.84l-4 2.8v.718l4 2.8V8.84z"/></svg></span>
@@ -139,6 +139,7 @@ export default {
     return{
       ws:null,
       participants:[],
+      noVideo:true,
       participationInfo:{name:"",room:"",isOfferingCourse:false},
       showMenu:false,
       users:[
@@ -941,6 +942,7 @@ export default {
 
               h2{
                 color:$main;
+                margin:.4rem 0;
               }
               span{
                 color:$main;
