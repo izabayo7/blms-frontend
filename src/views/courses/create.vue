@@ -132,7 +132,9 @@ export default {
         message: this.error,
         status: "danger",
         uptime: 2000,
-      });
+      }).then(() => {
+        this.error = ""
+      })
     },
   },
   methods: {

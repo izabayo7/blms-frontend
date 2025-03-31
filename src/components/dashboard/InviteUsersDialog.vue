@@ -78,7 +78,7 @@
             </div>
           </div>
           <div class="send-container">
-            <button class="add-email send mr-4" @click="$emit('closeModal')">
+            <button class="add-email send cancel mr-4" @click="$emit('closeModal')">
               Cancel
             </button>
             <button class="add-email send" @click="sendInvitations">
@@ -233,6 +233,9 @@ export default {
         }
         cursor: pointer;
         background: #193074;
+        &.cancel{
+          background: #ABABAB;
+        }
         border-radius: 3.80952px;
         font-family: Inter;
         font-style: normal;

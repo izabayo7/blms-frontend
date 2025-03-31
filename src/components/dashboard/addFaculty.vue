@@ -1,20 +1,20 @@
 <template>
   <v-dialog v-model="visible" :persistent="!closable">
     <div class="faculty-dialog-body">
-      <div class="close">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-          width="24"
-          height="24"
-          @click="$emit('closeModal')"
-        >
-          <path fill="none" d="M0 0h24v24H0z" />
-          <path
-            d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm0-11.414L9.172 7.757 7.757 9.172 10.586 12l-2.829 2.828 1.415 1.415L12 13.414l2.828 2.829 1.415-1.415L13.414 12l2.829-2.828-1.415-1.415L12 10.586z"
-          />
-        </svg>
-      </div>
+<!--      <div class="close">-->
+<!--        <svg-->
+<!--          xmlns="http://www.w3.org/2000/svg"-->
+<!--          viewBox="0 0 24 24"-->
+<!--          width="24"-->
+<!--          height="24"-->
+<!--          @click="$emit('closeModal')"-->
+<!--        >-->
+<!--          <path fill="none" d="M0 0h24v24H0z" />-->
+<!--          <path-->
+<!--            d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm0-11.414L9.172 7.757 7.757 9.172 10.586 12l-2.829 2.828 1.415 1.415L12 13.414l2.828 2.829 1.415-1.415L13.414 12l2.829-2.828-1.415-1.415L12 10.586z"-->
+<!--          />-->
+<!--        </svg>-->
+<!--      </div>-->
       <div class="tittle pa-6 pb-0">Create a faculty</div>
       <div class="row px-6 pt-0">
         <div class="col-12 col-lg-6">
@@ -47,6 +47,14 @@
               >
               </textarea>
             </div>
+          </div>
+          <div class="send-container">
+            <button class="add-email send cancel mr-4" @click="$emit('closeModal')">
+              Cancel
+            </button>
+            <button class="add-email send" @click="validate">
+              Save progress
+            </button>
           </div>
         </div>
         <div class="col-12 col-lg-6">
@@ -241,6 +249,11 @@ export default {
     },
     createFaculty() {
 
+    },
+    validate(){
+      if(this.faculty.name == ""){
+
+      }
     }
   }
 };
@@ -346,6 +359,29 @@ export default {
           color: #193074;
         }
       }
+    }
+    .add-email {
+      width: 79.24px;
+      height: 45.38px;
+      &.send {
+        width: 251.43px;
+        height: 40.38px;
+      }
+      cursor: pointer;
+      background: #193074;
+      &.cancel{
+        background: #ABABAB;
+      }
+      border-radius: 3.80952px;
+      font-family: Inter;
+      font-style: normal;
+      font-weight: 500;
+      font-size: 12.1905px;
+      /* identical to box height, or 125% */
+
+      text-align: center;
+
+      color: #ffffff;
     }
     .add-student-group {
       font-family: Source Sans Pro;
