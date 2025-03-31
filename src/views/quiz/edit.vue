@@ -17,7 +17,10 @@
       template="small"
     />
     <span class="quiz_lable my-6">Quiz duration</span>
-    <vue-timepicker v-model="duration" format="hh:mm:ss" />
+    <time-picker
+      :duration="duration"
+      @updateTime="updateDutation"
+    />
     <span class="quiz_lable my-6">Questions</span>
     <v-row v-for="(question, i) in selected_quiz.questions" :key="i">
       <v-col class="col-12">
@@ -263,10 +266,10 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
-import VueTimepicker from "vue2-timepicker/src/vue-timepicker.vue";
+import TimePicker from "@/components/quiz/timePicker";
 export default {
   components: {
-    VueTimepicker,
+    TimePicker,
   },
   data: () => ({
     pictures: [],
@@ -292,6 +295,11 @@ export default {
   },
   methods: {
     ...mapActions("quiz", ["update_quiz", "findQuizByName"]),
+    updateDutation(hh,mm,ss){
+      this.duration.hh = hh
+      this.duration.mm = mm
+      this.duration.ss = ss
+    },
     handleOptionClick(questionIndex, optionIndex, fileName) {
       let rightChoices = [],
         calculatedIndex = optionIndex,
@@ -511,7 +519,6 @@ export default {
         this.selected_quiz.questions[i].type = this.formatQuestionType(
           quiz.questions[i].type
         );
-        console.log(this.selected_quiz.questions[i].type);
         this.pictures.push([]);
       }
     });

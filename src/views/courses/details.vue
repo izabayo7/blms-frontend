@@ -20,7 +20,9 @@
           :chapters="course.chapters"
           :currentIndex="activeIndex"
           :maximumIndex="maximumIndex"
-          :progress="course.progress.progress"
+          :progress="
+            userCategory === 'Instructor' ? 0 : course.progress.progress
+          "
         />
       </v-col>
       <!-- chapters list for small devices -->
@@ -34,7 +36,9 @@
           :chapters="course.chapters"
           :currentIndex="activeIndex"
           :maximumIndex="maximumIndex"
-          :progress="course.progress.progress"
+          :progress="
+            userCategory === 'Instructor' ? 0 : course.progress.progress
+          "
         />
       </kurious-page-actions>
       <!-- the course main content -->
@@ -99,16 +103,14 @@
                         >Take Quiz</v-btn
                       >
                       <v-btn
-                        v-else
+                        v-else-if="userCategory === 'Student'"
                         color="green"
                         class="white--text"
                         @click="
                           finish_chapter($store.state.user.user._id).then(
                             (d) => {
                               maximumIndex = Math.round(
-                                (d.progress *
-                                  course.chapters.length) /
-                                  100
+                                (d.progress * course.chapters.length) / 100
                               );
                             }
                           )
@@ -252,7 +254,6 @@ export default {
   name: "course_details",
   data: () => ({
     activeIndex: -1,
-    progress: -1,
     progressId: "",
     maximumIndex: -1,
     attachments: [],
@@ -262,10 +263,15 @@ export default {
   computed: {
     ...mapGetters("courses", ["course"]),
     ...mapGetters("quiz_submission", ["selected_quiz_submission"]),
+    userCategory() {
+      return this.$store.state.user.user.category;
+    },
   },
   watch: {
     maximumIndex() {
-      this.activeIndex = this.maximumIndex;
+      if (this.userCategory === "Student") {
+        this.activeIndex = this.maximumIndex;
+      }
     },
     activeIndex() {
       this.editorContent = "";
@@ -283,9 +289,6 @@ export default {
     },
   },
   methods: {
-    console(message) {
-      console.log(message, this.maximumIndex, this.course);
-    },
     ...mapActions("courses", [
       "findCourseByName",
       "getChapterMainContent",
@@ -318,17 +321,18 @@ export default {
   },
   created() {
     this.findCourseByName({
-      userCategory: this.$store.state.user.user.category.toLowerCase(),
+      userCategory: this.userCategory.toLowerCase(),
       userId: this.$store.state.user.user._id,
       courseName: this.$route.params.name,
     }).then((course) => {
-      this.maximumIndex = Math.round(
-        (course.progress.progress * course.chapters.length) / 100
-      );
-      this.activeIndex =
-        this.maximumIndex > this.course.chapters.length - 1
-          ? this.course.chapters.length - 1
-          : this.maximumIndex;
+      if (this.userCategory === "Instructor") {
+        this.maximumIndex = this.course.chapters.length - 1;
+        this.activeIndex = 0;
+      } else {
+        this.maximumIndex = Math.round(
+          (course.progress.progress * course.chapters.length) / 100
+        );
+      }
     });
   },
 };

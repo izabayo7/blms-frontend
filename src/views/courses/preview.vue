@@ -400,211 +400,241 @@
               </div>
             </article>
 
-            <!--                action buttons-->
+            <!-- action buttons-->
             <article class="action-btns">
-              <div
-                @click="$router.push(`/courses/${course.name}`)"
-                class="act-btn preview"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="110"
-                  height="82.727"
-                  viewBox="0 0 110 82.727"
-                >
-                  <g
-                    id="Icon_feather-eye"
-                    data-name="Icon feather-eye"
-                    transform="translate(3.5 -1)"
+              <v-tooltip content-class="top tooltip" top>
+                <template v-slot:activator="{ attrs, on }">
+                  <div
+                    @click="$router.push(`/courses/${course.name}`)"
+                    class="act-btn preview"
+                    v-bind="attrs"
+                    v-on="on"
                   >
-                    <path
-                      id="Path_9"
-                      data-name="Path 9"
-                      d="M1.5,42.364S19.682,6,51.5,6s50,36.364,50,36.364-18.182,36.364-50,36.364S1.5,42.364,1.5,42.364Z"
-                      transform="translate(0 0)"
-                      fill="none"
-                      stroke="#000"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="7"
-                    />
-                    <path
-                      id="Path_10"
-                      data-name="Path 10"
-                      d="M53.833,33.666A20.166,20.166,0,1,1,33.666,13.5,20.166,20.166,0,0,1,53.833,33.666Z"
-                      transform="translate(17.834 8.697)"
-                      fill="none"
-                      stroke="#000"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="7"
-                    />
-                  </g>
-                </svg>
-              </div>
-              <div
-                @click="
-                  tooglePublishCourse().then(() => {
-                    $router.push('/courses');
-                  })
-                "
-                class="act-btn upload"
-              >
-                <svg
-                  v-if="course.published"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="30.205"
-                  height="30.425"
-                  viewBox="0 0 30.205 30.425"
-                >
-                  <g
-                    id="Icon_feather-upload"
-                    data-name="Icon feather-upload"
-                    transform="translate(32.628 33.571) rotate(-179)"
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="110"
+                      height="82.727"
+                      viewBox="0 0 110 82.727"
+                    >
+                      <g
+                        id="Icon_feather-eye"
+                        data-name="Icon feather-eye"
+                        transform="translate(3.5 -1)"
+                      >
+                        <path
+                          id="Path_9"
+                          data-name="Path 9"
+                          d="M1.5,42.364S19.682,6,51.5,6s50,36.364,50,36.364-18.182,36.364-50,36.364S1.5,42.364,1.5,42.364Z"
+                          transform="translate(0 0)"
+                          fill="none"
+                          stroke="#000"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="7"
+                        />
+                        <path
+                          id="Path_10"
+                          data-name="Path 10"
+                          d="M53.833,33.666A20.166,20.166,0,1,1,33.666,13.5,20.166,20.166,0,0,1,53.833,33.666Z"
+                          transform="translate(17.834 8.697)"
+                          fill="none"
+                          stroke="#000"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="7"
+                        />
+                      </g>
+                    </svg>
+                  </div>
+                </template>
+                <span class="tooltip-content">Preview course</span>
+              </v-tooltip>
+              <v-tooltip content-class="top tooltip" top>
+                <template v-slot:activator="{ attrs, on }">
+                  <div
+                    @click="
+                      tooglePublishCourse().then(() => {
+                        $router.push('/courses');
+                      })
+                    "
+                    class="act-btn upload"
+                    v-bind="attrs"
+                    v-on="on"
                   >
-                    <path
-                      id="Path_1962"
-                      data-name="Path 1962"
-                      d="M31.5,22.5v6a3,3,0,0,1-3,3H7.5a3,3,0,0,1-3-3v-6"
-                      fill="none"
-                      stroke="#fff"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="3"
-                    />
-                    <path
-                      id="Path_1963"
-                      data-name="Path 1963"
-                      d="M25.5,12,18,4.5,10.5,12"
-                      fill="none"
-                      stroke="#fff"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="3"
-                    />
-                    <path
-                      id="Path_1964"
-                      data-name="Path 1964"
-                      d="M18,4.5v18"
-                      fill="none"
-                      stroke="#fff"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="3"
-                    />
-                  </g>
-                </svg>
-                <svg
-                  v-else
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="30"
-                  height="30"
-                  viewBox="0 0 30 30"
+                    <svg
+                      v-if="course.published"
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="30.205"
+                      height="30.425"
+                      viewBox="0 0 30.205 30.425"
+                    >
+                      <g
+                        id="Icon_feather-upload"
+                        data-name="Icon feather-upload"
+                        transform="translate(32.628 33.571) rotate(-179)"
+                      >
+                        <path
+                          id="Path_1962"
+                          data-name="Path 1962"
+                          d="M31.5,22.5v6a3,3,0,0,1-3,3H7.5a3,3,0,0,1-3-3v-6"
+                          fill="none"
+                          stroke="#fff"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="3"
+                        />
+                        <path
+                          id="Path_1963"
+                          data-name="Path 1963"
+                          d="M25.5,12,18,4.5,10.5,12"
+                          fill="none"
+                          stroke="#fff"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="3"
+                        />
+                        <path
+                          id="Path_1964"
+                          data-name="Path 1964"
+                          d="M18,4.5v18"
+                          fill="none"
+                          stroke="#fff"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="3"
+                        />
+                      </g>
+                    </svg>
+                    <svg
+                      v-else
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="30"
+                      height="30"
+                      viewBox="0 0 30 30"
+                    >
+                      <g
+                        id="Icon_feather-upload"
+                        data-name="Icon feather-upload"
+                        transform="translate(-3 -3)"
+                      >
+                        <path
+                          id="Path_1962"
+                          data-name="Path 1962"
+                          d="M31.5,22.5v6a3,3,0,0,1-3,3H7.5a3,3,0,0,1-3-3v-6"
+                          fill="none"
+                          stroke="#fff"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="3"
+                        />
+                        <path
+                          id="Path_1963"
+                          data-name="Path 1963"
+                          d="M25.5,12,18,4.5,10.5,12"
+                          fill="none"
+                          stroke="#fff"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="3"
+                        />
+                        <path
+                          id="Path_1964"
+                          data-name="Path 1964"
+                          d="M18,4.5v18"
+                          fill="none"
+                          stroke="#fff"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="3"
+                        />
+                      </g>
+                    </svg>
+                  </div>
+                </template>
+                <span class="tooltip-content"
+                  >{{ course.published ? "Unpublish" : "Publish" }} course</span
                 >
-                  <g
-                    id="Icon_feather-upload"
-                    data-name="Icon feather-upload"
-                    transform="translate(-3 -3)"
+              </v-tooltip>
+              <v-tooltip content-class="top tooltip" top>
+                <template v-slot:activator="{ attrs, on }">
+                  <div
+                    @click="$router.push(`/courses/edit/${course.name}`)"
+                    class="act-btn update"
+                    v-bind="attrs"
+                    v-on="on"
                   >
-                    <path
-                      id="Path_1962"
-                      data-name="Path 1962"
-                      d="M31.5,22.5v6a3,3,0,0,1-3,3H7.5a3,3,0,0,1-3-3v-6"
-                      fill="none"
-                      stroke="#fff"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="3"
-                    />
-                    <path
-                      id="Path_1963"
-                      data-name="Path 1963"
-                      d="M25.5,12,18,4.5,10.5,12"
-                      fill="none"
-                      stroke="#fff"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="3"
-                    />
-                    <path
-                      id="Path_1964"
-                      data-name="Path 1964"
-                      d="M18,4.5v18"
-                      fill="none"
-                      stroke="#fff"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="3"
-                    />
-                  </g>
-                </svg>
-              </div>
-              <div
-                @click="$router.push(`/courses/edit/${course.name}`)"
-                class="act-btn update"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="33.182"
-                  height="33.182"
-                  viewBox="0 0 33.182 33.182"
-                >
-                  <g
-                    id="Icon_feather-edit"
-                    data-name="Icon feather-edit"
-                    transform="translate(-1.5 -1.318)"
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="33.182"
+                      height="33.182"
+                      viewBox="0 0 33.182 33.182"
+                    >
+                      <g
+                        id="Icon_feather-edit"
+                        data-name="Icon feather-edit"
+                        transform="translate(-1.5 -1.318)"
+                      >
+                        <path
+                          id="Path_1965"
+                          data-name="Path 1965"
+                          d="M16.5,6H6A3,3,0,0,0,3,9V30a3,3,0,0,0,3,3H27a3,3,0,0,0,3-3V19.5"
+                          fill="none"
+                          stroke="#131313"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="3"
+                        />
+                        <path
+                          id="Path_1966"
+                          data-name="Path 1966"
+                          d="M27.75,3.75a3.182,3.182,0,0,1,4.5,4.5L18,22.5,12,24l1.5-6Z"
+                          fill="none"
+                          stroke="#131313"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="3"
+                        />
+                      </g>
+                    </svg>
+                  </div>
+                </template>
+                <span class="tooltip-content">Update course</span>
+              </v-tooltip>
+              <v-tooltip content-class="top tooltip" top>
+                <template v-slot:activator="{ attrs, on }">
+                  <div
+                    @click="
+                      set_modal({
+                        template: 'action_confirmation',
+                        method: { action: 'courses/delete_course' },
+                        title: 'Delete Course',
+                        message: 'Are you sure you want to delete this course?',
+                      })
+                    "
+                    class="act-btn delete"
+                    v-bind="attrs"
+                    v-on="on"
                   >
-                    <path
-                      id="Path_1965"
-                      data-name="Path 1965"
-                      d="M16.5,6H6A3,3,0,0,0,3,9V30a3,3,0,0,0,3,3H27a3,3,0,0,0,3-3V19.5"
-                      fill="none"
-                      stroke="#131313"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="3"
-                    />
-                    <path
-                      id="Path_1966"
-                      data-name="Path 1966"
-                      d="M27.75,3.75a3.182,3.182,0,0,1,4.5,4.5L18,22.5,12,24l1.5-6Z"
-                      fill="none"
-                      stroke="#131313"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="3"
-                    />
-                  </g>
-                </svg>
-              </div>
-              <div
-                @click="
-                  set_modal({
-                    template: 'action_confirmation',
-                    method: { action: 'courses/delete_course' },
-                    title: 'Delete Course',
-                    message: 'Are you sure you want to delete this course?',
-                  })
-                "
-                class="act-btn delete"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="23"
-                  height="29"
-                  viewBox="0 0 23 29"
-                >
-                  <path
-                    id="Icon_material-delete"
-                    data-name="Icon material-delete"
-                    d="M9,28.5a3.009,3.009,0,0,0,3,3H24a3.009,3.009,0,0,0,3-3v-18H9ZM28.5,6H23.25l-1.5-1.5h-7.5L12.75,6H7.5V9h21V6Z"
-                    transform="translate(-6.5 -3.5)"
-                    fill="none"
-                    stroke="#fff"
-                    stroke-width="2"
-                  />
-                </svg>
-              </div>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="23"
+                      height="29"
+                      viewBox="0 0 23 29"
+                    >
+                      <path
+                        id="Icon_material-delete"
+                        data-name="Icon material-delete"
+                        d="M9,28.5a3.009,3.009,0,0,0,3,3H24a3.009,3.009,0,0,0,3-3v-18H9ZM28.5,6H23.25l-1.5-1.5h-7.5L12.75,6H7.5V9h21V6Z"
+                        transform="translate(-6.5 -3.5)"
+                        fill="none"
+                        stroke="#fff"
+                        stroke-width="2"
+                      />
+                    </svg>
+                  </div>
+                </template>
+                <span class="tooltip-content">Delete course</span>
+              </v-tooltip>
             </article>
           </main>
         </div>
@@ -800,6 +830,23 @@ button.back {
     &.preview {
       padding-right: 5rem;
     }
+  }
+}
+.tooltip {
+  background-color: #3d3d3d;
+  span {
+    color: white;
+  }
+
+  ::after {
+    content: "";
+    position: absolute;
+    top: 25px;
+    right: 53px;
+    width: 12px;
+    height: 12px;
+    background-color: #3d3d3d;
+    transform: rotate(226deg);
   }
 }
 </style>

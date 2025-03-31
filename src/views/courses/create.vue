@@ -20,7 +20,7 @@
           >
         </div>
       </v-col>
-      <v-col v-if="type=='details'" class="col-12">
+      <v-col v-if="type == 'details'" class="col-12">
         <v-form>
           <h3>Course Name</h3>
           <v-text-field
@@ -41,18 +41,27 @@
             class="group-select"
           ></v-select>
           <h3>Course Description</h3>
-          <textarea v-model="course.description" class="kurious--textarea mb-4" cols="60" rows="8"></textarea>
+          <textarea
+            v-model="course.description"
+            class="kurious--textarea mb-4"
+            cols="60"
+            rows="8"
+          ></textarea>
           <h3>Course Cover Image</h3>
           <v-btn
             fab
             small
-            color="#828282"
-            class="white--text course-image mt-4 mb-6 mr-4"
+            text
+            class="new-active-btn course-image mt-4 mb-6 mr-4"
             @click="pickfile()"
           >
             <v-icon>mdi-paperclip</v-icon>
           </v-btn>
-          <span>{{coverPicture === undefined ? 'Upload Course CoverPicture' : coverPicture.name}}</span>
+          <span>{{
+            coverPicture === undefined
+              ? "Upload Course CoverPicture"
+              : coverPicture.name
+          }}</span>
           <input
             ref="file"
             type="file"
@@ -62,12 +71,21 @@
             class="d-none my-6"
             @change="handleFileUpload()"
           />
-          <v-btn
-            rounded
-            color="#3CE970"
-            class="white--text mb-6 d-block"
-            @click="saveCourse()"
-          >Save Course</v-btn>
+          <div class="actions mx-0">
+            <v-btn
+              rounded
+              text
+              class="new-active-btn mb-6 mx-2"
+              @click="saveCourse()"
+              >Save Course</v-btn
+            >
+            <v-btn
+              color="transparent"
+              class="cancel-quiz mt-n4 mx-2"
+              @click="$router.push('/courses')"
+              >Cancel</v-btn
+            >
+          </div>
         </v-form>
       </v-col>
       <v-col v-else class="col-12 pr-12">

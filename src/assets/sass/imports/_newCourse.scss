@@ -6,34 +6,42 @@
         border-radius: 20px;
         display: flex;
         color: black !important;
-
-        .new-active-btn {
-            background-color: $primary;
-            color: #fff !important;
-        }
     }
+
+    .new-active-btn {
+        background-color: $primary;
+        color: #fff !important;
+    }
+
     .v-input.course-input.theme--light.v-text-field.v-text-field--is-booted.v-text-field--enclosed.v-text-field--outlined.v-text-field--placeholder {
         width: 360px;
     }
+
     .group-select {
         width: 360px !important;
     }
+
     .quiz-select {
         margin: 10px 0 0 10px;
         width: 460px !important;
     }
-    .quiz-details{
+
+    .quiz-details {
         background-color: #f8f8f8;
     }
+
     .v-input__slot {
         height: 0px;
     }
+
     .v-application--is-ltr .v-textarea.v-text-field--enclosed .v-text-field__slot textarea {
         height: 160px !important;
     }
+
     .v-input.course-description.v-textarea.theme--light.v-text-field.v-text-field--is-booted.v-text-field--enclosed.v-text-field--outlined {
         width: 430px;
     }
+
     .kurious--textarea {
         padding: 10px;
         resize: none;
@@ -47,42 +55,51 @@
         border-style: solid;
         border-width: 1px;
     }
-    .course-description:focus{
+
+    .course-description:focus {
         outline: none !important;
     }
+
     button.white--text.course-image.v-btn.v-btn--contained.v-btn--rounded.theme--light.v-size--default {
         margin-left: 0;
     }
+
     .actions-container {
         background-color: #eeeeee;
         padding: 0 !important;
         border-radius: 20px !important;
     }
-    .yellow{
+
+    .yellow {
         background-color: #ffd248 !important;
     }
+
     .class-chapters {
         button.v-btn.v-btn--contained.theme--light.v-size--default {
             width: 150px;
             margin-bottom: 10px;
             height: 45px;
         }
+
         .active-chapter {
             background-color: #ffd248 !important;
             color: #fff;
         }
+
         .v-text-field.v-text-field--solo:not(.v-text-field--solo-flat)>.v-input__control>.v-input__slot {
             box-shadow: none;
             border: 1px solid #8e8e8e;
             width: 240px;
             height: -2px !important;
         }
+
         .section-area {
             border: 1px solid #9d9d9d;
             width: 400px;
             height: 175px;
             margin-bottom: 2em;
         }
+
         input.section-name {
             display: block;
             background-color: #eeeeee;
@@ -90,25 +107,30 @@
             height: 45px;
             padding-left: 10px;
         }
+
         textarea.section-description {
             height: 130px;
             width: 100%;
             resize: none;
             padding-left: 10px;
         }
+
         button.remove-btn.v-btn.v-btn--contained.v-btn--rounded.theme--light.v-size--default {
             margin-left: 30px;
             height: 40px;
         }
+
         a.section-link {
             text-decoration: none;
             color: #686868;
             display: block;
             margin: -20px 280px 20px;
         }
+
         .chapters-div {
             margin-right: 560px;
         }
+
         .mdi-close::before {
             content: "\F0156";
             margin: -88px 160px 0;
