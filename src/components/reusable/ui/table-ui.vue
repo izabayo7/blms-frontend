@@ -195,7 +195,15 @@ export default {
             .head-tab-wrapper{
               padding:.6rem .5rem;
               cursor: pointer;
+
+              .icon{
+                svg{
+                  transform:scale(.9);
+                }
+              }
             }
+
+            //active/sorgin tab
             .sorting{
               height: 100%;
               background-color:$bg-one;
@@ -209,6 +217,7 @@ export default {
           }
           td{
             padding:.6rem .5rem;
+            box-sizing:content-box;
           }
         }
       }
