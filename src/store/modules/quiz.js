@@ -34,10 +34,10 @@ export default {
     },
     actions: {
         //get quiz from backend
-        getQuizes({ state }, { userId }) {
+        getQuizes({ state }, { user_name }) {
             // when quiz is not loaded fetch quizes
             if (!state.quiz.loaded) {
-                apis.get(`quiz/user/${userId}`).then(d => {
+                apis.get(`quiz/user/${user_name}`).then(d => {
                     d.data = d.data.data
                     state.quiz.data = d.data
                     //announce that data have been loaded
@@ -50,6 +50,7 @@ export default {
 
             return apis.create('quiz', quiz).then(d => {
                 d.data = d.data.data
+                d.data.usage = 0
                 if (pictures.length > 0) {
                     let index = 0
                     let pictureFound = false
@@ -67,7 +68,7 @@ export default {
                         // set the dialog
                         dispatch('modal/set_modal', { template: 'display_information', title: 'Creating quiz', message: 'uploading pictures' }, { root: true })
 
-                        apis.create(`file/quizAttachedFiles/${d.data._id}`, formData, {
+                        apis.create(`quiz/${d.data._id}/attachment`, formData, {
                             headers: {
                                 'Content-Type': 'multipart/form-data'
                             },
@@ -111,7 +112,7 @@ export default {
                     if (pictureFound) {
                         dispatch('modal/set_modal', { template: 'display_information', title: 'Updating quiz', message: 'uploading pictures' }, { root: true })
 
-                        apis.create(`file/quizAttachedFiles/${d.data._id}`, formData, {
+                        apis.create(`quiz/${d.data._id}/attachment`, formData, {
                             headers: {
                                 'Content-Type': 'multipart/form-data'
                             },
@@ -130,7 +131,7 @@ export default {
         },
 
         //find a quiz by name
-        findQuizByName({ state, commit }, { userId, quizName }) {
+        findQuizByName({ state, commit }, { user_name, quizName }) {
             let quizFound = false
             if (state.quiz.loaded) {
                 let quiz = state.quiz.data.filter(quiz => quiz.name == quizName)
@@ -141,7 +142,7 @@ export default {
                 }
             }
             if (!quizFound) {
-                return apis.get(`quiz/user/${userId}/${quizName}`).then(d => {
+                return apis.get(`quiz/user/${user_name}/${quizName}`).then(d => {
                     d.data = d.data.data
                     if (state.quiz.loaded) {
                         state.quiz.data.push(d.data)

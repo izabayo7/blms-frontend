@@ -16,7 +16,7 @@ import live from '@/store/modules/live'
 
 Vue.use(Vuex)
 export default new Vuex.Store({
-    // namespaced: true,
+    namespaced: true,
     state: {},
     mutations: {
     },

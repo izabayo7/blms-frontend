@@ -16,7 +16,6 @@
         </vue-plyr>
       </v-col>
     </v-row>
-
     <v-row>
       <v-col class="col-8">
         <!-- <span v-if="course !== undefined">{{course.name}}</span> -->
@@ -42,7 +41,7 @@
                 <!-- <v-col class="col-6"></v-col> -->
                 <v-col class="col-12">
                   <loader
-                    v-if="editorContent === undefined"
+                    v-if="editorContent === undefined || editorContent == ''"
                     type="2"
                     class="vertically--centered"
                   />
@@ -51,10 +50,7 @@
                     :defaultContent="editorContent"
                   />
                 </v-col>
-                <v-col
-                  v-if="Math.round(maximumIndex) === activeIndex"
-                  class="col-6 mx-auto text-center"
-                >
+                <v-col class="col-6 mx-auto text-center">
                   <v-btn
                     v-if="
                       course.chapters[activeIndex].quiz.length > 0 &&
@@ -68,10 +64,7 @@
                     >Take Quiz</v-btn
                   >
                   <v-btn
-                    v-else-if="
-                      userCategory === 'STUDENT' &&
-                      course.progress.progress < 100
-                    "
+                    v-else-if="Math.round(maximumIndex) === activeIndex"
                     :color="primary"
                     class="white--text"
                     @click="markAsCompleted"
@@ -85,7 +78,7 @@
                         v-if="activeIndex > 0"
                         rounded
                         @click="
-                          changeActiveChapter({
+                          $emit('changeActiveChapter', {
                             index: activeIndex - 1,
                             id: prevChapter(activeIndex),
                           })
@@ -97,13 +90,13 @@
                     <v-col class="text-right col-6">
                       <v-btn
                         v-if="
-                          activeIndex < maximumIndex &&
-                          activeIndex < course.chapters.length - 1
+                          activeIndex < maximumIndex ||
+                          userCategory == 'INSTRUCTOR'
                         "
                         :color="primary"
                         class="white--text next-chapter"
                         @click="
-                          changeActiveChapter({
+                          $emit('changeActiveChapter', {
                             index: activeIndex + 1,
                             id: nextChapter(activeIndex),
                           })
@@ -240,6 +233,9 @@ export default {
         this.activeIndex = this.maximumIndex;
       }
     },
+    currentRoute() {
+      this.immediateFunction();
+    },
   },
   computed: {
     ...mapGetters("courses", ["course", "totalComments"]),
@@ -247,6 +243,9 @@ export default {
 
     userCategory() {
       return this.$store.state.user.user.category.name;
+    },
+    currentRoute() {
+      return this.$route.params.id;
     },
   },
   methods: {
@@ -277,24 +276,20 @@ export default {
       window.location.href = url;
     },
     nextChapter(idx) {
-      const index = this.chapters.indexOf(idx);
-
-      return index < this.chapter.length - 1
-        ? this.chapters[index + 1]
-        : index === this.chapter.length
-        ? this.chapters[index]
+      return idx < this.course.chapters.length
+        ? this.course.chapters[idx + 1]._id
         : null;
     },
     prevChapter(idx) {
-      const index = this.chapters.indexOf(idx);
-      return index > 0 ? this.chapters[index + 1] : index === 0 ? 0 : null;
+      return idx > 0 ? this.course.chapters[idx - 1]._id : idx === 0 ? 0 : null;
     },
     markAsCompleted() {
       this.finish_chapter(this.$store.state.user.user.user_name).then((d) => {
         this.maximumIndex = Math.round(
           (d.progress * this.course.chapters.length) / 100
         );
-        this.changeActiveChapter({
+        this.$emit("changeMaximumIndex", this.activeIndex + 1);
+        this.$emit("changeActiveChapter", {
           index: this.activeIndex + 1,
           id: this.nextChapter(this.activeIndex),
         });
@@ -309,22 +304,33 @@ export default {
         user_name: this.$store.state.user.user.user_name,
         courseName: this.$route.params.name,
       }).then((course) => {
-        const total_chapters = course.chapters.length;
-        if (this.userCategory === "INSTRUCTOR" && !index && !id) {
-          this.maximumIndex = total_chapters - 1;
-          this.activeIndex = 0;
-        } else {
+        const total_chapters = this.course.chapters.length;
+        if (this.userCategory === "STUDENT") {
           this.maximumIndex = Math.round(
-            (course.progress.progress * total_chapters) / 100
+            (this.course.progress.progress * total_chapters) / 100
           );
           if (this.maximumIndex > total_chapters - 1) {
             this.maximumIndex = total_chapters - 1;
           }
         }
-      });
 
+        let index = 0;
+        for (const i in course.chapters) {
+          if (course.chapters[i]._id == this.$route.params.id) {
+            this.$store.commit(
+              "courses/SET_TOTAL_COMMENTS_ON_A_CHAPTER",
+              course.chapters[i].commentsLength
+            );
+            index = parseInt(i);
+            break;
+          }
+        }
+        this.activeIndex = index;
+      });
+      this.editorContent = "";
       //getting chapter content
       this.getChapterMainContent(id).then((d) => {
+        console.log(d);
         this.editorContent = d;
       });
 
@@ -335,12 +341,7 @@ export default {
   beforeRouteUpdate(to, from, next) {
     this.$store.commit("courses/DELETE_TOTAL_COMMENTS_ON_A_CHAPTER"); //delete comments number to make sure that next comments doesn't have previously chapter comments number
     emit("routeUpdate", to.params.id);
-
-      try{
-        next();
-      }catch (e) {
-        console.log(e)
-      }
+    next();
   },
   created() {
     this.immediateFunction();

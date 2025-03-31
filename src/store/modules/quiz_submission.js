@@ -62,30 +62,32 @@ export default {
         getQuizSubmissions({ state }, { user_name }) {
             // if submission not loaded fetch them
             // if (!state.quiz_submission.loaded) {
-                return apis.get(`quiz_submission/user/${user_name}`).then(d => {
-                    d.data = d.data.data
-                    state.quiz_submission.data = d.data
+            return apis.get(`quiz_submission/user/${user_name}`).then(d => {
+                d.data = d.data.data
+                state.quiz_submission.data = d.data
 
-                    //announce that data have been loaded
-                    state.quiz_submission.loaded = true
+                //announce that data have been loaded
+                state.quiz_submission.loaded = true
 
-                    return d.data
-                })
+                return d.data
+            })
             // }
         },
 
         //get quiz_submissions  in a quiz
         async getQuizSubmissionsInQuiz({ state, dispatch }, { quiz_id }) {
-            let quiz_submissions = state.quiz_submission.data
+
+            let result = state.quiz_submission.data.filter(e => e._id == quiz_id)
 
             // if submission not loaded fetch them
-            if (!quiz_submissions.length) {
+            if (!result.length) {
 
                 // eslint-disable-next-line no-undef
-                quiz_submissions = await dispatch('getQuizSubmissions', { user_name: user.state.user.user_name })
+                result = await dispatch('getQuizSubmissions', { user_name: user.state.user.user_name })
             }
 
-            let result = quiz_submissions.filter(e => e._id == quiz_id)
+
+
 
             return result[0]
 
@@ -130,11 +132,15 @@ export default {
             return apis.update('quiz_submission', state.selected_quiz_submission, submission).then(d => {
                 d.data = d.data.data
                 for (const i in state.quiz_submission.data) {
-                    if (state.quiz_submission.data[i]._id == state.selected_quiz_submission) {
-                        state.quiz_submission.data[i].answers = d.data.answers
-                        state.quiz_submission.data[i].totalMarks = d.data.totalMarks
-                        state.quiz_submission.data[i].updatedAt = d.data.updatedAt
-                        state.quiz_submission.data[i].marked = d.data.marked
+                    if (state.quiz_submission.data[i]._id == d.data.quiz) {
+                        for (const k in state.quiz_submission.data[i].submissions) {
+                            if (state.quiz_submission.data[i].submissions[k]._id == d.data._id) {
+                                state.quiz_submission.data[i].submissions[k].answers = d.data.answers
+                                state.quiz_submission.data[i].submissions[k].total_marks = d.data.total_marks
+                                state.quiz_submission.data[i].submissions[k].updatedAt = d.data.updatedAt
+                                state.quiz_submission.data[i].submissions[k].marked = d.data.marked
+                            }
+                        }
                     }
                 }
 
@@ -182,7 +188,7 @@ export default {
         },
         //get all quiz submissions
         quiz_submissions: state => {
-            return state.quiz_submission.data.reverse()
+            return state.quiz_submission.data
         },
     },
 }

@@ -8,9 +8,6 @@
         <student-new-comment-with-photo @sent="sent" />
       </div>
       <div class="unreal-time-discussions-holder">
-        <!--                <div class="new-comment">-->
-        <!--                    <new-comment />-->
-        <!--                </div>-->
         <loader v-if="commentsLoading" />
         <div v-else class="unreal-time-discussions">
           <div v-if="comments.length > 0" class="discussions-container">
@@ -19,7 +16,11 @@
               v-for="comment in comments"
               :key="comment._id"
             >
-              <discussion :content="comment" :verified="comment.sender.category !== 'STUDENT'" @replied="replied" />
+              <discussion
+                :content="comment"
+                :verified="comment.sender.category !== 'STUDENT'"
+                @replied="replied"
+              />
             </div>
           </div>
           <div v-else class="no-discussions-message">
@@ -64,7 +65,6 @@ export default {
   },
   methods: {
     async get_comments() {
-      console.log(this.selectedChapter);
       this.commentsLoading = true;
       const comments = await api.get(`comment/chapter/${this.selectedChapter}`);
       this.comments = comments.data.data;

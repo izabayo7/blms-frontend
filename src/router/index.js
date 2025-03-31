@@ -138,7 +138,6 @@ const routes = [
                     // for reports
                     {
                         path: '/reports',
-                        name: 'Reports',
                         component: () =>
                             import('@/views/reports')
                     },
@@ -146,6 +145,11 @@ const routes = [
                         path: '/reports/:target',
                         component: () =>
                             import('@/views/reports/student_reports')
+                    },
+                    {
+                        path: '/reports/:target/:user_name',
+                        component: () =>
+                            import('@/views/reports')
                     },
                     {
                         path: '/library',
@@ -159,14 +163,12 @@ const routes = [
                             import('@/components/live-class.vue')
                     }, {
                         path: '/profile',
-                        name: 'profile',
                         component: () =>
-                            import('@/components/profile.vue')
+                            import('@/components/update_profile.vue')
                     }, {
-                        path: '/accounts/currentUser',
-                        name: 'User Profile',
+                        path: '/update/password',
                         component: () =>
-                            import('@/components/profile.vue')
+                            import('@/components/update_profile.vue')
                     },
                     // administration functionalities
                     {

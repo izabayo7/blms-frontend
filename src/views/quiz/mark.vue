@@ -4,7 +4,7 @@
     fluid
     class="quiz-page white pl-lg-16"
   >
-    <back class="mt-0 mb-6 ml-n6" to="/reports" />
+    <back class="mt-0 mb-6 ml-n6" />
 
     <v-row class="relative">
       <v-col class="col-12 col-md-8">
@@ -300,7 +300,7 @@
 
 <script>
 import { mapGetters, mapActions } from "vuex";
-import _ from "lodash";
+import { omit } from "lodash";
 export default {
   data: () => ({
     alphabets: [
@@ -353,11 +353,23 @@ export default {
           link: "/reports",
         },
         {
-          text: "kanze wlh",
-          link: "/reports/" + "",
+          text: this.selected_quiz_submission.quiz.target.course.name,
+          link:
+            this.userCategory == "INSTRUCTOR"
+              ? "/reports/" + this.selected_quiz_submission.quiz._id
+              : "/reports",
         },
         {
-          text: `${this.selected_quiz_submission.user.sur_name} ${this.selected_quiz_submission.user.other_names}`,
+          text: this.selected_quiz_submission.quiz.name,
+          link:
+            this.userCategory == "INSTRUCTOR"
+              ? "/reports/" + this.selected_quiz_submission.quiz._id
+              : "/reports",
+        },
+        {
+          text: this.selected_quiz_submission.user.sur_name
+            ? `${this.selected_quiz_submission.user.sur_name} ${this.selected_quiz_submission.user.other_names}`
+            : `${this.$store.state.user.user.sur_name} ${this.$store.state.user.user.other_names}`,
           link: this.$route.fullPath,
         },
       ];
@@ -502,7 +514,7 @@ export default {
       this.update_quiz_submission({
         submission: this.attempt,
       }).then(() => {
-        this.$router.push("/reports");
+        this.$router.push(`/reports/${this.selected_quiz_submission.quiz._id}`);
       });
     },
   },
@@ -517,7 +529,7 @@ export default {
         auto_submitted: this.selected_quiz_submission.auto_submitted,
         used_time: this.selected_quiz_submission.used_time,
         answers: this.selected_quiz_submission.answers.map((x) =>
-          _.omit(x, ["feedback"])
+          omit(x, ["feedback"])
         ),
         marked: this.selected_quiz_submission.marked,
         total_marks: this.selected_quiz_submission.totalMarks,
