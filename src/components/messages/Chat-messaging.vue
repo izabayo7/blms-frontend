@@ -60,14 +60,15 @@
               v-else-if="
               !msgGoing(msgs.from) &&
               currentDisplayedUser.is_group &&
-              !systemMsg(msgs.from)
+              !systemMsg(msgs.from) &&
+              msgs.messages.length
             "
               class="sender_name"
           >
             {{ msgs.from }} {{ msgs.messages[0].createdAt | getTimeDifference }}
           </div>
           <div
-              v-else
+              v-else-if="msgs.messages.length"
               class="sender_name"
               :class="msgs.from ? msgs.from.toLowerCase() : 'announcements'"
           >
@@ -80,8 +81,8 @@
                 :class="`msg-cntnr ${
                 !msg.content || msg.content === '' ? 'noBg' : ''
               } d-flex`"
-                v-for="(msg, i) in msgs.messages"
-                :key="i"
+                v-for="(msg, j) in msgs.messages"
+                :key="j"
             >
               <div
                   class="msg mx-auto"
@@ -124,8 +125,8 @@
                       Reply message
                     </div>
                   </div>
-                  <div class="action tooltip">
-                    <div @click="setmsgTDlt(msg._id)" class="icon cursor-pointer">
+                  <div v-if="msgGoing(msgs.from)" @click="setmsgTDlt(msg._id)" class="action tooltip cursor-pointer">
+                    <div class="icon">
                       <svg width="14" height="18" viewBox="0 0 14 18" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path
                             d="M1 16C1 16.5304 1.21071 17.0391 1.58579 17.4142C1.96086 17.7893 2.46957 18 3 18H11C11.5304 18 12.0391 17.7893 12.4142 17.4142C12.7893 17.0391 13 16.5304 13 16V4H1V16ZM3 6H11V16H3V6ZM10.5 1L9.5 0H4.5L3.5 1H0V3H14V1H10.5Z"
@@ -190,9 +191,11 @@
                   </div>
                 </div>
               </div>
-              <Modal v-if="msgTDlt === msg._id" template="delete_message_confirmation" @close="setmsgTDlt(undefined)">
+              <Modal v-if="msgTDlt === msg._id" template="delete_message_confirmation" @close="setmsgTDlt(undefined)"
+                     @confirmed="deleteMessage(msg._id,i,j)">
                 <div>
                   <div
+                      v-if="msgs.messages.length"
                       class="sender_name text-left"
                   >
                     {{ msgs.messages[0].createdAt | getTimeDifference }}
@@ -295,6 +298,7 @@
 <script>
 import {mapState, mapGetters, mapMutations, mapActions} from "vuex";
 // import {on} from "@/services/event_bus";
+import Apis from "@/services/apis";
 import {chatMixins} from "@/services/mixins";
 
 export default {
@@ -339,7 +343,7 @@ export default {
   // },
   methods: {
     ...mapMutations("chat", ["CHANGE_MESSAGE_READ_STATUS"]),
-    ...mapActions("chat", ["loadMessages"]),
+    ...mapActions("chat", ["loadMessages", "deleteMsg"]),
     findTotalMessages() {
       let i = 0
       for (const k in this.data) {
@@ -347,7 +351,12 @@ export default {
       }
       return i
     },
-    setmsgTDlt(id){
+    async deleteMessage(id, convIndx, msgIndx) {
+      await Apis.delete('message', id)
+      this.deleteMsg({id, convIndx, msgIndx, username: this.$route.params.username})
+      this.msgTDlt = undefined
+    },
+    setmsgTDlt(id) {
       this.msgTDlt = id
     },
     loadMoreMessages() {
@@ -660,6 +669,7 @@ export default {
 
       .msg-cntnr {
         align-items: center;
+
         &:hover {
           .actions {
             display: initial;

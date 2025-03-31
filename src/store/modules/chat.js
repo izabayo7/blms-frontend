@@ -322,6 +322,20 @@ export default {
             // else initialise it
             else getters.socket.emit('message/start_conversation', {conversation_id: user_name});
         },
+        deleteMsg({state}, {msgIndx,convIndx,username}){
+            let exists = false
+            let i =0
+            state.loadedMessages.map(loadedMsg => {
+                if (loadedMsg.username === username) {
+                    exists = true
+                } else {
+                    i++
+                }
+            })
+            if (!exists)
+                return
+            state.loadedMessages[i].conversation[convIndx].messages.splice(msgIndx, 1)
+        },
         //load user messages
         loadMessages({getters, state, commit}, {id, lastMessage}) {
             // const group = user.is_group

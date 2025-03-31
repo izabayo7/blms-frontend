@@ -158,7 +158,7 @@
             </v-btn
             >
             <v-btn
-                @click="$emit('close')"
+                @click="$emit('confirmed')"
                 class="mx-2 white--text action-button"
             >Delete
             </v-btn
