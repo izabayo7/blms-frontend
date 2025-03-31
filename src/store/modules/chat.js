@@ -61,6 +61,7 @@ export default {
 
             // Get messages new style
             getters.socket.on('receive_conversation', ({conversation}) => {
+                console.log(conversation)
                 emit('conversation_loaded')
                 commit('STORE_LOADED_DATA',{username:id,messages:conversation})
                 state.currentChatMessages = conversation;

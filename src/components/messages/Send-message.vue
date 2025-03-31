@@ -52,7 +52,7 @@ export default {
     },
     sendMessage(){
       this.socket.emit('send-message', {
-        recipients:[this.currentDisplayedUser.id],
+        recipients:[{id:this.currentDisplayedUser.id}],
         msg: this.msg,
         group: undefined
       });
