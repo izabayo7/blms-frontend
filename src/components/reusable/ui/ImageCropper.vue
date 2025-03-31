@@ -11,7 +11,7 @@
 
 <script defer>
 import { Cropper } from 'vue-advanced-cropper'
-import {on} from "@/services/event_bus";
+import {emit, on} from "@/services/event_bus";
 
 export default {
   name: "ImageCropper",
@@ -23,18 +23,21 @@ export default {
   },
   data(){
     return{
-      visible:true
+      visible:false
     }
   },
   methods:{
+    //liste to change of the cropped area
     change({canvas}){
       const image = document.getElementById('preview-cropped-image')
       image.src = canvas.toDataURL()
-      this.$emit('change',canvas.toDataURL())
+      this.$emit('change',canvas.toDataURL()) //emit on component that cropped photo was changed
+      emit('image_cropped') //emit globally that image cropped
     }
   },
   mounted() {
 
+    //when new image uploaded makd this cropper visible
     on('new-image-loaded',()=>{
       this.visible = true
     })
