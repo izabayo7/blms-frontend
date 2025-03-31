@@ -223,7 +223,7 @@ export default {
     ...mapActions("quiz", ["findQuizByName"]),
     ...mapActions("quiz_submission", [
       "create_quiz_submission",
-      "findQuizSubmissionByStudentAndQuizNames",
+      "findQuizSubmissionByUserAndQuizNames",
     ]),
     async markUndoneQuestions() {
       for (const i in this.attempt.answers) {
@@ -350,8 +350,9 @@ export default {
   created() {
     this.mode = "edit";
     if (!this.loaded) {
-      if (this.$store.state.user.user.category == "Student") {
-        this.findQuizSubmissionByStudentAndQuizNames({
+      if (this.$store.state.user.user.category.name == "STUDENT") {
+        console.log('aaaaaaaaaaaaaaa')  
+        this.findQuizSubmissionByUserAndQuizNames({
           userName: this.$store.state.user.user.user_name,
           quizName: this.$route.params.name,
         });
