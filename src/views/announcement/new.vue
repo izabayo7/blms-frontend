@@ -249,7 +249,7 @@ export default {
     SelectUi
   },
   computed: {
-    ...mapGetters("users",["selected_users"])
+    ...mapGetters("users", ["selected_users"])
   },
   data: () => ({
     announcement: {
@@ -258,7 +258,7 @@ export default {
       content: "",
       createdAt: new Date(),
     },
-    target_types: ['course', 'student group', 'faculty', 'college'],
+    target_types: ['course', 'student group', 'faculty'],
     selected_target_type: '',
     selected_target_id: '',
     target_type: 'groups',
@@ -275,7 +275,7 @@ export default {
   }),
   methods: {
     ...mapActions("users", ["searchUser"]),
-    ...mapActions("announcement",["addAnnouncement"]),
+    ...mapActions("announcement", ["addAnnouncement"]),
     addMember(user) {
       const membersNotAvailable = this.foundUsers.length <= 0;
       const disabled = this.disabled(user.email);
@@ -339,7 +339,7 @@ export default {
           const res = await Apis.get('faculty/ALL')
           this.faculties = res.data.data
         }
-
+        // if (this.faculties && this.faculties.length)
         this.faculties.map(x => {
           this.select_options.push(x.name)
         })
@@ -434,7 +434,10 @@ export default {
     },
   },
   mounted() {
-    if(this.$route.query.target === 'individual') {
+    if (this.$store.state.user.user.category.name === 'ADMIN') {
+      this.target_types.push('college')
+    }
+    if (this.$route.query.target === 'individual') {
       this.target_type = 'individual'
       if (this.selected_users.length) {
         this.users = this.selected_users
