@@ -101,26 +101,26 @@ export default {
                         }
                     }
                 }
+                //increase unread message or read message
+                store.dispatch('chat/findIndexOfUserInIncomingMessages', id).then(idx => {
+                    if (idx === null) {
+                        //to be done later
+                    } else {
+                        //if the last message sender is the sam as new message sender
+                        if (newMessage.sender._id === state.currentDisplayedUser.id)
+                            state.incomingMessages[idx].unreadMessagesLength = 0
+                        else // unless the last message sender is not the same as new message sender
+                            state.incomingMessages[idx].unreadMessagesLength += 1
+
+                        state.incomingMessages[idx].last_message = newMessage
+
+                        //put conversation on the first place
+                        store.commit('chat/CHANGE_CONVERSATION_STAND', newMessage)
+                    }
+                })
 
             })
 
-            //increase unread message or read message
-            store.dispatch('chat/findIndexOfUserInIncomingMessages', id).then(idx => {
-                if (idx === null) {
-                    //to be done later
-                } else {
-                    //if the last message sender is the sam as new message sender
-                    if (newMessage.sender._id === state.currentDisplayedUser.id)
-                        state.incomingMessages[idx].unreadMessagesLength = 0
-                    else // unless the last message sender is not the same as new message sender
-                        state.incomingMessages[idx].unreadMessagesLength += 1
-
-                    state.incomingMessages[idx].last_message = newMessage
-                }
-            })
-
-            //put conversation on the first place
-            store.commit('chat/CHANGE_CONVERSATION_STAND', newMessage)
         },
         //store the message that we sent
         ADD_ONGOING_MESSAGE(state, newMessage) {
