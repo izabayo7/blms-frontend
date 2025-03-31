@@ -5,7 +5,10 @@
         <div class="upper">
           <div>Assignments</div>
           <div>{{ assignment.title }}</div>
-          <div>Due on {{ assignment.dueDate | formatDate }}, before {{ new Date(assignment.dueDate).toLocaleTimeString() }}</div>
+          <div>Due on {{ assignment.dueDate | formatDate }}, before {{
+              new Date(assignment.dueDate).toLocaleTimeString()
+            }}
+          </div>
         </div>
         <div class="lower">
           <div v-if="assignment.details" class="description">
@@ -27,24 +30,29 @@
                 </svg>
                 <span class="ml-1">Click on file to open</span>
               </div>
-              <div v-for="(attachment, i) in assignment.attachments" :key="i" class="pick-file col-12 col-md-8 d-flex px-4">
-                <button
-                    class="file-name">
-                  {{ attachment.src }}
-                </button>
-                <div class="file-size mx-auto">
-                  26kb
-                </div>
-                <div class="file-type ml-auto">
-                  {{ attachment.src.split('.')[attachment.src.split('.').length -1] }}
-                </div>
+              <div class="col-12">
+                <div class="row ma-0" v-for="(attachment, i) in assignment.attachments" :key="i">
+                  <div class="pick-file col-12 col-md-8 d-flex px-4">
+                    <button
+                        class="file-name">
+                      {{ attachment.src }}
+                    </button>
+                    <div class="file-size mx-auto">
+                      26kb
+                    </div>
+                    <div class="file-type ml-auto">
+                      {{ attachment.src.split('.')[attachment.src.split('.').length - 1] }}
+                    </div>
 
-              </div>
-              <div class="col-12 col-md-4 py-0">
-                <button
-                    class="download-attachment">
-                  Download
-                </button>
+                  </div>
+                  <div class="col-12 col-md-4 py-0">
+                    <button
+                        @click="downloadAttachment(`${backend_url}/api/assignments/${$route.params.id}/attachment/${attachment.src}?download=true&token=${$session.get('jwt')}`)"
+                        class="download-attachment">
+                      Download
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
             <div class="indicator mb-2 mt-6 col-12 pa-0">
@@ -64,7 +72,9 @@
                 </defs>
               </svg>
 
-              <span class="ml-1">Upload your submission bellow ( {{ assignment.allowed_files.join(' ,') }} format only)</span>
+              <span class="ml-1">Upload your submission bellow ( {{
+                  assignment.allowed_files.join(' ,')
+                }} format only)</span>
             </div>
             <div class="submission">
               <FilePicker
@@ -98,6 +108,7 @@
 
 <script>
 import {mapActions, mapGetters} from "vuex";
+import {downloadAttachment} from "@/services/global_functions"
 
 export default {
   data: () => ({
@@ -109,6 +120,9 @@ export default {
     FilePicker: () => import("@/components/reusable/FilePicker"),
   },
   computed: {
+    backend_url() {
+      return process.env.VUE_APP_api_service_url
+    },
     // get the current course
     ...mapGetters("quiz", ["all_quiz"]),
     // format the quiz to fit in the table
@@ -129,6 +143,7 @@ export default {
     },
   },
   methods: {
+    downloadAttachment,
     ...mapActions("quiz", ["getAssignment"]),
     addAssignmentAttachment(file) {
       this.assignmentAttachments.push(file)
@@ -168,7 +183,7 @@ export default {
   },
   async created() {
     this.assignment = await this.getAssignment({id: this.$route.params.id})
-    if(this.assignment){
+    if (this.assignment) {
       let date = new Date(this.assignment.dueDate)
       date.setMinutes(date.getUTCMinutes())
       date.setHours(date.getUTCHours())
