@@ -378,7 +378,7 @@ export default {
       const host = 'stream.kurious.rw'
       // const host = 'localhost:8080'
 
-      this.ws = new WebSocket('ws://' + host + '/kurious_stream' + `?token=${this.$session.get("jwt")}`);
+      this.ws = new WebSocket('wss://' + host + '/kurious_stream' + `?token=${this.$session.get("jwt")}`);
 
       this.ws.addEventListener('open', () => {
         self.register();
