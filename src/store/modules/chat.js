@@ -15,6 +15,9 @@ const getDefaultState = () => ({
         id: null,
         status: 0
     },
+    group:{
+        error:""
+    }
 })
 
 export default {
@@ -38,10 +41,16 @@ export default {
                 if (msg.id === data.id) FOUND = true
             })
 
-            if (FOUND) return
-            else state.incomingMessages.push(data)
+            if (!FOUND) state.incomingMessages.push(data)
         },
 
+        SET_GROUP_ERROR(state,err){
+            state.group.error = err;
+
+            setTimeout(() => {
+                state.group.error = '';
+            },3000)
+        },
         //store loaded messages
         STORE_LOADED_MESSAGES(state, data) {
             // verify if data object has information
@@ -167,7 +176,7 @@ export default {
             if (idx) state.incomingMessages[idx].unreadMessagesLength = 0;
         },
 
-        // change conversation to first if new messeage is sent or received
+        // change conversation to first if new message is sent or received
         CHANGE_CONVERSATION_STAND(state, msg) {
             let idx;
             let id = msg.sender._id;
@@ -318,6 +327,10 @@ export default {
                     user_name: user.state.user.user_name // username of the connected user
                 }
             })
+        },
+
+        groupError(state){
+            return state.group.error;
         },
 
         //get messages from loaded messages base on its id
