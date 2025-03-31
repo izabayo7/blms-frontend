@@ -24,6 +24,15 @@ const routes = [
             allowAnonymous: true
         }
     },
+    // the login page
+    {
+        path: '/reset_password',
+        component: () =>
+            import('@/views/pages/forgot_password'),
+        meta: {
+            allowAnonymous: true
+        }
+    },
     // the loader
     {
         path: '/loading',
