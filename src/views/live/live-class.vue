@@ -250,7 +250,7 @@
                 >
               </v-col>
               <v-col v-else class="col-12">
-                <kurious-comments />
+                <unreal-time-discussion-board />
               </v-col>
             </v-row>
           </v-col>
@@ -278,10 +278,12 @@ window.io = io;
 import * as RTCMultiConnection from "../../assets/js/RTCMultiConnection.min.js";
 import * as MultiStreamsMixer from "../../assets/js/MultiStreamsMixer.min.js";
 import DiscussionBoard from "../../components/Live/DiscussionBoard";
+import UnrealTimeDiscussionBoard from "../../components/Live/UnrealTimeDiscussionBoard";
 
 export default {
   name: "LiveClass",
   components:{
+    UnrealTimeDiscussionBoard,
     DiscussionBoard
   },
   data: () => ({

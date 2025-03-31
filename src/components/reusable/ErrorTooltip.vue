@@ -1,7 +1,9 @@
 <template>
   <div class="my-error-tooltip">
     <div class="error-tooltip-container">
-      <p>you messed with error</p>
+      <div class="error">
+        <p>you messed with error</p>
+      </div>
     </div>
   </div>
 </template>

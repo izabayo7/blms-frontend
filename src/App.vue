@@ -2,7 +2,8 @@
   <v-app class="home">
     <router-view />
     <app-dialog />
-      <new-group />
+    <new-group />
+    <notification-tooltip />
   </v-app>
 </template>
 
@@ -10,9 +11,11 @@
 // import axios from "axios";
 // import jwt from "jsonwebtoken";
 
+import NotificationTooltip from "./components/reusable/NotificationTooltip";
 export default {
   name: "App",
   components: {
+    NotificationTooltip,
     appDialog: () => import("@/components/shared/Dialog"),
     NewGroup : () => import('@/components/messages/NewGroup')
 

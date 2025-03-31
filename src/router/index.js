@@ -265,7 +265,7 @@ router.beforeEach((to, from, next) => {
             "jwt"
         )
         // set the token in axios headers
-        axios.defaults.headers.common.Authorization = `${token}`;
+        axios.defaults.headers.common.Authorization = `Bearer ${token}`;
         // keep the decoded user in vuex store
         store.dispatch("user/setUser", jwt.decode(token));
     }

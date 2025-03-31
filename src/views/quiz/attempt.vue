@@ -72,8 +72,16 @@
                   class="ma-1"
                 >
                   <v-img
-                    :src="`${choice.src}?format=png&width=200&height=200`"
-                    :lazy-src="`${choice.src}?format=png&width=200&height=200`"
+                    :src="`${
+                      choice.src
+                    }?format=png&width=200&height=200&token=${$session.get(
+                      'jwt'
+                    )}`"
+                    :lazy-src="`${
+                      choice.src
+                    }?format=png&width=200&height=200&token=${$session.get(
+                      'jwt'
+                    )}`"
                     :gradient="
                       checkChoiceStatus(attempt.answers[i].choosed_options, {
                         src: choice.src,
@@ -176,21 +184,33 @@ export default {
       "Z",
     ],
     attempt: {},
+    done: false,
     filesToUpload: [],
     remaining_time: 0,
   }),
   computed: {
     // get the current course
     ...mapGetters("quiz", ["selected_quiz"]),
-    ...mapGetters("quiz_submission", ["selected_quiz_submission"]),
+    ...mapGetters("quiz_submission", ["selected_quiz_submission", "loaded"]),
     formated_remaining_time() {
       return new Date(this.remaining_time * 1000).toISOString().substr(11, 8);
     },
   },
   watch: {
     remaining_time() {
-      if (this.remaining_time == this.selected_quiz.duration) {
-        // this.start_couter();
+      if (this.remaining_time > 0) {
+        setTimeout(() => {
+          this.remaining_time -= 1;
+        }, 1000);
+      } else if (!this.done) {
+        this.done = true;
+        const category = this.$store.state.user.user.category.name;
+        if (category == "INSTRUCTOR") {
+          this.$router.push("/quiz");
+        } else if (category == "STUDENT") {
+          this.markUndoneQuestions();
+          this.saveAttempt();
+        }
       }
     },
   },
@@ -200,13 +220,24 @@ export default {
       "create_quiz_submission",
       "findQuizSubmissionByStudentAndQuizNames",
     ]),
-    start_couter() {
-      console.log("ahoooooooooo");
-      while (this.remaining_time > 0) {
-        setTimeout(() => {
-          console.log(this.remaining_time);
-          this.remaining_time -= 60;
-        }, 1000);
+    async markUndoneQuestions() {
+      for (const i in this.attempt.answers) {
+        if (this.selected_quiz.questions[i].type.includes("select")) {
+          this.attempt.answers[i].not_done =
+            this.attempt.answers[i].choosed_options.length > 0
+              ? undefined
+              : true;
+        } else if (this.selected_quiz.questions[i].type === "open_ended") {
+          if (this.attempt.answers[i].text == "") {
+            this.attempt.answers[i].not_done = true;
+            this.attempt.answers[i].text = undefined;
+          }
+        } else if (this.selected_quiz.questions[i].type === "file_upload") {
+          if (this.attempt.answers[i].src == "") {
+            this.attempt.answers[i].not_done = true;
+            this.attempt.answers[i].src = undefined;
+          }
+        }
       }
     },
     checkChoiceStatus(choosed_options, choice) {
@@ -282,7 +313,9 @@ export default {
       }
       if (!deleted) {
         if (
-          this.selected_quiz.questions[questionIndex].type.includes("single")
+          this.selected_quiz.questions[questionIndex].type
+            .toLowerCase()
+            .includes("single")
         ) {
           this.attempt.answers[questionIndex].choosed_options = [value];
         } else {
@@ -301,35 +334,39 @@ export default {
   },
   created() {
     this.mode = "edit";
-    if (this.$store.state.user.user.category == "Student") {
-      this.findQuizSubmissionByStudentAndQuizNames({
-        studentName: `${this.$store.state.user.user.surName}_${this.$store.state.user.user.otherNames}`,
+    if (!this.loaded) {
+      if (this.$store.state.user.user.category == "Student") {
+        this.findQuizSubmissionByStudentAndQuizNames({
+          studentName: `${this.$store.state.user.user.surName}_${this.$store.state.user.user.otherNames}`,
+          quizName: this.$route.params.name,
+        });
+      }
+
+      this.findQuizByName({
+        user_name: this.$store.state.user.user.user_name,
         quizName: this.$route.params.name,
+      }).then((quiz) => {
+        this.remaining_time = quiz.duration;
+        this.attempt = {
+          quiz: quiz._id,
+          user: this.$store.state.user.user.user_name,
+          auto_submitted: false,
+          used_time: 0,
+          answers: [],
+        };
+        for (const question of quiz.questions) {
+          if (question.type === "open_ended") {
+            this.attempt.answers.push({ text: "" });
+          } else if (question.type === "file_upload") {
+            this.attempt.answers.push({ src: "" });
+            this.filesToUpload.push({ file: "" });
+          } else {
+            this.attempt.answers.push({ choosed_options: [] });
+          }
+        }
+        this.start_couter();
       });
     }
-    this.findQuizByName({
-      userId: this.$store.state.user.user._id,
-      quizName: this.$route.params.name,
-    }).then((quiz) => {
-      this.remaining_time = quiz.duration;
-      this.attempt = {
-        quiz: quiz._id,
-        user: this.$store.state.user.user._id,
-        auto_submitted: false,
-        used_time: 0,
-        answers: [],
-      };
-      for (const question of quiz.questions) {
-        if (question.type === "open-ended") {
-          this.attempt.answers.push({ text: "" });
-        } else if (question.type === "file-upload") {
-          this.attempt.answers.push({ src: "" });
-          this.filesToUpload.push({ file: "" });
-        } else {
-          this.attempt.answers.push({ choosed_options: [] });
-        }
-      }
-    });
   },
 };
 </script>

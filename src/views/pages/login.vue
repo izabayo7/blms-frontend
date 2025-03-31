@@ -81,7 +81,7 @@ export default {
 
         if (response.data.status == 200) {
           // set the token in axios headers
-          axios.defaults.headers.common.Authorization = `${response.data.data.data}`;
+          axios.defaults.headers.common.Authorization = `Bearer ${response.data.data}`;
           // start the session
           this.$session.start();
           // set the token in the session
@@ -89,7 +89,6 @@ export default {
 
           const user = await jwt.decode(this.$session.get("jwt"));
           const category = user.category.name;
-          
           // keep the decoded user in vuex
           this.$store.dispatch("user/setUser", user);
           if (this.$route.query.redirect) {
