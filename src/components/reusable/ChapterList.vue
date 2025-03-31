@@ -115,7 +115,6 @@ export default {
       return colors.primary;
     },
   },
-
 };
 </script>
 <style lang="scss">
