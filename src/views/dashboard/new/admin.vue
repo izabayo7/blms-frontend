@@ -172,24 +172,24 @@
               </div>
             </div>
           </div>
-          <v-col class="col-12 mt-5 pl-0">
+          <v-col class="col-12 mt-5 px-0">
             <div class="heading">Recently joined users</div>
             <div class="recent mt-5">
-              <div class="record">
-                <div class="name">Manzi gustave</div>
-                <div class="category">Instructor</div>
-                <div class="time">2 minutes ago</div>
-              </div>
-              <div class="record">
-                <div class="name">Mukamana Goreth</div>
-                <div class="category">Student</div>
-                <div class="time">2 weeks a go</div>
+              <loader
+                  v-if="!recentJoinedUsers.length"
+                  type="2"
+                  class="vertically--centered"
+              />
+              <div v-for="(user, i) in recentJoinedUsers" :key="i" class="record">
+                <div class="name">{{ user.sur_name + ' ' + user.other_names }}</div>
+                <div class="category">{{ user.category.name }}</div>
+                <div class="time">{{ elapsedDuration(user.createdAt) }}</div>
               </div>
             </div>
           </v-col>
           <v-col class="col-12 mt-5 pl-0">
             <div class="more">More ...</div>
-            <div class="mt-5">
+            <div class="mt-5 d-flex">
               <button
                 class="lower_buttons mr-2"
                 @click="showInviteUsers = true"
@@ -203,9 +203,9 @@
           </v-col>
         </div>
       </div>
-      <div class="v-col col-12 col-lg-8 py-0">
-        <v-row class="pa-0">
-          <v-col class="col-12 col-lg-6 pt-0">
+      <div class="v-col col-12 col-lg-8 py-0 mt-0 mt-md-n3" :class="{'px-0': $vuetify.breakpoint.width < 700 }">
+        <v-row class="pa-0 mt-6 mt-md-0" :class="{'px-0': $vuetify.breakpoint.width < 700 }">
+          <v-col class="col-12 col-lg-6 pt-0 mb-6 mb-md-0" :class="{'px-0': $vuetify.breakpoint.width < 700 }">
             <small-card
               :total="user_statistics.total_users"
               :series="computeUserSeries()"
@@ -238,7 +238,7 @@
               </template>
             </small-card>
           </v-col>
-          <v-col class="col-12 col-lg-6 pt-0">
+          <v-col class="col-12 col-lg-6 pa-0">
             <small-card
               :total="total_courses"
               :series="computeOtherSeries()"
@@ -273,8 +273,8 @@
               </template>
             </small-card>
           </v-col>
-          <v-col class="col-12">
-            <combined-statistics>
+          <v-col class="col-12" :class="{'px-0': $vuetify.breakpoint.width < 700 }">
+            <combined-statistics v-if="$store.state.sidebar_navbar.college">
               <template v-slot:icon>
                 <svg
                   width="21"
@@ -318,26 +318,33 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import {mapActions, mapGetters} from "vuex";
 import Apis from "@/services/apis";
+import {elapsedDuration} from "../../../services/global_functions";
 export default {
   name: "ApplicationDashboard",
   data: () => ({
     showInviteUsers: false,
     showFacultyModal: false,
+    recentJoinedUsers: [],
     user_statistics: {},
     total_faculties: 0,
     total_courses: 0,
     total_student_groups: 0,
   }),
+  computed:{
+    ...mapGetters("chat", ["socket"]),
+  },
   components: {
     InviteUsersDialog: () => import("@/components/dashboard/InviteUsersDialog"),
     FacultyDialog: () => import("@/components/dashboard/addFaculty"),
     SmallCard: () => import("@/components/dashboard/information-card"),
+    loader: () => import("@/components/loaders"),
     CombinedStatistics: () =>
       import("@/components/dashboard/combined-statistics"),
   },
   methods: {
+    elapsedDuration,
     ...mapActions("modal", ["set_modal"]),
     computeUserSeries() {
       const res = [];
@@ -366,205 +373,25 @@ export default {
 
     res = await Apis.get("user_groups/statistics");
     this.total_student_groups = res.data.data.total_student_groups;
+
+    this.socket.emit("users/recentlyJoined");
+
+    this.socket.on("res/users/recentlyJoined",(users)=>{
+      this.recentJoinedUsers = users;
+    });
+
+    this.socket.on("res/users/new", ({user}) => {
+      console.log(this.recentJoinedUsers, user)
+      if(this.recentJoinedUsers.indexOf(user) == -1) {
+        this.recentJoinedUsers.unshift(user)
+        this.recentJoinedUsers.pop()
+      }
+    });
+
   },
 };
 </script>
 
 <style lang="scss">
-.dashboard_page {
-  background-color: #f3f6ff;
-  min-height: 50em;
-  height: 10em;
-  .page_title {
-    display: block;
-    .upper {
-      font-family: Inter;
-      font-size: 17px;
-      font-style: normal;
-      font-weight: 500;
-      line-height: 13px;
-      letter-spacing: 0em;
-      text-align: left;
-      color: #343434;
-      margin-bottom: 15px;
-    }
-    .lower {
-      font-family: Inter;
-      font-style: normal;
-      font-weight: 600;
-      font-size: 24.8244px;
-      line-height: 13px;
-      /* identical to box height, or 53% */
-
-      color: #343434;
-    }
-  }
-  .more_info_container {
-    max-width: 358.8px;
-  }
-  .college_info {
-    max-width: 358.8px;
-    // width: 100%;
-    left: 159px;
-    background: #ffffff;
-    box-shadow: 0px 5.79235px 13.2397px rgba(180, 180, 180, 0.25);
-    border-radius: 4.13739px;
-    padding: 17.38px 13.05px 9.1px 19.65px;
-    .college_name {
-      font-family: Inter;
-      font-style: normal;
-      font-weight: bold;
-      font-size: 20.687px;
-      line-height: 28px;
-      display: flex;
-      align-items: center;
-
-      color: #193074;
-      margin-bottom: 50.48px;
-    }
-    .lower_content {
-      display: flex;
-    }
-    .number_of_users {
-      font-family: Inter;
-      font-style: normal;
-      font-weight: 500;
-      font-size: 12.4122px;
-      width: 60%;
-
-      display: flex;
-      align-items: center;
-      text-align: center;
-
-      color: #3c3c3c;
-    }
-    .account_type {
-      display: flex;
-      .text {
-        font-family: Inter;
-        font-style: normal;
-        font-weight: 500;
-        font-size: 11.4122px;
-        margin-left: 6px;
-
-        display: flex;
-        align-items: center;
-        text-align: center;
-
-        color: #3c3c3c;
-      }
-    }
-  }
-  .more_info {
-    width: 111.01px;
-    height: 89.8px;
-    background: #ffffff;
-    box-shadow: 0px 5.79235px 9.92974px rgba(156, 156, 156, 0.25);
-    border-radius: 4.13739px;
-    padding: 8px;
-
-    .total_number {
-      height: 49.34px;
-      width: 100%;
-      font-family: Inter;
-      font-style: normal;
-      font-weight: bold;
-      font-size: 33.0991px;
-      margin-top: -20px;
-      display: flex;
-      justify-content: center;
-
-      color: #000000;
-    }
-    .description {
-      width: 99.66px;
-      height: 34.54px;
-      left: calc(50% - 99.66px / 2 - 469.23px);
-      top: 369.06px;
-
-      font-family: Inter;
-      font-style: normal;
-      font-weight: 500;
-      font-size: 9.27479px;
-      text-align: center;
-
-      color: #3c3c3c;
-    }
-  }
-  .heading {
-    font-family: Inter;
-    font-style: normal;
-    font-weight: 600;
-    font-size: 15px;
-    line-height: 4px;
-    color: #343434;
-  }
-  .recent {
-    width: 358px;
-    height: 77px;
-    background: #ffffff;
-    box-shadow: 0px 5.9px 13.2px rgba(0, 0, 0, 0.1);
-  }
-  .record {
-    display: flex;
-    padding: 12px;
-    justify-content: space-between;
-    .name {
-      font-family: Inter;
-      font-style: normal;
-      font-weight: bold;
-      font-size: 12.4122px;
-      color: #000000;
-      flex: 1;
-    }
-    .category {
-      font-family: Inter;
-      font-style: normal;
-      font-weight: normal;
-      font-size: 12.4122px;
-      color: #000000;
-      flex: 1;
-    }
-    .time {
-      font-family: Inter;
-      font-style: normal;
-      font-weight: normal;
-      font-size: 12.4122px;
-      color: #000000;
-      flex: 1;
-    }
-  }
-  .more {
-    font-family: Inter;
-    font-style: normal;
-    font-weight: 600;
-    font-size: 12.4122px;
-    line-height: 4px;
-    /* identical to box height, or 33% */
-    text-align: right;
-    max-width: 310.8px;
-    color: #193074;
-  }
-  .lower_buttons {
-    width: 153.91px;
-    height: 43.86px;
-    left: calc(50% - 153.91px / 2 - 448.04px);
-    top: calc(50% - 43.86px / 2 + 231.49px);
-
-    background: #193074;
-    box-shadow: 0px 5.79235px 11.5847px rgba(147, 147, 147, 0.25);
-    border-radius: 2.48244px;
-
-    font-family: Inter;
-    font-style: normal;
-    font-weight: 500;
-    font-size: 13.2397px;
-    /* identical to box height, or 150% */
-
-    color: #ffffff;
-  }
-  .my-chart {
-    max-width: 20%;
-  }
-}
+@import '../../../assets/sass/imports/dashboard';
 </style>

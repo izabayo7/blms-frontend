@@ -15,8 +15,8 @@
       <!--          />-->
       <!--        </svg>-->
       <!--      </div>-->
-      <div class="tittle pa-6 pb-0">Create a faculty</div>
-      <div class="row px-6 pt-0">
+      <div class="tittle px-0 px-md-6 pa-6 pb-0">Create a faculty</div>
+      <div class="row px-0 px-md-6 pt-0">
         <div class="col-12 col-lg-6">
           <div class="input-group">
             <div class="label">
@@ -48,7 +48,7 @@
               </textarea>
             </div>
           </div>
-          <div class="send-container">
+          <div class=" hidden-sm-and-down send-container">
             <button class="add-email send cancel mr-4" @click="$emit('closeModal')">
               Cancel
             </button>
@@ -84,14 +84,16 @@
               </label>
               <span class="important">*</span>
             </div>
-            <div class="d-flex">
+            <div class="d-block d-md-flex">
               <div class="input-container coloured">
-                <input type="text" id=""/>
+                <input type="text" v-model="currentStudentGroup" id=""/>
                 <svg
+                    v-if="currentStudentGroup.length"
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
                     width="24"
                     height="24"
+                    @click="currentStudentGroup = ''"
                 >
                   <path fill="none" d="M0 0h24v24H0z"/>
                   <path
@@ -100,36 +102,38 @@
                 </svg>
               </div>
               <div class="vertically--centered">
-                <svg
-                    width="12"
-                    height="11"
-                    viewBox="0 0 12 11"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                      d="M6 1V9.5"
-                      stroke="#193074"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                  />
-                  <path
-                      d="M10.25 5.25L1.75 5.25"
-                      stroke="#193074"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                  />
-                </svg>
-
-                <button class="add-student-group">Add student group</button>
+                <button v-if="!isEditing" @click="addStudentGroup" class="add-student-group">
+                  <svg
+                      width="12"
+                      height="11"
+                      viewBox="0 0 12 11"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                        d="M6 1V9.5"
+                        stroke="#193074"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                    />
+                    <path
+                        d="M10.25 5.25L1.75 5.25"
+                        stroke="#193074"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                    />
+                  </svg>
+                  Add student group
+                </button>
+                <button v-else @click="saveStudentGroupChanges">Save</button>
               </div>
             </div>
           </div>
           <div class="added-student-groups customScroll">
             <div v-for="(item, i) in addedStudentGroups" :key="i" class="item">
               <div class="name">{{ item.name }}</div>
-              <div class="actions">
-                <div class="edit">
+              <div class="actions ml-auto">
+                <button @click="edit(i)" class="edit mr-4">
                   edit
                   <svg
                       width="14"
@@ -153,8 +157,8 @@
                         stroke-linejoin="round"
                     />
                   </svg>
-                </div>
-                <div class="delete">
+                </button>
+                <button @click="deleteStudentGroup(i)" class="delete">
                   Delete
                   <svg
                       width="14"
@@ -185,9 +189,19 @@
                         stroke-linejoin="round"
                     />
                   </svg>
-                </div>
+                </button>
               </div>
             </div>
+          </div>
+        </div>
+        <div class="col-12 hidden-md-and-up">
+          <div class="send-container">
+            <button class="add-email send cancel mr-4" @click="$emit('closeModal')">
+              Cancel
+            </button>
+            <button class="add-email send" @click="validate">
+              Save progress
+            </button>
           </div>
         </div>
       </div>
@@ -203,7 +217,10 @@ export default {
   components: {SelectUi},
   data: () => ({
     closable: false,
+    editingIndex: -1,
     user_categories: [],
+    isEditing: false,
+    currentStudentGroup: "",
     instructors: [],
     selected_user_category: "",
     faculty: {
@@ -214,11 +231,7 @@ export default {
     dean: {
       id: ""
     },
-    addedStudentGroups: [
-      {
-        name: "Computer science Year 3",
-      },
-    ],
+    addedStudentGroups: [],
   }),
   computed: {
     visible() {
@@ -258,18 +271,51 @@ export default {
   }
   ,
   methods: {
-      // getStudentGroups(){
-      //   Apis.get(`user_groups/college/`).then(d => {
-      //
-      //   })
-      // },
+    // getStudentGroups(){
+    //   Apis.get(`user_groups/college/`).then(d => {
+    //
+    //   })
+    // },
+    addStudentGroup() {
+      if (this.currentStudentGroup == "")
+        this.error = "Please enter the student group name"
+      else if (this.currentStudentGroup.length < 5)
+        this.error = "Student group name too short"
+      else {
+        const count = this.addedStudentGroups.filter(s => s.name == this.currentStudentGroup)
+        if (!count.length) {
+          this.addedStudentGroups.unshift({name: this.currentStudentGroup})
+          this.currentStudentGroup = ""
+        } else {
+          this.error = "Dupplicate names not allowed"
+        }
+      }
+    },
+    saveStudentGroupChanges() {
+      const dupplicates = this.addedStudentGroups.filter(s => s.name == this.currentStudentGroup)
+      if (dupplicates.length > 1 || this.addedStudentGroups.indexOf(dupplicates[0]) != this.editingIndex) {
+        this.error = "Dupplicate names not allowed"
+      } else {
+        this.addedStudentGroups[this.editingIndex].name = this.currentStudentGroup;
+        this.currentStudentGroup = ""
+        this.isEditing = false
+      }
+    },
+    edit(i) {
+      this.isEditing = true;
+      this.editingIndex = i;
+      this.currentStudentGroup = this.addedStudentGroups[i].name
+    },
+    deleteStudentGroup(i) {
+      this.addedStudentGroups.splice(i, 1)
+    },
     select_dean(name) {
       console.log(name)
     }
     ,
     async createFaculty() {
       const res = await Apis.create("faculty", this.faculty);
-      if (res.data.status != 200 && res.data.status != 200) {
+      if (res.data.status != 200 && res.data.status != 201) {
         this.$store.dispatch("app_notification/SET_NOTIFICATION", {
           message: res.data.message,
           status: "danger",
@@ -281,6 +327,30 @@ export default {
           status: "success",
           uptime: 2000,
         })
+        const unsaved = []
+        for (const i in this.addedStudentGroups) {
+          const response = await Apis.create("user_groups", {
+            name: this.addedStudentGroups[i].name,
+            faculty: res.data.data._id
+          });
+          if (response.data.status != 200 && response.data.status != 201) {
+            this.$store.dispatch("app_notification/SET_NOTIFICATION", {
+              message: response.data.message,
+              status: "danger",
+              uptime: 2000,
+            })
+            unsaved.push(this.addedStudentGroups[i])
+          }
+        }
+        if (!unsaved.length) {
+          this.$store.dispatch("app_notification/SET_NOTIFICATION", {
+            message: "User groups added successfully",
+            status: "success",
+            uptime: 2000,
+          })
+          this.$emit('closeModal')
+        } else
+          this.addedStudentGroups = unsaved
       }
     }
     ,
@@ -320,6 +390,8 @@ export default {
     background-color: white;
     // padding-top: 50px;
     text-align: left;
+    margin: auto;
+    max-width: 1078px;
 
     .close {
       /* position: relative; */
@@ -370,7 +442,8 @@ export default {
         border: 0.954286px solid #858c94;
         box-sizing: border-box;
         border-radius: 7.63429px;
-        width: 305.37px;
+        max-width: 305.37px;
+        width: 100%;
         height: 45.9px;
         font-family: Source Sans Pro;
         font-style: normal;
@@ -383,6 +456,8 @@ export default {
 
       textarea {
         min-height: 122px;
+        max-height: 200px;
+        max-width: 100%;
       }
 
       select:focus {
@@ -392,7 +467,7 @@ export default {
       &.coloured {
         border-radius: 21.63px;
         background: #eeeeee;
-        width: 305.37px;
+        max-width: 305.37px;
         display: flex;
 
         svg {
@@ -423,7 +498,7 @@ export default {
       height: 45.38px;
 
       &.send {
-        width: 251.43px;
+        width: 158px;
         height: 40.38px;
       }
 
@@ -509,6 +584,19 @@ export default {
           margin-left: 11px;
           // width: 12px;
         }
+      }
+    }
+  }
+}
+
+/* Portrait phones and smaller */
+@media (max-width: 700px) {
+  .v-dialog:not(.v-dialog--fullscreen) .faculty-dialog-body {
+    .send-container {
+      display: flex;
+
+      .add-email.send {
+        width: 50%;
       }
     }
   }

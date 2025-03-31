@@ -1,6 +1,6 @@
 <template>
   <v-dialog id="kurious--dialog" v-model="visible" :persistent="!closable">
-    <div class="dialog-body">
+    <div class="dialog-body invite-users">
 <!--      <div class="close">-->
 <!--        <svg-->
 <!--          xmlns="http://www.w3.org/2000/svg"-->
@@ -135,6 +135,7 @@ export default {
       selected_user_group: "",
       selected_user_category: "",
       email: "",
+      error: "",
       closable: false,
     };
   },
@@ -168,12 +169,12 @@ export default {
       this.email = email;
     },
     async sendInvitations() {
-      if (this.selected_user_group == "") {
-        console.log("user group is required");
-      } else if (this.selected_user_category == "") {
-        console.log("user category is required");
+      if (this.selected_user_group == "Select user group") {
+        this.error = "user group is required"
+      } else if (this.selected_user_category == "Select user category") {
+        this.error = "user category is required";
       } else if (!this.emails.length) {
-        console.log("you must atleast select one email");
+        this.error = "you must atleast select one email";
       } else {
         const res = await Apis.create("user_invitations", {
           college: this.$store.state.user.user.college,
@@ -181,10 +182,27 @@ export default {
           user_group: this.selected_user_group,
           emails: this.emails,
         });
-        for (const obj of res.data.data) {
-          this.sent_emails.unshift(obj.email);
+        if(res.data.data) {
+          for (const obj of res.data.data) {
+            this.sent_emails.unshift(obj.email);
+          }
+        }
+        else {
+          this.error = res.data.message
         }
       }
+    },
+  },
+  watch:{
+    error() {
+      if (this.error != "")
+        this.$store.dispatch("app_notification/SET_NOTIFICATION", {
+          message: this.error,
+          status: "danger",
+          uptime: 5000,
+        }).then(() => {
+          this.error = ""
+        })
     },
   },
   async beforeMount() {
@@ -212,7 +230,10 @@ export default {
     background-color: white;
     padding-top: 50px;
     text-align: left;
-
+    &.invite-users {
+      max-width: 742px;
+      margin: auto
+    }
     .close {
       /* position: relative; */
       float: right;
@@ -323,5 +344,15 @@ export default {
   background-color: white;
   height: 100%;
   width: 100px;
+}
+/* Portrait phones and smaller */
+@media (max-width: 700px) {
+  .v-dialog:not(.v-dialog--fullscreen) {
+    .dialog-body {
+      .centered {
+        width: 100%
+      }
+    }
+  }
 }
 </style>
