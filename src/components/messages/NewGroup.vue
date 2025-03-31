@@ -13,12 +13,30 @@
               </div>
               <div class="row group-members">
                 <label for="group_members_input">Add members</label>
-                <input @keyup.enter.prevent.stop="addMember" v-model="currentMember" type="text"
-                       id="group_members_input">
+                <div class="members">
+                  <input @input="getUsers" v-model="currentMember" type="text"
+                         id="group_members_input">
+                  <transition name="member">
+                    <div class="found-members" v-if="foundUsers.length > 0 || userLoading">
+                      <svg v-if="userLoading" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"/><path d="M12 3a9 9 0 0 1 9 9h-2a7 7 0 0 0-7-7V3z"/></svg>
+                      <div class="no-user" v-if="NotFoundText.length>0">{{ NotFoundText }}</div>
+                      <transition-group name="members">
+                        <div class="member" :class="{disabled:disabled(user.email)}" v-for="(user,i) in foundUsers" @click="addMember(user)" :key="i">
+                          <img src="" alt="" v-if="user.pic" >
+                          <v-avatar size="25" class="avatar" v-else> {{ user.sur_name | computeText }}</v-avatar>
+                          <div class="name">{{ user.other_names + ' ' + user.sur_name}}</div>
+                          <div class="type">{{ user.category.name.toLowerCase() }}</div>
+                        </div>
+                      </transition-group>
+                    </div>
+                  </transition>
+                </div>
                 <div class="added-members-list" v-if="group.members.length > 0">
-                  <chip-ui v-for="(member,i) in group.members" @closed="closed(i)" :key="i">
-                    {{ member }}
-                  </chip-ui>
+                  <transition-group name="chips">
+                    <chip v-for="(member,i) in group.members" @closed="closed(i)" :key="i">
+                      {{ member.sur_name + ' ' + member.other_names }}
+                    </chip>
+                  </transition-group>
                 </div>
               </div>
               <div class="group-privacy">
@@ -28,7 +46,7 @@
                 </div>
               </div>
               <div class="row action-buttons">
-                <button class="create-group-button">Create group</button>
+                <button class="create-group-button" :class="{disabled:btnDisabled}">Create group</button>
                 <button class="cancel-group-creation" @click="toggleGroup">Cancel</button>
               </div>
             </div>
@@ -69,19 +87,23 @@
 </template>
 
 <script>
-import {emit, on} from '@/services/event_bus'
-import {mapMutations, mapState} from "vuex";
+import {emit, on} from '@/services/event_bus';
+import {mapMutations, mapState, mapActions} from "vuex";
+
 export default {
   name: "NewGroup",
   components: {
     switchUi: () => import('@/components/reusable/ui/switcher'),
-    chipUi: () => import('@/components/reusable/ui/Chip'),
+    chip: () => import('@/components/reusable/ui/Chip'),
     cropper: () => import('@/components/reusable/ui/ImageCropper')
   },
   data() {
     return {
       img:'',
       currentMember: '',
+      foundUsers:[],
+      userLoading:false,
+      NotFoundText:'',
       group: {
         name: '',
         public: true,
@@ -90,19 +112,54 @@ export default {
     }
   },
   computed:{
-    ...mapState('sidebar_navbar',['group_model'])
+    ...mapState('sidebar_navbar',['group_model']),
+    btnDisabled(){
+      const test_empty = /^\s+$/g
+      const is_name_empty = test_empty.test(this.group.name) || this.group.name.length <= 0
+      const is_members_empty = this.group.members.length <= 0
+      console.log(is_name_empty,is_members_empty)
+      return is_members_empty || is_name_empty
+    }
   },
   methods: {
     ...mapMutations('sidebar_navbar',{toggleGroup:'TOGGLE_GROUP_MODEL_VISIBILITY'}),
+    ...mapActions('users',['searchUser']),
 
     closed(i) {
       this.group.members.splice(i, 1)
     },
-    addMember() {
-      if(this.currentMember.length <=0)
+    disabled(email){
+      return this.group.members.some(member => member.email === email)
+    },
+    getUsers(){
+      this.userLoading = true
+      this.NotFoundText = ''
+      const EmptyStringRegex = /^\s+$/g //regext to detect empty string
+
+      if(EmptyStringRegex.test(this.currentMember) || this.currentMember.length <= 0){
+          this.foundUsers = []
+          this.userLoading = false
         return
-      this.group.members.unshift(this.currentMember)
-      this.currentMember = ''
+      }
+
+      this.searchUser({query: this.currentMember}).then(result => {
+        this.userLoading = false;
+        this.foundUsers= result;
+
+        //tell user that we didnt find the user with such id
+        this.NotFoundText = (result.length > 0) ? '' : "No user found"
+        console.log(result)
+      })
+    },
+    addMember(user) {
+      const membersNotAvailable = this.foundUsers.length <= 0
+      console.log(membersNotAvailable)
+      const disabled = this.disabled(user.email)
+
+      if(membersNotAvailable || this.currentMember.length <= 0 || disabled)
+        return
+
+      this.group.members.unshift(user)
     },
     readURL(input) {
       const self = this;
@@ -200,6 +257,115 @@ export default {
 
               @include scroll-bar;
 
+              /* aniamation of chips */
+              .chips-enter-active, .chips-leave-active{
+                //transition: all .4s;
+              }
+
+              .chips-enter, .chips-leave-to{
+                  opacity: 0;
+              }
+            }
+
+            .members{
+              width: 100%;
+
+              input{
+                width: 100%;
+              }
+
+              /*
+              animations on enter of members list
+               */
+              .member-enter-active, .member-leave-active {
+                transition: .5s;
+                transition-property: opacity,height;
+                height: auto;
+              }
+              .member-enter, .member-leave-to /* .fade-leave-active below version 2.1.8 */ {
+                opacity: 0;
+                height: 0;
+              }
+
+              .members-enter-active, .members-leave-active {
+                transition: .5s;
+                transition-property: opacity,height;
+                height: auto;
+              }
+              .members-enter, .members-leave-to /* .fade-leave-active below version 2.1.8 */ {
+                opacity: 0;
+                height: 0;
+              }
+
+              .found-members{
+                box-shadow: 0 2px 5px darken($blue-gray,5);
+                border-radius: 5px;
+                padding: 1rem 0;
+                display: flex;
+                justify-content: center;
+                flex-wrap: wrap;
+                transition: .4s ease-in-out;
+                .disabled{
+                  opacity:.3;
+                }
+                /* this element is added by vue due to transition group */
+                span{
+                  width: 100%;
+                }
+                .no-user{
+                  font-size: .8rem;
+                  color:lighten($font,20)
+                }
+                svg{
+                  border-radius: 50%;
+                  justify-self: center;
+                  animation: roll .9s ease-in-out infinite;
+                  fill:lighten($font,30);
+                }
+
+                @keyframes roll {
+                  0%{
+                    transform:rotate(0deg);
+                  }
+                  100%{
+                    transform: rotate(360deg);
+                  }
+                }
+                .member{
+                  width: 100%;
+                  transition:.3s ease-in;
+                  display: flex;
+                  padding:.4rem .7rem;
+                  cursor: pointer;
+                  font-size: .9rem;
+
+                  &:hover{
+                    background-color: $blue-gray;
+                  }
+
+                  .name {
+                    margin: 0 .4rem
+                  }
+
+                  .type{
+                    align-self: center;
+                    background-color: lighten($success,20);
+                    color:$font;
+                    margin-left: 2rem;
+                    font-size: .65rem;
+                    border-radius: 20px;
+                    height: fit-content;
+                    padding: .05rem .8rem;
+                  }
+
+                  .avatar{
+                    align-self: center;
+                    margin:0 .4rem;
+                    background-color: $primary;
+                    color:$main;
+                  }
+                }
+              }
             }
           }
 
