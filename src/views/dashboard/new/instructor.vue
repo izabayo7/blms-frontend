@@ -112,6 +112,7 @@
           <v-row v-if="submission_statistics" class="pa-0 px-md-6 pa-xl-0 pa-lg-0">
             <v-col class="col-12 col-md-6 pt-0">
               <small-card
+                  :width="140"
                   :data="{
                   start: 'Grade-book',
                   end: 'Marking status',
@@ -124,6 +125,7 @@
             </v-col>
             <v-col class="col-12 col-md-6 pt-0">
               <small-card
+                  :width="140"
                   :data="{
                   start: 'Performance',
                   end: 'Overall success score',

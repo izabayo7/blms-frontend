@@ -80,7 +80,7 @@
             class="my-chart"
             :class="{'ml-n6' : data === undefined}"
             :width="width+'px'"
-            height="100px"
+            :height="width+'px'"
             :options="chartOptions"
             :series="[data.total,100-data.total]"
         ></chart>
@@ -176,10 +176,14 @@ export default {
         donut: {
           labels: {
             show: true,
-            value: {
-              show: true
+            name:{
+              show: false
             },
-            label: 'test'
+            total: {
+              show: true,
+              label: '',
+              formatter: () => this.data.total + '%'
+            },
           }
         }
       }
