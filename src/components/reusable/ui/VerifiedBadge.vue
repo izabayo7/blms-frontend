@@ -12,6 +12,14 @@
     }
 </script>
 
-<style scoped>
-
+<style lang="scss" scoped>
+.my-verified-badge{
+    .verified-badge-container{
+        .icon{
+            svg{
+                transform: scale(.8);
+            }
+        }
+    }
+}
 </style>
