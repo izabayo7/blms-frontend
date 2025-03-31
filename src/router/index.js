@@ -119,51 +119,33 @@ const routes = [
         path: '/register/users',
         name: 'Register Users',
         component: () =>
-            import('@/components/registration/users/panel.vue'),
-        meta: {
-            allowAnonymous: false
-        }
+            import('@/components/registration/users/panel.vue')
     }, {
         path: '/register/users/student',
         name: 'Register Student',
         component: () =>
-            import('@/components/registration/users/index.vue'),
-        meta: {
-            allowAnonymous: false
-        }
+            import('@/components/registration/users/index.vue')
     }, {
         path: '/register/users/instructor',
         name: 'Register Instructor',
         component: () =>
-            import('@/components/registration/users/index.vue'),
-        meta: {
-            allowAnonymous: false
-        }
+            import('@/components/registration/users/index.vue')
     }, {
         path: '/recover-password',
         name: 'Recover-Password',
         component: () =>
-            import('@/components/recover-password.vue'),
-        meta: {
-            allowAnonymous: false
-        }
+            import('@/components/recover-password.vue')
     },
     {
         path: '/register/users/admin',
         name: 'Register Admin',
         component: () =>
-            import('@/components/registration/admin/admin.vue'),
-        meta: {
-            allowAnonymous: false
-        }
+            import('@/components/registration/admin/admin.vue')
     }, {
         path: '/register/faculty',
         name: 'Register Faculty',
         component: () =>
-            import('@/components/registration/faculty/index.vue'),
-        meta: {
-            allowAnonymous: false
-        }
+            import('@/components/registration/faculty/index.vue')
     },
     {
         path: '/classes',
@@ -230,13 +212,13 @@ router.beforeEach((to, from, next) => {
                 redirect: to.fullPath
             }
         })
-    } 
+    }
     // protect login page if user is logged in
     else if (to.path === '/login' && store.state.isLoggedIn) {
         next({
-            path: `/${store.state.user.category === 'Student' || store.state.user.category === 'Instructor' ? 'courses' : 'dashboard'}`,
+            path: `/${store.state.user.category === 'Student' || store.state.user.category === 'Instructor' ? 'courses' : 'users'}`,
         })
-    } 
+    }
     // go to the requested route
     else {
         next()
