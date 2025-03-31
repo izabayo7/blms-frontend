@@ -50,18 +50,18 @@ export default {
         //add incoming message
         ADD_INCOMING_MESSAGE(state, newMessage) {
 
-            const id = newMessage.group ? newMessage.group : newMessage.sender._id
+            const id = newMessage.group ? newMessage.group : newMessage.sender.user_name
             console.log(newMessage)
             //get last message from stored conversation
             store.dispatch('chat/lastMessageInCertainChatMessages', id).then(({ lastMessage, groupIndex, userIndex }) => {
 
-                console.log(lastMessage,userIndex,groupIndex)
+                console.log(lastMessage, userIndex, groupIndex)
                 //if conversation was found and message not duplicated
                 if (userIndex === undefined || lastMessage._id === newMessage._id)
                     return
 
                 //full names of the one who is sending messsage
-                let incomingName = `${newMessage.sender.surName} ${newMessage.sender.otherNames}`
+                let incomingName = `${newMessage.sender.sur_name} ${newMessage.sender.other_names}`
                 //user conversation between sender and receiver
                 let userMessages = state.loadedMessages[userIndex].conversation
                 //if conversation was found
@@ -69,15 +69,15 @@ export default {
                     // if the last sender is the receiver
                     if (userMessages[groupIndex].from.toLowerCase() === 'me') {
                         //store it as new set of message conversation
-                        userMessages.push({ from: incomingName, messages: [newMessage]})
+                        userMessages.push({ from: incomingName, image: newMessage.sender.profile, messages: [newMessage] })
                         //else append to the current messages
                     } else {
                         //if the last sender is the same as new message sender
-                        console.log(lastMessage.sender,newMessage.sender._id, lastMessage.sender === newMessage.sender._id)
-                        if(lastMessage.sender === newMessage.sender._id || lastMessage.sender._id === newMessage.sender._id){
+                        console.log(lastMessage.sender, newMessage.sender._id, lastMessage.sender === newMessage.sender._id)
+                        if (lastMessage.sender === newMessage.sender._id || lastMessage.sender._id === newMessage.sender._id) {
                             userMessages[userMessages.length - 1].messages.push(newMessage)
                         } else {
-                            userMessages.push({from:incomingName,messages:[newMessage]})
+                            userMessages.push({ from: incomingName, messages: [newMessage] })
                         }
                     }
                 }
@@ -100,7 +100,7 @@ export default {
             })
 
             //put conversation on the first place
-            store.commit('chat/CHANGE_CONVERSATION_STAND',newMessage)
+            store.commit('chat/CHANGE_CONVERSATION_STAND', newMessage)
         },
         //store the message that we sent
         ADD_ONGOING_MESSAGE(state, newMessage) {
@@ -137,7 +137,7 @@ export default {
             })
 
             //put conversation on the first place
-            store.commit('chat/CHANGE_CONVERSATION_STAND',newMessage)
+            store.commit('chat/CHANGE_CONVERSATION_STAND', newMessage)
 
         },
         RESET_STATE(state) {
@@ -145,36 +145,36 @@ export default {
         },
 
         //chenge msg status on read
-        CHANGE_MESSAGE_READ_STATUS(state){
-            let idx ;
+        CHANGE_MESSAGE_READ_STATUS(state) {
+            let idx;
 
             //find conversation of who wa are chatting with
-            state.incomingMessages.map((val,i) =>{
+            state.incomingMessages.map((val, i) => {
                 if (val.id === state.currentDisplayedUser.id) idx = i;
             })
 
             // if found then unread messages
-            if(idx) state.incomingMessages[idx].unreadMessagesLength = 0;
+            if (idx) state.incomingMessages[idx].unreadMessagesLength = 0;
         },
 
         // change conversation to first if new messeage is sent or received
-        CHANGE_CONVERSATION_STAND(state,msg){
+        CHANGE_CONVERSATION_STAND(state, msg) {
             let idx;
             let id = msg.sender._id;
 
             let message = {
-                content:msg.content,
-                sender:msg.sender._id,
-                time:msg.createdAt
+                content: msg.content,
+                sender: msg.sender._id,
+                time: msg.createdAt
             }
 
             // find the index of the incoming message
-            state.incomingMessages.map((val,i) => {
-                if(val.id === id) idx = i
+            state.incomingMessages.map((val, i) => {
+                if (val.id === id) idx = i
             })
 
-            if(idx){
-                state.incomingMessages.splice(0,0,state.incomingMessages.splice(idx,1)[0])
+            if (idx) {
+                state.incomingMessages.splice(0, 0, state.incomingMessages.splice(idx, 1)[0])
                 state.incomingMessages[0].last_message = message
             }
 
@@ -202,11 +202,11 @@ export default {
         },
         loadIncomingMessages({ getters, state }) {
             // get contacts new style
-            getters.socket.emit('request_user_contacts');
+            getters.socket.emit('message/contacts');
 
             // Get contacts new style
-            getters.socket.on('receive_user_contacts', ({ contacts }) => {
-                // console.log(contacts)
+            getters.socket.on('res/message/contacts', ({ contacts }) => {
+                console.log(contacts)
                 state.incomingMessages = contacts
                 emit('incoming_message_initially_loaded')
                 console.log(state.incomingMessages)
@@ -219,15 +219,16 @@ export default {
             // get messages
             //first check if we have ongoing requested data with the same id as this
             if (state.request.id !== id) {
-
-                getters.socket.emit('request_conversation', { conversation_id: id });
+                console.log('aha')
+                getters.socket.emit('message/conversation', { conversation_id: id });
                 state.request.ongoing = true
                 state.request.id = id
             }
 
 
             // Get messages
-            getters.socket.on('receive_conversation', ({ conversation }) => {
+            getters.socket.on('res/message/conversation', ({ conversation }) => {
+                console.log(conversation)
                 //check if returned conversation object has data
                 if (conversation.length > 0) {
                     commit('STORE_LOADED_MESSAGES', { username: id, conversation: conversation })
@@ -268,11 +269,11 @@ export default {
     getters: {
         // connect to socket from sever side
         socket() {
-            if(io.socket) io.socket.removeAllListeners()
+            if (io.socket) io.socket.removeAllListeners()
 
             return io(process.env.VUE_APP_api_service_url, {
                 query: {
-                    id: user.state.user._id // username of the connected user
+                    user_name: user.state.user.user_name // username of the connected user
                 }
             })
         },

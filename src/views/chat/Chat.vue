@@ -67,13 +67,6 @@ export default {
     on("message-received", () => {
       this.scrollChatToBottom();
     });
-    // Message from server
-    this.socket.on("receive-message", (message) => {
-      this.scrollChatToBottom();
-      if (this.loadedMessages.length > 0)
-        // if messages have loaded
-        this.$store.commit("chat/ADD_INCOMING_MESSAGE", message);
-    });
   },
 
   beforeMount() {

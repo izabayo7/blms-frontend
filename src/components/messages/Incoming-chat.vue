@@ -2,7 +2,11 @@
   <main class="incoming-chat" @click="handleClick">
     <!--    slot for profile picture-->
     <div class="pic col-xs-12 col-sm-2 col-md-3 col-lg-3">
-      <img v-if="data.image" :src="data.image" :alt="`${data.name}'s profile picture`"/>
+      <img
+        v-if="data.image"
+        :src="data.image"
+        :alt="`${data.name}'s profile picture`"
+      />
       <v-avatar v-else size="37" class="avatar">
         {{ data.name | computeText }}
       </v-avatar>
@@ -50,9 +54,9 @@ export default {
     read() {
       return this.formatedIncomingMessagesLength <= 0;
     },
-    active(){
-      return this.$route.params.username === this.data.id
-    }
+    active() {
+      return this.$route.params.username === this.data.id;
+    },
   },
   methods: {
     handleClick() {
@@ -72,7 +76,7 @@ export default {
   mounted() {
     let timeout = undefined;
 
-    this.socket.on("typing", (typist) => {
+    this.socket.on("message/typing", (typist) => {
       //if the typist id and this incoming chat id are the same
       if (this.data.id === typist) {
         // console.log(typist)
@@ -84,13 +88,20 @@ export default {
         }, 5000);
       }
     });
+    //when message came stop typing
+    this.socket.on("message/new", (message) => {
+      //if the typist id and this incoming chat id are the same
+      if (this.data.id === message.sender.user_name) {
+        this.typing = false;
+      }
+    });
   },
 };
 </script>
 
 <style lang="scss" scoped>
-.active-chat{
-  border-left:4px solid $primary;
+.active-chat {
+  border-left: 4px solid $primary;
 }
 .incoming-chat {
   background-color: $main;
@@ -99,7 +110,7 @@ export default {
   padding: 0.5rem;
   margin-top: 0.3rem;
   cursor: pointer;
-  transition: .1s ease-out;
+  transition: 0.1s ease-out;
 
   .pic {
     align-self: center;
@@ -115,9 +126,8 @@ export default {
       margin: auto;
     }
 
-    .avatar{
-      margin: auto ;
-
+    .avatar {
+      margin: auto;
     }
   }
 

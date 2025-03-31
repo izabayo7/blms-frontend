@@ -18,7 +18,7 @@
           receiving: !msgGoing(msgs.from),
         }"
       >
-<!--        <div class="unread-indicator"><hr /></div>-->
+        <!--        <div class="unread-indicator"><hr /></div>-->
         <!--        picture of the message sender-->
         <div class="picture">
           <img
@@ -33,8 +33,8 @@
         <!--        list of messages sent or received-->
         <div class="msgs">
           <div class="msg" v-for="(msg, i) in msgs.messages" :key="i">
-<!--            //for better html elements readability-->
-            <div :inner-html.prop="msg.content | urlify"/>
+            <!--            //for better html elements readability-->
+            <div :inner-html.prop="msg.content | urlify" />
           </div>
         </div>
       </div>
@@ -53,7 +53,6 @@
 </template>
 
 <script>
-
 import { mapState, mapGetters, mapMutations } from "vuex";
 // import {on} from "@/services/event_bus";
 import { chatMixins } from "@/services/mixins";
@@ -67,47 +66,45 @@ export default {
   data() {
     return {
       typing: false,
-
     };
   },
   computed: {
-    ...mapState("chat", ["currentDisplayedUser",'incomingMessages']),
+    ...mapState("chat", ["currentDisplayedUser", "incomingMessages"]),
     ...mapGetters("chat", ["socket"]),
   },
   methods: {
-    ...mapMutations('chat',['CHANGE_MESSAGE_READ_STATUS']),
+    ...mapMutations("chat", ["CHANGE_MESSAGE_READ_STATUS"]),
     // is message going or coming
     msgGoing(owner) {
       return owner && owner.toLowerCase() === "me";
     },
     //read messages
-    readMessages(){
-      const e = document.getElementById('my-chat-messaging')
-      const scrollHeight = e.scrollHeight - e.offsetHeight //scrollable length
-      const scrollTop = e.scrollTop //current scrolled length
+    readMessages() {
+      const e = document.getElementById("my-chat-messaging");
+      const scrollHeight = e.scrollHeight - e.offsetHeight; //scrollable length
+      const scrollTop = e.scrollTop; //current scrolled length
 
       //if the are no more space to scroll means we are on bottom
       //send event that all messages read
-      if(scrollTop === scrollHeight){
+      if (scrollTop === scrollHeight) {
         //emit on server that we read all messages
         this.socket.emit("all_messages_read", {
-          sender: this.currentDisplayedUser.id
+          sender: this.currentDisplayedUser.id,
         });
 
         //mark messages in front end that we read them
-        this.CHANGE_MESSAGE_READ_STATUS(this.currentDisplayedUser.id)
+        this.CHANGE_MESSAGE_READ_STATUS(this.currentDisplayedUser.id);
       }
-    }
-
-},
+    },
+  },
   mounted() {
     // Someone typing to me
     let timeout = undefined;
 
-    this.socket.on("typing", (typist) => {
-        if(this.currentDisplayedUser.is_group){
-          const user = this.currentDisplayedUser.members.some(el => el._id === typist)
-        }
+    this.socket.on("message/typing", (typist) => {
+      if (this.currentDisplayedUser.is_group) {
+        // const user = this.currentDisplayedUser.members.some(el => el._id === typist)
+      }
       //if the typist is the one we are chatting with
       if (this.currentDisplayedUser.id === typist) {
         this.typing = true;
@@ -120,18 +117,18 @@ export default {
         }, 5000);
 
         this.scrollChatToBottom(); //scroll chat to bottom
-        this.CHANGE_MESSAGE_READ_STATUS(this.currentDisplayedUser.id) //read all messages
+        this.CHANGE_MESSAGE_READ_STATUS(this.currentDisplayedUser.id); //read all messages
       }
     });
 
     //track scroll so that we can determine if use has read new messages
-    let scrollableDiv = document.getElementById('my-chat-messaging')
-    console.log(scrollableDiv.offsetHeight,scrollableDiv.scrollTop)
-    scrollableDiv.addEventListener('scroll',this.readMessages)
+    let scrollableDiv = document.getElementById("my-chat-messaging");
+    console.log(scrollableDiv.offsetHeight, scrollableDiv.scrollTop);
+    scrollableDiv.addEventListener("scroll", this.readMessages);
 
-    //when new message is received scroll to the bottom
-    this.socket.on("receive-message", () => {
-     this.typing = false;
+    //when message came stop typing
+    this.socket.on("message/new", (message) => {
+      this.typing = false;
     });
 
     /*
@@ -150,7 +147,7 @@ export default {
   overflow: auto;
   position: relative;
   height: 100%;
-  scrollbar-track-color:transparent ;
+  scrollbar-track-color: transparent;
   scrollbar-face-color: red;
 
   @include scroll-bar;
@@ -274,8 +271,8 @@ export default {
           color: $main;
           border-radius: 15px 0 0 15px;
 
-          div{
-            color:inherit;
+          div {
+            color: inherit;
           }
           &:last-child {
             border-bottom-right-radius: 15px;

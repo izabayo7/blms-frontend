@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import {mapGetters, mapMutations, mapState} from "vuex";
+import { mapGetters, mapMutations, mapState } from "vuex";
 import { chatMixins } from "@/services/mixins";
 
 export default {
@@ -11,12 +11,12 @@ export default {
   mixins: [chatMixins],
   computed: {
     ...mapGetters("chat", ["socket"]),
-    ...mapState("chat", ["currentDisplayedUser"]),
+    ...mapState("chat", ["currentDisplayedUser", "loadedMessages"]),
   },
   methods: {
     ...mapMutations("notification", ["addNotification"]),
     ...mapMutations("courses", ["addCourse"]),
-    ...mapMutations('chat',['CHANGE_MESSAGE_READ_STATUS']),
+    ...mapMutations("chat", ["CHANGE_MESSAGE_READ_STATUS"]),
   },
   mounted() {
     // listen to new notifications
@@ -29,17 +29,31 @@ export default {
     });
 
     // listen to if the new message was sent
-    this.socket.on("message-sent", (message) => {
-      console.log('in index.js')
+    this.socket.on("message/sent", (message) => {
+      console.log("in index.js");
       setTimeout(this.scrollChatToBottom, 1);
       this.$store.commit("chat/ADD_ONGOING_MESSAGE", message);
     });
 
     //when new message is received scroll to the bottom
-    this.socket.on("receive-message", () => {
+    this.socket.on("message/new", () => {
       //scroll to bottom
-      setTimeout(this.scrollChatToBottom,1)
-      this.CHANGE_MESSAGE_READ_STATUS(this.currentDisplayedUser.id) //read all messages
+      setTimeout(this.scrollChatToBottom, 1);
+      this.CHANGE_MESSAGE_READ_STATUS(this.currentDisplayedUser.id); //read all messages
+    });
+
+    // Message from server
+    this.socket.on("message/new", (message) => {
+      this.scrollChatToBottom();
+      if (this.loadedMessages.length > 0)
+        // if messages have loaded
+        this.$store.commit("chat/ADD_INCOMING_MESSAGE", message);
+    });
+
+    //handle errors
+    this.socket.on("error", (error) => {
+      console.log(error);
+      alert(error);
     });
   },
 };
