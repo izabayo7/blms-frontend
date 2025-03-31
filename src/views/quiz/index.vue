@@ -194,17 +194,7 @@
                     {{ item.status === 'DRAFT' ? 'Publish' : 'Un publish' }}
                   </div>
                 </div>
-                <div @click.stop="
-                  set_modal({
-                    template: 'action_confirmation',
-                    method: {
-                      action: 'quiz/change_assignment_status',
-                      parameters: { id: item._id, status: item.status === 'DRAFT' ? 'Published' : 'DRAFT' },
-                    },
-                    title: 'Change Assignment Status',
-                    message: `Are you sure you want to ${item.status === 'DRAFT' ? 'Publis' : 'Un publish'} this assignment?`,
-                  })
-                " class="tooltip">
+                <div @click.stop="$router.push(`/assignments/edit/${item._id}`)" class="tooltip">
                   <svg width="39" height="39" viewBox="0 0 39 39" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <circle cx="19.5" cy="19.5" r="19.5" fill="#DEDEDE"/>
                     <circle cx="19.5" cy="19.5" r="19.5" stroke="#DEDEDE"/>

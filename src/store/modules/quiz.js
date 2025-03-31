@@ -33,7 +33,7 @@ export default {
         set_selected_quiz(state, id) {
             state.selected_quiz = id
         },
-        addAssignment(state,assignment){
+        addAssignment(state, assignment) {
             state.assignments.data.unshift(assignment)
         },
         RESET_STATE(state) {
@@ -62,6 +62,16 @@ export default {
                     //announce that data have been loaded
                     state.assignments.loaded = true
                 })
+            }
+        },
+        async getAssignment({state}, {id}) {
+            // when quiz is not loaded fetch quizes
+            if (!state.quiz.loaded) {
+                const d = await apis.get(`assignments/${id}`)
+                return d.data.data
+            } else {
+                const res = state.assignments.filter(x => x._id === id)
+                return res[0]
             }
         },
         //create a quiz
