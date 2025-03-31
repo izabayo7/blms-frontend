@@ -607,7 +607,7 @@ export default {
     this.ws = new WebSocket('wss://' + host + '/kurious_stream' + `?token=${this.$session.get("jwt")}`);
 
     this.ws.addEventListener('open', () => {
-      self.register();
+      // self.register();
     })
 
     this.ws.onerror = function (evt) {
@@ -1382,6 +1382,45 @@ export default {
               }
             }
           }
+
+          .my-reply-comment .my-reply-comment-container .reply-comment {
+            .input-holder[data-v-645d75c2] {
+              border-radius: 6px;
+              border: 0.56px solid #9A9A9A
+            }
+
+            input[type=text] {
+              border: none;
+              outline: none;
+              -webkit-box-shadow: none;
+              box-shadow: none;
+              font-family: Montserrat;
+              font-style: normal;
+              font-weight: normal;
+              font-size: 10.1571px;
+              line-height: 12px;
+              /* identical to box height */
+              margin: 0;
+
+              color: #ABABAB;
+
+            }
+
+            .send {
+              display: flex;
+              align-items: center;
+
+              svg {
+                width: 30px;
+                display: none;
+
+                &.live {
+                  display: initial;
+                }
+              }
+            }
+          }
+
         }
       }
     }
