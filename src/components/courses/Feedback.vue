@@ -164,6 +164,8 @@ export default {
         },
         content: content,
       });
+
+      // add the feedback in state
       this.add_answer_feedback({
         answer_id: this.answerId,
         feedback: response.data.data,
@@ -183,8 +185,14 @@ export default {
       const response = await Apis.update("comment", this.feedbackId, {
         content: content,
       });
+
+      // update the feedback in state
+      this.add_answer_feedback({
+        answer_id: this.answerId,
+        feedback: response.data.data,
+      });
+
       this.message = "feedback successfuly updated";
-      console.log(response);
     },
     async removeFeedback() {
       const response = await Apis.delete("comment", this.feedbackId);
