@@ -21,7 +21,7 @@
             what i need from you. Thanks</p>"
             />
           </div>
-          <div v-if="1===2" class="attachment">
+          <div v-if="2===2" class="attachment">
             <div class="file-container row">
               <div class="indicator mb-2 col-12 pa-0">
                 <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -92,7 +92,7 @@
               </div>
             </div>
           </div>
-          <div class="text-input">
+          <div v-else class="text-input">
             <Editor
                 ref="editor"
                 mode="edit"
