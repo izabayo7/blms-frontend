@@ -107,7 +107,7 @@
                 rounded
                 text
                 class="new-active-btn mb-6"
-                @click="validate"
+                @click="validate()"
                 >update Course</v-btn
               >
               <v-btn
@@ -154,6 +154,11 @@ export default {
         this.selectedFacultyCollegeYearName
       )._id;
     },
+  },
+  watch:{
+    error(){
+      console.log(this.error)
+    }
   },
   methods: {
     ...mapActions("courses", ["findCourseByName", "updateCourse"]),
