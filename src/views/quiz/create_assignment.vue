@@ -277,6 +277,8 @@ export default {
         return this.error = "Invalid pass marks"
       if (this.assignment.dueDate === "")
         return this.error = "dueDate is required"
+      if (new Date(this.assignment.dueDate) < new Date())
+        return this.error = "dueDate is invalid (select a time in the future)"
       if (this.assignment.submissionMode === 'fileUpload' && !this.allowed_submission_file_types.length)
         return this.error = "Please select allowed submission file types"
       this.saveAssignment()
