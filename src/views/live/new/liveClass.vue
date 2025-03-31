@@ -155,7 +155,7 @@
             </button>
           </div>
           <div class="live-class--action end-class">
-            <button>
+            <button @click="leaveRoom">
             <span class="icon">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none"
                                                                                                        d="M0 0h24v24H0z"/><path
@@ -485,7 +485,7 @@ export default {
       this.audioEnabled = !this.audioEnabled;
     },
     leaveRoom() {
-      alert('leaving room')
+      alert('Are you sure you want to leave this class ?')
       this.sendMessage({
         id: 'leaveRoom'
       });
@@ -494,10 +494,8 @@ export default {
         this.participants[key].dispose();
       }
 
-      document.getElementById('join').style.display = 'block';
-      document.getElementById('room').style.display = 'none';
-
       this.ws.close();
+      this.$router.push('/')
     },
 
    async receiveVideo(sender) {
