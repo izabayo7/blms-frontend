@@ -70,7 +70,9 @@
           <p class="lable font-weight-medium mt-5">User name</p>
           <input v-model="user.user_name" type="text" class="course_input" />
         </div>
-        <div v-if="user.category.name == 'STUDENT'" class="title text-h5 mt-5">Enrolled courses</div>
+        <div v-if="user.category.name == 'STUDENT'" class="title text-h5 mt-5">
+          Enrolled courses
+        </div>
         <div v-if="user.category.name == 'STUDENT'" class="enrolled_courses">
           <v-row>
             <v-col class="col-12 col-md-8">
@@ -109,7 +111,7 @@
             <v-btn
               :color="primary"
               class="white--text mt-3 px-6 py-6 profile_button"
-              @click="pickfile()"
+              @click="validate()"
               >Save changes</v-btn
             ></v-col
           >
@@ -133,27 +135,18 @@ import colors from "@/assets/sass/imports/_colors.scss";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import axios from "axios";
+import Apis from "@/services/apis";
 import { mapGetters, mapActions } from "vuex";
 
 export default {
   name: "UserProfile",
   data: () => ({
     tab: null,
+    error: "",
     primary: colors.primary,
     tabs: [
       { tab: "General Info", content: "Tab 1 Content" },
       { tab: "Security", content: "Tab 2 Content" },
-    ],
-    passwordRules: [
-      (v) => !!v || "Password is required",
-      (v) =>
-        (/([ !"#$%&'()*+,-./:;<=>?@[\]^_`{|}~])/.test(v) &&
-          /(?=.*\d)/.test(v) &&
-          /(?=.*[A-Z])/.test(v) &&
-          /(?=.*[a-z])/.test(v)) ||
-        "Password must contain uppercase characters, lowercase characters, numbers and symbols",
-      (v) => (v && v.length >= 8) || "Password must atleast have 8 characters",
-      (v) => (v && v.length <= 15) || "Password must not exceed 15 characters",
     ],
     passwordMatch: [
       (v) =>
@@ -183,6 +176,62 @@ export default {
     },
     handleFileUpload() {
       this.user.profile = this.$refs.file.files[0];
+    },
+    validate() {
+      console.log("ahoooooo");
+      if (this.user.sur_name === "") {
+        return (this.error = "sur_name is required");
+      } else if (this.user.sur_name.length < 3) {
+        return (this.error = "sur_name is too short");
+      }
+      if (this.user.other_names === "") {
+        return (this.error = "other_names is required");
+      } else if (this.user.other_names.length < 3) {
+        return (this.error = "other_names is too short");
+      }
+
+      if (this.user.email === "") {
+        return (this.error = "email is required");
+      } else if (this.user.email.length < 3) {
+        return (this.error = "email is too short");
+      }
+      if (this.user.phone === "") {
+        return (this.error = "phone is required");
+      } else if (this.user.phone.length < 3) {
+        return (this.error = "phone is too short");
+      }
+      if (this.user.user_name === "") {
+        return (this.error = "user_name is required");
+      } else if (this.user.user_name.length < 3) {
+        return (this.error = "user_name is too short");
+      }
+
+      this.saveChanges();
+    },
+    async saveChanges() {
+      const response = await Apis.update_user({
+        sur_name: this.user.sur_name,
+        other_names: this.user.other_names,
+        phone: this.user.phone,
+        email: this.user.email,
+        user_name: this.user.user_name,
+      });
+
+      // set the token in the session
+      this.$session.set("jwt", response.data.data);
+
+      const user = await jwt.decode(this.$session.get("jwt"));
+      const category = user.category.name;
+      // keep the decoded user in vuex
+      this.$store.dispatch("user/setUser", user);
+
+      if (category === "STUDENT" || category === "INSTRUCTOR") {
+        this.$router.push("/courses");
+      }
+      // others land to the dashboard
+      else if (category === "ADMIN") {
+        this.$router.push("/administration");
+      }
     },
     async updateProfile() {
       if (this.oldPassword !== "") {

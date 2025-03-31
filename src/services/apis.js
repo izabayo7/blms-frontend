@@ -33,6 +33,10 @@ export default {
     update(path, id, body, config) {
         return Api().put(`/${path}/${id}`, body, config)
     },
+    // put requests
+    update_user(body) {
+        return Api().put(`/user`, body)
+    },
     // delete requests
     delete(path, id) {
         return Api().delete(`/${path}/${id}`)

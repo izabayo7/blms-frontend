@@ -1,5 +1,4 @@
 import apis from "@/services/apis";
-import jwt from "jsonwebtoken";
 
 const getDefaultState = () => ({
     users: {
@@ -61,31 +60,6 @@ export default {
                     state.users.data.push(userObj)
                 }
             })
-        },
-        //update a user
-        updateUser({ dispatch }, { user }) {
-
-            apis.update('user', user).then(async d => {
-                d.data = d.data.data
-
-                // set the token in the session
-                this.$session.set("jwt", d.data);
-
-                const user = await jwt.decode(this.$session.get("jwt"));
-                const category = user.category.name;
-                // keep the decoded user in vuex
-                dispatch("user/setUser", user);
-
-                if (category === "STUDENT" || category === "INSTRUCTOR") {
-                    this.$router.push("/courses");
-                }
-                // others land to the dashboard
-                else if (category === "ADMIN") {
-                    this.$router.push("/administration");
-                }
-
-            })
-
         },
         searchUser({ state }, { query, page, limit }) {
             let url = `user/search?data=${query}`
