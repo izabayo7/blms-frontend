@@ -1,6 +1,7 @@
 // resize the modal
 .v-dialog:not(.v-dialog--fullscreen) {
-  min-height: 432px !important;
+  //max-height: 432px !important;
+  height: fit-content!important;
   width: 100% !important;
   .dialog-body {
     height: 100%;
