@@ -40,7 +40,7 @@
                   placeholder="Type your answer here"
                   class="answer-field"
                 ></textarea>
-                <div v-else class="">
+                <div v-else class="d-block d-md-flex flex-row-reverse">
                   <div v-if="question.type.includes('select')" class="ml-4">
                     <div class="choice_status vertically--centered">
                       <svg
@@ -607,13 +607,15 @@ export default {
   font-size: 1.6rem;
 }
 .right_choice {
-  background: linear-gradient(#d9f1d8 0%, #85e97d 100%);
+  //background: linear-gradient(#d9f1d8 0%, #85e97d 100%);
+  background-color: #85e97d;
 }
 .wrong_choice {
-  background: linear-gradient(
-    rgba(255, 0, 0, 0.53) 0%,
-    rgba(249, 93, 93, 0.53) 100%
-  );
+  //background: linear-gradient(
+  //  rgba(255, 0, 0, 0.53) 0%,
+  //  rgba(249, 93, 93, 0.53) 100%
+  //);
+  background-color: rgba(255, 0, 0, 0.53);
   box-shadow: 0px 6px 3px rgba(0, 0, 0, 0.16);
 }
 .marks {
@@ -623,6 +625,12 @@ export default {
   color: $primary;
   svg {
     fill: $primary;
+  }
+}
+/* Portrait phones and smaller */
+@media (max-width: 700px) {
+  .options {
+    width: 100%;
   }
 }
 </style>
