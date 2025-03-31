@@ -1,5 +1,3 @@
-
-
 <template>
 <div class="my-button" :class="{rounded:rounded, fill:fill}">
   <div @click="clicked" class="button-container " :class="classList">
