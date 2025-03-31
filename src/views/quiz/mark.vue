@@ -35,7 +35,7 @@
                     <span class="ml-1">Click on file to open</span>
                   </div>
                   <div class="pick-file file-picked col-12 col-md-8 d-flex px-4">
-                    <button @click="downloadAttachment(`${backend_url}/api/quiz_submission/${selected_quiz_submission._id}/attachment/${attempt.answers[i].src}?token=${$session.get('jwt')}`)" class="file-name">
+                    <button @click="downloadAttachment(`${backend_url}/api/quiz_submission/${selected_quiz_submission._id}/attachment/${attempt.answers[i].src}/view?token=${$session.get('jwt')}`)" class="file-name">
                       {{ attempt.answers[i].src }}
                     </button>
                     <div class="file-size">
