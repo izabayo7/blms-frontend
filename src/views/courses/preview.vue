@@ -3,7 +3,9 @@
   <section class="my-container">
     <!--      this is for student preview-->
     <v-row v-if="userCategory === 'STUDENT'">
-      <div class="white back-container"><back class="ma-6 mb-1 ml-16" to="/courses"/></div>
+      <div class="white back-container">
+        <back class="ma-6 mb-1 ml-16" to="/courses"/>
+      </div>
       <v-col v-if="!loaded" class="col-12">
         <div class="ssc elevation-0 ssc-card student-card-skeleton ml mt-10">
           <div class="ssc-wrapper d-md-flex justify-between ml">
@@ -296,6 +298,7 @@
               :name="course.name"
               :dateUploaded="course.createdAt | formatDate"
               :progress="course.progress"
+              :live="islive?"
           />
         </main>
       </v-col>
@@ -510,12 +513,14 @@
 <script>
 import {mapActions, mapGetters} from "vuex";
 import Api from "@/services/apis.js"
+import {calculateNearestLiveSession} from "@/services/global_functions"
 
 export default {
   name: "preview_course",
   data: () => ({
     panel1: true,
-    student_list: []
+    student_list: [],
+    nearestLiveSession: undefined
   }),
   components: {
     preview: () => import("@/components/courses/Preview"),
@@ -532,6 +537,18 @@ export default {
     loaded() {
       return this.course !== undefined;
     },
+    isLive() {
+      for (const i in course.chapters) {
+        if (this.course.chapters[i].live_sessions.length) {
+          if ((new Date(this.course.chapters[i].live_sessions[0].date) == new Date(new Date().toISOString().substring(0, 10)))) {
+            if (new Date(this.nearestLiveSession.date.replace("00:00", this.nearestLiveSession.time)) <= new Date(new Date().toGMTString())) {
+              return true;
+            }
+          }
+        }
+      }
+      return false;
+    }
   },
   watch: {
     $route() {
@@ -556,24 +573,29 @@ export default {
     async loadStudents() {
       const {data} = await Api.get(`course/${this.course._id}/attendants`)
       this.student_list = data.data
-    }
+    },
   },
   created() {
     this.findCourseByName({
       userCategory: this.userCategory.toLowerCase(),
       user_name: this.$store.state.user.user.user_name,
       courseName: this.$route.params.name,
-    });
+    }).then(() => {
+      this.nearestLiveSession = calculateNearestLiveSession(this.course)
+      console.log(this.nearestLiveSession)
+    })
   },
 };
 </script>
 <style lang="scss" scoped>
-.my-container{
+.my-container {
   padding: 40px;
 }
-.back-container{
+
+.back-container {
   width: 100%;
 }
+
 button.back {
   margin: 2rem;
   padding: 0.2rem 2rem;
@@ -895,7 +917,7 @@ button.back {
 
 /* Portrait phones and smaller */
 @media (max-width: 700px) {
-  .my-container{
+  .my-container {
     padding: 20px;
   }
   .instructor_preview {
@@ -947,9 +969,11 @@ button.back {
   .student main {
     margin-top: 22px;
     margin-bottom: 32px;
-    &.description{
+
+    &.description {
       padding-left: 0;
     }
+
     &.preview {
     }
 
