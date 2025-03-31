@@ -28,7 +28,7 @@
               <div class="faculty--information-cards d-flex justify-space-between">
 
 <!--                card 1-->
-                <router-link to="">
+                <router-link :to="`/faculties/${facultyId}/students`">
                   <div class="faculty--information-card__1 faculty--information-card">
                     <div class="faculty--information-card--wrapper d-flex flex-column align-center">
                       <div class="faculty--information-card--icon faculty--information-card--inner-row">
@@ -43,7 +43,7 @@
                 </router-link>
 
 <!--                card 2-->
-                <router-link to="">
+                <router-link :to="`/faculties/${facultyId}/groups`">
                   <div class="faculty--information-card__2 faculty--information-card">
                     <div class="faculty--information-card--wrapper d-flex flex-column align-center">
                       <div class="faculty--information-card--icon faculty--information-card--inner-row">
@@ -58,7 +58,7 @@
                 </router-link>
 
 <!--                card 3-->
-                <router-link to="">
+                <router-link :to="`/faculties/${facultyId}/courses`">
                   <div class="faculty--information-card__3 faculty--information-card">
                     <div class="faculty--information-card--wrapper d-flex flex-column align-center">
                       <div class="faculty--information-card--icon faculty--information-card--inner-row">
