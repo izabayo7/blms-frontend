@@ -1,4 +1,5 @@
 import Api from './server'
+import Vue from 'vue'
 import { logout } from "./global_functions";
 
 
@@ -22,16 +23,18 @@ Api.interceptors.response.use(function (response) {
 
 Api.interceptors.request.use((config) => {
     try {
-        //get token
-        const { jwt: token } = JSON.parse(localStorage.getItem('vue-session-key'))
+        if (Vue.prototype.$session.exists()) {
+            //get token
+            const { jwt: token } = JSON.parse(localStorage.getItem('vue-session-key'))
 
-        //add token to headers
-        config.headers = {
-            'Authorization': `Bearer ${token}`,
-            'Accept': 'application/json',
+            //add token to headers
+            config.headers = {
+                'Authorization': `Bearer ${token}`,
+                'Accept': 'application/json',
+            }
         }
-
         return config
+
     } catch (e) {
         console.log(e)
     }
@@ -49,8 +52,8 @@ export default {
         return Api.get(`/${url}`)
     },
     // generalised put for update
-    put(url,body,config){
-        return Api.put(`/${url}`,body,config)
+    put(url, body, config) {
+        return Api.put(`/${url}`, body, config)
     },
     // post requests
     create(path, body, config) {
