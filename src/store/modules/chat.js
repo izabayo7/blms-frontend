@@ -76,8 +76,21 @@ export default {
                 })
 
             store.dispatch('chat/findIndexOfUserInIncomingMessages',newMessage.sender._id).then(idx => {
+
                 if(idx === null){
-                    //to be done later
+                    let incoming_message = {
+                        id: "5f53daf9d143be03eb33291f",
+                        last_message: {
+                            content: "apuuu",
+                            sender: "5f4e6f620b53af31a0bdf202",
+                            time: "2020-09-28T15:32:03.542Z",
+
+                        },
+                        name: "Teta Gaella",
+                        unreadMessagesLength: 67,
+                    }
+                    console.log(incoming_message,state.incomingMessages)
+                    // state.incomingMessages.shift(incoming_message)
                 }else {
                     if(newMessage.sender._id === state.currentDisplayedUser.id)
                         state.incomingMessages[idx].unreadMessagesLength = 0
