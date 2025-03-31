@@ -329,11 +329,11 @@ import {mapGetters, mapMutations, mapState} from "vuex";
 
 export default {
   name: "Sidebar",
-  // watch:{
-  //   $route(){
-  //     this.socket.emit("messages/unread");
-  //   }
-  // },
+  watch:{
+    $route(){
+      this.socket.emit("messages/unread");
+    }
+  },
   computed: {
     ...mapState("sidebar_navbar", {state: "sidebar_expanded", unreads: "total_unread_messages"}),
     ...mapGetters("chat", ["socket"]),
