@@ -12,7 +12,8 @@ on:
 jobs:
   build:
     runs-on: self-hosted
-
+    env:
+      HOME: /root
     strategy:
       matrix:
         node-version: [14.x]
@@ -23,7 +24,6 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-      - run: who am i
       - run: yarn install
 #      - run: npm run build --if-present
       - run: yarn pm2
