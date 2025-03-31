@@ -361,6 +361,7 @@ export default {
     },
   },
   methods: {
+    ...mapActions("modal", ["set_modal"]),
     moveTooltip(e) {
       let tooltip = document.querySelector('.coupontooltip');
       tooltip.style.left = e.pageX + 'px';
@@ -376,6 +377,7 @@ export default {
           end: false
         })
       }
+      this.goFullscreen()
     },
     async uploadFile(index) {
       const formData = new FormData()
@@ -605,8 +607,31 @@ export default {
       //   }
       // });
     },
+    goFullscreen(){
+      var el = document.documentElement
+          , rfs = // for newer Webkit and Firefox
+          el.requestFullScreen
+          || el.webkitRequestFullScreen
+          || el.mozRequestFullScreen
+          || el.msRequestFullScreen
+      ;
+      if(typeof rfs!="undefined" && rfs){
+        rfs.call(el);
+      } else if(typeof window.ActiveXObject!="undefined"){
+        // for Internet Explorer
+        // eslint-disable-next-line no-undef
+        var wscript = new ActiveXObject("WScript.Shell");
+        if (wscript!=null) {
+          wscript.SendKeys("{F11}");
+        }
+      }
+      this.set_modal({
+        template: 'exam_closed_successfull',
+      })
+    }
   },
   created() {
+    document.querySelector('body').addEventListener('mouseenter',this.goFullscreen)
     function goodbye(e) {
       if (!e) e = window.event;
       //e.cancelBubble is supported by IE - this will kill the bubbling process.
@@ -619,7 +644,6 @@ export default {
         e.preventDefault();
       }
     }
-
     window.addEventListener('beforeunload', goodbye)
     document.addEventListener("visibilitychange", () => {
           if (document.visibilityState == "visible") {
