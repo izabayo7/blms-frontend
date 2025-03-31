@@ -11,7 +11,10 @@ const getDefaultState = () => ({
     selectedCourse: '',
     // the current chapter's id (the one we are viewing or editing)
     selectedChapter: '',
-    totalCommentsOnAChapter: ""   //total number of comments based on chapter
+    totalCommentsOnAChapter: "" ,  //total number of comments based on chapter
+    coursesByFaculty:{
+        data:""
+    }
 })
 
 export default {
@@ -62,6 +65,9 @@ export default {
         },
         RESET_STATE(state) {
             Object.assign(state, getDefaultState())
+        },
+        SET_COURSE_BY_FACULTY(state,{data}){
+            state.coursesByFaculty.data = data;
         }
     },
     actions: {
@@ -77,6 +83,15 @@ export default {
                 })
             }
         },
+
+        // get faculty courses
+        getCourseByFaculty({commit},{facultyId}){
+            apis.get(`course/faculty/${facultyId}`)
+                .then(({data:{data}}) => {
+                    commit('SET_COURSE_BY_FACULTY', {data})
+                })
+        },
+
         //get chapterMainContent from backend
         getChapterMainContent({ state, commit }, chapterId) {
             // set the selected chapter
@@ -500,6 +515,9 @@ export default {
         },
         totalComments: state => {
             return state.totalCommentsOnAChapter;
+        },
+        coursesByFaculty: state => {
+            return state.coursesByFaculty.data;
         }
     },
 }
