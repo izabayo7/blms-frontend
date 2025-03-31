@@ -42,7 +42,7 @@
                 View submissions
               </v-btn></v-col
             >
-            <v-col class="pa-0 pl-1 py-1">
+            <v-col class="pa-0 px-1 py-1">
               <v-btn
                 color="#02A617"
                 class="white--text"
