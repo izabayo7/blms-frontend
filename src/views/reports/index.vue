@@ -61,7 +61,7 @@
       <h3>Courses</h3>
       <v-data-table
         :headers="coursesHeaders"
-        :items="courses"
+        :items="activeCourses"
         sort-by="name"
         class="data-table"
       >
@@ -165,7 +165,10 @@ export default {
     },
     ...mapGetters("courses", ["courses"]),
     ...mapGetters("quiz_submission", ["quiz_submissions"]),
-    
+    // only display courses we started
+    activeCourses() {
+      return this.courses.filter((course) => course.progress);
+    },
   },
   methods: {
     ...mapActions("courses", ["getCourses"]),
