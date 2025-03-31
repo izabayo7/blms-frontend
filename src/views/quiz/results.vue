@@ -6,10 +6,15 @@
         <div class="title">{{ "Quiz name" }}</div>
       </div>
       <v-col class="col-12 col-md-7">
-        <div class="failed_test">{{ "Attempt Failed" }}</div>
+        <div v-if="1 == 1" class="passed_test">Success</div>
+        <div v-else class="failed_test">Attempt Failed</div>
         <div class="mt-3 d-flex marks_container">
           <div class="mr-12 label">Your score is</div>
-          <div class="marks">{{ "08 / 20" }}</div>
+          <div class="marks">{{ "18 / 20" }}</div>
+        </div>
+        <div v-if="1 == 1" class="mt-8 text_2">
+          <div>You have succeeded on this assesment</div>
+          <div>You may continue your course.</div>
         </div>
         <div class="actions mt-8">
           <button
@@ -29,46 +34,25 @@
           <div>The pass mark is 10/20</div>
           <div>You have 1 Attempt left</div>
         </div>
-        <div v-else class="mt-8 text_1">
-          <div>The pass mark is 10/20</div>
-          <div>
-            You have <b>{{ "1" }}Attempt</b> left
-          </div>
-        </div>
       </v-col>
       <v-col class="col-12 col-md-5">
         <div class="head_icon">
           <svg
-            v-if="$route.fullPath == '/quiz/timeout'"
+            v-if="2 == 1"
             xmlns="http://www.w3.org/2000/svg"
             width="299.333"
-            height="339.442"
-            viewBox="0 0 299.333 339.442"
+            height="299.333"
+            viewBox="0 0 299.333 299.333"
           >
             <path
               id="Icon_awesome-check-circle"
               data-name="Icon awesome-check-circle"
               d="M299.9,150.229A149.667,149.667,0,1,1,150.229.563,149.666,149.666,0,0,1,299.9,150.229ZM132.917,229.477,243.96,118.434a9.656,9.656,0,0,0,0-13.655L230.305,91.123a9.656,9.656,0,0,0-13.656,0l-90.56,90.559L83.809,139.4a9.657,9.657,0,0,0-13.656,0L56.5,153.057a9.656,9.656,0,0,0,0,13.655l62.764,62.763a9.656,9.656,0,0,0,13.656,0Z"
-              transform="translate(-0.563 39.546)"
-              fill="#14b52f"
-            />
-            <circle
-              id="Ellipse_255"
-              data-name="Ellipse 255"
-              cx="49.5"
-              cy="49.5"
-              r="49.5"
-              transform="translate(192.945 10.622)"
-              fill="#fff"
-            />
-            <path
-              id="Icon_open-timer"
-              data-name="Icon open-timer"
-              d="M24.268,0V12.134H36.4V12.5A42.5,42.5,0,1,0,84.938,54.6,41.215,41.215,0,0,0,81.9,39.435L70.862,44.046A29.2,29.2,0,0,1,72.8,54.724,30.335,30.335,0,1,1,42.469,24.389a29.66,29.66,0,0,1,10.678,1.941l4.126-11.406a50.807,50.807,0,0,0-8.736-1.941v-.728H60.67V.121h-36.4Zm60.67,14.075s-44.289,34.1-46.594,36.4a5.932,5.932,0,0,0,0,8.372,5.724,5.724,0,0,0,8.372,0c2.427-2.427,38.343-44.774,38.343-44.774Z"
-              transform="translate(206.708)"
+              transform="translate(-0.563 -0.563)"
               fill="#14b52f"
             />
           </svg>
+
           <svg
             v-else
             xmlns="http://www.w3.org/2000/svg"
@@ -353,6 +337,10 @@ export default {
     color: #f54040;
     font-size: 2.5rem !important;
   }
+  .passed_test {
+    color: #1cc83f;
+    font-size: 2.5rem !important;
+  }
   .marks_container {
     .label {
       font-size: 1.5rem;
@@ -399,6 +387,11 @@ export default {
   }
   .text_1 {
     width: 55%;
+    font-size: 1.2rem;
+    color: black;
+  }
+  .text_2 {
+    width: 75%;
     font-size: 1.2rem;
     color: black;
   }
