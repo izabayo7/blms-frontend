@@ -35,6 +35,10 @@ export default {
                 }
             }
         },
+        // add a new course
+        addCourse(state, value) {
+            state.courses.data.unshift(value)
+        },
         // update progress of a student in a course
         set_student_progress(state, { courseId, progress }) {
             for (const i in state.courses.data) {

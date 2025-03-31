@@ -754,6 +754,7 @@ button.back {
   flex-direction: row;
   justify-content: space-between;
   main {
+    overflow-wrap: anywhere;
     &.description {
       padding-left: 2rem;
 
