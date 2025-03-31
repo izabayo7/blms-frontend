@@ -1,6 +1,6 @@
 <template>
 <div class="my-button" :class="{rounded:rounded, fill:fill}">
-  <div @click="clicked" class="button-container " :class="classList">
+  <div @click="clicked" class="button-container " :class="classList +' ' + category " >
     <button :type="type">
       <slot name="content"></slot>
     </button>
@@ -9,6 +9,7 @@
 </template>
 
 <script>
+
 export default {
   name: "button-ui",
   props:{
@@ -16,12 +17,16 @@ export default {
     classList:{default:"px-10 py-3"},
     size:{type:Number,default:3},
     rounded:{default:false,type:Boolean},
-    fill:{default:false,type:Boolean}
+    fill:{default:false,type:Boolean},
+    category:{default:""}
+  },
+  data(){
+
   },
   methods:{
     clicked(e){
       this.$emit('click',e)
-    }
+    },
   }
 }
 </script>
@@ -35,6 +40,8 @@ export default {
     }
   }
 
+
+
   &.fill{
     .button-container{
       background-color:$primary;
@@ -44,7 +51,14 @@ export default {
         color:$main;
       }
     }
+
+    .warn{
+      background-color:$warn;
+    }
+
   }
+
+
 
   .button-container{
     border:2px solid $primary;
@@ -55,7 +69,9 @@ export default {
     justify-content: center;
     align-items: center;
 
-
+    &.warn{
+      border-color: $warn;
+    }
 
     button{
       display:flex;
