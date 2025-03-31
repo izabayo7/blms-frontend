@@ -255,9 +255,14 @@
           $vuetify.breakpoint.name == 'lg' ? 'fixed right-0' : ''
         }`"
       >
-        <v-row class="font-weight-black color-primary student_name mb-8">
-          {{ selected_quiz_submission.user.sur_name }}
-          {{ selected_quiz_submission.user.other_names }}
+        <v-row
+          class="font-weight-black student_name mb-8"
+          align-content="center"
+        >
+          <v-col class="col-10 mx-auto color-primary">
+            {{ selected_quiz_submission.user.sur_name }}
+            {{ selected_quiz_submission.user.other_names }}
+          </v-col>
         </v-row>
         <v-row class="mb-6">
           <div class="mr-3 title font-weight-bold">Total marks</div>
