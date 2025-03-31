@@ -1,20 +1,87 @@
 <template>
   <v-dialog id="kurious--dialog" v-model="visible" :persistent="!closable">
-    <div class="dialog-body invite-users">
-      <!--      <div class="close">-->
-      <!--        <svg-->
-      <!--          xmlns="http://www.w3.org/2000/svg"-->
-      <!--          viewBox="0 0 24 24"-->
-      <!--          width="24"-->
-      <!--          height="24"-->
-      <!--          @click="$emit('closeModal')"-->
-      <!--        >-->
-      <!--          <path fill="none" d="M0 0h24v24H0z" />-->
-      <!--          <path-->
-      <!--            d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm0-11.414L9.172 7.757 7.757 9.172 10.586 12l-2.829 2.828 1.415 1.415L12 13.414l2.828 2.829 1.415-1.415L13.414 12l2.829-2.828-1.415-1.415L12 10.586z"-->
-      <!--          />-->
-      <!--        </svg>-->
-      <!--      </div>-->
+    <input
+        ref="file"
+        type="file"
+        id="file"
+        accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        hidden
+        @change="handleFileUpload"
+    />
+    <div v-if="choice === 0" class="dialog-body invite-users">
+      <div class="d-flex align-items-center centered first">
+        <div class="d-flex">
+          <button class="add-email ml-auto send mr-4" @click="choice = 1">
+            Add users manually
+          </button>
+          <button class="add-email send" @click="choice = 2">
+            Invite users by email
+          </button>
+        </div>
+      </div>
+    </div>
+    <div v-if="choice===1 || choice===4" class="dialog-body invite-users">
+      <div v-show="saved_users.length === 0 && failedUsers.length === 0" class="pre-send">
+        <div class="mx-auto centered">
+          <div class="title">{{ choice === 4 ? 'Invite' : 'Create' }} users</div>
+          <div class="d-flex my-6">
+            <button class="add-email" @click="pickFile">Pick file</button>
+            <div class="filename ml-2 d-flex align-center">{{ file ? file.name : 'please pick a xlsx file' }}</div>
+          </div>
+          <div class="added-emails customScroll my-3">
+            The .xlsx file should contain the following columns on each row
+            <div v-if="choice === 4" class="columns">
+              EMAIL, USER GROUP, USER CATEGORY
+            </div>
+            <div class="columns">
+              FIRST NAME, LAST NAME, GENDER, PASSWORD, USER GROUP, USER CATEGORY
+            </div>
+          </div>
+          <div class="send-container">
+            <button class="add-email send cancel mr-4" @click="$emit('closeModal')">
+              Cancel
+            </button>
+            <button class="add-email send" @click="uploadFile">
+              Send
+            </button>
+          </div>
+        </div>
+      </div>
+      <div v-show="saved_users.length !== 0 || failedUsers.length !== 0" class="post-send">
+        <div class="mx-auto non-centered">
+          <div v-if="choice === 4" class="title">
+            Sent {{ saved_users.length }} invitations
+          </div>
+          <div v-else class="title">
+            Added {{ saved_users.length }} new users
+          </div>
+          <div v-if="failedUsers.length" class="title text-left">
+            Errors:
+          </div>
+          <div class="added-emails mx-auto customScroll my-5">
+            <div v-for="(error, i) in failedUsers" :key="i" class="email">
+              <div class="text">{{ error }}</div>
+            </div>
+          </div>
+          <div class="send-container">
+            <button class="close" @click="$emit('closeModal')">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div v-if="choice === 2" class="dialog-body invite-users">
+      <div class="d-flex align-items-center centered first">
+        <div class="d-flex">
+          <button class="add-email send mr-4" @click="choice = 4">
+            Upload file with required info
+          </button>
+          <button class="add-email ml-auto send" @click="choice = 3">
+            Enter emails manually
+          </button>
+        </div>
+      </div>
+    </div>
+    <div v-else-if="choice === 3" class="dialog-body invite-users">
       <div v-show="sent_emails.length == 0" class="pre-send">
         <div class="mx-auto centered">
           <div class="title">Send user Invitations</div>
@@ -139,6 +206,9 @@ export default {
       options: ["Principal", "Instructor", "Student"],
       emails: [],
       sent_emails: [],
+      saved_users: [],
+      failedUsers: [],
+      choice: 0,
       user_categories: [],
       user_groups: [],
       selected_user_group: "",
@@ -146,6 +216,7 @@ export default {
       email: "",
       error: "",
       closable: false,
+      file: undefined
     };
   },
   computed: {
@@ -161,6 +232,49 @@ export default {
     },
   },
   methods: {
+    pickFile() {
+      document.getElementById("file").click();
+    },
+    handleFileUpload() {
+      this.file = document.getElementById("file").files[0]
+      if (this.file.name.split('.')[this.file.name.split('.').length - 1].toLowerCase() !== 'xlsx') {
+        document.getElementById("file").value = ""
+        this.file = undefined
+        this.$store.dispatch("app_notification/SET_NOTIFICATION", {
+          message: "invalid file format",
+          status: "danger",
+          uptime: 2000,
+        });
+      }
+    },
+    async uploadFile() {
+      const formData = new FormData()
+      formData.append('file', this.file)
+
+      if (this.choice === 1) {
+        const res = await Apis.create("user/multiple", formData);
+        if (res.data.status === 201) {
+          res.data = res.data.data
+          if (res.data.savedUsers.length)
+            this.saved_users = res.data.savedUsers
+          if (res.data.creationErrors.length)
+            this.failedUsers = res.data.creationErrors
+        } else {
+          this.error = res.data.message
+        }
+      } else{
+        const res = await Apis.create("user_invitations/multiple", formData);
+        if (res.data.status === 201) {
+          res.data = res.data.data
+          if (res.data.savedInvitations.length)
+            this.saved_users = res.data.savedInvitations
+          if (res.data.creationErrors.length)
+            this.failedUsers = res.data.creationErrors
+        } else {
+          this.error = res.data.message
+        }
+      }
+    },
     addEmail() {
       if (this.validateEmail(this.email)) {
         if (!this.emails.includes(this.email)) {
