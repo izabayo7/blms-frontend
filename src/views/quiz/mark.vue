@@ -284,16 +284,6 @@
           >
         </v-row>
       </v-col>
-
-      <v-col class="col-12 col-md-12 questions-side">
-        <v-btn
-          v-if="userCategory === 'INSTRUCTOR'"
-          class="d-block mb-4 primary-bg"
-          @click="updateSubmission"
-          rounded
-          >Save Marks</v-btn
-        >
-      </v-col>
     </v-row>
   </v-container>
 </template>
