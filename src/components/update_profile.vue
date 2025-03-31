@@ -61,31 +61,17 @@
       </v-col>
       <v-col class="col-12 col-md-7 text-center text-md-left">
         <div class="title text-h5">My Details</div>
-        <div class="user_info">
+        <div class="user_info col-12 col-md-6">
+          <p class="lable font-weight-medium mt-2">Sur name</p>
+          <input v-model="user.sur_name" type="text" class="course_input" />
+          <p class="lable font-weight-medium mt-2">Other names</p>
+          <input v-model="user.other_names" type="text" class="course_input" />
           <p class="lable font-weight-medium mt-2">Email</p>
-          <v-text-field
-            v-model="user.email"
-            class="profile-input mx-auto mx-md-0"
-            type="text"
-            solo
-            required
-          />
-          <p class="lable font-weight-medium">Phone number</p>
-          <v-text-field
-            v-model="user.phone"
-            class="profile-input mx-auto mx-md-0"
-            type="text"
-            solo
-            required
-          />
-          <p class="lable font-weight-medium">User name</p>
-          <v-text-field
-            v-model="user.user_name"
-            class="profile-input mx-auto mx-md-0"
-            type="text"
-            solo
-            required
-          />
+          <input v-model="user.email" type="text" class="course_input" />
+          <p class="lable font-weight-medium mt-5">Phone number</p>
+          <input v-model="user.phone" type="text" class="course_input" />
+          <p class="lable font-weight-medium mt-5">User name</p>
+          <input v-model="user.user_name" type="text" class="course_input" />
         </div>
         <div class="title text-h5 mt-5">Enrolled courses</div>
         <div class="enrolled_courses">
@@ -116,7 +102,7 @@
           color="black"
           class="mt-6 px-6 py-5 profile_button"
           outlined
-          @click="pickfile()"
+          to="/update/password"
           >Change password</v-btn
         >
       </v-col>
@@ -135,7 +121,7 @@
               color="black"
               class="mt-3 px-6 py-5 profile_button"
               outlined
-              @click="pickfile()"
+              to="/"
               >Cancel</v-btn
             ></v-col
           >
@@ -318,6 +304,12 @@ export default {
     background-color: $primary;
     color: white;
     cursor: pointer;
+  }
+  .course_input {
+    border: 2px solid #d5d5d5;
+    background-color: white;
+    width: 100%;
+    padding: 10px;
   }
 }
 </style>
