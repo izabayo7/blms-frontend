@@ -155,5 +155,17 @@
       padding:.6rem .5rem;
       box-sizing:border-box;
       min-width: fit-content;
+
+      &.row--image{
+        width:3rem;
+        img{
+          width:2rem;
+          height:2rem;
+          border-radius:50%;
+        }
+      }
+
     }
+
+
 }
