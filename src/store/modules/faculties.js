@@ -43,7 +43,6 @@ export default {
             return apis.create('faculty-college-year', facultyCollegeYear).then(d => {
                 state.facultyCollegeYears.data.push(d.data)
             })
-
         },
         //get faculties from backend
         getFaculties({ state }, collegeId) {
@@ -80,7 +79,8 @@ export default {
                     name: d.data.faculty.name,
                     attendants: 0,
                     teacher: "under development",
-                    _id: d.data.faculty._id
+                    _id: d.data.faculty._id,
+                    facultyCollegeId: d.data._id
                 })
                 for (const i in state.importable_faculties.data) {
                     if (state.importable_faculties.data[i]._id == d.data.faculty._id) {
@@ -96,7 +96,9 @@ export default {
         loaded: state => {
             return state.facultyCollegeYears.loaded
         },
-
+        f_loaded: state => {
+            return state.faculties.loaded
+        },
         i_loaded: state => {
             return state.importable_faculties.loaded
         },

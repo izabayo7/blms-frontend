@@ -42,7 +42,7 @@
             <v-col class="col-12 col-md-12">
               <h4>Classes</h4>
               <p>
-                <strong>{{faculties.length}}</strong>
+                <strong>{{ faculties.length }}</strong>
               </p>
             </v-col>
           </v-row>
@@ -72,7 +72,7 @@
               </v-col>
             </v-row>
           </v-card-title>
-          <v-data-table :headers="headers" :items="faculties" sort-by="name">
+          <v-data-table :headers="headers" :search="search" :items="faculties" sort-by="name">
             <template v-slot:item.actions="{ item }">
               <v-icon color="success" @click="editItem(item)"
                 >mdi-eye-outline</v-icon
@@ -107,14 +107,16 @@ export default {
   }),
   computed: {
     // get the faculties
-    ...mapGetters("faculties", ["faculties"]),
+    ...mapGetters("faculties", ["faculties", "f_loaded"]),
   },
   methods: {
     ...mapActions("faculties", ["getFaculties"]),
   },
   created() {
-    // load faculties
-    this.getFaculties(this.$store.state.user.user.college);
+    if (!this.f_loaded) {
+      // load faculties
+      this.getFaculties(this.$store.state.user.user.college);
+    }
   },
 };
 </script>

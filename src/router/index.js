@@ -24,15 +24,15 @@ const routes = [
             allowAnonymous: true
         }
     },
-        // the loader
-        {
-            path: '/loading',
-            component: () =>
-                import('@/components/loaders'),
-            meta: {
-                allowAnonymous: true
-            }
-        },
+    // the loader
+    {
+        path: '/loading',
+        component: () =>
+            import('@/components/loaders'),
+        meta: {
+            allowAnonymous: true
+        }
+    },
     {
         /**
          * DASHBOARD Parent
@@ -196,6 +196,11 @@ const routes = [
                 name: 'Register Faculty',
                 component: () =>
                     import('@/views/administration/faculty/register')
+            }, {
+                path: '/administration/register/studentGroup',
+                name: 'Register StudentGroup',
+                component: () =>
+                    import('@/views/administration/studentGroup/register')
             },
             {
                 path: '/administration/colleges/:name',

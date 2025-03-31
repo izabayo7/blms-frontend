@@ -40,6 +40,7 @@ export default {
       this.$store.commit("courses/RESET_STATE");
       this.$store.commit("colleges/RESET_STATE");
       this.$store.commit("chat/RESET_STATE");
+      this.$store.commit("years/RESET_STATE");
 
       // redirect to login
       this.$router.push("/login");
