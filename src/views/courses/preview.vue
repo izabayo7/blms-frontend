@@ -107,73 +107,32 @@
 
           <article class="infos pt-10">
             <div>
-              <v-avatar size="40" class="bg-color-one">
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="62"
-                    height="62"
-                    viewBox="0 0 62 62"
-                >
-                  <circle
-                      id="Ellipse_218"
-                      data-name="Ellipse 218"
-                      cx="31"
-                      cy="31"
-                      r="31"
-                      fill="#fc6767"
-                  />
+<!--              <v-avatar size="40" class="bg-color-one">-->
+                <svg class="p-icon" xmlns="http://www.w3.org/2000/svg" width="62" height="62" viewBox="0 0 62 62">
+                  <circle id="Ellipse_218" data-name="Ellipse 218" cx="31" cy="31" r="31" fill="#fc6767"/>
                   <g id="noun_index_1232133" transform="translate(13 13)">
-                    <g
-                        id="Group_125"
-                        data-name="Group 125"
-                        transform="translate(5.5 4)"
-                    >
+                    <g id="Group_125" data-name="Group 125" transform="translate(5.5 4)">
                       <g id="Group_124" data-name="Group 124">
-                        <rect
-                            id="Rectangle_1142"
-                            data-name="Rectangle 1142"
-                            width="7.25"
-                            height="2.417"
-                            transform="translate(18.125 19.333)"
-                            fill="#fff"
-                        />
-                        <rect
-                            id="Rectangle_1143"
-                            data-name="Rectangle 1143"
-                            width="7.25"
-                            height="2.417"
-                            transform="translate(18.125 22.958)"
-                            fill="#fff"
-                        />
-                        <rect
-                            id="Rectangle_1144"
-                            data-name="Rectangle 1144"
-                            width="7.25"
-                            height="2.417"
-                            transform="translate(18.125 26.583)"
-                            fill="#fff"
-                        />
-                        <path
-                            id="Path_1949"
-                            data-name="Path 1949"
-                            d="M5.5,33H22.417V22.125h8.458V4H5.5ZM28.458,19.708H20V30.583H11.542V6.417H28.458ZM7.917,6.417H9.125V30.583H7.917Z"
-                            transform="translate(-5.5 -4)"
-                            fill="#fff"
-                        />
+                        <rect id="Rectangle_1142" data-name="Rectangle 1142" width="7.25" height="2.417" transform="translate(18.125 19.333)" fill="#fff"/>
+                        <rect id="Rectangle_1143" data-name="Rectangle 1143" width="7.25" height="2.417" transform="translate(18.125 22.958)" fill="#fff"/>
+                        <rect id="Rectangle_1144" data-name="Rectangle 1144" width="7.25" height="2.417" transform="translate(18.125 26.583)" fill="#fff"/>
+                        <path id="Path_1949" data-name="Path 1949" d="M5.5,33H22.417V22.125h8.458V4H5.5ZM28.458,19.708H20V30.583H11.542V6.417H28.458ZM7.917,6.417H9.125V30.583H7.917Z" transform="translate(-5.5 -4)" fill="#fff"/>
                       </g>
                     </g>
                   </g>
                 </svg>
-              </v-avatar>
+
+<!--              </v-avatar>-->
               <span class="content">{{
                   `${course.chapters.length} chapter ${
                       course.chapters.length > 1 ? "s" : ""
                   }`
                 }}</span>
             </div>
-            <div class="pt-4">
-              <v-avatar size="40" class="bg-color-one">
+            <div>
+<!--              <v-avatar size="40" class="bg-color-one">-->
                 <svg
+                    class="p-icon"
                     xmlns="http://www.w3.org/2000/svg"
                     width="62"
                     height="62"
@@ -285,14 +244,14 @@
                     />
                   </g>
                 </svg>
-              </v-avatar>
+<!--              </v-avatar>-->
               <span class="content"
               >{{ course.assignmentsLength }} assignments</span
               >
             </div>
           </article>
         </main>
-        <main class="preview">
+        <main class="preview mt-sm-4">
           <preview
               :image="course.cover_picture"
               :name="course.name"
@@ -603,7 +562,9 @@ button.back {
   background-color: $main;
   box-shadow: 0 0 10px lighten($secondary, 3);
 }
-
+.p-icon{
+  width: 40px;
+}
 .student {
   background: white;
   // width:100%;
@@ -643,6 +604,10 @@ button.back {
           padding-left: 1rem;
           color: #717070;
           font-size: 1.1rem;
+        }
+        div{
+          display: flex;
+          place-items: center;
         }
       }
 
