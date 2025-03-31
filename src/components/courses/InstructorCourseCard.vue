@@ -89,12 +89,16 @@
               text
               color="error"
               class="action-btn"
-          >Unpublish <span class="hidden-sm-and-down">Course</span></v-btn
+          >Unpublish
+<!--            <span class="hidden-sm-and-down">Course</span>-->
+          </v-btn
           >
         </v-col>
         <v-col class="col-md-6 text-right">
           <v-btn :to="`/courses/preview/${course.name}`" text class="action-btn"
-          >Preview <span class="hidden-sm-and-down">Course</span></v-btn
+          >Preview
+<!--            <span class="hidden-sm-and-down">Course</span>-->
+          </v-btn
           >
         </v-col>
       </v-row>
