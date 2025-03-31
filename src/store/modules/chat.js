@@ -104,7 +104,7 @@ export default {
         },
         //store the message that we sent
         ADD_ONGOING_MESSAGE(state, newMessage) {
-
+console.log(newMessage)
             store.dispatch('chat/lastMessageInCertainChatMessages', state.username).then(({ lastMessage, groupIndex, userIndex }) => {
                 if (lastMessage._id !== newMessage._id) {
 

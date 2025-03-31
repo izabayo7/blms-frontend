@@ -26,12 +26,17 @@
             :src="msgs.image"
             :alt="`${msgs.from}'s profile picture`"
           />
-          <v-avatar min-width="20px" v-else class="avatar">
+          <v-avatar min-width="40" min-height="40" v-else class="avatar">
             {{ msgs.from | computeText }}
           </v-avatar>
         </div>
         <div>
-          <div v-if="!msgGoing(msgs.from) && currentDisplayedUser.is_group" class="sender_name">{{msgs.from}}</div>
+          <div
+            v-if="!msgGoing(msgs.from) && currentDisplayedUser.is_group"
+            class="sender_name"
+          >
+            {{ msgs.from }} {{ msgs.messages[0].createdAt | getTimeDifference }}
+          </div>
           <!--        list of messages sent or received-->
           <div class="msgs">
             <div class="msg" v-for="(msg, i) in msgs.messages" :key="i">
@@ -42,7 +47,17 @@
         </div>
       </div>
       <div class="receiving" v-if="typing">
-        <div class="typing">
+        <!-- <div class="receiving" v-if="1"> -->
+        <div
+          v-if="currentDisplayedUser.is_group"
+          class="sender_name text-center"
+        >
+          <span v-for="(member, i) in typing_members" :key="i"
+            >{{ `${i > 0 ? "," : ""} ${member}` }}
+          </span>
+          <span>{{ typing_members.length > 1 ? " are " : " is " }} typing</span>
+        </div>
+        <div v-else class="typing">
           <div class="lds-ellipsis">
             <div></div>
             <div></div>
@@ -69,11 +84,22 @@ export default {
   data() {
     return {
       typing: false,
+      typers: [],
     };
   },
   computed: {
     ...mapState("chat", ["currentDisplayedUser", "incomingMessages"]),
     ...mapGetters("chat", ["socket"]),
+    typing_members() {
+      let names = [];
+      for (const i in this.typers) {
+        const user = this.currentDisplayedUser.members.filter(
+          (m) => m.data.user_name == this.typers[i]
+        );
+        names.push(user[0].data.sur_name);
+      }
+      return names;
+    },
   },
   methods: {
     ...mapMutations("chat", ["CHANGE_MESSAGE_READ_STATUS"]),
@@ -104,12 +130,16 @@ export default {
     // Someone typing to me
     let timeout = undefined;
 
-    this.socket.on("message/typing", (typist) => {
+    this.socket.on("message/typing", (typist, group) => {
       if (this.currentDisplayedUser.is_group) {
         // const user = this.currentDisplayedUser.members.some(el => el._id === typist)
       }
+      if (!this.typers.includes(typist)) this.typers.push(typist);
       //if the typist is the one we are chatting with
-      if (this.currentDisplayedUser.id === typist) {
+      if (
+        this.currentDisplayedUser.id === typist ||
+        this.currentDisplayedUser.id === group
+      ) {
         this.typing = true;
 
         clearTimeout(timeout); // before setting new timeout lets create old one
@@ -117,6 +147,7 @@ export default {
         //if 5 seconds exceeds without new event of typing stop typing
         timeout = setTimeout(() => {
           this.typing = false;
+          this.typers.splice(this.typers.indexOf(typist), 1);
         }, 5000);
 
         this.scrollChatToBottom(); //scroll chat to bottom
@@ -152,6 +183,15 @@ export default {
   height: 100%;
   scrollbar-track-color: transparent;
   scrollbar-face-color: red;
+
+  .sender_name {
+    font-size: 11px;
+    color: #00000066;
+    font-weight: 600;
+    margin-bottom: 6px;
+    font-family: Poppins;
+    width: 100%;
+  }
 
   @include scroll-bar;
 
@@ -231,37 +271,36 @@ export default {
       margin-top: 4rem;
       color: lighten($font, 20);
     }
+
     //css for the whole msg block
     .msgs-block {
       margin: 5px 0;
       display: flex;
       flex-direction: column;
 
-      .sender_name {
-        font-size: 13px;
-        color: #00000066;
-        padding-left: 0.8rem;
-      }
-
       //css for the image of the sender
       .picture {
         display: flex;
-        place-items: flex-end;
+        place-items: flex-start;
         img {
-          width: 30px;
-          height: 30px;
+          width: 40px;
+          height: 40px;
           border-radius: 50%;
+          margin-top: 20px;
           margin-right: 20px;
         }
       }
       //whole msg bar css
       .msg {
         max-width: 20rem;
-        padding: 0.3rem 0.5rem;
+        padding: 0.5rem 1.7rem;
         margin: 1.5px;
+        width: -webkit-fit-content;
+        width: -moz-fit-content;
         width: fit-content;
         font-size: 0.8rem;
         font-weight: 400;
+        font-family: Poppins;
         word-break: break-word;
       }
     }
@@ -303,6 +342,13 @@ export default {
     .receiving {
       display: flex;
       flex-direction: row;
+      margin-top: 22px;
+      // .sender_name {
+      //   font-size: 13px;
+      //   color: #00000066;
+      //   padding-left: 0.8rem;
+      // }
+
       .msg {
         border-radius: 0 15px 15px 0;
         background-color: $secondary;
@@ -322,7 +368,7 @@ export default {
     width: 30px !important;
     height: 30px !important;
     margin-right: 20px;
-    margin-top: 0px;
+    margin-top: 20px;
     background-color: $primary;
     color: white;
     cursor: pointer;

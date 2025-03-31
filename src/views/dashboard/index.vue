@@ -32,6 +32,7 @@ export default {
     this.socket.on("message/sent", (message) => {
       console.log("in index.js");
       setTimeout(this.scrollChatToBottom, 1);
+      message.sender.sur_name = 'You'
       this.$store.commit("chat/ADD_ONGOING_MESSAGE", message);
     });
 

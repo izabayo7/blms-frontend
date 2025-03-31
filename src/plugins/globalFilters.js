@@ -70,7 +70,7 @@ const filters = [
             var diff = (date2.getTime() - date1.getTime());
 
             // To calculate the no. of days between two dates
-            var Difference_In_Days = diff / (1000 * 3600 * 24);
+            var Difference_In_Days = Math.round(diff / (1000 * 3600 * 24))
 
             if (Difference_In_Days > 1) {
                 result = date1.toISOString().substr(2, 8).split('-').reverse().join('/')
@@ -84,11 +84,11 @@ const filters = [
         },
     },
     {
-        name:'urlify',
-        structure(text){
+        name: 'urlify',
+        structure(text) {
             // return text.replace(urlRegex, '<a href="$1" target="_blank">$1</a>')
             return text.replace(urlRegex, (d) => {
-               return `<a href="${d}" target="_blank" >${d} </a>`
+                return `<a href="${d}" target="_blank" >${d} </a>`
             })
         }
     }

@@ -21,10 +21,32 @@
       </div>
       <!--        slot for the sent massage-->
       <div class="sender-message">
-        <div :class="{ 'unread-msg': !read }" v-if="!typing">
-          {{ data.last_message.content }}
+        <div
+          :class="{ 'unread-msg': !read }"
+          class="last_message_container"
+          v-if="!typing"
+        >
+          <div v-if="data.is_group || is_mine">
+            {{ data.last_message.sender.sur_name }} :
+          </div>
+          <div :class="{ 'pl-1': data.is_group || is_mine }">
+            {{
+              data.last_message.content
+                | trimString(data.is_group ? 15 : is_mine ? 50 : 100)
+            }}
+          </div>
         </div>
-        <span v-else>Typing...</span>
+        <div v-else>
+          <div v-if="data.is_group">
+            <span v-for="(member, i) in typing_members" :key="i"
+              >{{ `${i > 0 ? "," : ""} ${member}` }}
+            </span>
+            <span
+              >{{ typing_members.length > 1 ? " are " : " is " }} typing</span
+            >
+          </div>
+          <div v-else>Typing...</div>
+        </div>
       </div>
     </div>
   </main>
@@ -41,6 +63,7 @@ export default {
   data() {
     return {
       typing: false,
+      typers: [],
     };
   },
   computed: {
@@ -56,6 +79,20 @@ export default {
     },
     active() {
       return this.$route.params.username === this.data.id;
+    },
+    is_mine() {
+      return this.data.last_message.sender.sur_name == "You";
+    },
+    typing_members() {
+      let names = [];
+      for (const i in this.typers) {
+        const user = this.data.members.filter(
+          (m) => m.data.user_name == this.typers[i]
+        );
+        names.push(user[0].data.sur_name);
+      }
+      console.log(names)
+      return names;
     },
   },
   methods: {
@@ -76,15 +113,20 @@ export default {
   mounted() {
     let timeout = undefined;
 
-    this.socket.on("message/typing", (typist) => {
+    this.socket.on("message/typing", (typist, group) => {
       //if the typist id and this incoming chat id are the same
-      if (this.data.id === typist) {
+      if (!this.data.is_group && group) return;
+
+      if (this.data.id === typist || this.data.id == group) {
+        if (!this.typers.includes(typist)) this.typers.push(typist);
+
         // console.log(typist)
         this.typing = true;
         clearTimeout(timeout);
 
         timeout = setTimeout(() => {
           this.typing = false;
+          this.typers.splice(this.typers.indexOf(typist), 1);
         }, 5000);
       }
     });
@@ -192,6 +234,10 @@ export default {
     background-color: $primary;
     color: white;
     cursor: pointer;
+  }
+  .last_message_container {
+    display: flex;
+    // overflow: hidden;
   }
 }
 </style>
