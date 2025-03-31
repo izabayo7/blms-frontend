@@ -7,9 +7,6 @@
             <img :src="image" alt="" class="logo mx-auto" />
             <div class="college-name">{{ institution }}.</div>
             <div class="welcome">Reset password</div>
-            <!-- <div :class="`message ${valid ? '' : 'red--text'}`">
-              {{ message }}
-            </div> -->
             <form @submit.prevent="login">
               <div class="input-container">
                 <div class="input-icon">
@@ -46,20 +43,18 @@
                   required
                 />
               </div>
-              <button
-                :disabled="!valid"
-                :class="`login-button ${valid ? '' : 'disabled'}`"
-              >
-                RESET PASSWORD
-              </button>
+              <div :class="`message ${valid ? '' : 'red--text'}`">
+                {{ message }}
+              </div>
+              <button class="login-button">RESET PASSWORD</button>
             </form>
             <div class="lower-message">
               <div class="message-row">
                 Don’t have an account contact us ?
-                <a href="/register">Register</a>
+                <a to="/register">Register</a>
               </div>
               <div class="message-row">
-                Remembered your password ? <a href="/login">Login</a>
+                Remembered your password ? <router-link to="/login" />
               </div>
               <div class="message-row">
                 Having trouble resseting your password ?
@@ -83,21 +78,11 @@ export default {
     email_user_name_or_phone: "",
     showPassword: false,
     password: "",
-    message: "Please login to continue",
+    message: "",
     image: "https://apis.kurious.rw/assets/images/image%204.png",
     institution: "Kurious Learn",
   }),
   methods: {
-    // validate the form
-    validate() {
-      this.message =
-        this.email_user_name_or_phone.length < 3
-          ? "username or email too short"
-          : this.password.length < 8
-          ? "Password too short"
-          : "Please login to continue";
-      this.valid = this.message == "Please login to continue";
-    },
     async login() {
       try {
         const credentials = {
@@ -187,7 +172,8 @@ export default {
     font-family: Inter;
     form {
       height: 60%;
-      padding-top: 40px;
+      padding-top: 20px;
+      padding-bottom: 60px;
       justify-content: center;
     }
     .welcome {
@@ -207,9 +193,14 @@ export default {
       color: #bababc;
     }
     .logo {
+      // margin-top: 19px;
+      // max-width: 100%;
+      // max-height: 73px;
       margin-top: 19px;
       max-width: 100%;
       max-height: 73px;
+      object-fit: scale-down;
+      min-height: 73px;
     }
     .message {
       font-style: normal;
