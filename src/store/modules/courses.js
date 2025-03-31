@@ -249,7 +249,7 @@ export default {
 
         },
         //publish a course
-        tooglePublishCourse({ state, commit }, courseId) {
+        tooglePublishCourse({ state, commit, rootGetters }, courseId) {
             if (courseId)
                 commit('set_selected_course', courseId)
 
@@ -259,6 +259,9 @@ export default {
                         state.courses.data[i].published = d.data.published
                         break
                     }
+                }
+                if (d.data.published) {
+                    rootGetters['chat/socket'].emit('course-published', { courseId: d.data._id })
                 }
             })
         },
