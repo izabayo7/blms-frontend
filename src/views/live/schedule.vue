@@ -116,6 +116,21 @@
           ></TimePicker>
         </div>
       </div>
+      <div class="input-container my-margin">
+        <div class="label mb-2">Select quiz</div>
+        <select-ui
+          class="bold-border"
+          name="role"
+          id="user_group"
+          :options="user_group_names"
+          @input="
+            (e) => {
+              selected_user_group = e;
+            }
+          "
+        />
+      </div>
+      <button class="submit">Schedule class</button>
     </div>
   </div>
 </template>
@@ -208,7 +223,7 @@ export default {
       border: 1.54684px solid #bababc !important;
     }
     .input-container {
-      width: 515px;
+      max-width: 515px;
       .label {
         font-family: Inter;
         font-style: normal;
@@ -266,6 +281,24 @@ export default {
     place-items: center;
     justify-content: center;
     border-radius: 4px;
+  }
+  .submit {
+    width: 184px;
+    height: 52.67px;
+    left: 208px;
+    top: 724px;
+
+    background: #193074;
+    border-radius: 4.75155px;
+
+    font-family: Inter;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 12.354px;
+    line-height: 15px;
+    /* identical to box height */
+
+    color: #ffffff;
   }
 }
 </style>
