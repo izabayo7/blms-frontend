@@ -688,10 +688,7 @@ export default {
     },
     async nearestLiveSession(){
       if(this.nearestLiveSession){
-        console.log(
-            "hahiye"
-        )
-        const res = await axios.get(`https://strream.kurious.rw/api/live_sessions/${this.nearestLiveSession._id}/users`)
+        const res = await axios.get(`https://stream.kurious.rw/api/live_sessions/${this.nearestLiveSession._id}/users`)
         if(res.data)
           this.connected_users = res.data
       }
