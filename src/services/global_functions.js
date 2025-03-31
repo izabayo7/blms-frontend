@@ -36,8 +36,9 @@ async function getImgFile(base64, filename) {
  * @param date_time
  * @returns {string}
  */
-function elapsedDuration(date_time) {
-    const now = moment()
+function elapsedDuration(date_time,endTime) {
+
+    const now = endTime ? moment(endTime) : moment()
 
     date_time = moment(date_time)
 

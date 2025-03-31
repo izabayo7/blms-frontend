@@ -243,7 +243,8 @@
                 </div>
               </v-col>
             </v-row>
-            <v-row v-if="selected_quiz_submission[isExam?'exam':'quiz'].status === 2 || selected_quiz_submission[isExam?'exam':'quiz'].status === 'RELEASED' || userCategory === 'INSTRUCTOR'">
+            <v-row
+                v-if="selected_quiz_submission[isExam?'exam':'quiz'].status === 2 || selected_quiz_submission[isExam?'exam':'quiz'].status === 'RELEASED' || userCategory === 'INSTRUCTOR'">
               <v-col class="col-12 col-md-6 d-flex pb-0">
                 <div class="mr-3 marks-label">Award marks:</div>
                 <div class="d-flex align-center">
@@ -298,13 +299,29 @@
       </v-col>
       <v-col
           v-if="selected_quiz_submission[isExam?'exam':'quiz'].status === 2 || selected_quiz_submission[isExam?'exam':'quiz'].status === 'RELEASED' || userCategory === 'INSTRUCTOR'"
-          :class="`col-12 col-md-4 mt-16 mb-16 ${
-          $vuetify.breakpoint.name == 'lg' ? 'fixed right-0 pl-12' : ''
+          :class="`col-12 col-md-4 ${selected_quiz_submission.hasVideo ? '' : 'mt-16'} mb-16 ${
+          $vuetify.breakpoint.name == 'lg' ? 'right-0 pl-12' + selected_quiz_submission.hasVideo ? '' : 'fixed' : ''
         }`"
       >
         <v-row class="color-primary font-weight-black student_name mb-8">
           {{ selected_quiz_submission.user.sur_name }}
           {{ selected_quiz_submission.user.other_names }}
+        </v-row>
+        <v-row v-if="selected_quiz_submission.hasVideo" class="exam-highlights mb-8">
+          <div class="col-12 col-md-6">Exam video highlights</div>
+          <div class="col-12 col-md-6 time">{{ getVideoDuration(selected_quiz_submission.time_started,selected_quiz_submission.used_time) }}</div>
+          <div class="video">
+            <vue-plyr>
+              <video
+                  :src="`${selected_quiz_submission.videoUrl}?token=${$session.get('jwt')}`"
+              ></video>
+            </vue-plyr>
+          </div>
+          <div class="highlights">
+            <div class="heading">User suscpicious movements highlights ( 0 )</div>
+            <div class="series"></div>
+          </div>
+          <div class="hint">Video deleted after 1 week after releasing marks</div>
         </v-row>
         <v-row class="mb-6">
           <div class="mr-3 title font-weight-bold">Total marks</div>
@@ -378,6 +395,7 @@
 <script>
 import {mapGetters, mapActions} from "vuex";
 import {downloadAttachment} from "@/services/global_functions"
+import {getTime,elapsedDuration} from "../../services/global_functions";
 
 export default {
   data: () => ({
@@ -476,6 +494,15 @@ export default {
     },
   },
   methods: {
+    getVideoDuration(starting_time, duration) {
+      let date = new Date(starting_time)
+      date.setHours(date.getHours() + 2)
+      let result = getTime(date)
+      let endDate = new Date(date)
+      endDate.setTime(endDate.getTime() + (duration * 1000))
+      result += ` to ${getTime(endDate)} (${elapsedDuration(date, endDate).replace('ago','')})`
+      return result
+    },
     handleFeedbackSent(index, value) {
       this.questions_have_feedback[index] = value
     },
@@ -731,6 +758,56 @@ export default {
 
 .student_name {
   font-size: 1.6rem;
+}
+
+.exam-highlights {
+  max-width: 344.08px;
+  width: 100%;
+  font-family: Inter;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 12.0892px;
+
+  color: #343434;
+
+  .time {
+    font-size: 9.29936px;
+  }
+
+  video {
+    width: 308.08px;
+
+    &:fullscreen {
+      width: auto;
+    }
+
+    height: 173.295px;
+  }
+
+  .highlights {
+    width: 100%;
+    height: 206.45px;
+    background: rgba(25, 48, 116, 0.1);
+    padding: 10px 13px;
+  }
+
+  .hint {
+    font-family: Inter;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 9.29936px;
+    line-height: 24px;
+    /* identical to box height, or 262% */
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    color: #FFFFFF;
+    height: 22.32px;
+    width: 100%;
+    background: #193074;
+  }
 }
 
 .right_choice {
