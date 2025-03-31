@@ -12,27 +12,6 @@ export default {
     console.log(this.$el.style.height)
 
   },
-  beforeMount: async function () {
-    let innerHeight = window.innerHeight
-    let app = document.getElementById('app')
-    app.style.height = innerHeight;
-
-    if (!this.$session.exists()) {
-      this.$router.push("/login");
-      // keep the requested url then redirect after login
-    } else if (this.$store.state.user === null) {
-      axios.defaults.headers.common.Authorization = `${this.$session.get(
-        "jwt"
-      )}`;
-      this.$store.dispatch("setUser", jwt.decode(this.$session.get("jwt")));
-      this.$store.state.isLoggedIn = true;
-      // const response = await Services.otherGets('token')
-      // if (response.data === 'Invalid Token') {
-      //   this.$session.destroy()
-      //   this.$router.push('/')
-      // }
-    }
-  },
 };
 </script>
 <style lang="scss">

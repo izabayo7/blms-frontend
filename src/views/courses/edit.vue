@@ -231,7 +231,7 @@
                                     <v-icon
                                       color="#ffd248"
                                       x-large
-                                    >mdi-file{{findIcon(attachment.name)}}-outline</v-icon>
+                                    >mdi-file-outline</v-icon>
                                     <span class="filename text-truncate">{{attachment.name}}</span>
                                   </v-btn>
                                 </div>

@@ -12,19 +12,18 @@ const routes = [
         path: '/',
         name: 'Home',
         component: () =>
-            import('@/views/pages/home')
-    },
-    {
-        path: '/test',
-        name: 'dash',
-        component: () =>
-            import('@/components/dashboard')
+            import('@/views/pages/home'),
+        meta: {
+            allowAnonymous: true
+        },
     },
     {
         path: '/kurious',
         component: () =>
             import('@/views/dashboard/Index-new'),
-
+        meta: {
+            allowAnonymous: false
+        },
         children: [{
             path: '/messages',
             component: () => import('@/views/Messages.vue'),
@@ -53,7 +52,7 @@ const routes = [
             name: 'New Course',
             component: () =>
                 import('@/components/newCourse.vue')
-        },  {
+        }, {
             path: '/quiz/new-quiz',
             name: 'Set Quiz',
             component: () =>

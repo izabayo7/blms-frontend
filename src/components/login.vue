@@ -40,7 +40,7 @@
             solo
           ></v-select>
           <router-link to="/recover-password" class="forgot-pass">Forgot Password?</router-link>
-          <v-btn class="login-btn" @click.native="validate()" type="submit">Login</v-btn>
+          <v-btn class="login-btn" type="submit">Login</v-btn>
         </v-form>
       </v-col>
     </v-row>
@@ -110,15 +110,17 @@ export default {
           this.$router.push(this.$route.query.redirect);
         }
         // student and teacher land to courses
-        else if (
-          this.userCategory === "student" ||
-          this.userCategory === "instructor"
-        ) {
-          this.$router.push("/courses");
-        }
-        // others land to the dashboard
-        else if (this.userCategory === "admin") {
-          this.$router.push("/users");
+        else {
+          if (
+            this.userCategory === "student" ||
+            this.userCategory === "instructor"
+          ) {
+            this.$router.push("/courses");
+          }
+          // others land to the dashboard
+          else if (this.userCategory === "admin") {
+            this.$router.push("/users");
+          }
         }
       } catch (error) {
         // handle errors
