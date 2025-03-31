@@ -47,6 +47,7 @@ export default {
       border-color: $warn;
     }
 
+
     button{
       display:flex;
       align-items:center;
@@ -64,6 +65,13 @@ export default {
         align-items:center;
       }
 
+    }
+    &.outlined{
+      background-color: #FFFFFF !important;
+      button {
+        color: $primary !important;
+      }
+      border: 2px solid $primary !important;
     }
   }
 

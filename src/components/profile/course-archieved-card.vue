@@ -14,29 +14,14 @@
       </div>
       <!--      col 2 with success rate-->
       <div class="ccc--col ccc--col__2 ccc--class">
-        <div v-if="type === 'INSTRUCTOR'" class="ccc--class--name">
+        <div class="ccc--class--name">
           <p>Communication design year1</p>
-        </div>
-        <div v-else class="ccc--class--name">
-          <div class="text mx-auto">{{ Math.round(23.3) }} % completion</div>
-          <progress :value="23.3" max="100"></progress>
         </div>
       </div>
       <!--      col 3 with last attempted quiz infos-->
-      <div v-if="type === 'INSTRUCTOR'" class="ccc--col ccc--col__3 ccc--students">
-        <div class="ccc--students--number text-center">
-          <h5>62</h5>
-        </div>
+      <div class="ccc--col ccc--col__3 ccc--students">
         <div class="ccc--students--title">
-          <p>Students</p>
-        </div>
-      </div>
-      <div v-else class="ccc--col ccc--col__3 ccc--students">
-        <div class="ccc--students--title">
-          <p>Last chapter accessed</p>
-        </div>
-        <div class="ccc--students--number">
-          <h5>4.2 Rounding</h5>
+          <h5>18 Chapters</h5>
         </div>
       </div>
     </div>
@@ -45,13 +30,7 @@
 
 <script>
 export default {
-  name: "course-created-card",
-  props: {
-    type: {
-      type: String,
-      required: true
-    }
-  }
+  name: "course-archieved-card",
 }
 </script>
 
