@@ -238,13 +238,13 @@
               <v-col cols="12">
                 <v-img :src="require('@/assets/images/live-class.svg')"></v-img>
               </v-col>
-              <v-col>
+              <v-col class="mx-ato col-12">
                 <router-link to="/live/schedule">
-                  <v-icon dark class="video-icon">mdi-video</v-icon>
+                  <div class="circle mx-auto">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"/><path d="M16 4a1 1 0 0 1 1 1v4.2l5.213-3.65a.5.5 0 0 1 .787.41v12.08a.5.5 0 0 1-.787.41L17 14.8V19a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h14zM7.4 8.829a.4.4 0 0 0-.392.32L7 9.228v5.542a.4.4 0 0 0 .542.374l.073-.036 4.355-2.772a.4.4 0 0 0 .063-.624l-.063-.05L7.615 8.89A.4.4 0 0 0 7.4 8.83z"/></svg>
+                  </div>
+                  <div><p>Start Live Class</p></div>
                 </router-link>
-              </v-col>
-              <v-col>
-                <p>Start Live Class</p>
               </v-col>
             </v-row>
           </v-card>
@@ -304,6 +304,19 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+.circle{
+  background-color: $primary;
+  border-radius: 50%;
+  display: flex;
+  width: 50px;
+  height: 50px;
+  margin-top: 20px;
+  align-items: center;
+  justify-content: center;
+  svg{
+    fill: white;
+  }
+}
 #courses {
   background-color: #F3F6FF;
   padding: 25px 0px 0 35px;
