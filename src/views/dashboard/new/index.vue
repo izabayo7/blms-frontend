@@ -21,7 +21,9 @@
                   fill="#FF7700"
                 />
               </svg>
-              <div class="college_name">University of Kicukiro</div>
+              <div class="college_name">
+                {{ $store.state.sidebar_navbar.college.name }}
+              </div>
               <div class="lower_content">
                 <div class="number_of_users">
                   {{ user_statistics.total_users }} Users
@@ -115,7 +117,7 @@
                     />
                   </svg>
 
-                  <div class="total_number">{{total_faculties}}</div>
+                  <div class="total_number">{{ total_faculties }}</div>
                   <div class="description">number of faculties</div>
                 </div>
               </div>
@@ -145,7 +147,7 @@
                       fill="#FFAE34"
                     />
                   </svg>
-                  <div class="total_number">{{total_student_groups}}</div>
+                  <div class="total_number">{{ total_student_groups }}</div>
                   <div class="description">Student groups</div>
                 </div>
               </div>
@@ -164,7 +166,7 @@
                     />
                   </svg>
 
-                  <div class="total_number">{{total_courses}}</div>
+                  <div class="total_number">{{ total_courses }}</div>
                   <div class="description">number of courses</div>
                 </div>
               </div>
@@ -362,7 +364,7 @@ export default {
     res = await Apis.get("course/statistics");
     this.total_courses = res.data.data.total_courses;
 
-    res = await Apis.get("faculty_college_year/statistics");
+    res = await Apis.get("user_groups/statistics");
     this.total_student_groups = res.data.data.total_student_groups;
   },
 };

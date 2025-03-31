@@ -147,12 +147,16 @@ export default {
     college_logo: "https://apis.kurious.rw/assets/images/image%204.png",
   }),
   methods: {
-    ...mapMutations("sidebar_navbar", { toggle: "TOGGLE_SIDEBAR_EXPANSION" }),
+    ...mapMutations("sidebar_navbar", {
+      toggle: "TOGGLE_SIDEBAR_EXPANSION",
+      set_college: "SET_COLLEGE_INFO",
+    }),
   },
   async created() {
     const res = await Apis.get(
       `college/${this.$store.state.user.user.college}`
     );
+    this.set_college(res.data.data);
     this.college_logo = res.data.data.logo || this.college_logo;
   },
 };
@@ -163,7 +167,7 @@ export default {
   // box-shadow: 10px 0 10px 0 $secondary;
   width: 100%;
   display: flex;
-      max-height: 69px;
+  max-height: 69px;
   padding: 0 !important;
   z-index: 100;
   .top-left-contents div {
