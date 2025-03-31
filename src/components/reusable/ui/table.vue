@@ -25,7 +25,7 @@ export default {
   },
   computed:{
     tabHeads(){
-      return Object.keys(this.data)
+      return Object.keys(this.data[0])
     }
   }
 }
