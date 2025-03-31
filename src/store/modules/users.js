@@ -120,21 +120,39 @@ export default {
                     commit("SET_USERS_ON_FACULTIES", {data})
                 })
         },
-        // eslint-disable-next-line no-empty-pattern
-        holdAccounts({}, {usernames, hold}) {
+        holdAccounts({dispatch}, {usernames, hold}) {
+            let success = true
             for (const i in usernames)
                 apis.update('user/',`status/${usernames[i]}/${hold ? '' : 'un'}hold`)
-                    .then(({data: {data}}) => {
-                        console.log(data);
+                    .then(({data: {status}}) => {
+                        if(![200,201].includes(status))
+                            success = false
+                        console.log(status)
                     })
+
+            if(success)
+                dispatch("app_notification/SET_NOTIFICATION", {
+                    message: `Account${usernames.length > 1 ? 's' : ''} sucessfully ${hold ? '' : 'un'}hold`,
+                    status: "success",
+                    uptime: 5000,
+                }, {root: true})
         },
         // eslint-disable-next-line no-empty-pattern
-        deleteAccounts({}, {ids}) {
+        deleteAccounts({dispatch}, {ids}) {
+            let success = true
             for (const i in ids)
                 apis.delete('user/',ids[i])
-                    .then(({data: {data}}) => {
-                        console.log(data);
+                    .then(({data: {status}}) => {
+                        if(![200,201].includes(status))
+                            success = false
                     })
+
+            if(success)
+                dispatch("app_notification/SET_NOTIFICATION", {
+                    message: `Account${ids.length > 1 ? 's' : ''} sucessfully deleted`,
+                    status: "success",
+                    uptime: 5000,
+                }, {root: true})
         }
     },
     getters: {
