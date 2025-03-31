@@ -627,7 +627,7 @@ export default {
     },
     async nearestLiveSession(){
       if(this.nearestLiveSession){
-        const res = await axios.get(`https://stream.kurious.rw/api/live_sessions/${this.nearestLiveSession._id}/users`)
+        const res = await axios.get(`${process.env.VUE_APP_stream_api_service_url}/api/live_sessions/${this.nearestLiveSession._id}/users`)
         if(res.data)
           this.connected_users = res.data
       }
