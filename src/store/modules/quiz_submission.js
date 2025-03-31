@@ -34,10 +34,10 @@ export default {
     },
     actions: {
         //get quiz_submissions  from backend
-        getQuizSubmissions({ state }, { userId }) {
+        getQuizSubmissions({ state }, { user_name }) {
             // if submission not loaded fetch them
             if (!state.quiz_submission.loaded) {
-                apis.get(`quiz_submission/user/${userId}`).then(d => {
+                apis.get(`quiz_submission/user/${user_name}`).then(d => {
                     d.data = d.data.data
                     state.quiz_submission.data = d.data
                     //announce that data have been loaded
@@ -73,6 +73,7 @@ export default {
                         dispatch('modal/reset_modal', null, { root: true })
                     })
                 }
+                console.log(submissionObject)
                 state.quiz_submission.data.push(submissionObject)
 
             })
@@ -115,7 +116,7 @@ export default {
                     d.data = d.data.data
                     if (!d.data)
                         return d.data
-                        
+
                     if (state.quiz_submission.loaded) {
                         state.quiz_submission.data.push(d.data)
                     } else {
@@ -138,6 +139,7 @@ export default {
         },
         //get all quiz submissions
         quiz_submissions: state => {
+            console.log(state.quiz_submission)
             return state.quiz_submission.data.reverse()
         },
     },

@@ -111,8 +111,8 @@
                   class="ma-1"
                 >
                   <v-img
-                    :src="`${choice.src}?format=png&width=200&height=200`"
-                    :lazy-src="`${choice.src}?format=png&width=200&height=200`"
+                    :src="`${choice.src}?format=png&width=200&height=200&token=${$session.get('jwt')}`"
+                    :lazy-src="`${choice.src}?format=png&width=200&height=200&token=${$session.get('jwt')}`"
                     :gradient="
                       checkChoiceStatus(attempt.answers[i].choosed_options, {
                         src: choice.src,

@@ -198,12 +198,11 @@ export default {
   created() {
     //get courses on page load
     this.getCourses({
-      userCategory: this.userCategory.toLowerCase(),
-      userId: this.$store.state.user.user._id,
+      user_name: this.$store.state.user.user.user_name,
     });
     //get submissions on page load
     this.getQuizSubmissions({
-      userId: this.$store.state.user.user._id,
+      user_name: this.$store.state.user.user.user_name,
     });
   },
 };
