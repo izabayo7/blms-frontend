@@ -24,7 +24,6 @@ export default {
   watch:{
     show(){
       let message = this.$store.getters['app_notification/message']
-      console.log(message)
     }
   }
   // enum: ["success", "info", "danger", "warn"],
