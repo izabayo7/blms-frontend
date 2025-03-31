@@ -449,7 +449,7 @@ export default {
 
 <style lang="scss">
 .pdf-viewer {
-  height: 540px;
+  height: 100vh;
   width: 100%;
 
   .toolbar {
@@ -457,7 +457,28 @@ export default {
   }
 
   #viewerContainer {
-    top: 0px
+    top: 0px;
+    overflow-x: hidden;
+    &::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    &::-webkit-scrollbar-track {
+      // background-color: #f8f8ff;
+    }
+
+    &::-webkit-scrollbar-track:hover {
+      background-color: lighten($secondary, 4);
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: lighten($font, 40);
+      border-radius: 10px;
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+      background-color: lighten($font, 30);
+    }
   }
 
   .pdfViewer .page {
