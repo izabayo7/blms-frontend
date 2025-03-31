@@ -1,39 +1,67 @@
 <template>
-    <div class="profile">
-        <p class="name"><span>Ntwari liberi</span> <v-icon>mdi-chevron-down</v-icon></p>
-        <img src="@/assets/images/instructor.png" alt="profile picture">
-    </div>
+  <div class="profile">
+    <p class="name">
+      <span
+        >{{ $store.state.user.user.surName }}
+        {{ $store.state.user.user.otherNames }}</span
+      >
+      <v-icon>mdi-chevron-down</v-icon>
+    </p>
+    <img
+      @click="logout"
+      v-if="$store.state.user.user.profile"
+      src="@/assets/images/instructor.png"
+      alt="profile picture"
+    />
+    <v-avatar @click="logout" v-else size="50" class="avatar">
+      {{
+        `${$store.state.user.user.surName} ${$store.state.user.user.otherNames}`
+          | computeText
+      }}
+    </v-avatar>
+  </div>
 </template>
 <script>
 export default {
-    
-}
+  methods: {
+    logout() {
+      this.$session.destroy();
+      this.$store.dispatch("user/unsetUser");
+      this.$router.push("/login");
+    },
+  },
+};
 </script>
 <style lang="scss" scoped>
-    .profile{
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        padding: 1rem;
-        
+.profile {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 1rem;
 
-        img{
-            width:50px;
-            cursor: pointer;
-        }
-        p{
-            height: fit-content;
-            width: fit-content;
-            margin: 0;
-            padding-right: 1.5rem;
-            cursor: pointer;
+  img {
+    width: 50px;
+    cursor: pointer;
+  }
+  .avatar {
+    margin-top: 0px;
+    background-color: $primary;
+    color: white;
+    cursor: pointer;
+  }
+  p {
+    height: fit-content;
+    width: fit-content;
+    margin: 0;
+    padding-right: 1.5rem;
+    cursor: pointer;
 
-            &:hover{
-              color: darken($font,10);
-            }
-            span{
-                padding-right: .7rem;
-            }
-        }
+    &:hover {
+      color: darken($font, 10);
     }
+    span {
+      padding-right: 0.7rem;
+    }
+  }
+}
 </style>

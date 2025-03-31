@@ -1,9 +1,9 @@
 <template>
   <v-container class="mx-0 pa-0" fluid>
-    <v-row v-if="course !== undefined" id="courseDetails">
+    <v-row v-if="course && activeIndex > -1" id="courseDetails">
       <!-- button to show chapters list in small devices -->
       <v-btn
-        @click="showActions=true"
+        @click="showActions = true"
         class="hidden-md-and-up mr-n8 white--text"
         color="#FFC100"
         right
@@ -40,8 +40,12 @@
       <!-- the course main content -->
       <v-col class="col-12 col-md-9 course-content customScroll pa-3">
         <v-row>
-          <v-col class="col-12 title d-block">{{course.name}}</v-col>
-          <v-col v-if="course.chapters[activeIndex].mainVideo" class="col-12" id="video">
+          <v-col class="col-12 title d-block">{{ course.name }}</v-col>
+          <v-col
+            v-if="course.chapters[activeIndex].mainVideo"
+            class="col-12"
+            id="video"
+          >
             <vue-plyr>
               <video :src="course.chapters[activeIndex].mainVideo"></video>
             </vue-plyr>
@@ -63,15 +67,21 @@
 
               <v-tab-item v-for="n in 3" :key="n">
                 <v-container fluid>
-                  <v-row v-if="course.chapters.length > 0 && n===1">
-                    <v-col
-                      class="col-12 title d-block"
-                    >Chapter {{activeIndex + 1}}: {{course.chapters[activeIndex].name }}</v-col>
+                  <v-row v-if="course.chapters.length > 0 && n === 1">
+                    <v-col class="col-12 title d-block"
+                      >Chapter {{ activeIndex + 1 }}:
+                      {{ course.chapters[activeIndex].name }}</v-col
+                    >
                     <v-col class="col-12 description">
-                      <p class="my-4">{{course.chapters[activeIndex].description}}</p>
+                      <p class="my-4">
+                        {{ course.chapters[activeIndex].description }}
+                      </p>
                     </v-col>
                     <v-col class="col-12">
-                      <kurious-editor v-if="editorContent !== ''" :defaultContent="editorContent" />
+                      <kurious-editor
+                        v-if="editorContent !== ''"
+                        :defaultContent="editorContent"
+                      />
                     </v-col>
                     <v-col
                       v-if="Math.round(maximumIndex) === activeIndex"
@@ -83,13 +93,22 @@
                         class="white--text next-chapter"
                         @click="changeActiveChapter(activeIndex + 1)"
                         rounded
-                      >Take Quiz</v-btn>
+                        >Take Quiz</v-btn
+                      >
                       <v-btn
                         v-else
                         color="green"
                         class="white--text"
-                        @click="finish_chapter($store.state.user.user._id)"
-                      >Mark as complete</v-btn>
+                        @click="
+                          finish_chapter($store.state.user.user._id).then(
+                            (d) => {
+                              course.progress = d;
+                              activeIndex = maximumIndex
+                            }
+                          )
+                        "
+                        >Mark as complete</v-btn
+                      >
                     </v-col>
                     <v-col class="col-12">
                       <v-row>
@@ -99,23 +118,28 @@
                             rounded
                             @click="changeActiveChapter(activeIndex - 1)"
                             elevation="0"
-                          >Previous chapter</v-btn>
+                            >Previous chapter</v-btn
+                          >
                         </v-col>
                         <v-col class="text-right col-6">
                           <v-btn
-                            v-if="activeIndex < maximumIndex && activeIndex < course.chapters.length - 1"
+                            v-if="
+                              activeIndex < maximumIndex &&
+                              activeIndex < course.chapters.length - 1
+                            "
                             color="#FFC100"
                             class="white--text next-chapter"
                             @click="changeActiveChapter(activeIndex + 1)"
                             rounded
-                          >Next chapter</v-btn>
+                            >Next chapter</v-btn
+                          >
                         </v-col>
                       </v-row>
                     </v-col>
                   </v-row>
-                  <v-row
-                    v-else-if="course.chapters.length === 0"
-                  >There are no chapters in {{course.name}}</v-row>
+                  <v-row v-else-if="course.chapters.length === 0"
+                    >There are no chapters in {{ course.name }}</v-row
+                  >
                   <v-row v-else-if="n === 2">
                     <kurious-comments />
                   </v-row>
@@ -125,16 +149,22 @@
                       class="attachments"
                     >
                       <div
-                        v-for="(attachment, key) in course.chapters[activeIndex].attachments"
+                        v-for="(attachment, key) in course.chapters[activeIndex]
+                          .attachments"
                         :key="key"
                         class="file-listing d-flex"
                       >
-                        <div class="downloadable_attachment vertically--centered">
-                          <v-icon
-                            color="#000000"
-                            x-large
-                          >mdi-file{{findIcon(attachment.name)}}-outline</v-icon>
-                          <span class="filename text-truncate">{{attachment.name}}</span>
+                        <div
+                          class="downloadable_attachment vertically--centered"
+                        >
+                          <v-icon color="#000000" x-large
+                            >mdi-file{{
+                              findIcon(attachment.name)
+                            }}-outline</v-icon
+                          >
+                          <span class="filename text-truncate">{{
+                            attachment.name
+                          }}</span>
                           <button @click="downloadAttachment(attachment._id)">
                             <svg
                               class="attachment-download"
@@ -195,7 +225,10 @@
                         </div>
                       </div>
                     </div>
-                    <span v-else>Chapter {{course.chapters[activeIndex].name}} have no attachments</span>
+                    <span v-else
+                      >Chapter {{ course.chapters[activeIndex].name }} have no
+                      attachments</span
+                    >
                   </v-row>
                 </v-container>
               </v-tab-item>
@@ -221,9 +254,13 @@ export default {
   }),
   computed: {
     ...mapGetters("courses", ["course"]),
-    maximumIndex(){
-      return this.course ? Math.round((this.course.progress.progress * this.course.chapters.length) / 100) : 0;
-    }
+    maximumIndex() {
+      return this.course
+        ? Math.round(
+            (this.course.progress.progress * this.course.chapters.length) / 100
+          )
+        : 0;
+    },
   },
   watch: {
     activeIndex() {
@@ -268,8 +305,8 @@ export default {
       userCategory: this.$store.state.user.user.category.toLowerCase(),
       userId: this.$store.state.user.user._id,
       courseName: this.$route.params.name,
-    });
-    if (this.activeIndex == -1) {
+    })
+    if (this.activeIndex != this.maximumIndex) {
       this.activeIndex = this.maximumIndex;
     }
   },

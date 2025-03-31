@@ -39,7 +39,7 @@ export default {
         set_student_progress(state, { courseId, progress }) {
             for (const i in state.courses.data) {
                 if (state.courses.data[i]._id == courseId) {
-                    state.courses.data[i].progress = { progress: progress.progress, dateStarted: progress.createdAt }
+                    state.courses.data[i].progress = { id: progress._id, progress: progress.progress, dateStarted: progress.createdAt }
                     break
                 }
             }
@@ -316,7 +316,7 @@ export default {
                 let course = state.courses.data.filter(course => course.name == courseName)[0]
                 commit('set_selected_course', course._id)
             }
-            
+
 
         },
         // create student progress in a lesson
@@ -340,10 +340,10 @@ export default {
                     break
                 }
             }
-            apis.update(`studentProgress`, state.courses.data[courseIndex].progress.id, { student: studentId, course: state.selectedCourse, chapter: state.selectedChapter }).then(d => {
+            return apis.update(`studentProgress`, state.courses.data[courseIndex].progress.id, { student: studentId, course: state.selectedCourse, chapter: state.selectedChapter }).then(d => {
                 commit('set_student_progress', { courseId: state.selectedCourse, progress: d.data })
 
-                state.courses.data[courseIndex].progress = { id: d.data._id, progress: d.data.progress, dateStarted: d.data.createdAt }
+                return { id: d.data._id, progress: d.data.progress, dateStarted: d.data.createdAt }
 
             })
         },
