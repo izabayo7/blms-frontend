@@ -312,8 +312,9 @@
         <div class="tabs-body">
           <div class="tab d-md-flex">
             <div v-if="course.cover_picture"
-                 :alt="course.name + ' cover photo'" class="cover"
-                 :style="`background-image: url(${course.cover_picture});`"></div>
+                 class="cover"
+                 :style="`background-image: url('`+`${course.cover_picture}?token=${$session.get('jwt')}');`">
+            </div>
             <div v-show="panel1" class="content">
               <div class="course-title">
                 {{ course.name }}
@@ -888,46 +889,43 @@ button.back {
 
 /* Portrait phones and smaller */
 @media (max-width: 700px) {
-  .my-container {
-    padding: 0;
 
-    .instructor_preview .tabs-body {
+  .instructor_preview .tabs-body {
+    padding: 68px 30px;
+    .cover {
+      width: 100%;
+      height: 177px;
+    }
 
-      .cover {
-        width: 100%;
-        height: 177px;
+    .content {
+      padding: 14px 33.4px;
+
+      .course-description {
+        font-size: 12px;
       }
 
-      .content {
-        padding: 14px 33.4px;
+      .course-title {
+        font-size: 21px;
+      }
 
-        .course-description {
-          font-size: 12px;
+      .details .col {
+        font-size: 10px;
+      }
+
+      .actions {
+        margin-top: 20px;
+
+        svg {
+          margin: auto 10px;
         }
+      }
 
-        .course-title {
-          font-size: 21px;
-        }
+      .students {
+        height: fit-content;
 
-        .details .col {
-          font-size: 10px;
-        }
-
-        .actions {
-          margin-top: 20px;
-
-          svg {
-            margin: auto 10px;
-          }
-        }
-
-        .students {
-          height: fit-content;
-
-          .individual {
-            border-top: 1px solid #B8B8B8;
-            padding: 17px 0;
-          }
+        .individual {
+          border-top: 1px solid #B8B8B8;
+          padding: 17px 0;
         }
       }
     }
