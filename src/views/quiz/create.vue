@@ -31,8 +31,8 @@
       </div>
     </div>
     <div id="quiz-questions">
-      <div v-for="(question, i) in questions" :key="question.name" class="question">
-        <div class="question-number">1</div>
+      <div v-for="(question, i) in questions" :key="question.name" class="question mb-5">
+        <div class="question-number">{{ i + 1 }}</div>
         <div class="question-content">
           <div class="row">
             <div class="col-12 col-md-6">
@@ -115,7 +115,7 @@
               <div class="status mx-auto">
                 <label>Correct</label>
                 <!--                <transition name="fade" >-->
-                <svg class="d-none" width="18" height="20" viewBox="0 0 18 20" fill="none"
+                <svg v-if="option.right" @click="handleOptionClick(i, k)" width="18" height="20" viewBox="0 0 18 20" fill="none"
                      xmlns="http://www.w3.org/2000/svg">
                   <rect x="0.613894" y="5.7721" width="13.5057" height="13.5057" rx="1.84168" stroke="#828282"
                         stroke-width="1.22779"/>
@@ -123,7 +123,7 @@
                         stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
 
-                <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <svg v-else @click="handleOptionClick(i, k)" width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <rect x="0.613894" y="0.72034" width="13.5057" height="13.5057" rx="1.84168" stroke="#828282"
                         stroke-width="1.22779"/>
                 </svg>

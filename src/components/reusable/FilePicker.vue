@@ -253,8 +253,8 @@ div.remove-container a {
           here!</span
         >
         </v-col>
-        <v-col class="col-2">
-          <v-btn v-if="template != 'quiz-files' || files.length" class="mt-n2" @click="clickButton()" large icon>
+        <v-col v-if="template != 'quiz-files' || files.length" class="col-2">
+          <v-btn class="mt-n2" @click="clickButton()" large icon>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
               <path fill="none" d="M0 0h24v24H0z"/>
               <path
@@ -262,11 +262,12 @@ div.remove-container a {
                   fill="rgba(149,164,166,1)"/>
             </svg>
           </v-btn>
-          <input
-              type="file"
-              :multiple="multiple"
-              :id="inputId"
-              :accept="
+        </v-col>
+        <input
+            type="file"
+            :multiple="multiple"
+            :id="inputId"
+            :accept="
             allowedTypes === undefined
               ? undefined
               : allowedTypes.includes('video')
@@ -275,10 +276,9 @@ div.remove-container a {
               ? 'image/*'
               : undefined
           "
-              hidden
-              @change="addFile()"
-          />
-        </v-col>
+            hidden
+            @change="addFile()"
+        />
       </v-row>
     </form>
     <div v-if="hint" class="hint">

@@ -35,6 +35,7 @@
       box-sizing: border-box;
       border-radius: 4px;
       margin-bottom: 25px;
+      padding: 4px 12px;
 
       &.inner-input {
         border: none;
@@ -47,6 +48,7 @@
     .duration-input {
       max-width: 185px;
       width: 100%;
+      padding: 0px;
     }
 
     .duration-input {
