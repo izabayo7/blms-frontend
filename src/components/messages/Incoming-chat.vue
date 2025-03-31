@@ -2,7 +2,14 @@
   <main class="incoming-chat" @click="handleClick">
     <!--    slot for profile picture-->
     <div class="pic col-3">
-      <img src="@/assets/images/instructor.png" alt="profile picture" />
+      <img
+        v-if="data.image"
+        :src="data.image"
+        :alt="`${data.name}'s profile picture`"
+      />
+      <v-avatar @click="logout" v-else size="50" class="avatar">
+        {{ data.name | computeText }}
+      </v-avatar>
     </div>
     <div class="content col-9">
       <div class="sender">
@@ -156,6 +163,12 @@ export default {
   }
   .unread-msg {
     font-weight: 600;
+  }
+  .avatar {
+    margin-top: 0px;
+    background-color: $primary;
+    color: white;
+    cursor: pointer;
   }
 }
 </style>

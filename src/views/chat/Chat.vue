@@ -5,7 +5,6 @@
         <!--        profile picture of the current chatter-->
         <template #pic>
           <img
-            @click="logout"
             v-if="currentDisplayedUser.image"
             :src="currentDisplayedUser.image"
             :alt="`${currentDisplayedUser.name}'s profile picture`"
@@ -171,12 +170,6 @@ export default {
     width: 100%;
     align-self: flex-end;
     justify-self: flex-end;
-  }
-  .avatar {
-    margin-top: 0px;
-    background-color: $primary;
-    color: white;
-    cursor: pointer;
   }
 }
 </style>
