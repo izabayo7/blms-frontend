@@ -5,7 +5,7 @@
       <div class="shade" :class="{ iconActive: cardActive }">
         <div class="hold">
           <v-icon>mdi-bell-outline</v-icon>
-          <div class="number">{{ unReads }}</div>
+          <div v-if="unReads" class="number">{{ unReads }}</div>
         </div>
       </div>
     </div>
@@ -17,6 +17,10 @@
       <div class="my-card" v-if="cardActive">
         <div class="customScroll">
           <div class="head">Notifications</div>
+          <!-- when there is no notification -->
+          <div class="n_item">
+            You have no notifications
+          </div>
           <!-- notification item -->
           <div
             v-for="(no, i) in formatedNotifications"
@@ -181,6 +185,11 @@ export default {
       font-size: 1.2rem;
       border-bottom: 1px solid lighten($color: $secondary, $amount: 2);
       padding: 1rem;
+    }
+
+    .n_item{
+      text-align: center;
+      padding: 20px 0;
     }
 
     //notification item

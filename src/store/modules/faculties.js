@@ -28,9 +28,10 @@ export default {
         getFacultyCollegeYears({ state }, collegeId) {
             // when faculty college years not loaded fetch them
             if (!state.facultyCollegeYears.loaded) {
-                apis.get(`faculty-college-year/college/${collegeId}`).then(d => {
+                apis.get(`faculty_college_year/college/${collegeId}`).then(d => {
+                    d.data = d.data.data
                     for (const i in d.data) {
-                        d.data[i].name = `${d.data[i].facultyCollege.faculty.name} year ${d.data[i].collegeYear.digit}`
+                        d.data[i].name = `${d.data[i].faculty_college.faculty.name} year ${d.data[i].college_year.digit}`
                     }
                     state.facultyCollegeYears.data = d.data
                     //announce that data have been loaded
@@ -40,7 +41,7 @@ export default {
         },
         //create a facultyCollegeYear
         createFacultyCollegeYear({ state }, { facultyCollegeYear }) {
-            return apis.create('faculty-college-year', facultyCollegeYear).then(d => {
+            return apis.create('faculty_college_year', facultyCollegeYear).then(d => {
                 state.facultyCollegeYears.data.push(d.data)
             })
         },

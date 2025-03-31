@@ -15,12 +15,12 @@
           <router-link
             class="normal--text"
             :to="
-              userCategory === 'Student'
+              userCategory === 'STUDENT'
                 ? `/courses/preview/${returnCourseName(item.quiz)}`
                 : `/quiz/${item.quiz.name}/${item.student.surName}_${item.student.otherNames}`
             "
             >{{
-              userCategory === "Student"
+              userCategory === "STUDENT"
                 ? returnCourseName(item.quiz)
                 : item.student.surName + " " + item.student.otherNames
             }}</router-link
@@ -29,9 +29,9 @@
         <!-- display the quiz name as alink to that quiz -->
         <template v-slot:item.submissionName="{ item }">
           <router-link
-            v-if="userCategory === 'Student'"
+            v-if="userCategory === 'STUDENT'"
             class="normal--text"
-            :to="`/quiz/${item.quiz.name}/${$store.state.user.user.surName}_${$store.state.user.user.otherNames}`"
+            :to="`/quiz/${item.quiz.name}/${$store.state.user.user.user_name}`"
             >{{ item.quiz.name }}</router-link
           >
           <span v-else class="normal--text">{{ item.quiz.name }}</span>
@@ -49,7 +49,7 @@
         <!-- display the grades -->
         <template v-slot:item.grade="{ item }">
           <span class="normal--text">{{
-            (item.marked ? item.totalMarks : "") + "/" + item.quiz.totalMarks
+            (item.marked ? item.total_marks : "") + "/" + item.quiz.total_marks
           }}</span>
         </template>
         <template v-slot:no-data>
@@ -57,7 +57,7 @@
         </template>
       </v-data-table>
     </div>
-    <div v-if="userCategory === 'Student'" class="table-two">
+    <div v-if="userCategory === 'STUDENT'" class="table-two">
       <h3>Courses</h3>
       <v-data-table
         :headers="coursesHeaders"
@@ -138,7 +138,7 @@ export default {
       return [
         {
           text: `${
-            this.userCategory === "Student" ? "Course" : "Student"
+            this.userCategory === "STUDENT" ? "Course" : "STUDENT"
           } Name`,
           align: "start",
           sortable: false,
@@ -160,7 +160,7 @@ export default {
     },
     // get the userCategory
     userCategory() {
-      return this.$store.state.user.user.category;
+      return this.$store.state.user.user.category.name;
     },
     ...mapGetters("courses", ["courses"]),
     ...mapGetters("quiz_submission", ["quiz_submissions"]),
@@ -203,7 +203,6 @@ export default {
     });
     //get submissions on page load
     this.getQuizSubmissions({
-      userCategory: this.userCategory.toLowerCase(),
       userId: this.$store.state.user.user._id,
     });
   },

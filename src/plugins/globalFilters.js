@@ -11,6 +11,8 @@ const filters = [
         // decrease a strings length
         name: 'trimString',
         structure: (string, length) => {
+            if (!string)
+                return
             if (string.length < length)
                 return string
             let trimedString = string.substring(0, length);
@@ -26,17 +28,7 @@ const filters = [
         // (get short form of a string)
         name: 'computeText',
         structure: (string) => {
-
-            if(!string)
-                return
-
-            let text = "";
-            const forbiden = ["and", "of"];
-            string.split(" ").forEach((val) => {
-                if (!forbiden.includes(val)) text += val.substring(0, 1).toUpperCase();
-            });
-
-            return text;
+            return string[0].toUpperCase();
         },
     },
     {

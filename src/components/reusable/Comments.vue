@@ -46,7 +46,7 @@
               three-line
             >
               <v-list-item-avatar>
-                <img :src="`http://127.0.0.1:5500/src/assets/images/${item.userProfile}`" />
+                <img src="" />
               </v-list-item-avatar>
               <v-list-item-content>
                 <v-list-item-title

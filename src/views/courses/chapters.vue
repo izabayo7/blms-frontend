@@ -586,7 +586,6 @@ export default {
   created() {
     // load quizes
     this.getQuizes({
-      userCategory: this.$store.state.user.user.category.toLowerCase(),
       userId: this.$store.state.user.user._id,
     });
     // automatically add one chapter if there are no chapters

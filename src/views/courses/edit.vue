@@ -54,15 +54,15 @@
             </v-col>
             <v-col class="col-12 col-md-4">
               <v-avatar
-                v-if="course.coverPicture"
+                v-if="course.cover_picture"
                 size="245"
                 :class="
-                  course.coverPicture
+                  course.cover_picture
                     ? 'user-profile ml-2 mt-6 d-block'
                     : 'course-image white--text bg-color-one text-h2'
                 "
               >
-                <v-img :src="course.coverPicture" :lazy-src="course.coverPicture" alt="avatar">
+                <v-img :src="course.cover_picture" :lazy-src="course.cover_picture" alt="avatar">
                   <template v-slot:placeholder>
                     <v-row
                       class="fill-height ma-0"
@@ -93,7 +93,7 @@
                 <v-icon>mdi-paperclip</v-icon>
               </v-btn>
               <span>{{
-                course.coverPicture === undefined
+                course.cover_picture === undefined
                   ? "Upload Course CoverPicture"
                   : coverPicture
                   ? coverPicture.name
@@ -172,13 +172,14 @@ export default {
     handleFileUpload() {
       this.coverPicture = this.$refs.file.files[0];
     },
+
     saveCourseChanges() {
       this.updateCourse({
         course: {
           name: this.course.name,
-          instructor: this.$store.state.user.user._id,
+          user: this.$store.state.user.user._id,
           description: this.course.description,
-          facultyCollegeYear: this.selectedFacultyCollegeYearCode,
+          faculty_college_year: this.selectedFacultyCollegeYearCode,
         },
         coverPicture: this.coverPicture,
       }).then(() => {
@@ -190,12 +191,11 @@ export default {
   },
   created() {
     this.getFacultyCollegeYears(this.$store.state.user.user.college);
-    this.findCourseByName({
-      userCategory: this.$store.state.user.user.category.toLowerCase(),
+    this.findCourseByName({ 
       userId: this.$store.state.user.user._id,
       courseName: this.$route.params.name,
     }).then((course) => {
-      this.selectedFacultyCollegeYearName = `${course.facultyCollegeYear.facultyCollege.faculty.name} ${course.facultyCollegeYear.collegeYear.digit}`;
+      this.selectedFacultyCollegeYearName = `${course.faculty_college_year.faculty_college.faculty.name} ${course.faculty_college_year.college_year.digit}`;
     });
   },
 };

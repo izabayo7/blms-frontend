@@ -45,7 +45,7 @@ export default {
         set_student_progress(state, { courseId, progress }) {
             for (const i in state.courses.data) {
                 if (state.courses.data[i]._id == courseId) {
-                    state.courses.data[i].progress = { id: progress._id, progress: progress.progress, dateStarted: progress.createdAt }
+                    state.courses.data[i].progress = { id: progress._id, progress: progress.progress, dateStarted: progress.createdAt, lastUpdated: progress.updatedAt }
                     break
                 }
             }
@@ -56,10 +56,11 @@ export default {
     },
     actions: {
         //get courses from backend
-        getCourses({ state }, { userCategory, userId }) {
+        getCourses({ state }, { userId }) {
             // if courses not loaded fetch them
             if (!state.courses.loaded) {
-                apis.get(`course/${userCategory}/${userId}`).then(d => {
+                apis.get(`course/user/${userId}`).then(d => {
+                    d.data = d.data.data
                     state.courses.data = d.data
                     //announce that data have been loaded
                     state.courses.loaded = true
@@ -79,7 +80,7 @@ export default {
                                 return state.courses.data[i].chapters[k].documentContent
                             }
                             else {
-                                return apis.get(`file/chapterDocument/${chapterId}`).then(d => {
+                                return apis.get(`chapter/${chapterId}/document`).then(d => {
                                     state.courses.data[i].chapters[k].documentContent = d.data
                                     return d.data
                                 })
@@ -94,6 +95,7 @@ export default {
         createCourse({ state, commit, dispatch }, { course, coverPicture }) {
             let courseObject = {}
             return apis.create('course', course).then(d => {
+                d.data = d.data.data
 
                 courseObject._id = d.data._id
                 courseObject.name = d.data.name
@@ -115,7 +117,7 @@ export default {
                             dispatch('modal/set_progress', parseInt(Math.round((progressEvent.loaded / progressEvent.total) * 100)), { root: true })
                         }
                     }).then(courseData => {
-                        courseObject.coverPicture = courseData.data.coverPicture
+                        courseObject.coverPicture = courseData.data.data.coverPicture
                     })
                 }
                 courseObject.chapters = []
@@ -135,7 +137,7 @@ export default {
             }
 
             return apis.update('course', state.selectedCourse, course).then(d => {
-
+                d.data = d.data.data
                 state.courses.data[courseIndex].name = d.data.name
                 state.courses.data[courseIndex].description = d.data.description
                 state.courses.data[courseIndex].facultyCollegeYear = d.data.facultyCollegeYear
@@ -153,7 +155,7 @@ export default {
                             dispatch('modal/set_progress', parseInt(Math.round((progressEvent.loaded / progressEvent.total) * 100)), { root: true })
                         }
                     }).then(courseData => {
-                        state.courses.data[courseIndex].coverPicture = courseData.data.coverPicture
+                        state.courses.data[courseIndex].coverPicture = courseData.data.data.coverPicture
                     })
                 }
             })
@@ -218,7 +220,7 @@ export default {
                             commit('quiz/update_quiz_target', { id: state.courses.data[courseIndex].chapters[chapterIndex].quiz[0]._id, target: undefined }, { root: true })
                             state.courses.data[courseIndex].chapters[chapterIndex].quiz.splice(0, 1)
                         }
-                        state.courses.data[courseIndex].chapters[chapterIndex].quiz.push(quizResponse.data)
+                        state.courses.data[courseIndex].chapters[chapterIndex].quiz.push(quizResponse.data.data)
                         commit('quiz/update_quiz_target', { id: quizId, target: quizCopy.target }, { root: true })
                     })
 
@@ -276,7 +278,7 @@ export default {
                             dispatch('modal/set_progress', parseInt(Math.round((progressEvent.loaded / progressEvent.total) * 100)), { root: true })
                         }
                     }).then((videoResponse) => {
-                        state.courses.data[courseIndex].chapters[chapterIndex].mainVideo = videoResponse.data.filepath
+                        state.courses.data[courseIndex].chapters[chapterIndex].mainVideo = videoResponse.data.data.filepath
                     })
                 }
             })
@@ -287,7 +289,8 @@ export default {
             if (courseId)
                 commit('set_selected_course', courseId)
 
-            apis.update('course/tooglePublishment', state.selectedCourse).then(d => {
+            apis.update('course/toogle_publishment_status', state.selectedCourse).then(d => {
+                d.data = d.data.data
                 for (const i in state.courses.data) {
                     if (state.courses.data[i]._id == state.selectedCourse) {
                         state.courses.data[i].published = d.data.published
@@ -347,7 +350,7 @@ export default {
             })
         },
         //find a course by name
-        findCourseByName({ state, commit }, { userCategory, userId, courseName }) {
+        findCourseByName({ state, commit }, { userId, courseName }) {
             let courseFound = false
             if (state.courses.loaded) {
                 let courses = state.courses.data.filter(course => course.name == courseName)
@@ -359,7 +362,8 @@ export default {
                 }
             }
             if (!courseFound) {
-                return apis.get(`course/${userCategory}/${userId}/${courseName}`).then(d => {
+                return apis.get(`course/user/${userId}/${courseName}`).then(d => {
+                    d.data = d.data.data
                     if (state.courses.loaded) {
                         state.courses.data.push(d.data)
                     } else {
@@ -373,7 +377,8 @@ export default {
         },
         // create student progress in a lesson
         startCourse({ state, commit }, studentId) {
-            apis.create(`studentProgress`, { student: studentId, course: state.selectedCourse }).then(d => {
+            apis.create(`user_progress`, { user: studentId, course: state.selectedCourse }).then(d => {
+                d.data = d.data.data
                 commit('set_student_progress', { courseId: state.selectedCourse, progress: d.data })
                 for (const i in state.courses.data) {
                     if (state.courses.data[i]._id == state.selectedCourse) {
@@ -392,10 +397,11 @@ export default {
                     break
                 }
             }
-            return apis.update(`studentProgress`, state.courses.data[courseIndex].progress.id, { student: studentId, course: state.selectedCourse, chapter: state.selectedChapter }).then(d => {
+            return apis.update(`user_progress`, state.courses.data[courseIndex].progress.id, { user: studentId, course: state.selectedCourse, chapter: state.selectedChapter }).then(d => {
+                d.data = d.data.data
                 commit('set_student_progress', { courseId: state.selectedCourse, progress: d.data })
 
-                return { id: d.data._id, progress: d.data.progress, dateStarted: d.data.createdAt }
+                return { id: d.data._id, progress: d.data.progress, dateStarted: d.data.createdAt, lastUpdated: d.data.updatedAt }
 
             })
         },
@@ -415,7 +421,7 @@ export default {
                 }
             }
             return apis.create('chapter', chapter).then(async (d) => {
-
+                d.data = d.data.data
                 if (content) {
                     const formData = new FormData()
                     formData.append("file", video)
@@ -441,7 +447,7 @@ export default {
                     //     }
                     // }
                     apis.update('quiz', quizId, quiz).then((quizResponse) => {
-                        state.courses.data[courseIndex].chapters[chapterIndex].quiz.push(quizResponse.data)
+                        state.courses.data[courseIndex].chapters[chapterIndex].quiz.push(quizResponse.data.data)
                         commit('quiz/update_quiz_target', { id: quizId, target: quiz.target }, { root: true })
                     })
 
@@ -461,7 +467,7 @@ export default {
                         }
                     })
 
-                    for (const i in chapterResponse.data) {
+                    for (const i in chapterResponse.data.data) {
                         state.courses.data[courseIndex].chapters[chapterIndex].attachments.push(chapterResponse.data[i])
                     }
 
@@ -480,7 +486,7 @@ export default {
                             dispatch('modal/set_progress', parseInt(Math.round((progressEvent.loaded / progressEvent.total) * 100)), { root: true })
                         }
                     }).then((videoResponse) => {
-                        state.courses.data[courseIndex].chapters[chapterIndex].mainVideo = videoResponse.data.filepath
+                        state.courses.data[courseIndex].chapters[chapterIndex].mainVideo = videoResponse.data.data.filepath
                     })
                 }
             })

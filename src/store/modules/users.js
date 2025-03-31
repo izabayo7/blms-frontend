@@ -28,15 +28,14 @@ export default {
         getUsers({ state }, { collegeId }) {
             // if users not loaded fetch them
             if (!state.users.loaded) {
-                apis.get(`instructor/college/${collegeId}`).then(d => {
-                    state.users.data = d.data
-                    apis.get(`student/college/${collegeId}`).then(_d => {
-                        for (const i in _d.data) {
-                            state.users.data.push(_d.data[i])
-                        }
-                        //announce that data have been loaded
-                        state.users.loaded = true
-                    })
+
+                apis.get(`user/college/${collegeId}`).then(d => {
+                    d.data = d.data.data
+                    for (const i in d.data) {
+                        state.users.data.push(d.data[i])
+                    }
+                    //announce that data have been loaded
+                    state.users.loaded = true
                 })
             }
         },

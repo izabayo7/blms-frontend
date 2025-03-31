@@ -2,7 +2,7 @@
   <!-- details container -->
   <section class="my-container">
     <!--      this is for student preview-->
-    <v-row v-if="userCategory === 'Student'">
+    <v-row v-if="userCategory === 'STUDENT'">
       <back class="ma-6" to="/courses" />
       <v-col v-if="!loaded" class="col-12">
         <div class="ssc elevation-0 ssc-card student-card-skeleton ml mt-10">
@@ -79,13 +79,13 @@
           <div class="instructor-profile">
             <article>
               <img
-                v-if="course.instructor.profile"
-                :src="course.instructor.profile"
+                v-if="course.user.profile"
+                :src="course.user.profile"
                 alt="profile picture"
               />
               <v-avatar v-else size="50" class="bg-color-one">
                 <span class="white--text">{{
-                  `${course.instructor.surName} ${course.instructor.otherNames}`
+                  `${course.user.sur_name} ${course.user.other_names}`
                     | computeText
                 }}</span>
               </v-avatar>
@@ -93,7 +93,7 @@
             <article class="owner">
               <h3>
                 {{
-                  `${course.instructor.surName} ${course.instructor.otherNames}`
+                  `${course.user.sur_name} ${course.user.other_names}`
                 }}
               </h3>
               <p class="faculty">PHD, web development</p>
@@ -289,7 +289,7 @@
         </main>
         <main class="preview">
           <preview
-            :image="course.coverPicture"
+            :image="course.cover_picture"
             :name="course.name"
             :dateUploaded="course.createdAt | formatDate"
             :progress="course.progress"
@@ -299,16 +299,16 @@
     <!--      end of student preview-->
 
     <!--      teacher preview-->
-    <div class="teacher" v-if="userCategory === 'Instructor'">
+    <div class="teacher" v-if="userCategory === 'INSTRUCTOR'">
       <button @click="$router.go(-1)" class="back">back</button>
       <div class="preview-card row">
         <div class="preview-image col-sm-12 col-md-12 col-lg-4 col-xl-4">
           <v-img
-            v-if="course.coverPicture"
+            v-if="course.cover_picture"
             :alt="course.name + ' cover photo'"
             class="preview-media"
-            :src="course.coverPicture"
-            :lazy-src="course.coverPicture"
+            :src="course.cover_picture"
+            :lazy-src="course.cover_picture"
           >
             <template v-slot:placeholder>
               <v-row class="fill-height ma-0" align="center" justify="center">
@@ -383,7 +383,7 @@
                   </svg>
                 </div>
                 <div class="text">
-                  {{ course.facultyCollegeYear.facultyCollege.faculty.name }}
+                  {{ course.faculty_college_year.faculty_college.faculty.name }}
                 </div>
               </div>
               <div class="info-col col-sm-6 col-md-~4 col-lg-4 col-xl-4">
@@ -449,7 +449,7 @@
                   </svg>
                 </div>
                 <div class="text">
-                  year {{ course.facultyCollegeYear.collegeYear.digit }}
+                  year {{ course.faculty_college_year.college_year.digit }}
                 </div>
               </div>
               <div class="info-col col-sm-6 col-md-~4 col-lg-4 col-xl-4">
@@ -733,7 +733,7 @@ export default {
   computed: {
     // get the userCategory
     userCategory() {
-      return this.$store.state.user.user.category;
+      return this.$store.state.user.user.category.name;
     },
     // get the current course
     ...mapGetters("courses", ["course"]),
@@ -905,6 +905,7 @@ button.back {
         align-items: center;
         img {
           width: 50px;
+          border-radius: 50%;
           cursor: pointer;
         }
       }

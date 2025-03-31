@@ -306,7 +306,7 @@
           sort-by="name"
         >
           <template v-slot:item.name="{ item }">
-            {{ `${item.surName} ${item.otherNames}` }}
+            {{ `${item.sur_name} ${item.other_names}` }}
           </template>
           <template v-slot:item.faculty="{ item }">
             {{

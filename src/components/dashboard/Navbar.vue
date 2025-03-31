@@ -3,13 +3,7 @@
     <div class="my-search col-5">
       <search />
     </div>
-    <div
-      v-if="
-        $store.state.user.user.category === 'Instructor' &&
-        $route.name !== 'Create course'
-      "
-      class="create_course col-2"
-    >
+    <div v-if="showCreateCourseButton" class="create_course col-2">
       <v-btn
         rounded
         dark
@@ -28,11 +22,8 @@
       </v-btn>
     </div>
     <div
-      :class="`notification col-1 offset-1 offset-md-${
-        $store.state.user.user.category === 'Instructor' &&
-        $route.name !== 'Create course'
-          ? 1
-          : 2
+      :class="`notification col-1 offset-1 ${
+        !showCreateCourseButton ? 'offset-md-3' : ''
       }`"
     >
       <notifications />
@@ -49,6 +40,14 @@ export default {
     search: () => import("@/components/reusable/Search"),
     notifications: () => import("@/components/reusable/Notification"),
     profile: () => import("./Profile"),
+  },
+  computed: {
+    showCreateCourseButton() {
+      return (
+        this.$store.state.user.user.category.name === "INSTRUCTOR" &&
+        this.$route.name !== "Create course"
+      );
+    },
   },
 };
 </script>
