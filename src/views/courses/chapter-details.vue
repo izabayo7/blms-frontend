@@ -50,10 +50,7 @@
                     :defaultContent="editorContent"
                   />
                 </v-col>
-                <v-col
-                  v-if="Math.round(maximumIndex) === activeIndex"
-                  class="col-6 mx-auto text-center"
-                >
+                <v-col class="col-6 mx-auto text-center">
                   <v-btn
                     v-if="
                       course.chapters[activeIndex].quiz.length > 0 &&
@@ -67,10 +64,7 @@
                     >Take Quiz</v-btn
                   >
                   <v-btn
-                    v-else-if="
-                      userCategory === 'STUDENT' &&
-                      course.progress.progress < 100
-                    "
+                    v-else-if="Math.round(maximumIndex) === activeIndex"
                     :color="primary"
                     class="white--text"
                     @click="markAsCompleted"
@@ -95,10 +89,7 @@
                     </v-col>
                     <v-col class="text-right col-6">
                       <v-btn
-                        v-if="
-                          activeIndex < maximumIndex &&
-                          activeIndex < course.chapters.length - 1
-                        "
+                        v-if="activeIndex < maximumIndex"
                         :color="primary"
                         class="white--text next-chapter"
                         @click="
@@ -299,6 +290,13 @@ export default {
         this.maximumIndex = Math.round(
           (d.progress * this.course.chapters.length) / 100
         );
+        if (this.activeIndex < this.course.chapters.length)
+          this.$router.push(
+            `/courses/${this.course.name}/chapter/${this.activeIndex + 1}/${
+              this.course.chapters[this.activeIndex + 1]._id
+            }`
+          );
+        else this.$router.push("/courses");
         this.changeActiveChapter({
           index: this.activeIndex + 1,
           id: this.nextChapter(this.activeIndex),
@@ -314,6 +312,16 @@ export default {
         user_name: this.$store.state.user.user.user_name,
         courseName: this.$route.params.name,
       }).then((course) => {
+        const total_chapters = this.course.chapters.length;
+        if (this.userCategory === "STUDENT") {
+          this.maximumIndex = Math.round(
+            (this.course.progress.progress * total_chapters) / 100
+          );
+          if (this.maximumIndex > total_chapters - 1) {
+            this.maximumIndex = total_chapters - 1;
+          }
+        }
+
         let index = 0;
         for (const i in course.chapters) {
           if (course.chapters[i]._id == this.$route.params.id) {
@@ -321,7 +329,6 @@ export default {
             break;
           }
         }
-        console.log(index);
         this.activeIndex = index;
       });
 
