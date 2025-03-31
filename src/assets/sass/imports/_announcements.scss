@@ -52,6 +52,7 @@
   .announcement-container {
     padding: 10px 17px;
     max-width: 329px;
+    cursor: pointer;
     height: 100px;
     position: relative;
     background: rgba(25, 48, 116, 0.05);
@@ -131,6 +132,27 @@
       align-items: center;
       color: #EFEFEF;
       transform: rotate(45deg);
+    }
+  }
+  .limited{
+    max-height: 464px;
+    overflow-y: auto;
+    .announcement-container{
+      max-width: 100%;
+    }
+  }
+  .announcement{
+    max-width: 463px;
+    min-height: 395px;
+    margin-bottom: 22px;
+    background: rgba(243, 244, 248, 0.6);
+  }
+  .actions{
+    display: flex;
+    .outlined{
+      background-color: transparent;
+      border: 1px solid #193074;
+      color: #193074;
     }
   }
 }

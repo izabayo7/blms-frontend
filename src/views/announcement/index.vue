@@ -3,7 +3,7 @@
     <v-row class="page_title">
       <div class="col-4 col-md-6">
         <div class="upper">Dashboard</div>
-        <div class="lower">Overview</div>
+        <div class="lower">Anouncements</div>
       </div>
       <div class="col-8 col-md-6 text-right">
         <button>
