@@ -424,6 +424,7 @@
 
 <script>
 import {mapActions, mapGetters} from "vuex";
+import '@/assets/js/mathlive'
 import colors from "@/assets/sass/imports/_colors.scss";
 
 export default {
@@ -498,8 +499,14 @@ export default {
       this.attachments = [];
     },
     stepCounter() {
-      if (this.stepCounter === 3) {
+      console.log(this.stepCounter)
+      if (this.stepCounter == 3) {
+        console.log('ngahoooooooo')
         document.querySelector(".ProseMirror").focus();
+        setTimeout(() => {
+          console.log('going to burn')
+          this.addSpecialInput()
+        }, 3000)
       }
       if (this.stepCounter == 4) {
         this.calculateQuizNames();
@@ -525,6 +532,19 @@ export default {
     },
   },
   methods: {
+    addSpecialInput() {
+      const el = document.querySelector('.editor__content')
+      const newElement = document.createElement('math-field')
+      newElement.setAttribute('virtual-keyboard-mode', 'manual')
+      newElement.setAttribute('role', 'textbox')
+      newElement.setAttribute('tabindex', '0')
+      const div = document.createElement('p')
+      div.appendChild(newElement)
+
+      el.appendChild(div)
+      // const paragraph = document.createElement('p')
+      // el.appendChild(paragraph)
+    },
     ...mapActions("courses", [
       "getChapterMainContent",
       "updateChapter",
@@ -537,7 +557,7 @@ export default {
     ...mapActions("modal", ["set_modal"]),
     changeLimit() {
       for (let i in this.course.chapters) {
-        i=parseInt(i)
+        i = parseInt(i)
         if (i === this.activeChapter) {
           this.course.chapters[i].status = this.course.chapters[i].status ? 0 : 1
         } else if (this.course.chapters[i].status === 0) {
