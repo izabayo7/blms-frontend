@@ -49,6 +49,11 @@ export default {
         create_quiz({ state, dispatch }, { quiz, pictures }) {
 
             return apis.create('quiz', quiz).then(d => {
+                if(d.data.status != 200 && d.data.status != 201){
+                    throw d.data
+                }
+                console.log('twakomeje')
+
                 d.data = d.data.data
                 d.data.usage = 0
                 if (pictures.length > 0) {

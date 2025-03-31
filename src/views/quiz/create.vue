@@ -169,7 +169,7 @@
     <div id="quiz-actions" class=" d-flex mb-12 mt-6">
       <button class="quiz-action cancel">Cancel</button>
       <button class="quiz-action" v-if="!questions.length" @click="recreate">Add questions</button>
-      <button class="quiz-action" v-else>Save quiz</button>
+      <button class="quiz-action" v-else @click="validate">Save quiz</button>
     </div>
   </div>
 </template>
@@ -202,6 +202,25 @@ export default {
     passMarks: 0
   }),
   methods: {
+    validate(){
+      if(this.title == "")
+        return this.error = "Title is required"
+
+      if(this.title.length < 3)
+        return this.error = "Title is too short"
+
+      if(this.hours == 0 && this.minutes == 0 )
+        return this.error = "Duration is required"
+
+      if(this.passMarks == 0)
+        return this.error = "PassMarks is too short"
+
+      for (const i in this.questions) {
+
+      }
+
+      this.saveQuiz();
+    },
     ...mapActions("quiz", ["create_quiz"]),
     addPicture(file, boundIndex) {
       this.pictures[boundIndex].push(file);
@@ -292,13 +311,8 @@ export default {
       this.questions.splice(index, 1);
       this.pictures.splice(index, 1);
     },
-    toSeconds(duration) {
-      const hours = duration.hh ? duration.hh : 0;
-      const minutes = duration.mm ? duration.mm : 0;
-      const seconds = duration.ss ? duration.ss : 0;
-      const result =
-          parseInt(seconds) + parseInt(minutes) * 60 + parseInt(hours) * 3600;
-      return result;
+    calculateSeconds() {
+      return parseInt(this.minutes) * 60 + parseInt(this.hours) * 3600;
     },
     async saveQuiz() {
       let questions = [];
@@ -317,20 +331,28 @@ export default {
 
       this.create_quiz({
         quiz: {
-          name: this.name,
+          name: this.title,
           instructions:
               editorContent ==
               `<ol><li><p>Write your custom instructions</p></li></ol>`
                   ? undefined
                   : editorContent,
-          duration: this.toSeconds(this.duration),
+          duration: this.calculateSeconds(),
           user: this.$store.state.user.user.user_name,
           questions: questions,
         },
         pictures: this.pictures,
       }).then(() => {
         this.$router.push("/quiz");
-      });
+      }).catch((e)=>{
+        this.$store.dispatch("app_notification/SET_NOTIFICATION", {
+          message: e.message,
+          status: "danger",
+          uptime: 5000,
+        }).then(() => {
+          this.error = ""
+        })
+      })
     },
   }
 };
