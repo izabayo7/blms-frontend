@@ -79,7 +79,7 @@ export default {
         },
       },
       yaxis: {
-        min: -10,
+        min: 0,
         max: 40,
       },
     },
