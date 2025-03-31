@@ -8,7 +8,8 @@
             </div>
             <div class="right">
                 <div class="comment">
-                    <div class="name">Joshua Kingsley</div>
+                    <h4 class="name">Joshua Kingsley</h4>
+                    <div class="time"><span>10:29 PM</span></div>
                     <div class="comment">Who can support you without having
                         the idea ?
                     </div>
@@ -46,7 +47,8 @@
 .my-discussion{
     .my-discussion-container{
         display: flex;
-
+        background-color: $main;
+        padding:.4rem;
         .left{
             .avatar{
                 padding-top: 1rem;
@@ -57,6 +59,14 @@
                     color:$main;
                     font-size: .9rem;
                 }
+            }
+        }
+        .right{
+            .comment{
+                .name{
+
+                }
+
             }
         }
     }
