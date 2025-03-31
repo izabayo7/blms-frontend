@@ -76,6 +76,21 @@
         </div>
       </div>
     </div>
+    <!-- view for action confirmation -->
+    <div
+        v-else-if="modal_template == 'live_related'"
+        class="dialog-body live"
+    >
+      <div class="title">ATTENDANCE CHECK</div>
+      <div class="sub-title">Hey user, are you there ? Type the code bellow to confirm</div>
+      <div class="code">H8DJ95</div>
+      <div class="">
+        <input type="text">
+      </div>
+      <div class="action">
+        <button>Submit</button>
+      </div>
+    </div>
   </v-dialog>
 </template>
 
@@ -192,10 +207,107 @@ export default {
     border-color: $primary;
   }
 }
+.live{
+  width: 651px;
+  height: 315px !important;
+  padding: 30px;
+
+  background: #FFFFFF;
+  border-radius: 5px;
+  div{
+    margin-bottom: 15px;
+  }
+  .title{
+    font-family: Montserrat;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 30px;
+    line-height: 37px;
+    text-align: center;
+
+    color: #000000;
+  }
+  .sub-title{
+    font-family: Montserrat;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 15px;
+    line-height: 18px;
+
+    color: #000000;
+  }
+  .code{
+    font-family: Montserrat;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 30px;
+    line-height: 37px;
+    text-align: center;
+
+    color: #000000;
+
+  }
+  input{
+    width: 251px;
+    height: 44px;
+    left: 557px;
+    top: 421px;
+
+    background: #E8E8E8;
+    border-radius: 5px;
+    padding: 10px 40px;
+  }
+  .action{
+    button{
+      width: 199px;
+      height: 44px;
+      font-family: Montserrat;
+      font-style: normal;
+      font-weight: 300;
+      font-size: 20px;
+      line-height: 24px;
+      color: #FFFFFF;
+      background: #193074;
+      border-radius: 15px;
+    }
+  }
+}
 #panel--btn {
   background-color: transparent !important;
   /* box-shadow: none; */
   /* color: dodgerblue; */
   border: 2px solid;
+}
+/* Portrait phones and smaller */
+@media (max-width: 700px) {
+  .live{
+    max-width: 342px;
+    width: 100%;
+    height: fit-content !important;
+    padding: 19px 10px;
+    div{
+      margin-bottom: 10px;
+    }
+    .title{
+      font-size: 15px;
+    }
+    .sub-title{
+      font-size: 10px;
+    }
+    .code{
+      font-size: 15px;
+    }
+    input{
+      width: 140px;
+      height: 25px;
+    }
+    .action{
+      button{
+        width: 122.77px;
+        height: 27.15px;
+        font-size: 12.34px;
+      }
+    }
+  }
 }
 </style>
