@@ -74,10 +74,9 @@ export default {
         padding-left: 1.4rem;
         font-family: Inter;
         font-style: normal;
-        font-weight: 500;
-        font-size: 11.6667px;
+        font-weight: 600;
+        font-size: 12.6667px;
         /* identical to box height, or 214% */
-
         color: #7c7c7c;
       }
 .options{
@@ -87,13 +86,15 @@ export default {
   border-radius: 6px;
   margin-top: 28px;
   z-index: 9;
-  font-family: Inter;
   background: white;
   box-shadow: 0px 5.9px 13.2px rgba(0, 0, 0, 0.1);
   .option{
     &:hover{
       background: rgba(208, 205, 205, 0.68);
     }
+    font-family: Inter;
+    color: #7c7c7c;
+    font-size: 12.6667px;
   }
 }
       .drop-down-icon {

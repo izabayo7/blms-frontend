@@ -86,12 +86,14 @@
             </div>
             <div class="d-flex">
               <div class="input-container coloured">
-                <input type="text" id=""/>
+                <input type="text" v-model="currentStudentGroup" id=""/>
                 <svg
+                    v-if="currentStudentGroup.length"
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
                     width="24"
                     height="24"
+                    @click="currentStudentGroup = ''"
                 >
                   <path fill="none" d="M0 0h24v24H0z"/>
                   <path
@@ -100,28 +102,29 @@
                 </svg>
               </div>
               <div class="vertically--centered">
-                <svg
-                    width="12"
-                    height="11"
-                    viewBox="0 0 12 11"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                      d="M6 1V9.5"
-                      stroke="#193074"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                  />
-                  <path
-                      d="M10.25 5.25L1.75 5.25"
-                      stroke="#193074"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                  />
-                </svg>
-
-                <button class="add-student-group">Add student group</button>
+                <button v-if="!isEditing" @click="addStudentGroup" class="add-student-group">
+                  <svg
+                      width="12"
+                      height="11"
+                      viewBox="0 0 12 11"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                        d="M6 1V9.5"
+                        stroke="#193074"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                    />
+                    <path
+                        d="M10.25 5.25L1.75 5.25"
+                        stroke="#193074"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                    />
+                  </svg>
+                  Add student group</button>
+                <button v-else @click="saveStudentGroupChanges">Save</button>
               </div>
             </div>
           </div>
@@ -129,7 +132,7 @@
             <div v-for="(item, i) in addedStudentGroups" :key="i" class="item">
               <div class="name">{{ item.name }}</div>
               <div class="actions">
-                <div class="edit">
+                <button @click="edit(i)" class="edit">
                   edit
                   <svg
                       width="14"
@@ -153,8 +156,8 @@
                         stroke-linejoin="round"
                     />
                   </svg>
-                </div>
-                <div class="delete">
+                </button>
+                <button @click="deleteStudentGroup(i)" class="delete">
                   Delete
                   <svg
                       width="14"
@@ -185,7 +188,7 @@
                         stroke-linejoin="round"
                     />
                   </svg>
-                </div>
+                </button>
               </div>
             </div>
           </div>
@@ -203,7 +206,10 @@ export default {
   components: {SelectUi},
   data: () => ({
     closable: false,
+    editingIndex: -1,
     user_categories: [],
+    isEditing: false,
+    currentStudentGroup: "",
     instructors: [],
     selected_user_category: "",
     faculty: {
@@ -215,9 +221,6 @@ export default {
       id: ""
     },
     addedStudentGroups: [
-      {
-        name: "Computer science Year 3",
-      },
     ],
   }),
   computed: {
@@ -263,6 +266,29 @@ export default {
       //
       //   })
       // },
+    addStudentGroup(){
+      if(this.currentStudentGroup == "")
+        this.error = "Please enter the student group name"
+      else if (this.currentStudentGroup.length < 5)
+        this.error = "Student group name too short"
+      else {
+        this.addedStudentGroups.unshift({name: this.currentStudentGroup})
+        this.currentStudentGroup = ""
+      }
+    },
+    saveStudentGroupChanges(){
+      this.addedStudentGroups[this.editingIndex].name = this.currentStudentGroup;
+      this.currentStudentGroup = ""
+      this.isEditing = false
+    },
+    edit(i){
+      this.isEditing = true;
+      this.editingIndex = i;
+      this.currentStudentGroup = this.addedStudentGroups[i].name
+    },
+    deleteStudentGroup(i){
+      this.addedStudentGroups.splice(i, 1)
+    },
     select_dean(name) {
       console.log(name)
     }
@@ -385,6 +411,7 @@ export default {
 
       textarea {
         min-height: 122px;
+        max-height: 200px;
       }
 
       select:focus {
@@ -425,7 +452,7 @@ export default {
       height: 45.38px;
 
       &.send {
-        width: 251.43px;
+        width: 158px;
         height: 40.38px;
       }
 
