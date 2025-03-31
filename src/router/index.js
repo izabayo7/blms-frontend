@@ -117,9 +117,9 @@ const routes = [
                         component: () => import('@/views/faculties/groups/faculty.vue'),
                     },
                     {
-                        path: '/faculties/instructors/:facultyId',
-                        name:"facultyInstructors",
-                        component: () => import('@/views/faculties/instructors/faculty.vue'),
+                        path: '/faculties/students/:facultyId',
+                        name:"facultyStudents",
+                        component: () => import('@/views/faculties/students/faculty.vue'),
                     },
                     {
                         path: '/faculties/courses/:facultyId',

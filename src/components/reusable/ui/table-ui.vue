@@ -39,7 +39,7 @@
                 </div>
               </div>
             </div></td>
-            <td v-for="tabHead in tabHeads" :key="`${tabHead}${Date.now()*Math.random()}` ">{{content[tabHead]}}</td>
+            <td v-for="col in columnNames" :key="`${col}${Date.now()*Math.random()}` ">{{content[col]}}</td>
           </tr>
         </tbody>
       </table>
@@ -50,6 +50,8 @@
 
 <script>
 //TODO auto flexible column based on length of data [liberi]
+import S from 'string'
+
 export default {
   name: "table-ui",
   props:{
@@ -68,14 +70,34 @@ export default {
     }
   },
   computed:{
-    tabHeads(){
-      try{
 
-        const {keysToShow} = this.options;
-        return keysToShow
-      }catch(e){
-        return Object.keys(this.data[0])
-      }
+    /**
+     * formatted tab/column names that are inserted in table
+     *
+     * @returns {string[]} array
+     */
+    tabHeads(){
+      let tabHeadsCols = this.columnNames;
+
+      tabHeadsCols = tabHeadsCols.map(aTabHead => {
+        let s = S(aTabHead).humanize().s;
+        s = S(s).chompLeft("Total").s;
+
+        return S(s).humanize().s;
+      })
+
+      return tabHeadsCols;
+    },
+
+
+    /**
+     * pure / not formatted tab/column names
+     *
+     * @returns {string[]} array
+     */
+    columnNames(){
+      const {keysToShow} = this.options;
+      return keysToShow || Object.keys(this.data[0]);
     }
   },
   methods:{
