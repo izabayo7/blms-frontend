@@ -13,7 +13,7 @@
                 <!--                </div>-->
                 <div class="unreal-time-discussions">
                     <div class="discussion" v-for="comment in comments" :key="comment._id">
-                        <discussion :content="comment"/>
+                        <discussion :content="comment" @replied="replied"/>
                     </div>
                 </div>
 
@@ -29,16 +29,12 @@
     import DiscussionHead from "./DiscussionHead";
     import StudentNewCommentWithPhoto from "./StudentNewCommentWithPhoto";
     import api from '@/services/apis'
+    import {mapGetters} from 'vuex'
 
     export default {
         name: "UnrealTimeDiscussionBoard",
         props:{
             head_visible:{default:false,type:Boolean,}
-        },
-        data(){
-            return {
-                comments:[]
-            }
         },
         components:{
             StudentNewCommentWithPhoto,
@@ -46,14 +42,28 @@
             Discussion,
             DiscussionHead
         },
+        data(){
+            return {
+                comments:[]
+            }
+        },
+        computed:{
+            ...mapGetters("courses", ['selectedChapter']),
+        },
         methods:{
             async get_comments(){
-                const comments = await api.get("comment")
+                const comments = await api.get(`comment/chapter/${this.selectedChapter}`)
                 this.comments = comments.data.data
                 console.log(this.comments)
             },
             sent(comment){
                 this.comments.unshift(comment)
+            },
+            replied(data){
+                this.comments.map(comment => {
+                    if(comment._id === data._id)
+                        comment.replies.push(data.data)
+                })
             }
         },
         mounted() {
