@@ -220,7 +220,11 @@ export default {
   },
   methods: {
     ...mapMutations("sidebar_navbar", {toggleGroup: "TOGGLE_GROUP_MODEL_VISIBILITY"}),
-    ...mapMutations("chat", {setGroupError:"SET_GROUP_ERROR",changeConversationStand:"CHANGE_CONVERSATION_STAND"}),
+    ...mapMutations("chat", {
+      setGroupError:"SET_GROUP_ERROR",
+      changeConversationStand:"CHANGE_CONVERSATION_STAND",
+      setDisplayedUser:"SET_DISPLAYED_USER"
+    }),
     ...mapActions("users", ["searchUser"]),
 
     closed(i) {
@@ -321,10 +325,16 @@ export default {
 
         }
 
-        //
-        this.changeConversationStand({msg:newGroupAsContact,creation:true})
-        await this.$router.push(`/messages/${newGroup.data.data.code}`);
-        this.toggleGroup()
+
+        this.changeConversationStand({msg:newGroupAsContact,creation:true}) // add the group on top of other conversations
+        await this.$router.push(`/messages/${newGroup.data.data.code}`); //then go to group chat by changing route
+        this.setDisplayedUser(newGroupAsContact) //set this group as current displayed user on chat
+        this.toggleGroup() //then switch off/make it invisible group creation model
+
+        //empty the group property
+        this.group.name =  ""
+        this.group.public =  false
+        this.group.members =  []
       }else{
         this.setGroupError(message)
       }
