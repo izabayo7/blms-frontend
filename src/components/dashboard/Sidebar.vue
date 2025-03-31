@@ -11,7 +11,7 @@
         <li
           v-if="userCategory === 'ADMIN'"
           @click="$router.push('/administration')"
-          :class="{ active: activeRoute.includes('/administration') }"
+          :class="{ active: activeRoute('administration') }"
         >
           <div class="link-icon">
             <svg
@@ -38,7 +38,7 @@
         <li
           v-if="userCategory === 'INSTRUCTOR'"
           @click="$router.push('/users')"
-          :class="{ active: activeRoute.includes('/users') }"
+          :class="{ active: activeRoute('users') }"
         >
           <div class="link-icon">
             <svg xmlns="http://www.w3.org/2000/svg" width="22" height="23" viewBox="0 0 22 23" fill="none">
@@ -67,7 +67,7 @@
         <li
           v-if="userCategory === 'INSTRUCTOR'"
           @click="$router.push('/faculties')"
-          :class="{ active: activeRoute.includes('/faculties') }"
+          :class="{ active: activeRoute('faculties') }"
         >
           <div class="link-icon">
             <svg xmlns="http://www.w3.org/2000/svg" width="22" height="26" viewBox="0 0 22 26" fill="none">
@@ -85,7 +85,7 @@
         <li
           v-if="userCategory === 'INSTRUCTOR'"
           @click="$router.push('/user-groups')"
-          :class="{ active: activeRoute.includes('/user-groups') }"
+          :class="{ active: activeRoute('user-groups') }"
         >
           <div class="link-icon">
             <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 25 25" fill="none">
@@ -109,7 +109,7 @@
         <li
           v-if="userCategory === 'STUDENT' || userCategory === 'INSTRUCTOR'"
           @click="$router.push('/courses')"
-          :class="{ active: activeRoute.includes('/courses') }"
+          :class="{ active: activeRoute('courses') }"
         >
           <div class="link-icon">
             <svg
@@ -131,7 +131,7 @@
         <li
           v-if="userCategory === 'STUDENT' || userCategory === 'INSTRUCTOR'"
           @click="$router.push('/reports')"
-          :class="{ active: activeRoute.includes('/reports') }"
+          :class="{ active: activeRoute('reports') }"
         >
           <div class="link-icon">
             <svg
@@ -153,7 +153,7 @@
         <li
           v-if="userCategory === 'STUDENT' || userCategory === 'INSTRUCTOR'"
           @click="$router.push('/library')"
-          :class="{ active: activeRoute.includes('/library') }"
+          :class="{ active: activeRoute('library') }"
         >
           <div class="link-icon">
             <svg
@@ -174,7 +174,7 @@
         </li>
         <li
           @click="$router.push('/messages')"
-          :class="{ active: activeRoute.includes('/messages') }"
+          :class="{ active: activeRoute('messages') }"
         >
           <div class="link-icon">
             <svg
@@ -196,7 +196,7 @@
         <li
           v-if="userCategory === 'INSTRUCTOR'"
           @click="$router.push('/quiz')"
-          :class="{ active: activeRoute.includes('/quiz') }"
+          :class="{ active: activeRoute('quiz') }"
         >
           <div class="link-icon">
             <svg
@@ -218,7 +218,7 @@
         <li
           v-if="userCategory === 'STUDENT' || userCategory === 'INSTRUCTOR'"
           @click="$router.push('/settings')"
-          :class="{ active: activeRoute.includes('/sinz kbx') }"
+          :class="{ active: activeRoute('settings') }"
         >
           <div class="link-icon">
             <svg
@@ -248,15 +248,21 @@ export default {
   name: "Sidebar",
   computed: {
     ...mapState("sidebar_navbar", { state: "sidebar_expanded" }),
-    activeRoute() {
-      return this.$route.path;
-    },
     userCategory() {
       return this.$store.state.user.user.category.name;
     },
   },
   methods: {
     ...mapMutations("sidebar_navbar", { toggle: "TOGGLE_SIDEBAR_EXPANSION" }),
+    activeRoute(route) {
+      const routeParts = this.$route.path.split("/")
+
+      console.log(route === routeParts[1])
+
+      return route === routeParts[1];
+
+
+    },
   },
 };
 </script>

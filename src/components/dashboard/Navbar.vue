@@ -20,7 +20,6 @@
   </div>
 </template>
 <script>
-//TODO improved active menu detection
 export default {
   name: "Navbar",
   components: {
