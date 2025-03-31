@@ -15,7 +15,7 @@
       </v-btn>
       <!-- the chapters list for big devices only -->
       <v-col class="col-3 hidden-sm-and-down pt-0 fill-height">
-        <kurious-chapter-list
+        <chapter-list
             @change-chapter="changeActiveChapter"
             :chapters="course.chapters"
             :currentIndex="activeIndex"
@@ -26,10 +26,10 @@
         />
       </v-col>
       <!-- chapters list for small devices -->
-      <kurious-page-actions
+      <page-actions
           class="hidden-md-and-up"
       >
-        <kurious-chapter-list
+        <chapter-list
             @change-chapter="changeActiveChapter"
             :chapters="course.chapters"
             :currentIndex="activeIndex"
@@ -38,7 +38,7 @@
             userCategory === 'INSTRUCTOR' || userCategory === 'ADMIN' ? 0 : course.progress.progress
           "
         />
-      </kurious-page-actions>
+      </page-actions>
       <!-- the course main content -->
       <v-col class="col-12 col-md-9 course-content customScroll pa-3">
         <!--        <chapter-details :activeIndex="activeIndex" />-->
@@ -55,11 +55,11 @@
 import colors from "@/assets/sass/imports/_colors.scss";
 import {mapActions, mapGetters} from "vuex";
 
-// import ChapterDetails from "./chapter-details";
 export default {
   name: "course_details",
   components: {
-    // ChapterDetails,
+    ChapterList: () => import("@/components/reusable/ChapterList"),
+    PageActions: () => import("@/components/reusable/PageActions"),
   },
   data: () => ({
     primary: colors.primary,
@@ -73,6 +73,10 @@ export default {
     userCategory() {
       return this.$store.state.user.user.category.name;
     },
+    limit() {
+      const chapter = this.course.chapters.filter(x => x.status === 0)
+      return chapter.length ? chapter[chapter.length - 1]._id : undefined
+    }
   },
   watch: {
     maximumIndex() {
