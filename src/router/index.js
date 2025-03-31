@@ -114,7 +114,13 @@ const routes = [
                             allowedUsers: ["STUDENT"]
                         },
                     },
-
+                    {
+                        path: '/exam/instructions',
+                        component: () => import( /* webpackChunkName: "assignments" */ '@/views/quiz/exam_intermediate.vue'),
+                        meta: {
+                            allowedUsers: ["STUDENT","INSTRUCTOR"]
+                        },
+                    },
                     {
                         path: '/assignments/new',
                         component: () => import( /* webpackChunkName: "assignments" */ '@/views/quiz/create_assignment.vue'),

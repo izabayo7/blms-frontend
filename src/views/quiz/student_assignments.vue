@@ -137,7 +137,7 @@
               <button class="attempt-exam disabled" @click=" disabled ?
                       set_modal({
                         template: 'payment_err',
-                      }) : undefined">
+                      }) : $router.push('/exam/instructions')">
                 Attempt
               </button>
             </template>
