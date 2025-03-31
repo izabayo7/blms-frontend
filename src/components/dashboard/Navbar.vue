@@ -87,7 +87,7 @@
         <v-btn
           rounded
           dark
-          class="add_course mt-3 white--text hidden-lg-and-down"
+          class="add_course mt-3 white--text hidden-md-and-down"
           to="/courses/new"
         >
           <svg
@@ -256,7 +256,7 @@ export default {
     showCreateCourseButton() {
       return (
         this.$store.state.user.user.category.name === "INSTRUCTOR" &&
-        this.$route.name !== "Create course"
+        this.$route.path !== "/courses/new"
       );
     },
   },
