@@ -11,6 +11,7 @@
         <div class="picture"><img src="@/assets/images/instructor.png" alt="sender profile picture" ></div>
 <!--        list of messages sent or received-->
         <div class="msgs">
+
           <div class="msg" v-for="(msg,i) in msgs.messages" :key="i">{{msg.content}}</div>
         </div>
 
