@@ -200,7 +200,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('users', ['usersOnFaculties', 'userByUsername', 'userByUsernameLoading']),
+    ...mapGetters('users', ['userByUsername', 'userByUsernameLoading']),
   },
   mixins: [userSimpleCard],
   methods: {

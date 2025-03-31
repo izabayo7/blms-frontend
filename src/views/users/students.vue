@@ -1,6 +1,20 @@
 <template>
   <div v-if="selected_course" class="students-page bg-one d-flex justify-center">
     <div class="users-page-container d-flex flex-column">
+      <transition name="fade">
+        <div id="user-profile-card">
+          <user-simple-card :loading="userByUsernameLoading" @close="mouseOutPic($event,'user-profile-card')">
+            <template #name>{{ userByUsername.other_names + " " + userByUsername.sur_name }}</template>
+            <template #type>Instructor</template>
+            <template #image>
+              <img v-if="userByUsername.profile" :src="userByUsername.profile + '?width=50'" alt=" profile pic">
+              <v-avatar v-else :size="30" class="profile-avatar">
+                {{ `${userByUsername.sur_name} ${userByUsername.other_names}` | computeText }}
+              </v-avatar>
+            </template>
+          </user-simple-card>
+        </div>
+      </transition>
       <div class="header">
         <div class="header-wrapper row ">
           <div class="heading col-12 col-md-2 d-flex align-center">
@@ -99,13 +113,18 @@
                            v-for="(user, i) in statistics.students" :key="user._id" @select="handleRowSelect(i)"
                            :selected="selected_users.has(i)" :ref="`row${i}`">
                   <template #cols>
-                    <td class="row--image">
+                    <td @click="$router.push(`/users/${user.user_name}`)" class="row--image"
+                        @mouseenter="mouseOnPic($event,user.user_name,'user-profile-card')"
+                        @mouseleave="mouseOutPic($event,'user-profile-card')">
                       <img v-if="user.profile" :src="user.profile + '?width=50'" class="img" alt=" profile pic">
                       <v-avatar v-else size="30" class="profile-avatar img">
                         {{ `${user.sur_name} ${user.other_names}` | computeText }}
                       </v-avatar>
                     </td>
-                    <td>{{ user.sur_name }} {{ user.other_names }}</td>
+                    <td @click="$router.push(`/users/${user.user_name}`)"
+                        @mouseenter="mouseOnPic($event,user.user_name,'user-profile-card')"
+                        @mouseleave="mouseOutPic($event,'user-profile-card')">{{ user.sur_name }} {{ user.other_names }}
+                    </td>
                     <td>{{ user.gender }}</td>
                     <td>
                       <progress :value="user.progress" max="100"></progress>
@@ -134,12 +153,15 @@ import SelectUi from "@/components/reusable/ui/select-ui";
 import TableRow from "../../components/reusable/table/TableRow";
 import {mapActions, mapGetters, mapMutations} from "vuex";
 import Apis from '../../services/apis'
+import UserSimpleCard from "../../components/reusable/user-simple-card";
+import userSimpleCard from "../../mixins/user-simple-card.mixin";
 
 export default {
   name: "Students",
-  components: {TableRow, TableHeadRow, TableUi, TableHeader, SelectUi},
+  components: {TableRow, TableHeadRow, TableUi, TableHeader, SelectUi,UserSimpleCard},
   computed: {
     ...mapGetters("courses", ["courses", "loaded"]),
+    ...mapGetters('users', ['userByUsername', 'userByUsernameLoading']),
     courseNames() {
       let res = [];
       for (const i in this.courses) {
@@ -212,6 +234,7 @@ export default {
       this.statistics = res.data.data
     }
   },
+  mixins: [userSimpleCard],
   created() {
     this.getCourses(!this.loaded);
     if (this.courses.length)
