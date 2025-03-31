@@ -4,6 +4,7 @@ const getDefaultState = () => ({
     group_model: false,
     college: {},
     showChatMobileNavbar: false,
+    total_unread_messages: 0
 })
 
 export default {
@@ -13,6 +14,10 @@ export default {
         //change state of side bar expansion
         TOGGLE_SIDEBAR_EXPANSION(state) {
             state.sidebar_expanded = !state.sidebar_expanded;
+        },
+
+        SET_TOTAL_UNREAD(state, value) {
+            state.total_unread_messages = value
         },
 
         TOGGLE_CHAT_MOBILE_NAVBAR(state) {

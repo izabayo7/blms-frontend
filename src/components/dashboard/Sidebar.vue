@@ -227,7 +227,7 @@
           :class="{ active: activeRoute('messages') }"
         >
           <div class="link-icon">
-            <div class="number">12</div>
+            <div v-if="!activeRoute('messages')" class="number">{{ unreads }}</div>
             <svg
               width="26"
               height="27"
@@ -311,12 +311,18 @@
   </div>
 </template>{
 <script>
-import { mapMutations, mapState } from "vuex";
+import {mapGetters, mapMutations, mapState} from "vuex";
 
 export default {
   name: "Sidebar",
+  watch:{
+    $route(){
+      this.socket.emit("messages/unread");
+    }
+  },
   computed: {
-    ...mapState("sidebar_navbar", { state: "sidebar_expanded" }),
+    ...mapState("sidebar_navbar", { state: "sidebar_expanded", unreads: "total_unread_messages" }),
+    ...mapGetters("chat", ["socket"]),
     userCategory() {
       return this.$store.state.user.user.category.name;
     },
@@ -332,7 +338,7 @@ export default {
       if(this.$route.path != path)
         this.$router.push(path)
     },
-    ...mapMutations("sidebar_navbar", { toggle: "TOGGLE_SIDEBAR_EXPANSION" }),
+    ...mapMutations("sidebar_navbar", { toggle: "TOGGLE_SIDEBAR_EXPANSION"}),
     activeRoute(route) {
       const routeParts = this.$route.path.split("/");
 

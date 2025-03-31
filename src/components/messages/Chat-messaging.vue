@@ -167,8 +167,8 @@ export default {
     //track scroll so that we can determine if use has read new messages
     let scrollableDiv = document.getElementById("my-chat-messaging");
     console.log(scrollableDiv.offsetHeight, scrollableDiv.scrollTop);
-    scrollableDiv.addEventListener("scroll", this.readMessages);
-
+    // scrollableDiv.addEventListener("scroll", this.readMessages);
+    this.readMessages();
     //when message came stop typing
     this.socket.on("res/message/new", () => {
       this.typing = false;
