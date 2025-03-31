@@ -361,7 +361,7 @@ export default {
           action: 'sidebar_navbar/SET_SEND_CONFIRMATION',
           parameters: true,
         },
-        title: 'Change Exam Status',
+        title: 'Create Announcement',
         message: `Are you sure you want to send this announcement to ${this.target_type == 'individual' ? this.selected_users.length :'all '} users ${this.target_type != 'individual' ? 'in '+this.selected_target_type+' ('+this.selected_target_id+')':''}`,
       })
     },
