@@ -350,6 +350,15 @@
                             &.viewer {
                                 justify-content: left;
                                 backgound-color: transparent;
+                                .time{
+                                    font-family: Segoe UI;
+                                    font-style: normal;
+                                    font-weight: bold;
+                                    font-size: 12px;
+                                    line-height: 16px;
+margin: 2px 8px;
+                                    color: #E8E8E8;
+                                }
                             }
 
                             .live {

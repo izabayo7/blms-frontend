@@ -9,7 +9,7 @@
             <span class="live" v-if="participationInfo.isOfferingCourse">Live</span>
           </div>
           <div v-if="participationInfo.isOfferingCourse" class="time">
-            {{live_session.time}}
+            {{elapsed_time}}
           </div>
           <div v-else class="users">
             {{ participants.length }} watching
@@ -95,6 +95,9 @@
                   <div class="video-controls" v-else>
                     <div class="video-controls--wrapper viewer">
                       <span class="live">Live</span>
+                      <div class="time">
+                        {{elapsed_time}}
+                      </div>
                       <button class="ml-auto">
                         <svg width="22" height="17" viewBox="0 0 22 17" fill="none" xmlns="http://www.w3.org/2000/svg">
                           <path d="M6.72526 1H1.30859V6.41667" stroke="white" stroke-width="1.26923"/>
@@ -254,7 +257,7 @@ import { elapsedDuration, toLocal} from "@/services/global_functions"
 import OnlineUser from "../../../components/Live/OnlineUser";
 import StudentNewCommentWithPhoto from "../../../components/Live/StudentNewCommentWithPhoto";
 import Apis from '../../../services/apis'
-import {playSound} from "../../../services/global_functions";
+import {convertUTCDateToLocalDate, playSound} from "../../../services/global_functions";
 const sound = require("@/assets/audio/Comment.wav");
 
 export default {
@@ -271,7 +274,9 @@ export default {
       participants: [],
       comments: [],
       me: null,
+      interval:null,
       id: "",
+      elapsed_time: "",
       comment: "",
       noVideo: false,
       isPresenting: false,
@@ -725,16 +730,16 @@ export default {
         }
       }
     }
-  }
-  ,
-  created() {
-
-  }
-  ,
+  },
+  created(){
+    this.interval=setInterval(() => {
+      this.elapsed_time = elapsedDuration(convertUTCDateToLocalDate(new Date(this.live_session.date.replace("00:00", this.live_session.time))));
+    }, 1000)
+  },
   destroyed() {
-    console.log("bibaye when destroyed")
     if (this.ws)
       this.ws.close();
+    clearInterval(this.interval)
   }
   ,
   watch: {

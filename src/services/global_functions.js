@@ -36,14 +36,13 @@ async function getImgFile(base64, filename) {
  * @param date_time
  * @returns {string}
  */
-function elapsedDuration(date_time, humanize = true) {
+function elapsedDuration(date_time) {
     const now = moment()
 
     date_time = moment(date_time)
 
     let elapsed = date_time.diff(now)
-    if (humanize)
-        elapsed = moment.duration(elapsed).humanize(true);
+    elapsed = moment.duration(elapsed).humanize(true);
 
     return elapsed
 }
