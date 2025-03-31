@@ -33,6 +33,9 @@ export default {
         set_selected_quiz(state, id) {
             state.selected_quiz = id
         },
+        addAssignment(state,assignment){
+            state.assignments.data.unshift(assignment)
+        },
         RESET_STATE(state) {
             Object.assign(state, getDefaultState())
         }
