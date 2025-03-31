@@ -365,7 +365,7 @@ export default {
     attempt: {},
     mode: "view",
     computedTotalMarks: 0,
-    coppied: false
+    coppied: false,
   }),
   components: {
     back: () => import("@/components/shared/back-button"),
@@ -419,12 +419,13 @@ export default {
     ...mapActions("quiz_submission", [
       "update_quiz_submission",
       "findQuizSubmissionByUserAndQuizNames",
+      "markResultsAsSeen",
     ]),
     copy(content) {
       navigator.clipboard.writeText(content);
-      this.coppied = true
+      this.coppied = true;
       setTimeout(() => {
-        this.coppied = false
+        this.coppied = false;
       }, 2000);
     },
     computeTotalMarks() {
@@ -487,6 +488,12 @@ export default {
         this.mode = "edit";
       }
       this.computeTotalMarks();
+      setTimeout(() => {
+        this.markResultsAsSeen({
+          course_id: this.selected_quiz_submission.quiz.target.course._id,
+          submission_id: this.selected_quiz_submission._id,
+        });
+      }, 5000);
     });
   },
 };
@@ -617,10 +624,10 @@ export default {
 .marks {
   font-size: 1rem;
 }
-.coppied{
+.coppied {
   color: $primary;
-  svg{
-    fill:$primary
+  svg {
+    fill: $primary;
   }
 }
 </style>

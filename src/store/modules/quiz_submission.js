@@ -90,6 +90,19 @@ export default {
             return result[0]
         },
 
+        //get quiz_submissions  in a quiz
+        async markResultsAsSeen({ state }, { course_id, submission_id }) {
+
+            apis.update('quiz_submission/', `${submission_id}/results_seen`).then(() => {
+                for (const i in state.quiz_submission.data) {
+                    if (state.quiz_submission.data[i]._id == course_id) {
+                        state.quiz_submission.data[i].unread_results--
+                        break;
+                    }
+                }
+            })
+        },
+
         //create a quiz_submission
         create_quiz_submission({ state, commit, dispatch }, { submission, attachments }) {
             let submissionObject = {}
