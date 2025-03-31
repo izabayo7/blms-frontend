@@ -1,13 +1,13 @@
 <template>
     <div class="my-student-new-comment-with-photo">
         <div class="my-student-new-comment-container-with-photo">
-            <form action="" class="new-comment-with-photo">
+            <form @submit.prevent="send_comment" action="" class="new-comment-with-photo">
                 <div class="profile-pic">
                     <v-avatar size="30">{{ user_full_names | computeText}} </v-avatar>
 
                 </div>
                 <div class="input mx-3 px-3 py-1"><input v-model="comment" type="text" placeholder="write something.."></div>
-                <div class="send">
+                <div class="send" :class="{disabled:comment_empty}" @click="send_comment">
                     <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"/><path d="M1.946 9.315c-.522-.174-.527-.455.01-.634l19.087-6.362c.529-.176.832.12.684.638l-5.454 19.086c-.15.529-.455.547-.679.045L12 14l6-8-8 6-8.054-2.685z"/></svg></div>
                 </div>
             </form>
@@ -17,6 +17,7 @@
 
 <script>
     import {mapGetters} from 'vuex'
+    import api from "@/services/apis"
 
 
     export default {
@@ -35,9 +36,27 @@
                     target:{type:"chapter",id:this.selectedChapter},
                     content:this.comment
                 }
+            },
+            comment_empty(){
+                return /^\s*$/.test(this.comment);
             }
         },
+        methods:{
+            async send_comment(){
+                if(this.comment_empty)
+                    return
 
+
+                try{
+                    let {data} = await api.create('comment',this.comment_object)
+                    this.$emit('sent',data.data)
+                    this.comment=""
+                }
+                catch(err) {
+                    console.log(err)
+                }
+            }
+        }
     }
 </script>
 
@@ -50,6 +69,10 @@
                 background-color: $main;
                 align-items: center;
                 padding: .5rem;
+
+                .disabled{
+                    opacity: .5;
+                }
 
                 .profile-pic{
                     .v-avatar{
@@ -64,6 +87,10 @@
                     display: flex;
                     justify-items: center;
                     border-bottom:3px solid $secondary;
+
+                    input{
+                        width: 100%;
+                    }
                 }
                 .send{
                     background-color: $primary;
@@ -73,6 +100,11 @@
                     width: 2rem;
                     height: 2rem;
                     border-radius: 50%;
+                    cursor: pointer;
+
+                    &:hover{
+                        background-color: darken($primary,5);
+                    }
 
                     .icon{
                         width: fit-content;
