@@ -44,7 +44,7 @@
                 <!--                <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" >-->
               </video>
               <transition name="fade">
-                <div class="overlay" v-show="(showMenu || noVideo)">
+                <div :class="`overlay ${noVideo? 'none' : ''}`" v-show="(showMenu || noVideo)">
                   <div class="video-controls" v-if="participationInfo.isOfferingCourse">
                     <div class="video-controls--wrapper">
                       <button @click="toogleVideo" class="start-mute-video">

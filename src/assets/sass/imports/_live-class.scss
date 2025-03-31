@@ -318,6 +318,9 @@
                                         180deg, rgba(0, 0, 0, 0) 0%, #000000 100%);
                         display: block;
                         bottom: 0;
+                        &.none{
+                            background: none;
+                        }
                     }
 
                     //video controls
@@ -641,6 +644,7 @@
          span{
              border: none;
              border-radius: 0;
+             max-width: 100%;
              &:focus{
                  outline: none;
                  border-bottom: 1px solid #3C3C3C;
