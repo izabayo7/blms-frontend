@@ -7,31 +7,31 @@ const prefix = '/courses'
 const routes =  [
     {
         path: '/',
-        component: () => import('@/views/courses'),
+        component: () => import( /* webpackPrefetch: true */ '@/views/courses'),
     },
     {
         path: '/preview/:name',
-        component: () => import('@/views/courses/preview')
+        component: () => import( /* webpackPrefetch: true */ '@/views/courses/preview')
     },
     {
         path: '/edit/:name/:type',
         name: 'Edit Course',
         component: () =>
-            import('@/views/courses/edit')
+            import( /* webpackPrefetch: true */ '@/views/courses/edit')
     },
     {
         path: '/new',
         name: 'Create course',
         component: () =>
-            import('@/views/courses/create')
+            import( /* webpackPrefetch: true */ '@/views/courses/create')
     },
     {
         path: '/:name',
-        component: () => import('@/views/courses/details'),
+        component: () => import( /* webpackPrefetch: true */ '@/views/courses/details'),
         children: [
             {
                 path: '/courses/:name/chapter/:index/:id',
-                component: () => import('@/views/courses/chapter-details')
+                component: () => import( /* webpackPrefetch: true */ '@/views/courses/chapter-details')
             }
         ]
     },

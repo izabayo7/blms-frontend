@@ -8,7 +8,7 @@ const routes =  [
     {
         path:'/course/',
         name:"liveCourse",
-        component:() => import("@/views/live/new/index.vue")
+        component:() => import( /* webpackPrefetch: true */ "@/views/live/new/index.vue")
     },
     {
         path: '/schedule',
@@ -18,12 +18,12 @@ const routes =  [
     {
         path:'/test/:courseId',
         name:"liveClassCourseTest",
-        component:() => import("@/views/live/new/liveClass_test.vue")
+        component:() => import( /* webpackPrefetch: true */ "@/views/live/new/liveClass_test.vue")
     },
     {
         path:'/:liveSessionId',
         name:"liveClassCourse",
-        component:() => import("@/views/live/new/liveClass.vue")
+        component:() => import( /* webpackPrefetch: true */ "@/views/live/new/liveClass.vue")
     },
 ]
 
