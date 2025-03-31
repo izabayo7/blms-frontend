@@ -378,7 +378,7 @@ export default {
       font-family: Inter;
       font-style: normal;
       font-weight: bold;
-      font-size: 18px;
+      font-size: 15px !important;
       /* or 698% */
 
       display: flex;

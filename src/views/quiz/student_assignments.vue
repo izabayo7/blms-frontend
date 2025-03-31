@@ -25,34 +25,32 @@
           <v-data-table
               :search="search"
               :headers="headers"
-              :items="[1,2,3,4]"
+              :items="assignments"
               sort-by="title"
               @click:row="handleRowClick"
           >
-            <template v-slot:item.target="{ }">
+            <template v-slot:item.target="{ item }">
               <div class="target">
-                <div class="title">Course</div>
-                <div class="subtitle">Chapter 1</div>
+                <div v-if="item.target.course" class="title">{{ item.target.course.name }}</div>
+                <div v-if="item.target.chapter" class="subtitle">{{ item.target.chapter.name }}</div>
               </div>
             </template>
-            <template v-slot:item.title="{ }">
+            <template v-slot:item.title="{ item }">
               <div class="assignment_title">
-                First assignment
+                {{ item.title }}
               </div>
             </template>
-            <template v-slot:item.created="{ }">
+            <template v-slot:item.dueDate="{ item }">
               <div class="assignment_td">
-                June 22, 2021
+                {{ item.dueDate | formatDate }}
+              </div>
+              <div class="assignment_td">
+                {{ getTime(item.dueDate) }}
               </div>
             </template>
-            <template v-slot:item.dueDate="{ }">
+            <template v-slot:item.marks="{ item }">
               <div class="assignment_td">
-                July 22, 2021
-              </div>
-            </template>
-            <template v-slot:item.marks="{ }">
-              <div class="assignment_td">
-                15 Marks
+                {{ item.total_marks }} Marks
               </div>
             </template>
             <template v-slot:item.status="{ }">
@@ -97,7 +95,7 @@ export default {
   }),
   computed: {
     // get the current course
-    ...mapGetters("quiz", ["all_quiz"]),
+    ...mapGetters("quiz", ["assignments"]),
     // format the quiz to fit in the table
     formated_quiz() {
       let formated_quiz = [];
@@ -116,14 +114,20 @@ export default {
     },
   },
   methods: {
+    ...mapActions("quiz", ["getAssignments"]),
     ...mapActions("modal", ["set_modal"]),
     handleRowClick(value) {
-      this.$router.push(`quiz/attempt/${value.name}`)
+      this.$router.push(`/assignments/${value._id}`)
     },
+    getTime(date) {
+      date = new Date(date)
+      date.setHours(date.getUTCHours())
+      date.setMinutes(date.getUTCMinutes())
+      return new Date(date).toLocaleTimeString()
+    }
   },
   created() {
-    // load formated_quiz
-
+    this.getAssignments()
   },
 };
 </script>
@@ -180,7 +184,7 @@ export default {
       font-family: Inter;
       font-style: normal;
       font-weight: bold;
-      font-size: 18px;
+      font-size: 15px !important;
       /* or 698% */
 
       display: flex;
