@@ -197,7 +197,7 @@ export default {
     max-width: 100%;
     &.empty_feedback {
       border: 2px solid #d2d2d2;
-      color: black;
+      background-color: white;
     }
   }
   .feedback_input:focus {
