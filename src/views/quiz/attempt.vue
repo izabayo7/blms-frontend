@@ -212,13 +212,8 @@
         </v-col>
       </v-row>
     </div>
-    <div v-else>
-      You arleady did this assignment, you can
-      <router-link
-          :to="`/quiz/${$route.params.name}/${$store.state.user.user.user_name}`"
-      >review your submission
-      </router-link
-      >
+    <div class="d-flex justify-center align-center full-height" v-else>
+      <img src="https://kurious.rw/_nuxt/img/loader.059b462.gif" alt="loading ..">
     </div>
   </v-container>
 </template>
@@ -498,6 +493,12 @@ export default {
 </script>
 
 <style lang="scss">
+
+
+.full-height{
+  min-height: 62vh;
+}
+
 .check-svg {
   fill: #FFFFFF;
   height: 50px;
