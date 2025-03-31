@@ -226,7 +226,7 @@
                                         action: 'courses/deleteAttachment',
                                         parameters: attachment.name,
                                       },
-                                      title: 'Delete Chapter',
+                                      title: 'Delete Attachment',
                                       message:
                                         'Are you sure you want to delete this attachment?',
                                     })
