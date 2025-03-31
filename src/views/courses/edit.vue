@@ -173,7 +173,11 @@ export default {
   },
   watch: {
     error() {
-      console.log(this.error);
+      this.$store.dispatch("app_notification/SET_NOTIFICATION", {
+        message: this.error,
+        status: "danger",
+        uptime: 2000,
+      });
     },
   },
   methods: {
@@ -192,6 +196,9 @@ export default {
         return (this.error = "name is required");
       } else if (this.course.name.length < 3) {
         return (this.error = "name is too short");
+      }
+      if (!this.course.max) {
+        return (this.error = "maximum marks is required");
       }
       if (this.selectedFacultyCollegeYearName === "") {
         return (this.error = "student_group is required");
