@@ -1,9 +1,9 @@
 <template>
     <div class="my-discussion-board">
         <div class="discussion-bord-container">
-            <div class="head">
-                <discussion-head />
-            </div>
+<!--            <div class="head">-->
+<!--                <discussion-head />-->
+<!--            </div>-->
             <div class="discussions-holder">
 <!--                <div class="new-comment">-->
 <!--                    <new-comment />-->
@@ -22,14 +22,16 @@
 <script>
     // import NewComment from "./NewComment";
     import Discussion from "./Discussion";
-    import DiscussionHead from "./DiscussionHead";
+    // import DiscussionHead from "./DiscussionHead";
     import StudentNewComment from "./StudentNewComment";
 
     export default {
         name: "DiscussionBoard",
         components:{StudentNewComment,
             // NewComment,
-            Discussion,DiscussionHead}
+            Discussion,
+            // DiscussionHead
+        }
     }
 </script>
 
