@@ -127,7 +127,7 @@ export default {
     message: "Please login to continue",
     image: "https://apis.kurious.rw/assets/images/logo.png",
     collegeHasLogo: false,
-    institution: "Kurious Learn",
+    institution: "Kurious Learn Docker",
   }),
   methods: {
     // validate the form
