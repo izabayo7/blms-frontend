@@ -59,7 +59,7 @@
                       parameters: { id: item._id, quizName: item.name,user_group: item.target.course.user_group._id},
                     } : {
                       action: 'quiz/change_exam_status',
-                      parameters: { id: item._id, status: 'RELEASED', user_group: item.course.user_group._id, name: item.title },
+                      parameters: { id: item._id, status: 'RELEASED', user_group: item.course.user_group._id, name: item.name },
                     },
                     title: 'Release Marks',
                     message: `Are you sure you want to release marks for this ${item.submissionMode ? 'assignment' : item.target ? 'quiz' : 'exam'}?`,
