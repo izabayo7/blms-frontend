@@ -18,7 +18,7 @@
           receiving: !msgGoing(msgs.from),
         }"
       >
-        <div class="unread-indicator"><hr /></div>
+<!--        <div class="unread-indicator"><hr /></div>-->
         <!--        picture of the message sender-->
         <div class="picture">
           <img
@@ -52,7 +52,7 @@
 </template>
 
 <script>
-import { mapState, mapGetters } from "vuex";
+import { mapState, mapGetters, mapMutations } from "vuex";
 // import {on} from "@/services/event_bus";
 import { chatMixins } from "@/services/mixins";
 import { on } from "@/services/event_bus";
@@ -69,14 +69,33 @@ export default {
     };
   },
   computed: {
-    ...mapState("chat", ["currentDisplayedUser"]),
+    ...mapState("chat", ["currentDisplayedUser",'incomingMessages']),
     ...mapGetters("chat", ["socket"]),
   },
   methods: {
+    ...mapMutations('chat',['CHANGE_MESSAGE_READ_STATUS']),
     // is message going or coming
     msgGoing(owner) {
       return owner && owner.toLowerCase() === "me";
     },
+    //read messages
+    readMessages(){
+      const e = document.getElementById('my-chat-messaging')
+      const scrollHeight = e.scrollHeight - e.offsetHeight //scrollable length
+      const scrollTop = e.scrollTop //current scrolled length
+
+      //if the are no more space to scroll means we are on bottom
+      //send event that all messages read
+      if(scrollTop === scrollHeight){
+        //emit on server that we read all messages
+        this.socket.emit("all_messages_read", {
+          sender: this.currentDisplayedUser.id
+        });
+
+        //mark messages in front end that we read them
+        this.CHANGE_MESSAGE_READ_STATUS(this.currentDisplayedUser.id)
+      }
+    }
   },
   mounted() {
     // Someone typing to me
@@ -94,20 +113,35 @@ export default {
           this.typing = false;
         }, 5000);
 
-        this.scrollChatToBottom();
+        this.scrollChatToBottom(); //scroll chat to bottom
+        this.CHANGE_MESSAGE_READ_STATUS(this.currentDisplayedUser.id) //read all messages
       }
     });
 
     //when new message is received scroll to the bottom
     this.socket.on("receive-message", () => {
       this.typing = false;
-      this.scrollChatToBottom();
+      this.scrollChatToBottom();//scroll to bottom
+      this.CHANGE_MESSAGE_READ_STATUS(this.currentDisplayedUser.id) //read all messages
     });
 
     //when the chatting user send message let us scroll to the bottom
     on("message-sent", () => {
       setTimeout(this.scrollChatToBottom, 1);
+      this.CHANGE_MESSAGE_READ_STATUS(this.currentDisplayedUser.id) //read all messages
     });
+
+
+    //track scroll so that we can determine if use has read new messages
+    let scrollableDiv = document.getElementById('my-chat-messaging')
+    console.log(scrollableDiv.offsetHeight,scrollableDiv.scrollTop)
+    scrollableDiv.addEventListener('scroll',this.readMessages)
+
+
+    this.$store.getters['chat/socket'].on('message-sent',message => {
+      console.log(message)
+      this.$store.commit('chat/ADD_ONGOING_MESSAGE',message)
+    })
     /*
     when this component is mounted Immediately scroll to the bottom
     the reason we call this function the end is that we need to wait for the all message to be rendered
@@ -124,6 +158,9 @@ export default {
   overflow: auto;
   position: relative;
   height: 100%;
+  scrollbar-track-color:transparent ;
+  scrollbar-face-color: red;
+
   &::-webkit-scrollbar {
     width: 8px;
   }
@@ -143,6 +180,8 @@ export default {
   &::-webkit-scrollbar-thumb:hover {
     background-color: lighten($font, 30);
   }
+
+
   .msg-container {
     margin: 0 10px;
     overflow: auto;

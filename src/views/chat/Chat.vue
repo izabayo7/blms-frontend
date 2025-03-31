@@ -11,8 +11,7 @@
           />
           <v-avatar v-else size="50" class="avatar">
             {{ currentDisplayedUser.name | computeText }}
-          </v-avatar></template
-        >
+          </v-avatar></template>
         <!--        name of the current chatter-->
         <template #name>{{ currentDisplayedUser.name }}</template>
       </chat-header>
@@ -62,7 +61,7 @@ export default {
     ...mapMutations("chat", ["ADD_TYPIST", "REMOVE_TYPIST"]),
     doneTyping() {
       this.typing.typist = "";
-    },
+    }
   },
   mounted() {
     on("message-received", () => {
@@ -97,9 +96,7 @@ export default {
 <style lang="scss" scoped>
 .my-chat {
   background-color: $main;
-  margin-top: 1rem;
-  //remove 1rem from the height since we have applied margin of 1rem
-  height: calc(100% - 1rem);
+  height: 100%;
   display: flex;
   flex-direction: column;
   flex-wrap: wrap;
@@ -113,8 +110,6 @@ export default {
   .messages-list {
     width: 100%;
     position: relative;
-    overflow-y: scroll;
-    overscroll-behavior-y: contain;
     flex-grow: 1;
     //height: 60%;
 

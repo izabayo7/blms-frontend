@@ -1,8 +1,8 @@
-<script src="main.js"></script>
 <template>
   <v-app class="home">
     <router-view />
     <app-dialog />
+    <new-group />
   </v-app>
 </template>
 
@@ -15,6 +15,8 @@ export default {
   name: "App",
   components: {
     appDialog: () => import("@/components/shared/Dialog"),
+    NewGroup : () => import('@/components/messages/NewGroup')
+
   },
   beforeCreate: async function () {
     if (!this.$session.exists()) {

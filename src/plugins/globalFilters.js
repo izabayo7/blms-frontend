@@ -23,8 +23,6 @@ const filters = [
         // (get short form of a string)
         name: 'computeText',
         structure: (string) => {
-            if (!string)
-                return
             let text = "";
             const forbiden = ["and", "of"];
             string.split(" ").forEach((val) => {
@@ -72,7 +70,7 @@ const filters = [
 
             var diff = (date2.getTime() - date1.getTime());
 
-            // To calculate the no. of days between two dates 
+            // To calculate the no. of days between two dates
             var Difference_In_Days = diff / (1000 * 3600 * 24);
 
             if (Difference_In_Days > 1) {
