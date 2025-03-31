@@ -184,7 +184,7 @@ openQuiz">
         <div class="live-class--attendance--wrapper">
           <h3>ONLINE USERS : {{ participants.length }} </h3>
           <div class="online-users">
-            <online-user v-for="user in participants" :user="user.userInfo"
+            <online-user v-for="user in participants.filter(x=>x.userInfo.category != 'INSTRUCTOR')" :user="user.userInfo"
                          :key="`${(Date.now() * Math.random())}${user.name}`"/>
           </div>
         </div>
@@ -885,6 +885,12 @@ export default {
     end_class() {
       if (this.end_class)
         this.leaveRoom()
+    },
+    participants(){
+      if(!this.instructor){
+        let video = document.getElementById("video_feed");
+        video.setAttribute('poster','https://apis.kurious.rw/assets/images/video-loader.gif')
+      }
     }
   }
 }
