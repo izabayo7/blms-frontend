@@ -1,5 +1,5 @@
 <template>
-  <v-app id="reports-page" class="instructor_reports">
+  <v-app v-if="quiz_submission" id="reports-page" class="instructor_reports">
     <div class="table-one">
       <navigation title="Submissions" class="mb-6" :links="navigation_links" />
       <v-data-table
