@@ -1,5 +1,5 @@
 <template>
-  <article @mouseleave="$emit('close')" v-if="!loading" class="user-card">
+  <article @mouseleave="$emit('close',$event)" v-if="!loading" class="user-card">
 
     <article class="user-card--wrapper">
       <!--    <div class="loader" v-if="loading">-->
@@ -70,11 +70,10 @@ export default {
     outsideClickDetector() {
       const self = this
       let el = document.querySelector('.user-card')
-      console.log(el)
       document.addEventListener("click", function (e) {
         if (e)
-          if (!el || !el.contains(e.target)) {
-            self.$emit('close')
+          if (!el || !el.contains(e.relatedTarget)) {
+            self.$emit('close',e)
           }
       });
     },

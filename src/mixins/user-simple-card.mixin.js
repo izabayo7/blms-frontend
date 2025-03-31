@@ -12,16 +12,25 @@ export default {
             }, 1500)
 
         },
-        mouseOutPic(e, cardId) {
-            console.log("hano",e)
-            if (e)
-                if (e.relatedTarget ? (e.relatedTarget.id !== cardId && e.relatedTarget.className !== "user-card--wrapper") : false) {
-                    clearTimeout(this.timeout)
-                    const card = document.getElementById(cardId)
-                    setTimeout(() => {
-                        card.style.display = "none";
-                    }, 1000)
-                }
+        mouseOutPic(e) {
+            // if (e) {
+            // if (e.relatedTarget ? (e.relatedTarget.id !== cardId && e.relatedTarget.className !== "user-card--wrapper") : false) {
+            //     clearTimeout(this.timeout)
+            //     const card = document.getElementById(cardId)
+            //     setTimeout(() => {
+            //         card.style.display = "none";
+            //     }, 1000)
+            // }
+            let el = document.querySelector('.user-card')
+
+            if (!el || !el.contains(e.relatedTarget)) {
+                clearTimeout(this.timeout)
+                const card = document.getElementById('user-profile-card')
+                setTimeout(() => {
+                    card.style.display = "none";
+                }, 1000)
+            }
+            // }
         },
     }
 }
