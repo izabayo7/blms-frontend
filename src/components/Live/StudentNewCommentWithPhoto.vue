@@ -137,6 +137,7 @@ export default {
             console.log(result)
             this.$emit("sent", result);
             this.comment = "";
+            this.socket.off('res/comment/new');
           });
         }
         let span = document.querySelector('.message-row span')

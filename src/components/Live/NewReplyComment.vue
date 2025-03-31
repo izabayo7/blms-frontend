@@ -95,6 +95,7 @@ export default {
             // );
             this.$emit('sent', {_id: this.reply_id, data: result})
             this.reply_comment = "";
+            this.socket.off('res/comment/new');
           });
         }
       } catch (err) {
