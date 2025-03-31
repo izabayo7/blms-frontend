@@ -53,14 +53,14 @@
                 {{ item.total_marks }} Marks
               </div>
             </template>
-            <template v-slot:item.status="{ }">
+            <template v-slot:item.status="{ item }">
               <div class="assignment_td">
-                Not done
+                {{ item.submission ? 'Done' : 'Not done' }}
               </div>
             </template>
-            <template v-slot:item.grades="{ }">
+            <template v-slot:item.grades="{ item }">
               <div class="assignment_td">
-                N/A
+                {{ item.status === 'RELEASED' ? item.submission ? item.submission.total_marks : 'N/A' : 'N / A' }}
               </div>
             </template>
             <template v-slot:no-data>
@@ -89,7 +89,7 @@ export default {
       {text: "Target", value: "target"},
       {text: "Due date", value: "dueDate"},
       {text: "Marks", value: "marks"},
-      {text: "Status", value: "status"},
+      {text: "Status", value: "status",sortable: true},
       {text: "My grade", value: "grades", sortable: false, align: "center"},
     ],
   }),

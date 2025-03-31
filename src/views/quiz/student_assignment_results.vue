@@ -106,13 +106,14 @@
             />
           </div>
           <div id="quiz-actions" class=" d-flex mb-12 mt-6">
-            <button @click="$router.push('/assignments')" class="quiz-action cancel">
+            <button @click="$router.push(`/${userCategory==='STUDENT' ? 'assignments':'quiz'}`)"
+                    class="quiz-action cancel">
               Cancel
             </button>
-            <button v-if="$store.state.user.user.category.name === 'STUDENT'" class="quiz-action" @click="validate">
+            <button v-if="userCategory === 'STUDENT'" class="quiz-action" @click="validate">
               {{ assignment_submission._id ? 'Save' : 'Submit' }}
             </button>
-            <button v-if="$store.state.user.user.category.name === 'STUDENT' && assignment_submission._id && !assignment_submission.marked"
+            <button v-if="userCategory === 'STUDENT' && assignment_submission._id && !assignment_submission.marked"
                     class="quiz-action delete" @click="
                   set_modal({
                     template: 'action_confirmation',
@@ -169,6 +170,7 @@ export default {
     backend_url() {
       return process.env.VUE_APP_api_service_url
     },
+    ...mapGetters("user", ["userCategory"]),
     // get the current course
     ...mapGetters("quiz", ["all_quiz"]),
     // format the quiz to fit in the table
@@ -506,6 +508,7 @@ export default {
         background: #BABABC;
         max-width: 146px;
       }
+
       &.delete {
         background: #FC6767;
         max-width: 146px;
