@@ -41,8 +41,9 @@ name: "course-created-card"
 <style lang="scss" scoped>
 .ccc{
   max-width:28rem;
+  min-height: 100%;
   &--wrapper{
-    padding:.5rem 1rem;
+    padding:.5rem 0;
     border-radius:6.5px;
   }
   &--col{
@@ -65,6 +66,7 @@ name: "course-created-card"
   }
 
   &--class{
+    padding:0 1rem;
     p{
       font-size:.75rem;
       color:lighten($primary,10)
@@ -77,7 +79,7 @@ name: "course-created-card"
 
   }
 
-  &--last-quiz{
+  &--students{
     p{
       font-size:.75rem;
     }
