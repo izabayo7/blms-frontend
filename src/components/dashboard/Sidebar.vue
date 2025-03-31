@@ -1,17 +1,14 @@
 <template>
   <div class="sidebar">
-    <div class="toogle">
-      <v-icon large>mdi-menu</v-icon>
+    <div class="toggle">
+      <v-icon large @click="toggle">mdi-menu</v-icon>
     </div>
     <div class="routes mt-15">
       <ul ref="nav">
         <div class="active-link"></div>
-        <li
-          v-if="userCategory == 'Admin'"
-          @click="$router.push('/administration')"
-          :class="{ active: activeRoute.includes('/administration') }"
-        >
-          <svg
+        <li v-if="userCategory === 'Admin'" @click="$router.push('/courses')" :class="{ active: activeRoute.includes('/courses') }">
+          <div class="link-icon">
+            <svg
             xmlns="http://www.w3.org/2000/svg"
             width="35"
             height="23"
@@ -25,13 +22,12 @@
               fill="#fff"
             />
           </svg>
+          </div>
+          <div class="link-name animate__animated animate__bounce" v-show="state">Courses</div>
         </li>
-        <li
-          v-if="userCategory == 'Student' || userCategory == 'Instructor'"
-          @click="$router.push('/courses')"
-          :class="{ active: activeRoute.includes('/courses') }"
-        >
-          <svg
+        <li v-if="userCategory === 'Student' || userCategory === 'Instructor'" @click="$router.push('/courses')" :class="{ active: activeRoute.includes('/courses') }">
+          <div class="link-icon">
+            <svg
             xmlns="http://www.w3.org/2000/svg"
             width="101.875"
             height="87.321"
@@ -44,13 +40,12 @@
               transform="translate(-2.25 -4.5)"
             />
           </svg>
+          </div>
+          <div class="link-name" v-show="state">Courses</div>
         </li>
-        <li
-          v-if="userCategory == 'Student' || userCategory == 'Instructor'"
-          @click="$router.push('/reports')"
-          :class="{ active: activeRoute.includes('/reports') }"
-        >
-          <svg
+        <li v-if="userCategory === 'Student' || userCategory === 'Instructor'" @click="$router.push('/reports')" :class="{ active: activeRoute.includes('/reports') }">
+          <div class="link-icon">
+            <svg
             xmlns="http://www.w3.org/2000/svg"
             width="100"
             height="122.268"
@@ -63,13 +58,12 @@
               transform="translate(-129.956 -44.898)"
             />
           </svg>
+          </div>
+          <div class="link-name" v-show="state">Reports</div>
         </li>
-        <li
-          v-if="userCategory == 'Student' || userCategory == 'Instructor'"
-          @click="$router.push('/library')"
-          :class="{ active: activeRoute.includes('/library') }"
-        >
-          <svg
+        <li v-if="userCategory === 'Student' || userCategory === 'Instructor'" @click="$router.push('/library')" :class="{ active: activeRoute.includes('/library') }">
+          <div class="link-icon">
+            <svg
             xmlns="http://www.w3.org/2000/svg"
             width="174.421"
             height="121.839"
@@ -82,12 +76,12 @@
               transform="translate(-2.571 -8.571)"
             />
           </svg>
+          </div>
+          <div class="link-name" v-show="state">Library</div>
         </li>
-        <li
-          @click="$router.push('/messages')"
-          :class="{ active: activeRoute.includes('/messages') }"
-        >
-          <svg
+        <li @click="$router.push('/messages')" :class="{ active: activeRoute.includes('/messages') }">
+          <div class="link-icon">
+            <svg
             xmlns="http://www.w3.org/2000/svg"
             width="100"
             height="100"
@@ -100,13 +94,12 @@
               transform="translate(-3 -3)"
             />
           </svg>
+          </div>
+          <div class="link-name" v-show="state">Messages</div>
         </li>
-        <li
-          v-if="userCategory == 'Student' || userCategory == 'Instructor'"
-          @click="$router.push('/sinz kbx')"
-          :class="{ active: activeRoute.includes('/sinz kbx') }"
-        >
-          <svg
+        <li v-if="userCategory === 'Student' || userCategory === 'Instructor'" @click="$router.push('/settings')" :class="{ active: activeRoute.includes('/sinz kbx') }">
+          <div class="link-icon">
+            <svg
             xmlns="http://www.w3.org/2000/svg"
             width="100"
             height="99.998"
@@ -119,13 +112,12 @@
               transform="translate(-3.375 -3.375)"
             />
           </svg>
+          </div>
+          <div class="link-name" v-show="state">Settings</div>
         </li>
-        <li
-          v-if="userCategory == 'Instructor' || userCategory == 'Student'"
-          @click="$router.push('/quiz')"
-          :class="{ active: activeRoute.includes('/quiz') }"
-        >
-          <svg
+        <li v-if="userCategory === 'Instructor' || userCategory === 'Student'" @click="$router.push('/quiz')" :class="{ active: activeRoute.includes('/quiz') }">
+          <div class="link-icon">
+            <svg
             xmlns="http://www.w3.org/2000/svg"
             width="36"
             height="36"
@@ -138,15 +130,20 @@
               transform="translate(-2.071 -1.428)"
             />
           </svg>
+          </div>
+          <div class="link-name" v-show="state">Quiz</div>
         </li>
       </ul>
     </div>
   </div>
 </template>{
 <script>
+import {mapMutations,mapState} from 'vuex'
+
 export default {
   name: "Sidebar",
   computed: {
+    ...mapState('sidebar_navbar',{state:'sidebar_expanded'}),
     activeRoute() {
       return this.$route.path;
     },
@@ -154,13 +151,19 @@ export default {
       return this.$store.state.user.user.category;
     },
   },
+  methods:{
+    ...mapMutations('sidebar_navbar',{toggle:'TOGGLE_SIDEBAR_EXPANSION'}),
+}
 };
 </script>
 <style lang="scss" scoped>
 .sidebar {
   height: 100vh;
   box-shadow: 0px 0px 15px 0px $secondary;
-  .toogle {
+  transition: .4s ease-out;
+  .toggle {
+    display: inline-flex;
+    align-self: flex-start;
     padding: 1rem;
     margin: auto;
     width: fit-content;
@@ -170,7 +173,7 @@ export default {
   .routes {
     ul {
       list-style-type: none;
-      padding: 1rem;
+      padding: .5rem;
       position: relative;
 
       .active-link {
@@ -182,17 +185,28 @@ export default {
         position: absolute;
         border-radius: 10px;
         box-shadow: 0 0 10px 0 lighten($color: $primary, $amount: 20);
+
       }
       li {
-        padding: 0.5rem;
-        margin: 1.5rem 0.5rem;
+        padding: 0.8rem;
+        margin: 1.5rem 0.2rem;
         cursor: pointer;
+        display: flex;
+        flex-direction: row;
+        align-content: center;
 
-        svg {
-          width: 27px;
-          height: 27px;
-          color: red;
-          fill: #828282;
+        .link-icon{
+          svg {
+            width: 27px;
+            height: 27px;
+            color: red;
+            fill: #828282;
+          }
+        }
+
+        .link-name{
+          transition: display .4s ease-out;
+          padding-left: 1rem;
         }
 
         &.active {
@@ -202,6 +216,9 @@ export default {
 
           svg {
             fill: $main;
+          }
+          .link-name{
+            color:$main;
           }
         }
       }

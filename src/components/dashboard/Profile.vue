@@ -1,6 +1,6 @@
 <template>
   <div class="profile">
-    <p class="name">
+    <p class="name d-none d-md-flex">
       <span
         >{{ $store.state.user.user.surName }}
         {{ $store.state.user.user.otherNames }}</span
@@ -37,6 +37,7 @@ export default {
   display: flex;
   flex-direction: row;
   align-items: center;
+  justify-content: center;
   padding: 1rem;
 
   img {

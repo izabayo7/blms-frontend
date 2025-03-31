@@ -53,14 +53,13 @@ export default {
       input.focus();
     },
     sendMessage(){
+      if(this.msg.length <= 0)
+        return
       this.socket.emit('send-message', {
         recipients:[{id:this.currentDisplayedUser.id}],
         msg: this.msg,
         group: undefined
       });
-
-      //adding sent message to store
-      this.$store.commit('chat/ADD_ONGOING_MESSAGE',this.msg)
 
       //after sending message let us make the div empty
       this.$refs['input'].textContent = ''
@@ -119,6 +118,7 @@ export default {
           outline: none;
           padding: 0;
           max-height: 5rem;
+          min-height: 1.2rem;
           overflow-y: auto;
           overflow-x: hidden;
 
