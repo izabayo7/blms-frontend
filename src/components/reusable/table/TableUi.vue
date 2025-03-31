@@ -20,7 +20,6 @@
 
 <script>
 //TODO auto flexible column based on length of data [liberi]
-import S from 'string'
 
 
 /**
@@ -58,8 +57,8 @@ export default {
 
 
     coloredRows(){
-      console.log(this.options)
-      return this.options.coloredRows || false
+      console.log(this.options, 'in table ui')
+      return this.options.coloredRows
     }
   },
   methods:{
@@ -176,22 +175,6 @@ export default {
         min-width: 100%;
         display:table;
         table-layout:fixed;
-      }
-
-      tr{
-        .select--wrapper{
-
-          width:2.5rem;
-        }
-
-        &.table-body-row{
-          border-bottom: .5px solid $bg-one;
-          border-top: .5px solid $bg-one;
-          &:hover{
-            background-color:$bg-one;
-          }
-        }
-
       }
 
       &.colored-rows{

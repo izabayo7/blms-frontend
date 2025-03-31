@@ -11,7 +11,7 @@
 <!--          </div>-->
 
           <div class="table">
-            <table-ui >
+            <table-ui :options="options">
               <template #tableHeaderRow>
                 <table-head-row :cols="options.keysToShow" />
               </template>
@@ -51,6 +51,7 @@ name: "FacultyUsers",
       students:[],
       facultyId:this.$route.params.facultyId,
       options:{
+        coloredRows:true,
         keysToShow:[ "sur_name",  "other_names",  "email",  "gender"]
       }
     }
