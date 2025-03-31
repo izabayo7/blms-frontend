@@ -87,7 +87,7 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-$green: #3ce970;
+$green: #02A617;
 
 //make image fit the div
 img {
@@ -95,6 +95,9 @@ img {
 }
 
 .preview {
+  .v-progress-circular__overlay {
+    stroke: #02A617!important;
+  }
   //centering the informations
   .center {
     width: fit-content;
