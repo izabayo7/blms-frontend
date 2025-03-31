@@ -1,6 +1,6 @@
 <template>
   <v-container class="round smooth--background" fluid>
-    <v-row v-if="userCategory === 'Instructor'">
+    <v-row v-if="userCategory === 'INSTRUCTOR'">
       <v-col class="col-12">
         <v-card
           class="mx-auto elevation-0 pa-12 text-center smooth--card"
@@ -95,7 +95,7 @@
       </v-col>
     </v-row>
     <v-row v-else>
-      Sorry this page is under construction, you can 
+      Sorry this page is under construction, you can
       <router-link :to="`/reports`">view your reports</router-link>
     </v-row>
   </v-container>
@@ -141,7 +141,7 @@ export default {
       return formated_quiz.reverse();
     },
     userCategory() {
-      return this.$store.state.user.user.category;
+      return this.$store.state.user.user.category.name;
     },
   },
   methods: {
@@ -151,7 +151,7 @@ export default {
   created() {
     // load formated_quiz
     this.getQuizes({
-      userCategory: this.$store.state.user.user.category.toLowerCase(),
+      userCategory: this.$store.state.user.user.category.name.toLowerCase(),
       userId: this.$store.state.user.user._id,
     });
   },
