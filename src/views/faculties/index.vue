@@ -43,7 +43,7 @@
             <table-header />
           </div>
           <div class="table">
-            <table-ui :data="faculties"/>
+            <table-ui :options="options"  :data="faculties"/>
           </div>
         </div>
       </div>
