@@ -144,6 +144,10 @@
                   :defaultContent="msgs.content"
                 />
               </div>
+              <div class="col-12">
+                <div class="announcer">{{msgs.sender.sur_name}} {{msgs.sender.other_names}}</div>
+                <div class="category">{{msgs.sender.category.toLowerCase()}}</div>
+              </div>
             </div>
           </div>
         </div>
@@ -426,11 +430,26 @@ export default {
       }
       .announcement-container {
         max-width: 486px;
-        widows: 100%;
+        width: 100%;
         margin-left: 18px;
         padding: 21px 15px;
         background: #e7ecf0;
         border-radius: 10px;
+        font-family: Inter;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 15px;
+        line-height: 25px;
+        /* or 167% */
+
+
+        color: #3C3C3C;
+        .announcer{
+          font-weight: bold;
+        }
+        .category{
+          text-transform: capitalize !important;
+        }
         img {
           max-width: 225px;
           max-height: 57px;
