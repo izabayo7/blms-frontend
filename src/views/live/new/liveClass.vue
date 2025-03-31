@@ -428,11 +428,6 @@ export default {
               })
             else {
               self.finishSession();
-              self.set_modal({
-                template: 'live_related_ended',
-                title: 'Live class ended',
-                message: 'Hey user, the class you were attending has ended.',
-              })
             }
 
             this.onCloseRoom();

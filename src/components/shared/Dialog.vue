@@ -151,8 +151,9 @@ export default {
               this.reset_modal();
             })
       } else {
+        const template = this.modal_template
         this.reset_modal();
-        if (this.modal_template.includes('ended')) {
+        if (template.includes('ended')) {
           this.$router.push(`/courses${this.course ? '/' + this.course.name : ''}`)
         } else {
           this.$router.go(-1)
