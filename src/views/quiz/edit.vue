@@ -113,7 +113,7 @@
                 class="option d-block d-md-flex">
               <div class="details">
                               <textarea
-                                  placeholder="option 1"
+                                  :placeholder="`option ${k+1}`"
                                   v-model="option.text"
                                   class="kurious--textarea mb-4 customScroll"
                                   rows="8"
