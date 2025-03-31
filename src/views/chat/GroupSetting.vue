@@ -2,7 +2,7 @@
 <div class="my-group-setting">
   <div class="group-setting-container">
     <div class="group-header">
-      <group-header>
+      <group-header v-if="!haveGroupRoute">
         <template #pic>
           <v-avatar size="50" class="avatar">
             {{ group.name | computeText }}
@@ -31,6 +31,12 @@ name: "GroupSetting",
       group:{
         name:"Kurious"
       }
+    }
+  },
+  computed:{
+    haveGroupRoute(){
+      const testReg = /\/messages\/group\/[a-z]+/g //test for '/messages/group/...route
+      return  testReg.test(this.$route.path)
     }
   }
 }
