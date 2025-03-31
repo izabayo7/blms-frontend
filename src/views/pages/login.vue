@@ -171,11 +171,11 @@ export default {
           }
           // student and teacher land to courses
           else {
-            if (category === "STUDENT" || category === "INSTRUCTOR") {
+            if (category === "STUDENT") {
               this.$router.push("/courses");
             }
             // others land to the dashboard
-            else if (category === "ADMIN") {
+            else if (category === "ADMIN" || category === "INSTRUCTOR") {
               this.$router.push("/welcome");
             }
           }

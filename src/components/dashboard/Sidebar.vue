@@ -4,6 +4,7 @@
       <ul ref="nav">
         <div class="active-link"></div>
         <li
+            v-if="userCategory === 'ADMIN' || userCategory === 'INSTRUCTOR'"
             @click="
             closeSidebar();
             routeTo('/welcome');

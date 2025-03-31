@@ -84,7 +84,8 @@ const routes = [
                         component: () =>
                             import( /* webpackPrefetch: true */ /* webpackChunkName: "dashboard" */ '@/views/dashboard/new/main'),
                         meta: {
-                            allowAnonymous: false
+                            allowAnonymous: false,
+                            allowedUsers: ["INSTRUCTOR", "ADMIN"]
                         }
                     },
                     //for users
@@ -291,7 +292,7 @@ router.beforeEach((to, from, next) => {
             })
         } else if ((to.path === '/login' || to.path === '/') && store.state.user.isLoggedIn) {
             next({
-                path: `/welcome`,
+                path: `/${store.state.user.user.category.name === 'STUDENT' ? 'courses' : 'welcome'}`,
             })
         }
         if (to.meta.allowedUsers && !to.meta.allowedUsers.includes(store.state.user.user.category.name))
