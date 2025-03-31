@@ -5,16 +5,21 @@
       <table :class="{'colored-rows':options.coloredRows}">
         <thead>
           <tr>
-            <th><div class="select select-all" v-if="options.showSelect">
-              <div class="icon" @click="selectAll">
-                <div class="icon__checked " v-if="selected_all">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"/><path d="M4 3h16a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zm7.003 13l7.07-7.071-1.414-1.414-5.656 5.657-2.829-2.829-1.414 1.414L11.003 16z"/></svg>
-                </div>
-                <div class="icon__unchecked" v-else>
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"/><path d="M4 3h16a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zm1 2v14h14V5H5z"/></svg>
+<!--            select checkbox-->
+            <th v-if="options.showSelect" class="select--wrapper" >
+              <div class="select select-all" >
+                <div class="icon" @click="selectAll">
+                  <div class="icon__checked " v-if="selected_all">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"/><path d="M4 3h16a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zm7.003 13l7.07-7.071-1.414-1.414-5.656 5.657-2.829-2.829-1.414 1.414L11.003 16z"/></svg>
+                  </div>
+                  <div class="icon__unchecked" v-else>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"/><path d="M4 3h16a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zm1 2v14h14V5H5z"/></svg>
+                  </div>
                 </div>
               </div>
-            </div></th>
+            </th>
+
+<!--            table header-->
             <th class="" v-for="tabHead in tabHeads" @click="sort(tabHead)" :key="`${tabHead}${Date.now()}` ">
               <div class="head-tab-wrapper d-flex justify-space-between" :class="{sorting:currentSortingTab === tabHead}">
                 <div class="content">{{tabHead}}</div>
@@ -27,9 +32,13 @@
             </th>
           </tr>
         </thead>
+
+<!--        table body-->
         <tbody>
           <tr class="table-body-row" @click="rowClicked(content[options.link.paramPropertyName] || null)" v-for="(content,i) in tabularData" :key="`${content}${Date.now()*Math.random()}`">
-            <td><div class="select select-one" v-if="options.showSelect">
+<!--            select checkbox-->
+            <td v-if="options.showSelect" class="select--wrapper">
+              <div class="select select-one" >
               <div class="icon" @click="select(i)">
                 <div class="icon__checked" v-if="selected_all || inSelectedRows(i)">
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"/><path d="M4 3h16a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zm7.003 13l7.07-7.071-1.414-1.414-5.656 5.657-2.829-2.829-1.414 1.414L11.003 16z"/></svg>
@@ -39,6 +48,8 @@
                 </div>
               </div>
             </div></td>
+
+<!--            table data-->
             <td v-for="col in columnNames" :key="`${col}${Date.now()*Math.random()}` ">{{content[col]}}</td>
           </tr>
         </tbody>
@@ -191,6 +202,11 @@ export default {
 
           th{
             padding:0;
+            border-right:1px solid $tertiary;
+
+            &:nth-last-child{
+              border-right:none;
+            }
           }
         }
         tbody{
@@ -224,7 +240,7 @@ export default {
         }
 
         tr{
-          td:nth-child(1),th:nth-child(1){
+          .select--wrapper{
             width:2.5rem;
           }
 
