@@ -1,6 +1,20 @@
 <template>
   <v-dialog id="kurious--dialog" v-model="visible" :persistent="!closable">
     <div class="dialog-body">
+      <div class="close">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          width="24"
+          height="24"
+          @click="$emit('closeModal')"
+        >
+          <path fill="none" d="M0 0h24v24H0z" />
+          <path
+            d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm0-11.414L9.172 7.757 7.757 9.172 10.586 12l-2.829 2.828 1.415 1.415L12 13.414l2.828 2.829 1.415-1.415L13.414 12l2.829-2.828-1.415-1.415L12 10.586z"
+          />
+        </svg>
+      </div>
       <div v-show="sent_emails.length == 0" class="pre-send">
         <div class="mx-auto centered">
           <div class="title">Send user Invitations</div>
@@ -153,7 +167,7 @@ export default {
     async sendInvitations() {
       // if (this.selected_user_group == "") {
       //   console.log("user group is required");
-      // } else 
+      // } else
       if (this.selected_user_category == "") {
         console.log("user category is required");
       } else if (!this.emails.length) {
@@ -180,6 +194,11 @@ export default {
       `faculty_college_year/college/${this.$store.state.user.user.college}`
     );
     this.user_groups = user_groups_res.data.data;
+    setTimeout(() => {
+      const dialog = document.querySelector(".v-dialog--active");
+      dialog.style.maxWidth = "742px";
+      dialog.style.setProperty("height", "432px", "important");
+    }, 0);
   },
 };
 </script>
@@ -187,15 +206,21 @@ export default {
 // resize the modal
 .v-dialog:not(.v-dialog--fullscreen) {
   height: 432px !important;
-  width: 50% !important;
+  width: 100% !important;
   max-width: 742px;
-  border-radius: 0 !important;
   .dialog-body {
     height: 100%;
     padding: 30px;
     background-color: white;
     padding-top: 50px;
     text-align: left;
+
+    .close {
+      /* position: relative; */
+      float: right;
+      margin-top: -20px;
+    }
+
     .centered {
       width: 60%;
       .email-input {

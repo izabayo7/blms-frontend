@@ -23,7 +23,9 @@
               </svg>
               <div class="college_name">University of Kicukiro</div>
               <div class="lower_content">
-                <div class="number_of_users">268 Users</div>
+                <div class="number_of_users">
+                  {{ user_statistics.total_users }} Users
+                </div>
                 <div class="account_type">
                   <svg
                     width="14"
@@ -113,7 +115,7 @@
                     />
                   </svg>
 
-                  <div class="total_number">4</div>
+                  <div class="total_number">{{total_faculties}}</div>
                   <div class="description">number of faculties</div>
                 </div>
               </div>
@@ -143,7 +145,7 @@
                       fill="#FFAE34"
                     />
                   </svg>
-                  <div class="total_number">4</div>
+                  <div class="total_number">{{total_student_groups}}</div>
                   <div class="description">Student groups</div>
                 </div>
               </div>
@@ -162,7 +164,7 @@
                     />
                   </svg>
 
-                  <div class="total_number">4</div>
+                  <div class="total_number">{{total_courses}}</div>
                   <div class="description">number of courses</div>
                 </div>
               </div>
@@ -186,8 +188,15 @@
           <v-col class="col-12 mt-5 pl-0">
             <div class="more">More ...</div>
             <div class="mt-5">
-              <button class="lower_buttons mr-2" @click="showInviteUsers = true">Invite users</button>
-              <button class="lower_buttons">New Faculty</button>
+              <button
+                class="lower_buttons mr-2"
+                @click="showInviteUsers = true"
+              >
+                Invite users
+              </button>
+              <button class="lower_buttons" @click="showFacultyModal = true">
+                New Faculty
+              </button>
             </div>
           </v-col>
         </div>
@@ -195,7 +204,12 @@
       <div class="v-col col-12 col-lg-8 py-0">
         <v-row class="pa-0">
           <v-col class="col-12 col-lg-6 pt-0">
-            <small-card>
+            <small-card
+              :total="user_statistics.total_users"
+              :series="computeUserSeries()"
+              type="users"
+              :headers="['Instuctors', 'Students', 'Staff']"
+            >
               <template v-slot:icon>
                 <svg
                   width="16"
@@ -223,7 +237,12 @@
             </small-card>
           </v-col>
           <v-col class="col-12 col-lg-6 pt-0">
-            <small-card>
+            <small-card
+              :total="total_courses"
+              :series="computeOtherSeries()"
+              type="others"
+              :headers="['Faculties', 'Courses', 'Student groups']"
+            >
               <template v-slot:icon>
                 <svg
                   width="21"
@@ -289,26 +308,63 @@
       v-if="showInviteUsers"
       @closeModal="showInviteUsers = false"
     />
+    <faculty-dialog
+      v-if="showFacultyModal"
+      @closeModal="showFacultyModal = false"
+    />
   </v-container>
 </template>
 
 <script>
 import { mapActions } from "vuex";
+import Apis from "@/services/apis";
 export default {
   name: "ApplicationDashboard",
   data: () => ({
     showInviteUsers: false,
+    showFacultyModal: false,
+    user_statistics: {},
+    total_faculties: 0,
+    total_courses: 0,
+    total_student_groups: 0,
   }),
   components: {
     InviteUsersDialog: () => import("@/components/dashboard/InviteUsersDialog"),
+    FacultyDialog: () => import("@/components/dashboard/addFaculty"),
     SmallCard: () => import("@/components/dashboard/information-card"),
     CombinedStatistics: () =>
       import("@/components/dashboard/combined-statistics"),
   },
   methods: {
     ...mapActions("modal", ["set_modal"]),
+    computeUserSeries() {
+      const res = [];
+      res.push(this.user_statistics.total_instructors);
+      res.push(this.user_statistics.total_students);
+      res.push(this.user_statistics.total_staff);
+      return res;
+    },
+    computeOtherSeries() {
+      const res = [];
+      res.push(this.total_faculties);
+      res.push(this.total_courses);
+      res.push(this.total_student_groups);
+      return res;
+    },
   },
-  beforeMount() {},
+  async beforeMount() {
+    let res = await Apis.get("user/statistics");
+    this.user_statistics = res.data.data;
+
+    res = await Apis.get("faculty/statistics");
+    this.total_faculties = res.data.data.total_faculties;
+
+    res = await Apis.get("course/statistics");
+    this.total_courses = res.data.data.total_courses;
+
+    res = await Apis.get("faculty_college_year/statistics");
+    this.total_student_groups = res.data.data.total_student_groups;
+  },
 };
 </script>
 

@@ -5,9 +5,7 @@
         <slot name="icon" />
       </div>
       <div class="top-blocks">
-        <div class="inner">Instuctors</div>
-        <div class="inner">Students</div>
-        <div class="inner">Staff</div>
+        <div v-for="item in headers" :key="item" class="inner">{{ item }}</div>
       </div>
     </div>
     <div class="statistics mt-3">
@@ -21,45 +19,51 @@
             :series="series"
           ></chart>
         </div>
-        <div class="total mt-n4">56</div>
-        <div class="label">Total number of users</div>
+        <div class="total mt-n4">{{ total }}</div>
+        <div class="label">
+          {{
+            type == "users"
+              ? "Total number of users"
+              : "Total number of courses"
+          }}
+        </div>
       </div>
       <div class="details mt-4">
         <div class="element">
           <div class="label">
-            <div class="text">Instuctors:</div>
-            <div class="numb ml-2">26</div>
+            <div class="text">{{ headers[0] }}:</div>
+            <div class="numb ml-2">{{ series[0] }}</div>
           </div>
           <div class="progress mt-n5 mb-4">
             <v-progress-linear
               :active="false"
-              :value="26"
+              :value="percent(series[0])"
               class="mt-6 progressbar reports yellow"
             />
           </div>
         </div>
         <div class="element">
           <div class="label">
-            <div class="text">Students:</div>
-            <div class="numb ml-2">36</div>
+            <div class="text">{{ headers[1] }}:</div>
+            <div class="numb ml-2">{{ series[1] }}</div>
           </div>
           <div class="progress mt-n5 mb-4">
             <v-progress-linear
               :active="false"
-              :value="36"
+              :value="percent(series[1])"
               class="mt-6 progressbar reports blue"
             />
           </div>
         </div>
         <div class="element">
           <div class="label">
-            <div class="text">Staff:</div>
-            <div class="numb ml-2">12</div>
+            <div class="text">{{ headers[2] }}:</div>
+            <div class="numb ml-2">{{ series[2] }}</div>
           </div>
           <div class="progress mt-n5 mb-4">
             <v-progress-linear
               :active="false"
-              :value="12"
+              :value="percent(series[2])"
               class="mt-6 progressbar reports red"
             />
           </div>
@@ -72,8 +76,29 @@
 <script>
 import Apexcharts from "vue-apexcharts";
 export default {
+  props: {
+    series: {
+      type: Array,
+      required: true,
+    },
+    type: {
+      type: String,
+      required: true,
+    },
+    total: {
+      type: Number,
+    },
+    headers: {
+      type: Array,
+      required: true,
+    },
+  },
+  methods: {
+    percent(value, valuer = this.total) {
+      return (value / valuer) * 100;
+    },
+  },
   data: () => ({
-    series: [44, 55, 13, 33],
     chartOptions: {
       chart: {
         width: 380,
@@ -82,6 +107,7 @@ export default {
       dataLabels: {
         enabled: false,
       },
+      colors: ["#ffae34", "#193074", "#ff0808"],
       responsive: [
         {
           breakpoint: 480,
@@ -131,7 +157,7 @@ export default {
     display: flex;
     .inner {
       width: 201.09px;
-      height: 22.95px;
+      min-height: 22.95px;
 
       border-left: 0.827479px solid #dedede;
       box-sizing: border-box;
