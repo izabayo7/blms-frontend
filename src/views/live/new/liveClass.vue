@@ -492,21 +492,20 @@ export default {
       })
 
       self.socket.on("res/live/checkAttendance", ({code}) => {
-        console.log(code)
         this.set_modal({
           template: 'live_related',
-          method: {action: 'live_session/answerAttendance', parameters: {user: {id: self.instructor._id}}},
+          method: {action: 'live_session/answerAttendance', parameters: {user: {id: self.instructor._id}, session_id: self.$route.params.liveSessionId}},
           title: 'ATTENDANCE CHECK',
           message: 'Hey user, are you there ? Type the code bellow to confirm ',
           code: code,
         })
       })
 
-      self.socket.on("res/live/studentAnswered", ({id}) => {
+      self.socket.on("res/live/studentAnswered", ({id, attendance}) => {
 
         for (const i in self.participants) {
           if (self.participants[i].userInfo._id == id)
-            self.participants[i].userInfo.attendance = 100
+            self.participants[i].userInfo.attendance = attendance
         }
 
         self.participants.sort((a, b) => {
@@ -730,7 +729,8 @@ export default {
     },
     checkAttandance() {
       this.socket.emit("live/checkAttendance", {
-        receivers: this.$store.getters['live_session/participants']
+        receivers: this.$store.getters['live_session/participants'],
+        session_id: this.$route.params.liveSessionId
       });
       console.log(this.$store.getters['live_session/participants'])
     },
