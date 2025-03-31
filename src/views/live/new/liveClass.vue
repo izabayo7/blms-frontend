@@ -1004,7 +1004,7 @@ console.log('\n\n\n\n\n\n',participant)
         width: 100%;
 
         .video-el {
-          //width: fit-content;
+          position: relative;
           &.--lg {
             height: 320px;
             width: 568.89px;
