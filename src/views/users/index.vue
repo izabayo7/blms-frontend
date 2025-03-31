@@ -1,9 +1,9 @@
 <template>
-  <div class="my-users-page">
-    <div class="users-page-container bg-one d-flex">
+  <div class="my-users-page bg-one d-flex justify-center">
+    <div class="users-page-container d-flex ">
       <div class="header">
-        <div class="header-wrapper d-flex justify-between">
-          <div class="heading d-flex">
+        <div class="header-wrapper d-flex justify-space-between">
+          <div class="heading d-flex align-center">
             <div class="icon">
               <div class="icon-wrapper">
                 <svg xmlns="http://www.w3.org/2000/svg" width="22" height="25" viewBox="0 0 22 25" fill="none">
@@ -50,10 +50,37 @@ export default {
 <style lang="scss" scoped>
 .my-users-page{
   height: 100%;
+  width:100%;
+
   .users-page-container{
     height: 100%;
+    width:80%;
 
+    .header{
+      width:100%;
 
+      .header-wrapper{
+        margin-top:4rem;
+
+        .heading{
+          .icon{
+            margin-right:1.55rem;
+          }
+          .text-content{
+
+            h2,h4{
+              color:$font;
+            }
+          }
+        }
+        .search{
+          .search-wrapper{
+            width:20rem;
+          }
+        }
+      }
+
+    }
 
   }
 }
