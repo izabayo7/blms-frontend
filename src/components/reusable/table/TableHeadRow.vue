@@ -1,5 +1,5 @@
 <template>
-  <tr>
+  <tr class="table-header-row table-row">
 <!--            select checkbox-->
     <th v-if="showSelect" class="select--wrapper" >
       <div class="select select-all" >
@@ -65,6 +65,8 @@ export default {
 }
 </script>
 
-<style scoped>
-
+<style lang="scss" scoped>
+.table-header-row{
+  @include table-row;
+}
 </style>
