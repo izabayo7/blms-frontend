@@ -1,5 +1,6 @@
 import apis from "@/services/apis";
 import router from '@/router'
+import { pick } from 'lodash'
 const getDefaultState = () => ({
     // storage for all courses
     courses: {
@@ -106,10 +107,7 @@ export default {
             return apis.create('course', course).then(d => {
                 d.data = d.data.data
 
-                courseObject._id = d.data._id
-                courseObject.name = d.data.name
-                courseObject.description = d.data.description
-                courseObject.facultyCollegeYear = d.data.facultyCollegeYear
+                courseObject = pick(d.data, ['_id', 'name', 'description', 'faculty_college_year'])
 
                 commit('set_selected_course', d.data._id)
 
