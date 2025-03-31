@@ -5,7 +5,7 @@
       <div class="upper">Dashboard</div>
       <div class="lower">School details</div>
         <div class="back">
-          <button>Back</button>
+          <button @click="$router.push('/welcome')">Back</button>
         </div>
         <div class="links">
           <router-link :active-class="$route.path === '/settings' ? 'active' : ''" to="/settings">Personal</router-link>

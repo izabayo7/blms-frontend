@@ -115,7 +115,7 @@
       <div class="v-col col-12 mx-md-auto col-md-4 pa-0">
         <div class="row">
           <div class="v-col col-12 pa-0">
-            <div class="college_info">
+            <div class="college_info cursor-pointer" @click="$router.push('/settings/institution')">
               <svg
                   width="17"
                   height="13"
