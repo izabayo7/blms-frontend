@@ -128,7 +128,10 @@ export default {
     },
   },
   methods: {
-    ...mapMutations("quiz_submission", ["add_answer_feedback"]),
+    ...mapMutations("quiz_submission", [
+      "add_answer_feedback",
+      "remove_answer_feedback",
+    ]),
     feedbackContent() {
       return this.$refs.feedback_input
         ? this.$refs.feedback_input.innerHTML
@@ -196,7 +199,7 @@ export default {
     },
     async removeFeedback() {
       const response = await Apis.delete("comment", this.feedbackId);
-
+      console.log(response);
       let element = this.$refs.feedback_input;
       element.innerHTML = "";
       element.className = element.className.replace(
@@ -205,6 +208,11 @@ export default {
       );
       this.message = "feedback successfuly removed";
       this.showDelete = false;
+
+      // remove the feedback from the state
+      this.remove_answer_feedback({
+        answer_id: this.answerId,
+      });
     },
   },
   mounted() {
