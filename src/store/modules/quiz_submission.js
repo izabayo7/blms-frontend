@@ -34,8 +34,7 @@ export default {
                             if (marks) {
                                 state.quiz_submission.data[i].submissions[j].total_marks = marks
                                 state.quiz_submission.data[i].submissions[j].marked = true
-                            }
-                            else if (feedback)
+                            } else if (feedback)
                                 state.quiz_submission.data[i].submissions[j].total_feedbacks = feedback
                             break
                         }
@@ -224,10 +223,19 @@ export default {
         },
         //get all quiz submissions
         quiz_submissions: state => {
-            return state.quiz_submission.data.length ? state.quiz_submission.data.filter(x => !x.submissionMode && !x.submissions[0].assignment) : []
+            try {
+                return state.quiz_submission.data.length ? state.quiz_submission.data.filter(x => !x.submissionMode && !x.submissions[0].assignment) : []
+            } catch (e) {
+                return []
+            }
+
         },
         assignment_submissions: state => {
-            return state.quiz_submission.data.length ? state.quiz_submission.data.filter(x => x.submissionMode || x.submissions[0].assignment) : []
+            try {
+                return state.quiz_submission.data.length ? state.quiz_submission.data.filter(x => x.submissionMode || x.submissions[0].assignment) : []
+            } catch (e) {
+                return []
+            }
         },
     },
 }
