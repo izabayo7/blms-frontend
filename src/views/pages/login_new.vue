@@ -5,12 +5,8 @@
         <div class="login-box mx-auto text-center">
           <div class="heading">
             <div class="welcome">Welcome to</div>
-            <div class="college-name">Rwanda coding academy.</div>
-            <img
-              src="../../components/accountancy-logo 1.png"
-              alt=""
-              class="logo mx-auto"
-            />
+            <div class="college-name">{{ institution }}.</div>
+            <img :src="image" alt="" class="logo mx-auto" />
             <div class="message">Please login to continue</div>
             <div class="input-container">
               <div class="input-icon">
@@ -95,6 +91,8 @@ export default {
     email_user_name_or_phone: "",
     showPassword: false,
     password: "",
+    image: "https://apis.kurious.rw/assets/images/image%204.png",
+    institution: "Kurious Learn",
     simpleRules: [(v) => !!v || "This Field is required"],
   }),
   methods: {
@@ -165,6 +163,19 @@ export default {
         }
       }
     },
+  },
+  async beforeMount() {
+    if (this.$route.query.institution) {
+      const res = await Apis.get(
+        `college/name/${this.$route.query.institution}`
+      );
+      if (res.data.status != 404) {
+        this.institution = res.data.data.name;
+        this.image = res.data.data.image || this.image;
+      } else {
+        this.$router.push("/college_login");
+      }
+    }
   },
 };
 </script>

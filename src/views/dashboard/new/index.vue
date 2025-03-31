@@ -230,7 +230,7 @@
               <chart
                 type="donut"
                 class="my-chart"
-                width="380"
+                width="180"
                 :options="chartOptions"
                 :series="series"
               ></chart>
@@ -559,6 +559,9 @@ export default {
         color: #515151;
       }
     }
+  }
+  .my-chart{
+    max-width: 20%;
   }
 }
 </style>
