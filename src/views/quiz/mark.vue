@@ -6,7 +6,7 @@
   >
     <back class="mt-0 mb-6 ml-n6" to="/reports" />
 
-    <v-row>
+    <v-row class="relative">
       <v-col class="col-12 col-md-8">
         <navigation />
         <v-row
@@ -250,7 +250,7 @@
           </v-col>
         </v-row>
       </v-col>
-      <v-col class="col-12 col-md-4 more_info">
+      <v-col class="col-12 col-md-4 fixed right-0">
         <v-row class="text-h5 font-weight-black mb-6 fixed">
           <v-col class="col-12"></v-col>
           {{ selected_quiz_submission.user.sur_name }}
@@ -583,6 +583,13 @@ export default {
     box-shadow: 8px 9px 11px rgb(199 199 199);
   }
 }
-.more_info {
+.relative {
+  position: relative;
+}
+.fixed {
+  position: fixed;
+}
+.right-0 {
+  right: 0;
 }
 </style>
