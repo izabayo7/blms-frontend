@@ -37,11 +37,17 @@
           </div>
         </div>
       </div>
+
+
       <div class="tabular-faculties">
         <div class="table-wrapper mt-6" v-if="faculties.length > 0">
+
+<!--          table header-->
           <div class="table-header">
             <table-header />
           </div>
+
+<!--          list of faculties in table-->
           <div class="table">
             <table-ui :options="options"  :data="faculties"/>
           </div>
