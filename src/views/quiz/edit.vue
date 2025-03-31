@@ -136,7 +136,7 @@
                   v-model="question.details"
                   placeholder="Type your question here ..."
                   class="kurious--textarea mb-4 customScroll"
-                  rows="8"
+                  @input="autoResizeQuestionInput"
               ></textarea>
             </div>
           </div>
@@ -150,7 +150,7 @@
                                   :placeholder="`option ${k+1}`"
                                   v-model="option.text"
                                   class="kurious--textarea mb-4 customScroll"
-                                  rows="8"
+                                  @input="autoResizeQuestionInput"
                               ></textarea>
               </div>
               <div class="status mx-auto">
@@ -271,7 +271,7 @@
 <script>
 import {mapActions, mapGetters, mapMutations} from "vuex"
 import Apis from "@/services/apis";
-import {findLocalTime} from "../../services/global_functions";
+import {autoResizeQuestionInput, findLocalTime} from '@/services/global_functions'
 
 export default {
   name: "EditQuiz",
@@ -304,6 +304,11 @@ export default {
     passMarks: 0
   }),
   watch: {
+    questions() {
+      if (this.questions.length) {
+        setTimeout(()=>{this.resizeAll();},500)
+      }
+    },
     error() {
       if (this.error != "")
         this.$store.dispatch("app_notification/SET_NOTIFICATION", {
@@ -330,6 +335,15 @@ export default {
   },
   methods: {
     findLocalTime,
+    autoResizeQuestionInput,
+    resizeAll() {
+      console.log('twahageze', document.querySelectorAll('textarea'))
+      document.querySelectorAll('textarea').forEach(e => {
+        console.log(e)
+        autoResizeQuestionInput(null, e)
+        // console.log(e.scrollHeight)
+      })
+    },
     ...mapActions('quiz', ['getExam']),
     ...mapActions("courses", ["getCourses"]),
     ...mapMutations("quiz", ["editExam"]),
@@ -671,6 +685,8 @@ export default {
         this.title = quiz.name;
         this.questions = this.formatQuestionTypes(quiz.questions);
       });
+
+
   },
 };
 </script>

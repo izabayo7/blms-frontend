@@ -36,7 +36,7 @@ async function getImgFile(base64, filename) {
  * @param date_time
  * @returns {string}
  */
-function elapsedDuration(date_time,endTime) {
+function elapsedDuration(date_time, endTime) {
 
     const now = endTime ? moment(endTime) : moment()
 
@@ -100,6 +100,20 @@ function getDateAndTime() {
  */
 function empty(string) {
     return /^\s*$/.test(string);
+}
+
+/**
+ * auto increases input height
+ */
+function autoResizeQuestionInput(e, el) {
+    console.log(e,el)
+    if (!el)
+        el = e.target
+    else
+        console.log(el,el.style.height)
+    el.style.height = "auto";
+    el.style.height = (el.scrollHeight) + "px";
+    console.log(el.style.height)
 }
 
 
@@ -171,16 +185,17 @@ function getTime(date) {
     date.setMinutes(date.getUTCMinutes())
     return new Date(date).toLocaleTimeString()
 }
-function findLocalTime(date){
+
+function findLocalTime(date) {
     let date_copy = date
     date = new Date(date)
     date.setHours(date.getUTCHours())
     date.setMinutes(date.getUTCMinutes())
 
     let s = new Date(date)
-    let t =  s.toLocaleTimeString()
+    let t = s.toLocaleTimeString()
     let hours = s.getHours()
-    if(hours < 10)
+    if (hours < 10)
         hours = `0${hours}`
     return `${date_copy.substring(0, 11)}${hours}:${t.split(':')[1]}`
 }
@@ -199,5 +214,6 @@ export {
     downloadAttachment,
     daysDifference,
     getTime,
-    findLocalTime
+    findLocalTime,
+    autoResizeQuestionInput
 }
