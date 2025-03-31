@@ -272,6 +272,22 @@ export default {
             })
 
         },
+
+        //add live-session to chapter
+        addLiveSession({ state }, { session }) {
+            for (const i in state.courses.data) {
+                if (state.courses.data[i]._id == state.selectedCourse) {
+                    for (const k in state.courses.data[i].chapters) {
+                        if (state.courses.data[i].chapters[k]._id == session.target.id) {
+                            state.courses.data[i].chapters[k].live_sessions.push(session);
+                            break
+                        }
+                    }
+                    break
+                }
+            }
+        },
+
         //publish a course
         tooglePublishCourse({ state, commit, rootGetters }, courseId) {
             if (courseId)

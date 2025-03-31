@@ -21,10 +21,11 @@ export default {
                 })
             }
         },
-        createLiveSession({state}, {session}) {
+        createLiveSession({state, dispatch}, {session}) {
             return apis.create('live_session', session).then(d => {
                 d.data = d.data.data
                 state.live_sessions.data.push(d.data)
+                dispatch('courses/addLiveSession', {session: d.data}, {root:true})
             })
         },
         addParticipant({state}, {id}) {
