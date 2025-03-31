@@ -833,7 +833,7 @@ export default {
     position: absolute;
     right: 0;
     z-index: 3;
-    align-items: left;
+    align-items: flex-start;
     display: flex;
     opacity: 0;
     // &.hovered {
@@ -846,6 +846,9 @@ export default {
       height: 40px;
       border-radius: 7px;
       margin: 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
       &.muted {
         background-color: #9e0000;
       }
