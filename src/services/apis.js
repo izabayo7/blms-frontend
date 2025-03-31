@@ -26,15 +26,15 @@ export default {
         return Api().get(`/${url}`)
     },
     // post requests
-    create(category, body, config) {
-        return Api().post(`/${category}`, body, config)
+    create(path, body, config) {
+        return Api().post(`/${path}`, body, config)
     },
     // put requests
-    update(category, id, body, config) {
-        return Api().put(`/${category}/${id}`, body, config)
+    update(path, id, body, config) {
+        return Api().put(`/${path}/${id}`, body, config)
     },
     // delete requests
-    delete(category, id) {
-        return Api().delete(`/${category}/${id}`)
+    delete(path, id) {
+        return Api().delete(`/${path}/${id}`)
     },
 }
