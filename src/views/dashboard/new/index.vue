@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid class="dashboard_page px-6 px-lg-14 pt-9">
+  <v-container fluid class="dashboard_page px-6 pl-lg-14 pt-9">
     <v-row class="page_title">
       <div class="upper">Dashboard</div>
       <div class="lower" @click="showInviteUsers = true">Overview</div>
@@ -192,77 +192,95 @@
           </v-col>
         </div>
       </div>
-      <div class="v-col col-8">
-        <v-row class="pa-4">
-          <v-col class="col-6">
-            <div class="small-card">
-              <div class="d-flex">
-                <div class="icon">
-                  <svg
-                    width="16"
-                    height="18"
-                    viewBox="0 0 16 18"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <rect
-                      x="3.41162"
-                      y="0.23822"
-                      width="8.82547"
-                      height="8.82547"
-                      rx="4.41274"
-                      fill="#FFAE34"
-                    />
-                    <path
-                      fill-rule="evenodd"
-                      clip-rule="evenodd"
-                      d="M0.285645 17.2588H15.3632C15.0429 13.3758 11.79 10.3245 7.82444 10.3245C3.85886 10.3245 0.605977 13.3758 0.285645 17.2588Z"
-                      fill="#FFAE34"
-                    />
-                  </svg>
-                </div>
-                <div class="top-blocks">
-                  <div class="inner">Instuctors</div>
-                  <div class="inner">Students</div>
-                  <div class="inner">Staff</div>
-                </div>
-              </div>
-              <chart
-                type="donut"
-                class="my-chart"
-                width="180"
-                :options="chartOptions"
-                :series="series"
-              ></chart>
-            </div>
+      <div class="v-col col-12 col-lg-8 py-0">
+        <v-row class="pa-0">
+          <v-col class="col-12 col-lg-6 pt-0">
+            <small-card>
+              <template v-slot:icon>
+                <svg
+                  width="16"
+                  height="18"
+                  viewBox="0 0 16 18"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <rect
+                    x="3.41162"
+                    y="0.23822"
+                    width="8.82547"
+                    height="8.82547"
+                    rx="4.41274"
+                    fill="#FFAE34"
+                  />
+                  <path
+                    fill-rule="evenodd"
+                    clip-rule="evenodd"
+                    d="M0.285645 17.2588H15.3632C15.0429 13.3758 11.79 10.3245 7.82444 10.3245C3.85886 10.3245 0.605977 13.3758 0.285645 17.2588Z"
+                    fill="#FFAE34"
+                  />
+                </svg>
+              </template>
+            </small-card>
           </v-col>
-          <v-col class="col-6">
-            <div class="small-card">
-              <svg
-                width="21"
-                height="22"
-                viewBox="0 0 21 22"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <rect
-                  x="0.644531"
-                  y="0.0536499"
-                  width="4.3645"
-                  height="4.3645"
-                  rx="2.18225"
-                  fill="#FFAE34"
-                />
-                <path
-                  d="M0.0488281 9.477V20.6858C0.0488281 21.9753 2.0327 21.8761 2.0327 20.6858C1.99964 19.8262 1.95335 16.1825 2.0327 14.8334C2.11206 13.4844 3.81818 13.4447 3.81818 14.8334C3.78512 16.0568 3.73883 18.8805 3.81818 20.3883C3.89754 21.896 5.70285 21.8761 5.70285 20.1899V11.1633C5.70285 9.97297 5.40527 8.68346 6.29801 8.68346H10.1665C11.4362 8.68346 11.6214 6.89798 10.1665 6.89798H2.42945C0.0488313 6.89798 0.0488301 7.8899 0.0488281 9.47697V9.477Z"
-                  fill="#FFAE34"
-                />
-                <path
-                  d="M20.4828 1.64074V14.635H15.0272L16.9118 21.777H15.0272L13.4401 14.635H11.5554L9.86913 21.777H7.98446L9.76993 14.635H7.19092V12.552H18.4989V3.42622H7.3893V1.64074H11.2578V0.847198H13.0433V1.64074H20.4828Z"
-                  fill="#FFAE34"
-                />
-              </svg>
-            </div>
+          <v-col class="col-12 col-lg-6 pt-0">
+            <small-card>
+              <template v-slot:icon>
+                <svg
+                  width="21"
+                  height="22"
+                  viewBox="0 0 21 22"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <rect
+                    x="0.644531"
+                    y="0.0536499"
+                    width="4.3645"
+                    height="4.3645"
+                    rx="2.18225"
+                    fill="#FFAE34"
+                  />
+                  <path
+                    d="M0.0488281 9.477V20.6858C0.0488281 21.9753 2.0327 21.8761 2.0327 20.6858C1.99964 19.8262 1.95335 16.1825 2.0327 14.8334C2.11206 13.4844 3.81818 13.4447 3.81818 14.8334C3.78512 16.0568 3.73883 18.8805 3.81818 20.3883C3.89754 21.896 5.70285 21.8761 5.70285 20.1899V11.1633C5.70285 9.97297 5.40527 8.68346 6.29801 8.68346H10.1665C11.4362 8.68346 11.6214 6.89798 10.1665 6.89798H2.42945C0.0488313 6.89798 0.0488301 7.8899 0.0488281 9.47697V9.477Z"
+                    fill="#FFAE34"
+                  />
+                  <path
+                    d="M20.4828 1.64074V14.635H15.0272L16.9118 21.777H15.0272L13.4401 14.635H11.5554L9.86913 21.777H7.98446L9.76993 14.635H7.19092V12.552H18.4989V3.42622H7.3893V1.64074H11.2578V0.847198H13.0433V1.64074H20.4828Z"
+                    fill="#FFAE34"
+                  />
+                </svg>
+              </template>
+            </small-card>
+          </v-col>
+          <v-col class="col-12">
+            <combined-statistics>
+              <template v-slot:icon>
+                <svg
+                  width="21"
+                  height="22"
+                  viewBox="0 0 21 22"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <rect
+                    x="0.644531"
+                    y="0.0536499"
+                    width="4.3645"
+                    height="4.3645"
+                    rx="2.18225"
+                    fill="#FFAE34"
+                  />
+                  <path
+                    d="M0.0488281 9.477V20.6858C0.0488281 21.9753 2.0327 21.8761 2.0327 20.6858C1.99964 19.8262 1.95335 16.1825 2.0327 14.8334C2.11206 13.4844 3.81818 13.4447 3.81818 14.8334C3.78512 16.0568 3.73883 18.8805 3.81818 20.3883C3.89754 21.896 5.70285 21.8761 5.70285 20.1899V11.1633C5.70285 9.97297 5.40527 8.68346 6.29801 8.68346H10.1665C11.4362 8.68346 11.6214 6.89798 10.1665 6.89798H2.42945C0.0488313 6.89798 0.0488301 7.8899 0.0488281 9.47697V9.477Z"
+                    fill="#FFAE34"
+                  />
+                  <path
+                    d="M20.4828 1.64074V14.635H15.0272L16.9118 21.777H15.0272L13.4401 14.635H11.5554L9.86913 21.777H7.98446L9.76993 14.635H7.19092V12.552H18.4989V3.42622H7.3893V1.64074H11.2578V0.847198H13.0433V1.64074H20.4828Z"
+                    fill="#FFAE34"
+                  />
+                </svg>
+              </template>
+            </combined-statistics>
           </v-col>
         </v-row>
       </div>
@@ -276,43 +294,16 @@
 
 <script>
 import { mapActions } from "vuex";
-import Apexcharts from "vue-apexcharts";
 export default {
   name: "ApplicationDashboard",
   data: () => ({
     showInviteUsers: false,
-    series: [44, 55, 13, 33],
-    chartOptions: {
-      chart: {
-        width: 380,
-        type: "donut",
-      },
-      dataLabels: {
-        enabled: false,
-      },
-      responsive: [
-        {
-          breakpoint: 480,
-          options: {
-            chart: {
-              width: 200,
-            },
-            legend: {
-              show: false,
-            },
-          },
-        },
-      ],
-      legend: {
-        position: "right",
-        offsetY: 0,
-        height: 230,
-      },
-    },
   }),
   components: {
     InviteUsersDialog: () => import("@/components/dashboard/InviteUsersDialog"),
-    chart: Apexcharts,
+    SmallCard: () => import("@/components/dashboard/information-card"),
+    CombinedStatistics: () =>
+      import("@/components/dashboard/combined-statistics"),
   },
   methods: {
     ...mapActions("modal", ["set_modal"]),
@@ -322,12 +313,6 @@ export default {
 </script>
 
 <style lang="scss">
-@font-face {
-  font-family: "Inter";
-  src: local("Inter"),
-    url(http://localhost:7070/assets/fonts/Inter/Inter-VariableFont_slnt\,wght.ttf)
-      format("truetype");
-}
 .dashboard_page {
   background-color: #f3f6ff;
   min-height: 50em;
@@ -520,47 +505,7 @@ export default {
 
     color: #ffffff;
   }
-  .small-card {
-    max-width: 359.95px;
-
-    height: 199.2px;
-    left: 0px;
-    top: 0px;
-
-    background: #ffffff;
-    box-shadow: 0px 7.44731px 12.4122px rgba(180, 180, 180, 0.25);
-    border-radius: 4.13739px;
-    padding: 14px 30px;
-    .d-flex {
-      max-width: 100%;
-      .icon {
-        width: 30%;
-      }
-    }
-    .top-blocks {
-      border: 0.827479px solid #dedede;
-      max-width: 70%;
-      display: flex;
-      .inner {
-        width: 201.09px;
-        height: 22.95px;
-
-        border-left: 0.827479px solid #dedede;
-        box-sizing: border-box;
-        border-radius: 1.65496px;
-        font-family: Inter;
-        font-style: normal;
-        font-weight: 500;
-        font-size: 10.7572px;
-        text-align: center;
-        padding-top: 4px;
-        align-items: center;
-
-        color: #515151;
-      }
-    }
-  }
-  .my-chart{
+  .my-chart {
     max-width: 20%;
   }
 }

@@ -1,16 +1,11 @@
 <template>
-  <div class="sidebar hidden-sm-and-down">
-    <div class="toggle-container">
-      <div class="toggle">
-        <v-icon large @click="toggle">mdi-menu</v-icon>
-      </div>
-    </div>
-    <div class="routes mt-15">
+  <div :class="`sidebar ${onPhone ? (state ? 'absolute' : 'd-none') : ''}`">
+    <div class="routes">
       <ul ref="nav">
         <div class="active-link"></div>
         <li
           v-if="userCategory === 'ADMIN'"
-          @click="$router.push('/administration')"
+          @click="closeSidebar();$router.push('/administration')"
           :class="{ active: activeRoute('administration') }"
         >
           <div class="link-icon">
@@ -37,22 +32,51 @@
         </li>
         <li
           v-if="userCategory === 'INSTRUCTOR'"
-          @click="$router.push('/users')"
+          @click="closeSidebar();$router.push('/users')"
           :class="{ active: activeRoute('users') }"
         >
           <div class="link-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="23" viewBox="0 0 22 23" fill="none">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="22"
+              height="23"
+              viewBox="0 0 22 23"
+              fill="none"
+            >
               <g clip-path="url(#clip0)">
-                <path d="M18.7788 12.1808H17.0815C17.2545 12.6545 17.3491 13.1657 17.3491 13.6984V20.113C17.3491 20.3351 17.3104 20.5484 17.2401 20.7466H20.046C21.0941 20.7466 21.9468 19.8939 21.9468 18.8458V15.3489C21.9469 13.6021 20.5257 12.1808 18.7788 12.1808Z" fill="white"/>
-                <path d="M4.59782 13.6985C4.59782 13.1657 4.69234 12.6546 4.86534 12.1809H3.16809C1.4212 12.1809 0 13.6021 0 15.349V18.8459C0 19.894 0.852696 20.7467 1.90085 20.7467H4.70682C4.63648 20.5484 4.59782 20.3352 4.59782 20.1131V13.6985Z" fill="white"/>
-                <path d="M12.9135 10.5304H9.03332C7.28644 10.5304 5.86523 11.9516 5.86523 13.6985V20.1131C5.86523 20.463 6.14891 20.7467 6.49885 20.7467H15.4479C15.7979 20.7467 16.0816 20.463 16.0816 20.1131V13.6985C16.0816 11.9516 14.6604 10.5304 12.9135 10.5304Z" fill="white"/>
-                <path d="M10.9731 2.13007C8.87225 2.13007 7.16309 3.83923 7.16309 5.94013C7.16309 7.36515 7.9496 8.60971 9.11113 9.26313C9.66207 9.57304 10.2972 9.75015 10.9731 9.75015C11.649 9.75015 12.2841 9.57304 12.8351 9.26313C13.9967 8.60971 14.7831 7.36511 14.7831 5.94013C14.7831 3.83927 13.074 2.13007 10.9731 2.13007Z" fill="white"/>
-                <path d="M4.28299 5.68134C2.7118 5.68134 1.43359 6.95954 1.43359 8.53073C1.43359 10.1019 2.7118 11.3801 4.28299 11.3801C4.68154 11.3801 5.06106 11.2976 5.40581 11.1492C6.00188 10.8925 6.49336 10.4383 6.79748 9.86925C7.01095 9.46988 7.13238 9.01428 7.13238 8.53073C7.13238 6.95959 5.85417 5.68134 4.28299 5.68134Z" fill="white"/>
-                <path d="M17.6638 5.68134C16.0927 5.68134 14.8145 6.95954 14.8145 8.53073C14.8145 9.01432 14.9359 9.46992 15.1494 9.86925C15.4535 10.4383 15.945 10.8926 16.541 11.1492C16.8858 11.2976 17.2653 11.3801 17.6638 11.3801C19.235 11.3801 20.5132 10.1019 20.5132 8.53073C20.5132 6.95954 19.235 5.68134 17.6638 5.68134Z" fill="white"/>
+                <path
+                  d="M18.7788 12.1808H17.0815C17.2545 12.6545 17.3491 13.1657 17.3491 13.6984V20.113C17.3491 20.3351 17.3104 20.5484 17.2401 20.7466H20.046C21.0941 20.7466 21.9468 19.8939 21.9468 18.8458V15.3489C21.9469 13.6021 20.5257 12.1808 18.7788 12.1808Z"
+                  fill="white"
+                />
+                <path
+                  d="M4.59782 13.6985C4.59782 13.1657 4.69234 12.6546 4.86534 12.1809H3.16809C1.4212 12.1809 0 13.6021 0 15.349V18.8459C0 19.894 0.852696 20.7467 1.90085 20.7467H4.70682C4.63648 20.5484 4.59782 20.3352 4.59782 20.1131V13.6985Z"
+                  fill="white"
+                />
+                <path
+                  d="M12.9135 10.5304H9.03332C7.28644 10.5304 5.86523 11.9516 5.86523 13.6985V20.1131C5.86523 20.463 6.14891 20.7467 6.49885 20.7467H15.4479C15.7979 20.7467 16.0816 20.463 16.0816 20.1131V13.6985C16.0816 11.9516 14.6604 10.5304 12.9135 10.5304Z"
+                  fill="white"
+                />
+                <path
+                  d="M10.9731 2.13007C8.87225 2.13007 7.16309 3.83923 7.16309 5.94013C7.16309 7.36515 7.9496 8.60971 9.11113 9.26313C9.66207 9.57304 10.2972 9.75015 10.9731 9.75015C11.649 9.75015 12.2841 9.57304 12.8351 9.26313C13.9967 8.60971 14.7831 7.36511 14.7831 5.94013C14.7831 3.83927 13.074 2.13007 10.9731 2.13007Z"
+                  fill="white"
+                />
+                <path
+                  d="M4.28299 5.68134C2.7118 5.68134 1.43359 6.95954 1.43359 8.53073C1.43359 10.1019 2.7118 11.3801 4.28299 11.3801C4.68154 11.3801 5.06106 11.2976 5.40581 11.1492C6.00188 10.8925 6.49336 10.4383 6.79748 9.86925C7.01095 9.46988 7.13238 9.01428 7.13238 8.53073C7.13238 6.95959 5.85417 5.68134 4.28299 5.68134Z"
+                  fill="white"
+                />
+                <path
+                  d="M17.6638 5.68134C16.0927 5.68134 14.8145 6.95954 14.8145 8.53073C14.8145 9.01432 14.9359 9.46992 15.1494 9.86925C15.4535 10.4383 15.945 10.8926 16.541 11.1492C16.8858 11.2976 17.2653 11.3801 17.6638 11.3801C19.235 11.3801 20.5132 10.1019 20.5132 8.53073C20.5132 6.95954 19.235 5.68134 17.6638 5.68134Z"
+                  fill="white"
+                />
               </g>
               <defs>
                 <clipPath id="clip0">
-                  <rect width="21.9464" height="21.9464" fill="white" transform="translate(0 0.46521)"/>
+                  <rect
+                    width="21.9464"
+                    height="21.9464"
+                    fill="white"
+                    transform="translate(0 0.46521)"
+                  />
                 </clipPath>
               </defs>
             </svg>
@@ -84,7 +108,7 @@
         </li>
         <li
           v-if="userCategory === 'STUDENT' || userCategory === 'INSTRUCTOR'"
-          @click="$router.push('/courses')"
+          @click="closeSidebar();$router.push('/courses')"
           :class="{ active: activeRoute('courses') }"
         >
           <div class="link-icon">
@@ -106,7 +130,7 @@
         </li>
         <li
           v-if="userCategory === 'STUDENT' || userCategory === 'INSTRUCTOR'"
-          @click="$router.push('/reports')"
+          @click="closeSidebar();$router.push('/reports')"
           :class="{ active: activeRoute('reports') }"
         >
           <div class="link-icon">
@@ -128,7 +152,7 @@
         </li>
         <li
           v-if="userCategory === 'STUDENT' || userCategory === 'INSTRUCTOR'"
-          @click="$router.push('/library')"
+          @click="closeSidebar();$router.push('/library')"
           :class="{ active: activeRoute('library') }"
         >
           <div class="link-icon">
@@ -149,7 +173,7 @@
           <div class="link-name" v-show="state">Library</div>
         </li>
         <li
-          @click="$router.push('/messages')"
+          @click="closeSidebar();$router.push('/messages')"
           :class="{ active: activeRoute('messages') }"
         >
           <div class="link-icon">
@@ -171,7 +195,7 @@
         </li>
         <li
           v-if="userCategory === 'INSTRUCTOR'"
-          @click="$router.push('/quiz')"
+          @click="closeSidebar();$router.push('/quiz')"
           :class="{ active: activeRoute('quiz') }"
         >
           <div class="link-icon">
@@ -193,7 +217,7 @@
         </li>
         <li
           v-if="userCategory === 'STUDENT' || userCategory === 'INSTRUCTOR'"
-          @click="$router.push('/settings')"
+          @click="closeSidebar();$router.push('/settings')"
           :class="{ active: activeRoute('settings') }"
         >
           <div class="link-icon">
@@ -227,17 +251,27 @@ export default {
     userCategory() {
       return this.$store.state.user.user.category.name;
     },
+    onPhone() {
+      return (
+        this.$vuetify.breakpoint.name == "sm" ||
+        this.$vuetify.breakpoint.name == "xs"
+      );
+    },
   },
   methods: {
     ...mapMutations("sidebar_navbar", { toggle: "TOGGLE_SIDEBAR_EXPANSION" }),
     activeRoute(route) {
-      const routeParts = this.$route.path.split("/")
+      const routeParts = this.$route.path.split("/");
 
-      console.log(route === routeParts[1])
+      console.log(route === routeParts[1]);
 
       return route === routeParts[1];
-
-
+    },
+    closeSidebar() {
+      // console.log(this.onPhone);
+      if (this.onPhone) {
+        this.toggle();
+      }
     },
   },
 };
@@ -245,8 +279,12 @@ export default {
 <style lang="scss" scoped>
 .sidebar {
   height: 100vh;
-  box-shadow: 0 0 15px 0 $secondary;
+  box-shadow: 0 11px 15px 0 $secondary;
   transition: 0.4s ease-out;
+
+  &.absolute {
+    position: absolute;
+  }
 
   .toggle-container {
     border-bottom: 1px solid lighten($font, 65);
