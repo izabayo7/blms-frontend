@@ -101,7 +101,6 @@
                 @click="downloadAttachment(`${backend_url}/api/${type ==='assignment' ? 'assignment_submission':'quiz_submission'}/${submission_id}/attachment/${feedback_name}/view?token=${$session.get('jwt')}`)">
           {{ feedback_name }}
         </button>
-        moose
         <button class="download-attachment mx-auto mr-0"
                 @click="downloadAttachment(`${backend_url}/api/${type ==='assignment' ? 'assignment_submission':'quiz_submission'}/${submission_id}/attachment/${feedback_name}/download?token=${$session.get('jwt')}`)">
           Download attachment

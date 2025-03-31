@@ -134,7 +134,7 @@
           </div>
           <Feedback
               class="mt-4 feedback_container"
-              v-if="(assignment_submission.feedback && assignment.status === 'RELEASED') || userCategory === 'INSTRUCTOR'"
+              v-if="(assignment_submission.feedback_src && assignment.status === 'RELEASED') || userCategory === 'INSTRUCTOR'"
               :submission_id="assignment_submission._id"
               :feedback_name="assignment_submission.feedback_src"
               :feedbackId="
@@ -558,7 +558,9 @@ export default {
     }
 
     .file-picked {
-      width: 102px;
+      min-width: 100px;
+      width: fit-content;
+      max-width: 50%;
       height: 32px;
 
       background: #FFFFFF !important;
