@@ -56,7 +56,7 @@
           </p>
           <v-col class="col-10">
             <v-btn
-              v-if="question.type === 'file-upload'"
+              v-if="question.type === 'file_upload'"
               rounded
               color="#ffd248"
               disabled
@@ -71,14 +71,14 @@
               }}</span>
             </v-btn>
             <input
-              v-if="question.type === 'file-upload'"
+              v-if="question.type === 'file_upload'"
               type="file"
               :id="`file${i}`"
               hidden
             />
 
             <textarea
-              v-if="question.type === 'open-ended'"
+              v-if="question.type === 'open_ended'"
               v-model="attempt.answers[i].text"
               cols="50"
               disabled
@@ -91,7 +91,7 @@
                 <div
                   v-for="(choice, k) in question.options.choices"
                   :key="k"
-                  :class="`text-selection ${
+                  :class="`text_selection ${
                     checkChoiceStatus(attempt.answers[i].choosed_options, {
                       text: choice.text,
                     })
@@ -164,7 +164,7 @@
             "
           >
             <div
-              v-if="question.type === 'open-ended'"
+              v-if="question.type === 'open_ended'"
               class="cool-box grey-bg ml-6 mt-n1"
             >
               <input
@@ -511,7 +511,7 @@ export default {
   color: $primary;
   border: 1px solid $primary;
 }
-.text-selection {
+.text_selection {
   width: 75%;
   border-radius: 20px;
   padding: 16px;

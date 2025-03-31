@@ -17,7 +17,7 @@
             :to="
               userCategory === 'STUDENT'
                 ? `/courses/preview/${returnCourseName(item.quiz)}`
-                : `/quiz/${item.quiz.name}/${item.user.sur_name}_${item.user.other_names}`
+                : `/quiz/${item.quiz.name}/${item.user.user_name}`
             "
             >{{
               userCategory === "STUDENT"
