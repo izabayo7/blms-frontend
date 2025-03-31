@@ -1,5 +1,5 @@
 <template>
-  <section :class="{'hfull': isMobile && $route.name === 'chatingRoom' && state}" class="dashboard">
+  <v-container fluid :class="{'hfull': isMobile && $route.name === 'chatingRoom' && state}" class="dashboard pa-0">
     <!-- navbar -->
     <div class="my-navbar">
       <navbar v-if="!(isMobile && $route.name === 'chatingRoom' && state)"/>
@@ -36,7 +36,7 @@
         <div v-if="!$route.path.includes('messages')" class="lower-space"></div>
       </div>
     </main>
-  </section>
+  </v-container>
 </template>
 <script>
 import sidebar from "@/components/dashboard/Sidebar";
