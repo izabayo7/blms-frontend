@@ -462,9 +462,13 @@ export default {
           case 'initialScreenOff':
             this.noVideo = true;
             break;
-          case 'existingParticipants':
+          case 'existingParticipants': {
             this.onExistingParticipants(parsedMessage);
+            this.socket.emit("live_session/joined", {
+              session_id: this.live_session._id
+            });
             break;
+          }
           case 'newParticipantArrived':
             this.onNewParticipant(parsedMessage);
             break;
@@ -498,6 +502,9 @@ export default {
       }
       this.ws.onclose = () => {
         console.trace();
+        this.socket.emit("live_session/left", {
+          session_id: this.live_session._id
+        });
       }
       self.socket.on("live/quizReleased", (quiz) => {
         self.quiz = quiz;
