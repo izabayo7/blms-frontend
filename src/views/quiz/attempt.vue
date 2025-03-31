@@ -184,6 +184,7 @@ export default {
       "Z",
     ],
     attempt: {},
+    done: false,
     filesToUpload: [],
     remaining_time: 0,
   }),
@@ -197,8 +198,15 @@ export default {
   },
   watch: {
     remaining_time() {
-      if (this.remaining_time == this.selected_quiz.duration) {
-        // this.start_couter();
+      if (this.remaining_time > 0) {
+        setTimeout(() => {
+          this.remaining_time -= 1;
+        }, 1000);
+      } else if (!this.done) {
+        this.done = true;
+        if (this.$store.state.user.user.category.name == "INSTRUCTOR") {
+          this.$router.push("/quiz");
+        }
       }
     },
   },
@@ -208,12 +216,6 @@ export default {
       "create_quiz_submission",
       "findQuizSubmissionByStudentAndQuizNames",
     ]),
-    start_couter() {
-      while (this.remaining_time > 0) {
-        console.log(this.remaining_time);
-        this.remaining_time -= 60;
-      }
-    },
     checkChoiceStatus(choosed_options, choice) {
       if (choice.src) {
         for (const option of choosed_options) {
