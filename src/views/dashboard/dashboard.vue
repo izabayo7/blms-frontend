@@ -33,7 +33,7 @@
       <div class="main-content customScroll">
         <notification/>
         <router-view v-if="showPage"/>
-        <div class="lower-space"></div>
+        <div v-if="!$route.path.includes('messages')" class="lower-space"></div>
       </div>
     </main>
   </section>
@@ -111,6 +111,7 @@ export default {
       overflow-y: auto;
       overflow-x: hidden;
       background: $tertiary;
+
       .lower-space {
         height: 40px;
       }
