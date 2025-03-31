@@ -99,10 +99,10 @@ function calculateNearestLiveSession(course) {
             live_session = course.chapters[i].live_sessions.filter(e => e.status == "PENDING")
             if (live_session.length) {
                 live_session = live_session[0]
+                break
             } else {
                 live_session = undefined
             }
-            break;
         }
     }
     return live_session;
