@@ -67,16 +67,16 @@
             </v-col>
             <v-col class="col-12 col-md-6" align="center">
               <v-avatar
-                  v-if="course.cover_picture"
+                  v-if="course.cover_picture || coverPicture"
                   size="245"
                   :class="
                   course.cover_picture
                     ? 'user-profile ml-2 mt-6 d-block'
-                    : 'course-image white--text bg-color-one text-h2'
+                    : 'course-image white--text bg-color-one text-h2' + ' d-block'
                 "
               >
                 <v-img
-                    :src="`${
+                    :src="loaded_pic ? loaded_pic : `${
                     course.cover_picture
                   }?height=300&width=300&token=${$session.get('jwt')}`"
                     alt="avatar"
@@ -154,6 +154,7 @@ export default {
   data: () => ({
     selectedFacultyCollegeYearName: "",
     coverPicture: undefined,
+    loaded_pic:undefined,
     nameRules: [
       (v) => !!v || "Name is required",
       (v) => v.length > 2 || "Name is too short",
@@ -190,6 +191,12 @@ export default {
     // keep the coverPicture
     handleFileUpload() {
       this.coverPicture = this.$refs.file.files[0];
+      const fileReader = new FileReader();
+      const self = this
+      fileReader.readAsDataURL(this.coverPicture);
+      fileReader.addEventListener("load", function () {
+        self.loaded_pic = this.result
+      });
     },
     validate() {
       if (this.course.name === "") {
