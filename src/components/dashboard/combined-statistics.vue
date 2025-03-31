@@ -111,6 +111,16 @@ export default {
         ]
         this.chartOptions.xaxis.categories = response.data.data.map(x => x._id)
         this.loaded = true
+      } else if (this.selected_category === "Users online") {
+        response = await Apis.get(`user_logs/statistics/online?start_date=${this.$store.state.sidebar_navbar.college.createdAt}&end_date=${new Date().toISOString()}`);
+        this.series = [
+          {
+            name: "Submissions",
+            data: response.data.data.map(x => x.total_users),
+          },
+        ]
+        this.chartOptions.xaxis.categories = response.data.data.map(x => x._id)
+        this.loaded = true
       } else {
         this.loaded = true
       }
