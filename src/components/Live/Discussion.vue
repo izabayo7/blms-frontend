@@ -1,11 +1,13 @@
 <template>
     <div class="my-discussion">
-        <div class="discussion-container">
+        <div class="my-discussion-container">
             <div class="left">
-
+                <div class="avatar">
+                    <v-avatar :size="30" class="a_avatar">{{user.sur_name | computeText}}</v-avatar>
+                </div>
             </div>
             <div class="right">
-                <div class="head">
+                <div class="comment">
                     <div class="name">Joshua Kingsley</div>
                     <div class="comment">Who can support you without having
                         the idea ?
@@ -26,12 +28,37 @@
 
 <script>
     import ReplyComment from "./ReplyComment";
+    import {mapGetters} from 'vuex'
+
     export default {
         name: "Discussion",
-        components: {ReplyComment}
+        components: {
+            ReplyComment,
+
+        },
+        computed:{
+            ...mapGetters('user',['user'])
+        }
     }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+.my-discussion{
+    .my-discussion-container{
+        display: flex;
 
+        .left{
+            .avatar{
+                padding-top: 1rem;
+                padding-bottom: 1rem;
+                padding-right: .5rem;
+                .a_avatar{
+                    background-color: $primary;
+                    color:$main;
+                    font-size: .9rem;
+                }
+            }
+        }
+    }
+}
 </style>
