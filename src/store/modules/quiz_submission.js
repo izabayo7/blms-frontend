@@ -102,8 +102,7 @@ export default {
         findQuizSubmissionByUserAndQuizNames({ state, commit }, { userName, quizName }) {
             let submissionFound = false
             if (state.quiz_submission.loaded) {
-                let quiz_submission = state.quiz_submission.data.filter(quiz_submission => `${quiz_submission.user.sur_name}_${quiz_submission.user.other_names}` == userName && quiz_submission.quiz.name == quizName)
-
+                let quiz_submission = state.quiz_submission.data.filter(quiz_submission => quiz_submission.user.user_name == userName && quiz_submission.quiz.name == quizName)
                 if (quiz_submission.length > 0) {
                     submissionFound = true
                     commit('set_selected_quiz_submission', quiz_submission[0]._id)
