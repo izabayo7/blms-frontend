@@ -156,6 +156,7 @@
                 v-if="question.type.includes('select')"
                 class="col-12 col-md-4 ml-n6"
               >
+                hhhhhhhhhhhhhhhh
                 <div class="choice_status vertically--centered">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -256,14 +257,9 @@
           $vuetify.breakpoint.name == 'lg' ? 'fixed right-0' : ''
         }`"
       >
-        <v-row
-          class="font-weight-black student_name mb-8"
-          align-content="center"
-        >
-          <v-col class="col-10 mx-auto color-primary">
-            {{ selected_quiz_submission.user.sur_name }}
-            {{ selected_quiz_submission.user.other_names }}
-          </v-col>
+        <v-row class="color-primary font-weight-black student_name mb-8">
+          {{ selected_quiz_submission.user.sur_name }}
+          {{ selected_quiz_submission.user.other_names }}
         </v-row>
         <v-row class="mb-6">
           <div class="mr-3 title font-weight-bold">Total marks</div>
@@ -277,6 +273,34 @@
               />
               <span>{{ `/${selected_quiz_submission.quiz.total_marks}` }}</span>
             </div>
+          </div>
+        </v-row>
+        <v-row>
+          <div class="submission_details">
+            <span> Submission ID </span>
+            <button
+              @click="copy(selected_quiz_submission._id)"
+              class="copy_code ml-2"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20.17"
+                height="24.973"
+                viewBox="0 0 20.17 24.973"
+              >
+                <path
+                  id="Icon_ionic-md-copy"
+                  data-name="Icon ionic-md-copy"
+                  d="M18.674,3.375H11.5A2.4,2.4,0,0,0,9.069,5.746v.51h-.45A2.4,2.4,0,0,0,6.188,8.628V25.916a2.452,2.452,0,0,0,2.431,2.431H21.105a2.4,2.4,0,0,0,2.371-2.431v-.45h.51a2.4,2.4,0,0,0,2.371-2.431V11.059Zm0,2.677,5.007,5.007H18.674Zm2.881,19.864a.485.485,0,0,1-.45.51H8.619a.535.535,0,0,1-.51-.51V8.628a.485.485,0,0,1,.51-.45h.45V23.515a1.7,1.7,0,0,0,1.951,1.951H21.555Zm2.881-2.881a.485.485,0,0,1-.45.51H11.5a.535.535,0,0,1-.51-.51V5.746a.485.485,0,0,1,.51-.45h5.253V12.98h7.684Z"
+                  transform="translate(-6.188 -3.375)"
+                />
+              </svg>
+              copy to clipboard
+            </button>
+          </div>
+          <div class="more_info mt-3 red--text">
+            In case you have a claim, write to your instructor and start your
+            message with your submission ID
           </div>
         </v-row>
         <v-row>
@@ -379,10 +403,9 @@ export default {
     async selected_quiz_submission() {
       if (!this.selected_quiz_submission.marked) {
         for (const answer of this.selected_quiz_submission.answers) {
-          answer.marks = 0;
+          if (!answer.marks) answer.marks = 0;
         }
       }
-      await this.autoMarkChoiceQuestions();
     },
   },
   methods: {
@@ -390,6 +413,9 @@ export default {
       "update_quiz_submission",
       "findQuizSubmissionByUserAndQuizNames",
     ]),
+    copy(content) {
+      navigator.clipboard.writeText(content);
+    },
     computeTotalMarks() {
       console.log("ahooooooooooooooo");
       let result = 0;
@@ -415,94 +441,6 @@ export default {
         }
       }
       return false;
-    },
-    async autoMarkChoiceQuestions() {
-      for (const i in this.selected_quiz_submission.quiz.questions) {
-        if (
-          this.selected_quiz_submission.quiz.questions[i].type.includes(
-            "select"
-          )
-        ) {
-          const rightChoices = this.selected_quiz_submission.quiz.questions[
-            i
-          ].options.choices.filter((choice) => choice.right);
-
-          if (
-            this.selected_quiz_submission.quiz.questions[i].type.includes(
-              "single"
-            )
-          ) {
-            if (
-              this.selected_quiz_submission.quiz.questions[i].type.includes(
-                "file"
-              ) &&
-              this.selected_quiz_submission.answers[i].choosed_options[0]
-            ) {
-              if (
-                this.selected_quiz_submission.answers[i].choosed_options[0]
-                  .src ==
-                  rightChoices[0].src.split("/")[
-                    rightChoices[0].src.split("/").length - 1
-                  ] &&
-                this.selected_quiz_submission.answers[i].choosed_options[0]
-                  .length
-              ) {
-                this.selected_quiz_submission.answers[
-                  i
-                ].marks = this.selected_quiz_submission.quiz.questions[i].marks;
-              }
-            } else if (
-              this.selected_quiz_submission.answers[i].choosed_options[0] &&
-              rightChoices[0]
-            ) {
-              if (
-                this.selected_quiz_submission.answers[i].choosed_options[0]
-                  .text == rightChoices[0].text
-              ) {
-                this.selected_quiz_submission.answers[
-                  i
-                ].marks = this.selected_quiz_submission.quiz.questions[i].marks;
-              }
-            }
-          } else {
-            for (const k in this.selected_quiz_submission.answers[i]
-              .choosed_options) {
-              if (
-                this.selected_quiz_submission.quiz.questions[i].type.includes(
-                  "file"
-                )
-              ) {
-                let checkStatus = rightChoices.filter(
-                  (choice) =>
-                    choice.src.split("/")[
-                      rightChoices[0].src.split("/").length - 1
-                    ] ==
-                    this.selected_quiz_submission.answers[i].choosed_options[k]
-                      .src
-                );
-
-                if (checkStatus.length > 0) {
-                  this.selected_quiz_submission.answers[i].marks +=
-                    this.selected_quiz_submission.quiz.questions[i].marks /
-                    rightChoices.length;
-                }
-              } else {
-                let checkStatus = rightChoices.filter(
-                  (choice) =>
-                    choice.text ==
-                    this.selected_quiz_submission.answers[i].choosed_options[k]
-                      .text
-                );
-                if (checkStatus.length > 0) {
-                  this.selected_quiz_submission.answers[i].marks +=
-                    this.selected_quiz_submission.quiz.questions[i].marks /
-                    rightChoices.length;
-                }
-              }
-            }
-          }
-        }
-      }
     },
     removeMediaPath(url) {
       return url.split("/")[url.split("/").length - 1];
@@ -564,6 +502,20 @@ export default {
   p {
     margin: 0;
   }
+}
+.copy_code {
+  svg {
+    height: 15px;
+  }
+}
+.submission_details {
+  span {
+    color: #4a4a4a;
+    font-weight: 500;
+  }
+}
+.more_info {
+  width: 80%;
 }
 .blue-bg {
   background-color: #6daefc;
