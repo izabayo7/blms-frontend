@@ -16,20 +16,9 @@
             <p class="question_details col-md-12 col-12">
               {{ `${i + 1}. ${question.details}` }}
             </p>
-            <v-btn
-              v-if="question.type === 'file_upload'"
-              rounded
-              color="#ffd248"
-              class="white--text course-image mt-4 mb-6 d-block"
-              @click="pickfile(i)"
-            >
-              <v-icon>mdi-arrow-expand-up</v-icon>
-              <span>{{
-                attempt.answers[i].src === ""
-                  ? "Upload file"
-                  : attempt.answers[i].src
-              }}</span>
-            </v-btn>
+            <button class="pick-file" @click="pickfile">
+              Choose file
+            </button>
             <input
               v-if="question.type === 'file_upload'"
               type="file"
@@ -202,7 +191,7 @@ export default {
     remaining_time() {
       if (this.remaining_time > 0) {
         setTimeout(() => {
-          this.remaining_time -= 1;
+          // this.remaining_time -= 1;
         }, 1000);
       } else if (!this.done) {
         this.done = true;
@@ -349,7 +338,6 @@ export default {
     this.mode = "edit";
     if (!this.loaded) {
       if (this.$store.state.user.user.category.name == "STUDENT") {
-        console.log("aaaaaaaaaaaaaaa");
         this.findQuizSubmissionByUserAndQuizNames({
           userName: this.$store.state.user.user.user_name,
           quizName: this.$route.params.name,
@@ -440,8 +428,39 @@ export default {
   }
 }
 .question_details {
-  font-weight: 700;
-  color: #6a6a6a;
-  font-size: 1.2rem;
+  font-family: Inter;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 15px;
+  line-height: 26px;
+  /* or 175% */
+
+
+  color: #3C3C3C;
+
+}
+.pick-file{
+  width: 77px;
+  height: 24px;
+
+  background: #FFFFFF;
+  border: 1px solid #BABABC;
+  box-sizing: border-box;
+  box-shadow: 0px 4px 4px rgba(25, 48, 116, 0.25);
+  border-radius: 7px;
+
+  font-family: Inter;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 11px;
+  line-height: 26px;
+  /* or 328% */
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #3C3C3C;
+
 }
 </style>
