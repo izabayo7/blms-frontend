@@ -415,9 +415,19 @@ export default {
             break;
           case 'roomClosed':
             if (!self.participationInfo.isOfferingCourse)
-              alert('Room Closed');
-            else
+              self.set_modal({
+                template: 'live_related_ended',
+                title: 'Live class ended',
+                message: 'Hey user, the class you were attending has ended.',
+              })
+            else {
               self.finishSession();
+              self.set_modal({
+                template: 'live_related_ended',
+                title: 'Live class ended',
+                message: 'Hey user, the class you were attending has ended.',
+              })
+            }
 
             this.onCloseRoom();
             break;
@@ -740,7 +750,6 @@ export default {
       this.audioEnabled = !this.audioEnabled;
     },
     leaveRoom() {
-      alert('Are you sure you want to leave this class ?')
       this.sendMessage({
         id: this.participationInfo.isOfferingCourse ? 'closeRoom' : 'leaveRoom'
       });
