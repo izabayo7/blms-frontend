@@ -17,6 +17,44 @@
     }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+.my-student-new-comment{
+    .my-student-new-comment-container{
+        form{
+            display: flex;
+            justify-items: center;
+            background-color: $main;
+            padding: .5rem;
 
+            .input{
+                width: 90%;
+                display: flex;
+                justify-items: center;
+            }
+            .send{
+                background-color: $primary;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                width: 2rem;
+                height: 2rem;
+                border-radius: 50%;
+
+                .icon{
+                    width: fit-content;
+                    height: fit-content;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    border-radius: 50%;
+
+                    svg{
+                        transform: scale(.8);
+                        fill:$main;
+                    }
+                }
+            }
+        }
+    }
+}
 </style>
