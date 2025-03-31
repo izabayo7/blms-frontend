@@ -522,8 +522,7 @@ export default {
   created() {
     this.mode = "edit";
     this.findQuizByName({
-      userCategory: this.$store.state.user.user.category.toLowerCase(),
-      userId: this.$store.state.user.user._id,
+      user_name: this.$store.state.user.user.user_name,
       quizName: this.$route.params.name,
     }).then((quiz) => {
       this.duration = this.to_hh_mm_ss(quiz.duration);

@@ -130,7 +130,7 @@ export default {
         },
 
         //find a quiz by name
-        findQuizByName({ state, commit }, { userId, quizName }) {
+        findQuizByName({ state, commit }, { user_name, quizName }) {
             let quizFound = false
             if (state.quiz.loaded) {
                 let quiz = state.quiz.data.filter(quiz => quiz.name == quizName)
@@ -141,7 +141,7 @@ export default {
                 }
             }
             if (!quizFound) {
-                return apis.get(`quiz/user/${userId}/${quizName}`).then(d => {
+                return apis.get(`quiz/user/${user_name}/${quizName}`).then(d => {
                     d.data = d.data.data
                     if (state.quiz.loaded) {
                         state.quiz.data.push(d.data)
