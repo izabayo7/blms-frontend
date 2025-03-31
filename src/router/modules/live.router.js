@@ -10,6 +10,11 @@ const routes =  [
         name:"liveCourse",
         component:() => import("@/views/live/new/index.vue")
     },
+    {
+        path:'/class',
+        name:"liveClass",
+        component:() => import("@/views/live/new/liveClass.vue")
+    },
 ]
 
 //changing all routes to have prefix live
