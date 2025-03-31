@@ -56,82 +56,11 @@
         </template>
       </v-data-table>
     </div>
-    <div v-if="userCategory === 'STUDENT'" class="table-two">
-      <h3>Courses</h3>
-      <v-data-table
-        :headers="coursesHeaders"
-        :items="activeCourses"
-        class="data-table"
-      >
-        <template v-slot:item.name="{ item }">
-          <router-link
-            class="normal--text"
-            :to="`/courses/preview/${item.name}`"
-            >{{ item.name }}</router-link
-          >
-        </template>
-        <template v-slot:item.actions="{ item }">
-          <v-icon
-            small
-            class="view-icon"
-            @click="$router.push(`reports/submissions/${item.name}`)"
-            >mdi-eye</v-icon
-          >
-        </template>
-        <!-- display the date of starting the course -->
-        <template v-slot:item.dateStarted="{ item }">
-          <span class="normal--text">{{
-            item.progress.dateStarted | formatDate
-          }}</span>
-        </template>
-        <template v-slot:item.status="{ item }">
-          <span v-if="item.status === 1">Pending..</span>
-          <v-btn v-else rounded small color="#8ceda9">passed</v-btn>
-        </template>
-        <template v-slot:item.progress="{ item }">
-          <v-progress-linear
-            :active="false"
-            :value="item.progress.progress"
-            :class="`mt-6 kurious--progressbar ${
-              item.progress.progress === 100
-                ? 'completed-progress'
-                : 'ongoing-progress'
-            }`"
-          />
-          <p class="text-caption mb-0 text-left ml-1">
-            {{ Math.round(item.progress.progress) }}%
-          </p>
-        </template>
-        <template v-slot:no-data>
-          <span class="text-h6">Oops You don't have a course.</span>
-        </template>
-      </v-data-table>
-    </div>
   </v-app>
 </template>
 <script>
 import { mapGetters, mapActions } from "vuex";
 export default {
-  data: () => ({
-    options: { rowsPerPage: 5 },
-    coursesHeaders: [
-      {
-        text: "Course Name",
-        align: "start",
-        sortable: false,
-        value: "name",
-      },
-      { text: "Date started", value: "dateStarted", align: "center" },
-      { text: "Progress", value: "progress", align: "center" },
-      {
-        text: "Exam Status",
-        value: "status",
-        sortable: false,
-        align: "center",
-      },
-      { text: "Grade", value: "grade", sortable: false, align: "center" },
-    ],
-  }),
   computed: {
     submissionHeaders() {
       return [
