@@ -66,10 +66,10 @@ export default {
     },
     actions: {
         //get courses from backend
-        getCourses({ state }, { user_name }) {
+        getCourses({ state }) {
             // if courses not loaded fetch them
             if (!state.courses.loaded) {
-                apis.get(`course/user/${user_name}`).then(d => {
+                apis.get(`course/user`).then(d => {
                     d.data = d.data.data
                     state.courses.data = d.data
                     //announce that data have been loaded
