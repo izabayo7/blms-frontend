@@ -57,7 +57,7 @@
                       :defaultContent="editorContent"
                   />
                   <div v-if="course.chapters[activeIndex].uploaded_content" class="relative">
-                    <vue-pdf-app class="pdf-viewer" :config="config"
+                    <vue-pdf-app class="pdf-viewer" :config="config" @pages-rendered="increasePdfHeight"
                                  :pdf="`${course.chapters[activeIndex].uploaded_content_url}?token=${$session.get('jwt')}`">
                     </vue-pdf-app>
                   </div>
@@ -328,6 +328,13 @@ export default {
   },
   methods: {
     downloadAttachment,
+    increasePdfHeight() {
+      const viewer = document.getElementById("viewer");
+
+      const container = document.getElementById("vuePdfApp")
+      container.style.height = viewer.clientHeight.toString()+"px";
+
+    },
     ...mapActions("courses", [
       "findCourseByName",
       "getChapterMainContent",
@@ -456,30 +463,31 @@ export default {
     display: none;
   }
 
-  #viewerContainer {
-    top: 0px;
-    overflow-x: hidden;
-    &::-webkit-scrollbar {
-      width: 8px;
-    }
-
-    &::-webkit-scrollbar-track {
-      // background-color: #f8f8ff;
-    }
-
-    &::-webkit-scrollbar-track:hover {
-      background-color: lighten($secondary, 4);
-    }
-
-    &::-webkit-scrollbar-thumb {
-      background-color: lighten($font, 40);
-      border-radius: 10px;
-    }
-
-    &::-webkit-scrollbar-thumb:hover {
-      background-color: lighten($font, 30);
-    }
-  }
+  //#viewerContainer {
+  //  top: 0px;
+  //  overflow-x: hidden;
+  //
+  //  &::-webkit-scrollbar {
+  //    width: 8px;
+  //  }
+  //
+  //  &::-webkit-scrollbar-track {
+  //    // background-color: #f8f8ff;
+  //  }
+  //
+  //  &::-webkit-scrollbar-track:hover {
+  //    background-color: lighten($secondary, 4);
+  //  }
+  //
+  //  &::-webkit-scrollbar-thumb {
+  //    background-color: lighten($font, 40);
+  //    border-radius: 10px;
+  //  }
+  //
+  //  &::-webkit-scrollbar-thumb:hover {
+  //    background-color: lighten($font, 30);
+  //  }
+  //}
 
   .pdfViewer .page {
     border: none;

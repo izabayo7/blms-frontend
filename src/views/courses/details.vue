@@ -42,7 +42,7 @@
         />
       </page-actions>
       <!-- the course main content -->
-      <v-col class="col-12 col-md-9 course-content customScroll pa-3">
+      <v-col class="col-12 col-md-9 course-content pa-3">
         <!--        <chapter-details :activeIndex="activeIndex" />-->
         <router-view
             @changeActiveChapter="changeActiveChapter"
