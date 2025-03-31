@@ -76,7 +76,8 @@ export default {
         font-weight: 600;
         font-size: 12.6667px;
         /* identical to box height, or 214% */
-        color: #7c7c7c;
+        color: #313131;
+
       }
 .options{
   padding: 18px;
