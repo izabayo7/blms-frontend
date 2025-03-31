@@ -527,6 +527,7 @@ export default {
 
       .search-results {
         height: 58vh;
+        width: 100%;
         position: absolute;
         z-index: 7;
 
@@ -572,7 +573,6 @@ export default {
 
           li {
             margin-bottom: 8px;
-            max-width: 303px;;
             list-style-type: none;
             height: 68px;
             display: flex;
@@ -926,6 +926,9 @@ export default {
         font-size: 12.34px;
       }
     }
+  }
+  .dialog_t_1.delete_msg{
+    width: 100%;
   }
 }
 </style>
