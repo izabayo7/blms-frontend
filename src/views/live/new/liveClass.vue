@@ -871,11 +871,7 @@ export default {
       this.participationInfo.name = `${this.user.other_names} ${this.user.sur_name}`
       this.participationInfo.room = this.$route.params.liveSessionId
 
-      const host = 'stream.kurious.rw'
-      // const host = 'localhost:8081'
-
-      this.ws = new WebSocket('wss://' + host + '/kurious_stream' + `?token=${this.$session.get("jwt")}`);
-      // this.ws = new WebSocket('ws://' + host + '/kurious_stream' + `?token=${this.$session.get("jwt")}`);
+      this.ws = new WebSocket(process.env.VUE_APP_stream_service_url + `?token=${this.$session.get("jwt")}`);
 
       this.ws.addEventListener('open', () => {
         self.register();
