@@ -556,16 +556,14 @@ export default {
     }
 
     document.querySelector("#toogleScreenShare").onclick = function () {
-      console.log(vm.screenSharingStream)
+      console.log(vm.screenSharingStream);
       if (vm.isScreenShared) {
         vm.screenSharingStream.getTracks().forEach(function (track) {
-          console.log(track)
+          console.log(track);
           track.stop();
         });
-        vm.isScreenShared = false;
       } else {
         getMixedCameraAndScreen(); // hello ladies vp abajama banjye
-        vm.isScreenShared = true;
       }
     };
 
@@ -593,15 +591,16 @@ export default {
           // videoPreview.id = event.stream.id;
           videoPreview.play();
 
+          vm.isScreenShared = true
           addStreamStopListener(screenStream, function () {
             mixer.releaseStreams();
-            videoPreview.pause();
-            videoPreview.srcObject = cameraStream;
-            videoPreview.play();
+            vm.isScreenShared = false
+            videoPreview.srcObject = vm.localVideoStream;
+            videoPreview.play()
 
-            // cameraStream.getTracks().forEach(function (track) {
-            //     track.stop();
-            // });
+            cameraStream.getTracks().forEach(function (track) {
+              track.stop();
+            });
           });
           vm.screenSharingStream = mixer.getMixedStream();
           vm.connection.addStream(vm.screenSharingStream);
