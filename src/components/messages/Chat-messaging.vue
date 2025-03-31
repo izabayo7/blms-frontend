@@ -33,7 +33,8 @@
         <!--        list of messages sent or received-->
         <div class="msgs">
           <div class="msg" v-for="(msg, i) in msgs.messages" :key="i">
-            {{ msg.content }}
+<!--            {{ msg.content | urlify }}-->
+            <div :inner-html.prop="msg.content | urlify"/>
           </div>
         </div>
       </div>
@@ -52,6 +53,7 @@
 </template>
 
 <script>
+
 import { mapState, mapGetters, mapMutations } from "vuex";
 // import {on} from "@/services/event_bus";
 import { chatMixins } from "@/services/mixins";
@@ -66,6 +68,7 @@ export default {
   data() {
     return {
       typing: false,
+
     };
   },
   computed: {
@@ -96,7 +99,8 @@ export default {
         this.CHANGE_MESSAGE_READ_STATUS(this.currentDisplayedUser.id)
       }
     }
-  },
+
+},
   mounted() {
     // Someone typing to me
     let timeout = undefined;
@@ -301,6 +305,9 @@ export default {
           color: $main;
           border-radius: 15px 0 0 15px;
 
+          div{
+            color:inherit;
+          }
           &:last-child {
             border-bottom-right-radius: 15px;
           }
