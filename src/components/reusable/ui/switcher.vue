@@ -8,7 +8,7 @@
 
 <script>
 export default {
-  name: "switch",
+  name: "switcher",
   data(){
     return{
       active:false

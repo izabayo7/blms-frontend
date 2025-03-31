@@ -55,6 +55,7 @@ export default {
             //get last message from stored conversation
             store.dispatch('chat/lastMessageInCertainChatMessages', id).then(({ lastMessage, groupIndex, userIndex }) => {
 
+                console.log(lastMessage,userIndex,groupIndex)
                 //if conversation was found and message not duplicated
                 if (userIndex === undefined || lastMessage._id === newMessage._id)
                     return
@@ -68,24 +69,30 @@ export default {
                     // if the last sender is the receiver
                     if (userMessages[groupIndex].from.toLowerCase() === 'me') {
                         //store it as new set of message conversation
-                        userMessages.push(
-                            { from: incomingName, messages: [newMessage] }
-                        )
+                        userMessages.push({ from: incomingName, messages: [newMessage]})
                         //else append to the current messages
                     } else {
-                        userMessages[userMessages.length - 1].messages.push(newMessage)
+                        //if the last sender is the same as new message sender
+                        console.log(lastMessage.sender,newMessage.sender._id, lastMessage.sender === newMessage.sender._id)
+                        if(lastMessage.sender === newMessage.sender._id || lastMessage.sender._id === newMessage.sender._id){
+                            userMessages[userMessages.length - 1].messages.push(newMessage)
+                        } else {
+                            userMessages.push({from:incomingName,messages:[newMessage]})
+                        }
                     }
                 }
 
             })
 
+            //increase unread message or read message
             store.dispatch('chat/findIndexOfUserInIncomingMessages', id).then(idx => {
                 if (idx === null) {
                     //to be done later
                 } else {
+                    //if the last message sender is the sam as new message sender
                     if (newMessage.sender._id === state.currentDisplayedUser.id)
                         state.incomingMessages[idx].unreadMessagesLength = 0
-                    else
+                    else // unless the last message sender is not the same as new message sender
                         state.incomingMessages[idx].unreadMessagesLength += 1
 
                     state.incomingMessages[idx].last_message = newMessage
@@ -261,7 +268,8 @@ export default {
     getters: {
         // connect to socket from sever side
         socket() {
-            // io.socket.removeAllListeners()
+            if(io.socket) io.socket.removeAllListeners()
+
             return io(process.env.VUE_APP_api_service_url, {
                 query: {
                     id: user.state.user._id // username of the connected user

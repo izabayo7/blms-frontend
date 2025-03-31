@@ -60,10 +60,19 @@ const routes = [
                 // for chat
                 children: [
                     {
+                        path: '/messages/start-conversation',
+                        component: () => import('@/views/chat/StartConversation.vue'),
+                    },
+                    {
+                        path: '/messages/no-conversation',
+                        component: () => import('@/views/chat/NoConversation.vue'),
+                    },
+                    {
                         path: '/messages',
                         component: () => import('@/views/chat/Messages.vue'),
                         children: [
                             { path: '/messages/group/:id', component: () => import('@/views/chat/GroupSetting') },
+                            { path: '/messages/group/:id/add-member', component: () => import('@/views/chat/AddMember') },
                             { path: '/messages/:username', component: () => import('@/views/chat/Chat.vue') }
                         ]
                     },

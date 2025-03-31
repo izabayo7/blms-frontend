@@ -57,7 +57,6 @@
 import { mapState, mapGetters, mapMutations } from "vuex";
 // import {on} from "@/services/event_bus";
 import { chatMixins } from "@/services/mixins";
-// import { on } from "@/services/event_bus";
 
 export default {
   name: "Chat-messaging",
@@ -106,6 +105,9 @@ export default {
     let timeout = undefined;
 
     this.socket.on("typing", (typist) => {
+        if(this.currentDisplayedUser.is_group){
+          const user = this.currentDisplayedUser.members.some(el => el._id === typist)
+        }
       //if the typist is the one we are chatting with
       if (this.currentDisplayedUser.id === typist) {
         this.typing = true;
@@ -122,25 +124,15 @@ export default {
       }
     });
 
-    //when new message is received scroll to the bottom
-    this.socket.on("receive-message", () => {
-      this.typing = false;
-      this.scrollChatToBottom();//scroll to bottom
-      this.CHANGE_MESSAGE_READ_STATUS(this.currentDisplayedUser.id) //read all messages
-    });
-
-    //when the chatting user send message let us scroll to the bottom
-    // on("message-sent", () => {
-    //   setTimeout(this.scrollChatToBottom, 1);
-    //   this.CHANGE_MESSAGE_READ_STATUS(this.currentDisplayedUser.id) //read all messages
-    // });
-
-
     //track scroll so that we can determine if use has read new messages
     let scrollableDiv = document.getElementById('my-chat-messaging')
     console.log(scrollableDiv.offsetHeight,scrollableDiv.scrollTop)
     scrollableDiv.addEventListener('scroll',this.readMessages)
 
+    //when new message is received scroll to the bottom
+    this.socket.on("receive-message", () => {
+     this.typing = false;
+    });
 
     /*
     when this component is mounted Immediately scroll to the bottom

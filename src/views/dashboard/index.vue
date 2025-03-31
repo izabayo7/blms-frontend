@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from "vuex";
+import {mapGetters, mapMutations, mapState} from "vuex";
 import { chatMixins } from "@/services/mixins";
 
 export default {
@@ -11,10 +11,12 @@ export default {
   mixins: [chatMixins],
   computed: {
     ...mapGetters("chat", ["socket"]),
+    ...mapState("chat", ["currentDisplayedUser"]),
   },
   methods: {
     ...mapMutations("notification", ["addNotification"]),
     ...mapMutations("courses", ["addCourse"]),
+    ...mapMutations('chat',['CHANGE_MESSAGE_READ_STATUS']),
   },
   mounted() {
     // listen to new notifications
@@ -31,6 +33,13 @@ export default {
       console.log('in index.js')
       setTimeout(this.scrollChatToBottom, 1);
       this.$store.commit("chat/ADD_ONGOING_MESSAGE", message);
+    });
+
+    //when new message is received scroll to the bottom
+    this.socket.on("receive-message", () => {
+      //scroll to bottom
+      setTimeout(this.scrollChatToBottom,1)
+      this.CHANGE_MESSAGE_READ_STATUS(this.currentDisplayedUser.id) //read all messages
     });
   },
 };
