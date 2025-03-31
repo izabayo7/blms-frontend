@@ -2,7 +2,7 @@
   <v-container
     v-if="selected_quiz && attempt !== {}"
     fluid
-    class="quiz-page px-16"
+    class="quiz-page px-4 px-md-16"
   >
     <div v-if="!selected_quiz_submission">
       <h2>{{ selected_quiz.name }}</h2>
