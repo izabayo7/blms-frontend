@@ -3,6 +3,7 @@ import { emit } from '@/services/event_bus'
 import user from '@/store/modules/user'
 import store from '@/store'
 import router from '@/router'
+import apis from "@/services/apis";
 
 const getDefaultState = () => ({
     username: null,
@@ -29,15 +30,15 @@ export default {
         SET_DISPLAYED_USER(state, data) {
             state.currentDisplayedUser = data;
         },
-        ADD_INCOMING_CONTACT(state,data){
+        ADD_INCOMING_CONTACT(state, data) {
             let FOUND = false;
 
             /* handling existing user */
             state.incomingMessages.map(msg => {
-                if(msg.id === data.id) FOUND = true
+                if (msg.id === data.id) FOUND = true
             })
 
-            if(FOUND) return 
+            if (FOUND) return
             else state.incomingMessages.push(data)
         },
 
@@ -219,6 +220,16 @@ export default {
                 emit('incoming_message_initially_loaded')
             });
         },
+        removeMember({ state }, { groupId, member }) {
+            apis.update("chat_group", `${groupId}/remove_member/${member.data.user_name}`).then(() => {
+                for (const i in state.incomingMessages) {
+                    if (state.incomingMessages[i].id == groupId) {
+                        state.incomingMessages[i].members.splice(state.incomingMessages[i].members.indexOf(member), 1)
+                    }
+                }
+            })
+
+        },
         start_conversation({ state, getters }, user_name) {
 
             // search if conversation exist
@@ -226,7 +237,7 @@ export default {
 
             // if found go to it
             if (contact_found.length) router.push(`/messages/${user_name}`);
-            
+
             // else initialise it
             else getters.socket.emit('message/start_conversation', { conversation_id: user_name });
         },

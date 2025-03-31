@@ -31,7 +31,21 @@
             />
           </svg>
         </div>
-        <div class="remove" v-if="!IamTheOwner" @click="removeMember">
+        <div
+          class="remove"
+          v-if="!IamTheOwner"
+          @click="
+            set_modal({
+              template: 'action_confirmation',
+              method: {
+                action: 'chat/removeMember',
+                parameters: { groupId: $route.params.id, member: member },
+              },
+              title: 'Delete member',
+              message: 'Are you sure you want to delete this member?',
+            })
+          "
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
@@ -93,9 +107,13 @@ export default {
   },
   methods: {
     ...mapActions("chat", ["start_conversation"]),
+    ...mapActions("modal", ["set_modal"]),
     async removeMember() {
-      await apis.update("chat_group", `${this.$route.params.id}/remove_member/${this.member.data.user_name}`);
-      this.$emit('removeMember', this.member)
+      await apis.update(
+        "chat_group",
+        `${this.$route.params.id}/remove_member/${this.member.data.user_name}`
+      );
+      this.$emit("removeMember", this.member);
     },
   },
 };

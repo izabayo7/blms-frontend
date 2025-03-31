@@ -25,6 +25,7 @@
           </div>
         </div>
         <div class="members-list">
+          <!-- naha -->
           <group-member v-for="(member,i) in group.members" :key="i" :member="member" :IamAdmin="IamAdmin" @removeMember="removeMember" />
         </div>
         <div class="action-btn">
@@ -65,6 +66,7 @@ export default {
       const group = await a.get(`chat_group/${this.$route.params.id}`)
       this.group = group.data.data
     },
+    // aha
     removeMember(member){
       this.group.members.splice(this.group.members.indexOf(member), 1)
     }
