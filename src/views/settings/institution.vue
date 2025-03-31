@@ -52,12 +52,26 @@
             <div class="label">Institution logo</div>
           </div>
           <div class="col-12 col-md-5 text-center">
-            <img class="college_logo" :src="state.logo" alt="">
-            <div class="current_value lable">Click on image to update the logo</div>
+            <input
+                ref="file"
+                type="file"
+                id="picture"
+                allow="image/*"
+                hidden
+                @change="handleFileUpload"
+            />
+            <img @click="pickfile()" class="college_logo cursor-pointer" :src="state.logo" alt="">
+            <div v-if="editStatus[1]" class="current_value lable">Click on image to update the logo</div>
+            <div v-else class="edit">
+              <div class="actions">
+                <button class="save" @click="saveChanges(1)">Save</button>
+                <button class="cancel" @click="toogleEdit(1);profile=undefined;document.getElementById('picture'.value = '')">Cancel</button>
+              </div>
+            </div>
           </div>
           <div class="col-12 col-md-4">
             <div class="action">
-              <button v-if="editStatus[1]" @click="toogleEdit(1)">Change</button>
+              <button class="delete">Delete logo</button>
             </div>
           </div>
           <div class="col-12 col-md-3">
@@ -152,16 +166,16 @@
 </template>
 
 <script>
-// import {mapActions, mapGetters, mapState} from "vuex";
-import Apis from "@/services/apis";
-// import {elapsedDuration} from "../../../services/global_functions";
 
+import Apis from "@/services/apis";
 import {mapMutations, mapState} from "vuex";
 
 export default {
   name: "Settings",
   data: () => ({
     editStatus: [true, true, true, true, true, true, true],
+    img: "",
+    logo: undefined,
     college: {
       name: "",
       motto: "",
@@ -189,70 +203,103 @@ export default {
     }
   },
   methods: {
+    pickfile() {
+      document.getElementById("picture").click();
+    },
     ...mapMutations("sidebar_navbar", {
       set_college: "SET_COLLEGE_INFO",
     }),
     toogleEdit(index) {
       this.$set(this.editStatus, index, !this.editStatus[index])
     },
+    handleFileUpload() {
+      this.logo = document.getElementById("picture").files[0]
+      this.toogleEdit(1)
+    },
+    callback(res, index) {
+      if (res.data.status !== 200)
+        this.$store.dispatch("app_notification/SET_NOTIFICATION", {
+          message: res.data.message,
+          status: "danger",
+          uptime: 2000,
+        });
+      else {
+        this.set_college(res.data.data);
+        this.toogleEdit(index)
+      }
+    },
     saveChanges(index) {
       let obj
 
-      switch (index) {
-        case 0: {
-          if (this.state.name === this.college.name)
-            return
-          else
-            obj = {name: this.college.name}
-          break
-        }
-        case 2: {
-          if (this.state.motto === this.college.motto)
-            return
-          else {
-            obj = {motto: this.college.motto}
+      if (index !== 1) {
+        switch (index) {
+          case 0: {
+            if (this.state.name === this.college.name)
+              return
+            else
+              obj = {name: this.college.name}
             break
           }
-        }
-        case 3: {
-          if (this.state.location === this.college.location)
-            return
-          else {
-            obj = {location: this.college.location}
-            break
+          case 2: {
+            if (this.state.motto === this.college.motto)
+              return
+            else {
+              obj = {motto: this.college.motto}
+              break
+            }
+          }
+          case 3: {
+            if (this.state.location === this.college.location)
+              return
+            else {
+              obj = {location: this.college.location}
+              break
+            }
+          }
+          case 4: {
+            if (this.state.email === this.college.email)
+              return
+            else {
+              obj = {email: this.college.email}
+              break
+            }
+          }
+          case 5: {
+            if (this.state.phone === this.college.phone)
+              return
+            else {
+              obj = {phone: this.college.phone}
+              break
+            }
           }
         }
-        case 4: {
-          if (this.state.email === this.college.email)
-            return
-          else {
-            obj = {email: this.college.email}
-            break
-          }
-        }
-        case 5: {
-          if (this.state.phone === this.college.phone)
-            return
-          else {
-            obj = {phone: this.college.phone}
-            break
-          }
-        }
+        Apis.update('college', this.state._id, obj).then((res) => {
+          this.callback(res, index)
+        })
+      } else {
+        obj = new FormData()
+        obj.append('file', this.logo)
+
+        this.$store.dispatch("modal/set_modal", {
+          template: "display_information",
+          title: "Updating Logo",
+          message: `uploading logo`,
+        });
+
+        Apis.update('college', this.state._id + '/logo', obj,
+            {
+              onUploadProgress: (progressEvent) => {
+                this.$store.dispatch(
+                    "modal/set_progress",
+                    parseInt(
+                        Math.round((progressEvent.loaded / progressEvent.total) * 100)
+                    )
+                );
+              },
+            }).then((res) => {
+          this.callback(res, index)
+        })
       }
-
-      Apis.update('college', this.state._id, obj).then((res) => {
-        if (res.data.status !== 200)
-          this.$store.dispatch("app_notification/SET_NOTIFICATION", {
-            message: res.data.message,
-            status: "danger",
-            uptime: 2000,
-          });
-        else {
-          this.set_college(res.data.data);
-          this.toogleEdit(index)
-        }
-      })
-
     },
   }
 };
