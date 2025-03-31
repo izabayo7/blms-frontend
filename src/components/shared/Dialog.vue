@@ -385,7 +385,7 @@ export default {
   name: "Dialog",
   data: () => ({
     userCode: "",
-    showModal: this.template === undefined,
+    showModal: false,
     attendance: 100,
     interval: null
   }),

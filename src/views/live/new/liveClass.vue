@@ -496,7 +496,7 @@ openQuiz">
       <div v-else class="not-found">Sorry {{ error }}</div>
     </div>
     <media-sources-selection :stream="me ? me.rtcPeer.getLocalStream():undefined"
-                             :peerConnection="me ?me.rtcPeer.peerConnection:false" :show="displaySettings"
+                             :peerConnection="me ?me.rtcPeer.peerConnection:undefined" :show="displaySettings"
                              @closeSettings="displaySettings = false"/>
   </div>
 </template>
@@ -1075,7 +1075,8 @@ export default {
       return response.data.data
     },
     toggleMenu(status) {
-      this.showMenu = status
+      console.log(status)
+      // this.showMenu = status
       // const self = this;
       // if (status) {
       //   setTimeout(() => {
