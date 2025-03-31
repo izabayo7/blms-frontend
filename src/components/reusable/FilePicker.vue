@@ -88,6 +88,7 @@
   &.chat-files {
     width: 130px;
     height: 108px;
+    border: 1px solid #193074;
   }
 
   &.quiz-files {
@@ -237,11 +238,22 @@ div.remove-container a {
                 </v-btn>
 
                 <v-img
-                    @click="fileClicked(key)"
+                    v-if="imageTypes.includes(file.type)"
                     class="attachment vertically--centered"
                     :class="template"
                     v-bind:ref="'preview' + parseInt(key)"
                 />
+                <div
+                    :class="template"
+                    class="attachment vertically--centered"
+                >
+                  <div class="file_figure">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"/><path d="M9 2.003V2h10.998C20.55 2 21 2.455 21 2.992v18.016a.993.993 0 0 1-.993.992H3.993A1 1 0 0 1 3 20.993V8l6-5.997zM5.83 8H9V4.83L5.83 8zM11 4v5a1 1 0 0 1-1 1H5v10h14V4h-8z"/></svg>
+                  </div>
+                  <div class="file_name">
+                    <span>{{ file.name | trimString(12) }}</span>
+                  </div>
+                </div>
               </v-badge>
               <v-badge v-else overlap color="transparent">
                 <v-btn

@@ -21,7 +21,6 @@
         <FilePicker
             ref="picker"
             template="chat-files"
-            :allowedTypes="['image']"
             :multiple="true"
             @addFile="addFile"
             @removeFile="removeFile"
