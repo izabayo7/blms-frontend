@@ -1,30 +1,56 @@
 <template>
 <div class="live-class">
   <div class="live-class--wrapper">
-    <div id="container">
-      <div id="wrapper">
-        <div id="join" class="animate join">
-          <h1>Join a Room</h1>
-          <form @submit.prevent="register" accept-charset="UTF-8">
-            <p>
-              <input type="text" name="name" value="" id="name"
-                placeholder="Username" required>
-            </p>
-            <p>
-              <input type="text" name="room" value="" id="roomName"
-                placeholder="Room" required>
-            </p>
-            <p class="submit">
-              <input type="submit" name="commit" value="Join!">
-            </p>
-          </form>
+<!--    <div id="container">-->
+<!--      <div id="wrapper">-->
+<!--        <div id="join" class="animate join">-->
+<!--          <h1>Join a Room</h1>-->
+<!--          <form @submit.prevent="register" accept-charset="UTF-8">-->
+<!--            <p>-->
+<!--              <input type="text" name="name" value="" id="name"-->
+<!--                placeholder="Username" required>-->
+<!--            </p>-->
+<!--            <p>-->
+<!--              <input type="text" name="room" value="" id="roomName"-->
+<!--                placeholder="Room" required>-->
+<!--            </p>-->
+<!--            <p class="submit">-->
+<!--              <input type="submit" name="commit" value="Join!">-->
+<!--            </p>-->
+<!--          </form>-->
+<!--        </div>-->
+<!--        <div id="room" style="display: none;">-->
+<!--          <h2 id="room-header"></h2>-->
+<!--          <div id="participants"></div>-->
+<!--          <input type="button" id="button-leave" onmouseup="leaveRoom();"-->
+<!--            value="Leave room">-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
+    <div class="live-class--video">
+      <div class="head">
+        <div class="text">
+          <h2>Economics Basics: Chapter 8 part II</h2>
+          <span class="live">Live</span>
         </div>
-        <div id="room" style="display: none;">
-          <h2 id="room-header"></h2>
-          <div id="participants"></div>
-          <input type="button" id="button-leave" onmouseup="leaveRoom();"
-            value="Leave room">
+        <div class="time">
+          00 : 00 : 36
         </div>
+      </div>
+      <div class="video">
+        <div class="video--wrapper" >
+          <video >
+            <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+          </video>
+        </div>
+      </div>
+      <div class="live-comments">
+        
+      </div>
+    </div>
+    <div class="live-class--attendance">
+      <div class="online-users">
+
       </div>
     </div>
   </div>
@@ -585,6 +611,42 @@ export default {
 
     a.hovertext:hover:after, a.hovertext:focus:after {
       opacity: 1.0;
+    }
+  }
+
+  &--video{
+    .head{
+      display:flex;
+      padding: .3rem 0;
+      justify-content: space-between;
+
+      .text{
+        display:flex;
+        align-items: center;
+
+        span{
+          margin-left:2rem;
+          padding:0 1rem;
+          text-align: center;
+          border-radius: 10rem;
+          background-color: $danger;
+          height: fit-content;
+          color:$main;
+        }
+      }
+    }
+  }
+
+  .video{
+    width:100%;
+
+    &--wrapper{
+      width: 100%;
+
+      video{
+        width: 100%;
+        max-height: 20rem;
+      }
     }
   }
 }
