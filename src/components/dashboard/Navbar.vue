@@ -1,20 +1,27 @@
 <template>
   <div class="my-navbar row">
-    <div class="col-2">
-      <div class="toggle">
+    <div class="col-2 d-flex top-left-contents">
+      <div class="toggle ml-2">
         <v-icon large @click="toggle">mdi-menu</v-icon>
       </div>
+      <div class="vertically--centered">
+        <img :src="college_logo" class="logo" />
+      </div>
     </div>
-    <div class="col-3 vertically--centered">
+    <!-- <div class="col-3 vertically--centered">
       <img :src="college_logo" class="logo" />
-    </div>
-    <div class="my-search col-2">
+    </div> -->
+    <div class="my-search col-6">
       <search />
     </div>
-    <div :class="`notification col-1${!showCreateCourseButton ? '' : ''}`">
+    <div
+      :class="`notification  offset-lg-1 col-1${
+        !showCreateCourseButton ? '' : ''
+      }`"
+    >
       <notifications />
     </div>
-    <div class="profile col-3">
+    <div class="profile col-2">
       <profile />
     </div>
   </div>
@@ -59,7 +66,9 @@ export default {
   display: flex;
   padding: 0 !important;
   z-index: 100;
-
+  .top-left-contents div {
+    width: 50%;
+  }
   .my-search,
   .notification,
   .profile {

@@ -11,6 +11,7 @@
         <li
           v-if="userCategory === 'ADMIN'"
           @click="$router.push('/administration')"
+          class="vertically--centered"
           :class="{ active: activeRoute.includes('/administration') }"
         >
           <div class="link-icon">
@@ -38,6 +39,7 @@
         <li
           v-if="userCategory === 'INSTRUCTOR'"
           @click="$router.push('/users')"
+          class="vertically--centered"
           :class="{ active: activeRoute.includes('/users') }"
         >
           <div class="link-icon">
@@ -96,6 +98,7 @@
         <li
           v-if="userCategory === 'STUDENT' || userCategory === 'INSTRUCTOR'"
           @click="$router.push('/courses')"
+          class="vertically--centered"
           :class="{ active: activeRoute.includes('/courses') }"
         >
           <div class="link-icon">
@@ -118,6 +121,7 @@
         <li
           v-if="userCategory === 'STUDENT' || userCategory === 'INSTRUCTOR'"
           @click="$router.push('/reports')"
+          class="vertically--centered"
           :class="{ active: activeRoute.includes('/reports') }"
         >
           <div class="link-icon">
@@ -140,6 +144,7 @@
         <li
           v-if="userCategory === 'STUDENT' || userCategory === 'INSTRUCTOR'"
           @click="$router.push('/library')"
+          class="vertically--centered"
           :class="{ active: activeRoute.includes('/library') }"
         >
           <div class="link-icon">
@@ -161,6 +166,7 @@
         </li>
         <li
           @click="$router.push('/messages')"
+          class="vertically--centered"
           :class="{ active: activeRoute.includes('/messages') }"
         >
           <div class="link-icon">
@@ -183,6 +189,7 @@
         <li
           v-if="userCategory === 'INSTRUCTOR'"
           @click="$router.push('/quiz')"
+          class="vertically--centered"
           :class="{ active: activeRoute.includes('/quiz') }"
         >
           <div class="link-icon">
@@ -205,6 +212,7 @@
         <li
           v-if="userCategory === 'STUDENT' || userCategory === 'INSTRUCTOR'"
           @click="$router.push('/settings')"
+          class="vertically--centered"
           :class="{ active: activeRoute.includes('/sinz kbx') }"
         >
           <div class="link-icon">
