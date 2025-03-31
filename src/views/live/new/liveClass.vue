@@ -592,23 +592,30 @@ export default {
       }
     }
   },
-  mounted(){
+  mounted() {
     let span = document.querySelector('.message-row span')
     let actionButtons = document.querySelector('.action-btn');
+    let cancelButton = document.querySelector('.action-btn .cancel button')
     span.innerText = 'write comment'
     actionButtons.style.display = 'none';
     // let focused = false;
-    span.onfocus = ()=>{
-      if(span.innerText == 'write comment'){
+    span.onfocus = () => {
+      if (span.innerText == 'write comment') {
         span.innerText = ""
       }
       actionButtons.style.display = 'flex';
     }
-    span.onblur = ()=>{
-      if(span.innerText == ''){
-        span.innerText = "write comment"
+    span.onblur = () => {
+      if (span.innerText == "") {
+        actionButtons.style.display = 'none';
       }
-      actionButtons.style.display = 'none';
+    }
+    cancelButton.onclick = () => {
+        span.innerText = "write comment"
+        actionButtons.style.display = 'none';
+    }
+    if(!this.participationInfo.isOfferingCourse){
+      span.className="stud_span"
     }
   },
   created() {

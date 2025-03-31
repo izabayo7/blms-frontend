@@ -640,8 +640,10 @@
      .input{
          span{
              border: none;
+             border-radius: 0;
              &:focus{
                  outline: none;
+                 border-bottom: 1px solid #3C3C3C;
              }
              font-family: Poppins;
              font-style: normal;
@@ -652,6 +654,9 @@
 
 
              color: #ABABAB;
+             &.stud_span:focus{
+                 border: 1px solid #3C3C3C;
+             }
          }
      }
         .action-btn{
