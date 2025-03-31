@@ -61,14 +61,17 @@ export default {
     },
     actions: {
         // set up the dialog
-        set_modal({ commit }, { template, method, title, message, closable = false }) {
+        set_modal({ state, commit }, { template, method, title, message, closable = false }) {
             console.log({ template, method, title, message, closable })
             commit('update_modal_template', template)
             commit('update_confirmation_method', method)
             commit('update_title', title)
             commit('update_message', message);
             commit('update_closability', closable)
-            commit('toogle_visibility');
+            if (!state.visible) {
+                commit('toogle_visibility');
+            }
+
         },
         // set up the dialog
         reset_modal({ commit }) {
@@ -81,13 +84,16 @@ export default {
             commit('update_closability', false)
         },
         // set the progress
-        set_progress({ dispatch, commit }, value) {
+        set_progress({ getters, dispatch, commit }, value) {
             commit('update_progress', value)
             // if the progress is full reset the modal
             if (value === 100) {
-                console.log('done kbx')
+                console.log('done kbx', getters.progress)
                 setTimeout(() => {
-                    dispatch('reset_modal', null)
+                    console.log('love story', getters.progress)
+                    if (getters.progress === 100) {
+                        dispatch('reset_modal', null)
+                    }
                 }, 1000);
             } else {
                 console.log(value)

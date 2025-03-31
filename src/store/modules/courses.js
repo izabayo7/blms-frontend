@@ -172,7 +172,7 @@ export default {
                     break
                 }
             }
-            return apis.update('chapter', state.selectedChapter, chapter).then(() => {
+            return apis.update('chapter', state.selectedChapter, chapter).then( async () => {
 
                 if (content) {
                     const formData = new FormData()
@@ -239,6 +239,27 @@ export default {
                         state.courses.data[courseIndex].chapters[chapterIndex].quiz.splice(0, 1)
                     })
                 }
+                if (attachments.length > 0) {
+                    dispatch('modal/set_modal', { template: 'display_information', title: 'Updating Chapter', message: `uploading attachments` }, { root: true })
+                    const formData = new FormData()
+                    for (const i in attachments) {
+                        formData.append("files[" + i + "]", attachments[i]);
+                    }
+                    const chapterResponse = await apis.create(`file/addAttachments/${state.selectedChapter}`, formData, {
+                        headers: {
+                            'Content-Type': 'multipart/form-data'
+                        },
+                        onUploadProgress: (progressEvent) => {
+                            dispatch('modal/set_progress', parseInt(Math.round((progressEvent.loaded / progressEvent.total) * 100)), { root: true })
+                        }
+                    })
+
+                    for (const i in chapterResponse.data) {
+                        state.courses.data[courseIndex].chapters[chapterIndex].attachments.push(chapterResponse.data[i])
+                    }
+
+                }
+
                 if (video) {
                     // set the dialog
                     dispatch('modal/set_modal', { template: 'display_information', title: 'Updating Chapter', message: `uploading ${video.name}` }, { root: true })
@@ -254,25 +275,6 @@ export default {
                     }).then((videoResponse) => {
                         state.courses.data[courseIndex].chapters[chapterIndex].mainVideo = videoResponse.data.filepath
                     })
-                } if (attachments.length > 0) {
-                    dispatch('modal/set_modal', { template: 'display_information', title: 'Updating Chapter', message: `uploading attachments` }, { root: true })
-                    const formData = new FormData()
-                    for (const i in attachments) {
-                        formData.append("files[" + i + "]", attachments[i]);
-                    }
-                    apis.create(`file/addAttachments/${state.selectedChapter}`, formData, {
-                        headers: {
-                            'Content-Type': 'multipart/form-data'
-                        },
-                        onUploadProgress: (progressEvent) => {
-                            dispatch('modal/set_progress', parseInt(Math.round((progressEvent.loaded / progressEvent.total) * 100)), { root: true })
-                        }
-                    }).then((chapterResponse) => {
-                        for (const i in chapterResponse.data) {
-                            state.courses.data[courseIndex].chapters[chapterIndex].attachments.push(chapterResponse.data[i])
-                        }
-                    })
-
                 }
             })
 
@@ -409,7 +411,7 @@ export default {
                     break
                 }
             }
-            return apis.create('chapter', chapter).then(d => {
+            return apis.create('chapter', chapter).then( async (d) => {
 
                 if (content) {
                     const formData = new FormData()
@@ -441,12 +443,33 @@ export default {
                     })
 
                 }
+                if (attachments.length > 0) {
+                    dispatch('modal/set_modal', { template: 'display_information', title: 'Updating Chapter', message: `uploading attachments` }, { root: true })
+                    const formData = new FormData()
+                    for (const i in attachments) {
+                        formData.append("files[" + i + "]", attachments[i]);
+                    }
+                    const chapterResponse = await apis.create(`file/addAttachments/${state.selectedChapter}`, formData, {
+                        headers: {
+                            'Content-Type': 'multipart/form-data'
+                        },
+                        onUploadProgress: (progressEvent) => {
+                            dispatch('modal/set_progress', parseInt(Math.round((progressEvent.loaded / progressEvent.total) * 100)), { root: true })
+                        }
+                    })
+
+                    for (const i in chapterResponse.data) {
+                        state.courses.data[courseIndex].chapters[chapterIndex].attachments.push(chapterResponse.data[i])
+                    }
+
+                }
+
                 if (video) {
                     // set the dialog
-                    dispatch('modal/set_modal', { template: 'display_information', title: 'Saving Chapter', message: `uploading ${video.name}` }, { root: true })
+                    dispatch('modal/set_modal', { template: 'display_information', title: 'Updating Chapter', message: `uploading ${video.name}` }, { root: true })
                     const formData = new FormData()
                     formData.append("file", video)
-                    apis.update('file/updateMainVideo', d.data._id, formData, {
+                    apis.update('file/updateMainVideo', state.selectedChapter, formData, {
                         headers: {
                             'Content-Type': 'multipart/form-data'
                         },
@@ -455,28 +478,7 @@ export default {
                         }
                     }).then((videoResponse) => {
                         state.courses.data[courseIndex].chapters[chapterIndex].mainVideo = videoResponse.data.filepath
-                        // dispatch('modal/reset_modal', null, { root: true })
                     })
-                } if (attachments.length > 0) {
-                    dispatch('modal/set_modal', { template: 'display_information', title: 'Saving Chapter', message: `uploading attachments` }, { root: true })
-                    const formData = new FormData()
-                    for (const i in attachments) {
-                        formData.append("files[" + i + "]", attachments[i]);
-                    }
-                    apis.create(`file/addAttachments/${d.data._id}`, formData, {
-                        headers: {
-                            'Content-Type': 'multipart/form-data'
-                        },
-                        onUploadProgress: (progressEvent) => {
-                            dispatch('modal/set_progress', parseInt(Math.round((progressEvent.loaded / progressEvent.total) * 100)), { root: true })
-                        }
-                    }).then((chapterResponse) => {
-                        for (const i in chapterResponse.data) {
-                            state.courses.data[courseIndex].chapters[chapterIndex].attachments.push(chapterResponse.data[i])
-                        }
-                        // dispatch('modal/reset_modal', null, { root: true })
-                    })
-
                 }
             })
 
