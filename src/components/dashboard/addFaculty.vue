@@ -116,7 +116,7 @@
             </div>
           </div>
           <div class="added-student-groups customScroll">
-            <div v-for="(item, i) in addedStudentGroups" :key="i" class="item">
+            <div v-for="(item, i) in addedStudentGroups" :key="i" :class="{'d-none': isEditing && editingIndex === i}" class="item">
               <div class="name">{{ item.name }}</div>
               <div class="actions ml-auto">
                 <button @click="edit(i)" class="edit mr-4">
