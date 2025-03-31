@@ -139,7 +139,7 @@ export default {
     },
 
     receiveVideo(sender) {
-      let participant = new Participant(sender);
+      let participant = new Participant(sender,this);
       this.participants[sender] = participant;
       let video = participant.getVideoElement();
 

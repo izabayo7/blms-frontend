@@ -22,6 +22,7 @@ export default function Participant(name,vm) {
     let span = document.createElement('span');
     let video = document.createElement('video');
     let rtcPeer;
+    this.vm = vm;
 
     container.appendChild(video);
     container.appendChild(span);
@@ -73,7 +74,7 @@ export default function Participant(name,vm) {
     }
 
 
-    this.onIceCandidate = function (candidate, wp) {
+    this.onIceCandidate =  (candidate, wp) => {
         console.log("Local candidate" + JSON.stringify(candidate));
 
         let message = {
@@ -81,6 +82,7 @@ export default function Participant(name,vm) {
             candidate: candidate,
             name: name
         };
+
         vm.sendMessage(message);
     }
 
