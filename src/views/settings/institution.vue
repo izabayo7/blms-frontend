@@ -51,30 +51,7 @@
           <div class="col-12 col-md-3">
             <div class="label">Institution logo</div>
           </div>
-          <cropper :img="img" @change="imageCropped" @save="saveChanges(1)"/>
-          <div class="col-12 col-md-5 text-center">
-            <input
-                ref="file"
-                type="file"
-                id="picture"
-                allow="image/*"
-                hidden
-                @change="handleFileUpload"
-            />
-            <v-avatar
-                v-if="state.logo"
-                width="auto"
-                :height="largeDevices.includes($vuetify.breakpoint.name) ? 150 : 120"
-                @click="pickfile"
-                class="mt-4 d-block cursor-pointer"
-                id="user_pic"
-            >
-              <img :src="state.logo + `?width=${largeDevices.includes($vuetify.breakpoint.name) ? 150 : 120}`"
-                   alt="avatar"/>
-            </v-avatar>
-            <div v-if="editStatus[2]" class="current_value lable"><span v-if="state.logo">Click on image to update the logo </span>
-            </div>
-          </div>
+<!--          <cropper :img="img" @change="imageCropped" @save="saveChanges(1)"/>-->
 <!--          <div class="col-12 col-md-5 text-center">-->
 <!--            <input-->
 <!--                ref="file"-->
@@ -84,18 +61,42 @@
 <!--                hidden-->
 <!--                @change="handleFileUpload"-->
 <!--            />-->
-<!--            <img @click="pickfile()" class="college_logo cursor-pointer" :src="state.logo" alt="">-->
-<!--            <div v-if="editStatus[1]" class="current_value lable"><span v-if="state.logo">Click on image to update the logo </span>-->
-<!--            </div>-->
-<!--            <div v-else class="edit">-->
-<!--              <div class="actions">-->
-<!--                <button class="save" @click="saveChanges(1)">Save</button>-->
-<!--                <button class="cancel"-->
-<!--                        @click="toogleEdit(1);profile=undefined;document.getElementById('picture').value = ''">Cancel-->
-<!--                </button>-->
-<!--              </div>-->
+<!--&lt;!&ndash;            <v-avatar&ndash;&gt;-->
+<!--&lt;!&ndash;                v-if="state.logo"&ndash;&gt;-->
+<!--&lt;!&ndash;                :width="largeDevices.includes($vuetify.breakpoint.name) ? 150 : 120"&ndash;&gt;-->
+<!--&lt;!&ndash;                :height="largeDevices.includes($vuetify.breakpoint.name) ? 150 : 120"&ndash;&gt;-->
+<!--&lt;!&ndash;                @click="pickfile"&ndash;&gt;-->
+<!--&lt;!&ndash;                class="mt-4 d-block cursor-pointer"&ndash;&gt;-->
+<!--&lt;!&ndash;                id="user_pic"&ndash;&gt;-->
+<!--&lt;!&ndash;            >&ndash;&gt;-->
+<!--              <img :src="state.logo + `?width=${largeDevices.includes($vuetify.breakpoint.name) ? 150 : 120}`"-->
+<!--                   alt="avatar"/>-->
+<!--&lt;!&ndash;            </v-avatar>&ndash;&gt;-->
+<!--            <div v-if="editStatus[2]" class="current_value lable"><span v-if="state.logo">Click on image to update the logo </span>-->
 <!--            </div>-->
 <!--          </div>-->
+          <div class="col-12 col-md-5 text-center">
+            <input
+                ref="file"
+                type="file"
+                id="picture"
+                allow="image/*"
+                hidden
+                @change="handleFileUpload"
+            />
+            <img v-if="state.logo" @click="pickfile()" class="college_logo cursor-pointer" :src="state.logo + `?width=${largeDevices.includes($vuetify.breakpoint.name) ? 150 : 120}`" alt="">
+            <div v-else-if="editStatus[1]" class="current_value">not yet set</div>
+            <div v-if="editStatus[1]" class="current_value lable"><span v-if="state.logo">Click on image to update the logo </span>
+            </div>
+            <div v-else class="edit">
+              <div class="actions">
+                <button class="save" @click="saveChanges(1)">Save</button>
+                <button class="cancel"
+                        @click="toogleEdit(1);profile=undefined;document.getElementById('picture').value = ''">Cancel
+                </button>
+              </div>
+            </div>
+          </div>
           <div class="col-12 col-md-4">
             <div class="action">
               <button v-if="state.logo" @click="
@@ -213,15 +214,8 @@
           </div>
           <div class="col-12 col-md-4">
             <div class="action">
-              <button class="delete" @click="
-              set_modal({
-                  template: 'action_confirmation',
-                  method: {
-                  },
-                  title: 'Delege college',
-                  message:
-                    'Are you sure you want to delete this college?',
-                })">Delete account
+              <button class="delete" disabled
+              >Delete account
               </button>
             </div>
           </div>
@@ -235,7 +229,7 @@
 
 import Apis from "@/services/apis";
 import {mapActions, mapMutations, mapState} from "vuex";
-import {cropperMixin} from "../../services/mixins";
+// import {cropperMixin} from "../../services/mixins";
 
 export default {
   name: "InstitutionSettings",
@@ -260,9 +254,9 @@ export default {
     ...mapState("sidebar_navbar", {state: "college"}),
   },
   components:{
-    cropper: () => import("@/components/reusable/ui/ImageCropper"),
+    // cropper: () => import("@/components/reusable/ui/ImageCropper"),
   },
-  mixins: [cropperMixin],
+  // mixins: [cropperMixin],
   watch: {
     state() {
       if (this.state) {
@@ -271,6 +265,10 @@ export default {
     }
   },
   methods: {
+    handleFileUpload() {
+      this.logo = this.$refs.file.files[0];
+      this.toogleEdit(1)
+    },
     constructCollege() {
       this.college.name = this.state.name
       if (this.state.motto)
@@ -363,7 +361,7 @@ export default {
           this.callback(res, index)
         })
       } else {
-        obj = {profile  : this.profile}
+        // obj = {profile  : this.profile}
 
         this.$store.dispatch("modal/set_modal", {
           template: "display_information",
@@ -371,17 +369,30 @@ export default {
           message: `uploading logo`,
         });
 
-        Apis.update('college', this.state._id + '/logo', obj,
-            {
-              onUploadProgress: (progressEvent) => {
-                this.$store.dispatch(
-                    "modal/set_progress",
-                    parseInt(
-                        Math.round((progressEvent.loaded / progressEvent.total) * 100)
-                    )
-                );
-              },
-            }).then((res) => {
+        // Apis.update('college', this.state._id + '/logo', obj,
+        //     {
+        //       onUploadProgress: (progressEvent) => {
+        //         this.$store.dispatch(
+        //             "modal/set_progress",
+        //             parseInt(
+        //                 Math.round((progressEvent.loaded / progressEvent.total) * 100)
+        //             )
+        //         );
+        //       },
+        //     }).then((res) => {
+        //   this.callback(res, index)
+        // })
+
+        const formData = new FormData()
+        formData.append("file", this.logo)
+        Apis.update('college', `${this.state._id}/logo`, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          },
+          onUploadProgress: (progressEvent) => {
+            this.$store.dispatch('modal/set_progress', parseInt(Math.round((progressEvent.loaded / progressEvent.total) * 100)), {root: true})
+          }
+        }).then((res) => {
           this.callback(res, index)
         })
       }

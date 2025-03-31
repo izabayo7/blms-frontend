@@ -14,6 +14,9 @@ const getDefaultState = () => ({
     totalCommentsOnAChapter: "",  //total number of comments based on chapter
     coursesByFaculty: {
         data: ""
+    },
+    coursesByUserGroup: {
+        data: ""
     }
 })
 
@@ -74,6 +77,9 @@ export default {
         },
         SET_COURSE_BY_FACULTY(state, {data}) {
             state.coursesByFaculty.data = data;
+        },
+        SET_COURSE_BY_USERGROUP(state, {data}) {
+            state.coursesByUserGroup.data = data;
         }
     },
     actions: {
@@ -98,6 +104,12 @@ export default {
             apis.get(`course/faculty/${facultyId}`)
                 .then(({data: {data}}) => {
                     commit('SET_COURSE_BY_FACULTY', {data})
+                })
+        },
+        getCourseByUserGroup({commit}, {Id}) {
+                apis.get(`course/user_group/${Id}`)
+                .then(({data: {data}}) => {
+                    commit('SET_COURSE_BY_USERGROUP', {data})
                 })
         },
 
@@ -632,6 +644,9 @@ export default {
         },
         coursesByFaculty: state => {
             return state.coursesByFaculty.data;
+        },
+        coursesByUserGroup: state => {
+            return state.coursesByUserGroup.data;
         }
     },
 }

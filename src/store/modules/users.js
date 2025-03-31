@@ -13,6 +13,9 @@ const getDefaultState = () => ({
     usersBasedOnFaculties: {
         data: "",
     },
+    usersBasedOnUserGroups: {
+        data: "",
+    },
     userByUsername: {
         data: "",
         loaded: false,
@@ -39,6 +42,9 @@ export default {
         },
         SET_USERS_ON_FACULTIES(state, {data}) {
             state.usersBasedOnFaculties.data = data;
+        },
+        SET_USERS_ON_USERGROUPS(state, {data}) {
+            state.usersBasedOnUserGroups.data = data;
         },
         SET_USER_BY_USERNAME(state, user) {
             state.userByUsername.data = user
@@ -123,6 +129,12 @@ export default {
                     commit("SET_USERS_ON_FACULTIES", {data})
                 })
         },
+        loadUsersBasedOnUserGroups({commit}, {userGroupId, category}) {
+            apis.get(`user/user_group/${userGroupId}/${category}`)
+                .then(({data: {data}}) => {
+                    commit("SET_USERS_ON_USERGROUPS", {data})
+                })
+        },
         holdAccounts({dispatch}, {usernames, hold}) {
             let success = true
             for (const i in usernames)
@@ -155,6 +167,22 @@ export default {
                     status: "success",
                     uptime: 5000,
                 }, {root: true})
+        },
+        removeUsers({dispatch}, {ids}) {
+            let success = true
+            for (const i in ids)
+                apis.delete('user_user_group/',ids[i])
+                    .then(({data: {status}}) => {
+                        if(![200,201].includes(status))
+                            success = false
+                    })
+
+            if(success)
+                dispatch("app_notification/SET_NOTIFICATION", {
+                    message: `Users ${ids.length > 1 ? 's' : ''} sucessfully removed`,
+                    status: "success",
+                    uptime: 5000,
+                }, {root: true})
         }
     },
     getters: {
@@ -173,6 +201,9 @@ export default {
         },
         usersOnFaculties: state => {
             return state.usersBasedOnFaculties.data;
+        },
+        usersOnUserGroups: state => {
+            return state.usersBasedOnUserGroups.data || [];
         },
         userByUsername: state => state.userByUsername.data,
         userByUsernameLoading: state => !state.userByUsername.loaded

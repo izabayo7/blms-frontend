@@ -36,6 +36,7 @@
           <v-tab :key="2">
             <v-icon class="mx-md-2">mdi-file-download-outline</v-icon>
             Downloads
+            {{ course.chapters[activeIndex].attachments.length }}
           </v-tab>
 
           <v-tab-item v-for="n in 3" :key="n">

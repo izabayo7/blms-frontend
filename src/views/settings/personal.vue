@@ -213,7 +213,7 @@
 <script>
 
 import Apis from "@/services/apis";
-import {mapActions, mapMutations, mapState,mapGetters} from "vuex";
+import {mapActions, mapMutations, mapState, mapGetters} from "vuex";
 import jwt from "jsonwebtoken";
 import {cropperMixin} from "../../services/mixins";
 
@@ -246,6 +246,7 @@ export default {
   methods: {
     getUser() {
       const user = JSON.stringify(this.$store.state.user.user);
+      console.log(this.$store.state.user.user)
       return JSON.parse(user);
     },
     ...mapActions("modal", ["set_modal"]),
@@ -276,6 +277,7 @@ export default {
           this.toogleEdit(index)
         const user = await jwt.decode(this.$session.get("jwt"));
         this.$store.dispatch("user/setUser", user);
+        this.user = user
       }
     },
 

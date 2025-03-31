@@ -265,9 +265,10 @@ export default {
     border: 0.827479px solid #dedede;
     max-width: 70%;
     display: flex;
+    margin-left: auto;
 
     .inner {
-      width: 201.09px;
+      width: fit-content;
       min-height: 22.95px;
 
       border-left: 0.827479px solid #dedede;
@@ -278,7 +279,7 @@ export default {
       font-weight: 500;
       font-size: 10.7572px;
       text-align: center;
-      padding-top: 4px;
+      padding: 4px 5px 0px;
       align-items: center;
 
       color: #515151;

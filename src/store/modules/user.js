@@ -25,8 +25,12 @@ export default {
         }
     },
     actions: {
-        setUser({ commit }, user) {
-            commit('SET_USER', user)
+        setUser({ commit,state }, user) {
+            state.isLoggedIn = true
+            commit('SET_USER',user)
+            Apis.get(`user/current`).then(res=>{
+                commit('SET_USER', res.data.data)
+            })
         },
         unsetUser({ commit }) {
             commit('UNSET_USER')
