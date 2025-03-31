@@ -4,13 +4,13 @@ export default{
     computed:{
         ...mapGetters('user',['user']),
         isStudent(){
-          return this.user.category === "STUDENT"
+          return this.user.category.name === "STUDENT"
         },
         isInstructor(){
-          return this.user.category === "INSTRUCTOR"
+          return this.user.category.name === "INSTRUCTOR"
         },
         isAdmin(){
-          return this.user.category === "ADMIN"
+          return this.user.category.name === "ADMIN"
         }
     }
 }
