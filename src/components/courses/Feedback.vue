@@ -246,6 +246,7 @@ export default {
     &.saved_feedback {
       color: black;
       background-color: #e1e1e1;
+      // box-shadow: 3px 6px 10px rgb(0, 0, 0, 0.16);
       border: none;
     }
   }
