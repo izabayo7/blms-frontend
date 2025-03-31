@@ -37,8 +37,8 @@
           </div>
         </div>
       </div>
-      <div class="tabular-users">
-        <div class="table-wrapper mt-6">
+      <div class="tabular-faculties">
+        <div class="table-wrapper mt-6" v-if="faculties.length > 0">
           <div class="table-header">
             <table-header />
           </div>
@@ -56,20 +56,44 @@ import buttonUi from '@/components/reusable/ui/button-ui'
 import Search from "../../components/reusable/Search2";
 import TableHeader from "../../components/reusable/ui/table-header";
 import TableUi from "../../components/reusable/ui/table-ui";
+import apis from "../../services/apis";
+import moment from "moment";
+import _ from "lodash";
 
 export default {
 name: "Faculties",
   components: {TableUi, TableHeader, Search, buttonUi},
   data(){
     return{
-      faculties:[
-        {"Faculty Name":"Computer Science","Student groups":4, "Students":124, "Courses":12 ,"Created on":"today"},
-        {"Faculty Name":"Language and arts","Student groups":9, "Students":64, "Courses":4 ,"Created on":"12/12/2020"},
-        {"Faculty Name":"Curious learners","Student groups":3, "Students":13, "Courses":16 ,"Created on":"12/5/2020"},
-        {"Faculty Name":"Communication design","Student groups":5, "Students":34, "Courses":1 ,"Created on":"13/12/2021"},
-        {"Faculty Name":"Computer Science","Student groups":1, "Students":76, "Courses":20 ,"Created on":"3/10/2019"},
-      ]
+      faculties:[],
     }
+  },
+  methods:{
+    loadFaculties(){
+      apis.get("faculty")
+        .then(({data:{data}}) => {
+          const attributesToPick = [ "name", "updatedAt", "createdAt"]
+          let filteredFaculties = [];
+
+          data.map(faculty => {
+            console.log();
+
+            faculty.createdAt = moment(faculty.createdAt).format("DD MMM  YYYY")
+            faculty.updatedAt = moment(faculty.updatedAt).format("DD MMM YYYY")
+            //TODO finalising faculties
+
+            filteredFaculties.push(_.pick(faculty,attributesToPick))
+          })
+          this.faculties = filteredFaculties;
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    }
+  },
+  created(){
+
+    this.loadFaculties();
   }
 }
 </script>
