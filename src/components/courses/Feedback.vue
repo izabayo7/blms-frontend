@@ -55,9 +55,7 @@
       </div>
     </div>
     <v-btn
-      v-if="
-        $store.state.user.user.category.name === 'INSTRUCTOR' && mode == 'any'
-      "
+      v-if="$store.state.user.user.category.name === 'INSTRUCTOR' && showSave"
       @click="addFeedback()"
       class="primary-bg px-6 py-4 mt-4"
       rounded
@@ -85,6 +83,7 @@ export default {
   },
   data: () => ({
     element: undefined,
+    showSave: false,
   }),
   computed: {
     refName() {
@@ -94,6 +93,11 @@ export default {
       // console.log(this.feedbackContent());
       // return this.feedbackContent() == this.content ? "view" : "edit";
       return "any";
+    },
+    currentContent() {
+      return this.$refs.feedback_input
+        ? this.$refs.feedback_input.innerHTML
+        : "";
     },
   },
   watch: {
@@ -117,6 +121,8 @@ export default {
           element.className = element.className.replace(" empty_feedback", "");
         }
       }
+      // show or hide save button
+      this.showSave = this.feedbackContent() != this.content;
     },
     async addFeedback() {
       const content = this.feedbackContent();

@@ -2,7 +2,7 @@
   <v-container
     v-if="selected_quiz_submission"
     fluid
-    class="quiz-page white px-lg-16"
+    class="quiz-page white pl-lg-16"
   >
     <back class="mt-0 mb-6 ml-n6" to="/reports" />
 
@@ -135,7 +135,7 @@
                 selected_quiz_submission.marked || userCategory === 'INSTRUCTOR'
               "
             >
-              <v-vol class="col-12 col-md-8 d-flex">
+              <v-col class="col-12 col-md-8 d-flex">
                 <div class="mr-3">Awarded marks:</div>
                 <div>
                   <div class="cool-box marks grey-color mt-n1">
@@ -150,8 +150,8 @@
                     <span>{{ `/${question.marks}` }}</span>
                   </div>
                 </div>
-              </v-vol>
-              <v-vol
+              </v-col>
+              <v-col
                 v-if="question.type.includes('select')"
                 class="col-12 col-md-4"
               >
@@ -226,7 +226,7 @@
                     }}
                   </span>
                 </div>
-              </v-vol>
+              </v-col>
               <v-col class="col-12">
                 <feedback
                   v-if="
@@ -250,7 +250,41 @@
           </v-col>
         </v-row>
       </v-col>
-      <v-col class="col-12 col-md-4"></v-col>
+      <v-col class="col-12 col-md-4 more_info">
+        <v-row class="text-h5 font-weight-black mb-6 fixed">
+          <v-col class="col-12"></v-col>
+          {{ selected_quiz_submission.user.sur_name }}
+          {{ selected_quiz_submission.user.other_names }}
+        </v-row>
+        <v-row class="mb-6">
+          <div class="mr-3">Total marks:</div>
+          <div>
+            <div class="cool-box marks grey-color mt-n1">
+              <input
+                class="marks-input"
+                v-model="computedTotalMarks"
+                readonly
+                type="text"
+              />
+              <span>{{ `/${1000}` }}</span>
+            </div>
+          </div>
+        </v-row>
+        <v-row>
+          <v-btn
+            v-if="userCategory === 'INSTRUCTOR'"
+            class="primary-bg mr-3"
+            @click="updateSubmission"
+            >Save Marks</v-btn
+          >
+          <v-btn
+            v-if="userCategory === 'INSTRUCTOR'"
+            class="primary-bg"
+            @click="updateSubmission"
+            >Save Marks</v-btn
+          >
+        </v-row>
+      </v-col>
 
       <v-col class="col-12 col-md-12 questions-side">
         <v-btn
@@ -544,5 +578,7 @@ export default {
     /* border-color: green; */
     box-shadow: 8px 9px 11px rgb(199 199 199);
   }
+}
+.more_info {
 }
 </style>
