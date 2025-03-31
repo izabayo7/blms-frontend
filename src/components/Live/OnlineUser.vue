@@ -63,11 +63,11 @@ export default {
       margin:.1rem 0;
     }
       &--name{
-        font-size:.7rem;
+        font-size:.8rem;
       }
 
       &--attendance{
-        font-size: .5rem;
+        font-size: .6rem;
         color:$grayish;
       }
   }
