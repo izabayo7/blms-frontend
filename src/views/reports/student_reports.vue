@@ -108,11 +108,11 @@ export default {
           link: "/reports",
         },
         {
-          text: 'course',
+          text: this.quiz_submission.target.course.name,
           link: "/reports/" + this.$route.params.target,
         },
         {
-          text: this.$route.params.target,
+          text: this.quiz_submission.target.chapter.name,
           link: "/reports/" + this.$route.params.target,
         },
       ]
