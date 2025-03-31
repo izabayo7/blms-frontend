@@ -154,7 +154,13 @@
             <div class="description">{{ live_session.chapter.description }}
             </div>
             <div v-if="displayQuiz && quiz" class="quiz ml-auto ">
-              <button :to="`/quiz/preview/${live_session.quiz.name}`">
+              <button @click="
+openQuiz">
+                Take quiz
+              </button>
+            </div>
+            <div class="quiz ml-auto" v-else>
+              <button disabled class="disabled">
                 Take quiz
               </button>
             </div>
@@ -265,6 +271,7 @@
 <script>
 import {WebRtcPeer} from "../../../plugins/kurentoLive/kurento-utils.js"
 import Participant from "../../../plugins/kurentoLive/participants";
+import {downloadAttachment} from "@/services/global_functions"
 // import {WebRtcPeer} from 'kurento-utils'
 import {mapActions, mapGetters, mapState} from 'vuex'
 import Discussion from "../../../components/Live/Discussion";
@@ -355,6 +362,11 @@ export default {
     },
   },
   methods: {
+    downloadAttachment,
+    openQuiz(){
+      let route = this.$router.resolve(`/quiz/preview/${this.quiz.name}`);
+      this.downloadAttachment(route.href)
+    },
     ...mapActions("live_session", ["addParticipant"]),
     async loadComments() {
       Apis.get(`comment/live_session/${this.$route.params.liveSessionId}`).then(d => {
@@ -451,9 +463,14 @@ export default {
         console.trace();
         console.log("\n\n\n\nclosed\n\n\n\n", new Date())
       }
-      self.socket.on("live/quizReleased",(quiz)=>{
+      self.socket.on("live/quizReleased", (quiz) => {
         self.quiz = quiz;
         self.displayQuiz = true
+        this.$store.dispatch("app_notification/SET_NOTIFICATION", {
+          message: self.participationInfo.isOfferingCourse ? 'Quiz was released' : 'You have a quiz',
+          status: "info",
+          uptime: 5000,
+        });
       })
       self.socket.on("comment/new", (result) => {
         // this.$store.commit(
@@ -660,9 +677,12 @@ export default {
       }
 
     },
-    releaseQuiz(){
+    releaseQuiz() {
       this.displayQuiz = true
-      this.socket.emit("live/releaseQuiz", {quiz: this.live_session.quiz, receivers: this.$store.getters['live_session/participants']});
+      this.socket.emit("live/releaseQuiz", {
+        quiz: this.live_session.quiz,
+        receivers: this.$store.getters['live_session/participants']
+      });
     },
     toogleVideo() {
       let message = {
