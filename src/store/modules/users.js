@@ -167,6 +167,22 @@ export default {
                     status: "success",
                     uptime: 5000,
                 }, {root: true})
+        },
+        removeUsers({dispatch}, {ids}) {
+            let success = true
+            for (const i in ids)
+                apis.delete('user_user_group/',ids[i])
+                    .then(({data: {status}}) => {
+                        if(![200,201].includes(status))
+                            success = false
+                    })
+
+            if(success)
+                dispatch("app_notification/SET_NOTIFICATION", {
+                    message: `Users ${ids.length > 1 ? 's' : ''} sucessfully removed`,
+                    status: "success",
+                    uptime: 5000,
+                }, {root: true})
         }
     },
     getters: {

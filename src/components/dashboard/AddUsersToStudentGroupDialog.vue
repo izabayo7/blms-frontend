@@ -136,6 +136,9 @@ export default {
     user_group_id: {
       type: String,
       required: true
+    },
+    added_users:{
+      type: Array
     }
   },
   data() {
@@ -181,7 +184,7 @@ export default {
         this.getUsers()
     },
     disabled(email) {
-      return this.users.some((member) => member.email === email);
+      return this.users.some((member) => member.email === email) || this.added_users.some((member) => member.email === email);
     },
     getUsers() {
       this.userLoading = true;
@@ -225,7 +228,7 @@ export default {
       } else {
         for (const i in this.users) {
           try {
-            const res = await Apis.create("user_user_group", {
+            const res = await Apis.create("user_user_group?sendEmail=true", {
               user: this.users[i].user_name,
               user_group: this.user_group_id,
             });

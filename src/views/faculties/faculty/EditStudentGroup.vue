@@ -98,7 +98,7 @@
                                     fill="#FF0808"/>
                               </svg>
                             </template>
-                            <template #text>Delete account</template>
+                            <template #text>Remove user</template>
                           </table-action-burner>
                         </div>
                         <div class="action mx-2" @click="showAddUsers = true">
@@ -130,7 +130,7 @@
                     <!--              rows-->
                     <template #tableRows>
                       <table-row :selected="selected_users.has(i)" @select="handleRowSelect(i)" :data="user"
-                                 v-for="(user, i) in usersOnUserGroups" :key="user._id" :ref="`row${i}`">
+                                 v-for="(user, i) in formatedUsers" :key="user._id" :ref="`row${i}`">
                         <template #cols>
                           <td @click="$router.push(`/users/${user.user_name}`)" class="row--image"
                               @mouseenter="mouseOnPic($event,user.user_name,'user-profile-card')"
@@ -211,6 +211,7 @@
     </div>
     <add-users-to-student-group-dialog
         :user_group_id="facultyCollegeYear._id"
+        :added_users="usersOnUserGroups"
         v-if="showAddUsers"
         @closeModal="showAddUsers = false"
     />
@@ -218,7 +219,7 @@
 </template>
 <script>
 
-import {mapGetters} from "vuex";
+import {mapActions, mapGetters, mapMutations} from "vuex";
 import Apis from "@/services/apis";
 import TableHeader from "../../../components/reusable/ui/table-header";
 import tableActionBurner from "../../../components/reusable/ui/table-action-burner";
@@ -226,6 +227,7 @@ import TableRow from "../../../components/reusable/table/TableRow";
 import TableHeadRow from "../../../components/reusable/table/TableHeadRow";
 import TableUi from "../../../components/reusable/table/TableUi";
 import userSimpleCard from "../../../mixins/user-simple-card.mixin";
+import moment from "moment";
 
 export default {
   name: "EditStudentGroup",
@@ -250,6 +252,54 @@ export default {
     };
   },
   methods: {
+    ...mapMutations("users", ["SET_SELECTED_USERS"]),
+    ...mapActions("modal", ["set_modal"]),
+    click(value) {
+      if (!this.selected_users.size)
+        return this.$store.dispatch("app_notification/SET_NOTIFICATION", {
+          message: "please select at least one user",
+          status: "info",
+          uptime: 5000,
+        })
+
+      if (value === 'announce') {
+        let users = []
+
+        if (this.selected_users.has(-1)) {
+          users = this.usersOnUserGroups
+        } else
+          for (const item of this.selected_users) {
+            users.push(this.usersOnUserGroups[item])
+          }
+
+        this.SET_SELECTED_USERS(users)
+        this.$router.push('/announcements/new?target=individual')
+      }
+
+      else if (value === 'delete') {
+        const ids = []
+
+        for (const item of this.selected_users) {
+          ids.push(this.usersOnUserGroups[item].user_user_group_id)
+        }
+
+        this.set_modal({
+          template: 'action_confirmation',
+          title: "Remove users",
+          method: {action: 'users/removeUsers', parameters: {ids}},
+          message: `Are you sure you want to remove ${this.selected_users.has(-1) ? 'All' : this.selected_users.size} user${this.selected_users.size > 1 || this.selected_users.has(-1) ? 's' : ''}?`,
+        })
+      }
+      setTimeout(() => {
+        this.loadUsers();
+      }, 5000);
+    },
+    loadUsers(){
+      this.$store.dispatch('users/loadUsersBasedOnUserGroups', {
+        userGroupId: this.facultyCollegeYear._id,
+        category: "ALL"
+      })
+    },
     handleRowSelect(index) {
       const found = this.selected_users.has(index)
       if (found) {
@@ -293,6 +343,17 @@ export default {
     }
   },
   computed: {
+    formatedUsers() {
+      let filteredUsers = [];
+
+      this.usersOnUserGroups.map(user => {
+
+        user.date_joined = moment(user.date_joined).format("DD MMM  YYYY")
+        filteredUsers.push(user)
+      })
+
+      return filteredUsers;
+    },
     ...mapGetters('users', ['usersOnUserGroups']),
     options() {
       const options = {
@@ -312,17 +373,11 @@ export default {
   watch: {
     facultyCollegeYear() {
       this.name = this.facultyCollegeYear.name
-      this.$store.dispatch('users/loadUsersBasedOnUserGroups', {
-        userGroupId: this.facultyCollegeYear._id,
-        category: "ALL"
-      })
+      this.loadUsers();
     },
     showAddUsers() {
       if (!this.showAddUsers)
-        this.$store.dispatch('users/loadUsersBasedOnUserGroups', {
-          userGroupId: this.facultyCollegeYear._id,
-          category: "ALL"
-        })
+        this.loadUsers();
     },
     error() {
       if (this.error != "")
