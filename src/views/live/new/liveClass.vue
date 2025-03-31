@@ -825,7 +825,7 @@ export default {
   }
 
   &--video{
-    flex-basis: 64%;
+    flex-basis: 70%;
     padding-left: 3rem;
     padding-right: 3rem;
     .head{
@@ -863,7 +863,7 @@ export default {
 
         .video-el{
           //width: fit-content;
-          max-height: 20rem;
+          max-height: 25rem;
           position: relative;
           background-color: #000;
           video{
@@ -959,7 +959,7 @@ export default {
   }
 
   &--attendance{
-    flex-basis: 36%;
+    flex-basis: 30%;
 
     &--wrapper{
       padding:.5rem;
