@@ -1,243 +1,323 @@
 <template>
-  <v-container>
-      <v-row
-        id="liveClass"
-      >
-          <v-col
-            class="col-12 col-md-4 course-content pa-md-16"
-          >
-            <v-avatar size="245" class="user-profile ml-2 mt-6 d-block">
-                <img
-                    src="https://cdn.vuetifyjs.com/images/john.jpg"
-                    alt="avatar"
-                >
-            </v-avatar>
-            <v-btn color="#FFD248" class="white--text mt-6 ml-4 px-12 py-7 " @click="pickfile()">Change profile pic</v-btn>
-              <input
-                ref="file"
-                type="file"
-                id="picture"
-                hidden
-                @change="handleFileUpload()"
-              >
-          </v-col>
-          <v-col
-            class="col-8 hidden-sm-and-down chapters pt-md-12"
-          >
-            <v-tabs
-              v-model="tab"
+  <v-container fluid class="py-0">
+    <v-row id="user_profile">
+      <v-col class="col-12 pa-md-16 py-md-6"> General Info </v-col>
+      <v-col class="col-12 col-md-5 course-content px-md-6 py-md-0">
+        <v-row>
+          <v-col class="col-7 mx-auto">
+            <v-avatar
+              v-if="user.profile"
+              width="auto"
+              height="245"
+              class="mt-4 d-block"
+              id="user_pic"
             >
-              <v-tab
-                v-for="(tab, i) in tabs"
-                :key="i"
-              >
-                {{ tab.tab }}
-              </v-tab>
-            </v-tabs>
-
-            <v-tabs-items v-model="tab">
-              <v-tab-item
-                v-for="(tab, i) in tabs"
-                :key="i"
-              >
-                <v-card flat>
-                  <v-card-text>
-                    <div v-if="tab.tab === 'General Info'" class="generalInfo">
-                      <h4>Sur name</h4>
-                      <v-text-field
-                        v-model="user.surName"
-                        class="profile-input"
-                        type="text"
-                        solo
-                        required
-                      />
-                      <h4>Other names</h4>
-                      <v-text-field
-                        v-model="user.otherNames"
-                        class="profile-input"
-                        type="text"
-                        solo
-                        required
-                      />
-                      <h4>Email</h4>
-                      <v-text-field
-                        v-model="user.email"
-                        class="profile-input"
-                        solo
-                        required
-                      />
-                      <h4>National id</h4>
-                      <v-text-field
-                        v-model="user.nationalId"
-                        class="profile-input"
-                        type="number"
-                        solo
-                        required
-                      />
-                      <h4>Phone number</h4>
-                      <v-text-field
-                        v-model="user.phone"
-                        class="profile-input"
-                        type="text"
-                        solo
-                        required
-                      />
-
-                      <v-btn color="#3CE970" class="white--text mt-6 ml-4 px-12 py-7 " @click="updateProfile()">Save Changes</v-btn>
-                      <v-btn text class="mt-6 ml-4 px-12 py-7 ">Cancel</v-btn>
-                    </div>
-                    <div v-else class="generalInfo">
-                      <h4>Old password</h4>
-                      <v-text-field
-                        v-model="oldPassword"
-                        type="password"
-                        class="profile-input"
-                        solo
-                        required
-                      />
-                      <h4>New Password</h4>
-                      <v-text-field
-                        v-model="newPassword"
-                        class="profile-input"
-                        :rules="passwordRules"
-                        type="password"
-                        solo
-                        required
-                      />
-                      <h4>Confirm Password</h4>
-                      <v-text-field
-                        v-model="confirmNewPassword"
-                        :rules="passwordMatch"
-                        class="profile-input"
-                        type="password"
-                        solo
-                        required
-                      />
-                      <v-btn color="#3CE970" class="white--text mt-6 ml-4 px-12 py-7 " @click="updateProfile()">Save Changes</v-btn>
-                      <v-btn text class="mt-6 ml-4 px-12 py-7 ">Cancel</v-btn>
-                    </div>
-                  </v-card-text>
-                </v-card>
-              </v-tab-item>
-            </v-tabs-items>
+              <img
+                src="https://cdn.vuetifyjs.com/images/john.jpg"
+                alt="avatar"
+              />
+            </v-avatar>
+            <v-avatar
+              v-else
+              size="245"
+              class="mt-4 d-block text-h1 avatar py-16"
+            >
+              {{ `${$store.state.user.user.sur_name}` | computeText }}
+            </v-avatar>
           </v-col>
-      </v-row>
+          <v-col :class="`col-12 col-md-${user.profile ? 6 : 12} text-center`">
+            <v-btn
+              :color="primary"
+              class="white--text mt-6 px-6 py-5 profile_button"
+              @click="pickfile()"
+              >Upload photo</v-btn
+            ></v-col
+          >
+          <v-col class="col-12 col-md-6 text-center">
+            <v-btn
+              v-if="user.profile"
+              color="black"
+              class="mt-6 px-6 py-5 profile_button"
+              outlined
+              @click="pickfile()"
+              >Remove photo</v-btn
+            ></v-col
+          >
+          <v-col class="col-12">
+            <p class="description text-center text-md-left">
+              Photo will be shown to users wherever you send messages or comment
+              on any course, live class or group chat. Max photo size 1MB.
+            </p>
+          </v-col>
+        </v-row>
+
+        <input
+          ref="file"
+          type="file"
+          id="picture"
+          hidden
+          @change="handleFileUpload()"
+        />
+      </v-col>
+      <v-col class="col-12 col-md-7 text-center text-md-left">
+        <div class="title text-h5">My Details</div>
+        <div class="user_info">
+          <p class="lable font-weight-medium mt-2">Email</p>
+          <v-text-field
+            v-model="user.email"
+            class="profile-input mx-auto mx-md-0"
+            type="text"
+            solo
+            required
+          />
+          <p class="lable font-weight-medium">Phone number</p>
+          <v-text-field
+            v-model="user.phone"
+            class="profile-input mx-auto mx-md-0"
+            type="text"
+            solo
+            required
+          />
+          <p class="lable font-weight-medium">User name</p>
+          <v-text-field
+            v-model="user.user_name"
+            class="profile-input mx-auto mx-md-0"
+            type="text"
+            solo
+            required
+          />
+        </div>
+        <div class="title text-h5 mt-5">Enrolled courses</div>
+        <div class="enrolled_courses">
+          <v-row>
+            <v-col class="col-12 col-md-8">
+              <v-row>
+                <v-col
+                  class="col-6"
+                  v-for="(course, i) in started_courses"
+                  :key="i"
+                >
+                  <v-btn
+                    width="100%"
+                    class="py-5"
+                    :to="`/courses/preview/${course.name}`"
+                    color="white"
+                  >
+                    {{ course.name }}
+                  </v-btn>
+                </v-col>
+              </v-row>
+            </v-col>
+          </v-row>
+        </div>
+      </v-col>
+      <v-col class="col-12 col-md-5 text-center text-md-left">
+        <v-btn
+          color="black"
+          class="mt-6 px-6 py-5 profile_button"
+          outlined
+          @click="pickfile()"
+          >Change password</v-btn
+        >
+      </v-col>
+      <v-col class="col-12 col-md-7 text-center text-md-left">
+        <v-row>
+          <v-col class="col-6 col-md-4">
+            <v-btn
+              :color="primary"
+              class="white--text mt-3 px-6 py-6 profile_button"
+              @click="pickfile()"
+              >Save changes</v-btn
+            ></v-col
+          >
+          <v-col class="col-6">
+            <v-btn
+              color="black"
+              class="mt-3 px-6 py-5 profile_button"
+              outlined
+              @click="pickfile()"
+              >Cancel</v-btn
+            ></v-col
+          >
+        </v-row>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
 <script>
-import bcrypt from 'bcryptjs'
-import jwt from 'jsonwebtoken'
-import axios from 'axios' 
+import colors from "@/assets/sass/imports/_colors.scss";
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+import axios from "axios";
+import { mapGetters, mapActions } from "vuex";
 
 export default {
-    name: 'UserProfile',
-    data:() =>({
-        tab: null,
-        tabs: [
-          { tab: 'General Info', content: 'Tab 1 Content' },
-          { tab: 'Security', content: 'Tab 2 Content' },
-        ],
-        passwordRules: [
-          v => !!v || 'Password is required',
-          v => (/([ !"#$%&'()*+,-./:;<=>?@[\]^_`{|}~])/.test(v) && /(?=.*\d)/.test(v) && /(?=.*[A-Z])/.test(v) && /(?=.*[a-z])/.test(v)) || 'Password must contain uppercase characters, lowercase characters, numbers and symbols',
-          v => (v && v.length >= 8) || 'Password must atleast have 8 characters',
-          v => (v && v.length <= 15) || 'Password must not exceed 15 characters',
-        ],
-        passwordMatch: [
-          v => (v && v === this.newPassword ) || 'confirm password must match with new password',
-        ],
-        showActions: false,
-        oldPassword: '',
-        newPassword: '',
-        confirmNewPassword: '',
-    }),
-    computed:{
-      user () {
-        const user = JSON.stringify(this.$store.state.user)
-        return JSON.parse(user)
-      },
+  name: "UserProfile",
+  data: () => ({
+    tab: null,
+    primary: colors.primary,
+    tabs: [
+      { tab: "General Info", content: "Tab 1 Content" },
+      { tab: "Security", content: "Tab 2 Content" },
+    ],
+    passwordRules: [
+      (v) => !!v || "Password is required",
+      (v) =>
+        (/([ !"#$%&'()*+,-./:;<=>?@[\]^_`{|}~])/.test(v) &&
+          /(?=.*\d)/.test(v) &&
+          /(?=.*[A-Z])/.test(v) &&
+          /(?=.*[a-z])/.test(v)) ||
+        "Password must contain uppercase characters, lowercase characters, numbers and symbols",
+      (v) => (v && v.length >= 8) || "Password must atleast have 8 characters",
+      (v) => (v && v.length <= 15) || "Password must not exceed 15 characters",
+    ],
+    passwordMatch: [
+      (v) =>
+        (v && v === this.newPassword) ||
+        "confirm password must match with new password",
+    ],
+    showActions: false,
+    oldPassword: "",
+    newPassword: "",
+    confirmNewPassword: "",
+  }),
+  computed: {
+    user() {
+      const user = JSON.stringify(this.$store.state.user.user);
+      return JSON.parse(user);
     },
-    methods: {
-      comparePassword () {
-        this.passwordMatch = this.newPassword === this.confirmNewPassword
-      },
-      pickfile () {
-        document.getElementById('picture').click()
-      },
-      handleFileUpload () {
-        this.user.profile = this.$refs.file.files[0]
-      },
-      async updateProfile () {
-        if (this.oldPassword !== '') {
-          this.passwordValid = await bcrypt.compare(this.oldPassword, this.$store.state.user.password)
-          if (!this.passwordValid) {
-            alert('old password is incorrect')
-            return 0
-          }
+    ...mapGetters("courses", ["started_courses"]),
+  },
+  methods: {
+    ...mapActions("courses", ["getCourses"]),
+    comparePassword() {
+      this.passwordMatch = this.newPassword === this.confirmNewPassword;
+    },
+    pickfile() {
+      document.getElementById("picture").click();
+    },
+    handleFileUpload() {
+      this.user.profile = this.$refs.file.files[0];
+    },
+    async updateProfile() {
+      if (this.oldPassword !== "") {
+        this.passwordValid = await bcrypt.compare(
+          this.oldPassword,
+          this.$store.state.user.password
+        );
+        if (!this.passwordValid) {
+          alert("old password is incorrect");
+          return 0;
         }
-        const category = this.$store.state.user.category === 'SuperAdmin' ? 'superAdmin' : this.$store.state.user.category.toLowerCase()
-        const formData = new FormData()
+      }
+      const category =
+        this.$store.state.user.category === "SuperAdmin"
+          ? "superAdmin"
+          : this.$store.state.user.category.toLowerCase();
+      const formData = new FormData();
 
-        formData.append('surName', this.user.surName)
-        formData.append('otherNames', this.user.otherNames)
-        formData.append('gender', this.user.gender)
-        formData.append('nationalId', this.user.nationalId)
-        formData.append('phone', this.user.phone)
-        formData.append('email', this.user.email)
+      formData.append("surName", this.user.surName);
+      formData.append("otherNames", this.user.otherNames);
+      formData.append("gender", this.user.gender);
+      formData.append("nationalId", this.user.nationalId);
+      formData.append("phone", this.user.phone);
+      formData.append("email", this.user.email);
 
-        if (this.newPassword !== '') {
-          formData.append('password', this.newPassword)
+      if (this.newPassword !== "") {
+        formData.append("password", this.newPassword);
+      }
+
+      if (this.$store.state.user.category === "Student") {
+        formData.append("DOB", this.user.DOB);
+      }
+      if (this.$store.state.user.category !== "SuperAdmin") {
+        formData.append("college", this.user.college);
+      }
+
+      if (this.user.profile) {
+        formData.append("profile", this.user.profile);
+      }
+
+      const response = await axios.put(
+        `http://161.35.199.197:7070/kurious/${category}/${this.$store.state.user._id}`,
+        formData,
+        { headers: { "Content-Type": "multipart/form-data" } }
+      );
+      if (response.data._id) {
+        // success message needed
+        const updatedUser = {
+          _id: response.data._id,
+          surName: response.data.surName,
+          otherNames: response.data.otherNames,
+          gender: response.data.gender,
+          nationalId: response.data.nationalId,
+          phone: response.data.phone,
+          email: response.data.email,
+          password: response.data.password,
+          category: this.$store.state.user.category,
+        };
+
+        if (response.data.profile) {
+          updatedUser.profile = response.data.profile;
         }
 
-        if (this.$store.state.user.category === 'Student') {
-          formData.append('DOB', this.user.DOB)
-        }
-        if (this.$store.state.user.category !== 'SuperAdmin') {
-          formData.append('college', this.user.college)
+        if (this.$store.state.user.category !== "SuperAdmin") {
+          // updatedUser.isActive = response.data.isActive
+          updatedUser.college = response.data.college;
         }
 
-        if (this.user.profile) {
-          formData.append('profile', this.user.profile)
+        if (this.$store.state.user.category === "Student") {
+          // for non student
+          updatedUser.DOB = response.data.DOB;
         }
-        
-        const response = await axios.put(`http://161.35.199.197:7070/kurious/${category}/${this.$store.state.user._id}`, formData, { headers: { 'Content-Type': 'multipart/form-data' } })
-        if (response.data._id) {
-            // success message needed
-          const updatedUser = {
-            _id: response.data._id,
-            surName: response.data.surName,
-            otherNames: response.data.otherNames,
-            gender: response.data.gender,
-            nationalId: response.data.nationalId,
-            phone: response.data.phone,
-            email: response.data.email,
-            password: response.data.password,
-            category: this.$store.state.user.category,
-          }
 
-          if (response.data.profile) {
-            updatedUser.profile = response.data.profile
-          }
-
-          if (this.$store.state.user.category !== 'SuperAdmin') {
-            // updatedUser.isActive = response.data.isActive
-            updatedUser.college = response.data.college
-          }
-
-          if (this.$store.state.user.category === 'Student') {
-            // for non student
-            updatedUser.DOB = response.data.DOB
-          }
-
-          const ONE_DAY = 60 * 60 * 24
-          this.$session.remove('jwt')
-          this.$session.set('jwt', jwt.sign(updatedUser, 'KurichTech01', { expiresIn: ONE_DAY }))
-          this.$store.dispatch('setUser', updatedUser)
-        } else {
-          //  error message needed
-        }
-      },
-    }
-}
+        const ONE_DAY = 60 * 60 * 24;
+        this.$session.remove("jwt");
+        this.$session.set(
+          "jwt",
+          jwt.sign(updatedUser, "KurichTech01", { expiresIn: ONE_DAY })
+        );
+        this.$store.dispatch("setUser", updatedUser);
+      } else {
+        //  error message needed
+      }
+    },
+  },
+  created() {
+    //get courses on page load
+    this.getCourses({
+      user_name: this.$store.state.user.user.user_name,
+    });
+  },
+};
 </script>
+
+<style lang="scss">
+#user_profile {
+  background-color: #fcfcfc;
+  .title {
+    color: black;
+  }
+  .lable {
+    color: #747474;
+  }
+  .profile_button {
+    max-width: 1;
+  }
+  .description {
+    color: #747474;
+    font-size: 0.8rem;
+    font-weight: 800;
+  }
+  #user_pic {
+    background-color: inherit;
+  }
+  .avatar {
+    margin-top: 0px;
+    background-color: $primary;
+    color: white;
+    cursor: pointer;
+  }
+}
+</style>

@@ -487,6 +487,10 @@ export default {
         courses: state => {
             return state.courses.data
         },
+        // get enrolled courses
+        started_courses: state => {
+            return state.courses.data.filter((course) => course.progress)
+        },
         //get a specified courses
         course: state => {
             return state.courses.data.filter(course => course._id == state.selectedCourse)[0]
