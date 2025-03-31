@@ -34,7 +34,7 @@
                 :defaultContent="assignment.details"
             />
           </div>
-          <div v-if="assignment.submissionMode === 'fileUpload'" class="attachment-container">
+          <div class="attachment-container">
             <div v-if="assignment.attachments.length" class="file-container row ma-0">
               <div class="indicator mb-2 col-12 pa-0">
                 <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -51,8 +51,9 @@
                   <div class="pick-file col-12 col-md-8 d-flex px-4">
                     <button
                         @click="downloadAttachment(`${backend_url}/api/assignments/${$route.params.id}/attachment/${attachment.src}?&token=${$session.get('jwt')}`)"
-                        class="file-name">
-                      {{ attachment.src }}
+                        class="file-name"
+                    :title="attachment.src">
+                      {{ attachment.src | trimString(25) }}
                     </button>
                     <!--                    <div class="file-size mx-auto">-->
                     <!--                      26kb-->
@@ -72,7 +73,7 @@
                 </div>
               </div>
             </div>
-            <div class="indicator mb-2 mt-6 col-12 pa-0">
+            <div v-if="assignment.submissionMode === 'fileUpload'" class="indicator mb-2 mt-6 col-12 pa-0">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <g clip-path="url(#clip0)">
                   <path
@@ -93,7 +94,7 @@
                   assignment.allowed_files.join(' ,')
                 }} format only)</span>
             </div>
-            <div class="submission">
+            <div v-if="assignment.submissionMode === 'fileUpload'" class="submission">
               <FilePicker
                   v-if="!assignment_submission._id || userCategory === 'STUDENT'"
                   :ref="`picker`"
@@ -131,7 +132,7 @@
               </div>
             </div>
           </div>
-          <div v-else class="text-input">
+          <div v-if="assignment.submissionMode !== 'fileUpload'" class="text-input">
             <Editor
                 ref="editor"
                 :mode="userCategory === 'STUDENT'? 'edit': 'view'"
