@@ -1,8 +1,13 @@
+
+<!--faculties list page-->
 <template>
 <div class="my-faculties bg-one d-flex justify-center">
   <div class="faculties-container  ">
+
+<!--    faculty header-->
       <div class="header">
         <div class="header-wrapper d-flex ">
+<!--          header title-->
           <div class="heading col d-flex align-center">
             <div class="icon">
               <div class="icon-wrapper">
@@ -23,11 +28,15 @@
               <h2>Faculties List</h2>
             </div>
           </div>
+
+<!--          search bar-->
           <div class="search col">
             <div class="search-wrapper">
               <search  placeholder="Search user"/>
             </div>
           </div>
+
+<!--          add user button-->
           <div class="add-user d-flex justify-end col">
             <div class="add-user-button">
               <button-ui>
@@ -38,14 +47,10 @@
         </div>
       </div>
 
-      <div class="nav">
-        <div class="nav--wrapper">
-          <subpage-navbar/>
-        </div>
-      </div>
 
+<!--    table of faculties-->
       <div class="tabular-faculties">
-        <div class="table-wrapper mt-6" v-if="faculties.length > 0">
+        <div class="table-wrapper" v-if="faculties.length > 0">
 
 <!--          table header-->
           <div class="table-header">
@@ -70,11 +75,10 @@ import TableUi from "../../components/reusable/ui/table-ui";
 import apis from "../../services/apis";
 import moment from "moment";
 import {mapGetters} from 'vuex'
-import SubpageNavbar from "../../components/reusable/subpage-navbar";
 
 export default {
 name: "Faculties",
-  components: {SubpageNavbar, TableUi, TableHeader, Search, buttonUi},
+  components: {TableUi, TableHeader, Search, buttonUi},
   data(){
     return{
       faculties:[],
