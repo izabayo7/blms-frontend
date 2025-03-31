@@ -48,6 +48,7 @@
             <input-ui
               ref="email_input"
               class="email-input"
+              placeholder="Enter email"
               :valid="email !== '' ? validateEmail(email) : true"
               name="role"
               id="role"
