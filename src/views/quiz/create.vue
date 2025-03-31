@@ -62,7 +62,7 @@
       <div v-if="assessment_type === 'assignment'" class="flex d-block d-md-flex">
         <div class="input-group">
           <label for="assignment-marks">Total-marks</label>
-          <input id="assignment-marks" v-model="assignment.totalMarks" type="number">
+          <input id="assignment-marks" v-model="assignment.total_marks" type="number">
         </div>
         <div class="input-group ml-auto">
           <label for="assignment-pass-marks">Pass-marks (%)</label>
@@ -456,8 +456,8 @@ export default {
       allowMultipleFilesSubmission: false,
       attachments: [],
       passMarks: 50,
-      totalMarks: 100,
-      allowed_submission_file_types: []
+      total_marks: 100,
+      allowed_files: []
     },
     assignmentAttachments: []
   }),
@@ -473,7 +473,7 @@ export default {
         this.$store.dispatch("app_notification/SET_NOTIFICATION", {
           message: this.error,
           status: "danger",
-          uptime: 20000,
+          uptime: 2000,
         }).then(() => {
           this.error = ""
         })
@@ -592,7 +592,7 @@ export default {
           return this.error = "Course is required"
         if (this.assignment.target.type === 'chapter' && this.selected_chapter === 'Select chapter')
           return this.error = "Chapter is required"
-        if (this.assignment.totalMarks < 1)
+        if (this.assignment.total_marks < 1)
           return this.error = "Invalid total marks"
         if (this.assignment.passMarks < 1)
           return this.error = "Invalid pass marks"
@@ -754,7 +754,23 @@ export default {
           }
         })
       this.assignment.allowed_files = this.allowed_submission_file_types
-      Apis.create('assignment', this.assignment).then(async (res) => {
+      if (this.assignment.details === "")
+        this.assignment.details = undefined
+
+      for (const i in this.courses) {
+        if (this.courses[i].name == this.selected_course) {
+          if (this.assignment.target.type === 'course')
+            this.assignment.target.id = this.courses[i]._id
+          else
+            for (const k in this.courses[i].chapters) {
+              if (this.courses[i].chapters[k].name == this.selected_chapter) {
+                this.assignment.target.id = this.courses[i].chapters[k]._id
+              }
+            }
+        }
+      }
+
+      Apis.create('assignments', this.assignment).then(async (res) => {
         if (res.data.status !== 201) {
           this.$store.dispatch("app_notification/SET_NOTIFICATION", {
             message: res.data.message,
@@ -778,7 +794,7 @@ export default {
               message: 'uploading attachments'
             })
 
-            await Apis.create(`assignment/${res.data.data._id}/attachment`, formData, {
+            await Apis.create(`assignments/${res.data.data._id}/attachment`, formData, {
               headers: {
                 'Content-Type': 'multipart/form-data'
               },
