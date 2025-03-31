@@ -197,7 +197,7 @@ export default {
         for (const k in this.files) {
             formData.append("files[" + k + "]", this.files[k]);
         }
-        apis.update('course', `${message._id}/attachements`, formData, {
+        apis.update('message', `${message._id}/attachements`, formData, {
           headers: {
             'Content-Type': 'multipart/form-data'
           },
@@ -205,10 +205,12 @@ export default {
             this.$store.dispatch('modal/set_progress', parseInt(Math.round((progressEvent.loaded / progressEvent.total) * 100)))
           }
         }).then(res => {
-          if(res.data.status === 200)
+          if(res.data.status === 200) {
             this.socket.emit("message/notify-users", {
               message
             });
+            this.clearFiles()
+          }
         })
       }
       setTimeout(this.scrollChatToBottom, 1);
@@ -243,14 +245,14 @@ export default {
     },
     sendMessage() {
 
-      const attachements = this.makeAttachments()
+      const attachments = this.makeAttachments()
 
-      if (this.msg.length <= 0 && !attachements.length) return;
+      if (this.msg.length <= 0 && !attachments.length) return;
 
       this.socket.emit("message/create", {
         receiver: this.currentDisplayedUser.id,
         content: this.msg,
-        attachements
+        attachments
       });
 
       //after sending message let us make the div empty
