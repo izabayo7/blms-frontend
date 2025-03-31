@@ -6,8 +6,8 @@
     </figure>
   </div>
   <div class="online-user--details">
-    <div class="online-user--details--name">{{user.name}}</div>
-    <div class="online-user--details--attendance">{{user.attendance}}</div>
+    <p class="online-user--details--name">{{user.name}}</p>
+    <p class="online-user--details--attendance"> Attendance {{user.attendance}}%</p>
   </div>
 </div>
 </template>
@@ -55,6 +55,21 @@ export default {
         }
       }
     }
+  }
+
+  &--details{
+    padding-left: .5rem;
+    p{
+      margin:.1rem 0;
+    }
+      &--name{
+        font-size:.7rem;
+      }
+
+      &--attendance{
+        font-size: .5rem;
+        color:$grayish;
+      }
   }
 }
 </style>
