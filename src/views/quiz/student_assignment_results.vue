@@ -97,15 +97,15 @@
             <Editor
                 ref="editor"
                 mode="edit"
-                  :defaultContent="assignment_submission.details || '<p>Type your answer here</p>'"
+                :defaultContent="assignment_submission.details || '<p>Type your answer here</p>'"
             />
           </div>
           <div id="quiz-actions" class=" d-flex mb-12 mt-6">
-            <button @click="$router.push('/quiz')" class="quiz-action cancel">
+            <button @click="$router.push('/assignments')" class="quiz-action cancel">
               Cancel
             </button>
             <button v-if="$store.state.user.user.category.name === 'STUDENT'" class="quiz-action" @click="validate">
-              Submit assignment
+              {{ assignment_submission._id ? 'Save' : 'Submit' }} assignment
             </button>
           </div>
         </div>
@@ -196,8 +196,10 @@ export default {
       } else if (this.assignment.submissionMode === 'fileUpload')
         if (this.submissionAttachments.length === 0)
           return this.error = "Please upload the requested files"
-
-      this.saveAssignmentSubmission()
+      if (this.assignment_submission._id)
+        this.saveAssignmentSubmission()
+      else
+        this.createAssignmentSubmission()
 
     },
     addAssignmentAttachment(file) {
@@ -235,7 +237,7 @@ export default {
       return allowed_types.join(',')
 
     },
-    saveAssignmentSubmission() {
+    createAssignmentSubmission() {
       this.assignment_submission.assignment = this.$route.params.id
       if (this.assignment.submissionMode === 'textInput')
         this.assignment_submission.details = this.$refs.editor.getHTML()
@@ -287,7 +289,64 @@ export default {
           this.$router.push('/assignments')
         }
       })
-    }
+    },
+    saveAssignmentSubmission() {
+      this.assignment_submission.assignment = this.$route.params.id
+      if (this.assignment.submissionMode === 'textInput')
+        this.assignment_submission.details = this.$refs.editor.getHTML()
+      if (this.submissionAttachments.length)
+        this.assignment_submission.attachments = this.submissionAttachments.map(x => {
+          return {
+            src: x.name
+          }
+        })
+      Apis.update('assignment_submission', this.assignment_submission._id, {
+        assignment: this.$route.params.id,
+        details: this.assignment_submission.details,
+        attachments: this.assignment_submission.attachments
+      }).then(async (res) => {
+        if (res.data.status !== 200) {
+          this.$store.dispatch("app_notification/SET_NOTIFICATION", {
+            message: res.data.message,
+            status: "danger",
+            uptime: 5000,
+          }).then(() => {
+            this.error = ""
+          })
+        } else {
+          if (this.submissionAttachments.filter(x => x.size).length) {
+            const formData = new FormData()
+            let index = 0;
+            for (const i in this.submissionAttachments) {
+              formData.append("files[" + index + "]", this.submissionAttachments[i]);
+              index++
+            }
+            // set the dialog
+            this.$store.dispatch('modal/set_modal', {
+              template: 'display_information',
+              title: 'Creating assignment submission',
+              message: 'uploading attachments'
+            })
+
+            await Apis.create(`assignment_submission/${res.data.data._id}/attachment`, formData, {
+              headers: {
+                'Content-Type': 'multipart/form-data'
+              },
+              onUploadProgress: (progressEvent) => {
+                this.$store.dispatch('modal/set_progress', parseInt(Math.round((progressEvent.loaded / progressEvent.total) * 100)))
+              }
+            })
+          }
+          // this.addAssignment(res.data.data)
+          this.$store.dispatch("app_notification/SET_NOTIFICATION", {
+            message: "Assignment submission creation succeded",
+            status: "success",
+            uptime: 5000,
+          })
+          this.$router.push('/assignments')
+        }
+      })
+    },
   },
   created() {
     this.getSubmission()
