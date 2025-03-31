@@ -1,5 +1,5 @@
 <template>
-  <v-dialog id="kurious--dialog" v-model="show" :persistent="modal" max-width="70%">
+  <v-dialog id="kurious--dialog" v-model="visible" :persistent="modal" max-width="70%">
     <div class="round">
       <v-card class="text-center pa-12">
         <v-avatar
@@ -38,6 +38,12 @@ export default {
     },
     color: {
       type: String,
+    },
+  },
+  // compute the variable that determines the visibility of the dialog
+  computed: {
+    visible() {
+      return this.show;
     },
   },
 };

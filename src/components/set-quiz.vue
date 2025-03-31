@@ -41,10 +41,11 @@
                     v-model="question.type"
                     :items="questionTypes"
                     label="Question Type"
+                    @change="handleTypeChange(i)"
                     solo
                   ></v-select>
                 </v-col>
-                <v-col class="col-8 pt-9" v-if="question.type !== 'Open ended'">
+                <v-col class="col-8 pt-9" v-if="question.type !== 'Open ended' && question.options">
                   <v-row>
                     <v-col
                       v-if="question.type === 'Single text select' || question.type === 'Multiple text select'"
@@ -97,6 +98,7 @@
       <v-btn color="#ffd248" class="white--text save-quiz" rounded @click="saveQuiz() ">Save</v-btn>
       <v-btn color="#707070" class="cancel-quiz" text>Cancel</v-btn>
     </v-row>
+    <!-- the dialog for messages -->
     <kurious-dialog :show="show" :message="message" :modal="modal" :status="status">
       <!-- <v-icon slot="icon" size="55" dark>mdi-clipboard-text-multiple-outline</v-icon> -->
       <v-icon slot="icon" size="55" dark>mdi-barley</v-icon>
@@ -141,32 +143,17 @@ export default {
       // "Image Selection",
       // "Audio Question",
     ],
-    questions: [
-      {
-        type: "Open ended",
-        marks: 0,
-        details: "",
-        options: {
-          choices: [{ text: "" }, { text: "" }],
-        },
-      },
-      {
-        type: "Single text select",
-        marks: 0,
-        details: "",
-        options: {
-          choices: [{ text: "" }, { text: "" }],
-        },
-      },
-    ],
+    questions: [],
   }),
   beforeMount() {
     this.mode = "edit";
+    this.reset();
   },
   methods: {
     addPicture(file, boundIndex) {
       this.pictures[boundIndex].push(file);
       this.questions[boundIndex].options.choices.push({ src: file.name });
+      console.log(this.pictures[boundIndex]);
     },
     removePicture(index, boundIndex) {
       this.pictures[boundIndex].splice(index, 1);
@@ -175,44 +162,61 @@ export default {
     reset() {
       this.questions = [
         {
-          type: "Multiple text select",
+          type: "",
           marks: 0,
           details: "",
           options: {
-            choices: [{ text: "" }, { text: "" }],
+            choices: [],
           },
         },
         {
-          type: "Open ended",
+          type: "",
           marks: 0,
           details: "",
           options: {
-            choices: [{ text: "" }, { text: "" }],
+            choices: [],
           },
         },
       ];
       this.duration = { hh: "00", mm: "00", ss: "00" };
       this.pictures = [[], []];
     },
+    handleTypeChange(index) {
+      if (this.questions[index].type.includes("text")) {
+        this.questions[index].options = {
+          choices: [{ text: "" }, { text: "" }],
+        };
+      } else if (
+        this.questions[index].type.includes("file") &&
+        this.questions[index].type.includes("select")
+      ) {
+        this.questions[index].options = {
+          choices: [],
+        };
+      }
+    },
     addQuestion() {
       this.questions.push({
-        type: "Open ended",
+        type: "",
         marks: 0,
         details: "",
         options: {
-          choices: [{ text: "" }, { text: "" }],
+          choices: [],
         },
       });
       this.pictures.push([]);
     },
     addOption(index) {
       this.questions[index].options.choices.push({ text: "" });
+      console.log(this.questions);
+      console.log(index);
     },
     removeOption(index, index1) {
       this.questions[index].options.choices.splice(index1, 1);
     },
     removeQuestion(index) {
       this.questions.splice(index, 1);
+      this.pictures.splice(index, 1);
     },
     toSeconds(duration) {
       const hours = duration.hh ? duration.hh : 0;
@@ -242,28 +246,24 @@ export default {
           this.status = 503;
           this.message = "Service Unavailable";
         }
+        console.log(error);
         this.modal = false;
         this.show = true;
       }
     },
     async saveQuiz() {
       try {
+        console.log(this.questions);
+        console.log(this.pictures);
         let questions = [];
         for (const index in this.questions) {
-          if (!this.questions[index].type.includes("select")) {
-            this.questions[index].options = undefined;
-          }
-
           this.questions[index].type = this.questions[index].type
             .toLowerCase()
             .split(" ")
             .join("-");
-
-          if (
-            this.questions[index].type.includes("file") &&
-            this.questions[index].options.choices.length > 0
-          ) {
-            this.questions[index].options.choices.splice(0, 2);
+          console.log("this place is fine " + index);
+          if (!this.questions[index].type.includes("select")) {
+            this.questions[index].options = undefined;
           }
           questions.push(this.questions[index]);
         }
@@ -280,6 +280,7 @@ export default {
           questions: questions,
         });
         this.uploadPictures(response.data._id);
+        this.status = 200;
         this.message = "Quiz was saved successfully";
         this.show = true;
       } catch (error) {
@@ -290,6 +291,7 @@ export default {
           this.status = 503;
           this.message = "Service Unavailable";
         }
+        console.log(error);
         this.modal = false;
         this.show = true;
       }

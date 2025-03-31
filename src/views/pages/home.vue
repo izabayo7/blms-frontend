@@ -23,26 +23,7 @@
 </template>
 
 <script>
-import axios from "axios";
-import jwt from "jsonwebtoken";
 export default {
   name: "Home",
-  beforeMount() {
-    if (this.$session.exists()) {
-      axios.defaults.headers.common.Authorization = `${this.$session.get(
-        "jwt"
-      )}`;
-      this.$store.dispatch("setUser", jwt.decode(this.$session.get("jwt")));
-      this.$store.state.isLoggedIn = true;
-      if (
-        this.$store.state.user.category === "Student" ||
-        this.$store.state.user.category === "Instructor"
-      ) {
-        this.$router.push({ name: "Courses" });
-      } else {
-        alert("not in mvp");
-      }
-    }
-  },
 };
 </script>

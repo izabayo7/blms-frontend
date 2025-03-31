@@ -31,7 +31,7 @@
             placeholder="Type your answer here"
             class="answer-field"
           ></textarea>
-          <div v-else class="options">
+          <div v-else class="options col col-12">
             <div v-if="question.type.includes('text')" class="d-block">
               <v-btn
                 v-for="(choice, k) in question.options.choices"
@@ -54,8 +54,8 @@
                 >
                   <v-card flat tile class="d-flex">
                     <v-img
-                      :src="`http://localhost:7070/kurious/file/quizAttachedFiles/${$route.params.id}/${choice.src}?format=png&width=200&height=200`"
-                      :lazy-src="`http://localhost:7070/kurious/file/quizAttachedFiles/${$route.params.id}/${choice.src}?format=png&width=200&height=200`"
+                      :src="`http://161.35.199.197:7070/kurious/file/quizAttachedFiles/${$route.params.id}/${choice.src}?format=png&width=200&height=200`"
+                      :lazy-src="`http://161.35.199.197:7070/kurious/file/quizAttachedFiles/${$route.params.id}/${choice.src}?format=png&width=200&height=200`"
                       :gradient="checkCoiceStatus(attempt.answers[i].choosedOptions, {src: choice.src}) ? 'to top right, rgba(100,115,201,.33), rgba(25,32,72,.7)' : undefined"
                       @click="handleOptionClick(i,k)"
                     >
@@ -106,6 +106,7 @@
 
 <script>
 import Apis from "@/services/apis";
+import axios from "axios";
 export default {
   data: () => ({
     alphabets: [
@@ -184,16 +185,36 @@ export default {
             src: this.quiz.questions[questionIndex].options.choices[optionIndex]
               .src,
           };
-      if (this.quiz.questions[questionIndex].type.includes("single")) {
-        this.attempt.answers[questionIndex].choosedOptions = [value];
-      } else {
-        if (
-          this.attempt.answers[questionIndex].choosedOptions.includes(value)
-        ) {
-          this.attempt.answers[questionIndex].choosedOptions.splice(
-            this.attempt.answers[questionIndex].choosedOptions.indexOf(value),
-            1
-          );
+
+      let deleted = false;
+      for (
+        let i = 0;
+        i < this.attempt.answers[questionIndex].choosedOptions.length;
+        i++
+      ) {
+        if (this.quiz.questions[questionIndex].type.includes("text")) {
+          if (
+            this.attempt.answers[questionIndex].choosedOptions[i].text ===
+            value.text
+          ) {
+            this.attempt.answers[questionIndex].choosedOptions.splice(i, 1);
+            deleted = true;
+            break;
+          }
+        } else {
+          if (
+            this.attempt.answers[questionIndex].choosedOptions[i].src ===
+            value.src
+          ) {
+            this.attempt.answers[questionIndex].choosedOptions.splice(i, 1);
+            deleted = true;
+            break;
+          }
+        }
+      }
+      if (!deleted) {
+        if (this.quiz.questions[questionIndex].type.includes("single")) {
+          this.attempt.answers[questionIndex].choosedOptions = [value];
         } else {
           this.attempt.answers[questionIndex].choosedOptions.push(value);
         }
@@ -214,10 +235,10 @@ export default {
             this.attempt.answers.push({ text: "" });
           } else if (question.type === "file-upload") {
             this.attempt.answers.push({ src: "" });
-            this.filesToUpload.push({ file: undefined });
           } else {
             this.attempt.answers.push({ choosedOptions: [] });
           }
+          this.filesToUpload.push({ file: "" });
         }
         this.quiz = response.data;
       } catch (error) {
@@ -229,15 +250,39 @@ export default {
         }
       }
     },
+    async uploadAttachments(submissionId) {
+      try {
+        const formData = new FormData();
+        for (const i in this.filesToUpload) {
+          if (this.filesToUpload[i].file !== "") {
+            formData.append("files[" + i + "]", this.filesToUpload[i].file);
+          }
+        }
+        await axios.post(
+          `http://161.35.199.197:7070/kurious/file/submissionAttachedFiles/${submissionId}`,
+          formData,
+          { headers: { "Content-Type": "multipart/form-data" } }
+        );
+      } catch (error) {
+        if (error.response) {
+          this.status = error.response.status;
+          this.message = error.response.data;
+        } else if (error.request) {
+          this.status = 503;
+          this.message = "Service Unavailable";
+        }
+        console.log(error);
+        this.modal = false;
+        this.show = true;
+      }
+    },
     async saveAttempt() {
       try {
-        await Apis.create("quizSubmission", this.attempt);
+        const response = await Apis.create("quizSubmission", this.attempt);
+        this.uploadAttachments(response.data._id);
         // upload the files
         this.message = "Submission was saved successfuly";
         this.show = true;
-        setTimeout(() => {
-          this.$router.push("/courses");
-        }, 1000);
       } catch (error) {
         if (error.response) {
           this.status = error.response.status;

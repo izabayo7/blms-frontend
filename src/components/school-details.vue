@@ -2,7 +2,7 @@
   <v-app id="school-page">
     <v-row>
       <v-col class="col-4 col-md-4 logo-side">
-        <v-btn @click="$router.push(`/admin`)">
+        <v-btn @click="$router.push(`/users`)">
           <v-icon>mdi-chevron-left</v-icon>Back
         </v-btn>
         <div class="school-logo">

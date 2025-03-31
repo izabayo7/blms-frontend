@@ -17,10 +17,17 @@ export default new Vuex.Store({
             state.user = user
             state.isLoggedIn = true
         },
+        unSetUser(state) {
+            state.user = null
+            state.isLoggedIn = false
+        },
     },
     actions: {
         setUser({ commit }, user) {
             commit('setUser', user)
+        },
+        unSetUser({ commit }) {
+            commit('unSetUser')
         },
     },
     modules:{

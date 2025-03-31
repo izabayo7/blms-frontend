@@ -23,6 +23,4 @@ npm run lint
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
 
-today its quiz
-then finalyse content management
-re arrange components break them down for better understanding
+
