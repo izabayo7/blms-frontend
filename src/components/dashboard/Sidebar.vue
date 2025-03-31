@@ -34,7 +34,7 @@
           v-if="userCategory === 'ADMIN' || userCategory === 'INSTRUCTOR'"
           @click="
             closeSidebar();
-            routeTo('/users');
+            routeTo(userCategory === 'ADMIN' ? '/users' : '/students');
           "
           :class="{ active: activeRoute('users') }"
         >
