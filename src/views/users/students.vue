@@ -161,6 +161,14 @@ export default {
   },
   methods: {
     handleSelect(value) {
+      for (const i in this.statistics.students) {
+        if (value.has(-1)) {
+          if (!this.$refs[`row${i}`][0].selectSelected)
+            this.$refs[`row${i}`][0].changeSelectedIndex()
+        } else if (this.$refs[`row${i}`][0].selectSelected)
+          this.$refs[`row${i}`][0].changeSelectedIndex()
+      }
+
       this.selected_users = value
     },
     handleRowSelect(index) {
