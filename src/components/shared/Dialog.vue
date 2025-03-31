@@ -1,5 +1,5 @@
 <template>
-  <v-dialog id="kurious--dialog" v-model="visible" :persistent="!closable">
+  <v-dialog id="kurious--dialog" v-model="showModal" :persistent="!closable">
     <!-- view for information display ex(showing progress or a message) -->
     <div
         v-if="modal_template == 'display_information'"
@@ -120,6 +120,50 @@
           >Okay
           </v-btn
           >
+        </div>
+      </div>
+    </div>
+    <div
+        v-else-if="template === 'delete_message_confirmation'"
+        class="dialog-body dialog_t_1 payment_err delete_msg"
+    >
+      <div class="close-dialog show">
+        <svg
+            @click="$emit('close')"
+            xmlns="http://www.w3.org/2000/svg"
+            width="19.805"
+            height="19.8"
+            viewBox="0 0 19.805 19.8"
+        >
+          <path
+              id="Icon_ionic-ios-close"
+              data-name="Icon ionic-ios-close"
+              d="M23.534,21.189l7.074-7.074a1.657,1.657,0,0,0-2.344-2.344L21.19,18.845l-7.074-7.074a1.657,1.657,0,1,0-2.344,2.344l7.074,7.074-7.074,7.074a1.657,1.657,0,0,0,2.344,2.344l7.074-7.074,7.074,7.074a1.657,1.657,0,1,0,2.344-2.344Z"
+              transform="translate(-11.285 -11.289)"
+          />
+        </svg>
+      </div>
+      <div class="d-flex justify-center align-center content">
+        <div class="content confirmation-dialog ma-0">
+          <h4 class="title">Delete message</h4>
+          <span class="sub-title">
+   Are you sure you want to delete this message
+        </span>
+          <slot/>
+          <div class="actions">
+            <v-btn
+                @click="$emit('close')"
+                class="mx-2 white--text action-button cancel"
+            >Cancel
+            </v-btn
+            >
+            <v-btn
+                @click="$emit('close')"
+                class="mx-2 white--text action-button"
+            >Delete
+            </v-btn
+            >
+          </div>
         </div>
       </div>
     </div>
@@ -294,9 +338,13 @@ import {mapGetters, mapMutations, mapState, mapActions} from "vuex";
 export default {
   data: () => ({
     userCode: "",
+    showModal: false,
     attendance: 100,
     interval: null
   }),
+  props: {
+    template: String,
+  },
   computed: {
     ...mapState("modal", ["confirmed"]),
     ...mapGetters("courses", ["course"]),
@@ -318,6 +366,9 @@ export default {
   },
   watch: {
     visible() {
+      this.showModal = this.visible
+    },
+    showModal() {
       if (this.visible)
         if (this.modal_template === "live_related") {
           this.interval = setInterval(() => {
@@ -371,6 +422,10 @@ export default {
       }
     }
   },
+  created() {
+    if (this.template)
+      this.showModal = true
+  }
 };
 </script>
 <style lang="scss">
@@ -396,6 +451,38 @@ export default {
 .dialog_t_1 {
   padding: 18px;
   border-radius: 12px;
+
+  &.delete_msg {
+    width: 665px;
+    max-height: 340px;
+    overflow: auto;
+
+    .title {
+      margin-bottom: 12px !important;
+    }
+
+    img {
+      max-width: 101px;
+      margin: 0px 5px;
+    }
+
+    .msg {
+      max-width: 28rem;
+      padding: 0.5rem 1.7rem;
+      margin: 1.5px;
+      width: -webkit-fit-content;
+      border-radius: 15px 15px 0 15px;
+      background-color: $primary;
+      color: #FFFFFF;
+      width: -moz-fit-content;
+      width: fit-content;
+      font-size: 0.8rem;
+      font-weight: 400;
+      font-family: Poppins;
+      word-break: break-word;
+      position: relative;
+    }
+  }
 
   &.payment_err, &.exam_constraints {
     border-radius: 0px;

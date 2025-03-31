@@ -125,7 +125,7 @@
                     </div>
                   </div>
                   <div class="action tooltip">
-                    <div class="icon">
+                    <div @click="setmsgTDlt(msg._id)" class="icon cursor-pointer">
                       <svg width="14" height="18" viewBox="0 0 14 18" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path
                             d="M1 16C1 16.5304 1.21071 17.0391 1.58579 17.4142C1.96086 17.7893 2.46957 18 3 18H11C11.5304 18 12.0391 17.7893 12.4142 17.4142C12.7893 17.0391 13 16.5304 13 16V4H1V16ZM3 6H11V16H3V6ZM10.5 1L9.5 0H4.5L3.5 1H0V3H14V1H10.5Z"
@@ -190,6 +190,51 @@
                   </div>
                 </div>
               </div>
+              <Modal v-if="msgTDlt === msg._id" template="delete_message_confirmation" @close="setmsgTDlt(undefined)">
+                <div>
+                  <div
+                      class="sender_name text-left"
+                  >
+                    {{ msgs.messages[0].createdAt | getTimeDifference }}
+                  </div>
+                  <div
+                      v-if="msg.content"
+                      class="msg"
+                      :inner-html.prop="msg.content | urlify "
+                  />
+                  <div
+                      v-if="msg.attachments"
+                      :class="`attachments-cotainer ${msg.content ? 'pushed' : ''} ${
+                  msg.attachments.length > 1
+                    ? msg.attachments.length > 2
+                      ? 'more'
+                      : 'two'
+                    : ''
+                }`"
+                  >
+                    <div
+                        v-for="(attachment, k) in msg.attachments"
+                        :key="k"
+                        class="attachment"
+                    >
+                      <img
+                          v-if="fileType(attachment) === 'image'"
+                          :src="attachment.src + `?token=${$session.get('jwt')}`"
+                          alt=""
+                      />
+                      <!--                  <audio v-if="fileType(attachment) === 'audio'" :src="attachment.src+ `?token=${$session.get('jwt')}`"></audio>-->
+                      <vue-plyr v-if="fileType(attachment) === 'audio'">
+                        <audio controls crossorigin playsinline>
+                          <source
+                              :src="attachment.src + `?token=${$session.get('jwt')}`"
+                              type="audio/mp3"
+                          />
+                        </audio>
+                      </vue-plyr>
+                    </div>
+                  </div>
+                </div>
+              </Modal>
             </div>
           </div>
           <div v-else class="msgs">
@@ -257,6 +302,7 @@ export default {
   mixins: [chatMixins],
   components: {
     Editor: () => import("@/components/reusable/Editor"),
+    Modal: () => import("@/components/shared/Dialog"),
   },
   props: {
     // data: {type: [Array, Boolean], required: true},
@@ -265,7 +311,8 @@ export default {
     return {
       typing: false,
       typers: [],
-      topmsg: undefined
+      topmsg: undefined,
+      msgTDlt: undefined,
     };
   },
   computed: {
@@ -299,6 +346,9 @@ export default {
         i += this.data[k].messages.length
       }
       return i
+    },
+    setmsgTDlt(id){
+      this.msgTDlt = id
     },
     loadMoreMessages() {
       const el = document.querySelector('.msg-container');
