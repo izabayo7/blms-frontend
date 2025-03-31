@@ -4,6 +4,7 @@ $secondary:#e9ecef;
 $tertiary:#f9faff;
 $main:#ffffff;
 $font:#525252;
+$deepGreen: #02A617;
 
 
 $info:#2680eb;
@@ -13,5 +14,6 @@ $blue-gray:#F6F8FF;
 $disabled:#DADADA;
 
 :export {
-    primary: $primary
+    primary: $primary;
+    deep_green: $deepGreen
 }

@@ -44,7 +44,7 @@
             >
             <v-col class="pa-0 pl-1 py-1">
               <v-btn
-                color="#3CE970"
+                color="#02A617"
                 class="white--text"
                 :to="`/submissions/${item.name}`"
               >

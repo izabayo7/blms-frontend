@@ -40,7 +40,7 @@ export default {
 <style lang="scss" scoped>
 .my-navbar {
   background-color: $main;
-  box-shadow: 10px 0 10px 0 lighten($color: $primary, $amount: 20);
+  // box-shadow: 10px 0 10px 0 lighten($color: $primary, $amount: 20);
   width: 100%;
   display: flex;
   padding: 0 !important;

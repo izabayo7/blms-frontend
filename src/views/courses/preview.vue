@@ -3,7 +3,7 @@
   <section class="my-container">
     <!--      this is for student preview-->
     <v-row v-if="userCategory === 'STUDENT'">
-      <back class="ma-6" to="/courses" />
+      <back class="ma-6 mb-1 ml-16" to="/courses" />
       <v-col v-if="!loaded" class="col-12">
         <div class="ssc elevation-0 ssc-card student-card-skeleton ml mt-10">
           <div class="ssc-wrapper flex justify-between ml">
@@ -428,6 +428,7 @@
                       data-name="Path 16"
                       d="M129.65,58.926,98.832,28.376A6.458,6.458,0,0,0,94.008,26.5H40.679A9.5,9.5,0,0,0,31.3,35.879V143.073a9.321,9.321,0,0,0,9.379,9.379h81.2a9.5,9.5,0,0,0,9.379-9.379V63.75C131.526,61.874,130.454,60.266,129.65,58.926ZM52.739,83.581H77.661a3.484,3.484,0,1,1,0,6.968H52.739a3.484,3.484,0,1,1,0-6.968Zm53.329,49.845H52.739a3.484,3.484,0,0,1,0-6.968h53.329a3.237,3.237,0,0,1,3.484,3.484A3.378,3.378,0,0,1,106.068,133.426Zm0-21.439H52.739a3.484,3.484,0,1,1,0-6.968h53.329a3.484,3.484,0,0,1,0,6.968Zm-5.9-53.329a1.266,1.266,0,0,1-1.34-1.34V40.167l18.491,18.491Z"
                       transform="translate(-31.3 -26.5)"
+                      fill="02A617"
                     />
                   </svg>
                 </div>
@@ -890,7 +891,7 @@ button.back {
   height: 100%;
   margin: 0;
   padding: 2rem;
-  padding-top: 5rem;
+  padding-top: 0rem;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -902,7 +903,7 @@ button.back {
       padding-left: 2rem;
 
       h1 {
-        font-size: 3rem;
+        font-size: 2.3rem;
         max-width: 30rem;
       }
 

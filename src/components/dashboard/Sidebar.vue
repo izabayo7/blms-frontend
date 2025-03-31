@@ -252,7 +252,7 @@ export default {
         &.active {
           background: $primary;
           border-radius: 10px;
-          box-shadow: 0 0 10px 0 lighten($color: $primary, $amount: 20);
+          // box-shadow: 0 0 10px 0 lighten($color: $primary, $amount: 20);
 
           svg {
             fill: $main;
