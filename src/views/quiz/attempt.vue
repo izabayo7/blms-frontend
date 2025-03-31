@@ -296,7 +296,7 @@ export default {
         this.done = true;
         const category = this.$store.state.user.user.category.name;
         if (category == "INSTRUCTOR") {
-          this.$router.push("/quiz/timeout");
+          this.$router.push("/assessments/quiz/timeout");
         } else if (category == "STUDENT") {
           this.markUndoneQuestions();
           this.attempt.auto_submitted = true;
@@ -522,11 +522,11 @@ export default {
               content: 'submitted quiz ' + this.selected_quiz.name
             })
             if (is_selection_only) {
-              this.$router.push(`/quiz/${this.selected_quiz.name}/results`);
+              this.$router.push(`/assessments/quiz/${this.selected_quiz.name}/results`);
             } else {
               this.$router.push(
                   `${
-                      this.attempt.auto_submitted ? "/quiz/timeout" : "/quiz/submitted"
+                      this.attempt.auto_submitted ? "/assessments/quiz/timeout" : "/assessments/quiz/submitted"
                   }`
               );
             }
@@ -577,7 +577,7 @@ export default {
         quizName: this.$route.params.name,
       }).then(() => {
         if (this.selected_quiz_submission != undefined)
-          this.$router.push(`/quiz/${this.$route.params.name}/${this.$store.state.user.user.user_name}`)
+          this.$router.push(`/assessments/quiz/${this.$route.params.name}/${this.$store.state.user.user.user_name}`)
       })
     }
 
