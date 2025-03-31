@@ -5,13 +5,13 @@
       <p class="name"><slot name="name"> </slot></p>
       <p v-if="currentDisplayedUser.is_group">
         <span v-for="(member, i) in currentDisplayedUser.members" :key="i"
-          >{{ `${i > 0 ? "," : ""} ${member.data.sur_name}` }}
+          >{{ `${i > 0 ? "," : ""} ${member.data.user_name == $store.state.user.user.user_name ? 'You' : member.data.sur_name}` }}
         </span>
       </p>
       <p v-else class="online">{{ userOnline }}</p>
     </div>
     <div class="action-icons">
-      <div class="icon add-member" v-if="currentDisplayedUser.is_group">
+      <div class="icon add-member" v-if="currentDisplayedUser.is_group" @click="$router.push(`/messages/group/${currentDisplayedUser.id}/add-member`)">
         <svg
           id="user-add-line"
           xmlns="http://www.w3.org/2000/svg"
@@ -56,7 +56,7 @@
       </div>
       <div
         class="icon settings"
-        @click="$router.push(`/messages/group/${currentDisplayedUser._id}`)"
+        @click="$router.push(`/messages/group/${currentDisplayedUser.id}`)"
         v-if="currentDisplayedUser.is_group"
       >
         <svg
