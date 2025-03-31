@@ -532,7 +532,7 @@
                 {{ course.published ? "Unpublish" : "Publish" }} course
               </div>
             </div>
-            <div class="tooltip" @click="$router.push(`/courses/edit/${course.name}`)">
+            <div class="tooltip" @click="$router.push(`/courses/edit/${course.name}/details`)">
               <svg width="51" height="51" viewBox="0 0 51 51" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path
                     d="M25.7248 50.0345C39.4575 50.0345 50.5901 38.9019 50.5901 25.1691C50.5901 11.4363 39.4575 0.303711 25.7248 0.303711C11.992 0.303711 0.859375 11.4363 0.859375 25.1691C0.859375 38.9019 11.992 50.0345 25.7248 50.0345Z"

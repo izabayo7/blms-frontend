@@ -1,4 +1,4 @@
-<template>
+  <template>
   <v-app class="create-quiz-page">
     <div class="d-flex">
       <span class="quiz_lable">Quiz title</span>
