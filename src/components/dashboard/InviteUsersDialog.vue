@@ -1,7 +1,7 @@
 <template>
   <v-dialog id="kurious--dialog" v-model="visible" :persistent="!closable">
     <div class="dialog-body">
-      <div class="pre-send">
+      <div v-show="sent_emails.length == 0" class="pre-send">
         <div class="mx-auto centered">
           <div class="title">Send user Invitations</div>
           <div class="role my-2">
@@ -70,7 +70,7 @@
           </div>
         </div>
       </div>
-      <div class="post-send d-none">
+      <div v-show="sent_emails.length != 0" class="post-send">
         <div class="mx-auto non-centered">
           <div class="title">
             Invitations were successfuly sent to the following users
@@ -93,7 +93,7 @@
             </div>
           </div>
           <div class="send-container">
-            <button class="close">Close</button>
+            <button class="close" @click="$emit('closeModal')">Close</button>
           </div>
         </div>
       </div>
@@ -151,20 +151,24 @@ export default {
       this.email = email;
     },
     async sendInvitations() {
-      if (!this.selected_user_group) {
+      if (this.selected_user_group == "") {
         console.log("user group is required");
-      } else if (!this.selected_user_group) {
-        console.log("user group is required");
+      } else if (this.selected_user_category == "") {
+        console.log("user category is required");
       } else if (!this.emails.length) {
         console.log("you must atleast select one email");
       } else {
         const res = await Apis.create("user_invitations", {
           college: this.$store.state.user.user.college,
           category: this.selected_user_category,
-          faculty_college_year: this.selected_user_group,
+          // faculty_college_year: this.selected_user_group,
           emails: this.emails,
         });
+
         console.log(res);
+        for (const obj of res.data.data) {
+          this.sent_emails.unshift(obj.email);
+        }
       }
     },
   },
@@ -279,7 +283,7 @@ export default {
       }
       .added-emails {
         max-width: 80%;
-        height: 15rem;
+        height: 13rem;
       }
     }
   }
