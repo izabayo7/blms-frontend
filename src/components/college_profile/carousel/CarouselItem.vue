@@ -6,18 +6,21 @@
       @mouseenter="$emit('mouseenter')"
       @mouseout="$emit('mouseout')"
     >
-      <div class="testimony">
-        <div :style="`margin-top: ${alignHorizontally ? 51 : 27}px;`">
+      <div class="testimony" :style="`max-width: ${alignHorizontally ? '448px; margin-top: 51px' : '100%'};`" :class="{'ma-auto' : alignHorizontally}">
+        <div
+          :style="`margin-top: ${alignHorizontally ? 51 : 27}px;`"
+          :class="`d-${alignHorizontally ? 'flex' : 'block'}`"
+        >
           <div class="profile">
-            <img :src="slide.user_profile" />
+            <img :class="{'small' : alignHorizontally}" :src="slide.user_profile" />
           </div>
-          <div class="content">
+          <div class="content" :class="{'text-left ml-6' : alignHorizontally}">
             {{ slide.content | trimString(100) }}
           </div>
         </div>
-        <div>
+        <div :class="`d-${alignHorizontally ? 'flex' : 'block'}`">
           <div class="user_names">{{ slide.user_names }}</div>
-          <div class="course_name">{{ slide.course_name }}</div>
+          <div class="course_name" :class="`ml-${alignHorizontally ? 'auto mt-0' : '0'}`">{{ slide.course_name }}</div>
         </div>
       </div>
     </div>
@@ -70,34 +73,34 @@ export default {
   align-items: center;
   justify-content: center;
   font-weight: bold;
-  
+
   @media (min-width: 600px) {
     font-size: 80px;
   }
-  
+
   @media (min-width: 900px) {
     font-size: 140px;
   }
-  
+
   .animated {
     transition: all 400ms;
     position: absolute;
     transform: translate(-50%, -50%);
   }
-  
+
   .slide-in {
     opacity: 0;
     transform: translate(-40%, -50%);
   }
-  
+
   .slide-in-active {
     transition-delay: 150ms;
   }
-  
+
   .slide-out {
     opacity: 1;
   }
-  
+
   .slide-out-active {
     opacity: 0;
     transform: translate(-60%, -50%);
@@ -111,6 +114,10 @@ export default {
     height: 136px;
     margin-bottom: 26px;
     object-fit: cover;
+    &.small{
+      width: 79px;
+height: 84px;
+    }
   }
   .content {
     font-family: "Inter";
@@ -156,9 +163,9 @@ export default {
 /* Portrait phones and smaller */
 @media (max-width: 1200px) {
   .testimony {
-  .content {
-    font-size: 15px;
-  }
+    .content {
+      font-size: 15px;
+    }
   }
 }
 </style>

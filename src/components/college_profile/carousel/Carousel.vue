@@ -1,5 +1,5 @@
 <template>
-  <div class="carousel">
+  <div class="carousel" :class="{ small: alignHorizontally }">
     <div class="carousel-inner">
       <carousel-indicators
         v-if="indicators"
@@ -113,18 +113,28 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .carousel {
   display: flex;
   justify-content: center;
-  background: linear-gradient(0deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), #2B2B2B;
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)),
+    #2b2b2b;
   width: 100%;
   height: 411px;
-}
-.carousel-inner {
-  position: relative;
-  width: 900px;
-  height: 400px;
-  overflow: hidden;
+
+  &-inner {
+    position: relative;
+    width: 900px;
+    height: 400px;
+    overflow: hidden;
+  }
+
+  &.small {
+    height: 307px;
+    .carousel-inner {
+      width: 900px;
+      height: 287px;
+    }
+  }
 }
 </style>
