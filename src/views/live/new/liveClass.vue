@@ -40,7 +40,9 @@
         </div>
         <div class="video">
           <div class="video--wrapper">
-            <div class="video-el" :class="`--${$vuetify.breakpoint.name}`" @mouseenter="toggleMenu(true)"
+            <div class="video-el"
+                 :class="`--${$vuetify.breakpoint.name} ${participationInfo.isOfferingCourse? '': sidebarOpen ? '' : 'viewer'}`"
+                 @mouseenter="toggleMenu(true)"
                  @mouseleave="toggleMenu(false)">
               <div class="no-video" v-show="noVideo">
                 <div class="no-video--wrapper" :class="{presenting:isPresenting}">
@@ -111,13 +113,13 @@
                 <div class="video-controls" v-else>
                   <div class="video-controls--wrapper viewer">
                     <span class="live">Live</span>
-                    <button @click="toogleAudio" class="ml-auto">
-<svg width="22" height="17" viewBox="0 0 22 17" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M6.72526 1H1.30859V6.41667" stroke="white" stroke-width="1.26923"/>
-<path d="M15.8906 1H21.3073V6.41667" stroke="white" stroke-width="1.26923"/>
-<path d="M21.3073 10.25V15.6667H15.8906" stroke="white" stroke-width="1.26923"/>
-<path d="M1.30859 10.25V15.6667H6.72526" stroke="white" stroke-width="1.26923"/>
-</svg>
+                    <button class="ml-auto">
+                      <svg width="22" height="17" viewBox="0 0 22 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M6.72526 1H1.30859V6.41667" stroke="white" stroke-width="1.26923"/>
+                        <path d="M15.8906 1H21.3073V6.41667" stroke="white" stroke-width="1.26923"/>
+                        <path d="M21.3073 10.25V15.6667H15.8906" stroke="white" stroke-width="1.26923"/>
+                        <path d="M1.30859 10.25V15.6667H6.72526" stroke="white" stroke-width="1.26923"/>
+                      </svg>
                     </button>
                   </div>
                 </div>
@@ -125,7 +127,7 @@
             </div>
           </div>
         </div>
-        <div class="live-comments">
+        <div v-if="participationInfo.isOfferingCourse" class="live-comments">
           <div class="live-comments--wrapper">
             <div class="student-new-comment">
               <student-new-comment-with-photo v-model="comment"/>
@@ -140,8 +142,62 @@
             </div>
           </div>
         </div>
+        <div v-else class="live-class-details">
+          <div class="live-class-details--wrapper">
+            <div class="description">Learn about the basics of compound interest, with examples of basic compound
+              interest calculations. Created by professor Kubwimana Jean Damascene
+            </div>
+            <div class="quiz ml-auto mr-4">
+              <button>
+                Take quiz
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="live-class--attendance">
+      <div v-if="participationInfo.isOfferingCourse" class="live-class--attendance">
+        <div class="live-class--attendance--wrapper">
+          <h3>ONLINE USERS : {{ participants.length }} </h3>
+          <div class="online-users">
+            <online-user v-for="user in participants" :user="user.userInfo"
+                         :key="`${(Date.now() * Math.random())}${user.name}`"/>
+          </div>
+        </div>
+        <div class="live-class--actions">
+          <div class="live-class--action attendance">
+            <button>
+            <span class="icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none"
+                                                                                                       d="M0 0h24v24H0z"/><path
+                  d="M21 8v12.993A1 1 0 0 1 20.007 22H3.993A.993.993 0 0 1 3 21.008V2.992C3 2.455 3.449 2 4.002 2h10.995L21 8zm-2 1h-5V4H5v16h14V9zM8 7h3v2H8V7zm0 4h8v2H8v-2zm0 4h8v2H8v-2z"/></svg>
+            </span>
+              <span class="text">CHECK ATTENDANCE</span>
+            </button>
+          </div>
+          <div class="live-class--action release-quiz">
+            <button>
+            <span class="icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none"
+                                                                                                       d="M0 0h24v24H0z"/><path
+                  d="M10 15.172l9.192-9.193 1.415 1.414L10 18l-6.364-6.364 1.414-1.414z"/></svg>
+            </span>
+              <span class="text">RELEASE QUIZ</span>
+            </button>
+          </div>
+          <div class="live-class--action end-class">
+            <button @click="leaveRoom">
+            <span class="icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none"
+                                                                                                       d="M0 0h24v24H0z"/><path
+                  d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm0-11.414L9.172 7.757 7.757 9.172 10.586 12l-2.829 2.828 1.415 1.415L12 13.414l2.828 2.829 1.415-1.415L13.414 12l2.829-2.828-1.415-1.415L12 10.586z"
+                  fill="rgba(255,255,255,1)"/></svg>
+            </span>
+              <span class="text">END CLASS</span>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div v-else class="live-class--attendance">
         <div class="live-class--attendance--wrapper">
           <h3>ONLINE USERS : {{ participants.length }} </h3>
           <div class="online-users">
@@ -191,7 +247,7 @@
 // import * as kurentoUtils from "../../../plugins/kurentoLive/kurento-utils.js"
 import Participant from "../../../plugins/kurentoLive/participants";
 import {WebRtcPeer} from 'kurento-utils'
-import {mapGetters} from 'vuex'
+import {mapGetters, mapState} from 'vuex'
 import OnlineUser from "../../../components/Live/OnlineUser";
 import StudentNewCommentWithPhoto from "../../../components/Live/StudentNewCommentWithPhoto";
 import Apis from '../../../services/apis'
@@ -218,137 +274,12 @@ export default {
           name: 'Ntwari liberi',
           attendance: 89,
         },
-        /*
-      {
-        img:'https://s3.amazonaws.com/cms-assets.tutsplus.com/uploads/users/810/profiles/19338/profileImage/profile-square-extra-small.png',
-        name:'Ntwari liberi',
-        attendance:45,
-      },{
-        img:'https://s3.amazonaws.com/cms-assets.tutsplus.com/uploads/users/810/profiles/19338/profileImage/profile-square-extra-small.png',
-        name:'Ntwari liberi',
-        attendance:37,
-      },{
-        img:'https://s3.amazonaws.com/cms-assets.tutsplus.com/uploads/users/810/profiles/19338/profileImage/profile-square-extra-small.png',
-        name:'Ntwari liberi',
-        attendance:16,
-      },{
-        img:'https://s3.amazonaws.com/cms-assets.tutsplus.com/uploads/users/810/profiles/19338/profileImage/profile-square-extra-small.png',
-        name:'Ntwari liberi',
-        attendance:78,
-      },{
-        img:'https://s3.amazonaws.com/cms-assets.tutsplus.com/uploads/users/810/profiles/19338/profileImage/profile-square-extra-small.png',
-        name:'Ntwari liberi',
-        attendance:44,
-      },{
-        img:'https://s3.amazonaws.com/cms-assets.tutsplus.com/uploads/users/810/profiles/19338/profileImage/profile-square-extra-small.png',
-        name:'Ntwari liberi',
-        attendance:58
-      },{
-        img:'https://s3.amazonaws.com/cms-assets.tutsplus.com/uploads/users/810/profiles/19338/profileImage/profile-square-extra-small.png',
-        name:'Ntwari liberi',
-        attendance:74,
-      },{
-        img:'https://s3.amazonaws.com/cms-assets.tutsplus.com/uploads/users/810/profiles/19338/profileImage/profile-square-extra-small.png',
-        name:'Ntwari liberi',
-        attendance:89,
-      },{
-        img:'https://s3.amazonaws.com/cms-assets.tutsplus.com/uploads/users/810/profiles/19338/profileImage/profile-square-extra-small.png',
-        name:'Ntwari liberi',
-        attendance:89,
-      },{
-        img:'https://s3.amazonaws.com/cms-assets.tutsplus.com/uploads/users/810/profiles/19338/profileImage/profile-square-extra-small.png',
-        name:'Ntwari liberi',
-        attendance:89,
-      },{
-        img:'https://s3.amazonaws.com/cms-assets.tutsplus.com/uploads/users/810/profiles/19338/profileImage/profile-square-extra-small.png',
-        name:'Ntwari liberi',
-        attendance:89,
-      },{
-        img:'https://s3.amazonaws.com/cms-assets.tutsplus.com/uploads/users/810/profiles/19338/profileImage/profile-square-extra-small.png',
-        name:'Ntwari liberi',
-        attendance:2,
-      },{
-        img:'https://s3.amazonaws.com/cms-assets.tutsplus.com/uploads/users/810/profiles/19338/profileImage/profile-square-extra-small.png',
-        name:'Ntwari liberi',
-        attendance:89,
-      },{
-        img:'https://s3.amazonaws.com/cms-assets.tutsplus.com/uploads/users/810/profiles/19338/profileImage/profile-square-extra-small.png',
-        name:'Ntwari liberi',
-        attendance:59,
-      },{
-        img:'https://s3.amazonaws.com/cms-assets.tutsplus.com/uploads/users/810/profiles/19338/profileImage/profile-square-extra-small.png',
-        name:'Ntwari liberi',
-        attendance:42,
-      },{
-        img:'https://s3.amazonaws.com/cms-assets.tutsplus.com/uploads/users/810/profiles/19338/profileImage/profile-square-extra-small.png',
-        name:'Ntwari liberi',
-        attendance:90,
-      },{
-        img:'https://s3.amazonaws.com/cms-assets.tutsplus.com/uploads/users/810/profiles/19338/profileImage/profile-square-extra-small.png',
-        name:'Ntwari liberi',
-        attendance:34,
-      },{
-        img:'https://s3.amazonaws.com/cms-assets.tutsplus.com/uploads/users/810/profiles/19338/profileImage/profile-square-extra-small.png',
-        name:'Ntwari liberi',
-        attendance:89,
-      },{
-        img:'https://s3.amazonaws.com/cms-assets.tutsplus.com/uploads/users/810/profiles/19338/profileImage/profile-square-extra-small.png',
-        name:'Ntwari liberi',
-        attendance:55,
-      },{
-        img:'https://s3.amazonaws.com/cms-assets.tutsplus.com/uploads/users/810/profiles/19338/profileImage/profile-square-extra-small.png',
-        name:'Ntwari liberi',
-        attendance:7,
-      },{
-        img:'https://s3.amazonaws.com/cms-assets.tutsplus.com/uploads/users/810/profiles/19338/profileImage/profile-square-extra-small.png',
-        name:'Ntwari liberi',
-        attendance:23,
-      },{
-        img:'https://s3.amazonaws.com/cms-assets.tutsplus.com/uploads/users/810/profiles/19338/profileImage/profile-square-extra-small.png',
-        name:'Ntwari liberi',
-        attendance:0,
-      },{
-        img:'https://s3.amazonaws.com/cms-assets.tutsplus.com/uploads/users/810/profiles/19338/profileImage/profile-square-extra-small.png',
-        name:'Ntwari liberi',
-        attendance:76,
-      },{
-        img:'https://s3.amazonaws.com/cms-assets.tutsplus.com/uploads/users/810/profiles/19338/profileImage/profile-square-extra-small.png',
-        name:'Ntwari liberi',
-        attendance:76,
-      },{
-        img:'https://s3.amazonaws.com/cms-assets.tutsplus.com/uploads/users/810/profiles/19338/profileImage/profile-square-extra-small.png',
-        name:'Ntwari liberi',
-        attendance:45,
-      },{
-        img:'https://s3.amazonaws.com/cms-assets.tutsplus.com/uploads/users/810/profiles/19338/profileImage/profile-square-extra-small.png',
-        name:'Ntwari liberi',
-        attendance:87,
-      },{
-        img:'https://s3.amazonaws.com/cms-assets.tutsplus.com/uploads/users/810/profiles/19338/profileImage/profile-square-extra-small.png',
-        name:'Ntwari liberi',
-        attendance:66,
-      },{
-        img:'https://s3.amazonaws.com/cms-assets.tutsplus.com/uploads/users/810/profiles/19338/profileImage/profile-square-extra-small.png',
-        name:'Ntwari JOhn',
-        attendance:12,
-      },{
-        img:'https://s3.amazonaws.com/cms-assets.tutsplus.com/uploads/users/810/profiles/19338/profileImage/profile-square-extra-small.png',
-        name:'Ntwari liberi',
-        attendance:99,
-      },{
-        img:'https://s3.amazonaws.com/cms-assets.tutsplus.com/uploads/users/810/profiles/19338/profileImage/profile-square-extra-small.png',
-        name:'Ntwari umwe',
-        attendance:54,
-      },{
-        img:'https://s3.amazonaws.com/cms-assets.tutsplus.com/uploads/users/810/profiles/19338/profileImage/profile-square-extra-small.png',
-        name:'Nomi Kazungu',
-        attendance:32,
-      },*/
       ]
     }
   },
   computed: {
     ...mapGetters('user', ['user']),
+    ...mapState("sidebar_navbar", { sidebarOpen: "sidebar_expanded" }),
     instructor() {
       const el = this.participants.filter(e => e.userInfo.category == "INSTRUCTOR")
       return el[0] ? el[0].userInfo : undefined
@@ -1063,6 +994,11 @@ export default {
           &.--lg, &.--md {
             height: 320px;
             width: 568.89px;
+
+            &.viewer {
+              height: 402.1875px;
+              width: 715px;
+            }
           }
 
           //&.--md {
@@ -1247,6 +1183,50 @@ export default {
     }
   }
 
+  .live-class-details {
+    background-color: white;
+    margin-left: -1.2rem;
+    padding-left: 19.2px;
+    margin-top: -2.6rem;
+    padding-top: 36.6px;
+    height: 24.6vh;
+
+    &--wrapper {
+      padding-top: 1rem;
+      display: flex;
+
+      .description {
+        font-family: Poppins;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 12px;
+        line-height: 18px;
+
+        color: #464646;
+        max-width: 390px;
+      }
+
+      .quiz {
+        button {
+          background: #193074;
+          filter: drop-shadow(0px 6.8487px 15.0671px rgba(152, 152, 152, 0.161));
+          height: 36.537025451660156px;
+          width: 154.19863891601562px;
+          border-radius: 50px;
+          font-family: Montserrat;
+          font-style: normal;
+          font-weight: normal;
+          font-size: 12px;
+          line-height: 15px;
+          align-items: center;
+          text-align: center;
+
+          color: #FFFFFF;
+        }
+      }
+    }
+  }
+
   &--attendance {
     flex-basis: 30%;
 
@@ -1260,10 +1240,15 @@ export default {
     }
 
     h3 {
+      font-family: Montserrat;
+      font-style: normal;
+      font-weight: 600;
+      font-size: 12px;
+      line-height: 15px;
       text-align: center;
-      font-size: 1.1rem;
-      text-transform: capitalize;
-      margin-bottom: 1rem;
+
+      color: #141414;
+      margin-bottom: 16.39px;
     }
 
     .online-users {
