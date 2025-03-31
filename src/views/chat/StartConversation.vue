@@ -19,8 +19,7 @@
                   <p>{{ foundUser.names }}</p>
                   <span
                     v-if="foundUser.category.toLowerCase() === 'instructor'"
-                    >{{ foundUser.category }}</span
-                  >
+                    >{{ foundUser.category }}</span>
                 </div>
                 <input
                   @input="searchIt"
@@ -34,9 +33,10 @@
                 <ul class="searched-users" v-if="foundUsers.length > 0">
                   <li
                     class="user"
-                    v-for="(user, i) in foundUsers.filter((u) => !u.selected)"
+                    v-for="(user, i) in foundUsers"
                     :key="i"
                     @click="selectUser(i)"
+                    :class="{disabled:foundUser.user_name === user.user_name}"
                   >
                     <img
                       v-if="user.pic"
@@ -107,7 +107,8 @@ export default {
     return {
       foundUsers: [],
       query: "",
-      foundUser: null,
+      foundUser: '',
+
     };
   },
   methods: {
