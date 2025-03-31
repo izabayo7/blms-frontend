@@ -4,8 +4,11 @@
 
 <script>
 import { mapGetters, mapMutations } from "vuex";
+import { chatMixins } from "@/services/mixins";
+
 export default {
   name: "Index",
+  mixins: [chatMixins],
   computed: {
     ...mapGetters("chat", ["socket"]),
   },
@@ -21,6 +24,11 @@ export default {
     // listen to new course
     this.socket.on("new-course", (course) => {
       this.addCourse(course);
+    });
+    // listen to if the new message was sent
+    this.socket.on("message-sent", (message) => {
+      setTimeout(this.scrollChatToBottom, 1);
+      this.$store.commit("chat/ADD_ONGOING_MESSAGE", message);
     });
   },
 };
