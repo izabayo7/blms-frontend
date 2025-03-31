@@ -15,14 +15,8 @@
 <script>
 export default {
   name: "OnlineUser",
-  data(){
-    return {
-      user:{
-        img:'https://s3.amazonaws.com/cms-assets.tutsplus.com/uploads/users/810/profiles/19338/profileImage/profile-square-extra-small.png',
-        name:'Ntwari liberi',
-        attendance:89,
-      }
-    }
+  props:{
+    user:{required:true}
   },
   computed:{
     status(){

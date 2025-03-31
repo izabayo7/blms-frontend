@@ -52,31 +52,7 @@
       <div class="live-class--attendance--wrapper">
         <h3>ONLINE USERS : 60 </h3>
         <div class="online-users">
-          <online-user />
-          <online-user />
-          <online-user />
-          <online-user />
-          <online-user />
-          <online-user />
-          <online-user />
-          <online-user />
-          <online-user />
-          <online-user />
-          <online-user />
-          <online-user />
-          <online-user />
-          <online-user />
-          <online-user />
-          <online-user />
-          <online-user />
-          <online-user />
-          <online-user />
-          <online-user />
-          <online-user />
-          <online-user />
-          <online-user />
-          <online-user />
-          <online-user />
+          <online-user v-for="user in users" :user="user" :key="user"/>
         </div>
       </div>
     </div>
@@ -97,7 +73,138 @@ export default {
     return{
       ws:null,
       participants:[],
-      participationInfo:{name:"",room:"",isOfferingCourse:false}
+      participationInfo:{name:"",room:"",isOfferingCourse:false},
+      users:[
+        {
+          img:'https://s3.amazonaws.com/cms-assets.tutsplus.com/uploads/users/810/profiles/19338/profileImage/profile-square-extra-small.png',
+          name:'Ntwari liberi',
+          attendance:89,
+        },{
+          img:'https://s3.amazonaws.com/cms-assets.tutsplus.com/uploads/users/810/profiles/19338/profileImage/profile-square-extra-small.png',
+          name:'Ntwari liberi',
+          attendance:45,
+        },{
+          img:'https://s3.amazonaws.com/cms-assets.tutsplus.com/uploads/users/810/profiles/19338/profileImage/profile-square-extra-small.png',
+          name:'Ntwari liberi',
+          attendance:37,
+        },{
+          img:'https://s3.amazonaws.com/cms-assets.tutsplus.com/uploads/users/810/profiles/19338/profileImage/profile-square-extra-small.png',
+          name:'Ntwari liberi',
+          attendance:16,
+        },{
+          img:'https://s3.amazonaws.com/cms-assets.tutsplus.com/uploads/users/810/profiles/19338/profileImage/profile-square-extra-small.png',
+          name:'Ntwari liberi',
+          attendance:78,
+        },{
+          img:'https://s3.amazonaws.com/cms-assets.tutsplus.com/uploads/users/810/profiles/19338/profileImage/profile-square-extra-small.png',
+          name:'Ntwari liberi',
+          attendance:44,
+        },{
+          img:'https://s3.amazonaws.com/cms-assets.tutsplus.com/uploads/users/810/profiles/19338/profileImage/profile-square-extra-small.png',
+          name:'Ntwari liberi',
+          attendance:58
+        },{
+          img:'https://s3.amazonaws.com/cms-assets.tutsplus.com/uploads/users/810/profiles/19338/profileImage/profile-square-extra-small.png',
+          name:'Ntwari liberi',
+          attendance:74,
+        },{
+          img:'https://s3.amazonaws.com/cms-assets.tutsplus.com/uploads/users/810/profiles/19338/profileImage/profile-square-extra-small.png',
+          name:'Ntwari liberi',
+          attendance:89,
+        },{
+          img:'https://s3.amazonaws.com/cms-assets.tutsplus.com/uploads/users/810/profiles/19338/profileImage/profile-square-extra-small.png',
+          name:'Ntwari liberi',
+          attendance:89,
+        },{
+          img:'https://s3.amazonaws.com/cms-assets.tutsplus.com/uploads/users/810/profiles/19338/profileImage/profile-square-extra-small.png',
+          name:'Ntwari liberi',
+          attendance:89,
+        },{
+          img:'https://s3.amazonaws.com/cms-assets.tutsplus.com/uploads/users/810/profiles/19338/profileImage/profile-square-extra-small.png',
+          name:'Ntwari liberi',
+          attendance:89,
+        },{
+          img:'https://s3.amazonaws.com/cms-assets.tutsplus.com/uploads/users/810/profiles/19338/profileImage/profile-square-extra-small.png',
+          name:'Ntwari liberi',
+          attendance:2,
+        },{
+          img:'https://s3.amazonaws.com/cms-assets.tutsplus.com/uploads/users/810/profiles/19338/profileImage/profile-square-extra-small.png',
+          name:'Ntwari liberi',
+          attendance:89,
+        },{
+          img:'https://s3.amazonaws.com/cms-assets.tutsplus.com/uploads/users/810/profiles/19338/profileImage/profile-square-extra-small.png',
+          name:'Ntwari liberi',
+          attendance:59,
+        },{
+          img:'https://s3.amazonaws.com/cms-assets.tutsplus.com/uploads/users/810/profiles/19338/profileImage/profile-square-extra-small.png',
+          name:'Ntwari liberi',
+          attendance:42,
+        },{
+          img:'https://s3.amazonaws.com/cms-assets.tutsplus.com/uploads/users/810/profiles/19338/profileImage/profile-square-extra-small.png',
+          name:'Ntwari liberi',
+          attendance:90,
+        },{
+          img:'https://s3.amazonaws.com/cms-assets.tutsplus.com/uploads/users/810/profiles/19338/profileImage/profile-square-extra-small.png',
+          name:'Ntwari liberi',
+          attendance:34,
+        },{
+          img:'https://s3.amazonaws.com/cms-assets.tutsplus.com/uploads/users/810/profiles/19338/profileImage/profile-square-extra-small.png',
+          name:'Ntwari liberi',
+          attendance:89,
+        },{
+          img:'https://s3.amazonaws.com/cms-assets.tutsplus.com/uploads/users/810/profiles/19338/profileImage/profile-square-extra-small.png',
+          name:'Ntwari liberi',
+          attendance:55,
+        },{
+          img:'https://s3.amazonaws.com/cms-assets.tutsplus.com/uploads/users/810/profiles/19338/profileImage/profile-square-extra-small.png',
+          name:'Ntwari liberi',
+          attendance:7,
+        },{
+          img:'https://s3.amazonaws.com/cms-assets.tutsplus.com/uploads/users/810/profiles/19338/profileImage/profile-square-extra-small.png',
+          name:'Ntwari liberi',
+          attendance:23,
+        },{
+          img:'https://s3.amazonaws.com/cms-assets.tutsplus.com/uploads/users/810/profiles/19338/profileImage/profile-square-extra-small.png',
+          name:'Ntwari liberi',
+          attendance:0,
+        },{
+          img:'https://s3.amazonaws.com/cms-assets.tutsplus.com/uploads/users/810/profiles/19338/profileImage/profile-square-extra-small.png',
+          name:'Ntwari liberi',
+          attendance:76,
+        },{
+          img:'https://s3.amazonaws.com/cms-assets.tutsplus.com/uploads/users/810/profiles/19338/profileImage/profile-square-extra-small.png',
+          name:'Ntwari liberi',
+          attendance:76,
+        },{
+          img:'https://s3.amazonaws.com/cms-assets.tutsplus.com/uploads/users/810/profiles/19338/profileImage/profile-square-extra-small.png',
+          name:'Ntwari liberi',
+          attendance:45,
+        },{
+          img:'https://s3.amazonaws.com/cms-assets.tutsplus.com/uploads/users/810/profiles/19338/profileImage/profile-square-extra-small.png',
+          name:'Ntwari liberi',
+          attendance:87,
+        },{
+          img:'https://s3.amazonaws.com/cms-assets.tutsplus.com/uploads/users/810/profiles/19338/profileImage/profile-square-extra-small.png',
+          name:'Ntwari liberi',
+          attendance:66,
+        },{
+          img:'https://s3.amazonaws.com/cms-assets.tutsplus.com/uploads/users/810/profiles/19338/profileImage/profile-square-extra-small.png',
+          name:'Ntwari JOhn',
+          attendance:12,
+        },{
+          img:'https://s3.amazonaws.com/cms-assets.tutsplus.com/uploads/users/810/profiles/19338/profileImage/profile-square-extra-small.png',
+          name:'Ntwari liberi',
+          attendance:99,
+        },{
+          img:'https://s3.amazonaws.com/cms-assets.tutsplus.com/uploads/users/810/profiles/19338/profileImage/profile-square-extra-small.png',
+          name:'Ntwari umwe',
+          attendance:54,
+        },{
+          img:'https://s3.amazonaws.com/cms-assets.tutsplus.com/uploads/users/810/profiles/19338/profileImage/profile-square-extra-small.png',
+          name:'Nomi Kazungu',
+          attendance:32,
+        },
+      ]
     }
   },
   computed:{
