@@ -76,7 +76,9 @@
                       >Chapter {{ activeIndex + 1 }}:
                       {{ course.chapters[activeIndex].name }}
                     </v-col>
-                    <v-col class="col-12">
+                    <!-- <v-col class="col-6"></v-col> -->
+                    <v-col class="col-12 text-center">
+                      <loader v-if="editorContent == ''" type="2" class="vertically--centered" />
                       <kurious-editor
                         v-if="editorContent !== ''"
                         :defaultContent="editorContent"
@@ -247,6 +249,9 @@
 import { mapActions, mapGetters } from "vuex";
 export default {
   name: "course_details",
+  components:{
+    loader: ()=> import('@/components/loaders'),
+  },
   data: () => ({
     activeIndex: -1,
     progressId: "",

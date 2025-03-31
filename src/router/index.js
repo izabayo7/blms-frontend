@@ -28,7 +28,7 @@ const routes = [
         {
             path: '/loading',
             component: () =>
-                import('@/components/loader'),
+                import('@/components/skeleton'),
             meta: {
                 allowAnonymous: true
             }
