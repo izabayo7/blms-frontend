@@ -13,6 +13,7 @@ const getDefaultState = () => ({
     },
     exams: {
         data: [],
+        warned: false,
         loaded: false
     },
     // keep the selected quiz
@@ -76,6 +77,9 @@ export default {
                     state.quiz.loaded = true
                 })
             }
+        },
+        set_exam_warned({state}, {value}) {
+            state.exams.warned = value
         },
         getAssignments({state}) {
             // when quiz is not loaded fetch quizes
@@ -350,6 +354,7 @@ export default {
         },
     },
     getters: {
+        warned: state => state.exams.warned,
         //get a specified quiz
         loaded: state => {
             return state.quiz.loaded

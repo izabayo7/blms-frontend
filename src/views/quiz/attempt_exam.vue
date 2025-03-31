@@ -224,6 +224,9 @@
             >
               <p>{{ formated_remaining_time }}</p>
             </div>
+            <div class="webcam">
+              <video id="userStream" autoplay muted></video>
+            </div>
             <div class="subtitle">Do not :</div>
             <div class="content">
               <div> - Close exam window before submiting work.</div>
@@ -251,10 +254,15 @@
 import Apis from "@/services/apis";
 import {mapGetters, mapActions} from "vuex";
 import {assessmentMixins} from "../../services/mixins";
+import {load, SupportedPackages} from "@tensorflow-models/face-landmarks-detection";
+import {drawMesh} from "./utilities.js";
+// eslint-disable-next-line
+import * as tf from "@tensorflow/tfjs";
 
 export default {
   data: () => ({
-    warned: false,
+    recorder: undefined,
+    videoSaved: false,
     exam: undefined,
     alphabets: [
       "A",
@@ -295,6 +303,7 @@ export default {
   computed: {
     ...mapGetters("chat", ["socket"]),
     ...mapGetters("network", ["onLine"]),
+    ...mapGetters("quiz", ["warned"]),
     formated_remaining_time() {
       return new Date(this.remaining_time * 1000).toISOString().substr(11, 8);
     }
@@ -357,9 +366,12 @@ export default {
     ...mapActions("quiz", ["getExam"]),
     endExam() {
       if (!this.warned) {
-        this.warned = true
         this.set_modal({
           template: `exam_constraints`,
+          method: {
+            action: 'quiz/set_exam_warned',
+            parameters: {value: true}
+          }
         })
       } else {
         this.saveAttempt(true)
@@ -590,6 +602,17 @@ export default {
         this.removeListeners()
       }
     },
+    stopRecorder() {
+      const video = document.getElementById("userStream")
+      const stream = video.srcObject;
+      const tracks = stream.getTracks();
+
+      tracks.forEach(function (track) {
+        track.stop();
+      });
+      this.recorder.stop()
+      video.srcObject = null;
+    },
     goFullscreen() {
       var el = document.documentElement
           , rfs = // for newer Webkit and Firefox
@@ -625,7 +648,6 @@ export default {
       }
     },
     detectFocus() {
-      console.log(document.visibilityState)
       if (document.visibilityState !== "visible") {
         this.endExam()
       }
@@ -642,7 +664,135 @@ export default {
         e.preventDefault();
       }
     },
+    setDetector() {
+      const video = document.getElementById("userStream")
+      const canvas = document.createElement('canvas')
+      video.parentElement.append(canvas)
+
+      //  Load posenet
+      const runFacemesh = async () => {
+        // OLD MODEL
+        // const net = await facemesh.load({
+        //   inputResolution: { width: 640, height: 480 },
+        //   scale: 0.8,
+        // });
+        // NEW MODEL
+        const net = await load(SupportedPackages.mediapipeFacemesh);
+        setInterval(() => {
+          detect(net);
+        }, 10);
+      };
+
+      const detect = async (net) => {
+        if (
+            video.readyState === 4
+        ) {
+          // Get Video Properties
+          const videoWidth = video.videoWidth;
+          const videoHeight = video.videoHeight;
+
+          // Set video width
+          // webcamRef.current.video.width = videoWidth;
+          // webcamRef.current.video.height = videoHeight;
+
+          // Set canvas width
+          canvas.width = videoWidth;
+          canvas.height = videoHeight;
+
+          // Make Detections
+          // OLD MODEL
+          //       const face = await net.estimateFaces(video);
+          // NEW MODEL
+          const face = await net.estimateFaces({input: video});
+          // Get canvas context
+          const ctx = canvas.getContext("2d");
+          requestAnimationFrame(() => {
+            drawMesh(face, ctx)
+          });
+        }
+      };
+
+      runFacemesh()
+
+    },
+    postBlob(event) {
+      if (event.data && event.data.size > 0) {
+        this.sendBlobAsBase64(event.data);
+      }
+    },
+    sendBlobAsBase64(blob) {
+      const reader = new FileReader();
+
+      reader.addEventListener('load', () => {
+        const dataUrl = reader.result;
+        const base64EncodedData = dataUrl.split(',')[2];
+        this.sendDataToBackend(base64EncodedData);
+      });
+
+      reader.readAsDataURL(blob);
+    },
+    recordStream(stream) {
+      let options = {mimeType: 'video/webm;codecs=vp9'};
+      this.recorder = new MediaRecorder(stream, options);
+      this.recorder.ondataavailable = this.postBlob
+      // record for 1 min parts
+      this.recorder.start(60000)
+      // setTimeout(() => {
+      //   this.stopRecorder(
+      //   console.log('stopped recording')
+      // }, 120000)
+    },
+    sendDataToBackend(base64EncodedData) {
+
+      Apis.create(`exam_submission/${this.submission_id}/video`, {data: base64EncodedData}).then((res) => {
+        if (res.data.saved)
+          this.videoSaved = true
+      })
+
+      // this.socket.emit('save-exam-video', {
+      //   exam_id: this.exam._id,
+      //   data: base64EncodedData,
+      //   saved: this.videoSaved,
+      //   submission_id: this.submission_id
+      // })
+      //
+      // // TODO handle data loss
+      // this.socket.on('exam-video-saved', ({saved}) => {
+      //   if (saved && !this.videoSaved)
+      //     this.videoSaved = true
+      // })
+    },
+    setCamera() {
+      const video = document.getElementById("userStream")
+      const mediaSource = new MediaSource();
+      mediaSource.addEventListener('sourceopen', handleSourceOpen, false);
+
+      function handleSourceOpen() {
+        mediaSource.addSourceBuffer('video/webm; codecs="vp8"');
+      }
+
+      navigator.getUserMedia(
+          {
+            video: true,
+            audio: {
+              echoCancellation: true
+            }
+          },
+          stream => {
+            video.srcObject = stream
+            this.recordStream(stream)
+            video.addEventListener('play', () => {
+              this.setDetector()
+            })
+          },
+          err => console.error(err)
+      )
+    },
     setUp() {
+      setTimeout(() => {
+        this.setCamera()
+      }, 1000)
+
 
       document.querySelector('body').addEventListener('click', this.goFullscreen)
       window.addEventListener('beforeunload', this.goodbye)
