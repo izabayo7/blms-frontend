@@ -55,8 +55,8 @@
           <div class="incoming-messages" v-if="incomingMessages.length > 0">
             <transition-group name="incoming-contacts" tag="div">
               <incoming-chat
-                v-for="(message, i) in incomingMessages"
-                :key="i"
+                v-for="message in incomingMessages"
+                :key="message.id"
                 :data="message"
               />
             </transition-group>
