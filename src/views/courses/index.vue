@@ -138,7 +138,7 @@
                 type == 'unpublished' ? 'active-btn' : ''
               }`"
               @click="type = 'unpublished'"
-              >Unpublished Classes</v-btn
+              >Draft Classes</v-btn
             >
           </div>
           <div v-if="!loaded" class="loaders">
