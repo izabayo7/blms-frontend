@@ -141,7 +141,7 @@
 
 <script>
 import colors from "@/assets/sass/imports/_colors.scss";
-import {toLocal} from "@/services/global_functions"
+// import {toLocal} from "@/services/global_functions"
 import {calculateNearestLiveSession, convertUTCDateToLocalDate, elapsedDuration} from "../../services/global_functions";
 
 export default {
@@ -191,7 +191,6 @@ export default {
   destroyed(){
     clearInterval(this.interval)
   },
-  created() {
     this.nearestLiveSession = calculateNearestLiveSession(this.course)
   }
 }
