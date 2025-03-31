@@ -65,7 +65,7 @@
                 <!--                <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" >-->
               </video>
               <transition name="fade">
-                <div class="video-controls" v-if="showMenu || noVideo">
+                <div class="video-controls" v-if="showMenu || noVideo && participationInfo.isOfferingCourse">
                   <div class="video-controls--wrapper">
                     <button @click="toogleVideo" class="start-mute-video">
                       <span class="icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24"
@@ -462,7 +462,7 @@ export default {
 
     toogleVideo() {
       let message = {
-        id: 'togleVideo',
+        id: 'toogleMedia',
         isVideo: true,
         enabled: this.me.rtcPeer.videoEnabled
       }
@@ -472,7 +472,7 @@ export default {
     },
     toogleAudio() {
       let message = {
-        id: 'toogleAudio',
+        id: 'toogleMedia',
         isVideo: false,
         enabled: this.me.rtcPeer.audioEnabled
       }
@@ -529,8 +529,9 @@ export default {
       // delete this.participants[request.name];
     },
     toogleMedia(obj){
+      console.log(obj)
       if(obj.isVideo){
-        if(obj.status == this.noVideo){
+        if(obj.enabled == this.noVideo){
           this.noVideo = !this.noVideo
         }
       }
