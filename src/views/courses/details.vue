@@ -5,7 +5,7 @@
       <v-btn
         @click="showActions = true"
         class="hidden-md-and-up mr-n8 white--text"
-        color="#FFC100"
+        :color="primary"
         right
         bottom
         rounded
@@ -93,7 +93,7 @@
                           course.chapters[activeIndex].quiz.length > 0 &&
                           !selected_quiz_submission
                         "
-                        color="#FFC100"
+                        :color="primary"
                         class="white--text next-chapter"
                         :to="`/quiz/attempt/${course.chapters[activeIndex].quiz[0].name}`"
                         rounded
@@ -101,7 +101,7 @@
                       >
                       <v-btn
                         v-else-if="userCategory === 'Student' && course.progress.progress < 100"
-                        color="green"
+                        :color="primary"
                         class="white--text"
                         @click="
                           finish_chapter($store.state.user.user._id).then(
@@ -132,7 +132,7 @@
                               activeIndex < maximumIndex &&
                               activeIndex < course.chapters.length - 1
                             "
-                            color="#FFC100"
+                            :color="primary"
                             class="white--text next-chapter"
                             @click="changeActiveChapter(activeIndex + 1)"
                             rounded
@@ -246,6 +246,7 @@
 </template>
 
 <script>
+import colors from "@/assets/sass/imports/_colors.scss";
 import { mapActions, mapGetters } from "vuex";
 export default {
   name: "course_details",
@@ -253,6 +254,7 @@ export default {
     loader: ()=> import('@/components/loaders'),
   },
   data: () => ({
+    primary: colors.primary,
     activeIndex: -1,
     progressId: "",
     maximumIndex: -1,

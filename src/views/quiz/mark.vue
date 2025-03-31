@@ -506,9 +506,13 @@ export default {
   width: 75%;
   border-radius: 20px;
   padding: 16px;
+  box-shadow: 0px 4px 16px rgb(199 199 199);
+  margin-bottom: 12px;
   &.selected {
-    color: green;
-    border: 1px solid green;
+    font-weight: 600;
+    border: none;
+    /* border-color: green; */
+    box-shadow: 8px 9px 11px rgb(199 199 199);
   }
 }
 </style>
