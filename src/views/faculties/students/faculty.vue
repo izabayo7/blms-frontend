@@ -39,7 +39,7 @@
             <table-header />
           </div>
           <div class="table">
-            <table-ui :data="instructors"/>
+            <table-ui :data="students" :options="options"/>
           </div>
         </div>
       </div>
@@ -52,6 +52,7 @@ import Search from "../../../components/reusable/Search2";
 import TableHeader from "../../../components/reusable/ui/table-header";
 import TableUi from "../../../components/reusable/ui/table-ui";
 import apis from "../../../services/apis";
+import moment from "moment";
 
 export default {
   //TODO using dynamic students from backend
@@ -60,13 +61,10 @@ name: "FacultyInstructors",
   data(){
     return{
       faculty:{},
-      instructors:[
-        {"sur_name":"Ntwari Jearn bosco", "Gender":"male", "courses":2},
-        {"sur_name":"Uwikunda peter arts", "Gender":"male", "courses":1},
-        {"sur_name":"Nyenyeri James", "Gender":"male", "courses":3},
-        {"sur_name":"Mukamana Sarah", "Gender":"female", "courses":2},
-        {"sur_name":"Nshuti Ntwari", "Gender":"male", "courses":1},
-      ]
+      students:[],
+      options:{
+        keysToShow:[ "name",  "published",  "status",  "updatedAt",  "createdAt"]
+      }
     }
   },
   methods:{
@@ -82,6 +80,37 @@ name: "FacultyInstructors",
         })
     },
 
+    /**
+     * get students from specific faculty, faculty id passed in route params
+     */
+    getFacultyStudents(){
+      const {facultyId} = this.$route.params;
+      let filteredStudents = [];
+
+      apis.get(`course/faculty/${facultyId}`)
+        .then(({data:{data}}) => {
+
+           data.map(student => {
+
+            student.createdAt = moment(student.createdAt).format("DD MMM  YYYY")
+            student.updatedAt = moment(student.updatedAt).format("DD MMM YYYY")
+            //TODO finalising courses
+
+            filteredStudents.push(student)
+          })
+
+          console.log(filteredStudents)
+
+          this.courses = filteredStudents;
+           console.log(this.courses)
+        })
+
+      console.log(this.courses)
+    }
+
+  },
+  created(){
+  this.getFacultyInformation();
   }
 }
 </script>
