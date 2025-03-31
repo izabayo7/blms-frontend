@@ -459,6 +459,10 @@ export default {
 
 /* Portrait phones and smaller */
 @media (max-width: 700px) {
+  #messages-section{
+    margin-right: 0px !important;
+    margin-left: 0px !important;
+  }
   .my-messages {
     &.focus {
       padding: 0px;

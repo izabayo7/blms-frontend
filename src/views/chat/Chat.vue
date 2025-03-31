@@ -332,7 +332,7 @@ export default {
     height: 100%;
 
     .messages-list {
-      height: 78%;
+      height: 75%;
     }
   }
 }
