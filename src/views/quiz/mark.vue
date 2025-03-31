@@ -156,7 +156,6 @@
                 v-if="question.type.includes('select')"
                 class="col-12 col-md-4 ml-n6"
               >
-                hhhhhhhhhhhhhhhh
                 <div class="choice_status vertically--centered">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -275,7 +274,7 @@
             </div>
           </div>
         </v-row>
-        <v-row>
+        <v-row v-if="$store.state.user.user.category.name == 'STUDENT'">
           <div class="submission_details">
             <span> Submission ID </span>
             <button
