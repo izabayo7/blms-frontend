@@ -114,8 +114,8 @@
         />
       </div>
       <div class="input-container my-margin d-flex">
-        <div class="label mb-2">Record this live class</div>
-        <input v-model="record_session" class="mt-1 ml-2" type="checkbox">
+<!--        <div class="label mb-2">Record this live class</div>-->
+<!--        <input v-model="record_session" class="mt-1 ml-2" type="checkbox">-->
       </div>
       <button class="submit" @click="validateForm()">Schedule class</button>
     </div>
@@ -239,7 +239,7 @@ export default {
       this.menu = true;
     },
     validateForm() {
-      if (this.selected_chapter == "" || this.date == "") {
+      if (this.selected_chapter === "" || this.date === "") {
         this.$store.dispatch("app_notification/SET_NOTIFICATION", {
           message: "All fields are required",
           status: "danger",
