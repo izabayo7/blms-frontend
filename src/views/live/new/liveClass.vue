@@ -294,7 +294,7 @@ export default {
   methods: {
     ...mapActions("live_session", ["addParticipant"]),
     addComment(comment) {
-      this.comments.push(comment)
+      this.comments.unshift(comment)
     },
     replied(data) {
       this.comments.map((comment) => {
