@@ -107,7 +107,7 @@
           <div class="live-comments--wrapper">
             <div class="_title">LIVE COMMENTS</div>
             <div class="student-new-comment">
-              <student-new-comment-with-photo v-model="comment"/>
+              <student-new-comment-with-photo @sent="addComment" :isLive="true"/>
             </div>
             <div class="live-comments-container">
               <discussion
@@ -115,6 +115,7 @@
                   :key="i"
                   :content="comment"
                   :verified="comment.sender.category !== 'STUDENT'"
+                  :is-live="true"
                   @replied="replied"
               />
 
@@ -185,6 +186,7 @@
                 :key="i"
                 :content="comment"
                 :verified="comment.sender.category !== 'STUDENT'"
+                :is-live="true"
                 @replied="replied"
             />
           </div>
@@ -701,7 +703,11 @@ export default {
       //     "courses/SET_TOTAL_COMMENTS_ON_A_CHAPTER",
       //     this.totalComments == "" ? 1 : this.totalComments + 1
       // );
-      self.comments.push(result)
+      if(result.reply){
+        self.replied({_id: result.reply, data: result})
+      }else {
+        self.comments.push(result)
+      }
     });
   },
   destroyed() {

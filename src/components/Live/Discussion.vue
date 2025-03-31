@@ -85,7 +85,7 @@
             </div>
           </div>
           <div class="reply-comment mt-3" v-else>
-            <new-reply-comment :reply_id="content._id" @sent="replied" />
+            <new-reply-comment :reply_id="content._id" @sent="replied" :isLive="isLive" />
           </div>
         </div>
       </div>
@@ -102,6 +102,10 @@ export default {
   props: {
     content: { required: true, type: Object },
     verified: { default: false, type: Boolean },
+    isLive: {
+      type: Boolean,
+      default: false
+    }
   },
   components: {
     ReplyComment,
