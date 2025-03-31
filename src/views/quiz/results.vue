@@ -151,14 +151,14 @@ export default {
     },
     ...mapGetters("quiz_submission", ["selected_quiz_submission"]),
   },
-  methods:{
-        ...mapActions("quiz_submission", [
+  methods: {
+    ...mapActions("quiz_submission", [
       "create_quiz_submission",
-      "findQuizSubmissionByStudentAndQuizNames",
+      "findQuizSubmissionByUserAndQuizNames",
     ]),
   },
   created() {
-    this.findQuizSubmissionByStudentAndQuizNames({
+    this.findQuizSubmissionByUserAndQuizNames({
       user_name: this.$store.state.user.user.user_name,
       quizName: this.$route.params.name,
     });
