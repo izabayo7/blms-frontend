@@ -1,7 +1,7 @@
 <template>
   <v-dialog id="kurious--dialog" v-model="visible" :persistent="!closable">
     <!-- view for information display ex(showing progress or a message) -->
-    <div v-if="modal_template == 'display_information'" class="dialog-body dialog_t_1">
+    <div v-if="modal_template == 'display_information'" class="dialog-body dialog_t_1 pa-8">
       <div class="close-dialog">
         <svg
           v-if="closable"
@@ -20,8 +20,8 @@
         </svg>
       </div>
       <div class="content">
-        <h4 class="title">{{title}}....</h4>
-        <span class="sub-title">Please wait</span>
+        <h4 class="title mt-5">{{title}}....</h4>
+        <span class="sub-title my-8">Please wait</span>
         <p class="unconfirmed">{{message}}</p>
         <v-progress-linear :value="progress" color="#ffc100" class="request-progress" />
       </div>
@@ -121,7 +121,7 @@ export default {
     height: 8px;
     border-radius: 12px;
     width: 67%;
-    margin: auto;
+    margin: auto auto 80px;
   }
   .close-dialog {
     text-align: right;
