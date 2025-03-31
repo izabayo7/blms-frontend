@@ -1,7 +1,7 @@
 <template>
-  <div class="live-class" :class="{'pt-7':!participationInfo.isOfferingCourse}">
-    <div v-if="loaded && !error" class="live-class--wrapper" :class="{'mx-auto':!participationInfo.isOfferingCourse}">
-      <back v-if="!participationInfo.isOfferingCourse" class="mt-6 hidden-sm-and-down"/>
+  <div class="live-class" :class="{'pt-7':!participationInfo.isOfferingCourse || isStudentPresenting}">
+    <div v-if="loaded && !error" class="live-class--wrapper" :class="{'mx-auto':!participationInfo.isOfferingCourse || isStudentPresenting}">
+      <back v-if="!participationInfo.isOfferingCourse || isStudentPresenting" class="mt-6 hidden-sm-and-down"/>
       <div class="live-class--video" :class="`--${$vuetify.breakpoint.name}`">
         <div class="video">
           <div class="video--wrapper">
@@ -83,6 +83,15 @@
 <!--                        </div>-->
 <!--                      </div>-->
 <!--                    </div>-->
+                    <div v-if="isStudentPresenting" class="presenter d-flex">
+                      <div class="text">You are presenting</div>
+                      <button class="stop-presenting">
+                        <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <circle cx="13" cy="13" r="13" fill="#E9E9E9"/>
+                          <path d="M16.875 10.0062L15.9938 9.125L12.5 12.6188L9.00625 9.125L8.125 10.0062L11.6188 13.5L8.125 16.9938L9.00625 17.875L12.5 14.3812L15.9938 17.875L16.875 16.9938L13.3812 13.5L16.875 10.0062Z" fill="#626262"/>
+                        </svg>
+                      </button>
+                    </div>
                     <div v-if="!participationInfo.isOfferingCourse" class="users">
                       {{ participants.length }} watching
                     </div>
@@ -229,6 +238,15 @@
                       </span>
                         <span class="text">settings</span>
                       </button>
+                      <button v-if="isStudentPresenting" class="start-settings">
+                      <span class="icon">
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M10.09 15.59L11.5 17L16.5 12L11.5 7L10.09 8.41L12.67 11H3V13H12.67L10.09 15.59ZM19 3H5C3.89 3 3 3.9 3 5V9H5V5H19V19H5V15H3V19C3 20.1 3.89 21 5 21H19C20.1 21 21 20.1 21 19V5C21 3.9 20.1 3 19 3Z" fill="white"/>
+</svg>
+
+                      </span>
+                        <span class="text">stop presenting</span>
+                      </button>
                     </div>
                   </div>
                   <div v-else class="live-class-details">
@@ -242,7 +260,10 @@ openQuiz">
                             Take quiz
                           </button>
                         </div>
-                        <button class="raise-hand">
+                        <button @click="                      set_modal({
+                        template: 'presentation_request',
+                        method: { action: 'live_session/change_confirmation',parameters: { value: 'accept_presenting'} },
+                      })" class="raise-hand">
                           <div class="icon d-flex justify-center">
                             <svg width="37" height="46" viewBox="0 0 37 46" fill="none"
                                  xmlns="http://www.w3.org/2000/svg">
@@ -263,13 +284,13 @@ openQuiz">
           </div>
         </div>
       </div>
-      <div v-if="participationInfo.isOfferingCourse" class="live-class--attendance">
+      <div v-if="participationInfo.isOfferingCourse && !isStudentPresenting" class="live-class--attendance">
         <div class="live-class--attendance--wrapper">
           <h3>ONLINE USERS : {{ participants.length }} </h3>
           <div class="online-users">
             <online-user v-for="user in participants"
                          :user="user.userInfo"
-                         :key="`${(Date.now() * Math.random())}${user.name}`"/>
+                         :key="`${(Date.now() * Math.random())}${user.name}`" @accept_presenter="accept_presenter" @deny_presenter="deny_presenter" />
             <!--            <online-user v-for="user in participants.filter(x=>x.userInfo.category != 'INSTRUCTOR')"-->
             <!--                         :user="user.userInfo"-->
             <!--                         :key="`${(Date.now() * Math.random())}${user.name}`"/>-->
@@ -299,7 +320,7 @@ openQuiz">
           <div class="live-class--action end-class">
             <button @click="                      set_modal({
                         template: 'action_confirmation',
-                        method: { action: 'live_session/change_confirmation',parameters: { value: true} },
+                        method: { action: 'live_session/change_confirmation',parameters: { value: 'end_class'} },
                         title: 'End live session',
                         message: 'Are you sure you want to end this live session?'
                       })">
@@ -347,7 +368,13 @@ export default {
   data() {
     return {
       ws: null,
-      participants: [],
+      participants: [{
+        userInfo:{
+          sur_name: 'test',
+          other_names: 'user',
+          raisedHand: false
+        }
+      }],
       comments: [],
       me: null,
       interval: null,
@@ -417,7 +444,7 @@ export default {
   computed: {
     ...mapGetters('user', ['user']),
     ...mapGetters("chat", ["socket"]),
-    ...mapGetters("live_session", ["end_class"]),
+    ...mapGetters("live_session", ["live_session_confirmation"]),
 
     ...mapState("sidebar_navbar", {sidebarOpen: "sidebar_expanded"}),
     instructor() {
@@ -427,8 +454,20 @@ export default {
     userCategory() {
       return this.$store.state.user.user.category.name;
     },
+    isStudentPresenting(){
+      return this.participationInfo.isOfferingCourse && this.userCategory=='STUDENT'
+    }
   },
   methods: {
+    accept_presenter(id){
+console.log(id)
+    },
+    deny_presenter(id){
+console.log(id)
+    },
+    start_presenting(){
+      this.participationInfo.isOfferingCourse = true;
+    },
     toogleComments() {
       this.showComments = !this.showComments;
     },
@@ -932,9 +971,17 @@ export default {
     videoEnabled() {
       this.noVideo = !this.videoEnabled
     },
-    end_class() {
-      if (this.end_class)
+    live_session_confirmation() {
+      if (this.live_session_confirmation == 'end_class')
         this.leaveRoom()
+      else{
+        if(this.live_session_confirmation == 'accept_presenting'){
+          this.start_presenting()
+        }
+        if(this.live_session_confirmation !== ''){
+          this.live_session_confirmation == ''
+        }
+      }
     },
     participants() {
       if (!this.instructor) {
