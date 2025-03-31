@@ -587,7 +587,11 @@ export default {
         this.attachments = [];
         // this.updateActiveChapter();
         this.content = "";
-        this.message = "chapter was added updated";
+        this.$store.dispatch("app_notification/SET_NOTIFICATION", {
+          message: "Chapter was successfully updated",
+          status: "success",
+          uptime: 2000,
+        });
       });
     },
     saveChapter() {
@@ -611,7 +615,11 @@ export default {
         this.attachments = [];
         // this.updateActiveChapter();
         this.content = "";
-        this.message = "chapter was added succesfully";
+        this.$store.dispatch("app_notification/SET_NOTIFICATION", {
+          message: "Chapter was added successfully",
+          status: "success",
+          uptime: 2000,
+        });
       });
     },
     findIcon(name) {
