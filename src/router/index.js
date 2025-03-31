@@ -230,7 +230,7 @@ const router = new VueRouter({
 // before navigating to any route
 router.beforeEach((to, from, next) => {
     // if the session exist and the vuex store is not set
-    if (Vue.prototype.$session.exists() && !store.state.isLoggedIn) {
+    if (Vue.prototype.$session.exists() && !store.state.user.isLoggedIn) {
         // get the token
         const token = Vue.prototype.$session.get(
             "jwt"
@@ -252,13 +252,14 @@ router.beforeEach((to, from, next) => {
         })
     }
     // protect login page if user is logged in
-    else if (to.path === '/login' && store.state.isLoggedIn) {
+    else if ((to.path === '/login' || to.path === '/') && store.state.user.isLoggedIn) {
         next({
-            path: `/${store.state.user.category === 'Student' || store.state.user.category === 'Instructor' ? 'courses' : 'users'}`,
+            path: `/${store.state.user.category === 'Student' || store.state.user.category === 'Instructor' ? 'courses' : 'administration'}`,
         })
     }
     // go to the requested route
     else {
+        console.log(to)
         next()
     }
 })

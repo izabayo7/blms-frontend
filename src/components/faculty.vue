@@ -42,7 +42,7 @@
             <v-col class="col-12 col-md-12">
               <h4>Classes</h4>
               <p>
-                <strong>79</strong>
+                <strong>{{faculties.length}}</strong>
               </p>
             </v-col>
           </v-row>

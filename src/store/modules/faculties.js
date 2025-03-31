@@ -34,16 +34,30 @@ export default {
                 })
             }
         },
+        //create a facultyCollegeYear
+        createFacultyCollegeYear({ state }, { facultyCollegeYear }) {
+            return apis.create('faculty-college-year', facultyCollegeYear).then(d => {
+                state.facultyCollegeYears.data.push(d.data)
+            })
+
+        },
         //get faculties from backend (currently I'm fetching all for faster development but in future we'll fetch according to the current logged in user)
         getFaculties({ state }, collegeId) {
             // when faculties not loaded fetch them
-            if (!state.facultyCollegeYears.loaded) {
+            if (!state.faculties.loaded) {
                 apis.get(`faculty/college/${collegeId}`).then(d => {
                     state.faculties.data = d.data
                     //announce that data have been loaded
                     state.faculties.loaded = true
                 })
             }
+        },
+        //create a faculty
+        createFaculty({ state }, { faculty }) {
+            return apis.create('faculty', faculty).then(d => {
+                state.faculties.data.push(d.data)
+            })
+
         },
     },
     getters: {

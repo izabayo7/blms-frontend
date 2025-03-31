@@ -119,11 +119,6 @@ export default {
         else if (error.request) {
           this.$store.dispatch('modal/set_modal', { template: 'display_information', message: 'Service Unavailable', closable: true })
         }
-        this.show = true;
-        // hide the message after 3seconds
-        setTimeout(() => {
-          this.show = false;
-        }, 3000);
       }
     },
   },
