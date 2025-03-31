@@ -140,6 +140,7 @@
                   <transition name="member">
                     <div
                         class="found-members"
+                        v-show="showFoundUsers"
                         v-if="foundUsers.length > 0 || userLoading"
                     >
                       <svg
@@ -231,6 +232,7 @@ export default {
       content: "",
       createdAt: new Date(),
     },
+    showFoundUsers: false,
     target_types: ['course', 'student group', 'faculty'],
     selected_target_type: '',
     selected_target_id: '',
@@ -251,6 +253,19 @@ export default {
     ...mapActions("modal", ["set_modal"]),
     ...mapActions("announcement", ["addAnnouncement"]),
     ...mapMutations("sidebar_navbar", {setConfirmation: "SET_SEND_CONFIRMATION"}),
+    outsideClickDetector() {
+      const self = this
+      let el = document.querySelector('.found-members')
+      document.addEventListener("click", function (e) {
+        if (e)
+          if (!el || !el.contains(e.target)) {
+            self.toogleshowFoundUsers(false)
+          }
+      });
+    },
+    toogleshowFoundUsers(value) {
+      this.showFoundUsers = value
+    },
     addMember(user) {
       const membersNotAvailable = this.foundUsers.length <= 0;
       const disabled = this.disabled(user.email);
@@ -279,7 +294,7 @@ export default {
         this.userLoading = false;
         return;
       }
-
+      this.toogleshowFoundUsers(true)
       this.searchUser({query: this.currentMember}).then((result) => {
         this.userLoading = false;
         this.foundUsers = result;
@@ -432,6 +447,7 @@ export default {
         this.users = this.selected_users
       }
     }
+    this.outsideClickDetector()
   }
 };
 </script>

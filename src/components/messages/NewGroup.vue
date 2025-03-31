@@ -22,6 +22,7 @@
                   <input
                       @input="getUsers"
                       v-model="currentMember"
+                      @click="toogleshowFoundUsers"
                       type="text"
                       id="group_members_input"
                   />
@@ -46,6 +47,7 @@
                       <transition-group name="members">
                         <div
                             class="member"
+                            v-show="showFoundUsers"
                             v-for="user in foundUsers"
                             @click="addMember(user)"
                             :key="user.email"
@@ -81,7 +83,7 @@
                 <button
                     class="create-group-button"
                     :class="{ disabled: btnDisabled }"
-                    @click="createGroup"
+                    @click="btnDisabled ? undefined : createGroup()"
                 >
                   Create group
                 </button>
@@ -122,6 +124,7 @@
                         ref="filePicker"
                         @change="readURL"
                         type="file"
+                        accept="image/*"
                         id="profile_img"
                     />
                   </div>
@@ -198,6 +201,7 @@ export default {
       b64Img: "",
       currentMember: "",
       foundUsers: [],
+      showFoundUsers: false,
       userLoading: false,
       NotFoundText: "",
       group: {
@@ -209,7 +213,7 @@ export default {
   },
   computed: {
     ...mapState("sidebar_navbar", ["group_model"]),
-    ...mapGetters("chat", ["groupError","socket"]),
+    ...mapGetters("chat", ["groupError", "socket"]),
     btnDisabled() {
       const test_empty = /^\s+$/g;
       const is_name_empty =
@@ -219,6 +223,19 @@ export default {
     },
   },
   methods: {
+    outsideClickDetector() {
+      const self = this
+      let el = document.querySelector('.members')
+      document.addEventListener("click", function (e) {
+        if (e)
+          if (!el || !el.contains(e.target)) {
+            self.toogleshowFoundUsers()
+          }
+      });
+    },
+    toogleshowFoundUsers() {
+      this.showFoundUsers = !this.showFoundUsers
+    },
     ...mapMutations("sidebar_navbar", {
       toggleGroup: "TOGGLE_GROUP_MODEL_VISIBILITY",
     }),
@@ -305,7 +322,7 @@ export default {
         })),
         // private:!this.group.public,
         // profile: await getImgFile(this.b64Img,`${this.group.name}_cover_photo.png`),
-        college: this.$store.state.user.user.college,
+        college: this.$store.state.sidebar_navbar.college._id,
       };
       const newGroup = await a.create("chat_group", body);
       const {status, message, data} = newGroup.data;
@@ -362,6 +379,7 @@ export default {
         this.group.name = "";
         this.group.public = false;
         this.group.members = [];
+        this.$router.push(`/messages/${data.code}`)
       } else {
         this.setGroupError(message);
       }
@@ -371,6 +389,7 @@ export default {
     on("image_cropped", () => {
       document.getElementById("preview").style.display = "block";
     });
+    this.outsideClickDetector()
   },
 };
 </script>
