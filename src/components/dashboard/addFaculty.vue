@@ -320,6 +320,8 @@ export default {
     background-color: white;
     // padding-top: 50px;
     text-align: left;
+    margin: auto;
+    max-width: 1078px;
 
     .close {
       /* position: relative; */
