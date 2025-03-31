@@ -463,6 +463,14 @@
                 color: white;
                 cursor: pointer;
               }
+              h2 {
+                font-size: 1rem !important;
+
+                &.name {
+                  font-size: .8rem !important;
+                  margin: .2rem 0;
+                }
+              }
               &.presenting {
                 display: flex;
                 align-items: center;
@@ -473,16 +481,6 @@
 
                   img {
                     border-radius: 50%;
-                  }
-
-
-                  h2 {
-                    font-size: 1rem;
-
-                    &.name {
-                      font-size: .8rem;
-                      margin: .2rem 0;
-                    }
                   }
 
                   span {
