@@ -137,7 +137,6 @@ export default {
   // box-shadow: 10px 0 10px 0 $secondary;
   width: 100%;
   display: flex;
-  max-height: 69px;
   padding: 0 !important;
   z-index: 100;
   .top-left-contents div {

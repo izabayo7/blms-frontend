@@ -412,6 +412,9 @@ export default {
           box-shadow: 2.57812px 3.4375px 5.15625px rgba(0, 0, 0, 0.1);
           border-radius: 12px;
           padding: 10px 13px;
+          .link-name {
+            color: #FFFFFF;
+          }
           svg {
             fill: $main;
 
