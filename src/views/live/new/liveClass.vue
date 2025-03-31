@@ -489,6 +489,14 @@ export default {
       })
 
       self.socket.on("res/live/studentAnswered", ({id}) => {
+        self.participants.sort((a, b)=>
+        {
+          if (a._id == id)
+            return 1
+          else if (b._id == id)
+            return -1
+        }
+      )
         console.log("res/live/studentAnswered", id)
       })
 
@@ -536,6 +544,7 @@ export default {
     },
     async getUserInfo(id) {
       const response = await Apis.get(`user/byId/${id}`)
+      response.data.data.attendance = 20
       return response.data.data
     },
     toggleMenu(status) {
