@@ -487,15 +487,15 @@
             </div>
             <div v-show="!panel1" class="content second">
               <div class="title">{{ course.name }}</div>
-              <div class="subtitle">38 Attendees</div>
+              <div class="subtitle">{{ course.attendedStudents }} Attendees</div>
               <div class="students customScroll">
-                <div v-for="(stud, i) in 17" :key="i" class="individual d-md-flex">
-                  <div class="name mr-auto">Rita clemence Mugunga</div>
+                <div v-for="(stud, i) in student_list" :key="i" class="individual d-md-flex">
+                  <div class="name mr-auto">{{ stud.user.sur_name }} {{ stud.user.other_names }}</div>
                   <div class="progress ml-auto">
-                    <div class="text mx-auto">78 %</div>
-                    <progress value="78" max="100"></progress>
+                    <div class="text mx-auto">{{ Math.round(stud.progress) }} %</div>
+                    <progress :value="stud.progress" max="100"></progress>
                   </div>
-                  <div class="joinedon ml-auto">Joined on 15 July 2020</div>
+                  <div class="joinedon ml-auto">Joined on {{ stud.createdAt  | formatDate }}</div>
                 </div>
               </div>
             </div>
@@ -508,11 +508,13 @@
 </template>
 <script>
 import {mapActions, mapGetters} from "vuex";
+import Api from "@/services/apis.js"
 
 export default {
   name: "preview_course",
   data: () => ({
     panel1: true,
+    student_list: []
   }),
   components: {
     preview: () => import("@/components/courses/Preview"),
@@ -538,6 +540,10 @@ export default {
         courseName: this.$route.params.name,
       });
     },
+    panel1() {
+      if (!this.panel1 && !this.student_list.length)
+        this.loadStudents();
+    }
   },
   methods: {
     ...mapActions("courses", [
@@ -546,6 +552,10 @@ export default {
       "deleteCourse",
     ]),
     ...mapActions("modal", ["set_modal"]),
+    async loadStudents() {
+      const {data} = await Api.get(`course/${this.course._id}/attendants`)
+      this.student_list = data.data
+    }
   },
   created() {
     this.findCourseByName({
