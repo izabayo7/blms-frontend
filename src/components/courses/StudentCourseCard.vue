@@ -177,7 +177,6 @@ export default {
     primary: colors.primary,
     rem_time: "",
     currentDate: new Date().toISOString().substring(0, 10),
-    startTimer: false,
     nearestLiveSession: undefined,
     interval:null
   }),
