@@ -9,12 +9,12 @@ const getDefaultState = () => ({
     search_results: {
         data: []
     },
-    usersBasedOnFaculties:{
-        data:"",
+    usersBasedOnFaculties: {
+        data: "",
     },
-    userByUsername:{
-        data:"",
-        loaded:false,
+    userByUsername: {
+        data: "",
+        loaded: false,
     }
 })
 
@@ -33,19 +33,19 @@ export default {
         RESET_STATE(state) {
             Object.assign(state, getDefaultState())
         },
-        SET_USERS_ON_FACULTIES(state,{data}){
+        SET_USERS_ON_FACULTIES(state, {data}) {
             state.usersBasedOnFaculties.data = data;
         },
-        SET_USER_BY_USERNAME(state,user){
+        SET_USER_BY_USERNAME(state, user) {
             state.userByUsername.data = user
         },
-        SET_USER_BY_USERNAME_LOADER(state,status){
+        SET_USER_BY_USERNAME_LOADER(state, status) {
             state.userByUsername.loaded = status
         }
     },
     actions: {
         //get users from backend
-        getUsers({ state }, { collegeId }) {
+        getUsers({state}, {collegeId}) {
             // if users not loaded fetch them
             if (!state.users.loaded) {
 
@@ -60,20 +60,20 @@ export default {
             }
         },
 
-        getUserByUsername({commit},userName){
-            commit("SET_USER_BY_USERNAME_LOADER",false)
-            commit("SET_USER_BY_USERNAME","")
+        getUserByUsername({commit}, userName) {
+            commit("SET_USER_BY_USERNAME_LOADER", false)
+            commit("SET_USER_BY_USERNAME", "")
 
 
             apis.get(`user/${userName}`)
-                .then(({data:{data}}) => {
+                .then(({data: {data}}) => {
 
-                    commit("SET_USER_BY_USERNAME",data)
-                    commit("SET_USER_BY_USERNAME_LOADER",true)
-            })
+                    commit("SET_USER_BY_USERNAME", data)
+                    commit("SET_USER_BY_USERNAME_LOADER", true)
+                })
         },
         //create a user
-        createUser({ state }, { user, category, facultyCollegeYear }) {
+        createUser({state}, {user, category, facultyCollegeYear}) {
             let userObj = {}
             return apis.create(`${category}`, user).then(d => {
                 userObj = d.data
@@ -90,7 +90,7 @@ export default {
                 }
             })
         },
-        searchUser({ state }, { query, page, limit }) {
+        searchUser({state}, {query, page, limit}) {
             let url = `user/search?data=${query}`
             url += page ? `&page=${page}` : ''
             url += limit ? `&limit=${limit}` : ''
@@ -101,7 +101,7 @@ export default {
                 return d.data.results
             })
         },
-        searchNewGroupMembers({ state }, { group_code, query, page, limit }) {
+        searchNewGroupMembers({state}, {group_code, query, page, limit}) {
             let url = `chat_group/${group_code}/search_members?data=${query}`
             url += page ? `&page=${page}` : ''
             url += limit ? `&limit=${limit}` : ''
@@ -113,21 +113,37 @@ export default {
             })
         },
 
-        loadUsersBasedOnFaculties({commit},{facultyId,category}){
+        loadUsersBasedOnFaculties({commit}, {facultyId, category}) {
             apis.get(`user/faculty/${facultyId}/${category}`)
-                .then(({data:{data}})=> {
+                .then(({data: {data}}) => {
                     console.log(data);
-                    commit("SET_USERS_ON_FACULTIES",{data})
+                    commit("SET_USERS_ON_FACULTIES", {data})
                 })
+        },
+        // eslint-disable-next-line no-empty-pattern
+        holdAccounts({}, {usernames, hold}) {
+            for (const i in usernames)
+                apis.update('user/',`status/${usernames[i]}/${hold ? '' : 'un'}hold`)
+                    .then(({data: {data}}) => {
+                        console.log(data);
+                    })
+        },
+        // eslint-disable-next-line no-empty-pattern
+        deleteAccounts({}, {ids}) {
+            for (const i in ids)
+                apis.delete('user/',ids[i])
+                    .then(({data: {data}}) => {
+                        console.log(data);
+                    })
         }
     },
     getters: {
         //get all users
-        users: state =>  state.users.data
+        users: state => state.users.data
         ,
-        user_search_results: state =>  state.search_results.data
+        user_search_results: state => state.search_results.data
         ,
-        loaded: state =>  state.users.loaded
+        loaded: state => state.users.loaded
         ,
         selected_user: state => {
             return state.users.data.filter(user => user._id == state.selected_user)[0]
@@ -136,6 +152,6 @@ export default {
             return state.usersBasedOnFaculties.data;
         },
         userByUsername: state => state.userByUsername.data,
-        userByUsernameLoading: state=> !state.userByUsername.loaded
+        userByUsernameLoading: state => !state.userByUsername.loaded
     },
 }
