@@ -601,12 +601,12 @@ export default {
         this.removeListeners()
       }
     },
-    stopRecorder(){
+    stopRecorder() {
       const video = document.getElementById("userStream")
       const stream = video.srcObject;
       const tracks = stream.getTracks();
 
-      tracks.forEach(function(track) {
+      tracks.forEach(function (track) {
         track.stop();
       });
       this.recorder.stop()
@@ -731,26 +731,35 @@ export default {
       reader.readAsDataURL(blob);
     },
     recordStream(stream) {
-      console.log('going to record')
       let options = {mimeType: 'video/webm;codecs=vp9'};
       this.recorder = new MediaRecorder(stream, options);
       this.recorder.ondataavailable = this.postBlob
       // record for 1 min parts
       this.recorder.start(60000)
+      // setTimeout(() => {
+      //   this.stopRecorder(
+      //   console.log('stopped recording')
+      // }, 120000)
     },
     sendDataToBackend(base64EncodedData) {
-      this.socket.emit('save-exam-video', {
-        exam_id: this.exam._id,
-        data: base64EncodedData,
-        saved: this.videoSaved,
-        submission_id: this.submission_id
-      })
 
-      // TODO handle data loss
-      this.socket.on('exam-video-saved', ({saved}) => {
-        if (saved && !this.videoSaved)
+      Apis.create(`exam_submission/${this.submission_id}/video`, {data: base64EncodedData}).then((res) => {
+        if (res.data.saved)
           this.videoSaved = true
       })
+
+      // this.socket.emit('save-exam-video', {
+      //   exam_id: this.exam._id,
+      //   data: base64EncodedData,
+      //   saved: this.videoSaved,
+      //   submission_id: this.submission_id
+      // })
+      //
+      // // TODO handle data loss
+      // this.socket.on('exam-video-saved', ({saved}) => {
+      //   if (saved && !this.videoSaved)
+      //     this.videoSaved = true
+      // })
     },
     setCamera() {
       const video = document.getElementById("userStream")
@@ -764,7 +773,9 @@ export default {
       navigator.getUserMedia(
           {
             video: true,
-            audio: true
+            audio: {
+              echoCancellation: true
+            }
           },
           stream => {
             video.srcObject = stream
@@ -782,11 +793,11 @@ export default {
       }, 1000)
 
 
-      // document.querySelector('body').addEventListener('click', this.goFullscreen)
-      // window.addEventListener('beforeunload', this.goodbye)
-      // // track if one leaves tab
-      // document.addEventListener("visibilitychange", this.detectFocus)
-      // window.addEventListener("resize", this.detectResize)
+      document.querySelector('body').addEventListener('click', this.goFullscreen)
+      window.addEventListener('beforeunload', this.goodbye)
+      // track if one leaves tab
+      document.addEventListener("visibilitychange", this.detectFocus)
+      window.addEventListener("resize", this.detectResize)
     }
   },
   created() {
