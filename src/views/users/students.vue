@@ -113,6 +113,11 @@
                     </td>
                     <td>{{ user.gender }}</td>
                     <td>
+                      <div :class="`payment-status ${user.paid ? 'paid' : 'pending'}`">
+                        {{user.paid ? "Paid" : "Pending"}}
+                      </div>
+                    </td>
+                    <td>
                       <progress :value="user.progress" max="100"></progress>
                       <p class="text-caption mb-0 text-left ml-1">
                         {{ Math.round(user.progress) }}%
@@ -235,7 +240,7 @@ export default {
           routeTo: '/users/{id}',
           paramPropertyName: 'user_name'
         },
-        keysToShow: [" ", "User name", "Gender", "Course progress", "Perfomance (%)", "Attendace"],
+        keysToShow: [" ", "User name", "Gender","Payment status", "Course progress", "Perfomance (%)", "Attendace"],
       },
     }
   }
