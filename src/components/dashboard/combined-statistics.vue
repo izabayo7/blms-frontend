@@ -115,13 +115,22 @@ export default {
         response = await Apis.get(`user_logs/statistics/online?start_date=${this.$store.state.sidebar_navbar.college.createdAt}&end_date=${new Date().toISOString()}`);
         this.series = [
           {
-            name: "Submissions",
+            name: "Users",
             data: response.data.data.map(x => x.total_users),
           },
         ]
         this.chartOptions.xaxis.categories = response.data.data.map(x => x._id)
         this.loaded = true
-      } else {
+      }
+      else {
+        response = await Apis.get(`user_logs/statistics/${this.selected_category === "Course access" ? 'course_access' : 'live_session_access'}?start_date=${this.$store.state.sidebar_navbar.college.createdAt}&end_date=${new Date().toISOString()}`);
+        this.series = [
+          {
+            name: this.selected_category,
+            data: response.data.data.map(x => x.total_access),
+          },
+        ]
+        this.chartOptions.xaxis.categories = response.data.data.map(x => x._id)
         this.loaded = true
       }
 
