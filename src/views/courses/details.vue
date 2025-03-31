@@ -47,8 +47,7 @@
         <router-view
           @changeActiveChapter="changeActiveChapter"
           @changeMaximumIndex="changeMaximumIndex"
-        /> </v-col
-      >>
+        /> </v-col>
     </v-row>
   </v-container>
 </template>
@@ -136,14 +135,11 @@ export default {
         this.maximumIndex = total_chapters - 1;
         this.activeIndex = 0;
       } else {
-        this.maximumIndex = Math.round(
-          (course.progress.progress * total_chapters) / 100
-        );
+        this.maximumIndex = Math.round((course.progress.progress * total_chapters) / 100);
         if (this.maximumIndex > total_chapters - 1) {
           this.maximumIndex = total_chapters - 1;
         }
       }
-
       const index = this.userCategory == "STUDENT" ? this.maximumIndex : 0;
       console.log(index);
 

@@ -1,6 +1,6 @@
 <template>
   <v-container class="round smooth--background" fluid>
-    <v-row v-if="userCategory === 'INSTRUCTOR'">
+    <v-row v-if="userCategory === 'Instructor'">
       <v-col class="col-12">
         <v-card
           class="mx-auto elevation-0 pa-12 text-center smooth--card"
@@ -48,7 +48,7 @@
                 </v-row>
               </v-col>
               <v-col class="col-12 col-md-2 pa-md-0 px-4 pt-4">
-                <v-btn rounded to="/quiz/new">
+                <v-btn rounded to="/quiz/new-quiz">
                   <v-icon class="pr-2">mdi-plus</v-icon>Add new quiz
                 </v-btn>
               </v-col>
@@ -95,7 +95,7 @@
       </v-col>
     </v-row>
     <v-row v-else>
-      Sorry this page is under construction, you can
+      Sorry this page is under construction, you can 
       <router-link :to="`/reports`">view your reports</router-link>
     </v-row>
   </v-container>
@@ -128,7 +128,6 @@ export default {
     formated_quiz() {
       let formated_quiz = [];
       for (const quiz of this.all_quiz) {
-        console.log(quiz);
         formated_quiz.push({
           _id: quiz._id,
           name: quiz.name,
@@ -142,7 +141,7 @@ export default {
       return formated_quiz.reverse();
     },
     userCategory() {
-      return this.$store.state.user.user.category.name;
+      return this.$store.state.user.user.category;
     },
   },
   methods: {
@@ -152,7 +151,8 @@ export default {
   created() {
     // load formated_quiz
     this.getQuizes({
-      user_name: this.$store.state.user.user.user_name,
+      userCategory: this.$store.state.user.user.category.toLowerCase(),
+      userId: this.$store.state.user.user._id,
     });
   },
 };
