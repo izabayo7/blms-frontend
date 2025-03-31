@@ -7,7 +7,7 @@
             fill="white"/>
       </svg>
     </div>
-    <div v-if="show" class="message">{{ message }}</div>
+    <div v-if="show" class="message mb-0">{{ message }}</div>
   </div>
 </template>
 <script>
