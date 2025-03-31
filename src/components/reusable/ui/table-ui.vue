@@ -132,14 +132,14 @@ export default {
 
           th{
             text-align: start;
-            padding:.5rem .5rem;
+            padding:.6rem .5rem;
 
             .head-tab-wrapper{
               cursor: pointer;
             }
           }
           td{
-            padding:.5rem .5rem;
+            padding:.6rem .5rem;
           }
         }
       }
