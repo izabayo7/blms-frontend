@@ -1,3 +1,8 @@
-.plyr__control svg {
-    fill: white !important;
+.plyr__control {
+    svg {
+        fill: white !important;
+    }
+}
+.plyr__controls__item.plyr__time--current.plyr__time {
+    color: white;
 }

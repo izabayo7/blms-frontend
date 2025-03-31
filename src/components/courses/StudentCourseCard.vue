@@ -63,7 +63,7 @@
           </div>
         </v-col>
         <v-col cols="12" class="completed-results">
-          <span class="title d-block mb-2 mb-sm-1 pt-3">{{ course.name }}</span>
+          <span class="title d-block mb-2 mb-sm-1 pt-3">{{ course.name | trimString(20) }}</span>
           <span class="course-description text-caption d-block mb-6">{{
             course.description | trimString(50)
           }}</span>

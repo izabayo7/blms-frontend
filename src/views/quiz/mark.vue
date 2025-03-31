@@ -87,22 +87,19 @@
             ></textarea>
             <div v-else class="options">
               <div v-if="question.type.includes('text')" class="d-block">
-                <v-btn
+                <div
                   v-for="(choice, k) in question.options.choices"
                   :key="k"
-                  name="radio-btn"
-                  class="radio-btn d-block mb-4"
-                  rounded
-                  outlined
-                  :color="
+                  :class="`text-selection ${
                     checkChoiceStatus(attempt.answers[i].choosedOptions, {
                       text: choice.text,
                     })
-                      ? 'green'
+                      ? 'selected'
                       : ''
-                  "
-                  >{{ `${alphabets[k]}. ${choice.text}` }}</v-btn
+                  }`"
                 >
+                  {{ `${alphabets[k]}. ${choice.text}` }}
+                </div>
               </div>
               <div class="pictures-container" v-else>
                 <v-card
@@ -216,7 +213,6 @@
               </button>
               <button
                 v-else
-                @click="attempt.answers[i].marks = 0"
                 class="svg-check-marks"
               >
                 <svg
@@ -505,5 +501,14 @@ export default {
 .inactive {
   color: $primary;
   border: 1px solid $primary;
+}
+.text-selection {
+  width: 75%;
+  border-radius: 20px;
+  padding: 16px;
+  &.selected {
+    color: green;
+    border: 1px solid green;
+  }
 }
 </style>

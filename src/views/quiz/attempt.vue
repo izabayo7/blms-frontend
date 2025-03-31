@@ -48,23 +48,20 @@
             ></textarea>
             <div v-else class="options col col-12">
               <div v-if="question.type.includes('text')" class="d-block">
-                <v-btn
+                <div
                   v-for="(choice, k) in question.options.choices"
                   :key="k"
                   @click="handleOptionClick(i, k)"
-                  name="radio-btn"
-                  class="radio-btn d-block mb-4"
-                  rounded
-                  outlined
-                  :color="
+                  :class="`text-selection ${
                     checkChoiceStatus(attempt.answers[i].choosedOptions, {
                       text: choice.text,
                     })
-                      ? 'green'
+                      ? 'selected'
                       : ''
-                  "
-                  >{{ `${alphabets[k]}. ${choice.text}` }}</v-btn
+                  }`"
                 >
+                  {{ `${alphabets[k]}. ${choice.text}` }}
+                </div>
               </div>
               <div class="pictures-container" v-else>
                 <v-card
@@ -375,5 +372,16 @@ export default {
 .submitt-attempt {
   background-color: $primary !important;
   color: white !important;
+}
+.text-selection {
+  width: 75%;
+  border-radius: 20px;
+  padding: 16px;
+  border: 1px solid;
+  margin-bottom: 12px;
+  &.selected {
+    color: green;
+    border-color: green;
+  }
 }
 </style>

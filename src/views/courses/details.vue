@@ -16,7 +16,7 @@
       <!-- the chapters list for big devices only -->
       <v-col class="col-3 hidden-sm-and-down pt-0">
         <kurious-chapter-list
-          @changeChapter="changeActiveChapter"
+          @change-chapter="changeActiveChapter"
           :chapters="course.chapters"
           :currentIndex="activeIndex"
           :maximumIndex="maximumIndex"

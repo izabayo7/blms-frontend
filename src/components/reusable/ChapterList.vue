@@ -14,7 +14,7 @@
         <span class="title mb-3 d-block">Course content</span>
         <v-progress-linear
           :value="progress"
-          color="#ffc100"
+          :color="primary"
           height="25"
           class="mb-3 kurious--progressbar"
         />
@@ -25,7 +25,7 @@
             v-for="(item, i) in chapters"
             :key="i"
             :disabled="i>maximumIndex"
-            @click="$emit('changeChapter',i)"
+            @click="$emit('change-chapter',i)"
             :class="activeIndex === i ? 'active--chapter' : ''"
           >
             <v-list-item-content class="vertically--centered">
@@ -33,9 +33,6 @@
             </v-list-item-content>
 
             <v-list-item-action>
-              <!-- <v-icon
-                :color="maximumIndex > i  ? '#FFD248' : '#B4B4B4'"
-              >mdi-checkbox-{{maximumIndex > i ? 'marked' : 'blank'}}-circle{{maximumIndex > i ? '' : '-outline'}}</v-icon>-->
               <svg
                 v-if="maximumIndex > i"
                 xmlns="http://www.w3.org/2000/svg"
@@ -49,7 +46,7 @@
                   cx="17.5"
                   cy="17.5"
                   r="17.5"
-                  fill="#ffd248"
+                  :fill="primary"
                 />
                 <path
                   id="Icon_feather-check"
@@ -74,7 +71,7 @@
                   id="Ellipse_102"
                   data-name="Ellipse 102"
                   fill="none"
-                  :stroke="i == maximumIndex ? '#ffd248' :  '#b4b4b4'"
+                  :stroke="i == maximumIndex ? primary :  '#b4b4b4'"
                   v
                   stroke-width="3"
                 >
@@ -91,6 +88,7 @@
 </template>
 
 <script>
+import colors from "@/assets/sass/imports/_colors.scss";
 export default {
   props: {
     chapters: {
@@ -114,6 +112,9 @@ export default {
     activeIndex() {
       return this.currentIndex + 0;
     },
+    primary(){
+      return colors.primary
+    }
   },
 };
 </script>
