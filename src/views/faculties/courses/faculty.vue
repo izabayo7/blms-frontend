@@ -59,7 +59,7 @@ import apis from "../../../services/apis";
 import moment from "moment";
 
 export default {
-  //TODO using dynamic instructors from backend
+  //TODO using dynamic students from backend
 name: "FacultyCourses",
   components: {TableUi, TableHeader, Search,},
   data(){

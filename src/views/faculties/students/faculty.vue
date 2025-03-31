@@ -19,8 +19,8 @@
               </div>
             </div>
             <div class="text-content">
-              <h4>COM DESIGN Year 1</h4>
-              <h2>Teacher’s list</h2>
+              <h4>{{ faculty.name }}</h4>
+              <h2>Student’s list</h2>
             </div>
           </div>
           <div class="search col">
@@ -51,13 +51,15 @@
 import Search from "../../../components/reusable/Search2";
 import TableHeader from "../../../components/reusable/ui/table-header";
 import TableUi from "../../../components/reusable/ui/table-ui";
+import apis from "../../../services/apis";
 
 export default {
-  //TODO using dynamic instructors from backend
+  //TODO using dynamic students from backend
 name: "FacultyInstructors",
   components: {TableUi, TableHeader, Search,},
   data(){
     return{
+      faculty:{},
       instructors:[
         {"sur_name":"Ntwari Jearn bosco", "Gender":"male", "courses":2},
         {"sur_name":"Uwikunda peter arts", "Gender":"male", "courses":1},
@@ -66,6 +68,20 @@ name: "FacultyInstructors",
         {"sur_name":"Nshuti Ntwari", "Gender":"male", "courses":1},
       ]
     }
+  },
+  methods:{
+      /**
+     * getting faculty information based on faculty id provided in query parameters
+     */
+    getFacultyInformation(){
+      const {facultyId} = this.$route.params;
+
+      apis.get(`faculty/${facultyId}`)
+        .then(({data}) => {
+          this.faculty = data;
+        })
+    },
+
   }
 }
 </script>
