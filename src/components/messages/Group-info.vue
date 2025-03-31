@@ -63,7 +63,12 @@
           </div>
           <div class="action-btn">
             <button class="save">Save changes</button>
-            <button class="cancel">Cancel</button>
+            <button
+              class="cancel"
+              @click="$router.push(`/messages/${$route.params.id}`)"
+            >
+              Cancel
+            </button>
           </div>
         </div>
       </div>
@@ -106,9 +111,9 @@ export default {
     removeMember(member) {
       for (const k in this.group.members) {
         if (this.group.members[k].id == member.id) {
-          console.log(this.group.members[k], member)
+          console.log(this.group.members[k], member);
           this.group.members.splice(k, 1);
-          console.log(this.group.members)
+          console.log(this.group.members);
         }
       }
       this.update_confirmation(false);

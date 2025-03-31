@@ -149,7 +149,7 @@
                 <div class="w-60 mr">
                   <div class="ssc-head-line mb w-80"></div>
                   <div class="ssc-line w-40 mb"></div>
-                  <div class="ssc-line w-90"></div>
+                  <div class="ssc-line w-90 mb-2"></div>
                   <div class="ssc-line w-70 mb"></div>
 
                   <div v-if="type == 'published'" class="ssc-line w-60"></div>
