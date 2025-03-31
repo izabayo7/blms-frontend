@@ -51,7 +51,7 @@
           :key="i"
           class="col-12 col-md-12"
         >
-          <v-col class="col-8">
+          <v-col class="col-12 col-lg-8">
             <v-row>
               <v-col
                 :class="question.type.includes('select') ? 'col-10' : 'col-12'"
@@ -241,18 +241,18 @@
             </v-row>
           </v-col>
           <v-col
-            class="col-4"
+            class="col-12 col-lg-4"
             v-if="
               selected_quiz_submission.marked || userCategory === 'INSTRUCTOR'
             "
           >
             <v-row>
-              <v-col class="col-12 pb-0"
+              <v-col class="col-12 col-md-5 pb-0 pr-md-0"
                 ><div class="question title grey-color">
                   Q{{ i + 1 }} marks
                 </div></v-col
               >
-              <v-col class="col-12">
+              <v-col class="col-12 col-md-6 pl-md-0">
                 <div class="cool-box marks grey-color mt-n1">
                   <input
                     class="marks-input"
@@ -264,33 +264,20 @@
                 </div></v-col
               >
               <v-col class="col-12">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="27"
-                  height="22.5"
-                  viewBox="0 0 27 22.5"
-                >
-                  <path
-                    id="Icon_material-reply"
-                    data-name="Icon material-reply"
-                    d="M15,13.5v-6L4.5,18,15,28.5V22.35c7.5,0,12.75,2.4,16.5,7.65C30,22.5,25.5,15,15,13.5Z"
-                    transform="translate(-4.5 -7.5)"
-                    fill="#606060"
-                  />
-                </svg>
-                <div
-                  :class="`feedback_input empty_feedback`"
-                  contenteditable="true"
-                  @keyup="computeFeedbackClass(i)"
-                ></div>
+                <feedback
+                  :content="
+                    attempt.answers[i].feedback.length
+                      ? attempt.answers[i].feedback[0].content
+                      : ''
+                  "
+                />
               </v-col>
             </v-row>
-            <div class="d-flex"></div>
           </v-col>
         </v-row>
         <v-btn
           v-if="userCategory === 'INSTRUCTOR'"
-          class="radio-btn d-block mb-4 submitt-attempt"
+          class="d-block mb-4 primary-bg"
           @click="updateSubmission"
           rounded
           >Save Marks</v-btn
@@ -338,6 +325,7 @@ export default {
   }),
   components: {
     back: () => import("@/components/shared/back-button"),
+    feedback: () => import("@/components/courses/Feedback"),
   },
   computed: {
     ...mapGetters("quiz_submission", ["selected_quiz_submission"]),
@@ -369,23 +357,6 @@ export default {
       "update_quiz_submission",
       "findQuizSubmissionByUserAndQuizNames",
     ]),
-    feedbackContent(index) {
-      const allFeedbacks = document.querySelectorAll(".feedback_input");
-      return allFeedbacks[index] ? allFeedbacks[index].innerHTML : "";
-    },
-    computeFeedbackClass(index) {
-      const allFeedbacks = document.querySelectorAll(".feedback_input");
-      if (allFeedbacks[index]) {
-        if (allFeedbacks[index].innerHTML == "") {
-          allFeedbacks[index].className += " empty_feedback";
-        } else {
-          allFeedbacks[index].className = allFeedbacks[index].className.replace(
-            " empty_feedback",
-            ""
-          );
-        }
-      }
-    },
     checkChoiceStatus(choosed_options, choice) {
       if (choice.src) {
         for (const option of choosed_options) {
@@ -553,7 +524,7 @@ export default {
   flex-direction: row;
   flex-flow: wrap;
 }
-.submitt-attempt {
+.primary-bg {
   background-color: $primary !important;
   color: white !important;
 }
@@ -585,16 +556,5 @@ export default {
     /* border-color: green; */
     box-shadow: 8px 9px 11px rgb(199 199 199);
   }
-}
-.feedback_input {
-  border: 2px solid #d2d2d2;
-  padding: 15px;
-  border-radius: 9px;
-}
-.feedback_input:focus {
-  outline: none;
-}
-.empty_feedback::before {
-  content: "Write feedback here";
 }
 </style>
