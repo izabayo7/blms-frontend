@@ -204,7 +204,7 @@ export default {
     chapterNames() {
       let res = [];
       for (const i in this.courses) {
-        if (this.courses[i].name == this.selected_course) {
+        if (this.courses[i].name === this.selected_course) {
           for (const k in this.courses[i].chapters) {
             res.push(this.courses[i].chapters[k].name);
           }
@@ -213,9 +213,9 @@ export default {
       return res;
     },
     selectedQuiz() {
-      if (this.selected_quiz && this.all_quiz.length && this.selected_quiz != "") {
-        if (this.selected_quiz != "Select quiz")
-          return this.all_quiz.filter((quiz) => quiz.name == this.selected_quiz)[0]._id;
+      if (this.selected_quiz && this.all_quiz.length && this.selected_quiz !== "") {
+        if (this.selected_quiz !== "Select quiz")
+          return this.all_quiz.filter((quiz) => quiz.name === this.selected_quiz)[0]._id;
         else
           return undefined
       } else {
@@ -239,13 +239,13 @@ export default {
       this.menu = true;
     },
     validateForm() {
-      if (this.selected_chapter == "" || this.date == "") {
+      if (this.selected_chapter === "" || this.date === "") {
         this.$store.dispatch("app_notification/SET_NOTIFICATION", {
           message: "All fields are required",
           status: "danger",
           uptime: 20000,
         });
-      } else if (this.time == "00:00") {
+      } else if (this.time === "00:00") {
         this.$store.dispatch("app_notification/SET_NOTIFICATION", {
           message: "Time is required",
           status: "info",
@@ -258,7 +258,7 @@ export default {
     },
     studentGroup() {
       for (const i in this.courses) {
-        if (this.courses[i].name == this.selected_course) {
+        if (this.courses[i].name === this.selected_course) {
           return this.courses[i].user_group.name
         }
       }
@@ -266,9 +266,9 @@ export default {
     async saveSession() {
       let chapter_id = "";
       for (const i in this.courses) {
-        if (this.courses[i].name == this.selected_course) {
+        if (this.courses[i].name === this.selected_course) {
           for (const k in this.courses[i].chapters) {
-            if (this.courses[i].chapters[k].name == this.selected_chapter) {
+            if (this.courses[i].chapters[k].name === this.selected_chapter) {
               chapter_id = this.courses[i].chapters[k]._id
             }
           }

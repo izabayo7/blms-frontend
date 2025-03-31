@@ -3,6 +3,9 @@
   height: fit-content;
   min-height: calc(100vh - 76px);
 
+  .no-payments{
+    height: 100%;
+  }
 
   .upper {
     font-family: Inter;

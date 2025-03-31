@@ -1,6 +1,6 @@
 // resize the modal
 .v-dialog:not(.v-dialog--fullscreen) {
-  height: 432px !important;
+  min-height: 432px !important;
   width: 100% !important;
   .dialog-body {
     height: 100%;
@@ -10,6 +10,7 @@
     text-align: left;
     &.invite-users {
       max-width: 742px;
+      max-height: 432px;
       margin: auto
     }
     .close {

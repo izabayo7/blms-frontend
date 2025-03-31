@@ -203,6 +203,7 @@ export default {
   data: () => ({
     editStatus: [true, true, true, true, true, true],
     img: "",
+    user: undefined,
     showUpdatePassword: false,
     largeDevices: ['md', 'lg', 'xl'],
     profile: undefined,
@@ -213,13 +214,16 @@ export default {
   },
   computed: {
     ...mapState("sidebar_navbar", {state: "college"}),
-    user() {
-      const user = JSON.stringify(this.$store.state.user.user);
-      return JSON.parse(user);
-    },
+  },
+  beforeMount() {
+    this.user = this.getUser()
   },
   mixins: [cropperMixin],
   methods: {
+    getUser() {
+      const user = JSON.stringify(this.$store.state.user.user);
+      return JSON.parse(user);
+    },
     ...mapActions("modal", ["set_modal"]),
     pickfile() {
       document.getElementById("picture").click();
@@ -231,12 +235,14 @@ export default {
       this.$set(this.editStatus, index, !this.editStatus[index])
     },
     async callback(res, index) {
-      if (res.data.status !== 200)
+      if (res.data.status !== 200) {
         this.$store.dispatch("app_notification/SET_NOTIFICATION", {
           message: res.data.message,
           status: "danger",
           uptime: 2000,
         });
+        this.user = this.getUser()
+      }
       else {
         // set the token in the session
         this.$session.set("jwt", res.data.data);

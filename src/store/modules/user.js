@@ -6,7 +6,7 @@ export default {
     state: {
         user: null,
         isLoggedIn: false,
-        disableFucntionalities: false
+        paymentStatus: false
     },
     mutations: {
         SET_USER(state, user) {
@@ -14,7 +14,7 @@ export default {
             state.isLoggedIn = true
         },
         TOOGLE_DISABLE_FUNCTIONALITIES(state, value) {
-            state.disableFucntionalities = value
+            state.paymentStatus = value
         },
         UNSET_USER(state) {
             state.user = null
@@ -60,7 +60,10 @@ export default {
             return state.user.user_name
         },
         disableFunctionalities(state){
-          return state.disableFucntionalities
+          return state.paymentStatus.disabled
+        },
+        paymentStatus(state){
+            return state.paymentStatus
         },
         userCategory(state) {
             return state.user.category.name

@@ -220,12 +220,20 @@ const routes = [
                             {
                                 path: '/settings/institution',
                                 name: "institutionSettings",
+                                meta: {
+                                    allowedUsers: ["ADMIN"]
+                                },
                                 component: () => import( /* webpackChunkName: "settings" */ '@/views/settings/institution'),
                             },
                             {
                                 path: '/settings/payments',
                                 name: "paymentSettings",
                                 component: () => import( /* webpackChunkName: "settings" */ '@/views/settings/payments'),
+                            },
+                            {
+                                path: '/settings/paying',
+                                name: "paymentTest",
+                                component: () => import( /* webpackChunkName: "settings" */ '@/views/settings/payment'),
                             },
                         ]
                     },

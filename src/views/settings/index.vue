@@ -9,7 +9,7 @@
         </div>
         <div class="links">
           <router-link :active-class="$route.path === '/settings' ? 'active' : ''" to="/settings">Personal</router-link>
-          <router-link active-class="active" to="/settings/institution">Institution</router-link>
+          <router-link v-if="userCategory === 'ADMIN'" active-class="active" to="/settings/institution">Institution</router-link>
           <router-link active-class="active" to="/settings/payments">Payments</router-link>
         </div>
       </div>
@@ -28,13 +28,15 @@
 // import Apis from "@/services/apis";
 // import {elapsedDuration} from "../../../services/global_functions";
 
+import {mapGetters} from "vuex";
+
 export default {
   name: "Settings",
   data: () => ({
 
   }),
   computed: {
-
+    ...mapGetters('user', ['userCategory']),
   },
   components: {
 
