@@ -501,11 +501,11 @@ export default {
         })
       })
 
-      self.socket.on("res/live/studentAnswered", ({id}) => {
+      self.socket.on("res/live/studentAnswered", ({id, attendance}) => {
 
         for (const i in self.participants) {
           if (self.participants[i].userInfo._id == id)
-            self.participants[i].userInfo.attendance = 100
+            self.participants[i].userInfo.attendance = attendance
         }
 
         self.participants.sort((a, b) => {
@@ -729,7 +729,8 @@ export default {
     },
     checkAttandance() {
       this.socket.emit("live/checkAttendance", {
-        receivers: this.$store.getters['live_session/participants']
+        receivers: this.$store.getters['live_session/participants'],
+        session_id: this.$route.params.liveSessionId
       });
       console.log(this.$store.getters['live_session/participants'])
     },
