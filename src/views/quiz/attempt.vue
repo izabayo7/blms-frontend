@@ -261,6 +261,7 @@ export default {
     remaining_time: 0,
   }),
   computed: {
+    ...mapGetters("chat", ["socket"]),
     // get the current course
     ...mapGetters("quiz", ["selected_quiz"]),
     ...mapGetters("quiz_submission", ["selected_quiz_submission", "loaded"]),
@@ -333,6 +334,9 @@ export default {
       document.getElementById(`file${index}`).click();
     },
     findAcceptedFiles(index) {
+      if (!this.selected_quiz.questions[index].allowed_files)
+        return "*"
+
       let allowed_types = []
       if (this.selected_quiz.questions[index].allowed_files.includes('image'))
         allowed_types.push('image/*')
@@ -429,6 +433,12 @@ export default {
         submission: this.attempt,
         attachments: this.filesToUpload.filter(e => e.file != ""),
       }).then((is_selection_only) => {
+        // notify instructor
+        this.socket.emit('student-submitted', {
+          userId: this.selected_quiz.user,
+          route: `/quiz/${this.$route.params.name}/${this.$store.state.user.user.user_name}`,
+          content: 'submitted quiz ' + this.selected_quiz.name
+        })
         if (is_selection_only) {
           this.$router.push(`/quiz/${this.selected_quiz.name}/results`);
         } else {
@@ -448,7 +458,7 @@ export default {
         this.findQuizSubmissionByUserAndQuizNames({
           userName: this.$store.state.user.user.user_name,
           quizName: this.$route.params.name,
-        }).then(()=>{
+        }).then(() => {
           if (this.selected_quiz_submission != undefined)
             this.$router.push(`/quiz/${this.$route.params.name}/${this.$store.state.user.user.user_name}`)
         })
