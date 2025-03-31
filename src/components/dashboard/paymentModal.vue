@@ -79,7 +79,7 @@
           <div class="bill">
             <div>Total amount is</div>
             <div class="amount">
-              2000 usd
+              {{ amount }} frw
             </div>
           </div>
         </div>
@@ -108,13 +108,28 @@ export default {
   data() {
     return {
       options: ['HUGUKA', 'JIJUKA', 'MINUZA_STARTER', 'MINUZA_GROWTH', 'MINUZA_ACCELERATE'],
-      periodTypes: ['MONTH','YEAR'],
+      periodTypes: ['MONTH', 'YEAR'],
       selected_plan: "",
-      total_users: 0,
+      total_users: this.$store.state.user.paymentStatus.total_users,
       periodType: "",
       periodValue: 1,
       closable: false,
+      amount: 0,
     };
+  },
+  watch: {
+    periodType() {
+      this.findAmount();
+    },
+    periodValue() {
+      this.findAmount();
+    },
+    selected_plan() {
+      this.findAmount();
+    },
+    total_users() {
+      this.findAmount();
+    },
   },
   computed: {
     visible() {
@@ -122,41 +137,14 @@ export default {
     },
   },
   methods: {
-    updateCurrentPassword(value) {
-      this.current_password = value
-    },
-    updatePassword(value) {
-      this.new_password = value
-      this.validatePassword()
-    },
-    updateConfirmPassword(value) {
-      this.confirm_password = value
-      this.validateConfirmPassword();
-    },
-    async validatePassword() {
-      const str = this.new_password
-      if (!str.length)
-        return this.errors.passwordError = "password is required"
-
-      if (!/^(?=.*[a-z])/.test(str))
-        return this.errors.passwordError = "password must contain a lowercase letter"
-      if (!/^(?=.*[A-Z])/.test(str))
-        return this.errors.passwordError = "password must contain an uppercase letter"
-      if (!/^(?=.*[0-9])/.test(str))
-        return this.errors.passwordError = "password must contain a number"
-      if (!/^(?=.{8,})/.test(str))
-        return this.errors.passwordError = "password must have atleast 8 characters"
-
-      this.errors.passwordError = ""
-    },
-    validateConfirmPassword() {
-      if (this.confirm_password.length)
-        if (this.new_password === this.confirm_password)
-          this.errors.confirmPasswordError = ""
-        else
-          this.errors.confirmPasswordError = "Passwords must match"
-      else
-        this.errors.confirmPasswordError = "Confirmation password is required"
+    findAmount() {
+      Apis.create('account_payments/bill', {
+        periodType: this.periodType,
+        periodValue: this.periodValue,
+        total_users: this.total_users,
+      }).then((res) => {
+        this.amount = res.data.data.amount
+      })
     },
     async saveChanges() {
       Apis.update_user_password({
