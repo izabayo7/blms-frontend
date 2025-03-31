@@ -1,82 +1,100 @@
 <template>
     <div class="my-reply-comment">
-        <div class="my-reply-comment-container">
-            <form action="" class="reply-comment">
-                <div class="profile-pic">
-                    <v-avatar size="30">{{ user_full_names | computeText}} </v-avatar>
+        <div class="reply-comment-container">
+            <div class="left">
+                <div class="avatar">
+                    <v-avatar :size="30" class="a_avatar">{{fullNames | computeText}}</v-avatar>
                 </div>
-                <div class="ml-4 input-holder">
-                    <div class="input"><input type="text" placeholder="write-something"></div>
-                    <div class="send px-1">
-                        <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"/><path d="M1.946 9.315c-.522-.174-.527-.455.01-.634l19.087-6.362c.529-.176.832.12.684.638l-5.454 19.086c-.15.529-.455.547-.679.045L12 14l6-8-8 6-8.054-2.685z"/></svg></div>
+            </div>
+            <div class="right">
+                <div class="comment">
+                    <h4 class="comment__name">{{fullNames}}</h4>
+                    <div class="comment__time"><span>{{elapsedTime}}</span></div>
+                    <div class="comment__text"> {{ content.content}}
                     </div>
                 </div>
-            </form>
+            </div>
         </div>
     </div>
 </template>
 
 <script>
-    import {mapGetters} from 'vuex'
+    import {elapsedDuration} from "../../services/global_functions";
 
     export default {
         name: "ReplyComment",
-        computed:{
-            ...mapGetters('user',['user_full_names'])
+        props:{
+            content:{required:true}
         },
-
+        computed:{
+            elapsedTime(){
+                return elapsedDuration(this.content.createdAt)
+            },
+            fullNames(){
+                return `${this.content.sender.sur_name} ${this.content.sender.other_names}`
+            }
+        },
     }
 </script>
 
 <style lang="scss" scoped>
 .my-reply-comment{
-    .my-reply-comment-container{
+    .reply-comment-container{
         display: flex;
-        align-items: center;
-        margin-bottom: .3rem;
-        margin-top: .3rem;
-
-        .reply-comment{
-            display: flex;
-            flex-grow:1;
-
-            .profile-pic{
-                display: flex;
-
-                .v-avatar{
-                    align-self: center;
+        .left{
+            .avatar{
+                padding-top: 1rem;
+                padding-bottom: 1rem;
+                padding-right: .5rem;
+                .a_avatar{
                     background-color: $primary;
                     color:$main;
+                    font-size: .9rem;
                 }
             }
+        }
+        .right{
+            flex-grow: 1;
+            .comment{
+                &__name{
 
-            .input-holder{
-                border-radius: 3px;
-                border:2px solid $secondary;
-                display: flex;
-                flex-grow: 1;
-                .input{
-                    flex-grow: 1;
-                    padding-top:.2rem;
-                    padding-bottom:.2rem;
-                    padding-left:.4rem;
+                }
+                &__time{
+                    font-size: .7rem;
 
-
-                    input{
-                        width: 100%;
-                        padding-right: .3rem;
-                        font-size: .8rem;
+                    span{
+                        color:lighten($font,35);
                     }
                 }
-                .send{
-                    cursor: pointer ;
+                &__text{
+                    font-size: .9rem;
+                }
+                &__reply-icon{
+                    font-size: .8rem;
 
-                    &:hover{
-                        background-color: $secondary;
-                    }
-                    .icon{
-                        svg{
-                            transform: scale(.7) translateY(5.5px);
+                    .inner-icon{
+                        display: flex;
+                        background-color:$tertiary;
+                        @include fit-content;
+                        padding-right: .5rem;
+                        padding-left: .5rem;
+                        border-radius: 50px;
+                        cursor: pointer;
+
+                        &:hover{
+                            background-color: $secondary;
+                        }
+
+                        .icon{
+                            @include   fit-content;
+                            @include flex-center;
+                            svg{
+                                transform: scale(.75);
+                                fill:$font;
+                            }
+                        }
+                        .text{
+                            @include flex-center;
                         }
                     }
                 }
