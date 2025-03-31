@@ -36,6 +36,14 @@ export default {
         addAssignment(state, assignment) {
             state.assignments.data.unshift(assignment)
         },
+        editAssignment(state, {assignment,id}) {
+            for (const i in state.assignments.data) {
+                if(state.assignments.data[i]._id === id){
+                    state.assignments.data[i] = assignment
+                    break
+                }
+            }
+        },
         RESET_STATE(state) {
             Object.assign(state, getDefaultState())
         }
@@ -70,7 +78,7 @@ export default {
                 const d = await apis.get(`assignments/${id}`)
                 return d.data.data
             } else {
-                const res = state.assignments.filter(x => x._id === id)
+                const res = state.assignments.data.filter(x => x._id === id)
                 return res[0]
             }
         },
