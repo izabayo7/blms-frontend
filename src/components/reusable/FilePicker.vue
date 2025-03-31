@@ -151,6 +151,15 @@ div.remove-container a {
   display: flex;
   flex-wrap: wrap;
 }
+/* Portrait phones and smaller */
+@media (max-width: 700px) {
+  .attachment {
+    &.chat-files {
+      width: 100px;
+      height: 78px;
+    }
+  }
+}
 </style>
 
 <template>
@@ -244,6 +253,7 @@ div.remove-container a {
                     v-bind:ref="'preview' + parseInt(key)"
                 />
                 <div
+                    v-else
                     :class="template"
                     class="attachment vertically--centered"
                 >
