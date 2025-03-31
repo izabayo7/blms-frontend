@@ -61,7 +61,7 @@ export default {
 
         UPDATE_CONTACT_LAST_MSG(state, {id, msg}) {
             for (const i in state.incomingMessages) {
-                if (state.incomingMessages[i].id === id) {
+                if (state.incomingMessages[i].id === id ||(msg.group ? state.incomingMessages[i].id === msg.group : false)) {
                     state.incomingMessages[i].last_message.content = msg.content
                     state.incomingMessages[i].last_message.time = msg.createdAt
                     break
@@ -328,11 +328,13 @@ export default {
         start_conversation({state, getters}, user_name) {
 
             // search if conversation exist
-            const contact_found = state.incomingMessages.filter(c => c.id == user_name)
+            const contact_found = state.incomingMessages.filter(c => c.id === user_name)
 
             // if found go to it
-            if (contact_found.length) router.push(`/messages/${user_name}`);
-
+            if (contact_found.length) {
+                if (state.currentDisplayedUser.id !== user_name)
+                    router.push(`/messages/${user_name}`);
+            }
             // else initialise it
             else getters.socket.emit('message/start_conversation', {conversation_id: user_name});
         },
@@ -407,7 +409,7 @@ export default {
         socket(state) {
             return state.socket
         },
-        replyMsg(state){
+        replyMsg(state) {
             return state.replyMsg
         },
         groupError(state) {
