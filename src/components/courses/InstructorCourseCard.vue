@@ -90,14 +90,14 @@
               color="error"
               class="action-btn"
           >Unpublish
-<!--            <span class="hidden-sm-and-down">Course</span>-->
+            <!--            <span class="hidden-sm-and-down">Course</span>-->
           </v-btn
           >
         </v-col>
         <v-col class="col-md-6 text-right">
           <v-btn :to="`/courses/preview/${course.name}`" text class="action-btn"
           >Preview
-<!--            <span class="hidden-sm-and-down">Course</span>-->
+            <!--            <span class="hidden-sm-and-down">Course</span>-->
           </v-btn
           >
         </v-col>
@@ -120,15 +120,10 @@ export default {
   computed: {
     isLive() {
       if (!this.nearestLiveSession) return false;
-      console.log(this.nearestLiveSession)
-      for (const i in this.course.chapters) {
-        if (this.course.chapters[i].live_sessions.length) {
-          // if()
-          if ((new Date(this.course.chapters[i].live_sessions[0].date) <= new Date(new Date().toISOString().substring(0, 10)))) {
-            if (convertUTCDateToLocalDate(new Date(this.nearestLiveSession.date.replace("00:00", this.nearestLiveSession.time))) <= new Date(new Date().toGMTString())) {
-              return true;
-            }
-          }
+
+      if ((new Date(this.nearestLiveSession.date) <= new Date(new Date().toISOString().substring(0, 10)))) {
+        if (convertUTCDateToLocalDate(new Date(this.nearestLiveSession.date.replace("00:00", this.nearestLiveSession.time))) <= new Date(new Date().toGMTString())) {
+          return true;
         }
       }
       return false;
@@ -155,7 +150,7 @@ export default {
     clearInterval(this.interval)
     console.log("ndagiye")
   },
-  created() {
+  mounted() {
     this.nearestLiveSession = calculateNearestLiveSession(this.course)
   }
 };

@@ -261,6 +261,7 @@ export default {
   name: "courses",
   data: () => ({
     type: "published",
+    loaded: false
   }),
   components: {
     InstructorCourseCard: () =>
@@ -277,7 +278,7 @@ export default {
       "publishedCourses",
       "unpublishedCourses",
       "courses",
-      "loaded",
+      // "loaded",
     ]),
     finishedCourses() {
       return this.courses.filter((course) =>
@@ -293,13 +294,15 @@ export default {
   methods: {
     ...mapActions("courses", ["getCourses"]),
   },
-  created() {
-    if (!this.loaded) {
-      console.log(this.loaded);
+  mounted() {
+    this.loaded = false;
+    console.log(this.loaded)
+    // if (!this.loaded) {
       //get courses on page load
-      this.getCourses();
-      console.log(this.loaded);
-    }
+      this.getCourses().then(()=>{
+        this.loaded = true;
+      })
+    // }
   },
 };
 </script>
