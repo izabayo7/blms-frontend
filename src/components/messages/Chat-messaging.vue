@@ -154,6 +154,9 @@
                 </div>
               </div>
               <div v-if="(msg.content || msg.attachments) && msgs.from !== 'SYSTEM'">
+                <div v-if="msg.forwarded" class="forward">
+                  {{ msgs.from === 'Me' ? 'You forwarded a' :'Forwarded' }} message
+                </div>
                 <div
                     v-if="msg.content || msg.reply"
                     class="msg"
@@ -634,7 +637,20 @@ export default {
           max-height: 57px;
         }
       }
+      .forward {
+        font-family: Roboto;
+        font-style: normal;
+        font-weight: 500;
+        font-size: 10px;
+        /* or 7% */
 
+        display: flex;
+        align-items: center;
+
+        /* Type color / Default */
+
+        color: #343434;
+      }
       //whole msg bar css
       .msg {
         max-width: 28rem;
@@ -705,6 +721,7 @@ export default {
       .msg-cntnr {
         align-items: center;
         max-width: 100%;
+
         &:hover {
           .actions {
             display: initial;
