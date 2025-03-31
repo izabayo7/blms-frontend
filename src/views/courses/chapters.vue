@@ -566,7 +566,7 @@ export default {
       });
     },
     saveChapterChanges() {
-      console.log(this.selectedQuiz)
+      console.log(this.selectedQuiz);
       const content = this.$refs.editor.getHTML();
       this.updateChapter({
         chapter: {
