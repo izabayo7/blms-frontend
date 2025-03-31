@@ -21,7 +21,7 @@
       >
         <!--        <div class="unread-indicator"><hr /></div>-->
         <!--        picture of the message sender-->
-        <div v-if="!systemMsg(msgs.from)" class="picture">
+        <div v-if="!systemMsg(msgs.from)" class="picture mt-4">
           <img
             v-if="msgs.image"
             :src="msgs.image"

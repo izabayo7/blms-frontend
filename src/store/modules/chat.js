@@ -211,7 +211,7 @@ export default {
             });
         },
         start_conversation({ state, getters }, user_name) {
-// console.log(user_name)
+
             // search if conversation exist
             const contact_found = state.incomingMessages.filter(c => c.id == user_name)
 

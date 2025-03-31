@@ -99,7 +99,6 @@ export default {
         );
         names.push(user[0].data.sur_name);
       }
-      console.log(names);
       return names;
     },
   },
