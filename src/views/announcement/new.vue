@@ -307,13 +307,6 @@ export default {
         })
     },
   },
-  async created() {
-    // const res = await Apis.get(
-    //     `college/${this.$store.state.user.user.college}`
-    // );
-    // this.set_college(res.data.data);
-    // this.college_logo = res.data.data.logo || this.college_logo;
-  },
 };
 </script>
 
