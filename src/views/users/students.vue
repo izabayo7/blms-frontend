@@ -99,13 +99,18 @@
                            v-for="(user, i) in statistics.students" :key="user._id" @select="handleRowSelect(i)"
                            :selected="selected_users.has(i)" :ref="`row${i}`">
                   <template #cols>
-                    <td class="row--image">
+                    <td @click="$router.push(`/users/${user.user_name}`)" class="row--image"
+                        @mouseenter="mouseOnPic($event,user.user_name,'user-profile-card')"
+                        @mouseleave="mouseOutPic($event,'user-profile-card')">
                       <img v-if="user.profile" :src="user.profile + '?width=50'" class="img" alt=" profile pic">
                       <v-avatar v-else size="30" class="profile-avatar img">
                         {{ `${user.sur_name} ${user.other_names}` | computeText }}
                       </v-avatar>
                     </td>
-                    <td>{{ user.sur_name }} {{ user.other_names }}</td>
+                    <td @click="$router.push(`/users/${user.user_name}`)"
+                        @mouseenter="mouseOnPic($event,user.user_name,'user-profile-card')"
+                        @mouseleave="mouseOutPic($event,'user-profile-card')">{{ user.sur_name }} {{ user.other_names }}
+                    </td>
                     <td>{{ user.gender }}</td>
                     <td>
                       <progress :value="user.progress" max="100"></progress>
@@ -134,6 +139,7 @@ import SelectUi from "@/components/reusable/ui/select-ui";
 import TableRow from "../../components/reusable/table/TableRow";
 import {mapActions, mapGetters, mapMutations} from "vuex";
 import Apis from '../../services/apis'
+import userSimpleCard from "../../mixins/user-simple-card.mixin";
 
 export default {
   name: "Students",
@@ -212,6 +218,7 @@ export default {
       this.statistics = res.data.data
     }
   },
+  mixins: [userSimpleCard],
   created() {
     this.getCourses(!this.loaded);
     if (this.courses.length)

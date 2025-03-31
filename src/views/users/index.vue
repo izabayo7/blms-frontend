@@ -35,9 +35,10 @@
       </div>
       <div class="tabular-users">
         <div class="table-wrapper mt-6" v-if="users.length > 0">
+<!--          {{ size }}-->
           <div class="table-header">
             <table-header>
-              <template v-if="selected_users.size" #actions>
+              <template v-if="size" #actions>
                 <div class="action mx-2" @click="click('announce')">
                   <table-action-burner>
                     <template #icon>
@@ -102,8 +103,40 @@
               </template>
             </table-header>
           </div>
+          <!--          <div class="table">-->
+          <!--            <table-ui :options="options" @select="handleSelect" :data="users"/>-->
+          <!--          </div>-->
           <div class="table">
-            <table-ui :options="options" @select="handleSelect" :data="users"/>
+            <table-ui :options="options">
+              <template #tableHeaderRow>
+                <table-head-row @select="handleSelect" :cols="options.keysToShow"/>
+              </template>
+
+              <!--              rows-->
+              <template #tableRows>
+                <table-row :selected="selected_users.has(i)" @select="handleRowSelect(i)" :data="user"
+                           v-for="(user, i) in users" :key="user._id" :ref="`row${i}`">
+                  <template #cols>
+                    <td @click="$router.push(`/users/${user.user_name}`)" class="row--image"
+                        @mouseenter="mouseOnPic($event,user.user_name,'user-profile-card')"
+                        @mouseleave="mouseOutPic($event,'user-profile-card')">
+                      <img v-if="user.profile" :src="user.profile + '?width=50'" class="img" alt=" profile pic">
+                      <v-avatar v-else size="30" class="profile-avatar img">
+                        {{ `${user.sur_name} ${user.other_names}` | computeText }}
+                      </v-avatar>
+                    </td>
+                    <td @click="$router.push(`/users/${user.user_name}`)"
+                        @mouseenter="mouseOnPic($event,user.user_name,'user-profile-card')"
+                        @mouseleave="mouseOutPic($event,'user-profile-card')">{{ user.sur_name }} {{ user.other_names }}
+                    </td>
+                    <td @click="$router.push(`/users/${user.user_name}`)">{{ user.email }}</td>
+                    <td @click="$router.push(`/users/${user.user_name}`)">{{ user.user_name }}</td>
+                    <td @click="$router.push(`/users/${user.user_name}`)">{{ user.status }}</td>
+                    <td @click="$router.push(`/users/${user.user_name}`)">{{ user.gender }}</td>
+                  </template>
+                </table-row>
+              </template>
+            </table-ui>
           </div>
         </div>
       </div>
@@ -118,34 +151,42 @@
 <script>
 import buttonUi from '@/components/reusable/ui/button-ui'
 import Search from '@/components/reusable/Search2'
-import tableUi from '@/components/reusable/ui/table-ui'
+// import tableUi from '@/components/reusable/ui/table-ui'
 import TableHeader from "../../components/reusable/ui/table-header";
 import apis from "../../services/apis"
 import tableActionBurner from '../../components/reusable/ui/table-action-burner'
 import moment from 'moment'
 import {mapActions, mapMutations} from "vuex";
+import userSimpleCard from "../../mixins/user-simple-card.mixin";
+import TableRow from "../../components/reusable/table/TableRow";
+import TableHeadRow from "../../components/reusable/table/TableHeadRow";
+import TableUi from "../../components/reusable/table/TableUi";
 
 export default {
   name: "Users",
   components: {
-    TableHeader, buttonUi, Search, tableUi, tableActionBurner,
+    TableHeader, buttonUi, Search, tableActionBurner, TableRow, TableHeadRow, TableUi,
     InviteUsersDialog: () => import("@/components/dashboard/InviteUsersDialog")
   },
   data() {
     return {
       users: [],
-      selected_users: [],
+      size: 0,
+      selected_users: new Set([]),
       showInviteUsers: false,
       options: {
         link: {
           routeTo: '/users/{id}',
           paramPropertyName: 'user_name'
         },
-        keysToShow: ["names", "email", "user_name", "status", "gender"],
+        keysToShow: [" ", "names", "email", "user_name", "status", "gender"],
         showSelect: true
       },
     }
   },
+  computed: {
+  },
+  mixins: [userSimpleCard],
   methods: {
     ...mapActions("modal", ["set_modal"]),
     ...mapMutations("users", ["SET_SELECTED_USERS"]),
@@ -204,7 +245,26 @@ export default {
       }, 5000);
     },
     handleSelect(value) {
+      for (const i in this.users) {
+        if (value.has(-1)) {
+          if (!this.$refs[`row${i}`][0].selectSelected)
+            this.$refs[`row${i}`][0].changeSelectedIndex()
+        } else if (this.$refs[`row${i}`][0].selectSelected)
+          this.$refs[`row${i}`][0].changeSelectedIndex()
+      }
+      this.size = this.users.length
       this.selected_users = value
+    },
+    handleRowSelect(index) {
+      const found = this.selected_users.has(index)
+      if (found) {
+        this.selected_users.delete(index)
+        this.size--
+      } else {
+        this.selected_users.add(index)
+        this.size++
+      }
+      this.$refs[`row${index}`][0].changeSelectedIndex()
     },
     loadUsers() {
       this.users = []
