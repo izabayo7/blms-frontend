@@ -14,8 +14,8 @@
           </div>
         </div>
       </div>
-      <div class="profile--user-profile-card profile--user-profile-card__2">
-        <div class="profile--user-profile-card--success-rate ">
+      <div v-if="$store.state.user.user.category.name !== 'STUDENT'" class="profile--user-profile-card profile--user-profile-card__2">
+        <div v-if="$store.state.user.user.category.name !== 'INSTRUCTOR' || user.category === 'STUDENT'" class="profile--user-profile-card--success-rate ">
           <div class="head ">
             <h3>Students success rate</h3>
           </div>
@@ -25,10 +25,18 @@
         </div>
         <div class="profile--user-profile-card--performing-class">
           <div class="head mb-1">
-            <h3>Top 3 performing classes</h3>
+            <h3>{{ user.category === 'STUDENT' ? $store.state.user.user.category.name === 'INSTRUCTOR' ? 'Live class attendance status' : 'Detailed course scores' : 'Top 3 performing classes' }}</h3>
           </div>
           <div class="enrol-course-card mt-1 mb-1" v-for="i in 3" :key="i">
-            <detailed-course-score-card/>
+            <detailed-course-score-card :type="user.category"/>
+          </div>
+        </div>
+        <div v-if="$store.state.user.user.category.name === 'INSTRUCTOR' && user.category === 'INSTRUCTOR'" class="profile--user-profile-card--performing-class mt-6">
+          <div class="head mb-1">
+            <h3>Archived courses ( Not in use)</h3>
+          </div>
+          <div class="enrol-course-card mt-1 mb-1" v-for="i in 3" :key="i">
+            <course-archieved-card/>
           </div>
         </div>
         <!--          <enrol-course-card />-->
@@ -46,10 +54,11 @@ import DetailedCourseScoreCard from "../../../components/profile/detailed-course
 import SuccessScoreChart from "../../../components/profile/success-score-chart";
 import CourseCreatedCard from "../../../components/profile/course-created-card";
 import apis from "../../../services/apis";
+import CourseArchievedCard from "../../../components/profile/course-archieved-card";
 
 export default {
   name: "profile",
-  components: {CourseCreatedCard, SuccessScoreChart, DetailedCourseScoreCard, UserProfileCard},
+  components: {CourseArchievedCard, CourseCreatedCard, SuccessScoreChart, DetailedCourseScoreCard, UserProfileCard},
   data: () => ({
     user: undefined
   }),
