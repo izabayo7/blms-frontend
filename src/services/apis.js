@@ -1,13 +1,12 @@
 import Api from './server'
 import Vue from 'vue'
-import { logout } from "./global_functions";
-
+import {logout} from "./global_functions";
 
 
 /* interceptors */
 Api.interceptors.response.use(function (response) {
 
-    const { data: { status, message } } = response
+    const {data: {status, message}} = response
 
     if (status === 401) {
         if (message.toLowerCase() === 'invalid token')
@@ -24,7 +23,7 @@ Api.interceptors.request.use((config) => {
     try {
         if (Vue.prototype.$session.exists()) {
             //get token
-            const { jwt: token } = JSON.parse(localStorage.getItem('vue-session-key'))
+            const {jwt: token} = JSON.parse(localStorage.getItem('vue-session-key'))
 
             //add token to headers
             config.headers = {
@@ -42,7 +41,6 @@ Api.interceptors.request.use((config) => {
         })
     }
 })
-
 
 
 export default {
@@ -81,6 +79,6 @@ export default {
     },
     // delete requests
     delete(path, id) {
-        return Api.delete(`/${path}/${id}`)
+        return Api.delete(id ? `/${path}/${id}` : `/${path}`)
     },
 }

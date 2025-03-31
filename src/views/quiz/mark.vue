@@ -286,6 +286,10 @@
                   "
                     :isFileUpload="question.type === 'file_upload'"
                     :index="i"
+                    @feedbackDeleted="selected_quiz_submission.answers[i].feedback_src = undefined"
+                    @feedbackUploaded="(name)=>{
+                selected_quiz_submission.answers[i].feedback_src = name
+              }"
                 />
               </v-col>
             </v-row>
