@@ -51,7 +51,11 @@
             id="video"
           >
             <vue-plyr>
-              <video :src="course.chapters[activeIndex].uploaded_video"></video>
+              <video
+                :src="`${
+                  course.chapters[activeIndex].uploaded_video
+                }?token=${$session.get('jwt')}`"
+              ></video>
             </vue-plyr>
           </v-col>
         </v-row>
@@ -63,7 +67,8 @@
                 <v-icon class="mx-2">mdi-book-open-variant</v-icon>Chapter
               </v-tab>
               <v-tab>
-                <v-icon class="mx-2">mdi-chat-outline</v-icon>Discussions (20000)
+                <v-icon class="mx-2">mdi-chat-outline</v-icon>Discussions
+                (20000)
               </v-tab>
               <v-tab>
                 <v-icon class="mx-2">mdi-file-download-outline</v-icon>Downloads
