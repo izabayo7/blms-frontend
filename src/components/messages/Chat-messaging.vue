@@ -375,6 +375,7 @@ export default {
 
           img {
             max-width: 402px;
+            width: 100%;
             object-fit: cover;
             max-height: 199px;
             border-radius: 10px;

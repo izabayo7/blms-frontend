@@ -56,7 +56,9 @@
               <path d="M1 1.50031L9.99943 10.4997" stroke="#343434" stroke-width="2" stroke-linecap="round"/>
             </svg>
           </div>
-          <div class="text-center no-edit" contenteditable="false">Record your one time audio message</div>
+          <div class="text-center no-edit" contenteditable="false">
+            {{ recording ? 'Record your one time audio message' : 'Record duration is limited: 15m' }}
+          </div>
           <div class="text-center">
             <div class="before d-none">
               <svg width="32" height="33" viewBox="0 0 32 33" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -66,33 +68,43 @@
               </svg>
 
             </div>
-            <div class="after d-flex justify-center align-center">
-              <div @click="toogleRecorder" class="close cursor-pointer">
-                <svg width="33" height="31" viewBox="0 0 33 31" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path
-                      d="M22.6647 10.8414L21.4897 9.66644L16.8314 14.3248L12.173 9.66644L10.998 10.8414L15.6564 15.4998L10.998 20.1581L12.173 21.3331L16.8314 16.6748L21.4897 21.3331L22.6647 20.1581L18.0064 15.4998L22.6647 10.8414Z"
-                      fill="#FC6767"/>
-                  <rect x="1.49805" y="0.999756" width="30.6667" height="29" rx="4.5" stroke="#FC6767"/>
-                </svg>
-
-              </div>
-              <div class="duration">
-                <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <circle cx="9.69509" cy="9.49977" r="9.02907" fill="#FC6767"/>
-                </svg>
-
-                00:16
-              </div>
-              <div class="send cursor-pointer">
-                <svg width="33" height="31" viewBox="0 0 33 31" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path
-                      d="M20.62 11.5512L19.5284 10.4998L14.62 15.2276L15.7116 16.279L20.62 11.5512ZM23.9026 10.4998L15.7116 18.3894L12.4755 15.2798L11.3839 16.3312L15.7116 20.4998L25.002 11.5512L23.9026 10.4998ZM7.00195 16.3312L11.3297 20.4998L12.4213 19.4483L8.10131 15.2798L7.00195 16.3312Z"
-                      fill="#21833F"/>
-                  <rect x="0.501953" y="0.999756" width="31" height="29" rx="4.5" stroke="#21833F"/>
-                </svg>
-
-              </div>
+            <div>
+              <audio-recorder
+                  upload-url="some url"
+                  filename="ninja"
+                  format="mp3"
+                  :attempts="3"
+                  :time="15"
+                  @upload="uploadAudio"
+                  :bit-rate="192"/>
             </div>
+<!--            <div class="after d-flex justify-center align-center">-->
+<!--              <div @click="toogleRecorder" class="close cursor-pointer">-->
+<!--                <svg width="33" height="31" viewBox="0 0 33 31" fill="none" xmlns="http://www.w3.org/2000/svg">-->
+<!--                  <path-->
+<!--                      d="M22.6647 10.8414L21.4897 9.66644L16.8314 14.3248L12.173 9.66644L10.998 10.8414L15.6564 15.4998L10.998 20.1581L12.173 21.3331L16.8314 16.6748L21.4897 21.3331L22.6647 20.1581L18.0064 15.4998L22.6647 10.8414Z"-->
+<!--                      fill="#FC6767"/>-->
+<!--                  <rect x="1.49805" y="0.999756" width="30.6667" height="29" rx="4.5" stroke="#FC6767"/>-->
+<!--                </svg>-->
+
+<!--              </div>-->
+<!--              <div class="duration">-->
+<!--                <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">-->
+<!--                  <circle cx="9.69509" cy="9.49977" r="9.02907" fill="#FC6767"/>-->
+<!--                </svg>-->
+
+<!--                00:16-->
+<!--              </div>-->
+<!--              <div class="send cursor-pointer">-->
+<!--                <svg width="33" height="31" viewBox="0 0 33 31" fill="none" xmlns="http://www.w3.org/2000/svg">-->
+<!--                  <path-->
+<!--                      d="M20.62 11.5512L19.5284 10.4998L14.62 15.2276L15.7116 16.279L20.62 11.5512ZM23.9026 10.4998L15.7116 18.3894L12.4755 15.2798L11.3839 16.3312L15.7116 20.4998L25.002 11.5512L23.9026 10.4998ZM7.00195 16.3312L11.3297 20.4998L12.4213 19.4483L8.10131 15.2798L7.00195 16.3312Z"-->
+<!--                      fill="#21833F"/>-->
+<!--                  <rect x="0.501953" y="0.999756" width="31" height="29" rx="4.5" stroke="#21833F"/>-->
+<!--                </svg>-->
+
+<!--              </div>-->
+<!--            </div>-->
           </div>
         </div>
         <div
@@ -172,17 +184,24 @@ export default {
       msg: "",
       files: [],
       recording: false,
-      recordingMode: false
+      recordingMode: false,
+      headers: {
+        'X-Custom-Header': 'some data'
+      }
     };
   },
   components: {
     FilePicker: () => import("@/components/reusable/FilePicker"),
+    AudioRecorder: () => import("@/components/recorder/components/recorder"),
   },
   computed: {
     ...mapGetters("chat", ["socket"]),
     ...mapState("chat", ["currentDisplayedUser"]),
   },
   methods: {
+    callback(msg) {
+      console.debug('Event: ', msg)
+    },
     pickFile() {
       this.$refs["picker"].clickButton()
 
@@ -206,6 +225,15 @@ export default {
           res.push(this.files[i].name)
         }
       return res
+    },
+    uploadAudio(formData){
+      apis.update('message', `voiceNote/${this.currentDisplayedUser.id}`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        },
+      }).then(() => {
+        this.recordingMode = false
+      })
     },
     sendMessage() {
 
