@@ -104,7 +104,7 @@ export default {
         },
         //store the message that we sent
         ADD_ONGOING_MESSAGE(state, newMessage) {
-console.log(newMessage)
+
             store.dispatch('chat/lastMessageInCertainChatMessages', state.username).then(({ lastMessage, groupIndex, userIndex }) => {
                 if (lastMessage._id !== newMessage._id) {
 
@@ -211,6 +211,9 @@ console.log(newMessage)
                 emit('incoming_message_initially_loaded')
                 console.log(state.incomingMessages)
             });
+        },
+        start_conversation({ getters }, user_name) {
+            getters.socket.emit('message/start_conversation', { conversation_id: user_name });
         },
         //load user messages
         loadMessages({ getters, state, commit }, id) {

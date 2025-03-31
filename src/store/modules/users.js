@@ -4,7 +4,10 @@ const getDefaultState = () => ({
         data: [],
         loaded: false
     },
-    selected_user: ''
+    selected_user: '',
+    search_results: {
+        data: []
+    }
 })
 
 export default {
@@ -57,11 +60,28 @@ export default {
                 }
             })
         },
+        searchUser({ state }, { query, page, limit }) {
+            return apis.get(`user/search?data=${query}&page=${page}&limit=${limit}`).then((d) => {
+                d.data = d.data.data
+                console.log('oggggggggggggggggggg', d.data.results)
+                // if (state.search_results.data.length) {
+                //     for (const i in d.data) {
+                //         state.search_results.data.push(d.data[i])
+                //     }
+                // } else {
+                state.search_results.data = d.data.results
+                return d.data.results
+                // }
+            })
+        }
     },
     getters: {
         //get all users
         users: state => {
             return state.users.data
+        },
+        user_search_results: state => {
+            return state.search_results.data
         },
         loaded: state => {
             return state.users.loaded

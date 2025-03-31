@@ -1,222 +1,297 @@
 <template>
-<div class="my-start-conversation">
-  <div class="search-start-conversation-container">
-    <div class="search-container">
-      <h2>Search User</h2>
-      <div class="search-bar-container">
-        <div class="search-bar">
-          <div class="search-input">
-            <div class="input-container">
-              <div class="user"  v-if="foundUser">
-                <img :src="foundUser.pic" :alt="`${foundUser.names} profile picture`">
-                <p>{{foundUser.names}}</p>
-                <span v-if="foundUser.category.toLowerCase() === 'instructor' ">{{foundUser.category}}</span>
+  <div class="my-start-conversation">
+    <div class="search-start-conversation-container">
+      <div class="search-container">
+        <h2>Search User</h2>
+        <div class="search-bar-container">
+          <div class="search-bar">
+            <div class="search-input">
+              <div class="input-container">
+                <div class="user" v-if="foundUser">
+                  <img
+                    v-if="foundUser.pic"
+                    :src="foundUser.pic"
+                    :alt="`${foundUser.names} profile picture`"
+                  />
+                  <v-avatar size="30" v-else class="avatar">
+                    {{ foundUser.names | computeText }}
+                  </v-avatar>
+                  <p>{{ foundUser.names }}</p>
+                  <span
+                    v-if="foundUser.category.toLowerCase() === 'instructor'"
+                    >{{ foundUser.category }}</span
+                  >
+                </div>
+                <input
+                  @input="searchIt"
+                  v-model="query"
+                  autocomplete="off"
+                  spellcheck="false"
+                  autocapitalize="off"
+                  v-else
+                  type="text"
+                />
+                <ul class="searched-users" v-if="foundUsers.length > 0">
+                  <li
+                    class="user"
+                    v-for="(user, i) in foundUsers"
+                    :key="i"
+                    @click="selectUser(i)"
+                  >
+                    <img
+                      v-if="user.pic"
+                      :src="user.pic"
+                      :alt="`${user.names} profile picture`"
+                    />
+                    <v-avatar size="30" v-else class="avatar">
+                      {{ user.names | computeText }}
+                    </v-avatar>
+                    <p>{{ user.names }}</p>
+                    <span v-if="user.category.toLowerCase() === 'instructor'">{{
+                      user.category
+                    }}</span>
+                  </li>
+                </ul>
               </div>
-              <input @input="searchIt" v-model="query" autocomplete="off" spellcheck="false" autocapitalize="off" v-else type="text">
-              <ul class="searched-users" v-if="foundUsers.length > 0">
-                <li class="user" v-for="(user,i) in foundUsers" :key="i" @click="selectUser(i)">
-                  <img :src="user.pic" :alt="`${user.names} profile picture`">
-                  <p>{{user.names}}</p>
-                  <span v-if="user.category.toLowerCase() === 'instructor'">{{user.category}}</span>
-                </li>
-              </ul>
-            </div>
-            <div class="icon">
-              <svg v-if="foundUser !== null" @click="erase" class="close" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"/><path d="M12 10.586l4.95-4.95 1.414 1.414-4.95 4.95 4.95 4.95-1.414 1.414-4.95-4.95-4.95 4.95-1.414-1.414 4.95-4.95-4.95-4.95L7.05 5.636z"/></svg>
-              <svg v-else class="search" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"/><path d="M18.031 16.617l4.283 4.282-1.415 1.415-4.282-4.283A8.96 8.96 0 0 1 11 20c-4.968 0-9-4.032-9-9s4.032-9 9-9 9 4.032 9 9a8.96 8.96 0 0 1-1.969 5.617zm-2.006-.742A6.977 6.977 0 0 0 18 11c0-3.868-3.133-7-7-7-3.868 0-7 3.132-7 7 0 3.867 3.132 7 7 7a6.977 6.977 0 0 0 4.875-1.975l.15-.15z"/></svg>
+              <div class="icon">
+                <svg
+                  v-if="foundUser !== null"
+                  @click="erase"
+                  class="close"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  width="24"
+                  height="24"
+                >
+                  <path fill="none" d="M0 0h24v24H0z" />
+                  <path
+                    d="M12 10.586l4.95-4.95 1.414 1.414-4.95 4.95 4.95 4.95-1.414 1.414-4.95-4.95-4.95 4.95-1.414-1.414 4.95-4.95-4.95-4.95L7.05 5.636z"
+                  />
+                </svg>
+                <svg
+                  v-else
+                  class="search"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  width="24"
+                  height="24"
+                >
+                  <path fill="none" d="M0 0h24v24H0z" />
+                  <path
+                    d="M18.031 16.617l4.283 4.282-1.415 1.415-4.282-4.283A8.96 8.96 0 0 1 11 20c-4.968 0-9-4.032-9-9s4.032-9 9-9 9 4.032 9 9a8.96 8.96 0 0 1-1.969 5.617zm-2.006-.742A6.977 6.977 0 0 0 18 11c0-3.868-3.133-7-7-7-3.868 0-7 3.132-7 7 0 3.867 3.132 7 7 7a6.977 6.977 0 0 0 4.875-1.975l.15-.15z"
+                  />
+                </svg>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="button">
-          <button class="start-conversation-btn">Start conversation</button>
+          <div class="button">
+            <button
+              :disabled="!foundUser"
+              :class="`start-conversation-btn ${!foundUser ? 'disabled' : ''}`"
+              @click="begin_conversation(foundUser.user_name)"
+            >
+              Start conversation
+            </button>
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>
 </template>
 
 <script>
+import { mapGetters, mapActions } from "vuex";
 export default {
   name: "StartConversation",
-  data(){
+  data() {
     return {
-      users : [
-        {pic : "https://i2.wp.com/worldbusinessfitness.com/wp-content/uploads/2018/01/opulent-profile-square-07.jpg",names:'Ntwari Clarance Liberiste', category:'Student'},
-        {pic : "https://i2.wp.com/worldbusinessfitness.com/wp-content/uploads/2018/01/opulent-profile-square-07.jpg",names:'Cedric Izabayo', category:'Student'},
-        {pic : "https://i2.wp.com/worldbusinessfitness.com/wp-content/uploads/2018/01/opulent-profile-square-07.jpg",names:'Gustave Umukura', category:'Instructor'},
-        {pic : "https://i2.wp.com/worldbusinessfitness.com/wp-content/uploads/2018/01/opulent-profile-square-07.jpg",names:'Inzara Nimbi', category:'Student'},
-        {pic : "https://i2.wp.com/worldbusinessfitness.com/wp-content/uploads/2018/01/opulent-profile-square-07.jpg",names:'Uzapfurundi Damas', category:'Student'},
-        {pic : "https://i2.wp.com/worldbusinessfitness.com/wp-content/uploads/2018/01/opulent-profile-square-07.jpg",names:'Ingegera Pixel', category:'Instructor'},
-      ],
-      foundUsers:[],
-      query:'',
-      foundUser:null,
-
-    }
+      foundUsers: [],
+      query: "",
+      foundUser: null,
+    };
   },
-  methods:{
-    search(str){
+  computed: {
+    ...mapGetters("courses", ["user_search_results"]),
+  },
+  methods: {
+    ...mapActions("users", ["searchUser"]),
+    search(str) {
       this.foundUsers = [];
-
-      this.users.map((val,i) => {
-        if(val.names.search(new RegExp(str,'ig')) >= 0)
-          this.foundUsers.push(this.users[i])
-      })
+      this.searchUser({ query: str }).then((results) => {
+        // this.users.map((val, i) => {
+        //   if (val.names.search(new RegExp(str, "ig")) >= 0)
+        //     this.foundUsers.push(this.users[i]);
+        // });
+        this.foundUsers = []
+        for (const i in results) {
+          this.foundUsers.push({
+            names: `${results[i].sur_name} ${results[i].other_names}`,
+            pic: results[i].profile,
+            category: results[i].category.name,
+            user_name: results[i].user_name
+          });
+        }
+      });
     },
-    searchIt(){
-      this.search(this.query)
+    searchIt() {
+      this.search(this.query);
     },
-    selectUser(idx){
-      this.foundUser = this.foundUsers[idx]
-      console.log(this.foundUser)
+    selectUser(idx) {
+      this.foundUser = this.foundUsers[idx];
+      console.log(this.foundUser);
     },
-    erase(){
-      this.foundUser = ''
-    }
-  }
-
-}
+    erase() {
+      this.foundUser = "";
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>
-.my-start-conversation{
-  .search-start-conversation-container{
-    background-color: $blue-gray;
-    min-height: calc(100vh -  5rem);
+.my-start-conversation {
+  .search-start-conversation-container {
+    // background-color: $blue-gray;
+    min-height: calc(100vh - 5rem);
     display: flex;
     justify-content: center;
 
-    .search-container{
+    .search-container {
       align-self: center;
       background-color: $main;
       display: flex;
       flex-direction: column;
       padding: 1.5rem;
-      box-shadow: 0 0 10px lighten($font,62);
+      // box-shadow: 0 0 10px lighten($font, 62);
       border-radius: 1px;
 
-      h2{
-        font-size: .9rem;
-
+      h2 {
+        font-size: 0.9rem;
       }
-      .search-bar-container{
+      .search-bar-container {
         display: flex;
 
-        .search-input{
+        .search-input {
           width: 18rem;
           display: flex;
           justify-content: space-between;
-          margin: .5rem 1rem .5rem 0;
-          border:2px solid lighten($font,55);
-          background-color: lighten($font,65);
-          padding: .3rem;
+          margin: 0.5rem 1rem 0.5rem 0;
+          border: 2px solid lighten($font, 55);
+          background-color: lighten($font, 65);
+          padding: 0.3rem;
           position: relative;
 
-          div.icon{
+          div.icon {
             cursor: pointer;
             display: flex;
-            svg{
+            svg {
               align-self: center;
-              transform: scale(.8);
+              transform: scale(0.8);
             }
           }
-          div.user{
+          div.user {
             display: flex;
-            img{
-              width: 20px;
-              height: 20px;
+            img {
+              width: 30px;
+              height: 30px;
               border-radius: 50%;
               object-fit: cover;
-              margin: .2rem .3rem;
+              margin: 0.2rem 0.3rem;
             }
-            p{
-              margin: .2rem .3rem;
+            p {
+              margin: 0.2rem 0.3rem;
               align-self: center;
               height: fit-content;
-              padding:0;
-              font-size: .8rem;
+              padding: 0;
+              font-size: 0.8rem;
             }
-            span{
+            span {
               display: inline-flex;
               justify-self: self-end;
               align-self: center;
-              background-color: lighten($success,20);
-              font-size: .6rem;
-              padding:.05rem 1rem;
-              text-transform:lowercase;
-              color:darken($font,50);
+              background-color: lighten($success, 20);
+              font-size: 0.6rem;
+              padding: 0.05rem 1rem;
+              text-transform: lowercase;
+              color: darken($font, 50);
               border-radius: 40px;
               margin-left: 1rem;
             }
           }
 
-          ul{
+          ul {
             position: absolute;
             width: 100%;
             background-color: $main;
-            top:110%;
+            top: 110%;
             left: 0;
             border-radius: 5px;
-            box-shadow: 0 5px 10px lighten($font,60);
-            padding:.4rem .5rem;
+            box-shadow: 0 5px 10px lighten($font, 60);
+            padding: 0.4rem 0.5rem;
 
-            span{
+            span {
               display: inline-flex;
               justify-self: self-end;
               align-self: center;
-              background-color: lighten($success,20);
-              font-size: .6rem;
-              padding:.05rem 1rem;
-              text-transform:lowercase;
-              color:darken($font,50);
+              background-color: lighten($success, 20);
+              font-size: 0.6rem;
+              padding: 0.05rem 1rem;
+              text-transform: lowercase;
+              color: darken($font, 50);
               border-radius: 40px;
               margin-left: 1rem;
             }
 
-
-            li{
-              padding:.1rem;
+            li {
+              padding: 0.1rem;
               display: flex;
               flex-direction: row;
               max-height: 15rem;
               cursor: pointer;
 
-              &:hover{
-                background-color: lighten($font,65);
+              &:hover {
+                background-color: lighten($font, 65);
               }
 
-              img{
+              img {
                 width: 30px;
                 height: 30px;
                 border-radius: 50%;
                 object-fit: cover;
-                margin: .2rem .3rem;
+                margin: 0.2rem 0.3rem;
               }
 
-              p{
-                margin: .2rem .3rem;
+              p {
+                margin: 0.2rem 0.3rem;
                 align-self: center;
                 height: fit-content;
-                padding:0;
-                font-size: .8rem;
+                padding: 0;
+                font-size: 0.8rem;
               }
             }
           }
         }
-        .button{
+        .button {
           display: inline-flex;
 
-          button{
+          button {
             align-self: center;
             background-color: $success;
-            color:$main;
-            padding: .3rem 1rem;
+            color: $main;
+            padding: 0.3rem 1rem;
             border-radius: 50px;
+          }
+          .disabled {
+            background-color: $disabled;
           }
         }
       }
     }
+  }
+  .avatar {
+    background-color: $primary;
+    color: white;
+    cursor: pointer;
+    margin: 0.2rem 0.3rem;
   }
 }
 </style>
