@@ -16,6 +16,7 @@ export default {
   methods: {
     ...mapMutations("notification", ["addNotification"]),
     ...mapMutations("courses", ["addCourse"]),
+    ...mapMutations('chat',['CHANGE_MESSAGE_READ_STATUS']),
   },
   mounted() {
     // listen to new notifications
@@ -36,7 +37,8 @@ export default {
 
     //when new message is received scroll to the bottom
     this.socket.on("receive-message", () => {
-      this.scrollChatToBottom();//scroll to bottom
+      //scroll to bottom
+      setTimeout(this.scrollChatToBottom,1)
       this.CHANGE_MESSAGE_READ_STATUS(this.currentDisplayedUser.id) //read all messages
     });
   },
