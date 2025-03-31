@@ -97,9 +97,9 @@
                         >
                           <vue-plyr>
                             <video
-                              :src="
+                              :src="`${
                                 course.chapters[activeChapter].uploaded_video
-                              "
+                              }?token=${$session.get('jwt')}`"
                             ></video>
                           </vue-plyr>
                         </v-col>
