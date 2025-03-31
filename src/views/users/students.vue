@@ -231,10 +231,10 @@ export default {
       selected_users: new Set([]),
       options: {
         coloredRows: false,
-        link: {
-          routeTo: '/users/{id}',
-          paramPropertyName: 'user_name'
-        },
+        // link: {
+        //   routeTo: '/users/{id}',
+        //   paramPropertyName: 'user_name'
+        // },
         keysToShow: [" ", "User name", "Gender", "Course progress", "Perfomance (%)", "Attendace"],
       },
     }
