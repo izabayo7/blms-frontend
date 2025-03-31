@@ -506,9 +506,9 @@ export default {
     this.participationInfo.room = this.$route.params.courseId
 
 
-    const host = '198.211.107.132:8443'
+    const host = '198.211.107.132:8080'
 
-    this.ws = new WebSocket('wss://' + host + '/groupcall');
+    this.ws = new WebSocket('wss://' + host + '/kurious_stream'+`?token=${this.$session.get("jwt")}`);
 
     this.ws.addEventListener('open', () => {
       self.register();
