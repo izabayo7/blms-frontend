@@ -1,116 +1,179 @@
 <template>
-<div class="my-add-member">
-  <div class="add-member-container">
-    <div class="add-member-center">
-      <div class="row group-members">
-        <label for="group_members_input">Add members</label>
-        <input @input="getUsers" v-model="currentMember" type="text"
-               id="group_members_input">
-        <transition name="member">
-          <div class="found-members" v-if="foundUsers.length > 0 || userLoading">
-            <svg v-if="userLoading" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"/><path d="M12 3a9 9 0 0 1 9 9h-2a7 7 0 0 0-7-7V3z"/></svg>
-            <div class="no-user" v-if="NotFoundText.length>0">{{ NotFoundText }}</div>
-            <transition-group name="members">
-              <div class="member" v-for="(user) in foundUsers" @click="addMember(user)" :key="user.email">
-                <member :disabled="disabled(user.email)"  :user="user"  />
+  <div class="my-add-member">
+    <div class="add-member-container">
+      <!-- {{ incomingMessages }} -->
+      <div class="add-member-center">
+        <div class="row group-members">
+          <label for="group_members_input">Add members</label>
+          <input
+            @input="getUsers"
+            v-model="currentMember"
+            type="text"
+            id="group_members_input"
+          />
+          <transition name="member">
+            <div
+              class="found-members"
+              v-if="foundUsers.length > 0 || userLoading"
+            >
+              <svg
+                v-if="userLoading"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                width="24"
+                height="24"
+              >
+                <path fill="none" d="M0 0h24v24H0z" />
+                <path d="M12 3a9 9 0 0 1 9 9h-2a7 7 0 0 0-7-7V3z" />
+              </svg>
+              <div class="no-user" v-if="NotFoundText.length > 0">
+                {{ NotFoundText }}
               </div>
+              <transition-group name="members">
+                <div
+                  class="member"
+                  v-for="user in foundUsers"
+                  @click="addMember(user)"
+                  :key="user.email"
+                >
+                  <member :disabled="disabled(user.email)" :user="user" />
+                </div>
+              </transition-group>
+            </div>
+          </transition>
+          <div class="added-members-list" v-if="group.members.length > 0">
+            <transition-group name="chips">
+              <chip
+                v-for="(member, i) in group.members"
+                @closed="closed(i)"
+                :key="member.email"
+              >
+                {{ member.sur_name + " " + member.other_names }}
+              </chip>
             </transition-group>
           </div>
-        </transition>
-        <div class="added-members-list" v-if="group.members.length > 0">
-          <transition-group name="chips">
-            <chip v-for="(member,i) in group.members" @closed="closed(i)" :key="member.email">
-              {{ member.sur_name + ' ' + member.other_names }}
-            </chip>
-          </transition-group>
-      </div>
-      <div class="row action-buttons">
-        <button class="create-group-button">Add</button>
-        <button class="cancel-group-creation" @click="$router.go(-1)">Cancel</button>
+          <div class="row action-buttons">
+            <button class="create-group-button" @click="createAddMember">
+              Add
+            </button>
+            <button class="cancel-group-creation" @click="$router.go(-1)">
+              Cancel
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
-</div>
-</div>
 </template>
 
 <script>
 import Chip from "@/components/reusable/ui/Chip";
 import Member from "@/components/messages/Member";
-import {mapActions} from "vuex";
+import { mapActions, mapState } from "vuex";
 import apis from "@/services/apis";
 export default {
   name: "AddMember",
-  components: {Member, Chip},
-  data(){
+  components: { Member, Chip },
+  data() {
     return {
-      currentMember:'',
-      foundUsers:[],
-      userLoading:false,
-      NotFoundText:'',
+      currentMember: "",
+      foundUsers: [],
+      userLoading: false,
+      NotFoundText: "",
       group: {
         members: [],
-      }
-
-    }
+      },
+    };
   },
-  methods:{
-    ...mapActions('users',['searchNewGroupMembers']),
+  computed: {
+    ...mapState("chat", ["incomingMessages"]),
+  },
+  methods: {
+    ...mapActions("users", ["searchNewGroupMembers"]),
     closed(i) {
-      this.group.members.splice(i, 1)
+      this.group.members.splice(i, 1);
     },
-    disabled(email){
-      return this.group.members.some(member => member.email === email)
+    disabled(email) {
+      return this.group.members.some((member) => member.email === email);
     },
-    getUsers(){
-      this.userLoading = true
-      this.NotFoundText = ''
-      const EmptyStringRegex = /^\s+$/g //regext to detect empty string
+    getUsers() {
+      this.userLoading = true;
+      this.NotFoundText = "";
+      const EmptyStringRegex = /^\s+$/g; //regext to detect empty string
 
-      if(EmptyStringRegex.test(this.currentMember) || this.currentMember.length <= 0){
-        this.foundUsers = []
-        this.userLoading = false
-        return
+      if (
+        EmptyStringRegex.test(this.currentMember) ||
+        this.currentMember.length <= 0
+      ) {
+        this.foundUsers = [];
+        this.userLoading = false;
+        return;
       }
 
-      apis.get(`chat_group/${this.$route.params.id}/search_members?data=${this.currentMember}`).then(result => {
-        console.log('before ', result)
-        result = result.data.data.results
-        console.log('after ', result)
-        this.userLoading = false;
-        this.foundUsers= result;
+      apis
+        .get(
+          `chat_group/${this.$route.params.id}/search_members?data=${this.currentMember}`
+        )
+        .then((result) => {
+          result = result.data.data.results;
+          this.userLoading = false;
+          this.foundUsers = result;
 
-        //tell user that we didnt find the user with such id
-        this.NotFoundText = (result.length > 0) ? '' : "No user found"
-      })
+          //tell user that we didnt find the user with such id
+          this.NotFoundText = result.length > 0 ? "" : "No user found";
+        });
     },
     addMember(user) {
-      const membersNotAvailable = this.foundUsers.length <= 0
-      const disabled = this.disabled(user.email)
+      const membersNotAvailable = this.foundUsers.length <= 0;
+      const disabled = this.disabled(user.email);
 
-      if(membersNotAvailable || this.currentMember.length <= 0 || disabled)
-        return
+      if (membersNotAvailable || this.currentMember.length <= 0 || disabled)
+        return;
 
-      this.group.members.unshift(user)
+      this.group.members.unshift(user);
     },
-    createAddMember(){
-      apis.create()
-    }
-
-  }
-}
+    async createAddMember() {
+      let members = [],
+        index;
+      for (const i in this.incomingMessages) {
+        if (this.incomingMessages[i].id == this.$route.params.id) {
+          index = i;
+          break;
+        }
+      }
+      for (const i in this.group.members) {
+        members.push({ user_name: this.group.members[i].user_name });
+        this.incomingMessages[index].members.push({
+          isAdmin: false,
+          data: {
+            sur_name: this.group.members[i].sur_name,
+            other_names: this.group.members[i].other_names,
+            user_name: this.group.members[i].user_name,
+            gender: this.group.members[i].gender,
+            phone: this.group.members[i].phone,
+            category: this.group.members[i].category._id,
+          },
+        });
+      }
+      await apis.update("chat_group", `${this.$route.params.id}/add_members`, {
+        members: members,
+      });
+      this.$router.push(`/messages/group/${this.$route.params.id}`)
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>
-.my-add-member{
+.my-add-member {
   height: 100%;
-  .add-member-container{
+  .add-member-container {
     background-color: $main;
-    height:100%;
+    height: 100%;
     display: flex;
     justify-content: center;
 
-    .add-member-center{
+    .add-member-center {
       width: 25rem;
       align-self: center;
       max-width: 40rem;
@@ -118,15 +181,14 @@ export default {
         display: flex;
         margin: 1rem 0;
 
-
         label {
           display: block;
-          margin: .5rem 0;
+          margin: 0.5rem 0;
         }
 
         input {
           display: block;
-          padding: .2rem;
+          padding: 0.2rem;
           max-width: 25rem;
           color: darken($font, 30);
           border: 2px solid lighten($font, 45);
@@ -138,8 +200,8 @@ export default {
         display: flex;
         justify-content: flex-end;
         button {
-          padding: .5rem 1rem;
-          margin: .4rem;
+          padding: 0.5rem 1rem;
+          margin: 0.4rem;
 
           &.create-group-button {
             background-color: $success;
@@ -154,23 +216,22 @@ export default {
         }
       }
 
-      .group-members, .group-name {
+      .group-members,
+      .group-name {
         flex-direction: column;
-
       }
 
       .group-members {
         .added-members-list {
           max-width: 25rem;
-          border-bottom: .5px solid lighten($secondary, 5);
-          border-top: .5px solid lighten($secondary, 5);
+          border-bottom: 0.5px solid lighten($secondary, 5);
+          border-top: 0.5px solid lighten($secondary, 5);
           margin: 1rem 0;
           max-height: 15rem;
           overflow-x: hidden;
           overflow-y: auto;
 
           @include scroll-bar;
-
         }
       }
     }
