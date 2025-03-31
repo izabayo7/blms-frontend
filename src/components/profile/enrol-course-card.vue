@@ -1,8 +1,8 @@
 <template>
 <!--enrol course card-->
   <div class="ecc">
-    <div class="ecc--wrapper">
-      <div class="ecc--col ecc--col1 ecc--title">
+    <div class="ecc--wrapper d-flex">
+      <div class="ecc--col ecc--col__1 ecc--title">
         <div class="ecc--title--name">
           <h3>Bookkeeping basics</h3>
         </div>
@@ -10,7 +10,7 @@
           <p>Started on 27 jan 2021</p>
         </div>
       </div>
-      <div class="ecc--col ecc--col2 ecc--completion">
+      <div class="ecc--col ecc--col__2 ecc--completion">
         <div class="ecc--completion--text">
           <p>45 % Completion</p>
         </div>
@@ -20,7 +20,14 @@
           </div>
         </div>
       </div>
-      <div class="ecc--col ecc--col3 ecc--last-access"></div>
+      <div class="ecc--col ecc--col__3 ecc--last-access">
+        <div class="ecc--last-access--chapter-name">
+          <p>Last chapter accessed</p>
+        </div>
+        <div class="ecc--last-access--latest-step">
+          <h5>4.2 Rounding</h5>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -31,6 +38,65 @@ name: "enrol-course-card"
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+.ecc{
+  &--wrapper{
 
+  }
+  &--col{
+    &__2{
+      margin-left:1rem;
+      margin-right:1rem;
+    }
+  }
+
+  &--title{
+    &--name{
+      font-size:.9rem;
+    }
+    &--start-date{
+      font-size:.6rem;
+    }
+  }
+
+  p{
+    margin-bottom:.5rem;
+  }
+
+  &--completion{
+    &--text{
+      font-size:0.75rem;
+    }
+    &--progress-bar{
+      &--bar{
+        width:8rem;
+        height:.7rem;
+        background-color: lighten($warn,30);
+        border-radius:10rem;
+
+        &--value{
+          height:100%;
+          width:70%;
+          border-radius:10rem;
+          background-color:$warn;
+        }
+      }
+    }
+
+  }
+
+  &--last-access{
+    &--chapter-name{
+      p{
+        font-size:.75rem;
+      }
+    }
+
+    &--latest-step{
+      h5{
+        font-size:.75rem;
+      }
+    }
+  }
+}
 </style>
