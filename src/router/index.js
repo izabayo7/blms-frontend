@@ -131,6 +131,11 @@ const routes = [
                             import('@/views/quiz/intermediate')
                     },
                     {
+                        path: '/quiz/timeout',
+                        component: () =>
+                            import('@/views/quiz/quiz_timeout')
+                    },
+                    {
                         path: '/quiz/attempt/:name',
                         name: 'TakeQuiz',
                         component: () =>
