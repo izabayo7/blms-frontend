@@ -20,7 +20,7 @@
       <div class="user-card--row user-card--actions user-card--row__2 d-flex">
         <div class="user-card--actions--col user-card--actions--col__2">
           <router-link :to="`/messages/${userByUsername.user_name}`">
-            <button-ui rounded fill :class-list="'px-4 py-2'" class="user-card--actions--button__message user-card--actions--button">
+            <button-ui @click="$emit('close')" rounded fill :class-list="'px-4 py-2'" class="user-card--actions--button__message user-card--actions--button">
               <template #content>
                 <span>Message</span>
               </template>
@@ -30,7 +30,7 @@
 
         <div class="user-card--actions--col user-card--actions--col__1 ">
           <router-link :to="`/users/${userByUsername.user_name}`">
-            <button-ui rounded :class-list="'px-2 py-2'"  class="user-card--actions--button__visit-profile user-card--actions--button">
+            <button-ui rounded @click="$emit('close')" :class-list="'px-2 py-2'"  class="user-card--actions--button__visit-profile user-card--actions--button">
               <template #content>
                 <span>Visit profile</span>
               </template>

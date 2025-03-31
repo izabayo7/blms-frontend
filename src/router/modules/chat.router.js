@@ -9,10 +9,10 @@ const routes =  [
         path: '/start-conversation',
         component: () => import( /* webpackChunkName: "start-conversation" */ '@/views/chat/StartConversation.vue'),
     },
-    {
-        path: '/no-conversation',
-        component: () => import( /* webpackChunkName: "no-conversation" */ '@/views/chat/NoConversation.vue'),
-    },
+    // {
+    //     path: '/no-conversation',
+    //     component: () => import( /* webpackChunkName: "no-conversation" */ '@/views/chat/NoConversation.vue'),
+    // },
     {
         path: '/',
         component: () => import( /* webpackChunkName: "messages" */ '@/views/chat/Messages.vue'),
