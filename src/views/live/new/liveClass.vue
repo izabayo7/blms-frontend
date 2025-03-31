@@ -197,7 +197,12 @@ openQuiz">
             </button>
           </div>
           <div class="live-class--action end-class">
-            <button @click="leaveRoom">
+            <button @click="                      set_modal({
+                        template: 'action_confirmation',
+                        method: { action: 'live_session/change_confirmation',parameters: { value: true} },
+                        title: 'End live session',
+                        message: 'Are you sure you want to end this live session?'
+                      })">
             <span class="icon">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none"
                                                                                                        d="M0 0h24v24H0z"/><path
@@ -352,6 +357,7 @@ export default {
   computed: {
     ...mapGetters('user', ['user']),
     ...mapGetters("chat", ["socket"]),
+    ...mapGetters("live_session", ["end_class"]),
 
     ...mapState("sidebar_navbar", {sidebarOpen: "sidebar_expanded"}),
     instructor() {
@@ -499,14 +505,13 @@ export default {
       })
 
       self.socket.on("res/live/studentAnswered", ({id}) => {
-        self.participants.sort((a, b)=>
-        {
-          if (a._id == id)
-            return 1
-          else if (b._id == id)
-            return -1
-        }
-      )
+        self.participants.sort((a, b) => {
+              if (a._id == id)
+                return 1
+              else if (b._id == id)
+                return -1
+            }
+        )
         console.log("res/live/studentAnswered", id)
       })
 
@@ -861,6 +866,10 @@ export default {
     videoEnabled() {
       this.noVideo = !this.videoEnabled
       console.log(this.noVideo, this.videoEnabled)
+    },
+    end_class(){
+      if(this.end_class)
+        this.leaveRoom()
     }
   }
 }

@@ -6,6 +6,7 @@ const getDefaultState = () => ({
         loaded: false
     },
     active_participants: [],
+    end_class: false
 })
 
 export default {
@@ -29,6 +30,9 @@ export default {
                 d.data = d.data.data
                 state.live_sessions.data.push(d.data)
             })
+        },
+        change_confirmation({state}, {value}) {
+            state.end_class = value
         },
         answerAttendance({rootGetters}, {user}) {
             console.log(rootGetters)
@@ -55,6 +59,9 @@ export default {
     getters: {
         participants: state => {
             return state.active_participants;
+        },
+        end_class: state => {
+            return state.end_class;
         },
     }
 

@@ -1,11 +1,5 @@
 <template>
   <div class="courses-container">
-    <button  @click="                      set_modal({
-                        template: 'live_related_ended',
-                        method: { action: 'courses/delete_course' },
-                        title: 'Delete Course',
-                        message: 'Are you sure you want to delete this course?',
-                      })">Test</button>
     <!-- view of the student -->
     <v-container v-if="userCategory == 'STUDENT'" id="courses" fluid>
       <v-row>
@@ -305,7 +299,6 @@ export default {
   },
   methods: {
     ...mapActions("courses", ["getCourses"]),
-    ...mapActions("modal", ["set_modal"]),
   },
   mounted() {
     // if (!this.loaded) {

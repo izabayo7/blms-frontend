@@ -91,7 +91,7 @@
         <input v-model="userCode" type="text">
       </div>
       <div class="action">
-        <button v-if="modal_template.includes('ended')" @click="handleSubmit">Go to course</button>
+        <button v-if="modal_template.includes('ended')" @click="performAction">Go to course</button>
         <button v-else @click="handleSubmit">Submit</button>
       </div>
     </div>
@@ -215,6 +215,7 @@ export default {
   }
 
   .close-dialog {
+    visibility: hidden;
     text-align: right;
     padding: 11px;
 
