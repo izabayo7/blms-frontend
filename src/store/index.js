@@ -1,5 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import courses from "@/store/modules/courses";
+
 Vue.use(Vuex)
 export default new Vuex.Store({
     state: {
@@ -28,4 +30,7 @@ export default new Vuex.Store({
             commit('unSetUser')
         },
     },
+    modules:{
+        courses
+    }
 })

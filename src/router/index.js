@@ -6,11 +6,37 @@ import jwt from "jsonwebtoken"
 
 Vue.use(VueRouter)
 
-const routes = [
-    // the landing page
-    {
-        path: '/',
-        name: 'Home',
+
+const routes = [{
+    path: '/',
+    name: 'Home',
+    component: Home
+},
+{
+    path: '/login',
+    name: 'Login',
+    component: () =>
+        import('@/components/login')
+},
+{
+    path: '/test',
+    name: 'dash',
+    component: () =>
+        import('@/components/dashboard')
+},
+{
+    path: '/kurious',
+    component: () =>
+        import('@/views/dashboard/Index-new'),
+
+    children: [{
+        path: '/courses',
+        name: 'Courses',
+        component: () =>
+            import('@/components/courses.vue')
+    }, {
+        path: '/courses/new-course',
+        name: 'New Course',
         component: () =>
             import('@/views/pages/home'),
         meta: {
@@ -121,6 +147,11 @@ const routes = [
         component: () =>
             import('@/components/registration/users/panel.vue')
     }, {
+        path: '/messages',
+        component: () => import('@/views/Messages.vue'),
+        children:[
+            {path:'/messages/:username', component: () => import('@/views/Chat.vue')}
+        ]
         path: '/register/users/student',
         name: 'Register Student',
         component: () =>
