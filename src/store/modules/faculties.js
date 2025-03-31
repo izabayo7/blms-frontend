@@ -46,14 +46,13 @@ export default {
             })
         },
         //get faculties from backend
-        getFaculties({ state }, collegeId) {
+        async getFaculties({ state }, collegeId) {
             // when faculties not loaded fetch them
             if (!state.faculties.loaded) {
-                apis.get(`faculty/college/${collegeId}`).then(d => {
-                    state.faculties.data = d.data
+                const {data:{data}} = await apis.get(`faculty/college/${collegeId}`)
+                    state.faculties.data = data
                     //announce that data have been loaded
                     state.faculties.loaded = true
-                })
             }
         },
         //get faculties that a college can imoprt from backend
@@ -113,6 +112,7 @@ export default {
         },
         //get all specified faculties
         faculties: state => {
+
             return state.faculties.data
         },
         //get all specified importable_faculties
