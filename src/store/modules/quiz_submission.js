@@ -121,7 +121,7 @@ export default {
                     })
                 }
                 state.quiz_submission.data.push(submissionObject)
-                return d.is_selection_only;
+                return d.data.is_selection_only;
             })
 
         },

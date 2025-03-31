@@ -3,14 +3,28 @@
     <back class="mt-0 mb-6 ml-lg-n6" />
     <v-row v-if="selected_quiz_submission">
       <div class="col-12 ml-2 mt-5">
-        <div class="title">{{ "Quiz name" }}</div>
+        <div class="title">{{ selected_quiz_submission.quiz.name }}</div>
       </div>
       <v-col class="col-12 col-md-7">
-        <div v-if="1 == 2" class="passed_test">Success</div>
+        <div
+          v-if="
+            selected_quiz_submission.total_marks >=
+            selected_quiz_submission.quiz.total_marks / 2
+          "
+          class="passed_test"
+        >
+          Success
+        </div>
         <div v-else class="failed_test">Attempt Failed</div>
         <div class="mt-3 d-flex marks_container">
           <div class="mr-12 label">Your score is</div>
-          <div class="marks">{{ "18 / 20" }}</div>
+          <div class="marks">
+            {{
+              selected_quiz_submission.total_marks +
+              "/" +
+              selected_quiz_submission.quiz.total_marks
+            }}
+          </div>
         </div>
         <div v-if="1 == 2" class="mt-8 text_2">
           <div>You have succeeded on this assesment</div>
@@ -25,20 +39,34 @@
           </button>
           <button
             :class="`start_quiz grey ${!isInstructor ? 'ml-6' : ''}`"
-            @click="$router.push('/reports')"
+            @click="
+              $router.push(
+                '/courses/' + selected_quiz_submission.quiz.target.course.name
+              )
+            "
           >
             Go to course
           </button>
         </div>
         <div v-if="1 == 1" class="mt-8 text_1">
-          <div>The pass mark is 10/20</div>
-          <div>You have 1 Attempt left</div>
+          <div>
+            The pass mark is
+            {{
+              selected_quiz_submission.quiz.total_marks / 2 +
+              "/" +
+              selected_quiz_submission.quiz.total_marks
+            }}
+          </div>
+          <div>You have no Attempt left</div>
         </div>
       </v-col>
       <v-col class="col-12 col-md-5">
         <div class="head_icon">
           <svg
-            v-if="2 == 1"
+            v-if="
+              selected_quiz_submission.total_marks >=
+              selected_quiz_submission.quiz.total_marks / 2
+            "
             xmlns="http://www.w3.org/2000/svg"
             width="299.333"
             height="299.333"
@@ -159,7 +187,7 @@ export default {
   },
   created() {
     this.findQuizSubmissionByUserAndQuizNames({
-      user_name: this.$store.state.user.user.user_name,
+      userName: this.$store.state.user.user.user_name,
       quizName: this.$route.params.name,
     });
     // if (!this.course && !this.isInstructor) this.$router.push("/");
