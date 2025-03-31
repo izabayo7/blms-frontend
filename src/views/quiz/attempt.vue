@@ -282,7 +282,9 @@ export default {
       }
       if (!deleted) {
         if (
-          this.selected_quiz.questions[questionIndex].type.includes("single")
+          this.selected_quiz.questions[questionIndex].type
+            .toLowerCase()
+            .includes("single")
         ) {
           this.attempt.answers[questionIndex].choosed_options = [value];
         } else {
@@ -308,21 +310,21 @@ export default {
       });
     }
     this.findQuizByName({
-      userId: this.$store.state.user.user._id,
+      user_name: this.$store.state.user.user.user_name,
       quizName: this.$route.params.name,
     }).then((quiz) => {
       this.remaining_time = quiz.duration;
       this.attempt = {
         quiz: quiz._id,
-        user: this.$store.state.user.user._id,
+        user: this.$store.state.user.user.user_name,
         auto_submitted: false,
         used_time: 0,
         answers: [],
       };
       for (const question of quiz.questions) {
-        if (question.type === "open-ended") {
+        if (question.type === "open_ended") {
           this.attempt.answers.push({ text: "" });
-        } else if (question.type === "file-upload") {
+        } else if (question.type === "file_upload") {
           this.attempt.answers.push({ src: "" });
           this.filesToUpload.push({ file: "" });
         } else {
