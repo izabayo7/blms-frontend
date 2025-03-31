@@ -1,11 +1,13 @@
 <template>
   <div v-if="group.name" class="my-info">
     <div class="info-container">
+      <cropper :img="img" @change="imageCropped" />
       <div class="my-info">
         <div class="profile">
           <div class="photo">
-            <input type="file" ref="img" />
-            <div class="icon" @click="$refs.img.click()">
+            <img v-if="image" :src="image" @change="image" :alt="`${group.name} group icon`">
+            <input type="file" @change="handleFileUpload" ref="file" />
+            <div class="icon" @click="$refs.file.click()">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
@@ -80,6 +82,7 @@
 import GroupMember from "@/components/messages/Group-member";
 import a from "@/services/apis";
 import { mapMutations } from "vuex";
+import {cropper} from "../../services/mixins"
 
 export default {
   name: "Group-info",
@@ -88,8 +91,11 @@ export default {
     return {
       members: [],
       group: {},
+      profile:'',
+      img:''
     };
   },
+  mixins:[cropper],
   computed: {
     IamAdmin() {
       const me = this.group.members.filter(
@@ -97,6 +103,10 @@ export default {
       );
       return me[0] ? me[0].isAdmin : undefined;
     },
+    // get image either base64 or profile image
+    image(){
+      return this.img.length > 0 ? this.img : (this.profile.length > 0) ? this.profile : false
+    }
   },
   methods: {
     ...mapMutations("modal", ["update_confirmation"]),
