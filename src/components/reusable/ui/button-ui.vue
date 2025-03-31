@@ -1,6 +1,6 @@
 <template>
 <div class="my-button">
-  <div @click="clicked" class="button-container px-10 py-3" :class="classList">
+  <div @click="clicked" class="button-container " :class="classList">
     <button :type="type">
       <slot name="content"></slot>
     </button>
@@ -13,7 +13,8 @@ export default {
   name: "button-ui",
   props:{
     type:{default:"button"},
-    classList:{default:""},
+    classList:{default:"px-10 py-3"},
+    size:{type:Number,default:3}
   },
   methods:{
     clicked(e){
@@ -43,10 +44,16 @@ export default {
       border:3px solid lighten($primary,40)
     }
 
+
     button{
       color:$main;
       display:flex;
       align-items:center;
+      font-weight:300 !important;
+
+      *{
+        font-weight:300 !important;
+      }
 
       span{
         margin:0 .3rem;
