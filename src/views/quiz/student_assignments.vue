@@ -206,7 +206,6 @@ export default {
       this.$router.push(`/assessments/assignments/${value._id}`)
     },
     isExamDisabled(item) {
-      console.log(item)
       if (item.submission)
         return true
       let date = new Date(item.starting_time)

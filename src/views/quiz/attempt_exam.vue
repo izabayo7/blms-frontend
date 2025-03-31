@@ -593,13 +593,24 @@ export default {
           cheated
         })
         if (this.recorder)
-          this.recorder.stop()
+          this.stopRecorder()
       } else {
         this.set_modal({
           template: `exam_closed_${cheated ? 'failed' : 'successfull'}`,
         })
         this.removeListeners()
       }
+    },
+    stopRecorder(){
+      const video = document.getElementById("userStream")
+      const stream = video.srcObject;
+      const tracks = stream.getTracks();
+
+      tracks.forEach(function(track) {
+        track.stop();
+      });
+      this.recorder.stop()
+      video.srcObject = null;
     },
     goFullscreen() {
       var el = document.documentElement
@@ -720,6 +731,7 @@ export default {
       reader.readAsDataURL(blob);
     },
     recordStream(stream) {
+      console.log('going to record')
       let options = {mimeType: 'video/webm;codecs=vp9'};
       this.recorder = new MediaRecorder(stream, options);
       this.recorder.ondataavailable = this.postBlob
@@ -770,11 +782,11 @@ export default {
       }, 1000)
 
 
-      document.querySelector('body').addEventListener('click', this.goFullscreen)
-      window.addEventListener('beforeunload', this.goodbye)
-      // track if one leaves tab
-      document.addEventListener("visibilitychange", this.detectFocus)
-      window.addEventListener("resize", this.detectResize)
+      // document.querySelector('body').addEventListener('click', this.goFullscreen)
+      // window.addEventListener('beforeunload', this.goodbye)
+      // // track if one leaves tab
+      // document.addEventListener("visibilitychange", this.detectFocus)
+      // window.addEventListener("resize", this.detectResize)
     }
   },
   created() {
