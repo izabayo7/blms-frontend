@@ -159,7 +159,7 @@ export default {
   },
   created() {
     this.findQuizSubmissionByStudentAndQuizNames({
-      studentName: `${this.$store.state.user.user.surName}_${this.$store.state.user.user.otherNames}`,
+      user_name: this.$store.state.user.user.user_name,
       quizName: this.$route.params.name,
     });
     // if (!this.course && !this.isInstructor) this.$router.push("/");
