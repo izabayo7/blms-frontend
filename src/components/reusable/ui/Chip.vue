@@ -11,7 +11,7 @@
 
 <script>
 export default {
-name: "Chip",
+  name: "Chip",
   methods:{
     clicked(){
       this.$emit('closed')
@@ -29,7 +29,7 @@ name: "Chip",
   margin:.3rem;
   display: inline-flex;
   border-radius: 20px;
-  transition:.3s;
+  transition:all .5s;
   button{
     cursor: pointer;
     svg{
