@@ -2,7 +2,7 @@
   <div class="my-users-page bg-one d-flex justify-center">
     <div class="users-page-container d-flex flex-column">
       <div class="header">
-        <div class="header-wrapper d-flex justify-space-between">
+        <div class="header-wrapper d-flex ">
           <div class="heading col d-flex align-center">
             <div class="icon">
               <div class="icon-wrapper">
@@ -22,12 +22,7 @@
               <search  placeholder="Search user"/>
             </div>
           </div>
-          <div class="add-user col">
-            <div class="add-user-button">
-              <button-ui>
-                <template #content>Add user</template>
-              </button-ui>
-            </div>
+          <div class="add-user d-flex justify-end col">
           </div>
         </div>
       </div>
@@ -46,13 +41,12 @@
 </template>
 
 <script>
-import buttonUi from '@/components/reusable/ui/button-ui'
 import Search from '@/components/reusable/Search2'
 import tableUi from '@/components/reusable/ui/table-ui'
 import TableHeader from "../../components/reusable/ui/table-header";
 export default {
   name: "Students",
-  components:{TableHeader, buttonUi,Search,tableUi},
+  components:{TableHeader,Search,tableUi},
   data(){
     return{
       users:[
@@ -96,28 +90,7 @@ export default {
     width:90%;
 
     .header{
-      width:100%;
-
-      .header-wrapper{
-        margin-top:3rem;
-
-        .heading{
-          .icon{
-            margin-right:1.55rem;
-          }
-          .text-content{
-
-            h2,h4{
-              color:$font;
-            }
-          }
-        }
-        .search{
-          .search-wrapper{
-            width:20rem;
-          }
-        }
-      }
+      @include users-page-header;
 
     }
 
