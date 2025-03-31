@@ -48,7 +48,8 @@
 
       <!--    faculty page links/navbar-->
       <section class="faculty--links links">
-        <section class="links--wrapper">
+        <section class="links--wrapper d-block d-md-flex align-center">
+          <back class="ml-16" to="/faculties"/>
           <faculty-navbar/>
         </section>
       </section>
@@ -60,6 +61,7 @@
       <faculty-dialog
           v-if="showFacultyModal"
           @closeModal="showFacultyModal = false"
+          @saved="location.reload()"
           :editMode="true"
           :facultyId="facultyId"
       />
@@ -75,7 +77,7 @@ import {mapGetters} from "vuex";
 
 export default {
   name: "FacultyIndex",
-  components: {ButtonUi, Search, FacultyNavbar, FacultyDialog: () => import("@/components/dashboard/addFaculty"),},
+  components: {ButtonUi, Search, FacultyNavbar,back: () => import("@/components/shared/back-button"), FacultyDialog: () => import("@/components/dashboard/addFaculty"),},
   data() {
     return {
       facultyId: this.$route.params.facultyId,

@@ -99,7 +99,6 @@ export default {
       const videoEl = this.$refs['md-video-preview']
       videoEl.srcObject = stream;
       videoEl.play()
-      console.log(videoEl.srcObject,videoEl,stream)
     },
 
     // filter devices by name and return device id

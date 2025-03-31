@@ -24,10 +24,14 @@
               <div class="no-video"
                    v-show="(noVideo && !isPresenting) || (isPresenting && participationInfo.isOfferingCourse)">
                 <div class="no-video--wrapper" :class="{presenting:isPresenting}">
-                  <div class="instructor-info">
+                  <div v-if="instructor" class="instructor-info">
                     <img
-                        :src="instructor ? instructor.profile + '?width=100' : ''"
+                        v-if="instructor.profile"
+                        :src="instructor.profile + '?width=100'"
                         alt="profile picture" class="picture">
+                    <v-avatar v-else class="avatar">
+                      {{ instructor.sur_name | computeText }}
+                    </v-avatar>
                     <h2 class="course">{{ live_session.course.name }}: {{ live_session.chapter.name }}</h2>
                     <span class="source">by instuctor</span>
                     <h2 class="name">{{
@@ -44,11 +48,16 @@
                   </div>
                 </div>
               </div>
-                <video v-show="!noVideo && !isPresenting" id="video_feed">
+              <video v-show="!noVideo && !isPresenting" id="video_feed">
                 <!--                <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" >-->
               </video>
               <button @click="playVideo" class="play_button">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="64" height="64"><path fill="none" d="M0 0h24v24H0z"/><path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zM10.622 8.415a.4.4 0 0 0-.622.332v6.506a.4.4 0 0 0 .622.332l4.879-3.252a.4.4 0 0 0 0-.666l-4.88-3.252z" fill="rgba(255,255,255,1)"/></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="64" height="64">
+                  <path fill="none" d="M0 0h24v24H0z"/>
+                  <path
+                      d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zM10.622 8.415a.4.4 0 0 0-.622.332v6.506a.4.4 0 0 0 .622.332l4.879-3.252a.4.4 0 0 0 0-.666l-4.88-3.252z"
+                      fill="rgba(255,255,255,1)"/>
+                </svg>
               </button>
               <video v-if="!participationInfo.isOfferingCourse" v-show="isPresenting"
                      id="viewer_screen_feed">
@@ -335,7 +344,6 @@ export default {
         } else {
 
           if (remainingTime.includes('day') && remainingTime.includes('ago')) {
-            console.log(remainingTime)
             this.error = "The meeting expired " + remainingTime
             this.finishSession()
           } else if (remainingTime.includes("in ")) {
@@ -344,7 +352,7 @@ export default {
             // }
           } else {
 
-            await Apis.create('user_logs',{live_session_id: d.data.data._id})
+            await Apis.create('user_logs', {live_session_id: d.data.data._id})
 
             this.live_session = d.data.data
             this.startCounting(d.data.data);
@@ -375,10 +383,10 @@ export default {
     },
   },
   methods: {
-    toogleFullScreen(){
+    toogleFullScreen() {
       document.getElementById("video_feed").requestFullscreen()
     },
-    playVideo(){
+    playVideo() {
       document.getElementById("video_feed").play()
       document.querySelector('.play_button').style.display = 'none'
     },
@@ -397,13 +405,12 @@ export default {
     initialiseSession() {
       //know if this user has ability to give live class
       this.participationInfo.isOfferingCourse = this.user.category.name === 'INSTRUCTOR'
-      console.log(this.user)
 
       const self = this
       this.participationInfo.name = `${this.user.other_names} ${this.user.sur_name}`
       this.participationInfo.room = this.$route.params.liveSessionId
 
-      const host = 'stream.kurious.rw'
+      const host = 'test.stream.kurious.rw'
       // const host = 'localhost:8080'
 
       this.ws = new WebSocket('wss://' + host + '/kurious_stream' + `?token=${this.$session.get("jwt")}`);
@@ -413,12 +420,15 @@ export default {
       })
 
       this.ws.onerror = function (evt) {
-        console.log("ERR: ", evt);
+        this.$store.dispatch("app_notification/SET_NOTIFICATION", {
+          message: evt,
+          status: "danger",
+          uptime: 2000,
+        })
       };
 
 
       window.onbeforeunload = () => {
-        console.log('before unload g')
         this.ws.close();
         this.handleMediaTracks();
       };
@@ -461,7 +471,6 @@ export default {
             this.onParticipantLeft(parsedMessage);
             break;
           case 'toogleMedia':
-            console.log(this.audioEnabled, parsedMessage)
             this.toogleMedia(parsedMessage);
             break;
           case 'notification':
@@ -473,7 +482,6 @@ export default {
             this.receiveVideoResponse(parsedMessage);
             break;
           case 'iceCandidate':
-            console.log(parsedMessage.name, self.participantIndex(parsedMessage.name), self.participants)
             if (self.participantIndex(parsedMessage.name) != -1) {
               self.participants[self.participantIndex(parsedMessage.name)].rtcPeer.addIceCandidate(parsedMessage.candidate, function (error) {
                 if (error) {
@@ -489,7 +497,6 @@ export default {
       }
       this.ws.onclose = () => {
         console.trace();
-        console.log("\n\n\n\nclosed\n\n\n\n", new Date())
       }
       self.socket.on("live/quizReleased", (quiz) => {
         self.quiz = quiz;
@@ -504,7 +511,10 @@ export default {
       self.socket.on("res/live/checkAttendance", ({code}) => {
         this.set_modal({
           template: 'live_related',
-          method: {action: 'live_session/answerAttendance', parameters: {user: {id: self.instructor._id}, session_id: self.$route.params.liveSessionId}},
+          method: {
+            action: 'live_session/answerAttendance',
+            parameters: {user: {id: self.instructor._id}, session_id: self.$route.params.liveSessionId}
+          },
           title: 'ATTENDANCE CHECK',
           message: 'Hey user, are you there ? Type the code bellow to confirm ',
           code: code,
@@ -581,6 +591,12 @@ export default {
       }
     },
     shareScreen() {
+      if (!this.isPresenting) {
+        setTimeout(() => {
+          document.getElementById("video_screen_feed").srcObject.getVideoTracks()[0].addEventListener('ended', () =>
+              this.shareScreen())
+        }, 5000)
+      }
       let message = {
         id: this.isPresenting ? 'stopSharingScreen' : 'shareScreen',
       }
@@ -613,12 +629,10 @@ export default {
     },
     sendMessage(message) {
       let jsonMessage = JSON.stringify(message);
-      console.log('Sending message: ', message, this.participants);
       this.ws.send(jsonMessage);
     },
 
     onNewParticipant(request) {
-      console.log('new participant', request, this.participants)
       if (request.name != this.participationInfo.name + '_screen') {
         this.receiveVideo(request.name);
       }
@@ -631,7 +645,6 @@ export default {
       this.participants.splice(index, 1)
     },
     receiveVideoResponse(result) {
-      console.log('receiving video', result, this.participants)
 
       this.participants[this.participantIndex(result.name)].rtcPeer.processAnswer(result.sdpAnswer, function (error) {
         if (error) return console.error(error);
@@ -639,9 +652,7 @@ export default {
     },
 
     callResponse(message) {
-      console.log('call response', message, this.participants)
       if (message.response != 'accepted') {
-        console.info('Call not accepted by peer. Closing call');
         stop();
       } else {
         WebRtcPeer.processAnswer(message.sdpAnswer, function (error) {
@@ -652,7 +663,6 @@ export default {
 
     async onExistingParticipants(msg) {
       const self = this
-      console.log('existing participant', msg, this.participants)
       let constraints = self.isPresenting ? {
         audio: true,
         video: true
@@ -667,16 +677,9 @@ export default {
         }
       };
 
-      if (this.participationInfo.isOfferingCourse) {
-        console.log('\n\n\n\n\n instructor joined \n\n\n\n\n')
-      } else {
-        console.log('\n\n\n\n\n student joined \n\n\n\n\n')
-        // constraints = {audio: false, video: false}
+      if (!this.participationInfo.isOfferingCourse) {
         constraints = null
       }
-
-      console.log(this.participationInfo.name + " registered in room " + this.participationInfo.room);
-
 
       let participant = new Participant(self.isPresenting ? `${this.participationInfo.name}_screen` : this.participationInfo.name, this, true, await this.getUserInfo(this.participationInfo.name.split('_')[0]));
 
@@ -715,8 +718,6 @@ export default {
 
           });
 
-
-      msg.data.forEach(console.log)
       msg.data.forEach(this.receiveVideo);
 
       if (self.isPresenting) {
@@ -786,10 +787,7 @@ export default {
       // this.$router.push('/')
     },
     async receiveVideo(sender) {
-      console.log(`\n\n\n\n\n receiving video for ${sender} \n\n\n\n\n`)
       let participant = sender == this.participationInfo.name ? this.participants[this.participantIndex(sender)] : new Participant(sender, this, false, await this.getUserInfo(sender.split('_')[0]));
-      console.log('\n\n\n\n\n\n', participant)
-      console.log("\n\n\n", sender, "\n\n\n", (!this.participationInfo.isOfferingCourse && sender != this.participationInfo.name))
       if (participant.userInfo.category == "INSTRUCTOR") {
         let video = participant.getVideoElement();
         let options = {
@@ -828,7 +826,6 @@ export default {
     },
 
     onParticipantLeft(request) {
-      console.log('Participant ' + request.name + ' left');
       this.participants[this.participantIndex(request.name)].dispose();
       this.removeParticipant(this.participantIndex(request.name))
       // let participant = this.participants[request.name];
@@ -836,7 +833,6 @@ export default {
       // delete this.participants[request.name];
     },
     toogleMedia(obj) {
-      console.log(obj)
       if (obj.isVideo) {
         if (obj.enabled == this.noVideo) {
           this.noVideo = !this.noVideo
@@ -856,7 +852,6 @@ export default {
     handleMediaTracks() {
       const screen = document.getElementById("video_screen_feed");
       const video = document.getElementById("video_feed");
-      console.log(screen, video)
       if (video)
         if (video.srcObject) {
           this.stopTracks(video.srcObject.getTracks())
@@ -868,7 +863,6 @@ export default {
     }
   },
   beforeRouteLeave(to, from, next) {
-    console.log('aha')
     if (this.ws)
       this.ws.close();
     this.handleMediaTracks();
@@ -879,7 +873,6 @@ export default {
   watch: {
     videoEnabled() {
       this.noVideo = !this.videoEnabled
-      console.log(this.noVideo, this.videoEnabled)
     },
     end_class() {
       if (this.end_class)

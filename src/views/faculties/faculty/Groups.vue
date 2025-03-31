@@ -1,8 +1,8 @@
 <template>
   <div class="my-faculties bg-one d-flex justify-center">
     <div class="faculties-container  row">
-      <div v-for="item in facultyCollegeYears" :key="item._id" class="col-12 col-md-4">
-        <StudentGroupCard :item="item"/>
+      <div v-for="(item, i) in facultyCollegeYears" :key="item._id" class="col-12 col-md-4">
+        <StudentGroupCard @deleted="facultyCollegeYears.splice(i,1)" :item="item"/>
       </div>
     </div>
   </div>

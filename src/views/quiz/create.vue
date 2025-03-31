@@ -2,17 +2,18 @@
   <div id="create-quiz">
     <div id="quiz-info">
       <div class="label">Quiz creation wizzard</div>
-      <div class="input-group">
-        <label for="quiz-title">Title</label>
-        <input v-model="title" id="quiz-title" type="text">
+      <div class="input-group assesment_type">
+        <label>Title</label>
+        <input v-model="title" class="quiz-title" type="text">
       </div>
       <div class="input-group">
         <label>Instructions</label>
         <div class="quiz-instructions">
           <Editor
+              v-if="showEditor"
               ref="editor"
               mode="edit"
-              :defaultContent="'<ol><li><p>Write your custom instructions</p></li></ol>'"
+              defaultContent="<ol><li><p>Write your custom instructions</p></li></ol>"
           />
         </div>
       </div>
@@ -107,7 +108,7 @@
                 class="option d-block d-md-flex">
               <div class="details">
                               <textarea
-                                  placeholder="option 1"
+                                  :placeholder="`option ${k+1}`"
                                   v-model="option.text"
                                   class="kurious--textarea mb-4 customScroll"
                                   rows="8"
@@ -146,7 +147,7 @@
                 :boundIndex="i"
                 template="quiz-files"
                 hint="Click on an image to designate it as the correct  choice"
-                :allowedTypes="['image']"
+                allowedTypes="image/*"
                 :multiple="true"
                 @addFile="addPicture"
                 @removeFile="removePicture"
@@ -216,18 +217,22 @@
         </div>
       </div>
     </div>
-    <button @click="addQuestion()" class="quiz-action full mt-4" v-if="questions.length">Add question</button>
+    <button @click="addQuestion()" class="quiz-action full mt-4" v-if="questions.length">
+      Add question
+    </button>
     <div id="quiz-actions" class=" d-flex mb-12 mt-6">
       <button class="quiz-action cancel" @click="
                       set_modal({
                         template: 'action_confirmation',
                         title: 'Cancel quiz',
                         message: 'Are you sure you want to Cancel this quiz?',
-                      })
-">Cancel
+                      })">
+        Cancel
       </button>
-      <button class="quiz-action" v-if="!questions.length" @click="recreate">Add questions</button>
-      <button class="quiz-action" v-else @click="validate">Save quiz</button>
+      <button class="quiz-action" v-if="!questions.length" @click="recreate">Add
+        questions
+      </button>
+      <button class="quiz-action" v-else @click="validate">Save Quiz</button>
     </div>
   </div>
 </template>
@@ -253,13 +258,15 @@ export default {
       "Multiple image select",
       "File upload",
     ],
+    allowed_submission_file_types: [],
     pictures: [[], []],
     hours: 0,
     minutes: 0,
+    showEditor: true,
     questions: [],
     error: "",
     title: "",
-    passMarks: 0
+    passMarks: 0,
   }),
   watch: {
     error() {
@@ -273,12 +280,23 @@ export default {
         })
     },
   },
+  created() {
+    this.getCourses(!this.loaded);
+  },
   methods: {
-    fileTypeClicked(type, index){
-      if(this.questions[index].allowed_files.includes(type)){
-        this.questions[index].allowed_files.splice(this.questions[index].allowed_files.indexOf(type), 1)
-      } else{
-        this.questions[index].allowed_files.push(type)
+    ...mapActions("courses", ["getCourses"]),
+    fileTypeClicked(type, index) {
+      if (index === -1) {
+        if (this.allowed_submission_file_types.includes(type))
+          this.allowed_submission_file_types.splice(this.allowed_submission_file_types.indexOf(type), 1)
+        else
+          this.allowed_submission_file_types.push(type)
+      } else {
+        if (this.questions[index].allowed_files.includes(type)) {
+          this.questions[index].allowed_files.splice(this.questions[index].allowed_files.indexOf(type), 1)
+        } else {
+          this.questions[index].allowed_files.push(type)
+        }
       }
     },
     ...mapActions("modal", ["set_modal"]),
@@ -329,19 +347,14 @@ export default {
             if (this.questions[i].type.includes('text')) {
               if (this.questions[i].options.choices[k].text == "")
                 return this.error = `Question ${parseInt(i) + 1}, option ${parseInt(k) + 1} text is required`
-
-              if (this.questions[i].options.choices[k].text.length < 3)
-                return this.error = `Question ${parseInt(i) + 1}, option ${parseInt(k) + 1} text is too short`
             }
           }
           if (!right_choice_found)
             return this.error = `Question ${parseInt(i) + 1} must have a right choice`
         }
 
-
+        this.saveQuiz();
       }
-
-      this.saveQuiz();
     },
     ...mapActions("quiz", ["create_quiz"]),
     addPicture(file, boundIndex) {
@@ -370,7 +383,6 @@ export default {
       this.pictures = [[], []];
     },
     handleOptionClick(questionIndex, optionIndex) {
-      console.log(questionIndex, optionIndex)
       let rightChoices = [];
 
       for (const k in this.questions[questionIndex].options.choices) {

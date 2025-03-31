@@ -34,7 +34,7 @@ export default class {
       video: false,
       audio: {
         channelCount: 1,
-        echoCancellation: false
+        echoCancellation: true
       }
     }
 

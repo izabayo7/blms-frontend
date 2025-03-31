@@ -118,6 +118,7 @@
     <!-- view of instructor -->
     <v-container
         v-else-if="userCategory == 'INSTRUCTOR'"
+        id="courses"
         class="courses-home"
         fluid
     >

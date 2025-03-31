@@ -1,13 +1,12 @@
 import Api from './server'
 import Vue from 'vue'
-import { logout } from "./global_functions";
-
+import {logout} from "./global_functions";
 
 
 /* interceptors */
 Api.interceptors.response.use(function (response) {
 
-    const { data: { status, message } } = response
+    const {data: {status, message}} = response
 
     if (status === 401) {
         if (message.toLowerCase() === 'invalid token')
@@ -16,7 +15,6 @@ Api.interceptors.response.use(function (response) {
 
     return response
 }, function (error) {
-    console.log(error)
     return new Promise.reject(error)
 })
 
@@ -25,7 +23,7 @@ Api.interceptors.request.use((config) => {
     try {
         if (Vue.prototype.$session.exists()) {
             //get token
-            const { jwt: token } = JSON.parse(localStorage.getItem('vue-session-key'))
+            const {jwt: token} = JSON.parse(localStorage.getItem('vue-session-key'))
 
             //add token to headers
             config.headers = {
@@ -36,10 +34,13 @@ Api.interceptors.request.use((config) => {
         return config
 
     } catch (e) {
-        console.log(e)
+        Vue.prototype.$store.dispatch("app_notification/SET_NOTIFICATION", {
+            message: e,
+            status: "danger",
+            uptime: 2000,
+        })
     }
 })
-
 
 
 export default {
@@ -71,7 +72,6 @@ export default {
         return Api.put(`/user/password`, body)
     },
     update_user_profile(body, config) {
-        console.log(body)
         return Api.put(`/user/profile`, body, config)
     },
     remove_user_profile(file_name) {
@@ -79,6 +79,6 @@ export default {
     },
     // delete requests
     delete(path, id) {
-        return Api.delete(`/${path}/${id}`)
+        return Api.delete(id ? `/${path}/${id}` : `/${path}`)
     },
 }

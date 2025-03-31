@@ -3,7 +3,7 @@
     <div v-if="$vuetify.breakpoint.width > 900">
       <v-row class="page_title">
         <div class="upper">Dashboard</div>
-        <div class="lower">Overviewer</div>
+        <div class="lower">Overview</div>
       </v-row>
       <v-row v-if="course_statistics" class="mt-6 px-4">
         <div class="v-col col-12 col-md-6 pa-0">
@@ -57,7 +57,7 @@
               <div class="details">
                 Recent assignment submissions
               </div>
-              <div class="college_info long">
+              <div v-if="submission_statistics" class="college_info long">
                 <div class="body">
                   <div v-if="submission_statistics.submissions.length === 0"
                        class="empty d-flex justify-center align-center">
@@ -67,7 +67,8 @@
                     </div>
                   </div>
                   <div class="data">
-                    <div @click="$router.push(`/quiz/${data.quiz.name}/${data.user.user_name}`)" v-for="data in submission_statistics.submissions" :key="data._id" class="d-flex">
+                    <div @click="$router.push(`/quiz/${data.quiz.name}/${data.user.user_name}`)"
+                         v-for="data in submission_statistics.submissions" :key="data._id" class="d-flex">
                       <div class="student-name">{{ data.user.sur_name + ' ' + data.user.other_names }}</div>
                       <div class="course-name mx-auto">{{ data.quiz.name | trimString(20) }}</div>
                       <div class="time">{{
@@ -77,7 +78,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="footer">
+                <div @click="$router.push('/reports')" class="footer cursor-pointer">
                   View reports
                 </div>
               </div>
@@ -112,6 +113,7 @@
           <v-row v-if="submission_statistics" class="pa-0 px-md-6 pa-xl-0 pa-lg-0">
             <v-col class="col-12 col-md-6 pt-0">
               <small-card
+                  :width="140"
                   :data="{
                   start: 'Grade-book',
                   end: 'Marking status',
@@ -124,6 +126,7 @@
             </v-col>
             <v-col class="col-12 col-md-6 pt-0">
               <small-card
+                  :width="140"
                   :data="{
                   start: 'Performance',
                   end: 'Overall success score',
@@ -147,8 +150,11 @@
                     </div>
                   </div>
                   <div v-else class="data">
-                    <div v-for="data in course_statistics.latestComments" :key="data._id" class="d-flex">
-                      <div class="student-name vertically--centered">{{ data.sender.sur_name + ' ' + data.sender.other_names }}</div>
+                    <div v-for="data in course_statistics.latestComments" :key="data._id" class="d-flex"
+                         @click="$router.push(`/courses/${data.course.name}`)">
+                      <div class="student-name vertically--centered">
+                        {{ data.sender.sur_name + ' ' + data.sender.other_names }}
+                      </div>
                       <div class="course-name mx-auto">{{ data.chapter | trimString(20) }}</div>
                       <div class="time">{{
                           elapsedDuration(data.createdAt)

@@ -1,5 +1,5 @@
 <template>
-  <section :class="{'hfull': isMobile && $route.name === 'chatingRoom' && state}" class="dashboard">
+  <v-container fluid :class="{'hfull': isMobile && $route.name === 'chatingRoom' && state}" class="dashboard pa-0">
     <!-- navbar -->
     <div class="my-navbar">
       <navbar v-if="!(isMobile && $route.name === 'chatingRoom' && state)"/>
@@ -9,7 +9,7 @@
       <div id="user-profile-card">
         <user-simple-card :loading="userByUsernameLoading" @close="mouseOutPic($event,'user-profile-card')">
           <template #name>{{ userByUsername.other_names + " " + userByUsername.sur_name }}</template>
-          <template #type>Instructor</template>
+          <template #type>{{ userByUsername.category }}</template>
           <template #image>
             <img v-if="userByUsername.profile" :src="userByUsername.profile + '?width=50'" alt=" profile pic">
             <v-avatar v-else :size="30" class="profile-avatar">
@@ -32,10 +32,11 @@
       </main>
       <div class="main-content customScroll">
         <notification/>
-        <router-view/>
+        <router-view v-if="showPage"/>
+        <div v-if="!$route.path.includes('messages')" class="lower-space"></div>
       </div>
     </main>
-  </section>
+  </v-container>
 </template>
 <script>
 import sidebar from "@/components/dashboard/Sidebar";
@@ -44,6 +45,7 @@ import navbar from "@/components/dashboard/Navbar";
 import {mapGetters, mapState} from "vuex";
 import UserSimpleCard from "../../components/reusable/user-simple-card";
 import userSimpleCard from "../../mixins/user-simple-card.mixin";
+import userPayment from "../../mixins/user-payments.mixin";
 
 export default {
   name: "Dashboard",
@@ -54,12 +56,20 @@ export default {
     UserSimpleCard,
     Notification: () => import("@/components/shared/Notification"),
   },
-  mixins: [userSimpleCard],
+  mixins: [userSimpleCard, userPayment],
+  created() {
+    this.redirect()
+  },
   computed: {
     ...mapState("sidebar_navbar", {state: "showChatMobileNavbar"}),
     ...mapGetters('users', ['userByUsername', 'userByUsernameLoading']),
     isMobile() {
       return this.$vuetify.breakpoint.width < 960
+    },
+  },
+  watch: {
+    $route() {
+      this.redirect()
     }
   },
   data() {
@@ -101,11 +111,16 @@ export default {
       overflow-y: auto;
       overflow-x: hidden;
       background: $tertiary;
+
+      .lower-space {
+        height: 40px;
+      }
     }
   }
-  &.hfull{
-    .contents{
-      .main-content{
+
+  &.hfull {
+    .contents {
+      .main-content {
         height: 100vh;
       }
     }
@@ -122,4 +137,5 @@ export default {
   opacity: 0;
   transform: translateY(100px);
 }
+
 </style>

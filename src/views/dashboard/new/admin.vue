@@ -5,7 +5,7 @@
       <div class="lower">Overview</div>
     </v-row>
     <v-row class="">
-      <div class="v-col col-12 col-lg-7 py-0 mt-0 mt-md-n3" :class="{'px-0': $vuetify.breakpoint.width < 700 }">
+      <div class="v-col col-12 col-md-7 py-0 mt-0 mt-md-n3" :class="{'px-0': $vuetify.breakpoint.width < 700 }">
         <v-row class="pa-0 mt-6 mt-md-0" :class="{'px-0': $vuetify.breakpoint.width < 700 }">
           <v-col class="col-12 pa-0 mb-4 recent-joined" :class="{'px-0': $vuetify.breakpoint.width < 700 }">
             <combined-statistics v-if="$store.state.sidebar_navbar.college">
@@ -37,7 +37,8 @@
               </template>
             </combined-statistics>
           </v-col>
-          <v-col class="col-12 col-lg-6 pt-0 mb-6 mb-md-0 px-0" :class="{'px-0': $vuetify.breakpoint.width < 700 }">
+<!--          <div class="d-flex">-->
+          <div class="col-12 col-md-6 pt-0 mb-6 mb-md-0 px-0" :class="{'px-0': $vuetify.breakpoint.width < 700 }">
             <small-card
                 :total="user_statistics.total_users"
                 :size="state ? 'small' : ''"
@@ -71,12 +72,12 @@
                 </svg>
               </template>
             </small-card>
-          </v-col>
-          <v-col class="col-12 col-lg-6 pa-0">
+          </div>
+          <div class="col-12 col-md-6 pa-0">
             <small-card
                 :total="total_courses"
                 :size="state ? 'small' : ''"
-                class="ml-auto"
+                class="ml-md-auto mb-12 mb-md-0"
                 :series="computeOtherSeries()"
                 :labels="['Faculties','Courses','Student groups']"
                 type="others"
@@ -109,13 +110,14 @@
                 </svg>
               </template>
             </small-card>
-          </v-col>
+          </div>
+<!--          </div>-->
         </v-row>
       </div>
-      <div class="v-col col-12 mx-md-auto col-md-4 pa-0">
+      <div class="v-col col-12 mx-md-auto col-md-4 pa-md-0">
         <div class="row">
           <div class="v-col col-12 pa-0">
-            <div class="college_info">
+            <div class="college_info cursor-pointer" @click="$router.push('/settings/institution')">
               <svg
                   width="17"
                   height="13"
@@ -148,7 +150,7 @@
                         fill="#1B998B"
                     />
                   </svg>
-                  <div class="text">Premium Account</div>
+                  <div class="text">{{ $store.state.sidebar_navbar.plan.plan }} Account</div>
                 </div>
               </div>
             </div>
@@ -294,7 +296,7 @@
               </div>
             </div>
           </v-col>
-          <v-col class="col-12 col-lg-10 pt-0 pl-0 recent-joined">
+          <v-col class="col-12 col-md-10 pt-0 pl-0 recent-joined">
             <router-link class="more text-right" to="/users">More ...</router-link>
             <div class="mt-5 d-flex">
               <button class="lower_buttons mr-2" @click="showFacultyModal = true">
@@ -313,6 +315,7 @@
     </v-row>
     <invite-users-dialog
         v-if="showInviteUsers"
+        :total_admins="this.user_statistics.total_admins"
         @closeModal="showInviteUsers = false"
     />
     <faculty-dialog
@@ -393,7 +396,6 @@ export default {
     });
 
     this.socket.on("res/users/new", ({user}) => {
-      console.log(this.recentJoinedUsers, user)
       if (this.recentJoinedUsers.indexOf(user) == -1) {
         this.recentJoinedUsers.unshift(user)
         this.recentJoinedUsers.pop()

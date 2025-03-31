@@ -76,9 +76,6 @@ export default {
     ...mapGetters('users', ['usersOnFaculties']),
   },
   methods: {
-    hovered() {
-      console.log('hovered')
-    },
     selectAll() {
       this.allSelected = !this.allSelected
     },
@@ -98,7 +95,7 @@ export default {
     await this.$store.dispatch("faculties/getFaculty", this.facultyId)
     await this.$store.dispatch('faculties/changeHeader', {title: "Users List"})
     if (this.faculty)
-      this.$store.dispatch('users/loadUsersBasedOnFaculties', {facultyId: this.faculty._id, category: "STUDENT"})
+      this.$store.dispatch('users/loadUsersBasedOnFaculties', {facultyId: this.faculty._id, category: "ALL"})
   }
 }
 </script>

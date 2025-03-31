@@ -46,7 +46,7 @@ import Apis from "@/services/apis";
 export default {
   name: "combined-statistics",
   data: () => ({
-    selected_category: "User online",
+    selected_category: "Users online",
     userJoins: undefined,
     loaded: false,
     activeFilter: 4,

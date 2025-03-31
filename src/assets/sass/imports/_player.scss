@@ -9,6 +9,9 @@
             fill: rgb(74, 84, 100) !important;
         }
     }
+    .plyr__volume{
+        display: none !important;
+    }
 }
 .plyr__controls__item.plyr__time--current.plyr__time {
     color: white;

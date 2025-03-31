@@ -72,39 +72,39 @@
               <audio-recorder
                   upload-url="some url"
                   filename="ninja"
-                  format="mp3"
+                  format="wav"
                   :attempts="3"
                   :time="15"
                   @upload="uploadAudio"
                   :bit-rate="192"/>
             </div>
-<!--            <div class="after d-flex justify-center align-center">-->
-<!--              <div @click="toogleRecorder" class="close cursor-pointer">-->
-<!--                <svg width="33" height="31" viewBox="0 0 33 31" fill="none" xmlns="http://www.w3.org/2000/svg">-->
-<!--                  <path-->
-<!--                      d="M22.6647 10.8414L21.4897 9.66644L16.8314 14.3248L12.173 9.66644L10.998 10.8414L15.6564 15.4998L10.998 20.1581L12.173 21.3331L16.8314 16.6748L21.4897 21.3331L22.6647 20.1581L18.0064 15.4998L22.6647 10.8414Z"-->
-<!--                      fill="#FC6767"/>-->
-<!--                  <rect x="1.49805" y="0.999756" width="30.6667" height="29" rx="4.5" stroke="#FC6767"/>-->
-<!--                </svg>-->
+            <!--            <div class="after d-flex justify-center align-center">-->
+            <!--              <div @click="toogleRecorder" class="close cursor-pointer">-->
+            <!--                <svg width="33" height="31" viewBox="0 0 33 31" fill="none" xmlns="http://www.w3.org/2000/svg">-->
+            <!--                  <path-->
+            <!--                      d="M22.6647 10.8414L21.4897 9.66644L16.8314 14.3248L12.173 9.66644L10.998 10.8414L15.6564 15.4998L10.998 20.1581L12.173 21.3331L16.8314 16.6748L21.4897 21.3331L22.6647 20.1581L18.0064 15.4998L22.6647 10.8414Z"-->
+            <!--                      fill="#FC6767"/>-->
+            <!--                  <rect x="1.49805" y="0.999756" width="30.6667" height="29" rx="4.5" stroke="#FC6767"/>-->
+            <!--                </svg>-->
 
-<!--              </div>-->
-<!--              <div class="duration">-->
-<!--                <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">-->
-<!--                  <circle cx="9.69509" cy="9.49977" r="9.02907" fill="#FC6767"/>-->
-<!--                </svg>-->
+            <!--              </div>-->
+            <!--              <div class="duration">-->
+            <!--                <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">-->
+            <!--                  <circle cx="9.69509" cy="9.49977" r="9.02907" fill="#FC6767"/>-->
+            <!--                </svg>-->
 
-<!--                00:16-->
-<!--              </div>-->
-<!--              <div class="send cursor-pointer">-->
-<!--                <svg width="33" height="31" viewBox="0 0 33 31" fill="none" xmlns="http://www.w3.org/2000/svg">-->
-<!--                  <path-->
-<!--                      d="M20.62 11.5512L19.5284 10.4998L14.62 15.2276L15.7116 16.279L20.62 11.5512ZM23.9026 10.4998L15.7116 18.3894L12.4755 15.2798L11.3839 16.3312L15.7116 20.4998L25.002 11.5512L23.9026 10.4998ZM7.00195 16.3312L11.3297 20.4998L12.4213 19.4483L8.10131 15.2798L7.00195 16.3312Z"-->
-<!--                      fill="#21833F"/>-->
-<!--                  <rect x="0.501953" y="0.999756" width="31" height="29" rx="4.5" stroke="#21833F"/>-->
-<!--                </svg>-->
+            <!--                00:16-->
+            <!--              </div>-->
+            <!--              <div class="send cursor-pointer">-->
+            <!--                <svg width="33" height="31" viewBox="0 0 33 31" fill="none" xmlns="http://www.w3.org/2000/svg">-->
+            <!--                  <path-->
+            <!--                      d="M20.62 11.5512L19.5284 10.4998L14.62 15.2276L15.7116 16.279L20.62 11.5512ZM23.9026 10.4998L15.7116 18.3894L12.4755 15.2798L11.3839 16.3312L15.7116 20.4998L25.002 11.5512L23.9026 10.4998ZM7.00195 16.3312L11.3297 20.4998L12.4213 19.4483L8.10131 15.2798L7.00195 16.3312Z"-->
+            <!--                      fill="#21833F"/>-->
+            <!--                  <rect x="0.501953" y="0.999756" width="31" height="29" rx="4.5" stroke="#21833F"/>-->
+            <!--                </svg>-->
 
-<!--              </div>-->
-<!--            </div>-->
+            <!--              </div>-->
+            <!--            </div>-->
           </div>
         </div>
         <div
@@ -226,7 +226,7 @@ export default {
         }
       return res
     },
-    uploadAudio(formData){
+    uploadAudio(formData) {
       apis.update('message', `voiceNote/${this.currentDisplayedUser.id}`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
@@ -240,7 +240,8 @@ export default {
       const attachments = this.makeAttachments()
 
       if (this.msg.length <= 0 && !attachments.length) return;
-
+      if (!this.msg.replace(/\s/g, '').length)
+        return;
       if (attachments.length) {
         // set the dialog
         this.$store.dispatch('modal/set_modal', {
@@ -280,7 +281,6 @@ export default {
       this.msg = ""
       //emit that we are message sent
       emit("message-sent");
-      // console.log(this.$store.state.chat.incomingMessages)
     },
     inputMsg() {
       let input = this.$refs["input"];
@@ -298,7 +298,6 @@ export default {
     //function to set text content of placeholder
     p(t) {
       document.querySelector('.input .placeholder').innerHTML = t;
-      console.log(document.querySelector('.placeholder'))
     },
     addFile(file) {
       this.files.push(file)

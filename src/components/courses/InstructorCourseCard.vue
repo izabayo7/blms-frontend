@@ -2,7 +2,7 @@
   <div class="class-view">
     <div :class="`class-card ${course.published ? '' : 'unpublished-card'}`">
       <v-row class="first-row">
-        <v-col v-if="!isLive" class="col-md-7 col-7 content-side">
+        <v-col v-if="!nearestLiveSession" class="col-md-7 col-7 content-side">
           <p class="instructor-course-title">
             {{ course.name | trimString(25) }}
           </p>
@@ -29,7 +29,7 @@
             <v-icon color="#fff">mdi-arrow-right</v-icon>
           </v-btn>
         </v-col>
-        <v-col v-if="!isLive" class="col-md-5 col-5 image-side">
+        <v-col v-if="!nearestLiveSession" class="col-md-5 col-5 image-side">
           <v-img
               v-if="course.cover_picture"
               :src="`${
@@ -143,7 +143,6 @@ export default {
       this.nearestLiveSession = calculateNearestLiveSession(this.course)
     },
     nearestLiveSession() {
-      console.log(this.nearestLiveSession)
       this.interval = setInterval(() => {
         this.rem_time = elapsedDuration(convertUTCDateToLocalDate(new Date(this.nearestLiveSession.date.replace("00:00", this.nearestLiveSession.time))));
       }, 1000)

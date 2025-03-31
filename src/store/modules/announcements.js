@@ -32,12 +32,9 @@ export default {
                 })
             }
         },
-        //create a announcement
-        createAnnouncement({state}, {announcement}) {
-            return apis.create('announcement', announcement).then(d => {
-                state.announcements.data.push(d.data.data)
-                router.push('/announcements')
-            })
+
+        addAnnouncement({state}, announcement) {
+                state.announcements.data.unshift(announcement)
         },
         //create a announcement
         deleteAnnouncement({state}) {

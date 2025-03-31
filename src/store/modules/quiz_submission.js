@@ -1,5 +1,6 @@
 import apis from "@/services/apis";
 import user from '@/store/modules/user'
+
 const getDefaultState = () => ({
     // storage for all quiz_submissions 
     quiz_submission: {
@@ -15,7 +16,7 @@ export default {
     state: getDefaultState,
     mutations: {
         // add quiz_submission marks
-        add_quiz_target(state, { id, target }) {
+        add_quiz_target(state, {id, target}) {
             for (const i in state.quiz_submission.data) {
                 if (state.quiz_submission.data[i]._id === id) {
                     state.quiz_submission.data[i].target = target
@@ -25,8 +26,26 @@ export default {
                 }
             }
         },
+        add_assignment_submission_marks(state, {id, submission_id, marks, feedback}) {
+            for (const i in state.quiz_submission.data) {
+                if (state.quiz_submission.data[i]._id === id) {
+                    for (const j in state.quiz_submission.data[i].submissions) {
+                        if (state.quiz_submission.data[i].submissions[j]._id === submission_id) {
+                            if (marks) {
+                                state.quiz_submission.data[i].submissions[j].total_marks = marks
+                                state.quiz_submission.data[i].submissions[j].marked = true
+                            }
+                            else if (feedback)
+                                state.quiz_submission.data[i].submissions[j].total_feedbacks = feedback
+                            break
+                        }
+                    }
+                    break
+                }
+            }
+        },
         // add feedback to answer
-        add_answer_feedback(state, { answer_id, feedback }) {
+        add_answer_feedback(state, {answer_id, feedback}) {
             for (const i in state.quiz_submission.data) {
                 if (state.quiz_submission.data[i]._id === state.selected_quiz_submission) {
                     for (const k in state.quiz_submission.data[i].answers) {
@@ -38,7 +57,7 @@ export default {
             }
         },
         // remove feedback from answer
-        remove_answer_feedback(state, { answer_id }) {
+        remove_answer_feedback(state, {answer_id}) {
             for (const i in state.quiz_submission.data) {
                 if (state.quiz_submission.data[i]._id === state.selected_quiz_submission) {
                     for (const k in state.quiz_submission.data[i].answers) {
@@ -59,39 +78,43 @@ export default {
     },
     actions: {
         //get quiz_submissions  from backend
-        getQuizSubmissions({ state }) {
+        getQuizSubmissions({state}) {
             // if submission not loaded fetch them
             // if (!state.quiz_submission.loaded) {
-            return apis.get(`quiz_submission/user`).then(d => {
+
+            return apis.get(`quiz_submission/user`).then(async (d) => {
                 d.data = d.data.data
-                state.quiz_submission.data = d.data
+
+                const res = await apis.get(`assignment_submission`)
+
+                state.quiz_submission.data = d.data.concat(res.data.data)
 
                 //announce that data have been loaded
                 state.quiz_submission.loaded = true
 
-                return d.data
+                return state.quiz_submission.data
             })
             // }
         },
 
         //get quiz_submissions  in a quiz
-        async getQuizSubmissionsInQuiz({ state, dispatch }, { quiz_id }) {
+        async getQuizSubmissionsInQuiz({state, dispatch}, {quiz_id, isAssignments}) {
 
-            let result = state.quiz_submission.data.filter(e => e._id == quiz_id)
-
+            let result = state.quiz_submission.data.filter(e => e._id === quiz_id)
+            const index = isAssignments ? 1 : 0
             // if submission not loaded fetch them
             if (!result.length) {
 
                 // eslint-disable-next-line no-undef
-                result = await dispatch('getQuizSubmissions', { user_name: user.state.user.user_name })
-                result = result.filter(e => e._id == quiz_id)
+                result = await dispatch('getQuizSubmissions', {user_name: user.state.user.user_name})
+                result = result.filter(e => e._id === quiz_id)
             }
 
-            return result[0]
+            return result[index]
         },
 
         //get quiz_submissions  in a quiz
-        async markResultsAsSeen({ state }, { course_id, submission_id }) {
+        async markResultsAsSeen({state}, {course_id, submission_id}) {
 
             apis.update('quiz_submission/', `${submission_id}/results_seen`).then(() => {
                 for (const i in state.quiz_submission.data) {
@@ -104,7 +127,7 @@ export default {
         },
 
         //create a quiz_submission
-        create_quiz_submission({ state, commit, dispatch }, { submission, attachments }) {
+        create_quiz_submission({state, commit, dispatch}, {submission, attachments}) {
             let submissionObject = {}
             return apis.create('quiz_submission', submission).then(d => {
                 d.data = d.data.data
@@ -116,17 +139,21 @@ export default {
                     }
 
                     // set the dialog
-                    dispatch('modal/set_modal', { template: 'display_information', title: 'Creating submission', message: 'Uploading attachments' }, { root: true })
+                    dispatch('modal/set_modal', {
+                        template: 'display_information',
+                        title: 'Creating submission',
+                        message: 'Uploading attachments'
+                    }, {root: true})
                     apis.create(`quiz_submission/${d.data.document._id}/attachment`, formData, {
                         headers: {
                             'Content-Type': 'multipart/form-data'
                         },
                         onUploadProgress: (progressEvent) => {
-                            commit('modal/update_progress', parseInt(Math.round((progressEvent.loaded / progressEvent.total) * 100)), { root: true })
+                            commit('modal/update_progress', parseInt(Math.round((progressEvent.loaded / progressEvent.total) * 100)), {root: true})
                         }
                     }).then((response) => {
                         submissionObject = response.data.data
-                        dispatch('modal/reset_modal', null, { root: true })
+                        dispatch('modal/reset_modal', null, {root: true})
                     })
                 }
                 state.quiz_submission.data.push(submissionObject)
@@ -136,7 +163,7 @@ export default {
         },
 
         //create a quiz_submission
-        update_quiz_submission({ state }, { submission }) {
+        update_quiz_submission({state}, {submission}) {
             submission.totalMarks = undefined
             return apis.update('quiz_submission', state.selected_quiz_submission, submission).then(d => {
                 d.data = d.data.data
@@ -158,7 +185,7 @@ export default {
         },
 
         //find a quiz_submission by user name and submission name
-        findQuizSubmissionByUserAndQuizNames({ state, commit }, { userName, quizName }) {
+        findQuizSubmissionByUserAndQuizNames({state, commit}, {userName, quizName}) {
             let submissionFound = false
             if (state.quiz_submission.loaded) {
                 let quiz_submission = state.quiz_submission.data.filter(quiz_submission => quiz_submission.user.user_name == userName && quiz_submission.quiz.name == quizName)
@@ -197,7 +224,10 @@ export default {
         },
         //get all quiz submissions
         quiz_submissions: state => {
-            return state.quiz_submission.data
+            return state.quiz_submission.data.filter(x => !x.submissionMode && !x.submissions[0].assignment)
+        },
+        assignment_submissions: state => {
+            return state.quiz_submission.data.filter(x => x.submissionMode || x.submissions[0].assignment)
         },
     },
 }

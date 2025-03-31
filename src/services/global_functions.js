@@ -48,6 +48,30 @@ function elapsedDuration(date_time) {
 }
 
 /**
+ * elapsed time difference date_time and now
+ * @param date_time
+ * @returns {number}
+ */
+function daysDifference(date_time) {
+    const now = moment()
+
+    date_time = moment(date_time)
+    now.set({
+        hour: 0,
+        minute: 0,
+        second: 0,
+        millisecond: 0,
+    })
+    date_time.set({
+        hour: 0,
+        minute: 0,
+        second: 0,
+        millisecond: 0,
+    })
+    return now.diff(date_time, 'days')
+}
+
+/**
  * date_time to local time
  * @param date_time
  * @returns {string}
@@ -81,29 +105,30 @@ function empty(string) {
 /**
  * log out user and return him to login
  */
-function logout() {
+async function logout() {
 
     const institution = store.state.sidebar_navbar.college.name
 
     // clear the session
-    vue.$session.destroy();
+    await vue.$session.destroy();
 
     // reset the modules
-    store.dispatch("user/unsetUser");
-    store.commit("users/RESET_STATE");
-    store.commit("sidebar_navbar/RESET_STATE");
-    store.commit("quiz/RESET_STATE");
-    store.commit("quiz_submission/RESET_STATE");
-    store.commit("notification/RESET_STATE");
-    store.commit("modal/RESET_STATE");
-    store.commit("faculties/RESET_STATE");
-    store.commit("courses/RESET_STATE");
-    store.commit("colleges/RESET_STATE");
-    store.commit("chat/RESET_STATE");
-    store.commit("years/RESET_STATE");
+    await store.dispatch("user/unsetUser");
+    await store.commit("users/RESET_STATE");
+    await store.commit("sidebar_navbar/RESET_STATE");
+    await store.commit("quiz/RESET_STATE");
+    await store.commit("quiz_submission/RESET_STATE");
+    await store.commit("notification/RESET_STATE");
+    await store.commit("modal/RESET_STATE");
+    await store.commit("faculties/RESET_STATE");
+    await store.commit("courses/RESET_STATE");
+    await store.commit("colleges/RESET_STATE");
+    await store.commit("chat/RESET_STATE");
+    await store.commit("years/RESET_STATE");
 
     // redirect to login
-    router.push("/login?institution=" + institution);
+    await router.push("/login?institution=" + institution);
+    location.reload()
 }
 
 function calculateNearestLiveSession(course) {
@@ -150,5 +175,6 @@ export {
     toLocal,
     playSound,
     getDateAndTime,
-    downloadAttachment
+    downloadAttachment,
+    daysDifference
 }

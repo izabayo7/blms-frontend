@@ -117,7 +117,6 @@ export default {
     handleClick() {
       // only navigate to new paths ***going to the same route causes an erro***
       if (this.$route.path !== `/messages/${this.data.id}`) {
-        // console.log(this.data.id)
         this.$store.commit("chat/SET_DISPLAYED_USER", this.data);
         // this.$store.dispatch('chat/displayMessages',this.data.id)
         // emit('chat_user_changed',this.data.id) //alert that user was changed so we need to fetch some new messages
@@ -140,7 +139,6 @@ export default {
       if (this.data.id === typist || this.data.id == group) {
         if (!this.typers.includes(typist)) this.typers.push(typist);
 
-        // console.log(typist)
         this.typing = true;
         clearTimeout(timeout);
 

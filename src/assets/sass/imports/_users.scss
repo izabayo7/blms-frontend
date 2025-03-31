@@ -53,7 +53,8 @@
 }
 
 .users-table {
-    width: 1110px;
+    max-width: 1110px;
+    width: 96%;
     box-shadow: 0px 25px 50px rgba(207, 207, 207, 0.16) !important;
     .v-btn:not(.v-btn--flat):not(.v-btn--text):not(.v-btn--outlined) {
         background-color: $primary;

@@ -1,0 +1,308 @@
+.settings_page {
+  background-color: #f3f6ff;
+  height: fit-content;
+  min-height: calc(100vh - 76px);
+
+  .no-payments{
+    height: 100%;
+  }
+
+  .upper {
+    font-family: Inter;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16.5496px;
+    line-height: 13px;
+    /* identical to box height, or 80% */
+
+
+    color: #343434;
+
+  }
+
+  .lower {
+    font-family: Inter;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 24.8244px;
+    /* identical to box height, or 53% */
+    margin-bottom: 45px;
+    color: #343434;
+  }
+
+  .back {
+    margin-top: 58px;
+    display: flex;
+    justify-content: center;
+
+    button {
+      font-family: Inter;
+      font-style: normal;
+      font-weight: 600;
+      font-size: 15px;
+      color: #193074;
+      width: 119px;
+      height: 25px;
+      background: #FFFFFF;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.25);
+      border-radius: 5px;
+    }
+  }
+
+  .links {
+    margin-top: 59px;
+
+    a {
+      display: block;
+      font-family: Inter;
+      width: fit-content;
+      margin-left: 70px;
+      margin-right: auto;
+      font-style: normal;
+      font-weight: 600;
+      font-size: 15px;
+      line-height: 19px;
+      color: #828282;
+      margin-bottom: 26px;
+
+      &.active {
+        color: #193074;
+      }
+    }
+  }
+
+  .inner {
+    height: calc(100vh - 76px);
+    overflow-y: auto;
+    overflow-x: hidden;
+    background-color: #FFFFFF;
+
+    .college_logo {
+      max-width: 110.07px;
+      height: 102.39px;
+    }
+
+    .college_name {
+      margin-left: 12px;
+      font-family: Inter;
+      font-style: normal;
+      font-weight: bold;
+      font-size: 20.687px;
+      line-height: 28px;
+      margin-bottom: 42px;
+      color: #193074;
+    }
+
+    .account_type {
+      font-family: Inter;
+      font-style: normal;
+      font-weight: 500;
+      font-size: 12.4122px;
+      margin-right: 56px;
+      color: #3C3C3C;
+    }
+
+    .label {
+      font-family: Inter;
+      font-style: normal;
+      font-weight: bold;
+      font-size: 13.8582px;
+      line-height: 20px;
+      /* or 143% */
+
+
+      color: #343434;
+
+    }
+
+    .current_value {
+      font-style: normal;
+      font-weight: normal;
+      font-size: 15.3584px;
+      color: #193074;
+
+      &.predefined {
+        font-size: 11px;
+      }
+
+      &.lable {
+        font-family: Inter;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 10.2389px;
+        color: #000000;
+      }
+    }
+
+    .edit {
+      input {
+        font-family: Inter;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 15.3584px;
+        line-height: 36px;
+        /* or 234% */
+
+        display: flex;
+        align-items: center;
+
+        color: #193074;
+        border-bottom: 1.27986px solid #193074;
+      }
+
+      .actions {
+        margin-top: 23px;
+        font-family: Inter;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 15.3584px;
+        line-height: 36px;
+
+        button {
+          width: 93.43px;
+          height: 37.12px;
+          left: calc(50% - 93.43px / 2 + 44.58px);
+          top: calc(50% - 37.12px / 2 + 75.17px);
+
+          &.save {
+            color: #FFFFFF;
+            background: #193074;
+          }
+
+          &.cancel {
+            color: #193074;
+          }
+
+          border-radius: 3.17718px;
+        }
+      }
+    }
+
+    .action {
+      button {
+        width: 81.91px;
+        height: 34.56px;
+        border: 1.27986px solid #193074;
+        box-sizing: border-box;
+        border-radius: 2.55973px;
+        font-family: Inter;
+        font-style: normal;
+        font-weight: 600;
+        font-size: 13.8582px;
+        color: #193074;
+
+        &.delete {
+          width: 115.19px;
+          height: 33.28px;
+          background: #FC6767;
+          &.profile{
+            background: #193074
+          }
+          border: none;
+          color: #FFFFFF;
+        }
+
+        &.upgrade {
+          width: 183.92px;
+          height: 44.44px;
+          background: #193074;
+          border: none;
+          color: #FFFFFF;
+        }
+      }
+    }
+
+    .modes {
+      margin-top: 19px;
+      display: flex;
+
+      button {
+        font-family: Inter;
+        font-style: normal;
+        font-weight: bold;
+        font-size: 14.8125px;
+        line-height: 35px;
+        /* identical to box height, or 234% */
+        margin-right: 39px;
+        display: flex;
+        align-items: center;
+
+        color: #828282;
+
+        &.active {
+          color: #193074;
+        }
+      }
+    }
+
+    .current {
+      width: 450px;
+      height: 100px;
+      border: 1px solid #C4C4C4;
+      box-sizing: border-box;
+      display: flex;
+      div {
+        font-family: Inter;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 10px;
+        line-height: 20px;
+        /* or 200% */
+
+
+        color: #193074 !important;
+        &.d-flex{
+          div{
+            margin-right: 5px;
+          }
+        }
+      }
+      .user_name{
+        font-weight: bold;
+        font-size: 13px;
+      }
+      button{
+        font-size: 13px;
+        width: 76px;
+        height: 40px;
+        background: rgba(25, 48, 116, 0.1);
+        border-radius: 5px;
+      }
+    }
+
+    .history {
+      height: 12rem;
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+
+    .record {
+      display: flex;
+
+      .normal {
+        font-family: Inter;
+        font-style: normal;
+        font-weight: 500;
+        font-size: 12.3438px;
+        line-height: 35px;
+        /* identical to box height, or 281% */
+
+        display: flex;
+        align-items: center;
+        margin-right: 12px;
+        color: #193074;
+
+        &.bold {
+          font-weight: bold;
+        }
+      }
+    }
+  }
+}
+
+/* Portrait phones and smaller */
+@media (max-width: 700px) {
+  .settings_page {
+    margin-bottom: 70px;
+  }
+}

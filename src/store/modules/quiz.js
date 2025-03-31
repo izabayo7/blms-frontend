@@ -1,7 +1,13 @@
 import apis from "@/services/apis";
+import router from '@/router'
+
 const getDefaultState = () => ({
     // storage for all quiz
     quiz: {
+        data: [],
+        loaded: false
+    },
+    assignments: {
         data: [],
         loaded: false
     },
@@ -14,7 +20,7 @@ export default {
     state: getDefaultState,
     mutations: {
         // update quiz target
-        update_quiz_target(state, { id, target }) {
+        update_quiz_target(state, {id, target}) {
             for (const i in state.quiz.data) {
                 if (state.quiz.data[i]._id === id) {
                     state.quiz.data[i].target = target
@@ -28,13 +34,24 @@ export default {
         set_selected_quiz(state, id) {
             state.selected_quiz = id
         },
+        addAssignment(state, assignment) {
+            state.assignments.data.unshift(assignment)
+        },
+        editAssignment(state, {assignment, id}) {
+            for (const i in state.assignments.data) {
+                if (state.assignments.data[i]._id === id) {
+                    state.assignments.data[i] = assignment
+                    break
+                }
+            }
+        },
         RESET_STATE(state) {
             Object.assign(state, getDefaultState())
         }
     },
     actions: {
         //get quiz from backend
-        getQuizes({ state }, { user_name }) {
+        getQuizes({state}, {user_name}) {
             // when quiz is not loaded fetch quizes
             if (!state.quiz.loaded) {
                 apis.get(`quiz/user/${user_name}`).then(d => {
@@ -45,11 +62,32 @@ export default {
                 })
             }
         },
+        getAssignments({state}) {
+            // when quiz is not loaded fetch quizes
+            if (!state.quiz.loaded) {
+                apis.get(`assignments`).then(d => {
+                    d.data = d.data.data
+                    state.assignments.data = d.data
+                    //announce that data have been loaded
+                    state.assignments.loaded = true
+                })
+            }
+        },
+        async getAssignment({state}, {id}) {
+            // when quiz is not loaded fetch quizes
+            if (!state.quiz.loaded) {
+                const d = await apis.get(`assignments/${id}`)
+                return d.data.data
+            } else {
+                const res = state.assignments.data.filter(x => x._id === id)
+                return res[0]
+            }
+        },
         //create a quiz
-        create_quiz({ state, dispatch }, { quiz, pictures }) {
+        create_quiz({state, dispatch}, {quiz, pictures}) {
 
             return apis.create('quiz', quiz).then(d => {
-                if(d.data.status != 200 && d.data.status != 201){
+                if (d.data.status != 200 && d.data.status != 201) {
                     throw d.data
                 }
 
@@ -70,14 +108,18 @@ export default {
                     }
                     if (pictureFound) {
                         // set the dialog
-                        dispatch('modal/set_modal', { template: 'display_information', title: 'Creating quiz', message: 'uploading pictures' }, { root: true })
+                        dispatch('modal/set_modal', {
+                            template: 'display_information',
+                            title: 'Creating quiz',
+                            message: 'uploading pictures'
+                        }, {root: true})
 
                         apis.create(`quiz/${d.data._id}/attachment`, formData, {
                             headers: {
                                 'Content-Type': 'multipart/form-data'
                             },
                             onUploadProgress: (progressEvent) => {
-                                dispatch('modal/set_progress', parseInt(Math.round((progressEvent.loaded / progressEvent.total) * 100)), { root: true })
+                                dispatch('modal/set_progress', parseInt(Math.round((progressEvent.loaded / progressEvent.total) * 100)), {root: true})
                             }
                         }).then((response) => {
                             state.quiz.data.push(response.data)
@@ -89,24 +131,32 @@ export default {
             })
 
         },
-        release_marks({ dispatch, rootGetters }, {id,quizName,user_group}){
-            apis.update('quiz/release_marks',id).then(()=>{
-                rootGetters['chat/socket'].emit('marksReleased', {
-                    route: `/quiz/attempt/${quizName}`,
-                    user_group,
-                    content: `released marks for quiz ${quizName}`
-                })
-                dispatch("app_notification/SET_NOTIFICATION", {
-                    message: "Marks released",
-                    status: "success",
-                    uptime: 5000,
-                }, { root: true });
+        release_marks({dispatch, rootGetters}, {id, quizName, user_group}) {
+            apis.update('quiz/release_marks', id).then((res) => {
+                if (res.data.status === 403) {
+                    dispatch("app_notification/SET_NOTIFICATION", {
+                        message: res.data.message,
+                        status: "danger",
+                        uptime: 5000,
+                    }, {root: true});
+                } else {
+                    rootGetters['chat/socket'].emit('marksReleased', {
+                        route: `/quiz/attempt/${quizName}`,
+                        user_group,
+                        content: `released marks for quiz ${quizName}`
+                    })
+                    dispatch("app_notification/SET_NOTIFICATION", {
+                        message: "Marks released",
+                        status: "success",
+                        uptime: 5000,
+                    }, {root: true});
+                }
             })
         },
         //update a quiz
-        update_quiz({ state, dispatch }, { quiz, pictures }) {
+        update_quiz({state, dispatch}, {quiz, pictures}) {
             return apis.update('quiz', state.selected_quiz, quiz).then(d => {
-                if(d.data.status != 200 && d.data.status != 201){
+                if (d.data.status != 200 && d.data.status != 201) {
                     throw d.data
                 }
                 d.data = d.data.data
@@ -131,14 +181,18 @@ export default {
                         }
                     }
                     if (pictureFound) {
-                        dispatch('modal/set_modal', { template: 'display_information', title: 'Updating quiz', message: 'uploading pictures' }, { root: true })
+                        dispatch('modal/set_modal', {
+                            template: 'display_information',
+                            title: 'Updating quiz',
+                            message: 'uploading pictures'
+                        }, {root: true})
 
                         apis.create(`quiz/${d.data._id}/attachment`, formData, {
                             headers: {
                                 'Content-Type': 'multipart/form-data'
                             },
                             onUploadProgress: (progressEvent) => {
-                                dispatch('modal/set_progress', parseInt(Math.round((progressEvent.loaded / progressEvent.total) * 100)), { root: true })
+                                dispatch('modal/set_progress', parseInt(Math.round((progressEvent.loaded / progressEvent.total) * 100)), {root: true})
                             }
                         }).then((response) => {
                             state.quiz.data[quizIndex] = response.data.data
@@ -152,11 +206,10 @@ export default {
         },
 
         //find a quiz by name
-        findQuizByName({ state, commit }, { user_name, quizName }) {
+        findQuizByName({state, commit}, {user_name, quizName}) {
             let quizFound = false
             if (state.quiz.loaded) {
                 let quiz = state.quiz.data.filter(quiz => quiz.name == quizName)
-                console.log(quiz)
                 if (quiz.length > 0) {
                     quizFound = true
                     commit('set_selected_quiz', quiz[0]._id)
@@ -177,12 +230,58 @@ export default {
             }
         },
         //delete a quiz
-        delete_quiz({ state }, { id }) {
+        delete_quiz({state}, {id}) {
             apis.delete('quiz', id).then(() => {
                 for (const i in state.quiz.data) {
                     if (state.quiz.data[i]._id == id) {
                         state.quiz.data.splice(i, 1)
                         break
+                    }
+                }
+            })
+        },
+        delete_assignment({state}, {id}) {
+            apis.delete('assignments', id).then(() => {
+                for (const i in state.quiz.data) {
+                    if (state.assignments.data[i]._id === id) {
+                        state.assignments.data.splice(i, 1)
+                        break
+                    }
+                }
+            })
+        },
+        // eslint-disable-next-line no-empty-pattern
+        async delete_assignment_submission({}, {id}) {
+            await apis.delete('assignment_submission', id)
+            router.push('/assignments')
+        },
+        change_assignment_status({state, rootGetters, dispatch}, {id, status, user_group, name}) {
+            apis.update('assignments/changeStatus', id + '/' + status).then((res) => {
+                if (res.data.status === 403) {
+                    dispatch("app_notification/SET_NOTIFICATION", {
+                        message: res.data.message,
+                        status: "danger",
+                        uptime: 5000,
+                    }, {root: true});
+                } else {
+                    if (status === 'RELEASED' || status === 'PUBLISHED')
+                        rootGetters['chat/socket'].emit('marksReleased', {
+                            route: `/assignments/${id}`,
+                            user_group,
+                            content: `${status === 'RELEASED' ? 'released marks for' : 'published a new '} assignment ${name}`
+                        })
+                    if (status === 'RELEASED') {
+                        dispatch("app_notification/SET_NOTIFICATION", {
+                            message: "Marks released",
+                            status: "success",
+                            uptime: 5000,
+                        }, {root: true});
+                    }
+                    for (const i in state.quiz.data) {
+                        if (state.assignments.data[i]._id === id) {
+                            state.assignments.data[i].status = status
+                            break
+                        }
                     }
                 }
             })
@@ -193,6 +292,9 @@ export default {
         loaded: state => {
             return state.quiz.loaded
         },
+        assignments_loaded: state => {
+            return state.assignments.loaded
+        },
         //get the selected_quiz
         selected_quiz: state => {
             return state.quiz.data.filter(quiz => quiz._id == state.selected_quiz)[0]
@@ -200,6 +302,9 @@ export default {
         //get a specified quiz by name
         all_quiz: state => {
             return state.quiz.data
+        },
+        assignments: state => {
+            return state.assignments.data
         },
     },
 }

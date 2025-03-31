@@ -308,7 +308,6 @@ export default {
         college: this.$store.state.user.user.college,
       };
       const newGroup = await a.create("chat_group", body);
-      console.log(newGroup)
       const {status, message, data} = newGroup.data;
 
       //on error set an error

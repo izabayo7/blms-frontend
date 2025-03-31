@@ -12,14 +12,16 @@
           @click:row="handleRowClick"
       >
         <template v-slot:item.target="{ item }">
-          <span class="d-block">{{ item.quiz.target.chapter.name }}</span>
+          <span class="d-block">{{
+              item.quiz ? item.quiz.target.chapter.name : item.assignment.target.chapter ? item.assignment.target.chapter.name : 'ALL'
+            }}</span>
         </template>
         <template v-slot:item.date="{ item }">
           <span>{{ item.createdAt | formatDate }}</span>
         </template>
         <template v-slot:item.total_marks="{ item }">
           <span>{{
-              `${item.marked ? item.total_marks : ""} / ${item.quiz.total_marks}`
+              `${item.marked ? item.total_marks : ""} / ${item.quiz ? item.quiz.total_marks : item.assignment.total_marks}`
             }}</span>
         </template>
         <template v-slot:item.marking_status="{ item }">
@@ -53,7 +55,7 @@
           </svg>
         </template>
         <template v-slot:no-data>
-          <span class="text-h6">Oops You have no submissions.</span>
+          <span class="text-h6">Submission list is empty</span>
         </template>
       </v-data-table>
     </div>
@@ -111,7 +113,7 @@ export default {
           link: "/reports",
         },
         {
-          text: this.course.submissions[0].quiz.target.course.name,
+          text: this.course.submissions[0].quiz ? this.course.submissions[0].quiz.target.course.name : this.course.submissions[0].assignment.target.course.name,
           link: "/reports/" + this.$route.params.target,
         },
       ];
@@ -123,7 +125,7 @@ export default {
   },
   methods: {
     handleRowClick(value) {
-      this.$router.push(`/quiz/${value.quiz.name}/${this.$store.state.user.user.user_name}`)
+      this.$router.push(value.quiz ? `/quiz/${value.quiz.name}/${this.$store.state.user.user.user_name}` : `/assignments/${value.assignment._id}`)
     },
     ...mapActions("quiz_submission", ["getQuizSubmissionsInQuiz"]),
     guess() {
@@ -134,8 +136,8 @@ export default {
     //get submissions on page load
     this.getQuizSubmissionsInQuiz({
       quiz_id: this.$route.params.target,
+      isAssignments: this.$route.path.includes('assignments')
     }).then((d) => {
-      console.log(d);
       this.course = d;
     });
   },

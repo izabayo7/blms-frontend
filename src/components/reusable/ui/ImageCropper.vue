@@ -46,6 +46,7 @@ export default {
       this.$emit('change',canvas.toDataURL()) //emit on component that cropped photo was changed
       emit('image_cropped') //emit globally that image cropped
       this.visible = false
+      this.$emit('save')
     },
     changed({canvas}){
       this.$refs.preview.src = canvas.toDataURL();

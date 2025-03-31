@@ -81,7 +81,7 @@
           </div>
         </div>
       </div>
-      <div class="tabular-users mb-14">
+      <div class="tabular-users students-table mb-14">
         <div class="table-wrapper mt-6">
           <div class="table-header">
             <table-header/>
@@ -336,6 +336,20 @@ export default {
 
     progress {
       max-width: 114px;
+    }
+  }
+}
+/* Portrait phones and smaller */
+@media (max-width: 700px) {
+  .students-page {
+    .users-page-container {
+      .students-table{
+        overflow: auto;
+        .table-wrapper{
+          min-width: 808px;
+          overflow: auto;
+        }
+      }
     }
   }
 }

@@ -19,17 +19,32 @@ export default {
   },
   methods: {
     ...mapMutations("notification", ["addNotification"]),
+    ...mapMutations("user", ["TOOGLE_DISABLE_FUNCTIONALITIES"]),
     ...mapMutations("courses", ["addCourse"]),
-    ...mapMutations("chat", ["CHANGE_MESSAGE_READ_STATUS"]),
+    ...mapMutations("chat", ["CHANGE_MESSAGE_READ_STATUS", "SET_SOCKET", "UPDATE_CONTACT_STATUS"]),
     ...mapMutations("sidebar_navbar", {update_unread: "SET_TOTAL_UNREAD"}),
   },
   async created() {
     await apis.create('user_logs', {online: true})
+    apis.get('account_payments/status').then((res) => {
+      this.TOOGLE_DISABLE_FUNCTIONALITIES(res.data.data)
+    })
+  },
+  beforeMount() {
+    this.SET_SOCKET()
   },
   mounted() {
     // listen to new notifications
     this.socket.on("new-notification", ({notification}) => {
       this.addNotification(notification);
+    });
+
+    this.socket.on("users/online", ({id}) => {
+      this.UPDATE_CONTACT_STATUS({id, status: true})
+    });
+
+    this.socket.on("users/offline", ({id}) => {
+      this.UPDATE_CONTACT_STATUS({id, status: false})
     });
 
     // listen if the new message was sent
@@ -41,8 +56,8 @@ export default {
 
     this.socket.emit("messages/unread");
 
-    this.socket.on("res/messages/unread", (number) => {
-      this.update_unread(number)
+    this.socket.on("res/messages/unread", ({number,total_assignments}) => {
+      this.update_unread({number,total_assignments})
     });
 
     // listen to new course
@@ -56,7 +71,6 @@ export default {
     });
 
     this.socket.on("all_read", ({conversation_id}) => {
-      console.log(conversation_id)
       this.CHANGE_MESSAGE_READ_STATUS(conversation_id);
     })
 
@@ -88,10 +102,14 @@ export default {
     });
 
     //handle errors
-    this.socket.on("error", (error) => {
-      console.log("ikibazo broda", error);
-      // alert(error);
-    });
+    // this.socket.on("error", (error) => {
+    //   this.$store.dispatch("app_notification/SET_NOTIFICATION", {
+    //     message: error,
+    //     status: "danger",
+    //     uptime: 2000,
+    //   })
+    //   // alert(error);
+    // });
   },
 };
 </script>

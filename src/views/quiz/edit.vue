@@ -113,7 +113,7 @@
                 class="option d-block d-md-flex">
               <div class="details">
                               <textarea
-                                  placeholder="option 1"
+                                  :placeholder="`option ${k+1}`"
                                   v-model="option.text"
                                   class="kurious--textarea mb-4 customScroll"
                                   rows="8"
@@ -152,7 +152,7 @@
                 :boundIndex="i"
                 template="quiz-files"
                 hint="Click on an image to designate it as the correct  choice"
-                :allowedTypes="['image']"
+                allowedTypes="image/*"
                 :multiple="true"
                 :defaultFiles="question.options.choices"
                 @addFile="addPicture"
@@ -348,9 +348,6 @@ export default {
             if (this.questions[i].type.includes('text')) {
               if (this.questions[i].options.choices[k].text == "")
                 return this.error = `Question ${parseInt(i) + 1}, option ${parseInt(k) + 1} text is required`
-
-              if (this.questions[i].options.choices[k].text.length < 3)
-                return this.error = `Question ${parseInt(i) + 1}, option ${parseInt(k) + 1} text is too short`
             }
           }
           if (!right_choice_found)

@@ -4,7 +4,12 @@
       <div class="col-8 logo_container">
         <img :src="college_logo" class="logo my-auto" />
       </div>
-      <div class="col-4 vertically--centered">
+      <div class="col-2">
+        <div class="vertically--centered">
+          <notifications />
+        </div>
+      </div>
+      <div class="col-2 vertically--centered">
         <div class="profile mt-n4">
           <profile />
         </div>
@@ -94,7 +99,7 @@ export default {
     profile: () => import("./Profile"),
   },
   computed: {
-    ...mapState("sidebar_navbar", { state: "sidebar_expanded" }),
+    ...mapState("sidebar_navbar", { state: "sidebar_expanded", college: "college" }),
     showCreateCourseButton() {
       return (
         this.$store.state.user.user.category.name === "INSTRUCTOR" &&
@@ -105,17 +110,26 @@ export default {
   data: () => ({
     college_logo: "https://apis.kurious.rw/assets/images/image%204.png",
   }),
+  watch:{
+    college(){
+      if(this.college)
+        this.college_logo = this.college.logo
+    }
+  },
   methods: {
     ...mapMutations("sidebar_navbar", {
       toggle: "TOGGLE_SIDEBAR_EXPANSION",
       set_college: "SET_COLLEGE_INFO",
+      set_plan: "SET_COLLEGE_PLAN"
     }),
   },
   async created() {
     const res = await Apis.get(
       `college/${this.$store.state.user.user.college}`
     );
+    const plan = await Apis.get('college_payment_plans/current')
     this.set_college(res.data.data);
+    this.set_plan(plan.data.data);
     this.college_logo = res.data.data.logo || this.college_logo;
   },
 };
@@ -126,7 +140,6 @@ export default {
   // box-shadow: 10px 0 10px 0 $secondary;
   width: 100%;
   display: flex;
-  max-height: 69px;
   padding: 0 !important;
   z-index: 100;
   .top-left-contents div {

@@ -1,10 +1,15 @@
 <template>
   <v-app id="reports-page" class="pa-0 instructor_reports">
+
     <div class="table-one">
-      <h3>Submissions</h3>
+      <div class="d-flex">
+        <h3 class="mr-4" :class="{active : currentView === 'quiz'}" @click="currentView = 'quiz'">Quiz Submissions({{quiz_submissions.length}})</h3>
+        <h3 :class="{active : currentView === 'assignments'}" @click="currentView = 'assignments'">Assignment
+          Submissions ({{assignment_submissions.length}})</h3>
+      </div>
       <v-data-table
           :headers="submissionHeaders"
-          :items="quiz_submissions"
+          :items="currentView === 'quiz' ? quiz_submissions : assignment_submissions"
           :items-per-page="5"
           sort-by="dateOfSubmission"
           class="data-table"
@@ -19,7 +24,7 @@
             }}</span>
         </template>
         <template v-slot:item.chapter_name="{ item }">
-          <span class="normal--text">{{
+          <span v-if="item.target.chapter" class="normal--text">{{
               item.target.chapter.name
             }}</span>
         </template>
@@ -38,16 +43,19 @@
               <v-btn
                   color="#02A617"
                   class="white--text"
-                  :disabled="item.status == 2"
+                  :disabled="item.status ===  (item.submissionMode ? 'RELEASED' : 2)"
                   @click.stop="
                   set_modal({
                     template: 'action_confirmation',
-                    method: {
+                    method: item.submissionMode ? {
+                      action: 'quiz/change_assignment_status',
+                      parameters: { id: item._id, status: 'RELEASED', user_group: item.target.course.user_group._id, name: item.title },
+                    } :{
                       action: 'quiz/release_marks',
                       parameters: { id: item._id, quizName: item.name,user_group: item.target.course.user_group._id},
                     },
                     title: 'Release Marks',
-                    message: 'Are you sure you want to release marks for this quiz?',
+                    message: `Are you sure you want to release marks for this ${item.submissionMode ? 'assignment' : 'quiz'}?`,
                   })
                 "
               >
@@ -57,12 +65,12 @@
           </v-row>
         </template>
         <template v-slot:no-data>
-          <span class="text-h6">Oops You have no submissions.</span>
+          <span class="text-h6">Submission list is empty</span>
         </template>
       </v-data-table>
     </div>
     <div class="table-one">
-      <h3>Classes</h3>
+      <h3>Courses</h3>
       <v-data-table
           :headers="courseHeaders"
           :items="courses"
@@ -99,22 +107,22 @@
           >65%{{ "" + item ? "" : "nope" }}</span
           >
         </template>
-        <template v-slot:item.actions="{ item }">
-          <v-row class="actions pa-0">
-            <v-col class="pa-0 py-1">
-              <v-btn
-                  class="white--text"
-                  :color="primary"
-                  :to="`/submissions/${item.name}`"
-              >
-                Make announcement
-              </v-btn>
-            </v-col
-            >
-          </v-row>
-        </template>
+        <!--        <template v-slot:item.actions="{ item }">-->
+        <!--          <v-row class="actions pa-0">-->
+        <!--            <v-col class="pa-0 py-1">-->
+        <!--              <v-btn-->
+        <!--                  class="white&#45;&#45;text"-->
+        <!--                  :color="primary"-->
+        <!--                  :to="`/submissions/${item.name}`"-->
+        <!--              >-->
+        <!--                Make announcement-->
+        <!--              </v-btn>-->
+        <!--            </v-col-->
+        <!--            >-->
+        <!--          </v-row>-->
+        <!--        </template>-->
         <template v-slot:no-data>
-          <span class="text-h6">Oops You have no submissions.</span>
+          <span class="text-h6">Course list is empty</span>
         </template>
       </v-data-table>
     </div>
@@ -127,6 +135,7 @@ import colors from "@/assets/sass/imports/_colors.scss";
 export default {
   data: () => ({
     primary: colors.primary,
+    currentView: 'quiz',
   }),
   computed: {
     submissionHeaders() {
@@ -191,7 +200,7 @@ export default {
       return this.$store.state.user.user.category.name;
     },
     ...mapGetters("courses", ["courses"]),
-    ...mapGetters("quiz_submission", ["quiz_submissions"]),
+    ...mapGetters("quiz_submission", ["quiz_submissions", "assignment_submissions"]),
     // only display courses we started
     activeCourses() {
       return this.courses.filter((course) => course.progress);

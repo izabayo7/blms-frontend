@@ -19,12 +19,12 @@
       <div class="profile-actions">
         <ul class="actions">
           <li class="d-flex">
-            <router-link :to="`/profile/${user.user_name}`">
+            <router-link :to="`/settings`">
               <div class="icon"><v-icon>mdi-account</v-icon></div>
               <div class="content">My Account</div>
             </router-link>
           </li>
-          <li class="d-flex">
+          <li v-if="['INSTRUCTOR','STUDENT'].includes(user.category.name)" class="d-flex">
             <router-link to="/reports">
               <div class="icon"><v-icon>mdi-chart-box</v-icon></div>
               <div class="content">Reports</div>

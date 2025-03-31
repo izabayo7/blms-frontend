@@ -14,7 +14,7 @@
 <!--        <div class="input"></div>-->
 <!--      </div>-->
       <div class="actions">
-        <button class="add-email send cancel mr-4" @click="$emit('closeModal')">
+        <button class="add-email send cancel mr-4" @click="$router.push(`/faculties/${$route.params.facultyId}/groups`)">
           Cancel
         </button>
         <button class="add-email send" @click="editStudentGroup">

@@ -79,8 +79,8 @@
             type="donut"
             class="my-chart"
             :class="{'ml-n6' : data === undefined}"
-            :width="width+'px'"
-            height="100px"
+            width="100%"
+            height="100%"
             :options="chartOptions"
             :series="[data.total,100-data.total]"
         ></chart>
@@ -172,14 +172,21 @@ export default {
     if (this.data) {
       this.chartOptions.colors = this.data.colors
       // this.chartOptions.legend.show = true
+      this.chartOptions.tooltip = {
+        enabled: false
+      }
       this.chartOptions.plotOptions.pie = {
         donut: {
           labels: {
             show: true,
-            value: {
-              show: true
+            name:{
+              show: false
             },
-            label: 'test'
+            total: {
+              show: true,
+              label: '',
+              formatter: () => this.data.total + '%'
+            },
           }
         }
       }
@@ -199,6 +206,13 @@ export default {
   &.INSTRUCTOR {
     max-width: 217px;
     min-height: 197px;
+    .chart{
+      overflow: hidden;
+      max-width: 100%;
+      display: flex;
+      justify-content: center;
+      //display: none;
+    }
   }
 
   background: #ffffff;
@@ -374,6 +388,7 @@ export default {
   .small-card {
     &.INSTRUCTOR {
       height: 230px;
+      padding: 14px 15px;
     }
 
     .chart {

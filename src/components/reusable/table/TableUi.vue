@@ -57,7 +57,6 @@ export default {
 
 
     coloredRows(){
-      console.log(this.options, 'in table ui')
       return this.options.coloredRows
     }
   },

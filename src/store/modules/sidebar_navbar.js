@@ -1,10 +1,14 @@
+import Apis from "@/services/apis";
+
 const getDefaultState = () => ({
     sidebar_expanded: true,
     page_actions_visible: true,
     group_model: false,
     college: {},
+    plan: {},
     showChatMobileNavbar: false,
-    total_unread_messages: 0
+    total_unread_messages: 0,
+    total_undone_assignments: 0,
 })
 
 export default {
@@ -16,8 +20,9 @@ export default {
             state.sidebar_expanded = !state.sidebar_expanded;
         },
 
-        SET_TOTAL_UNREAD(state, value) {
-            state.total_unread_messages = value
+        SET_TOTAL_UNREAD(state, {number, total_assignments}) {
+            state.total_unread_messages = number
+            state.total_undone_assignments = total_assignments
         },
 
         TOGGLE_CHAT_MOBILE_NAVBAR(state) {
@@ -25,6 +30,9 @@ export default {
         },
         SET_COLLEGE_INFO(state, college) {
             state.college = college
+        },
+        SET_COLLEGE_PLAN(state, plan) {
+            state.plan = plan
         },
         // page action is a right side bar used in live on small devices
         TOGGLE_PAGE_ACTIONS_VISIBILITY(state) {
@@ -37,7 +45,14 @@ export default {
             Object.assign(state, getDefaultState())
         }
     },
-    actions: {},
+    actions: {
+        async removeLogo({state}) {
+            const splited = state.college.logo.split("/");
+            // set the dialog
+            await Apis.delete(`college/${state.college._id}/logo`, splited[splited.length - 1]);
+            state.college.logo = undefined
+        },
+    },
     getters: {
         showChatMobileNavbar: (state) => state.showChatMobileNavbar,
     },

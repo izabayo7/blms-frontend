@@ -93,9 +93,54 @@ const routes = [
                         component: () =>
                             import( /* webpackPrefetch: true */ /* webpackChunkName: "dashboard" */ '@/views/dashboard/new/main'),
                         meta: {
-                            allowAnonymous: false
+                            allowAnonymous: false,
+                            allowedUsers: ["INSTRUCTOR", "ADMIN"]
                         }
                     },
+
+                    {
+                        path: '/assignments',
+                        name: "assignments",
+                        component: () => import( /* webpackChunkName: "assignments" */ '@/views/quiz/student_assignments.vue'),
+                        meta: {
+                            allowedUsers: ["STUDENT"]
+                        },
+                    },
+
+                    {
+                        path: '/assignments/new',
+                        component: () => import( /* webpackChunkName: "assignments" */ '@/views/quiz/create_assignment.vue'),
+                        meta: {
+                            allowedUsers: ["INSTRUCTOR"]
+                        },
+                    },
+
+                    {
+                        path: '/assignments/edit/:id',
+                        component: () => import( /* webpackChunkName: "assignments" */ '@/views/quiz/edit_assignment.vue'),
+                        meta: {
+                            allowedUsers: ["INSTRUCTOR"]
+                        },
+                    },
+
+                    {
+                        path: '/assignments/:user_name/:id',
+                        name: "assignments",
+                        component: () => import( /* webpackChunkName: "assignments" */ '@/views/quiz/student_assignment_results.vue'),
+                        meta: {
+                            allowedUsers: ["STUDENT","INSTRUCTOR"]
+                        },
+                    },
+
+                    {
+                        path: '/assignments/:id',
+                        name: "assignments",
+                        component: () => import( /* webpackChunkName: "assignments" */ '@/views/quiz/student_assignment_results.vue'),
+                        meta: {
+                            allowedUsers: ["STUDENT","INSTRUCTOR"]
+                        },
+                    },
+
                     //for users
                     {
                         path: '/users',
@@ -167,9 +212,9 @@ const routes = [
                         path: '/announcements',
                         name: "announcements",
                         component: () => import( /* webpackChunkName: "announcements" */ '@/views/announcement/index.vue'),
-                        // meta: {
-                        //     allowedUsers: ["INSTRUCTOR", "ADMIN",]
-                        // },
+                        meta: {
+                            allowedUsers: ["INSTRUCTOR", "ADMIN",]
+                        },
                     },
                     {
                         path: '/announcements/new',
@@ -208,6 +253,14 @@ const routes = [
                         },
                     },
                     {
+                        path: '/reports/:target/assignments',
+                        component: () =>
+                            import( /* webpackChunkName: "reports-by-target" */ '@/views/reports/deep'),
+                        meta: {
+                            allowedUsers: ["STUDENT"]
+                        },
+                    },
+                    {
                         path: '/reports/:target/:user_name',
                         component: () =>
                             import( /* webpackChunkName: "user-reports" */ '@/views/reports'),
@@ -216,14 +269,29 @@ const routes = [
                         },
                     },
                     {
-                        path: '/profile/:user_name',
+                        path: '/settings',
                         component: () =>
-                            import( /* webpackChunkName: "user-profile" */ '@/components/update_profile.vue')
-                    },
-                    {
-                        path: '/update/password',
-                        component: () =>
-                            import( /* webpackChunkName: "change-password" */ '@/components/update_password.vue')
+                            import( /* webpackChunkName: "settings" */ '@/views/settings'),
+                        children: [
+                            {
+                                path: '/',
+                                name: "personalSettings",
+                                component: () => import( /* webpackChunkName: "settings" */ '@/views/settings/personal'),
+                            },
+                            {
+                                path: '/settings/institution',
+                                name: "institutionSettings",
+                                meta: {
+                                    allowedUsers: ["ADMIN"]
+                                },
+                                component: () => import( /* webpackChunkName: "settings" */ '@/views/settings/institution'),
+                            },
+                            {
+                                path: '/settings/payments',
+                                name: "paymentSettings",
+                                component: () => import( /* webpackChunkName: "settings" */ '@/views/settings/payments'),
+                            },
+                        ]
                     },
 
                     // course routes
@@ -291,7 +359,7 @@ router.beforeEach((to, from, next) => {
             })
         } else if ((to.path === '/login' || to.path === '/') && store.state.user.isLoggedIn) {
             next({
-                path: `/welcome`,
+                path: `/${store.state.user.user.category.name === 'STUDENT' ? 'courses' : 'welcome'}`,
             })
         }
         if (to.meta.allowedUsers && !to.meta.allowedUsers.includes(store.state.user.user.category.name))

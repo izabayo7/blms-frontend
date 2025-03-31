@@ -122,7 +122,7 @@ export default {
       return this.$vuetify.breakpoint.width < 960
     },
     userOnline() {
-      return this.online ? "Online" : "Away";
+      return this.currentDisplayedUser.online ? "Online" : "Away";
     },
     members() {
       return this.currentDisplayedUser.members;

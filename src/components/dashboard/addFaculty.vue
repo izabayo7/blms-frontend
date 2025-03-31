@@ -63,7 +63,7 @@
 <!--              />-->
 <!--            </div>-->
 <!--          </div>-->
-          <div v-if="!editMode" class="input-group">
+          <div class="input-group">
             <div class="label">
               <label for="faculty-description"
               >Add a student group to faculty
@@ -310,10 +310,6 @@ export default {
     deleteStudentGroup(i) {
       this.addedStudentGroups.splice(i, 1)
     },
-    select_dean(name) {
-      console.log(name)
-    }
-    ,
     async createFaculty() {
       const res = this.editMode ? await Apis.update("faculty", this.facultyId, this.faculty) : await Apis.create("faculty", this.faculty);
       if (res.data.status != 200 && res.data.status != 201) {
@@ -329,7 +325,7 @@ export default {
           uptime: 2000,
         })
 
-        if (!this.editMode) {
+        if (!this.editMode || this.addedStudentGroups.length) {
           const unsaved = []
           for (const i in this.addedStudentGroups) {
             const response = await Apis.create("user_groups", {

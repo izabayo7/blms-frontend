@@ -3,14 +3,18 @@
   text-align: center;
   border: 1px solid #d9d9d9;
 
-  &.quiz-files {
+  &.quiz-files, &.attachment-files {
     background: rgba(25, 48, 116, 0.07);
     border-radius: 3.39104px;
     max-width: 347.58px;
     width: 100%;
-    height: 94.95px;
+    min-height: 94.95px;
     display: flex;
     align-items: center;
+  }
+
+  &.attachment-files {
+    max-width: 531px !important;
   }
 
   &.chat-files {
@@ -151,6 +155,7 @@ div.remove-container a {
   display: flex;
   flex-wrap: wrap;
 }
+
 /* Portrait phones and smaller */
 @media (max-width: 700px) {
   .attachment {
@@ -230,7 +235,7 @@ div.remove-container a {
 
                 </div>
               </v-badge>
-              <v-badge v-if="template === 'chat-files'" overlap color="transparent">
+              <v-badge v-else-if="template === 'chat-files'" overlap color="transparent">
                 <v-btn
                     fab
                     color="error"
@@ -258,7 +263,11 @@ div.remove-container a {
                     class="attachment vertically--centered"
                 >
                   <div class="file_figure">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"/><path d="M9 2.003V2h10.998C20.55 2 21 2.455 21 2.992v18.016a.993.993 0 0 1-.993.992H3.993A1 1 0 0 1 3 20.993V8l6-5.997zM5.83 8H9V4.83L5.83 8zM11 4v5a1 1 0 0 1-1 1H5v10h14V4h-8z"/></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                      <path fill="none" d="M0 0h24v24H0z"/>
+                      <path
+                          d="M9 2.003V2h10.998C20.55 2 21 2.455 21 2.992v18.016a.993.993 0 0 1-.993.992H3.993A1 1 0 0 1 3 20.993V8l6-5.997zM5.83 8H9V4.83L5.83 8zM11 4v5a1 1 0 0 1-1 1H5v10h14V4h-8z"/>
+                    </svg>
                   </div>
                   <div class="file_name">
                     <span>{{ file.name | trimString(12) }}</span>
@@ -280,7 +289,6 @@ div.remove-container a {
                         fill="rgba(255,255,255,1)"/>
                   </svg>
                 </v-btn>
-
                 <div
                     @click="fileClicked(key)"
                     class="attachment vertically--centered"
@@ -291,22 +299,23 @@ div.remove-container a {
                         class="preview"
                         v-bind:ref="'preview' +  parseInt(key)"
                     />
-                    <v-icon v-else color="#000000" x-large
+                    <v-icon v-else-if="file.type" color="#000000" x-large
                     >mdi-file{{ findIcon(file.type) }}-outline
                     </v-icon
                     >
                   </div>
                   <div class="file_name">
-                    <span>{{ file.name | trimString(12) }}</span>
+                    <span>{{ (file.name || file.src) | trimString(12) }}</span>
                   </div>
                 </div>
               </v-badge>
             </div>
           </div>
         </v-col>
-        <v-col v-if="files.length === 0 && template === 'quiz-files' && !defaultFiles.length"
-               class="col-12 quiz-details">
-          Upload you images here
+        <v-col
+            v-if="files.length === 0 && (template === 'quiz-files' || template === 'attachment-files') && !defaultFiles.length"
+            class="col-12 quiz-details">
+          {{ template === 'quiz-files' ? 'Upload you images here' : 'Pick files' }}
           <svg @click="clickButton()" class="cursor-pointer" width="22" height="22" viewBox="0 0 22 22" fill="none"
                xmlns="http://www.w3.org/2000/svg">
             <path
@@ -328,7 +337,9 @@ div.remove-container a {
           here!</span
         >
         </v-col>
-        <v-col v-if=" template === undefined" class="col-2">
+        <v-col
+            v-if=" template === undefined || ((template === 'quiz-files' || template === 'attachment-files') && files.length)"
+            class="col-2">
           <v-btn class="mt-n2" @click="clickButton()" large icon>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
               <path fill="none" d="M0 0h24v24H0z"/>
@@ -342,15 +353,7 @@ div.remove-container a {
             type="file"
             :multiple="multiple"
             :id="inputId"
-            :accept="
-            allowedTypes === undefined
-              ? undefined
-              : allowedTypes.includes('video')
-              ? 'video/*'
-              : allowedTypes.includes('image')
-              ? 'image/*'
-              : undefined
-          "
+            :accept="allowedTypes"
             hidden
             @change="addFile()"
         />
@@ -369,7 +372,7 @@ export default {
     */
   props: {
     allowedTypes: {
-      type: Array,
+      type: String,
     },
     boundIndex: {
       type: Number,
@@ -469,11 +472,6 @@ export default {
     if (this.defaultFiles.length && !this.files.length)
       this.files = this.defaultFiles.filter(e => e.src)
   },
-  // watch: {
-  //   files() {
-  //     console.log(this.files)
-  //   }
-  // },
   methods: {
     fileClicked(index) {
       this.$emit(
@@ -611,6 +609,9 @@ export default {
         Removes a select file the user has uploaded
       */
     removeFile(key) {
+      if (this.defaultFiles.indexOf(this.files[key]) !== -1) {
+        this.defaultFiles.splice(key, 1);
+      }
       this.files.splice(key, 1);
       this.$emit("removeFile", key, this.boundIndex);
     },

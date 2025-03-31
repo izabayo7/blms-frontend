@@ -114,8 +114,8 @@
         />
       </div>
       <div class="input-container my-margin d-flex">
-        <div class="label mb-2">Record this live class</div>
-        <input v-model="record_session" class="mt-1 ml-2" type="checkbox">
+<!--        <div class="label mb-2">Record this live class</div>-->
+<!--        <input v-model="record_session" class="mt-1 ml-2" type="checkbox">-->
       </div>
       <button class="submit" @click="validateForm()">Schedule class</button>
     </div>
@@ -239,7 +239,7 @@ export default {
       this.menu = true;
     },
     validateForm() {
-      if (this.selected_chapter == "" || this.date == "") {
+      if (this.selected_chapter === "" || this.date === "") {
         this.$store.dispatch("app_notification/SET_NOTIFICATION", {
           message: "All fields are required",
           status: "danger",
@@ -296,7 +296,11 @@ export default {
         // notify students that session is scheduled
         this.socket.emit('live-session', {
           user_group,
-          content: `scheduled a live session on ${this.date} at ${this.time}`
+          content: `scheduled a live session on ${this.date} at ${this.time}`,
+          date: this.date,
+          time: this.time,
+          course_name: this.selected_course,
+          chapter_name: this.selected_chapter,
         })
 
         this.showModal = false;
@@ -322,7 +326,6 @@ export default {
     this.getQuizes({
       user_name: this.$store.state.user.user.user_name,
     });
-    console.log(this.$store.state.courses.selectedCourse, this.course)
     if (this.course) {
       this.selected_course = this.course.name
     }

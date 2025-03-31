@@ -118,7 +118,7 @@
                   {{ announcement.viewers.length }}
                 </div>
               </div>
-              <div class="new">New</div>
+              <div v-if="daysDifference(announcement.createdAt) < 1" class="new">New</div>
             </div>
           </div>
         </div>
@@ -129,6 +129,7 @@
 
 <script>
 import {mapActions, mapGetters} from "vuex";
+import {daysDifference} from "@/services/global_functions"
 
 export default {
   name: "ViewAllAnnouncements",
@@ -140,6 +141,7 @@ export default {
     }
   },
   methods: {
+    daysDifference,
     ...mapActions("announcement", ["getAnnouncements"]),
     computeTarget(receivers) {
       let arr = receivers.map(x => x.sur_name)

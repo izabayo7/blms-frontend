@@ -156,9 +156,7 @@ export default {
     removeMember(member) {
       for (const k in this.group.members) {
         if (this.group.members[k].id == member.id) {
-          console.log(this.group.members[k], member);
           this.group.members.splice(k, 1);
-          console.log(this.group.members);
         }
       }
       this.update_confirmation(false);
@@ -300,6 +298,22 @@ export default {
         }
         .cancel {
           background-color: $secondary;
+        }
+      }
+    }
+  }
+}
+
+/* Portrait phones and smaller */
+@media (max-width: 700px) {
+  .my-info {
+    .info-container {
+      .my-info {
+        min-width: 90%;
+        max-width: 100%;
+        .members {
+          align-self: start;
+          max-width: 100%;
         }
       }
     }

@@ -5,7 +5,7 @@
         <div class="reset-password-box mx-auto text-center">
           <div class="heading">
             <img :src="image" alt="" class="logo mx-auto" />
-            <div class="college-name">{{ institution }}.</div>
+            <div class="college-name">{{ institution }}</div>
             <div class="welcome">Reset password</div>
             <form @submit.prevent="createPasswordReset">
               <div class="input-container">
@@ -49,14 +49,8 @@
             </form>
             <div class="lower-message">
               <div class="message-row">
-                Don’t have an account contact us ?
-                <router-link to="/register">Register</router-link>
-              </div>
-              <div class="message-row">
-                Remembered your password ? <router-link to="/login" />
-              </div>
-              <div class="message-row">
-                Having trouble resseting your password ?
+                Remembered your password ?
+                <router-link :to="`/login${$route.query.institution ? '?institution='+$route.query.institution : ''}`">login</router-link>
               </div>
             </div>
           </div>

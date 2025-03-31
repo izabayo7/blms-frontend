@@ -29,9 +29,12 @@
           class="col-3 col-md-1 vertically--centered pa-0"
       >
         <div v-if="content !== '' || showDelete" class="actions">
-          <svg @click="removeFeedback()" class="cursor-pointer" width="28" height="29" viewBox="0 0 28 29" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <svg @click="removeFeedback()" class="cursor-pointer" width="28" height="29" viewBox="0 0 28 29" fill="none"
+               xmlns="http://www.w3.org/2000/svg">
             <g clip-path="url(#clip0)">
-              <path d="M7.0026 22.2848C7.0026 23.5682 8.0526 24.6182 9.33594 24.6182H18.6693C19.9526 24.6182 21.0026 23.5682 21.0026 22.2848V8.28483H7.0026V22.2848ZM22.1693 4.78483H18.0859L16.9193 3.61816H11.0859L9.91927 4.78483H5.83594V7.11816H22.1693V4.78483Z" fill="#FF0808"/>
+              <path
+                  d="M7.0026 22.2848C7.0026 23.5682 8.0526 24.6182 9.33594 24.6182H18.6693C19.9526 24.6182 21.0026 23.5682 21.0026 22.2848V8.28483H7.0026V22.2848ZM22.1693 4.78483H18.0859L16.9193 3.61816H11.0859L9.91927 4.78483H5.83594V7.11816H22.1693V4.78483Z"
+                  fill="#FF0808"/>
             </g>
             <defs>
               <clipPath id="clip0">
@@ -62,8 +65,8 @@
       <div v-if="isFileUpload && $store.state.user.user.category.name === 'INSTRUCTOR'" class="d-flex file-feedback">
         <div>
           <div>
-            <button class="pick-file file-picked" @click="pickfile(index)">
-              Choose file
+            <button class="pick-file file-picked" @click="feedback_name ? removeFile() : pickfile(index)">
+              {{ feedback_name ? 'Remove' : 'Choose' }} file
             </button>
             <input
                 type="file"
@@ -74,7 +77,7 @@
           </div>
           <div v-if="!feedback_name" class="hint">Upload a file (optional )</div>
           <button v-else class="hint"
-                  @click="downloadAttachment(`${backend_url}/api/quiz_submission/${submission_id}/attachment/${feedback_name}/download?token=${$session.get('jwt')}`)">
+                  @click="downloadAttachment(`${backend_url}/api/${type ==='assignment' ? 'assignment_submission':'quiz_submission'}/${submission_id}/attachment/${feedback_name}/download?token=${$session.get('jwt')}`)">
             {{ feedback_name }}
           </button>
         </div>
@@ -95,11 +98,11 @@
       </div>
       <div v-else-if="isFileUpload" class="d-block d-md-flex  file-feedback col-12 pa-0">
         <button class="pick-file saved file-picked mx-auto ml-0"
-                @click="downloadAttachment(`${backend_url}/api/quiz_submission/${submission_id}/attachment/${feedback_name}/view?token=${$session.get('jwt')}`)">
+                @click="downloadAttachment(`${backend_url}/api/${type ==='assignment' ? 'assignment_submission':'quiz_submission'}/${submission_id}/attachment/${feedback_name}/view?token=${$session.get('jwt')}`)">
           {{ feedback_name }}
         </button>
         <button class="download-attachment mx-auto mr-0"
-                @click="downloadAttachment(`${backend_url}/api/quiz_submission/${submission_id}/attachment/${feedback_name}/download?token=${$session.get('jwt')}`)">
+                @click="downloadAttachment(`${backend_url}/api/${type ==='assignment' ? 'assignment_submission':'quiz_submission'}/${submission_id}/attachment/${feedback_name}/download?token=${$session.get('jwt')}`)">
           Download attachment
         </button>
       </div>
@@ -126,12 +129,14 @@ export default {
       type: String,
       required: true,
     },
+    type: {
+      type: String
+    },
     feedback_name: {
       type: String
     },
     answerId: {
       type: String,
-      required: true,
     },
     feedbackId: {
       type: String,
@@ -164,19 +169,17 @@ export default {
       return "feedback_" + Math.random() * 1000;
     },
     mode() {
-      // console.log(this.feedbackContent());
       // return this.feedbackContent() == this.content ? "view" : "edit";
       return "any";
     },
     currentContent() {
       return this.$refs.feedback_input
-          ? this.$refs.feedback_input.innerHTML
+          ? this.removeNonBreakingSpace(this.$refs.feedback_input.innerHTML)
           : "";
     },
   },
   watch: {
     element() {
-      console.log("hahiyeeeeee");
       this.computeFeedbackClass();
     },
     message() {
@@ -190,26 +193,35 @@ export default {
   },
   methods: {
     downloadAttachment,
+    removeFile() {
+      Apis.delete(this.type === 'assignment' ? `assignment_submission/feedback/${this.submission_id}/${this.feedback_name}` : `quiz_submission/feedback/${this.submission_id}/${this.answerId}/${this.feedback_name}`).then(() => {
+        this.message = "feedback attachment deleted";
+        this.$emit("feedbackDeleted", this.index, true)
+      })
+    },
     upoadFeedback() {
       const formData = new FormData()
       formData.append("file", this.file)
       this.upload_status = 1;
-      Apis.create(`quiz_submission/feedback/${this.submission_id}/${this.answerId}`, formData, {
+      Apis.create(this.type === 'assignment' ? `assignment_submission/feedback/${this.submission_id}` : `quiz_submission/feedback/${this.submission_id}/${this.answerId}`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         },
       }).then(() => {
         this.upload_status = 2
-        this.$emit("feedbackSent",this.index, true)
+        this.$emit("feedbackUploaded", this.file.name)
+        this.file = undefined
+        this.showSave = false;
       })
     },
     saveChanges() {
+      const content = this.feedbackContent()
       if (this.file) {
         this.upoadFeedback()
       }
-      if (this.content != '')
+      if (this.feedbackId !== '')
         this.editFeedback()
-      else
+      else if (content.replace(/\s/g, '').length)
         this.addFeedback()
     },
     pickfile(index) {
@@ -225,11 +237,12 @@ export default {
     },
     ...mapMutations("quiz_submission", [
       "add_answer_feedback",
+      "add_assignment_submission_marks",
       "remove_answer_feedback",
     ]),
     feedbackContent() {
       return this.$refs.feedback_input
-          ? this.$refs.feedback_input.innerHTML
+          ? this.removeNonBreakingSpace(this.$refs.feedback_input.innerHTML)
           : "";
     },
     computeFeedbackClass() {
@@ -242,32 +255,36 @@ export default {
         }
       }
       // show or hide save button
-      this.showSave = this.feedbackContent() != this.content;
+      this.showSave = this.feedbackContent() !== this.content;
     },
     removeNonBreakingSpace(text) {
       return text.replace(/&nbsp;/g, "");
     },
     async addFeedback() {
-      let content = this.removeNonBreakingSpace(this.feedbackContent());
+      let content = this.feedbackContent();
 
-      if (content == "") {
-        console.log("reka genda");
+      if (content === "") {
         return;
       }
       const response = await Apis.create("comment", {
         sender: this.$store.state.user.user.user_name,
         target: {
-          type: "quiz_submission_answer",
-          id: this.answerId,
+          type: this.type === 'assignment' ? "assignment_submission" : "quiz_submission_answer",
+          id: this.type === 'assignment' ? this.submission_id : this.answerId,
         },
         content: content,
       });
+      if (this.type === 'quiz_submission_answer')
+          // add the feedback in state
+        this.add_answer_feedback({
+          answer_id: this.answerId,
+          feedback: response.data.data,
+        });
+      else
+        this.add_assignment_submission_marks({
+          id: this.$route.params.id, submission_id: this.submission_id, feedback: 1
+        })
 
-      // add the feedback in state
-      this.add_answer_feedback({
-        answer_id: this.answerId,
-        feedback: response.data.data,
-      });
       this.$emit("feedbackSent", this.index, true)
       let element = this.$refs.feedback_input;
       element.className += " saved_feedback";
@@ -276,8 +293,7 @@ export default {
     },
     async editFeedback() {
       const content = this.feedbackContent();
-      if (content == "") {
-        console.log("reka genda");
+      if (content === "") {
         return;
       }
       const response = await Apis.update("comment", this.feedbackId, {
@@ -293,8 +309,7 @@ export default {
       this.message = "feedback successfuly updated";
     },
     async removeFeedback() {
-      const response = await Apis.delete("comment", this.feedbackId);
-      console.log(response);
+      await Apis.delete("comment", this.feedbackId);
       let element = this.$refs.feedback_input;
       element.innerHTML = "";
       element.className = element.className.replace(
@@ -303,12 +318,16 @@ export default {
       );
       this.message = "feedback successfuly removed";
       this.showDelete = false;
-
-      // remove the feedback from the state
-      this.remove_answer_feedback({
-        answer_id: this.answerId,
-      });
-      this.$emit("feedbackSent",this.index , false)
+      if (this.type === 'quiz_submission_answer')
+          // remove the feedback from the state
+        this.remove_answer_feedback({
+          answer_id: this.answerId,
+        });
+      else
+        this.add_assignment_submission_marks({
+          id: this.$route.params.id, submission_id: this.submission_id, feedback: 0
+        })
+      this.$emit("feedbackSent", this.index, false)
     },
   },
   mounted() {

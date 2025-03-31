@@ -1,7 +1,7 @@
 <template>
   <main class="my-chat-messaging customScroll" id="my-chat-messaging">
     <!--    messages container-->
-    <div class="msg-container" id="msg-container" ref="msg-container">
+    <div class="msg-container" @scroll="loadMoreMessages" id="msg-container" ref="msg-container">
       <!--      if there are no messages-->
       <div class="no-msgs" v-if="!data">
         you have not yet started conversation with
@@ -10,10 +10,10 @@
 
       <!--      block of messages -->
       <div
-        class="msgs-block"
-        v-for="(msgs, i) in data"
-        :key="i"
-        :class="{
+          class="msgs-block"
+          v-for="(msgs, i) in data"
+          :key="i"
+          :class="{
           sending: msgGoing(msgs.from),
           system_message: systemMsg(msgs.from),
           receiving: !msgGoing(msgs.from),
@@ -23,27 +23,27 @@
         <!--        picture of the message sender-->
         <div v-if="!systemMsg(msgs.from)" class="picture mt-4">
           <div
-            v-if="currentDisplayedUser.id === 'announcements'"
-            class="announcement"
+              v-if="currentDisplayedUser.id === 'announcements'"
+              class="announcement"
           >
             <svg
-              width="37"
-              height="37"
-              viewBox="0 0 37 37"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
+                width="37"
+                height="37"
+                viewBox="0 0 37 37"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
             >
-              <circle cx="18.5" cy="18.5" r="18.5" fill="#FFD248" />
+              <circle cx="18.5" cy="18.5" r="18.5" fill="#FFD248"/>
               <path
-                d="M18.5012 26.5437C19.386 26.5437 20.1099 25.8198 20.1099 24.935H16.8925C16.8925 25.8198 17.6164 26.5437 18.5012 26.5437ZM23.3273 21.7176V17.6958C23.3273 15.2265 22.0162 13.1593 19.7077 12.6124V12.0654C19.7077 11.3978 19.1688 10.8589 18.5012 10.8589C17.8336 10.8589 17.2947 11.3978 17.2947 12.0654V12.6124C14.9942 13.1593 13.6751 15.2185 13.6751 17.6958V21.7176L12.0664 23.3263V24.1306H24.936V23.3263L23.3273 21.7176ZM21.7186 22.5219H15.2838V17.6958C15.2838 15.7011 16.4984 14.0763 18.5012 14.0763C20.504 14.0763 21.7186 15.7011 21.7186 17.6958V22.5219Z"
-                fill="#343434"
+                  d="M18.5012 26.5437C19.386 26.5437 20.1099 25.8198 20.1099 24.935H16.8925C16.8925 25.8198 17.6164 26.5437 18.5012 26.5437ZM23.3273 21.7176V17.6958C23.3273 15.2265 22.0162 13.1593 19.7077 12.6124V12.0654C19.7077 11.3978 19.1688 10.8589 18.5012 10.8589C17.8336 10.8589 17.2947 11.3978 17.2947 12.0654V12.6124C14.9942 13.1593 13.6751 15.2185 13.6751 17.6958V21.7176L12.0664 23.3263V24.1306H24.936V23.3263L23.3273 21.7176ZM21.7186 22.5219H15.2838V17.6958C15.2838 15.7011 16.4984 14.0763 18.5012 14.0763C20.504 14.0763 21.7186 15.7011 21.7186 17.6958V22.5219Z"
+                  fill="#343434"
               />
             </svg>
           </div>
           <img
-            v-else-if="msgs.image"
-            :src="msgs.image + '?height=50'"
-            :alt="`${msgs.from}'s profile picture`"
+              v-else-if="msgs.image"
+              :src="msgs.image + '?height=50'"
+              :alt="`${msgs.from}'s profile picture`"
           />
           <v-avatar min-width="40" min-height="40" v-else class="avatar">
             {{ msgs.from | computeText }}
@@ -51,46 +51,51 @@
         </div>
         <div class="msg-block">
           <div
-            v-if="currentDisplayedUser.id === 'announcements'"
-            class="sender_name"
+              v-if="currentDisplayedUser.id === 'announcements'"
+              class="sender_name"
           >
             {{ msgs.sender.sur_name }} {{ msgs.sender.other_names }} {{ msgs.createdAt | getTimeDifference }}
           </div>
           <div
-            v-else-if="
+              v-else-if="
               !msgGoing(msgs.from) &&
               currentDisplayedUser.is_group &&
               !systemMsg(msgs.from)
             "
-            class="sender_name"
+              class="sender_name"
           >
             {{ msgs.from }} {{ msgs.messages[0].createdAt | getTimeDifference }}
           </div>
           <div
-            v-else
-            class="sender_name"
-            :class="msgs.from ? msgs.from.toLowerCase() : 'announcements'"
+              v-else
+              class="sender_name"
+              :class="msgs.from ? msgs.from.toLowerCase() : 'announcements'"
           >
             <p>{{ msgs.messages[0].createdAt | getTimeDifference }}</p>
           </div>
           <!--        list of messages sent or received-->
           <div v-if="currentDisplayedUser.id !== 'announcements'" class="msgs">
             <div
-              :class="`msg-cntnr ${
+                :class="`msg-cntnr ${
                 !msg.content || msg.content === '' ? 'noBg' : ''
               }`"
-              v-for="(msg, i) in msgs.messages"
-              :key="i"
+                v-for="(msg, i) in msgs.messages"
+                :key="i"
             >
               <!--            //for better html elements readability-->
               <div
-                class="msg"
-                v-if="msg.content"
-                :inner-html.prop="msg.content | urlify"
+                  class="msg mx-auto"
+                  v-if="msg.content && msgs.from === 'SYSTEM'"
+                  :inner-html.prop="msg.content | injectTime"
               />
               <div
-                v-if="msg.attachments"
-                :class="`attachments-cotainer ${msg.content ? 'pushed' : ''} ${
+                  class="msg"
+                  v-else-if="msg.content"
+                  :inner-html.prop="msg.content | urlify "
+              />
+              <div
+                  v-if="msg.attachments"
+                  :class="`attachments-cotainer ${msg.content ? 'pushed' : ''} ${
                   msg.attachments.length > 1
                     ? msg.attachments.length > 2
                       ? 'more'
@@ -99,21 +104,21 @@
                 }`"
               >
                 <div
-                  v-for="(attachment, k) in msg.attachments"
-                  :key="k"
-                  class="attachment"
+                    v-for="(attachment, k) in msg.attachments"
+                    :key="k"
+                    class="attachment"
                 >
                   <img
-                    v-if="fileType(attachment) === 'image'"
-                    :src="attachment.src + `?token=${$session.get('jwt')}`"
-                    alt=""
+                      v-if="fileType(attachment) === 'image'"
+                      :src="attachment.src + `?token=${$session.get('jwt')}`"
+                      alt=""
                   />
                   <!--                  <audio v-if="fileType(attachment) === 'audio'" :src="attachment.src+ `?token=${$session.get('jwt')}`"></audio>-->
                   <vue-plyr v-if="fileType(attachment) === 'audio'">
                     <audio controls crossorigin playsinline>
                       <source
-                        :src="attachment.src + `?token=${$session.get('jwt')}`"
-                        type="audio/mp3"
+                          :src="attachment.src + `?token=${$session.get('jwt')}`"
+                          type="audio/mp3"
                       />
                     </audio>
                   </vue-plyr>
@@ -124,25 +129,29 @@
           <div v-else class="msgs">
             <div class="announcement-container">
               <div class="d-flex">
-                <div class="col-12 col-md-2">
+                <div class="col-5">
                   <img
-                    :src="$store.state.sidebar_navbar.college.logo"
-                    alt=""
-                    class="college-logo"
+                      :src="$store.state.sidebar_navbar.college.logo"
+                      alt=""
+                      class="college-logo"
                   />
                 </div>
-                <div class="col-12 col-md-8 vertically--centered justify-start">
+                <div class="col-7 vertically--centered justify-start">
                   {{ msgs.title }}
                 </div>
               </div>
               <div class="col-12">
                 <Editor
-                  ref="editor"
-                  mode="view"
-                  class="editor-container"
-                  :inverted="true"
-                  :defaultContent="msgs.content"
+                    ref="editor"
+                    mode="view"
+                    class="editor-container"
+                    :inverted="true"
+                    :defaultContent="msgs.content"
                 />
+              </div>
+              <div class="col-12">
+                <div class="announcer">{{ msgs.sender.sur_name }} {{ msgs.sender.other_names }}</div>
+                <div class="category">{{ msgs.sender.category.toLowerCase() }}</div>
               </div>
             </div>
           </div>
@@ -151,11 +160,11 @@
       <div class="receiving" v-if="typing">
         <!-- <div class="receiving" v-if="1"> -->
         <div
-          v-if="currentDisplayedUser.is_group"
-          class="sender_name text-center"
+            v-if="currentDisplayedUser.is_group"
+            class="sender_name text-center"
         >
           <span v-for="(member, i) in typing_members" :key="i"
-            >{{ `${i > 0 ? "," : ""} ${member}` }}
+          >{{ `${i > 0 ? "," : ""} ${member}` }}
           </span>
           <span>{{ typing_members.length > 1 ? " are " : " is " }} typing</span>
         </div>
@@ -173,9 +182,9 @@
 </template>
 
 <script>
-import { mapState, mapGetters, mapMutations } from "vuex";
+import {mapState, mapGetters, mapMutations, mapActions} from "vuex";
 // import {on} from "@/services/event_bus";
-import { chatMixins } from "@/services/mixins";
+import {chatMixins} from "@/services/mixins";
 
 export default {
   name: "Chat-messaging",
@@ -184,7 +193,7 @@ export default {
     Editor: () => import("@/components/reusable/Editor"),
   },
   props: {
-    data: { type: [Array, Boolean], required: true },
+    // data: {type: [Array, Boolean], required: true},
   },
   data() {
     return {
@@ -195,19 +204,41 @@ export default {
   computed: {
     ...mapState("chat", ["currentDisplayedUser", "incomingMessages"]),
     ...mapGetters("chat", ["socket"]),
+    data() {
+      return this.$store.getters["chat/currentMessages"]
+    },
     typing_members() {
       let names = [];
       for (const i in this.typers) {
         const user = this.currentDisplayedUser.members.filter(
-          (m) => m.data.user_name == this.typers[i]
+            (m) => m.data.user_name == this.typers[i]
         );
         names.push(user[0].data.sur_name);
       }
       return names;
     },
   },
+  // watch: {
+  //   $route() {
+  //     this.scrollChatToBottom(); //scroll chat to bottom
+  //   }
+  // },
   methods: {
     ...mapMutations("chat", ["CHANGE_MESSAGE_READ_STATUS"]),
+    ...mapActions("chat", ["loadMessages"]),
+    findTotalMessages(){
+      let i = 0
+      for (const k in this.data) {
+        i += this.data[k].messages.length
+      }
+      return i
+    },
+    loadMoreMessages() {
+      const el = document.querySelector('.msg-container');
+      if (el.scrollTop === 0 && this.data[0].from !== "SYSTEM") {
+        this.loadMessages({id: this.$route.params.username, lastMessage: this.data[0].messages[0]._id})
+      }
+    },
     // is message going or coming
     msgGoing(owner) {
       return owner && owner.toLowerCase() === "me";
@@ -226,7 +257,9 @@ export default {
     },
     //read messages
     readMessages() {
-      const e = document.getElementById("my-chat-messaging");
+      const e = document.querySelector('.msg-container');
+      if (!e)
+        return
       const scrollHeight = e.scrollHeight - e.offsetHeight; //scrollable length
       const scrollTop = e.scrollTop; //current scrolled length
 
@@ -248,7 +281,6 @@ export default {
     let timeout = undefined;
 
     this.socket.on("res/message/typing", (typist, group) => {
-      console.log(this.currentDisplayedUser);
       if (!this.currentDisplayedUser) return;
 
       if (this.currentDisplayedUser.is_group) {
@@ -257,8 +289,8 @@ export default {
       if (!this.typers.includes(typist)) this.typers.push(typist);
       //if the typist is the one we are chatting with
       if (
-        this.currentDisplayedUser.id === typist ||
-        this.currentDisplayedUser.id === group
+          this.currentDisplayedUser.id === typist ||
+          this.currentDisplayedUser.id === group
       ) {
         this.typing = true;
 
@@ -276,8 +308,7 @@ export default {
     });
 
     //track scroll so that we can determine if use has read new messages
-    let scrollableDiv = document.getElementById("my-chat-messaging");
-    console.log(scrollableDiv.offsetHeight, scrollableDiv.scrollTop);
+    // let scrollableDiv = document.getElementById("my-chat-messaging");
     // scrollableDiv.addEventListener("scroll", this.readMessages);
     this.readMessages();
     //when message came stop typing
@@ -290,7 +321,8 @@ export default {
     the reason we call this function the end is that we need to wait for the all message to be rendered
     so that we can scroll them
      */
-    this.scrollChatToBottom();
+    if (this.findTotalMessages() < 11)
+      this.scrollChatToBottom();
   },
 };
 </script>
@@ -325,6 +357,7 @@ export default {
     margin: 0 10px;
     overflow: auto;
     height: 100%;
+    overscroll-behavior: contain;
 
     .typing {
       height: fit-content;
@@ -424,13 +457,32 @@ export default {
           margin-right: 20px;
         }
       }
+
       .announcement-container {
-        max-width: 486px;
-        widows: 100%;
+        max-width: 90%;
+        width: 100%;
         margin-left: 18px;
         padding: 21px 15px;
         background: #e7ecf0;
         border-radius: 10px;
+        font-family: Inter;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 15px;
+        line-height: 25px;
+        /* or 167% */
+
+
+        color: #3C3C3C;
+
+        .announcer {
+          font-weight: bold;
+        }
+
+        .category {
+          text-transform: capitalize !important;
+        }
+
         img {
           max-width: 225px;
           max-height: 57px;
@@ -460,9 +512,11 @@ export default {
         //position: absolute;
         display: flex;
         flex-wrap: wrap;
+
         &.pushed {
           margin-top: 0.5rem;
         }
+
         .attachment {
           width: fit-content;
           padding: 0;
@@ -477,12 +531,14 @@ export default {
             border: 1px solid #193074;
           }
         }
+
         &.two {
           img {
             max-width: 201px;
             margin: 0px 5px;
           }
         }
+
         &.more {
           .attachment img {
             max-width: 130px;
@@ -492,6 +548,7 @@ export default {
         }
       }
     }
+
     .msg-block {
       width: 100%;
     }
@@ -531,6 +588,7 @@ export default {
 
           .msg-cntnr {
             align-self: flex-end;
+
             .attachments-cotainer {
               right: 0;
               justify-content: flex-end;

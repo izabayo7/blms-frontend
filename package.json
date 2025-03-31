@@ -19,7 +19,6 @@
     "jsonwebtoken": "^8.5.1",
     "kurento-utils": "^6.16.0",
     "lamejs": "^1.2.0",
-    "lodash": "^4.17.20",
     "moment": "^2.29.1",
     "skeleton-screen-css": "^1.0.1",
     "socket.io-client": "^2.3.0",

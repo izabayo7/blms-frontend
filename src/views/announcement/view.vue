@@ -117,10 +117,10 @@
                     </defs>
                   </svg>
 
-                  {{ announcement.views }}
+                  {{ announcement.viewers.length }}
                 </div>
               </div>
-              <div class="new">New</div>
+              <div v-if="daysDifference(announcement.createdAt) < 1" class="new">New</div>
             </div>
           </div>
         </div>
@@ -128,8 +128,9 @@
       <div v-if="announcement && showContent" class="col-12 col-md-8 pt-0">
         <div class="announcement view">
           <div class="d-flex">
-            <div class=" col-12 col-md-1"><img :src="$store.state.sidebar_navbar.college.logo" alt="" class="college-logo"></div>
-            <div class="col-12 col-md-8 vertically--centered justify-start">{{announcement.title}}</div>
+            <div class=" col-12 col-md-2"><img :src="$store.state.sidebar_navbar.college.logo" alt=""
+                                               class="college-logo"></div>
+            <div class="col-12 col-md-8 vertically--centered justify-start">{{ announcement.title }}</div>
           </div>
           <Editor
               ref="editor"
@@ -159,6 +160,7 @@ set_modal({
 
 <script>
 import {mapMutations, mapGetters, mapActions} from "vuex";
+import {daysDifference} from "@/services/global_functions"
 
 export default {
   name: "ViewAnnouncement",
@@ -170,8 +172,12 @@ export default {
   },
   computed: {
     ...mapGetters("announcement", ["announcements", "announcement"]),
+    userCategory() {
+      return this.$store.state.user.user.category.name
+    }
   },
   methods: {
+    daysDifference,
     ...mapActions("announcement", ["getAnnouncements", "deleteAnnouncement"]),
     ...mapMutations("announcement", ["set_selected_announcement"]),
     ...mapActions("modal", ["set_modal"]),

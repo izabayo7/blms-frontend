@@ -12,6 +12,10 @@
 
     h3 {
         color: #676767;
+        cursor: pointer;
+        &.active{
+            color: $primary,
+        }
         margin-bottom: 10px;
     }
 

@@ -53,7 +53,6 @@ export default {
     },
   },
   created() {
-    console.log(this.content)
     this.handleInput(this.content)
   }
 };

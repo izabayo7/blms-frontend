@@ -16,13 +16,15 @@
       >
         <div v-if="cardActive" class="content">
           <button @click="$router.push($route.path +'/'+ item._id)">Edit</button>
-          <button>Delete</button>
+          <button @click="deleteGroup">{{ item.total_courses || item.total_students ? 'Deactivate' : 'Delete' }}
+          </button>
         </div>
       </transition>
     </div>
   </div>
 </template>
 <script>
+import Apis from "@/services/apis";
 
 export default {
   name: "StudentGroupCard",
@@ -38,6 +40,19 @@ export default {
     }
   },
   methods: {
+    async deleteGroup() {
+      Apis.delete("user_groups", this.item._id).then((res) => {
+        if (res.data.status === 200) {
+          this.$store.dispatch("app_notification/SET_NOTIFICATION", {
+            message: `${res.data.message === "DELETED" ? 'Deleted' : 'Deactivated'} successcully`,
+            status: "success",
+            uptime: 2000,
+          })
+          this.$emit('deleted')
+        }
+
+      })
+    },
     outsideClickDetector() {
       let self = this;
       document.addEventListener("click", function (e) {
@@ -54,7 +69,7 @@ export default {
 </script>
 <style lang="scss">
 .student-group-container {
-  width: 347px;
+  max-width: 347px;
   height: 160px;
   padding: 18px 21px;
   background: #FFFFFF;
@@ -85,8 +100,14 @@ export default {
     top: 20px;
     right: 21px;
 
+    button {
+      width: 20px;
+      height: 20px;
+    }
+
     .content {
       z-index: 6;
+
       button {
         display: block;
         margin-bottom: 18px;

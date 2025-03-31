@@ -1,5 +1,5 @@
 import io from 'socket.io-client'
-import { emit } from '@/services/event_bus'
+import {emit} from '@/services/event_bus'
 import store from '@/store'
 import router from '@/router'
 import apis from "@/services/apis";
@@ -15,6 +15,7 @@ const getDefaultState = () => ({
         id: null,
         status: 0
     },
+    socket: undefined,
     group: {
         error: ""
     }
@@ -24,6 +25,17 @@ export default {
     namespaced: true,
     state: getDefaultState,
     mutations: {
+        SET_SOCKET(state) {
+            if (io.socket) io.socket.removeAllListeners()
+
+            state.socket = io(process.env.VUE_APP_api_service_url, {
+                query: {
+                    token: Vue.prototype.$session.get(
+                        "jwt"
+                    ) // toke n of the connected user
+                }
+            })
+        },
         //set the current user
         SET_USERNAME(state, username) {
             state.username = username
@@ -33,6 +45,16 @@ export default {
         SET_DISPLAYED_USER(state, data) {
             state.currentDisplayedUser = data;
         },
+
+        UPDATE_CONTACT_STATUS(state, {id, status}) {
+            for (const i in state.incomingMessages) {
+                if (state.incomingMessages[i].id === id) {
+                    state.incomingMessages[i].online = status
+                    break
+                }
+            }
+        },
+
         ADD_INCOMING_CONTACT(state, data) {
             let FOUND = false;
 
@@ -59,15 +81,21 @@ export default {
                 return
 
             let exists = false;
+            let i = 0
 
             //check if the messages we are about to add doesn't exist
             state.loadedMessages.map(loadedMsg => {
-                if (loadedMsg.username === data.username)
+                if (loadedMsg.username === data.username) {
                     exists = true
+                } else {
+                    i++
+                }
             })
-
             if (!exists)
-                state.loadedMessages.push(data)
+                state.loadedMessages.unshift(data)
+            else if (!state.loadedMessages[i].conversation.includes(data.conversation[0])) {
+                state.loadedMessages[i].conversation.unshift(...data.conversation)
+            }
         },
 
         //add incoming message
@@ -75,7 +103,11 @@ export default {
 
             const id = newMessage.title ? 'announcements' : newMessage.group ? newMessage.group : newMessage.sender.user_name
             //get last message from stored conversation
-            store.dispatch('chat/lastMessageInCertainChatMessages', id.toString()).then(({ lastMessage, groupIndex, userIndex }) => {
+            store.dispatch('chat/lastMessageInCertainChatMessages', id.toString()).then(({
+                                                                                             lastMessage,
+                                                                                             groupIndex,
+                                                                                             userIndex
+                                                                                         }) => {
 
                 //if conversation was found and message not duplicated
                 if (userIndex === undefined || lastMessage._id === newMessage._id)
@@ -85,23 +117,26 @@ export default {
                 let incomingName = `${newMessage.sender.sur_name} ${newMessage.sender.other_names}`
                 //user conversation between sender and receiver
                 let userMessages = state.loadedMessages[userIndex].conversation
-                console.log(userMessages)
                 //if conversation was found
                 if (userMessages && id !== "announcements") {
                     // if the last sender is the receiver
                     if (userMessages[groupIndex].from.toLowerCase() === 'me') {
                         //store it as new set of message conversation
-                        userMessages.push({ from: incomingName, image: newMessage.sender.profile, messages: [newMessage] })
+                        userMessages.push({
+                            from: incomingName,
+                            image: newMessage.sender.profile,
+                            messages: [newMessage]
+                        })
                         //else append to the current messages
                     } else {
                         //if the last sender is the same as new message sender
                         if (lastMessage.sender === newMessage.sender._id || lastMessage.sender._id === newMessage.sender._id) {
                             userMessages[userMessages.length - 1].messages.push(newMessage)
                         } else {
-                            userMessages.push({ from: incomingName, messages: [newMessage] })
+                            userMessages.push({from: incomingName, messages: [newMessage]})
                         }
                     }
-                } else if(userMessages){
+                } else if (userMessages) {
                     userMessages.push(newMessage)
                 }
 
@@ -130,18 +165,25 @@ export default {
         //store the message that we sent
         ADD_ONGOING_MESSAGE(state, newMessage) {
 
-            store.dispatch('chat/lastMessageInCertainChatMessages', state.username).then(({ lastMessage, groupIndex, userIndex }) => {
+            store.dispatch('chat/lastMessageInCertainChatMessages', state.username).then(({
+                                                                                              lastMessage,
+                                                                                              groupIndex,
+                                                                                              userIndex
+                                                                                          }) => {
                 if (lastMessage._id !== newMessage._id) {
 
                     //if we have not yet chatted with the user
                     if (userIndex === undefined) {
-                        state.loadedMessages.push({ username: state.username, conversation: [{ from: 'me', messages: [newMessage] }] })
+                        state.loadedMessages.push({
+                            username: state.username,
+                            conversation: [{from: 'me', messages: [newMessage]}]
+                        })
                     } else {//if we have been chatting
                         let userMessages = state.loadedMessages[userIndex].conversation
 
                         if (userMessages[groupIndex].from.toLowerCase() !== 'me') {
                             userMessages.push(
-                                { from: 'me', messages: [newMessage] }
+                                {from: 'me', messages: [newMessage]}
                             )
                         } else {
                             userMessages[userMessages.length - 1].messages.push(newMessage)
@@ -205,7 +247,7 @@ export default {
 
     },
     actions: {
-        lastMessageInCertainChatMessages({ state }, id) {
+        lastMessageInCertainChatMessages({state}, id) {
 
             let lastMessage;
             let lastGroupedMessageIndex;
@@ -217,33 +259,33 @@ export default {
                     if (id !== 'announcements') {
                         let lastIndividualMessageIndex = state.loadedMessages[index].conversation[lastGroupedMessageIndex].messages.length - 1
                         lastMessage = state.loadedMessages[index].conversation[lastGroupedMessageIndex].messages[lastIndividualMessageIndex]
-                    } else{
+                    } else {
                         lastMessage = state.loadedMessages[index].conversation[lastGroupedMessageIndex]
                     }
                     userIndex = index
                 }
             })
 
-            return ({ lastMessage, groupIndex: lastGroupedMessageIndex, userIndex })
+            return ({lastMessage, groupIndex: lastGroupedMessageIndex, userIndex})
         },
-        loadIncomingMessages({ getters, state }) {
+        loadIncomingMessages({getters, state}) {
             // get contacts new style
             getters.socket.emit('message/contacts');
 
             // Get contacts new style
-            getters.socket.on('res/message/contacts', ({ contacts }) => {
+            getters.socket.on('res/message/contacts', ({contacts}) => {
                 state.incomingMessages = contacts
                 emit('incoming_message_initially_loaded')
             });
 
             // Get new contact
-            getters.socket.on('res/message/contacts/new', ({ contact, redirect }) => {
+            getters.socket.on('res/message/contacts/new', ({contact, redirect}) => {
                 state.incomingMessages.unshift(contact)
                 if (redirect)
                     router.push(`/messages/${contact.id}`)
             });
         },
-        removeMember({ state }, { groupId, member }) {
+        removeMember({state}, {groupId, member}) {
             apis.update("chat_group", `${groupId}/remove_member/${member.data.user_name}`).then(() => {
                 for (const i in state.incomingMessages) {
                     if (state.incomingMessages[i].id == groupId) {
@@ -254,7 +296,7 @@ export default {
             })
 
         },
-        toogleIsAdmin({ state }, { groupId, member }) {
+        toogleIsAdmin({state}, {groupId, member}) {
             apis.update("chat_group", `${groupId}/toogle_isAdmin/${member.data.user_name}`).then(() => {
                 for (const i in state.incomingMessages) {
                     if (state.incomingMessages[i].id == groupId) {
@@ -269,7 +311,7 @@ export default {
             })
 
         },
-        start_conversation({ state, getters }, user_name) {
+        start_conversation({state, getters}, user_name) {
 
             // search if conversation exist
             const contact_found = state.incomingMessages.filter(c => c.id == user_name)
@@ -278,25 +320,25 @@ export default {
             if (contact_found.length) router.push(`/messages/${user_name}`);
 
             // else initialise it
-            else getters.socket.emit('message/start_conversation', { conversation_id: user_name });
+            else getters.socket.emit('message/start_conversation', {conversation_id: user_name});
         },
         //load user messages
-        loadMessages({ getters, state, commit }, id) {
+        loadMessages({getters, state, commit}, {id, lastMessage}) {
             // const group = user.is_group
 
             // get messages
             //first check if we have ongoing requested data with the same id as this
             if (state.request.id !== id) {
-                getters.socket.emit('message/conversation', { conversation_id: id });
+                getters.socket.emit('message/conversation', {conversation_id: id, lastMessage});
                 state.request.ongoing = true
                 state.request.id = id
             }
 
             // Get messages
-            getters.socket.on('res/message/conversation', ({ conversation }) => {
+            getters.socket.on('res/message/conversation', ({conversation, lastMessage}) => {
                 //check if returned conversation object has data
                 if (conversation.length > 0) {
-                    commit('STORE_LOADED_MESSAGES', { username: id, conversation: conversation })
+                    commit('STORE_LOADED_MESSAGES', {username: id, conversation: conversation})
 
                 }
                 if (conversation.status === 404)
@@ -304,10 +346,12 @@ export default {
 
                 state.request.id = null
                 state.request.ongoing = false
-                emit('conversation_loaded')
+                if (!lastMessage)
+                    emit('conversation_loaded')
+
             })
         },
-        setUsername({ commit, state }, username) {
+        setUsername({commit, state}, username) {
             commit('SET_USERNAME', username)
             return new Promise((res, rej) => {
                 if (state.username === username) {
@@ -320,7 +364,7 @@ export default {
         },
 
         //to get index of user in incoming/received contacts
-        findIndexOfUserInIncomingMessages({ state }, id) {
+        findIndexOfUserInIncomingMessages({state}, id) {
             let index = null;
             state.incomingMessages.map((message, idx) => {
                 if (message.id === id)
@@ -332,16 +376,8 @@ export default {
     },
     getters: {
         // connect to socket from sever side
-        socket() {
-            if (io.socket) io.socket.removeAllListeners()
-
-            return io(process.env.VUE_APP_api_service_url, {
-                query: {
-                    token: Vue.prototype.$session.get(
-                        "jwt"
-                    ) // toke n of the connected user
-                }
-            })
+        socket(state) {
+            return state.socket
         },
 
         groupError(state) {
@@ -368,7 +404,7 @@ export default {
             //if user messages are not in store load it from backend
             //and user has conversation with
             if (messagesFound === false && state.request.status !== 404) {
-                store.dispatch('chat/loadMessages', state.username)
+                store.dispatch('chat/loadMessages', {id: state.username})
             }
 
             return messages
