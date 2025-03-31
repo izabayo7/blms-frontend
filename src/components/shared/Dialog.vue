@@ -198,8 +198,13 @@ failure.
       <!-- show confirmations according to the set action -->
       <div class="content">
         <h4 class="title">Please read carefully</h4>
-        <span class="sub-title">
+        <span v-if="link" class="sub-title">
           I accept that if do the following, <b>I will fail automatically.</b>
+        </span>
+        <span v-else class="sub-title">
+          You just breached the laws, <b>This is the last warning.</b>
+          <br>
+          If you do one of the things below another time you will fail.
         </span>
         <div class="items">
           <div class="item">
@@ -247,10 +252,11 @@ failure.
           <v-btn
               @click="toogle_visibility"
               class="mx-2 white--text action-button cancel"
-          >I decline
+          >{{ link ? 'I decline' : 'Continue'}}
           </v-btn
           >
           <v-btn
+              v-if="link"
               @click="toogle_visibility();$router.push(link)"
               class="mx-2 white--text action-button"
           >I accept

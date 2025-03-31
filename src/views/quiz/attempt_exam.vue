@@ -22,7 +22,7 @@
     </div>
     <div
         class="quiz-page px-4 px-md-16"
-        v-if="(!exam_submission || $store.state.user.user.category.name ==  'INSTRUCTOR') && filesToUpload.length && !disabled">
+        v-if="(!exam.submission || $store.state.user.user.category.name ==  'INSTRUCTOR') && filesToUpload.length && !disabled">
       <div class="title">{{ exam.name }}</div>
       <v-row>
         <v-col class="col-12 col-md-7 questions-side">
@@ -253,6 +253,7 @@ import {mapGetters, mapActions} from "vuex";
 
 export default {
   data: () => ({
+    warned: false,
     exam: undefined,
     alphabets: [
       "A",
@@ -296,7 +297,6 @@ export default {
     ...mapGetters("chat", ["socket"]),
     ...mapGetters("user", ["paymentStatus"]),
     ...mapGetters("network", ["onLine"]),
-    ...mapGetters("quiz_submission", ["exam_submission", "loaded"]),
     formated_remaining_time() {
       return new Date(this.remaining_time * 1000).toISOString().substr(11, 8);
     },
@@ -307,11 +307,11 @@ export default {
   watch: {
     remaining_time() {
       if (this.remaining_time > 0) {
-        setTimeout(() => {
-          this.remaining_time -= 1;
-        }, 1000);
-        if (this.remaining_time === this.exam.duration - 1)
-          this.initialiseQuiz();
+        // setTimeout(() => {
+        //   this.remaining_time -= 1;
+        // }, 1000);
+        // if (this.remaining_time === this.exam.duration - 1)
+        //   this.initialiseQuiz();
 
         this.attempt.used_time = this.exam.duration - this.remaining_time;
       } else if (!this.done) {
@@ -360,7 +360,16 @@ export default {
     ...mapActions("modal", ["set_modal"]),
     ...mapActions("quiz", ["getExam"]),
     endExam() {
-      this.saveAttempt(true)
+      if(!this.warned) {
+        this.warned = true
+        this.set_modal({
+          template: `exam_constraints`,
+        })
+      }
+      else {
+        console.log('failed')
+        this.saveAttempt(true)
+      }
     },
     moveTooltip(e) {
       let tooltip = document.querySelector('.coupontooltip');
@@ -622,6 +631,7 @@ export default {
       }
     },
     detectFocus() {
+      console.log(document.visibilityState)
       if (document.visibilityState !== "visible") {
         this.endExam()
       }
