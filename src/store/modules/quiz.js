@@ -284,7 +284,7 @@ export default {
         // eslint-disable-next-line no-empty-pattern
         async delete_assignment_submission({}, {id}) {
             await apis.delete('assignment_submission', id)
-            router.push('/assignments')
+            router.push('/assessments/assignments')
         },
         change_assignment_status({state, rootGetters, dispatch}, {id, status, user_group, name}) {
             apis.update('assignments/changeStatus', id + '/' + status).then((res) => {
@@ -297,7 +297,7 @@ export default {
                 } else {
                     if (status === 'RELEASED' || status === 'PUBLISHED')
                         rootGetters['chat/socket'].emit('marksReleased', {
-                            route: `/assignments/${id}`,
+                            route: `/assessments/assignments/${id}`,
                             user_group,
                             content: `${status === 'RELEASED' ? 'released marks for' : 'published a new '} assignment ${name}`
                         })
@@ -328,7 +328,7 @@ export default {
                 } else {
                     if (status === 'RELEASED' || status === 'PUBLISHED')
                         rootGetters['chat/socket'].emit('marksReleased', {
-                            route: `/assignments/${id}`,
+                            route: `/assessments/exams/instructions?exam=${id}`,
                             user_group,
                             content: `${status === 'RELEASED' ? 'released marks for' : 'published a new '} exam ${name}`
                         })
