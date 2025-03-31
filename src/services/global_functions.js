@@ -48,6 +48,30 @@ function elapsedDuration(date_time) {
 }
 
 /**
+ * elapsed time difference date_time and now
+ * @param date_time
+ * @returns {number}
+ */
+function daysDifference(date_time) {
+    const now = moment()
+
+    date_time = moment(date_time)
+    now.set({
+        hour: 0,
+        minute: 0,
+        second: 0,
+        millisecond: 0,
+    })
+    date_time.set({
+        hour: 0,
+        minute: 0,
+        second: 0,
+        millisecond: 0,
+    })
+    return now.diff(date_time, 'days')
+}
+
+/**
  * date_time to local time
  * @param date_time
  * @returns {string}
@@ -150,5 +174,6 @@ export {
     toLocal,
     playSound,
     getDateAndTime,
-    downloadAttachment
+    downloadAttachment,
+    daysDifference
 }
