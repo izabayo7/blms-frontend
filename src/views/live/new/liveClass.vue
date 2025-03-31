@@ -184,7 +184,8 @@ openQuiz">
         <div class="live-class--attendance--wrapper">
           <h3>ONLINE USERS : {{ participants.length }} </h3>
           <div class="online-users">
-            <online-user v-for="user in participants.filter(x=>x.userInfo.category != 'INSTRUCTOR')" :user="user.userInfo"
+            <online-user v-for="user in participants.filter(x=>x.userInfo.category != 'INSTRUCTOR')"
+                         :user="user.userInfo"
                          :key="`${(Date.now() * Math.random())}${user.name}`"/>
           </div>
         </div>
@@ -291,7 +292,7 @@ openQuiz">
 import {WebRtcPeer} from "../../../plugins/kurentoLive/kurento-utils.js"
 import Participant from "../../../plugins/kurentoLive/participants";
 import {downloadAttachment} from "@/services/global_functions"
-import {mapActions, mapGetters, mapState} from 'vuex'
+import {mapActions, mapGetters, mapMutations, mapState} from 'vuex'
 import Discussion from "../../../components/Live/Discussion";
 import {elapsedDuration, toLocal} from "@/services/global_functions"
 import OnlineUser from "../../../components/Live/OnlineUser";
@@ -353,6 +354,9 @@ export default {
             // }
           } else {
 
+            if (this.sidebarOpen)
+              this.toggle()
+
             await Apis.create('user_logs', {live_session_id: d.data.data._id})
 
             this.live_session = d.data.data
@@ -384,6 +388,7 @@ export default {
     },
   },
   methods: {
+    ...mapMutations("sidebar_navbar", {toggle: "TOGGLE_SIDEBAR_EXPANSION"}),
     toogleFullScreen() {
       document.getElementById("video_feed").requestFullscreen()
     },
@@ -886,10 +891,10 @@ export default {
       if (this.end_class)
         this.leaveRoom()
     },
-    participants(){
-      if(!this.instructor){
+    participants() {
+      if (!this.instructor) {
         let video = document.getElementById("video_feed");
-        video.setAttribute('poster','https://apis.kurious.rw/assets/images/video-loader.gif')
+        video.setAttribute('poster', 'https://apis.kurious.rw/assets/images/video-loader.gif')
       }
     }
   }

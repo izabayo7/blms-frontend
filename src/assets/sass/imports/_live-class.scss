@@ -480,6 +480,7 @@
 
                 .instructor-info {
                   align-items: start;
+                  padding: 4rem;
 
                   img {
                     border-radius: 50%;
@@ -1043,7 +1044,10 @@
       }
 
       .instructor-info {
-        padding-top: 1rem;
+        padding: 1rem;
+      }
+      .screen-sharing-video{
+        margin: -30px 20px 0px 0px;
       }
     }
   }
