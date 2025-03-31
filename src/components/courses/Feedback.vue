@@ -221,7 +221,7 @@ export default {
       }
       if (this.feedbackId !== '')
         this.editFeedback()
-      else if(content.replace(/\s/g, '').length)
+      else if (content.replace(/\s/g, '').length)
         this.addFeedback()
     },
     pickfile(index) {
@@ -237,6 +237,7 @@ export default {
     },
     ...mapMutations("quiz_submission", [
       "add_answer_feedback",
+      "add_assignment_submission_marks",
       "remove_answer_feedback",
     ]),
     feedbackContent() {
@@ -273,12 +274,17 @@ export default {
         },
         content: content,
       });
+      if (this.type === 'quiz_submission_answer')
+          // add the feedback in state
+        this.add_answer_feedback({
+          answer_id: this.answerId,
+          feedback: response.data.data,
+        });
+      else
+        this.add_assignment_submission_marks({
+          id: this.$route.params.id, submission_id: this.submission_id, feedback: 1
+        })
 
-      // add the feedback in state
-      this.add_answer_feedback({
-        answer_id: this.answerId,
-        feedback: response.data.data,
-      });
       this.$emit("feedbackSent", this.index, true)
       let element = this.$refs.feedback_input;
       element.className += " saved_feedback";
@@ -312,11 +318,15 @@ export default {
       );
       this.message = "feedback successfuly removed";
       this.showDelete = false;
-
-      // remove the feedback from the state
-      this.remove_answer_feedback({
-        answer_id: this.answerId,
-      });
+      if (this.type === 'quiz_submission_answer')
+          // remove the feedback from the state
+        this.remove_answer_feedback({
+          answer_id: this.answerId,
+        });
+      else
+        this.add_assignment_submission_marks({
+          id: this.$route.params.id, submission_id: this.submission_id, feedback: 0
+        })
       this.$emit("feedbackSent", this.index, false)
     },
   },

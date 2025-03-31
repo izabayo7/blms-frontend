@@ -197,7 +197,7 @@
 </template>
 
 <script>
-import {mapActions, mapGetters} from "vuex";
+import {mapActions, mapGetters, mapMutations} from "vuex";
 import {downloadAttachment} from "@/services/global_functions"
 import Apis from "@/services/apis";
 
@@ -261,6 +261,9 @@ export default {
     downloadAttachment,
     ...mapActions("quiz", ["getAssignment"]),
     ...mapActions("modal", ["set_modal"]),
+    ...mapMutations("quiz_submission", [
+      "add_assignment_submission_marks",
+    ]),
     async getSubmission() {
       const res = await Apis.get(`assignment_submission/user/${this.userCategory === 'STUDENT' ? this.username : this.$route.params.user_name}/${this.$route.params.id}`, this.assignment_submission)
       if (res.data.data) {
@@ -388,6 +391,9 @@ export default {
         if (res.data.status !== 200) {
           this.error = res.data.message
         } else {
+          this.add_assignment_submission_marks({
+            id: this.$route.params.id, submission_id: this.assignment_submission._id, marks: this.total_marks
+          })
           this.$store.dispatch("app_notification/SET_NOTIFICATION", {
             message: "Submission marks were saved successfully",
             status: "success",
