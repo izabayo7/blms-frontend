@@ -54,7 +54,7 @@
             subtitle="You must first pay your school fees to regain access"
         />
       </div>
-      <div v-else class="text-center">
+      <div v-else class="text-center col-12">
         {{message}}
       </div>
     </v-row>

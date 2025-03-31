@@ -365,6 +365,9 @@
         </v-row>
       </v-col>
     </v-row>
+    <div class="d-flex justify-center align-center full-height" v-else-if="loading">
+      <img src="https://kurious.rw/_nuxt/img/loader.059b462.gif" alt="loading ..">
+    </div>
     <div v-else class="text-center">
       Submission not found
     </div>
@@ -405,6 +408,7 @@ export default {
       "Y",
       "Z",
     ],
+    loading: true,
     quiz: {},
     attempt: {},
     questions_have_feedback: [],
@@ -542,6 +546,7 @@ export default {
       quizName: this.isExam ? this.$route.params.id : this.$route.params.quiz_name,
       isExam: this.isExam
     }).then(async () => {
+      this.loading = false
       if (this.selected_quiz_submission) {
         this.attempt = {
           auto_submitted: this.selected_quiz_submission.auto_submitted,
