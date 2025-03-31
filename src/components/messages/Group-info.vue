@@ -95,6 +95,7 @@ export default {
       members: [],
       group: {},
       profile:'',
+      profile_link:'',
       img:'',
       uploaded:false
     };
@@ -109,7 +110,7 @@ export default {
     },
     // get image either base64 or profile image
     image(){
-      return (this.profile.length > 0) ? this.profile : this.img.length > 0 ? this.img : false
+      return (this.profile_link.length > 0) ? this.profile_link : this.img.length > 0 ? this.img : false
     }
   },
   methods: {
@@ -128,14 +129,17 @@ export default {
        //to wait for profile to be filled with something and make sure that no image has been uploaded
       //before
         if(this.profile.length > 0 && !this.uploaded){
-          const res = await apis.put(`chat_group/${this.group.code}/profile`,{profile:this.profile})
+          const {data} = await apis.put(`chat_group/${this.group.code}/profile`,{profile:this.profile})
 
           this.uploaded = true;
-          console.log(res)
+          console.log(data)
         }
         //call the function again
         else{
-          await this.uploadImage()
+          const self = this;
+          setTimeout(async ()=>{
+            await self.uploadImage()
+          },30)
         }
 
         return 0
@@ -144,7 +148,7 @@ export default {
       const group = await a.get(`chat_group/${this.$route.params.id}`);
       this.group = group.data.data;
       if(group.data.data.profile)
-        this.profile = group.data.data.profile
+        this.profile_link = group.data.data.profile
     },
     // aha
     removeMember(member) {
