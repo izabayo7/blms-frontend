@@ -35,18 +35,21 @@
       box-sizing: border-box;
       border-radius: 4px;
       margin-bottom: 25px;
-      &.inner-input{
+
+      &.inner-input {
         border: none;
         width: 30%;
         margin-bottom: 0;
         padding: 0px 12px;
       }
     }
-    .duration-input{
-      width: 185px;
+
+    .duration-input {
+      max-width: 185px;
+      width: 100%;
     }
 
-    .duration-input{
+    .duration-input {
       display: flex;
     }
 
@@ -55,7 +58,8 @@
     }
 
     #quiz-title, .quiz-instructions {
-      width: 531px;
+      max-width: 531px;
+      width: 100%;
     }
 
     .quiz-instructions {
@@ -63,10 +67,11 @@
       height: fit-content;
       padding: 12px;
 
-      .ProseMirror{
+      .ProseMirror {
         min-height: 70px;
       }
-      .menubar{
+
+      .menubar {
         margin-bottom: 0px !important;
         height: 37px !important;
       }
@@ -75,8 +80,10 @@
 
   .flex {
     display: flex;
-    width: 531px;
-    label{
+    max-width: 531px;
+    width: 100%;
+
+    label {
       font-family: Inter;
       font-style: normal;
       font-weight: 500;
@@ -101,10 +108,12 @@
       background: #BABABC;
     }
   }
-  #quiz-questions{
-    .question{
+
+  #quiz-questions {
+    .question {
       display: flex;
-      &-number{
+
+      &-number {
         font-family: Inter;
         font-style: normal;
         font-weight: 500;
@@ -117,26 +126,40 @@
         color: #3C3C3C;
         margin-right: 10px;
       }
-      &-content{
+
+      &-content {
+        .col-12 {
+          padding-top: 0px;
+          padding-bottom: 0px;
+          height: fit-content;
+        }
+
         border: 1px solid #C4C4C4;
         box-sizing: border-box;
         border-radius: 9px;
         padding: 19px;
-        width: 690px;
-        .my-select{
-          width: 275px;
+        max-width: 690px;
+        width: 100%;
+
+        .my-select {
+          max-width: 275px;
+          width: 100%;
         }
-        .my-select{
+
+        .my-select {
           margin-top: 9px;
         }
-        .required{
+
+        .required {
           margin-top: 20px;
         }
-        .delete-question{
+
+        .delete-question {
           margin-top: 16px;
         }
-        .marks{
-          label{
+
+        .marks {
+          label {
             font-family: Inter;
             font-style: normal;
             font-weight: 500;
@@ -148,19 +171,111 @@
             color: #000000;
             margin-bottom: 0px;
           }
-          input{
-            width: 62px;
+
+          input {
+            max-width: 62px;
             height: 34px;
             border: 1.69552px solid #828282;
           }
         }
-        .required{
-          .text{
+
+        .required {
+          .text {
             margin-right: 22px;
           }
         }
-        .mb-15px{
+
+        .mb-15px {
           margin-bottom: 15px;
+        }
+
+        textarea {
+          max-width: 610px;
+          width: 100%;
+          height: 47px;
+          padding: 8px 13px;
+          border: 1.69552px solid #C4C4C4;
+          box-sizing: border-box;
+          border-radius: 3.39104px;
+        }
+
+        .question-details {
+          label {
+            font-family: Inter;
+            font-style: normal;
+            font-weight: bold;
+            font-size: 15px;
+            line-height: 26px;
+            /* or 175% */
+
+
+            color: #3C3C3C;
+
+          }
+        }
+        .text-select{
+          .option {
+            max-width: 610px;
+            width: 100%;
+            margin-bottom: 10px;
+            .details{
+              textarea{
+                width: 347px;
+              }
+            }
+            .status{
+              label{
+                display: block;
+              }
+              text-align: center;
+              svg{
+                margin: auto;
+              }
+            }
+            .delete {
+              font-family: Inter;
+              font-style: normal;
+              font-weight: bold;
+              font-size: 10px;
+              line-height: 26px;
+              /* identical to box height, or 262% */
+
+
+              color: #3C3C3C;
+            }
+          }
+          .add-option{
+            font-family: Inter;
+            font-style: normal;
+            font-weight: bold;
+            font-size: 13.5641px;
+            line-height: 26px;
+            /* or 193% */
+
+
+            color: #717171;
+          }
+        }
+      }
+    }
+  }
+}
+
+/* Portrait phones and smaller */
+@media (max-width: 700px) {
+  #create-quiz {
+    padding: 26px 20px;
+
+    .input-group .quiz-instructions {
+      min-height: 164px;
+    }
+
+    #quiz-questions {
+      .question {
+        display: block;
+
+        input {
+          margin-bottom: 0;
         }
       }
     }

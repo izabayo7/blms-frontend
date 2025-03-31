@@ -17,7 +17,7 @@
           />
         </div>
       </div>
-      <div class="flex">
+      <div class="flex d-block d-md-flex">
         <div class="input-group">
           <label for="quiz-duration">Duration</label>
           <div class="duration-input" id="quiz-duration">
@@ -81,11 +81,51 @@
               </div>
             </div>
           </div>
+          <div class="question-details d-block">
+            <div class="input-group">
+              <label>Question text</label>
+              <textarea
+                  placeholder="Type your question here ..."
+                  class="kurious--textarea mb-4 customScroll"
+                  rows="8"
+              ></textarea>
+            </div>
+          </div>
+          <div class="text-select">
+            <div class="option d-block d-md-flex">
+              <div class="details">
+                              <textarea
+                                  placeholder="option 1"
+                                  class="kurious--textarea mb-4 customScroll"
+                                  rows="8"
+                              ></textarea>
+              </div>
+              <div class="status mx-auto">
+                <label>Correct</label>
+<!--                <transition name="fade" >-->
+                  <svg class="d-none" width="18" height="20" viewBox="0 0 18 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="0.613894" y="5.7721" width="13.5057" height="13.5057" rx="1.84168" stroke="#828282" stroke-width="1.22779"/>
+                    <path d="M3.68555 10.0695L7.36891 16.2084L16.5773 2.08887" stroke="#828282" stroke-width="2.45558" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+
+                  <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="0.613894" y="0.72034" width="13.5057" height="13.5057" rx="1.84168" stroke="#828282" stroke-width="1.22779"/>
+                  </svg>
+
+<!--                </transition>-->
+              </div>
+              <button class="delete">Delete option</button>
+            </div>
+            <button class="add-option">Add option</button>
+          </div>
+          <div class="image-select"></div>
+          <div class="file-upload"></div>
+
         </div>
       </div>
     </div>
     <button class="quiz-action full d-none">Add question</button>
-    <div id="quiz-actions">
+    <div id="quiz-actions" class=" d-flex mb-12 mt-6">
       <button class="quiz-action cancel">Cancel</button>
       <button class="quiz-action">Add questions</button>
     </div>
