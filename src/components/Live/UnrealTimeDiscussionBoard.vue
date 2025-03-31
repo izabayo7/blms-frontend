@@ -13,8 +13,13 @@
                 <!--                </div>-->
                 <loader v-if="commentsLoading"/>
                 <div v-else class="unreal-time-discussions">
-                    <div class="discussion" v-for="comment in comments" :key="comment._id">
-                        <discussion :content="comment" @replied="replied"/>
+                    <div v-if="comments.length > 0"> class="discussions-container">
+                        <div class="discussion" v-for="comment in comments" :key="comment._id">
+                            <discussion :content="comment" @replied="replied"/>
+                        </div>
+                    </div>
+                    <div v-else class="no-discussions-message">
+                        <p>No current discussion on this chapter :)</p>
                     </div>
                 </div>
 
