@@ -1,18 +1,19 @@
 <template>
   <v-container fluid class="py-0">
     <v-row id="user_profile">
-      <v-col class="col-12 pa-md-16 py-md-6"> General Info </v-col>
+      <cropper :img="img" @change="imageCropped" />
+      <v-col class="col-12 pa-md-16 py-md-6"><h2> General Info</h2> </v-col>
       <v-col class="col-12 col-md-5 course-content px-md-6 py-md-0">
         <v-row>
           <v-col class="col-7 mx-auto">
             <v-avatar
-              v-if="user.profile"
+              v-if="profile"
               width="auto"
               height="245"
               class="mt-4 d-block"
               id="user_pic"
             >
-              <img :src="user.profile" alt="avatar" />
+              <img :src="profile" alt="avatar" />
             </v-avatar>
             <v-avatar
               v-else
@@ -64,7 +65,7 @@
           type="file"
           id="picture"
           hidden
-          @change="handleFileUpload()"
+          @change="handleFileUpload"
         />
       </v-col>
       <v-col class="col-12 col-md-7 text-center text-md-left">
@@ -148,9 +149,13 @@ import jwt from "jsonwebtoken";
 import axios from "axios";
 import Apis from "@/services/apis";
 import { mapGetters, mapActions } from "vuex";
+import {emit} from "../services/event_bus";
 
 export default {
   name: "UserProfile",
+  components:{
+    cropper: () => import("@/components/reusable/ui/ImageCropper"),
+  },
   data: () => ({
     tab: null,
     error: "",
@@ -168,6 +173,7 @@ export default {
     oldPassword: "",
     newPassword: "",
     profile: undefined,
+    img:"",
     confirmNewPassword: "",
   }),
   computed: {
@@ -186,7 +192,28 @@ export default {
     pickfile() {
       document.getElementById("picture").click();
     },
-    handleFileUpload() {
+    readURL(input) {
+      const self = this;
+      input = input.target;
+      if (input.files && input.files[0]) {
+        let reader = new FileReader();
+
+        reader.onload = function (e) {
+          self.img = e.target.result;
+          emit("new-image-loaded");
+          // document.getElementById('preview').setAttribute('src', e.target.result);
+        };
+
+        reader.readAsDataURL(input.files[0]); // convert to base64 string
+      }
+    },
+    imageCropped(img) {
+      const image = document.getElementById("preview");
+      image.src = img;
+      this.profile = img;
+    },
+    handleFileUpload(e) {
+      this.readURL(e)
       this.profile = this.$refs.file.files[0];
     },
     validate() {
