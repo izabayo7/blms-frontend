@@ -90,7 +90,7 @@
 
           <div class="instructor-profile">
             <article @mouseenter="mouseOnPic($event,course.user.user_name,'user-profile-card')"
-                     @mouseleave="mouseOutPic($event,'user-profile-card')">
+                     >
               <img
                   v-if="course.user.profile"
                   :src="`${course.user.profile}?width=50`"
@@ -104,7 +104,7 @@
               </v-avatar>
             </article>
             <article @mouseenter="mouseOnPic($event,course.user.user_name,'user-profile-card')"
-                     @mouseleave="mouseOutPic($event,'user-profile-card')" class="owner">
+                      class="owner">
               <h3>
                 {{ `${course.user.sur_name} ${course.user.other_names}` }}
               </h3>
@@ -480,7 +480,7 @@
               <div class="subtitle">{{ course.attendedStudents }} Attendees</div>
               <div class="students customScroll">
                 <div v-for="(stud, i) in student_list" :key="i" class="individual row">
-                  <div class="col-12 col-md-4 name mr-auto">{{ stud.user.sur_name }} {{ stud.user.other_names }}</div>
+                  <div class="col-12 col-md-4 name mr-auto" @mouseenter="mouseOnPic($event,stud.user.user_name,'user-profile-card')">{{ stud.user.sur_name }} {{ stud.user.other_names }}</div>
                   <div class="col-12 col-md-4 progress ml-auto">
                     <div class="text mx-auto">{{ Math.round(stud.progress) }} %</div>
                     <progress :value="stud.progress" max="100"></progress>

@@ -86,6 +86,7 @@ export default {
 .user-card {
   width: 18rem;
   height: 161px;
+  z-index: 9;
   border-radius: .55rem;
   box-shadow: 0 0 10px lighten($primary, 65);
 

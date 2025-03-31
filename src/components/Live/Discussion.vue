@@ -19,7 +19,7 @@
       <div class="right">
         <div class="comment">
           <h4 class="comment__name">
-            <span>{{ fullNames }} </span
+            <span @mouseenter="content.sender.user_name !== $store.state.user.user.user_name ? mouseOnPic($event,content.sender.user_name,'user-profile-card') : null">{{ fullNames }} </span
             ><span v-if="verified" class="category"
           ><svg
               height="512pt"
@@ -98,6 +98,7 @@
 import NewReplyComment from "./NewReplyComment";
 import {elapsedDuration, toLocal} from "../../services/global_functions";
 import ReplyComment from "./ReplyComment";
+import userSimpleCard from "@/mixins/user-simple-card.mixin";
 
 export default {
   name: "Discussion",
@@ -113,6 +114,7 @@ export default {
     ReplyComment,
     NewReplyComment,
   },
+  mixins: [userSimpleCard],
   computed: {
     fullNames() {
       return `${this.content.sender.sur_name} ${this.content.sender.other_names}`;
