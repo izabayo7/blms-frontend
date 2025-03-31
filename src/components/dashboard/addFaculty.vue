@@ -301,7 +301,7 @@ export default {
     },
     saveStudentGroupChanges() {
       const dupplicates = this.addedStudentGroups.filter(s => s.name == this.currentStudentGroup)
-      if (dupplicates.length > 1 || this.addedStudentGroups.indexOf(dupplicates[0]) != this.editingIndex) {
+      if (dupplicates.length > 1 || (dupplicates.length && this.addedStudentGroups.indexOf(dupplicates[0]) != this.editingIndex)) {
         this.error = "Dupplicate names not allowed"
       } else {
         this.addedStudentGroups[this.editingIndex].name = this.currentStudentGroup;
