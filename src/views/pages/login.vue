@@ -150,7 +150,6 @@ export default {
         };
         // call the login api
         let response = await Apis.login(credentials);
-        console.log(response);
         if (response.data.status != 200) {
           this.message = response.data.message;
           this.valid = false;

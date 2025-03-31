@@ -71,7 +71,6 @@ export default {
         },
         //get faculties from backend
         async getFaculties({state}) {
-            console.log("ngahooo")
             // when faculties not loaded fetch them
             if (!state.faculties.loaded) {
                 const {data: {data}} = await apis.get(`faculty/ALL`)
@@ -92,7 +91,6 @@ export default {
         getImportableFaculties({state}, {collegeId}) {
             // when faculties not loaded fetch them
             if (!state.importable_faculties.loaded) {
-                console.log(collegeId)
                 apis.get(`faculty/import/college/${collegeId}`).then(d => {
                     state.importable_faculties.data = d.data
                     //announce that data have been loaded

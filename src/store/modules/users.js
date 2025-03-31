@@ -120,7 +120,6 @@ export default {
         loadUsersBasedOnFaculties({commit}, {facultyId, category}) {
             apis.get(`user/faculty/${facultyId}/${category}`)
                 .then(({data: {data}}) => {
-                    console.log(data);
                     commit("SET_USERS_ON_FACULTIES", {data})
                 })
         },
@@ -131,7 +130,6 @@ export default {
                     .then(({data: {status}}) => {
                         if(![200,201].includes(status))
                             success = false
-                        console.log(status)
                     })
 
             if(success)

@@ -114,7 +114,6 @@ export default {
       }
     },
     changeActiveChapter({index, id}) {
-      console.log(index, id)
       this.activeIndex = index;
       const path = `/courses/${this.$route.params.name}/chapter/${index}/${id}`;
       if (this.$route.fullPath != path) {

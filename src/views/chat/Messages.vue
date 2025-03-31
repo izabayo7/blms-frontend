@@ -132,8 +132,6 @@ export default {
     searchKey() {
       if (this.searchKey === '')
         this.foundUsers = []
-      else
-        console.log(this.searchKey)
     }
   },
   data() {

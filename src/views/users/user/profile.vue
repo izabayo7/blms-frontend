@@ -81,7 +81,11 @@ export default {
             this.info.user.user_groups = this.info.user_groups
           })
           .catch(err => {
-            console.log(err)
+            this.$store.dispatch("app_notification/SET_NOTIFICATION", {
+              message: err,
+              status: "danger",
+              uptime: 2000,
+            })
           })
     }
   },

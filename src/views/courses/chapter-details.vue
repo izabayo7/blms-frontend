@@ -374,7 +374,6 @@ export default {
     next();
   },
   created() {
-    console.log(this.$route.query)
     this.immediateFunction();
   },
   beforeMount() {

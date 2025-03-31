@@ -156,7 +156,6 @@ export default {
             let quizFound = false
             if (state.quiz.loaded) {
                 let quiz = state.quiz.data.filter(quiz => quiz.name == quizName)
-                console.log(quiz)
                 if (quiz.length > 0) {
                     quizFound = true
                     commit('set_selected_quiz', quiz[0]._id)

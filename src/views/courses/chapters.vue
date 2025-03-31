@@ -464,7 +464,6 @@ export default {
         });
       } else {
         this.mode = "edit";
-        console.log(this.content)
       }
       if (this.course.chapters[this.activeChapter].quiz.length > 0) {
         this.selectedQuizName = this.course.chapters[

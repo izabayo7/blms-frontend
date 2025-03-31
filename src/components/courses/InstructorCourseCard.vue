@@ -143,7 +143,6 @@ export default {
       this.nearestLiveSession = calculateNearestLiveSession(this.course)
     },
     nearestLiveSession() {
-      console.log(this.nearestLiveSession)
       this.interval = setInterval(() => {
         this.rem_time = elapsedDuration(convertUTCDateToLocalDate(new Date(this.nearestLiveSession.date.replace("00:00", this.nearestLiveSession.time))));
       }, 1000)

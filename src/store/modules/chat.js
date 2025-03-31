@@ -101,7 +101,6 @@ export default {
                 let incomingName = `${newMessage.sender.sur_name} ${newMessage.sender.other_names}`
                 //user conversation between sender and receiver
                 let userMessages = state.loadedMessages[userIndex].conversation
-                console.log(userMessages)
                 //if conversation was found
                 if (userMessages && id !== "announcements") {
                     // if the last sender is the receiver
@@ -260,7 +259,6 @@ export default {
             // Get contacts new style
             getters.socket.on('res/message/contacts', ({contacts}) => {
                 state.incomingMessages = contacts
-                console.log('contacts',contacts)
                 emit('incoming_message_initially_loaded')
             });
 

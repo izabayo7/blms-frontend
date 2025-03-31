@@ -469,11 +469,6 @@ export default {
     if (this.defaultFiles.length && !this.files.length)
       this.files = this.defaultFiles.filter(e => e.src)
   },
-  // watch: {
-  //   files() {
-  //     console.log(this.files)
-  //   }
-  // },
   methods: {
     fileClicked(index) {
       this.$emit(

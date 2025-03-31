@@ -134,13 +134,11 @@ export default {
             comment: this.comment_object,
           });
           this.socket.on("res/comment/new", (result) => {
-            console.log("\n\n\nyagiye weeeeeeeeeeeeeeeeeeeee\n\n\n", result)
             // this.$store.commit(
             //     "courses/SET_TOTAL_COMMENTS_ON_A_CHAPTER",
             //     this.totalComments == "" ? 1 : this.totalComments + 1
             // );
             result.replies = [];
-            console.log(result)
             this.$emit("sent", result);
             this.comment = "";
             this.socket.off('res/comment/new');
@@ -150,7 +148,11 @@ export default {
         span.innerText = 'write comment'
         this.showControls = false;
       } catch (err) {
-        console.log(err);
+        this.$store.dispatch("app_notification/SET_NOTIFICATION", {
+          message: err,
+          status: "danger",
+          uptime: 2000,
+        })
       }
     }
   },

@@ -1,7 +1,7 @@
 import {mapGetters} from "vuex";
 
 export default {
-    computed:{
+    computed: {
         ...mapGetters('user', ['disableFunctionalities']),
         showPage() {
             if (!this.disableFunctionalities)
@@ -11,9 +11,10 @@ export default {
         }
     },
     methods: {
-        redirect(){
+        redirect() {
             if (this.disableFunctionalities && this.$route.name ? !(this.$route.name.includes('chating') || this.$route.name.includes('Settings')) : true)
-                this.$router.push('/settings/payments')
+                if (this.$route.path !== '/settings/payments')
+                    this.$router.push('/settings/payments')
         }
     }
 }

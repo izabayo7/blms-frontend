@@ -280,7 +280,6 @@ export default {
       this.msg = ""
       //emit that we are message sent
       emit("message-sent");
-      // console.log(this.$store.state.chat.incomingMessages)
     },
     inputMsg() {
       let input = this.$refs["input"];
@@ -298,7 +297,6 @@ export default {
     //function to set text content of placeholder
     p(t) {
       document.querySelector('.input .placeholder').innerHTML = t;
-      console.log(document.querySelector('.placeholder'))
     },
     addFile(file) {
       this.files.push(file)

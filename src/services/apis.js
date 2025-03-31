@@ -16,7 +16,6 @@ Api.interceptors.response.use(function (response) {
 
     return response
 }, function (error) {
-    console.log(error)
     return new Promise.reject(error)
 })
 
@@ -36,7 +35,11 @@ Api.interceptors.request.use((config) => {
         return config
 
     } catch (e) {
-        console.log(e)
+        Vue.prototype.$store.dispatch("app_notification/SET_NOTIFICATION", {
+            message: e,
+            status: "danger",
+            uptime: 2000,
+        })
     }
 })
 
@@ -71,7 +74,6 @@ export default {
         return Api.put(`/user/password`, body)
     },
     update_user_profile(body, config) {
-        console.log(body)
         return Api.put(`/user/profile`, body, config)
     },
     remove_user_profile(file_name) {

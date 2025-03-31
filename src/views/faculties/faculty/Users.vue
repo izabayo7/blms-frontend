@@ -76,9 +76,6 @@ export default {
     ...mapGetters('users', ['usersOnFaculties']),
   },
   methods: {
-    hovered() {
-      console.log('hovered')
-    },
     selectAll() {
       this.allSelected = !this.allSelected
     },
