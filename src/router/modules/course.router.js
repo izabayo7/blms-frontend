@@ -17,13 +17,19 @@ const routes =  [
         path: '/edit/:name/:type',
         name: 'Edit Course',
         component: () =>
-            import(  /* webpackChunkName: "course-edit" */ '@/views/courses/edit')
+            import(  /* webpackChunkName: "course-edit" */ '@/views/courses/edit'),
+        meta: {
+            allowedUsers: ["INSTRUCTOR"]
+        },
     },
     {
         path: '/new',
         name: 'Create course',
         component: () =>
-            import( /* webpackChunkName: "new-course" */ '@/views/courses/create')
+            import( /* webpackChunkName: "new-course" */ '@/views/courses/create'),
+        meta: {
+            allowedUsers: ["INSTRUCTOR"]
+        },
     },
     {
         path: '/:name',
