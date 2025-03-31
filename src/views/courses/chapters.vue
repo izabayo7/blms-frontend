@@ -206,12 +206,48 @@
                                 : undefined
                             "
                           />
-                          <pdf src="http://www.africau.edu/images/default/sample.pdf"></pdf>
+                          <div v-if="course.chapters[activeChapter].uploaded_content" class="relative">
+                            <vue-pdf-app class="pdf-viewer"
+                                         :pdf="`${course.chapters[activeChapter].uploaded_content_url}?token=${$session.get('jwt')}`">
+                            </vue-pdf-app>
+                          </div>
                         </v-col>
+                        <div @click="clickButton" class="col-12 cursor-pointer">
+                          <svg width="22" height="22" viewBox="0 0 22 22" fill="none"
+                               xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M11.3346 17.6667C9.30797 17.6667 7.66797 16.0267 7.66797 14.0001L7.66797 7.00008C7.66797 5.52675 8.8613 4.33342 10.3346 4.33342C11.808 4.33342 13.0013 5.52675 13.0013 7.00008L13.0013 12.6667C13.0013 13.5867 12.2546 14.3334 11.3346 14.3334C10.4146 14.3334 9.66797 13.5867 9.66797 12.6667L9.66797 7.66675L11.0013 7.66675L11.0013 12.7267C11.0013 13.0934 11.668 13.0934 11.668 12.7267L11.668 7.00008C11.668 6.26675 11.068 5.66675 10.3346 5.66675C9.6013 5.66675 9.0013 6.26675 9.0013 7.00008L9.0013 14.0001C9.0013 15.2867 10.048 16.3334 11.3346 16.3334C12.6213 16.3334 13.668 15.2867 13.668 14.0001L13.668 7.66675L15.0013 7.66675L15.0013 14.0001C15.0013 16.0267 13.3613 17.6667 11.3346 17.6667Z"
+                                fill="#193074"/>
+                            <circle cx="11" cy="11" r="10.5" stroke="#193074"/>
+                          </svg>
+                          {{ chapterContent ? chapterContent.name : 'Upload document' }} <span>(pdf only)</span>
+                          <input
+                              type="file"
+                              id="chapterContent"
+                              accept="application/pdf"
+                              hidden
+                              @change="handleFileUpload()"
+                          />
+                        </div>
                       </v-row>
                     </v-card>
-                    <v-btn class="mr-4 primary-button" @click="stepCounter = 4"
+
+                    <v-btn class="mr-4 mt-4 primary-button" @click="stepCounter = 4"
                     >Continue
+                    </v-btn>
+                    <v-btn v-if="course.chapters[activeChapter].uploaded_content" class="primary-button danger ml-4 mt-4"
+                           @click.prevent="
+                                    set_modal({
+                                      template: 'action_confirmation',
+                                      method: {
+                                        action: 'courses/deleteChapterDocument',
+                                      },
+                                      title: 'Delete Chapter Document',
+                                      message:
+                                        'Are you sure you want to remove this document?',
+                                    })
+                                  "
+                    >Remove document
                     </v-btn>
                   </v-stepper-content>
 
@@ -449,6 +485,7 @@ export default {
     message: "",
     mode: "",
     content: "",
+    chapterContent: undefined,
     error: "",
     chapterVideo: undefined,
     nameRules: [
@@ -460,7 +497,7 @@ export default {
   components: {
     FilePicker: () => import("@/components/reusable/FilePicker"),
     Editor: () => import("@/components/reusable/Editor"),
-    pdf: () => import("vue-pdf")
+    // vuePdfApp: () => import("vue-pdf-app")
   },
   computed: {
     // get the current course
@@ -550,6 +587,12 @@ export default {
       const paragraphElement = document.createElement('p')
       paragraphElement.appendChild(newElement)
       el.appendChild(paragraphElement)
+    },
+    clickButton() {
+      document.getElementById('chapterContent').click();
+    },
+    handleFileUpload() {
+      this.chapterContent =  document.getElementById('chapterContent').files[0];
     },
     ...mapActions("courses", [
       "getChapterMainContent",
@@ -672,6 +715,7 @@ export default {
         video: this.chapterVideo,
         attachments: this.attachments,
         quiz: this.selectedQuiz,
+          chapterContent: this.chapterContent
       }).then(() => {
         this.chapterVideo = undefined;
         this.attachments = [];
@@ -701,6 +745,7 @@ export default {
         video: this.chapterVideo,
         attachments: this.attachments,
         quiz: this.selectedQuiz,
+        chapterContent: this.chapterContent
       }).then(() => {
         this.chapterVideo = undefined;
         this.attachments = [];
@@ -756,7 +801,64 @@ export default {
   },
 };
 </script>
+<style scoped>
+span.legend {
+  color: black;
+}
 
+button.secondary-toolbar-slot {
+  margin-left: 12px;
+}
+
+button.secondary-toolbar-slot span {
+  font-family: Arial, Helvetica, sans-serif;
+  padding-left: 5px;
+  font-size: 12px;
+}
+
+.append,
+.prepend {
+  font-family: pdf;
+  background: transparent;
+  outline: none;
+  border: none;
+  font-size: 1.1rem;
+  color: red;
+  margin: 5px;
+}
+
+.append:hover,
+.prepend:hover {
+  color: var(--pdf-button-hover-font-color);
+}
+
+#toolbarSidebar .prepend,
+#toolbarSidebar .append {
+  position: relative;
+  top: -10px;
+}
+
+.footer {
+  background: palevioletred;
+  color: var(--pdf-toolbar-font-color);
+  height: 40px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+>>> .secondaryToolbar.doorHangerRight {
+  right: 27px !important;
+}
+
+>>> #outerContainer {
+  height: calc(100% - 40px) !important;
+}
+</style>
 <style lang="scss">
 .ProseMirror:focus {
   outline: none;
@@ -766,6 +868,10 @@ export default {
   background-color: #f5f5f5;
   width: 100%;
   height: 50px;
+}
+
+.pdf-viewer {
+  min-height: 200px;
 }
 
 .chapter-badges {

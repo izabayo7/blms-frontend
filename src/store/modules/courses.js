@@ -201,7 +201,7 @@ export default {
 
         },
         //update a chapter
-        updateChapter({state, commit, dispatch}, {chapter, content, video, attachments, quiz}) {
+        updateChapter({state, commit, dispatch}, {chapter, content, video, attachments, quiz,chapterContent}) {
 
             let courseIndex, chapterIndex
             for (const i in state.courses.data) {
@@ -255,6 +255,23 @@ export default {
                             target: undefined
                         }, {root: true})
                         state.courses.data[courseIndex].chapters[chapterIndex].quiz.splice(0, 1)
+                    })
+                }
+                if (chapterContent) {
+                    dispatch('modal/set_modal', {
+                        template: 'display_information',
+                        title: 'Creating Chapter',
+                        message: `uploading chapter content`
+                    }, {root: true})
+                    const formData = new FormData()
+                    formData.append("file", chapterContent);
+                    await apis.create(`chapter/${state.selectedChapter}/uploaded_content`, formData, {
+                        headers: {
+                            'Content-Type': 'multipart/form-data'
+                        },
+                        onUploadProgress: (progressEvent) => {
+                            dispatch('modal/set_progress', parseInt(Math.round((progressEvent.loaded / progressEvent.total) * 100)), {root: true})
+                        }
                     })
                 }
                 if (attachments.length > 0) {
@@ -384,6 +401,19 @@ export default {
                 }
             })
         },
+        deleteChapterDocument({state}) {
+            apis.delete(`chapter/${state.selectedChapter}/`, 'uploaded_content').then(() => {
+                for (const i in state.courses.data) {
+                    if (state.courses.data[i]._id == state.selectedCourse) {
+                        for (const k in state.courses.data[i].chapters) {
+                            if (state.courses.data[i].chapters[k]._id == state.selectedChapter) {
+                                state.courses.data[i].chapters[k].uploaded_content = undefined
+                            }
+                        }
+                    }
+                }
+            })
+        },
         //find a course by name
         findCourseByName({state, commit}, {user_name, courseName}) {
             let courseFound = false
@@ -454,7 +484,7 @@ export default {
             commit('initialise_new_chapter');
         },
         //create a new chapter
-        createChapter({state, commit, dispatch}, {chapter, content, video, attachments, quiz}) {
+        createChapter({state, commit, dispatch}, {chapter, content, video, attachments, quiz, chapterContent}) {
 
             let courseIndex, chapterIndex
             for (const i in state.courses.data) {
@@ -491,6 +521,23 @@ export default {
                         }
                         state.courses.data[courseIndex].chapters[chapterIndex].quiz.push(quizResponse.data.data)
                         commit('quiz/update_quiz_target', {id: quiz._id, target: target}, {root: true})
+                    })
+                }
+                if (chapterContent) {
+                    dispatch('modal/set_modal', {
+                        template: 'display_information',
+                        title: 'Updating Chapter',
+                        message: `uploading chapter content`
+                    }, {root: true})
+                    const formData = new FormData()
+                    formData.append("file", chapterContent);
+                    await apis.create(`chapter/${d.data._id}/uploaded_content`, formData, {
+                        headers: {
+                            'Content-Type': 'multipart/form-data'
+                        },
+                        onUploadProgress: (progressEvent) => {
+                            dispatch('modal/set_progress', parseInt(Math.round((progressEvent.loaded / progressEvent.total) * 100)), {root: true})
+                        }
                     })
                 }
                 if (attachments.length > 0) {

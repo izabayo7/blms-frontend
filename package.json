@@ -10,6 +10,7 @@
     "ui": "vue ui"
   },
   "dependencies": {
+    "@mdi/font": "^6.3.95",
     "@tensorflow-models/face-landmarks-detection": "0.0.2",
     "@tensorflow/tfjs": "2.3.0",
     "animate.css": "^4.1.1",
@@ -35,7 +36,7 @@
     "vue-awesome-swiper": "^4.1.1",
     "vue-flutterwave": "^1.0.0",
     "vue-internet-checker": "^2.0.1",
-    "vue-pdf": "^4.3.0",
+    "vue-pdf-app": "^2.1.0",
     "vue-plyr": "^6.0.4",
     "vue-router": "^3.2.0",
     "vue-session": "^1.0.0",
