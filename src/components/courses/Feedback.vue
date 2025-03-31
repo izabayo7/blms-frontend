@@ -29,22 +29,17 @@
           class="col-3 col-md-1 vertically--centered pa-0"
       >
         <div v-if="content !== '' || showDelete" class="actions">
-          <svg
-              @click="removeFeedback()"
-              xmlns="http://www.w3.org/2000/svg"
-              width="20.57"
-              height="20.57"
-              viewBox="0 0 20.57 20.57"
-              class="mr-3 remove_feedback"
-          >
-            <path
-                id="Icon_ionic-ios-close-circle"
-                data-name="Icon ionic-ios-close-circle"
-                d="M13.66,3.375A10.285,10.285,0,1,0,23.945,13.66,10.284,10.284,0,0,0,13.66,3.375Zm2.606,14.009L13.66,14.778l-2.606,2.606a.79.79,0,1,1-1.118-1.118l2.606-2.606L9.937,11.054a.79.79,0,0,1,1.118-1.118l2.606,2.606,2.606-2.606a.79.79,0,1,1,1.118,1.118L14.778,13.66l2.606,2.606a.794.794,0,0,1,0,1.118A.785.785,0,0,1,16.266,17.384Z"
-                transform="translate(-3.375 -3.375)"
-                fill="#fc6767"
-            />
+          <svg @click="removeFeedback()" class="cursor-pointer" width="28" height="29" viewBox="0 0 28 29" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <g clip-path="url(#clip0)">
+              <path d="M7.0026 22.2848C7.0026 23.5682 8.0526 24.6182 9.33594 24.6182H18.6693C19.9526 24.6182 21.0026 23.5682 21.0026 22.2848V8.28483H7.0026V22.2848ZM22.1693 4.78483H18.0859L16.9193 3.61816H11.0859L9.91927 4.78483H5.83594V7.11816H22.1693V4.78483Z" fill="#FF0808"/>
+            </g>
+            <defs>
+              <clipPath id="clip0">
+                <rect width="28" height="28" fill="white" transform="translate(0 0.119141)"/>
+              </clipPath>
+            </defs>
           </svg>
+
           <!-- <svg
             @click="editFeedback()"
             xmlns="http://www.w3.org/2000/svg"
@@ -83,18 +78,18 @@
             {{ feedback_name }}
           </button>
         </div>
-        <div v-if="file">
-          <div class="file-name">{{ file.name }}</div>
+        <div v-if="file || message != ''">
+          <div v-if="file" class="file-name">{{ file.name }}</div>
           <div v-if="upload_status == 1" class="spining">
             uploading
           </div>
-          <div v-else-if="upload_status == 2" class="status text-right">
+          <div v-else-if="upload_status == 2 || message != ''" class="status text-right">
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path
                   d="M5.24909 9.45091L2.79909 7.00091L1.98242 7.81758L5.24909 11.0842L12.2491 4.08424L11.4324 3.26758L5.24909 9.45091Z"
                   fill="#289448"/>
             </svg>
-            Saved successfuly
+            {{ message == '' ? 'Saved successfuly' : message }}
           </div>
         </div>
       </div>
@@ -116,12 +111,6 @@
       >Save
       </v-btn
       >
-      <div
-          v-show="message != ''"
-          class="mt-3 ml-5 text-right col-6 message_place"
-      >
-        {{ message }}
-      </div>
     </div>
   </div>
 </template>
@@ -364,10 +353,6 @@ export default {
   .primary-bg {
     background-color: $primary !important;
     color: white !important;
-  }
-
-  .message_place {
-    color: $primary;
   }
 
   .remove_feedback {
