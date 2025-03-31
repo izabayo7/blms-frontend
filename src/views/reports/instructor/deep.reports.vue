@@ -143,8 +143,10 @@ export default {
     handleRowClick(value) {
       if (this.quiz_submission.submissionMode)
         this.$router.push(`/assignments/${value.user.user_name}/${this.quiz_submission._id}`)
+      if (this.quiz_submission.target)
+        this.$router.push(`/assessments/quiz/${this.quiz_submission.name}/${value.user.user_name}`)
       else
-        this.$router.push(`/quiz/${this.quiz_submission.name}/${value.user.user_name}`)
+        this.$router.push(`/assessments/exams/${this.quiz_submission._id}/${value.user.user_name}`)
     },
   },
   created() {

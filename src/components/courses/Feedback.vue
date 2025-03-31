@@ -203,7 +203,7 @@ export default {
       const formData = new FormData()
       formData.append("file", this.file)
       this.upload_status = 1;
-      Apis.create(this.type === 'assignment' ? `assignment_submission/feedback/${this.submission_id}` : `quiz_submission/feedback/${this.submission_id}/${this.answerId}`, formData, {
+      Apis.create(this.type === 'assignment' ? `assignment_submission/feedback/${this.submission_id}` : this.type === 'exam' ? `exam_submission/feedback/${this.submission_id}/${this.answerId}` :  `quiz_submission/feedback/${this.submission_id}/${this.answerId}`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         },
@@ -269,7 +269,7 @@ export default {
       const response = await Apis.create("comment", {
         sender: this.$store.state.user.user.user_name,
         target: {
-          type: this.type === 'assignment' ? "assignment_submission" : "quiz_submission_answer",
+          type: this.type === 'assignment' ? "assignment_submission" : this.type === 'exam' ? "exam_submission_answer" : "quiz_submission_answer",
           id: this.type === 'assignment' ? this.submission_id : this.answerId,
         },
         content: content,
@@ -329,12 +329,6 @@ export default {
         })
       this.$emit("feedbackSent", this.index, false)
     },
-  },
-  mounted() {
-    // this.computeFeedbackClass();
-    // setTimeout(() => {
-    //   this.element = this.$refs.feedback_input;
-    // }, 1000);
   },
 };
 </script>

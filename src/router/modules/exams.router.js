@@ -44,7 +44,7 @@ const routes = [
             import( /* webpackChunkName: "attempt-exam" */ '@/views/quiz/attempt_exam')
     },
     {
-        path: '/:exam_id/:user_name',
+        path: '/:id/:user_name',
         component: () =>
             import( /* webpackChunkName: "mark-exam" */ '@/views/quiz/mark')
     },
