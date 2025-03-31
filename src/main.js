@@ -24,6 +24,12 @@ Vue.use(VuePlyr)
 
 Vue.config.productionTip = false
 
+import VueGtag from "vue-gtag"
+
+Vue.use(VueGtag, {
+    config: { id: "G-35K20WVBSP" }
+});
+
 export default new Vue({
     store,
     router,
