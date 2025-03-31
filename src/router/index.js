@@ -158,9 +158,9 @@ const routes = [
                         path: '/announcements',
                         name: "announcements",
                         component: () => import( /* webpackChunkName: "announcements" */ '@/views/announcement/index.vue'),
-                        // meta: {
-                        //     allowedUsers: ["INSTRUCTOR", "ADMIN",]
-                        // },
+                        meta: {
+                            allowedUsers: ["INSTRUCTOR", "ADMIN",]
+                        },
                     },
                     {
                         path: '/announcements/new',
