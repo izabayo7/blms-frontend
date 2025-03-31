@@ -103,7 +103,7 @@
             <div class="lower-message">
               <div class="message-row">
                 Remembered your password ?
-                <router-link to="/login">login</router-link>
+                <router-link :to="`/login${$route.query.institution ? '?institution='+$route.query.institution : ''}`">login</router-link>
               </div>
             </div>
           </div>
