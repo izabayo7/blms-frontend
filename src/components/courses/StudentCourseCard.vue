@@ -55,7 +55,7 @@
         </v-col>
       </v-row>
     </div>
-    <v-card
+    <div
         v-else
         @click="$router.push(`/courses/preview/${course.name}`)"
         class="course completed"
@@ -86,7 +86,7 @@
           <span class="course-description text-caption d-block mb-6">{{
               course.description | trimString(50)
             }}</span>
-          <h4>
+          <div class="user-details">
             <v-avatar
                 size="30"
                 :class="`${
@@ -104,8 +104,8 @@
                 }}</span>
             </v-avatar>
             Instructor {{ course.user.sur_name }}
-          </h4>
-          <div class="mt-4">
+          </div>
+          <div class="mt-2 user-details d-flex">
             <div class="svg">
               <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -121,13 +121,13 @@
                 />
               </svg>
             </div>
-            <div class="ml-4 date_finished">
+            <div class="ml-4 mt-2 date_finished">
               completed on {{ course.progress.lastUpdated | formatDate }}
             </div>
           </div>
         </v-col>
       </v-row>
-    </v-card>
+    </div>
   </v-container>
 </template>
 
@@ -156,9 +156,12 @@ export default {
   height: 208px;
 }
 
-.course-card:hover,
+.course-card:hover{
+  box-shadow: 0px 4px 10px 3px rgba(25, 48, 116, 0.17);
+  margin-top: -10px;
+}
 .course.completed:hover {
-  box-shadow: 0px 5px 15px rgb(199, 199, 199, 1.6) !important;
+  filter: drop-shadow(0px 21.7761px 43.5522px rgba(138, 138, 138, 0.161));
   margin-top: -10px;
 }
 
@@ -171,7 +174,7 @@ export default {
 }
 
 .course-card {
-  box-shadow: 0px 4px 10px 3px rgba(25, 48, 116, 0.17);
+  box-shadow: 0px 4px 10px 3px rgba(25, 48, 116, 0.05);
   width: 355px;
   height: 170px;
   // border-radius: 24px;
@@ -219,7 +222,7 @@ export default {
       font-weight: 500;
       font-size: 15.4862px;
       line-height: 23px;
-margin-bottom: 4.7px !important;
+      margin-bottom: 4.7px !important;
       color: #6A6A6A;
     }
 
@@ -243,7 +246,7 @@ margin-bottom: 4.7px !important;
       line-height: 15px;
       display: flex;
       align-items: flex-end;
-margin-bottom: 20px !important;
+      margin-bottom: 20px !important;
       color: #787878;
     }
 
@@ -277,30 +280,54 @@ margin-bottom: 20px !important;
   // }
 }
 
-.date_finished {
-  margin: -31px 0 0 40px !important;
-}
-
 .course.completed {
-  min-height: 380px !important;
-  max-width: 300px;
+  height: 302.57px;
+  background: white;
+  max-width: 260px;
   border-radius: 0 !important;
 
-  h4 {
-    color: #acacac;
+  .title {
+    font-family: Montserrat;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 13.7533px;
+    line-height: 17px;
+
+    color: #141414;
+  }
+
+  .course-description {
+    font-family: Montserrat;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 9.16889px;
+    line-height: 11px;
+
+    color: #B4B4B4;
+    margin-top: 14px;
+  }
+
+  .user-details {
+    font-family: Poppins;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 11.4611px;
+    line-height: 17px;
+    /* identical to box height */
+svg{
+  width: 15px;
+}
+
+    color: #9B9B9B;
   }
 
   p {
     color: #787878;
   }
 
-  .course-description {
-    margin-right: 80px !important;
-  }
-
   .course-image {
-    height: 160.6px;
-    margin: -12px 0 0 0px;
+    width: 260px;
+    height: 149px;
     // border-radius: 0;
   }
 
