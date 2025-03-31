@@ -19,7 +19,6 @@ export default {
   },
   methods:{
     toggle(){
-      console.log('toggled')
       this.$emit('check_it',!this.check)
     }
   },
