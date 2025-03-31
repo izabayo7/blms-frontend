@@ -53,8 +53,22 @@ export default {
   props:{
     loading:{type:Boolean,default:false}
   },
+  mounted() {
+    this.outsideClickDetector();
+  },
   computed:{
     ...mapGetters('users', ['userByUsername']),
+  },
+  methods:{
+    outsideClickDetector() {
+      const self = this
+      let el = document.querySelector('.user-card')
+      document.addEventListener("click", function (e) {
+        if (!el || !el.contains(e.target)) {
+          self.$emit('close')
+        }
+      });
+    },
   },
   components: {ButtonUi}
 }
