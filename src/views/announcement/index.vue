@@ -40,7 +40,7 @@
         </button>
       </div>
       <div class="col-12">
-        <div v-if="announcements.length < 0" class="row">
+        <div v-if="announcements.length > 0" class="row">
           <div class="col-12 col-md-4" v-for="(announcement, i) in announcements" :key="i">
             <div class="announcement-container" @click="$router.push('/announcements/view/'+announcement._id)">
               <div class="head">

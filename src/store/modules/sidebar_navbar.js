@@ -9,6 +9,7 @@ const getDefaultState = () => ({
     showChatMobileNavbar: false,
     total_unread_messages: 0,
     total_undone_assignments: 0,
+    send_confirmation: false
 })
 
 export default {
@@ -25,6 +26,9 @@ export default {
                 state.total_unread_messages = number
             if (total_assignments)
                 state.total_undone_assignments = total_assignments
+        },
+        SET_SEND_CONFIRMATION(state, value) {
+            state.send_confirmation = value
         },
 
         TOGGLE_CHAT_MOBILE_NAVBAR(state) {
@@ -53,6 +57,9 @@ export default {
             // set the dialog
             await Apis.delete(`college/${state.college._id}/logo`, splited[splited.length - 1]);
             state.college.logo = undefined
+        },
+        SET_SEND_CONFIRMATION({state}, value) {
+            state.send_confirmation = value
         },
     },
     getters: {
