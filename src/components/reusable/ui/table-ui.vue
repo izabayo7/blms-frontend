@@ -50,7 +50,6 @@
 
 <script>
 //TODO adding row links
-//TODO unique design on table row
 export default {
   name: "table-ui",
   props:{
