@@ -22,9 +22,9 @@
                 <div class="w-60 mr">
                   <div class="ssc-head-line mb w-80"></div>
                   <div class="ssc-line w-30 mb"></div>
-                  <div class="ssc-line w-90"></div>
+                  <div class="ssc-line w-90 mb-1"></div>
                   <div class="ssc-line w-70 mb"></div>
-                  <div class="ssc-line w-80"></div>
+                  <div class="ssc-line w-80 mb-1"></div>
                   <div class="ssc-line w-60 mb"></div>
                 </div>
               </div>
@@ -41,7 +41,7 @@
           </v-col>
         </v-row>
         <v-row v-else>
-          <img src="@/assets/images/courses_empty.svg"  class="mx-auto"/>
+          <img src="@/assets/images/courses_empty.svg" class="mx-auto" />
           <div class="col-12">
             <p class="text-center">You have no ongoing courses</p>
             <p class="text-center">You can review completed courses.</p>
@@ -73,7 +73,7 @@
               </div>
               <div class="ssc-wrapper flex ml pt-0">
                 <div class="w-20">
-                  <div class=" w-60 ssc-square mb"></div>
+                  <div class="w-60 ssc-square mb"></div>
                 </div>
                 <div class="w-50 mt-2 mr">
                   <div class="ssc-line w-90"></div>
@@ -272,13 +272,13 @@ export default {
   },
   created() {
     if (!this.loaded) {
-      console.log(this.loaded)
+      console.log(this.loaded);
       //get courses on page load
       this.getCourses({
         userCategory: this.userCategory.toLowerCase(),
         userId: this.$store.state.user.user.user_name,
       });
-      console.log(this.loaded)
+      console.log(this.loaded);
     }
   },
 };
