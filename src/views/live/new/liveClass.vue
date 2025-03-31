@@ -44,7 +44,7 @@
                 <!--                <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" >-->
               </video>
               <transition name="fade">
-                <div class="overlay" v-show="(showMenu || noVideo)">
+                <div :class="`overlay ${noVideo? 'none' : ''}`" v-show="(showMenu || noVideo)">
                   <div class="video-controls" v-if="participationInfo.isOfferingCourse">
                     <div class="video-controls--wrapper">
                       <button @click="toogleVideo" class="start-mute-video">
@@ -107,7 +107,7 @@
           <div class="live-comments--wrapper">
             <div class="_title">LIVE COMMENTS</div>
             <div class="student-new-comment">
-              <student-new-comment-with-photo v-model="comment"/>
+              <student-new-comment-with-photo @sent="addComment" :isLive="true"/>
             </div>
             <div class="live-comments-container">
               <discussion
@@ -115,6 +115,7 @@
                   :key="i"
                   :content="comment"
                   :verified="comment.sender.category !== 'STUDENT'"
+                  :is-live="true"
                   @replied="replied"
               />
 
@@ -185,11 +186,12 @@
                 :key="i"
                 :content="comment"
                 :verified="comment.sender.category !== 'STUDENT'"
+                :is-live="true"
                 @replied="replied"
             />
           </div>
           <div class="student-new-comment">
-            <student-new-comment-with-photo v-model="comment"/>
+            <student-new-comment-with-photo @sent="addComment" :isLive="true"/>
           </div>
         </div>
         <div v-if="participationInfo.isOfferingCourse" class="live-class--actions">
@@ -234,7 +236,7 @@
 // import * as kurentoUtils from "../../../plugins/kurentoLive/kurento-utils.js"
 import Participant from "../../../plugins/kurentoLive/participants";
 import {WebRtcPeer} from 'kurento-utils'
-import {mapGetters, mapState} from 'vuex'
+import {mapActions, mapGetters, mapState} from 'vuex'
 import Discussion from "../../../components/Live/Discussion";
 import OnlineUser from "../../../components/Live/OnlineUser";
 import StudentNewCommentWithPhoto from "../../../components/Live/StudentNewCommentWithPhoto";
@@ -252,110 +254,7 @@ export default {
     return {
       ws: null,
       participants: [],
-      comments: [{
-        "_id": "6034a4ce486da89738c1700c",
-        "sender": {
-          "email": "cedro@gmail.com",
-          "sur_name": "Cedric",
-          "other_names": "Izabayo",
-          "user_name": "user_238760",
-          "gender": "male",
-          "profile": "https://apis.kurious.rw/api/user/user_238760/profile/profile_1620119711766.png",
-          "category": "STUDENT"
-        },
-        "target": {"type": "chapter", "id": "600d9d6574bd7a7b60d7b4cd"},
-        "content": "olala",
-        "updatedAt": "2021-02-23T06:46:38.062Z",
-        "createdAt": "2021-02-23T06:46:38.062Z",
-        "__v": 0,
-        "replies": [{
-          "_id": "6034a4d8486da89738c1700d",
-          "sender": {
-            "email": "cedro@gmail.com",
-            "sur_name": "Cedric",
-            "other_names": "Izabayo",
-            "user_name": "user_238760",
-            "gender": "male",
-            "profile": "https://apis.kurious.rw/api/user/user_238760/profile/profile_1620119711766.png",
-            "category": "STUDENT"
-          },
-          "target": {"type": "chapter", "id": "600d9d6574bd7a7b60d7b4cd"},
-          "content": "ibintu numuti",
-          "reply": "6034a4ce486da89738c1700c",
-          "updatedAt": "2021-02-23T06:46:48.317Z",
-          "createdAt": "2021-02-23T06:46:48.317Z",
-          "__v": 0
-        },
-          {
-            "_id": "6034a4d8486da89738c1700d",
-            "sender": {
-              "email": "cedro@gmail.com",
-              "sur_name": "Cedric",
-              "other_names": "Izabayo",
-              "user_name": "user_238760",
-              "gender": "male",
-              "profile": "https://apis.kurious.rw/api/user/user_238760/profile/profile_1620119711766.png",
-              "category": "STUDENT"
-            },
-            "target": {"type": "chapter", "id": "600d9d6574bd7a7b60d7b4cd"},
-            "content": "ibintu numuti",
-            "reply": "6034a4ce486da89738c1700c",
-            "updatedAt": "2021-02-23T06:46:48.317Z",
-            "createdAt": "2021-02-23T06:46:48.317Z",
-            "__v": 0
-          }]
-      }, {
-        "_id": "601af4846725b4e249144313",
-        "sender": {
-          "email": "cedro@gmail.com",
-          "sur_name": "Cedric",
-          "other_names": "Izabayo",
-          "user_name": "user_238760",
-          "gender": "male",
-          "profile": "https://apis.kurious.rw/api/user/user_238760/profile/profile_1620119711766.png",
-          "category": "STUDENT"
-        },
-        "target": {"type": "chapter", "id": "600d9d6574bd7a7b60d7b4cd"},
-        "content": "hahiye koko",
-        "updatedAt": "2021-02-03T19:07:48.244Z",
-        "createdAt": "2021-02-03T19:07:48.244Z",
-        "__v": 0,
-        "replies": []
-      }, {
-        "_id": "60115efff29a011323d063ff",
-        "sender": {
-          "email": "cedro@gmail.com",
-          "sur_name": "Cedric",
-          "other_names": "Izabayo",
-          "user_name": "user_238760",
-          "gender": "male",
-          "profile": "https://apis.kurious.rw/api/user/user_238760/profile/profile_1620119711766.png",
-          "category": "STUDENT"
-        },
-        "target": {"type": "chapter", "id": "600d9d6574bd7a7b60d7b4cd"},
-        "content": "hello\n",
-        "updatedAt": "2021-01-27T12:39:27.036Z",
-        "createdAt": "2021-01-27T12:39:27.036Z",
-        "__v": 0,
-        "replies": []
-      }, {
-        "_id": "60115ef4f29a011323d063fe",
-        "sender": {
-          "email": "cedro@gmail.com",
-          "sur_name": "Cedric",
-          "other_names": "Izabayo",
-          "user_name": "user_238760",
-          "gender": "male",
-          "profile": "https://apis.kurious.rw/api/user/user_238760/profile/profile_1620119711766.png",
-          "category": "STUDENT"
-        },
-        "target": {"type": "chapter", "id": "600d9d6574bd7a7b60d7b4cd"},
-        "content": "hello\n",
-        "updatedAt": "2021-01-27T12:39:16.548Z",
-        "createdAt": "2021-01-27T12:39:16.548Z",
-        "__v": 0,
-        "replies": []
-      }],
+      comments: [],
       me: null,
       id: "",
       comment: "",
@@ -376,6 +275,7 @@ export default {
   },
   computed: {
     ...mapGetters('user', ['user']),
+    ...mapGetters("chat", ["socket"]),
     ...mapState("sidebar_navbar", {sidebarOpen: "sidebar_expanded"}),
     instructor() {
       const el = this.participants.filter(e => e.userInfo.category == "INSTRUCTOR")
@@ -386,9 +286,18 @@ export default {
     },
   },
   methods: {
+    ...mapActions("live_session", ["addParticipant"]),
+    addComment(comment) {
+      this.comments.push(comment)
+    },
     replied(data) {
       this.comments.map((comment) => {
-        if (comment._id === data._id) comment.replies.push(data.data);
+        if (comment._id === data._id) {
+          if(!comment.replies) {
+            comment.replies = []
+          }
+          comment.replies.push(data.data)
+        }
       });
     },
     async getUserInfo(id) {
@@ -483,6 +392,7 @@ export default {
       let participant = new Participant(this.participationInfo.name, this, true, await this.getUserInfo(this.participationInfo.name.split('_')[0]));
 
       this.participants.push(participant);
+      this.addParticipant({id: participant.userInfo._id})
 
 
       let video = participant.getVideoElement();
@@ -572,6 +482,7 @@ export default {
       }
       if (sender != this.participationInfo.name) {
         this.participants.push(participant);
+        this.addParticipant({id: participant.userInfo._id})
       }
     },
 
@@ -590,32 +501,6 @@ export default {
           this.noVideo = !this.noVideo
         }
       }
-    }
-  },
-  mounted() {
-    let span = document.querySelector('.message-row span')
-    let actionButtons = document.querySelector('.action-btn');
-    let cancelButton = document.querySelector('.action-btn .cancel button')
-    span.innerText = 'write comment'
-    actionButtons.style.display = 'none';
-    // let focused = false;
-    span.onfocus = () => {
-      if (span.innerText == 'write comment') {
-        span.innerText = ""
-      }
-      actionButtons.style.display = 'flex';
-    }
-    span.onblur = () => {
-      if (span.innerText == "") {
-        actionButtons.style.display = 'none';
-      }
-    }
-    cancelButton.onclick = () => {
-        span.innerText = "write comment"
-        actionButtons.style.display = 'none';
-    }
-    if(!this.participationInfo.isOfferingCourse){
-      span.className="stud_span"
     }
   },
   created() {
@@ -671,12 +556,14 @@ export default {
           break;
         case 'iceCandidate':
           console.log(parsedMessage.name, self.participantIndex(parsedMessage.name), self.participants)
-          this.participants[self.participantIndex(parsedMessage.name)].rtcPeer.addIceCandidate(parsedMessage.candidate, function (error) {
-            if (error) {
-              console.error("Error adding candidate: " + error);
-              return null;
-            }
-          });
+          if (self.participantIndex(parsedMessage.name) != -1) {
+            self.participants[self.participantIndex(parsedMessage.name)].rtcPeer.addIceCandidate(parsedMessage.candidate, function (error) {
+              if (error) {
+                console.error("Error adding candidate: " + error);
+                return null;
+              }
+            });
+          }
           break;
         default:
           console.error('Unrecognized message', parsedMessage);
@@ -686,7 +573,24 @@ export default {
       console.trace();
       console.log("\n\n\n\nclosed\n\n\n\n", new Date())
     }
-
+    self.socket.on("comment/new", (result) => {
+      // this.$store.commit(
+      //     "courses/SET_TOTAL_COMMENTS_ON_A_CHAPTER",
+      //     this.totalComments == "" ? 1 : this.totalComments + 1
+      // );
+      if (result.reply) {
+        const comments = self.comments.filter(e => e._id == result.reply)
+        if (comments.length) {
+          const replies = comments[0].replies.filter(e=>e._id == result._id)
+          if (!replies.length)
+            self.replied({_id: result.reply, data: result});
+        }
+      } else {
+        const comments = self.comments.filter(e => e._id == result._id)
+        if (!comments.length)
+          self.comments.push(result);
+      }
+    });
   },
   destroyed() {
     console.log("bibaye when destroyed")
