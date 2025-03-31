@@ -94,6 +94,9 @@
         &.send {
           width: 251.43px;
           height: 40.38px;
+          &.small{
+            width: 120px;
+          }
         }
 
         cursor: pointer;

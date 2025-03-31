@@ -19,6 +19,13 @@
           </button>
         </div>
       </div>
+      <div class="centered">
+        <div class="">
+          <button class="add-email send cancel small" @click="$emit('closeModal')">
+            Cancel
+          </button>
+        </div>
+      </div>
     </div>
     <div v-if="choice===1 || choice===4" class="dialog-body invite-users">
       <div v-show="saved_users.length === 0 && failedUsers.length === 0" class="pre-send">
@@ -82,6 +89,16 @@
           </button>
           <button class="add-email ml-auto send" @click="choice = 3">
             Enter emails manually
+          </button>
+        </div>
+      </div>
+      <div class="centered">
+        <div class="">
+          <button class="add-email send cancel small mr-2" @click="choice=0">
+            Back
+          </button>
+          <button class="add-email send cancel small" @click="$emit('closeModal')">
+            Cancel
           </button>
         </div>
       </div>
