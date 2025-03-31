@@ -447,12 +447,12 @@ export default {
     }).then(async () => {
       this.attempt = {
         quiz: this.selected_quiz_submission.quiz._id,
-        user: this.selected_quiz_submission.user._id,
-        autoSubmitted: this.selected_quiz_submission.autoSubmitted,
-        usedTime: this.selected_quiz_submission.usedTime,
+        user: this.selected_quiz_submission.user.user_name,
+        auto_submitted: this.selected_quiz_submission.auto_submitted,
+        used_time: this.selected_quiz_submission.used_time,
         answers: this.selected_quiz_submission.answers,
         marked: this.selected_quiz_submission.marked,
-        totalMarks: this.selected_quiz_submission.totalMarks,
+        total_marks: this.selected_quiz_submission.totalMarks,
       };
       if (!this.attempt.marked && this.userCategory === "Instructor") {
         this.mode = "edit";
