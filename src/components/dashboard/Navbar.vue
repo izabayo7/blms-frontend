@@ -4,7 +4,12 @@
       <div class="col-8 logo_container">
         <img :src="college_logo" class="logo my-auto" />
       </div>
-      <div class="col-4 vertically--centered">
+      <div class="col-2">
+        <div class="vertically--centered">
+          <notifications />
+        </div>
+      </div>
+      <div class="col-2 vertically--centered">
         <div class="profile mt-n4">
           <profile />
         </div>
