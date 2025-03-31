@@ -1,6 +1,10 @@
 <template>
   <main class="my-chat-header">
       <div class="information-header">
+        <button v-if="isMobile && state" @click="TOGGLE_CHAT_MOBILE_NAVBAR" class="back"><svg xmlns="http://www.w3.org/2000/svg" width="9.918" height="17.348" viewBox="0 0 9.918 17.348">
+          <path id="Icon_ionic-ios-arrow-back" data-name="Icon ionic-ios-arrow-back" d="M14.24,14.866,20.8,8.307a1.24,1.24,0,1,0-1.756-1.751l-7.437,7.432a1.237,1.237,0,0,0-.036,1.709l7.468,7.483A1.24,1.24,0,1,0,20.8,21.43Z" transform="translate(-11.251 -6.194)" fill="#343434"/>
+        </svg>
+        </button>
           <div class="pic"><slot name="pic"></slot></div>
           <div class="user-info">
               <p class="name"><slot name="name"> </slot></p>
@@ -101,15 +105,22 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import {mapMutations, mapState} from "vuex";
 
 export default {
   name: "Chat-header",
   props: {
     online: { type: Boolean, default: false },
   },
+  methods:{
+    ...mapMutations("sidebar_navbar", ["TOGGLE_CHAT_MOBILE_NAVBAR"])
+  },
   computed: {
     ...mapState("chat", ["currentDisplayedUser"]),
+    ...mapState("sidebar_navbar", {state: "showChatMobileNavbar"}),
+    isMobile() {
+      return this.$vuetify.breakpoint.width < 960
+    },
     userOnline() {
       return this.online ? "Online" : "Away";
     },
@@ -130,6 +141,9 @@ export default {
     align-items: center;
   padding: 0.7rem 1.5rem;
   border-bottom: 2px solid lighten($font, 40);
+  button.back{
+    margin-right: 21px;
+  }
     .information-header{
         display: flex;
         align-items: center;

@@ -1,23 +1,23 @@
 <template>
-  <section class="dashboard">
+  <section :class="{'hfull': isMobile && $route.name === 'chatingRoom' && state}" class="dashboard">
     <!-- navbar -->
     <div class="my-navbar">
-      <navbar />
+      <navbar v-if="!(isMobile && $route.name === 'chatingRoom' && state)"/>
     </div>
 
     <!-- sidebar and dashboard content -->
     <main class="contents">
       <main class="sidebar">
         <div class="hidden-md-and-up row">
-          <mobile-sidebar />
+          <mobile-sidebar v-if="$route.name !== 'chatingRoom' || !state"/>
         </div>
         <div class="hidden-sm-and-down row">
-          <sidebar />
+          <sidebar/>
         </div>
       </main>
       <div class="main-content customScroll">
-        <notification />
-        <router-view />
+        <notification/>
+        <router-view/>
       </div>
     </main>
   </section>
@@ -26,6 +26,7 @@
 import sidebar from "@/components/dashboard/Sidebar";
 import MobileSidebar from "@/components/dashboard/MobileSidebar";
 import navbar from "@/components/dashboard/Navbar";
+import {mapState} from "vuex";
 
 export default {
   name: "Dashboard",
@@ -34,6 +35,12 @@ export default {
     MobileSidebar,
     navbar,
     Notification: () => import("@/components/shared/Notification"),
+  },
+  computed: {
+    ...mapState("sidebar_navbar", {state: "showChatMobileNavbar"}),
+    isMobile() {
+      return this.$vuetify.breakpoint.width < 960
+    }
   },
   data() {
     return {
@@ -56,12 +63,14 @@ export default {
     background: $main;
     box-shadow: 10px 0 10px 0 $secondary;
   }
+
   .sidebar {
     width: fit-content;
     z-index: 100;
     background: $main;
     // position: fixed;
   }
+
   .contents {
     width: 100%;
     display: flex;
@@ -74,7 +83,15 @@ export default {
       background: $tertiary;
     }
   }
+  &.hfull{
+    .contents{
+      .main-content{
+        height: 100vh;
+      }
+    }
+  }
 }
+
 .error-enter-active,
 .error-leave-active {
   transition: 0.3s ease-in-out;
