@@ -84,6 +84,9 @@ name: "FacultyCourses",
         })
     },
 
+    /**
+     * get courses from specific faculty, faculty id passed in route params
+     */
     getFacultyCourses(){
       const {facultyId} = this.$route.params;
       let filteredCourses = [];
