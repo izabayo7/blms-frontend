@@ -132,7 +132,7 @@ export default {
                 for (const i in state.quiz_submission.data) {
                     if (state.quiz_submission.data[i]._id == state.selected_quiz_submission) {
                         state.quiz_submission.data[i].answers = d.data.answers
-                        state.quiz_submission.data[i].totalMarks = d.data.totalMarks
+                        state.quiz_submission.data[i].total_marks = d.data.total_marks
                         state.quiz_submission.data[i].updatedAt = d.data.updatedAt
                         state.quiz_submission.data[i].marked = d.data.marked
                     }
