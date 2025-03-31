@@ -35,7 +35,7 @@
   // import * as kurentoUtils from "../../../plugins/kurentoLive/kurento-utils.js"
   import Participant from "../../../plugins/kurentoLive/participants";
   import {WebRtcPeer} from 'kurento-utils'
-
+  import {mapGetters} from 'vuex'
 export default {
   name: "liveClass",
   data(){
@@ -44,7 +44,11 @@ export default {
       name:"",
       room:"",
       participants:[],
+      participationInfo:{name:"",room:""}
     }
+  },
+  computed:{
+    ...mapGetters('user',['user']),
   },
   methods:{
      register() {
@@ -166,6 +170,8 @@ export default {
     }
   },
   created(){
+    this.participationInfo.name = `${this.user.other_names} ${this.user.sur_name}`
+    this.participationInfo.room = this.$route.params.courseId
 
 
     const host = '198.211.107.132:8443'
@@ -421,7 +427,6 @@ export default {
     }
 
     .participant {
-      border-radius: 4px;
       /* border: 2px groove; */
       margin-left: 5;
       margin-right: 5;
