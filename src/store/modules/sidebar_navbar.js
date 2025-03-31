@@ -21,8 +21,10 @@ export default {
         },
 
         SET_TOTAL_UNREAD(state, {number, total_assignments}) {
-            state.total_unread_messages = number
-            state.total_undone_assignments = total_assignments
+            if (number)
+                state.total_unread_messages = number
+            if (total_assignments)
+                state.total_undone_assignments = total_assignments
         },
 
         TOGGLE_CHAT_MOBILE_NAVBAR(state) {
