@@ -27,8 +27,8 @@
       <!--        </div>-->
       <!--      </div>-->
       <!--    </div>-->
-
       <div class="live-class--video" :class="`--${$vuetify.breakpoint.name}`">
+        <back class="mt-6" />
         <div class="head">
           <div class="text">
             <h2>Economics Basics: Chapter 8 part II</h2>
@@ -40,7 +40,8 @@
         </div>
         <div class="video">
           <div class="video--wrapper">
-            <div class="video-el" :class="`--${$vuetify.breakpoint.name}`" @mouseenter="toggleMenu(true)" @mouseleave="toggleMenu(false)">
+            <div class="video-el" :class="`--${$vuetify.breakpoint.name}`" @mouseenter="toggleMenu(true)"
+                 @mouseleave="toggleMenu(false)">
               <div class="no-video" v-show="noVideo">
                 <div class="no-video--wrapper" :class="{presenting:isPresenting}">
                   <div class="instructor-info">
@@ -49,7 +50,9 @@
                         alt="profile picture" class="picture">
                     <h2 class="course">Economics Basics: Chapter 8 part II</h2>
                     <span class="source">by instuctor</span>
-                    <h2 class="name">{{ participationInfo.isOfferingCourse ? "YOU" : `${instructor ? instructor.sur_name + ' '+ instructor.other_names : ''}` }}</h2>
+                    <h2 class="name">{{
+                        participationInfo.isOfferingCourse ? "YOU" : `${instructor ? instructor.sur_name + ' ' + instructor.other_names : ''}`
+                      }}</h2>
                   </div>
                   <div class="screen-sharing-video" v-if="isPresenting">
                     <div class="screen-sharing-video--wrapper">
@@ -182,7 +185,7 @@ import Apis from '../../../services/apis'
 
 export default {
   name: "liveClass",
-  components: {StudentNewCommentWithPhoto, OnlineUser},
+  components: {StudentNewCommentWithPhoto, OnlineUser, back: () => import("@/components/shared/back-button"),},
   data() {
     return {
       ws: null,
@@ -333,8 +336,8 @@ export default {
   },
   computed: {
     ...mapGetters('user', ['user']),
-    instructor(){
-      const el = this.participants.filter(e=>e.userInfo.category == "INSTRUCTOR")
+    instructor() {
+      const el = this.participants.filter(e => e.userInfo.category == "INSTRUCTOR")
       return el[0] ? el[0].userInfo : undefined
     }
   },
@@ -380,8 +383,8 @@ export default {
       const result = this.participants.filter(e => e.name == name)
       return this.participants.indexOf(result[0]);
     },
-    removeParticipant(index){
-      this.participants.splice(index,1)
+    removeParticipant(index) {
+      this.participants.splice(index, 1)
     },
     receiveVideoResponse(result) {
       console.log('receiving video', result, this.participants)
@@ -498,10 +501,10 @@ export default {
       this.$router.push('/')
     },
 
-   async receiveVideo(sender) {
+    async receiveVideo(sender) {
       console.log(`\n\n\n\n\n receiving video for ${sender} \n\n\n\n\n`)
-     let participant = sender == this.participationInfo.name ? this.participants[this.participantIndex(sender)] : new Participant(sender, this, false, await this.getUserInfo(sender.split('_')[0]));
-console.log('\n\n\n\n\n\n',participant)
+      let participant = sender == this.participationInfo.name ? this.participants[this.participantIndex(sender)] : new Participant(sender, this, false, await this.getUserInfo(sender.split('_')[0]));
+      console.log('\n\n\n\n\n\n', participant)
       console.log("\n\n\n", sender, "\n\n\n", (!this.participationInfo.isOfferingCourse && sender != this.participationInfo.name))
       if (participant.userInfo.category == "INSTRUCTOR") {
         let video = participant.getVideoElement();
@@ -518,9 +521,9 @@ console.log('\n\n\n\n\n\n',participant)
               this.generateOffer(participant.offerToReceiveVideo.bind(participant));
             })
       }
-     if (sender != this.participationInfo.name) {
-       this.participants.push(participant);
-     }
+      if (sender != this.participationInfo.name) {
+        this.participants.push(participant);
+      }
     },
 
     onParticipantLeft(request) {
@@ -531,10 +534,10 @@ console.log('\n\n\n\n\n\n',participant)
       //
       // delete this.participants[request.name];
     },
-    toogleMedia(obj){
+    toogleMedia(obj) {
       console.log(obj)
-      if(obj.isVideo){
-        if(obj.enabled == this.noVideo){
+      if (obj.isVideo) {
+        if (obj.enabled == this.noVideo) {
           this.noVideo = !this.noVideo
         }
       }
@@ -960,10 +963,12 @@ console.log('\n\n\n\n\n\n',participant)
 
   &--video {
     flex-basis: 70%;
+
     &.--lg {
       padding-left: 3rem;
       padding-right: 3rem;
     }
+
     &.--sm, &.--md {
       padding-left: 2rem;
       padding-right: 2rem;
@@ -1001,7 +1006,8 @@ console.log('\n\n\n\n\n\n',participant)
           height: fit-content;
           color: $main;
         }
-        .live{
+
+        .live {
           width: 65.38px;
           height: 18.97px;
           font-family: Poppins;
@@ -1015,7 +1021,8 @@ console.log('\n\n\n\n\n\n',participant)
 
         }
       }
-      .time{
+
+      .time {
         font-family: Segoe UI;
         font-style: normal;
         font-weight: bold;
@@ -1034,22 +1041,27 @@ console.log('\n\n\n\n\n\n',participant)
 
         .video-el {
           position: relative;
+
           &.--lg {
             height: 320px;
             width: 568.89px;
           }
+
           &.--md {
             height: 253.1249px;
             width: 450px;
           }
-          &.--sm{
+
+          &.--sm {
             height: 224.999px;
             width: 400px;
           }
-          &.--xs{
+
+          &.--xs {
             height: calc(100vw / 1.77777777778);
             width: 100vw;
           }
+
           background-color: #000;
 
           video {
