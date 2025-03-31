@@ -62,7 +62,7 @@
       </v-data-table>
     </div>
     <div class="table-one">
-      <h3>Classes</h3>
+      <h3>Courses</h3>
       <v-data-table
           :headers="courseHeaders"
           :items="courses"
