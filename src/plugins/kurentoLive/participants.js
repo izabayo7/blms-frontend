@@ -13,10 +13,10 @@ const PARTICIPANT_MAIN_CLASS = 'participant main';
  * @param {boolean} offeringCourse - if participant is the one who is offering course
  * @return
  */
-export default function Participant(name, vm, offeringCourse = false, userInfo) {
+export default function Participant(name, vm, offeringCourse = false, userInfo,videoElement) {
     this.name = name;
     this.userInfo = userInfo;
-    let video = document.getElementById(name.includes("_screen") ? vm.participationInfo.isOfferingCourse ? "video_screen_feed" : "viewer_screen_feed" : "video_feed");
+    let video = name.includes("_screen") ? document.getElementById( vm.participationInfo.isOfferingCourse ? "video_screen_feed" : "viewer_screen_feed" ): videoElement;
     let rtcPeer;
     this.vm = vm;
     this.offeringCourse = offeringCourse

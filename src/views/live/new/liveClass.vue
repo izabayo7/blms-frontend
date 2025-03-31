@@ -53,7 +53,8 @@
                   </div>
                 </div>
               </div>
-              <video v-show="!noVideo && !isPresenting" id="video_feed">
+              <video v-show="!noVideo && !isPresenting" id="video_feed"
+                     poster="https://apis.kurious.rw/assets/images/video-loader.gif">
                 <!--                <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" >-->
               </video>
               <button @click="playVideo" class="play_button">
@@ -610,6 +611,13 @@ export default {
     }
   },
   methods: {
+    create_videoElement(id) {
+      let element = document.createElement('video')
+      element.setAttribute('id', `video_feed${id}`)
+      element.style.display = 'none'
+      document.querySelector('.video-el').appendChild(element)
+      return element
+    },
     stop_presenter() {
       let id = this.currentPresenter._id;
       this.socket.emit("live/presentation_request", {
@@ -618,6 +626,29 @@ export default {
       });
       this.currentPresenter = undefined
       this.onViewerStopedPresenting(true)
+    },
+    displaySrcVideo(){
+      if (this.me) {
+        if ((this.currentPresenter ? this.currentPresenter._id == this.live_session.course.user : this.userCategory == "INSTRUCTOR") || this.isStudentPresenting) {
+          console.log('\n\n\ninner\n\n\n')
+          let video = this.me.getVideoElement()
+          video.muted = true
+          video.style.display = 'initial'
+        } else {
+          console.log('twageze aha')
+          for (let i in this.participants) {
+            console.log(`\n\nparticipantId: ${this.participants[i].userInfo._id}\ncurrentPresenter: ${this.currentPresenter ? this.currentPresenter._id : this.instructor._id}\n`)
+            if (this.participants[i].userInfo._id == (this.currentPresenter ? this.currentPresenter._id : this.instructor._id)) {
+              console.log('twageze mo imbere')
+              console.log(`\n\nparticipantId: ${this.participants[i].userInfo._id}\ncurrentPresenter: ${this.currentPresenter ? this.currentPresenter._id : this.instructor._id}\n`)
+              const video = this.participants[i].getVideoElement();
+              video.muted = false
+              video.style.display = 'initial'
+              break;
+            }
+          }
+        }
+      }
     },
     findRightSource() {
       // console.clear()
@@ -1111,8 +1142,8 @@ export default {
       // if (!this.participationInfo.isOfferingCourse) {
       //   constraints = null
       // }
-
-      let participant = new Participant(self.isPresenting ? `${this.participationInfo.name}_screen` : this.participationInfo.name, this, true, await this.getUserInfo(this.participationInfo.name.split('_')[0]));
+      let userInfo = await this.getUserInfo(this.participationInfo.name.split('_')[0])
+      let participant = new Participant(self.isPresenting ? `${this.participationInfo.name}_screen` : this.participationInfo.name, this, true, userInfo, this.create_videoElement(userInfo._id));
 
       this.participants.push(participant);
       this.addParticipant({id: participant.userInfo._id})
@@ -1137,20 +1168,28 @@ export default {
             if (self.me === null)
               self.me = participant;
 
+            const default_vid = document.querySelector('#video_feed')
+            video.muted = true
+
             this.generateOffer(participant.offerToReceiveVideo.bind(participant));
-            if (!self.participationInfo.isOfferingCourse) {
-              participant.rtcPeer.enabled = false
-              video.srcObject = self.instructorParticipant ? self.instructorParticipant.rtcPeer.getRemoteStream() : undefined
-              video.muted = false
-            }
             if (self.presenter_id) {
-              console.clear()
               self.presenterChanged(self.presenter_id)
               self.presenter_id = undefined
               if (!self.participationInfo.isOfferingCourse) {
                 setTimeout(() => {
                   video.play()
                 }, 3000)
+              }
+            } else {
+              if (!self.participationInfo.isOfferingCourse) {
+                if (self.instructorParticipant) {
+                  default_vid.style.display = 'none'
+                  participant.rtcPeer.enabled = false
+                  self.displaySrcVideo()
+                }
+              } else {
+                default_vid.style.display = 'none'
+                video.style.display = 'initial'
               }
             }
           })
@@ -1244,23 +1283,29 @@ export default {
       this.$router.push('/')
     },
     async receiveVideo(sender) {
-      let participant = sender == this.participationInfo.name ? this.participants[this.participantIndex(sender)] : new Participant(sender, this, false, await this.getUserInfo(sender.split('_')[0]));
+      let participant;
+      if (sender == this.participationInfo.name)
+        participant = this.participants[this.participantIndex(sender)]
+      else {
+        let userInfo = await this.getUserInfo(sender.split('_')[0]);
+        participant = new Participant(sender, this, false, userInfo, this.create_videoElement(userInfo._id));
+      }
       // if (participant.userInfo.category == "INSTRUCTOR") {
       let video = participant.getVideoElement();
       let options = {
         remoteVideo: video,
         onicecandidate: participant.onIceCandidate.bind(participant)
       }
-      let self = this
+      // let self = this
       participant.rtcPeer = new WebRtcPeer.WebRtcPeerRecvonly(options,
           function (error) {
             if (error) {
               return console.error(error);
             }
-            if (this.participationInfo.isOfferingCourse)
-              self.onViewerStopedPresenting()
-            else
-              self.findRightSource()
+            // if (this.participationInfo.isOfferingCourse)
+            //   self.onViewerStopedPresenting()
+            // else
+            //   self.findRightSource()
             this.generateOffer(participant.offerToReceiveVideo.bind(participant));
           })
       // }
