@@ -3,7 +3,7 @@
       fluid
       class="quiz-page white pl-lg-16"
   >
-    <back class="mt-0 mb-6 ml-0 ml-md-n6"/>
+    <back :target="userCategory == 'STUDENT' ? '/reports' : `/reports/${selected_quiz_submission[isExam?'exam':'quiz']._id}${isExam?'/exams':''}`" class="mt-0 mb-6 ml-0 ml-md-n6"/>
 
     <v-row v-if="selected_quiz_submission && (attempt.quiz || attempt.exam)" class="relative mx-0">
       <v-col class="col-12 col-md-8 px-0">
@@ -255,6 +255,8 @@
                         question.type === 'open_ended' ? 'editable' : ''
                       }`"
                         type="number"
+                        @change="checkMarks"
+                        :max="question.marks"
                         v-model="attempt.answers[i].marks"
                         :readonly="mode === 'view' || question.type.includes('select')"
                         @mouseleave="computeTotalMarks()"
@@ -495,6 +497,12 @@ export default {
     },
   },
   methods: {
+    checkMarks(e){
+      const element = e.target
+      if(element.value > element.getAttribute('max')){
+        element.value = element.getAttribute('max')
+      }
+    },
     getVideoDuration(starting_time, duration) {
       let date = new Date(starting_time)
       date.setHours(date.getHours() + 2)
