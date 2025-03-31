@@ -97,9 +97,9 @@
                         >
                           <vue-plyr>
                             <video
-                              :src="
+                              :src="`${
                                 course.chapters[activeChapter].uploaded_video
-                              "
+                              }?token=${$session.get('jwt')}`"
                             ></video>
                           </vue-plyr>
                         </v-col>
@@ -566,7 +566,7 @@ export default {
       });
     },
     saveChapterChanges() {
-      console.log(this.selectedQuiz)
+      console.log(this.selectedQuiz);
       const content = this.$refs.editor.getHTML();
       this.updateChapter({
         chapter: {

@@ -125,20 +125,20 @@
             <v-btn
               rounded
               text
-              :class="`unpublished-btn ${
-                type == 'unpublished' ? 'active-btn' : ''
-              }`"
-              @click="type = 'unpublished'"
-              >Unpublished Classes</v-btn
-            >
-            <v-btn
-              rounded
-              text
               :class="`published-btn ${
                 type == 'published' ? 'active-btn' : ''
               }`"
               @click="type = 'published'"
               >Published Classes</v-btn
+            >
+            <v-btn
+              rounded
+              text
+              :class="`unpublished-btn ${
+                type == 'unpublished' ? 'active-btn' : ''
+              }`"
+              @click="type = 'unpublished'"
+              >Unpublished Classes</v-btn
             >
           </div>
           <div v-if="!loaded" class="loaders">
@@ -248,7 +248,7 @@ import { mapActions, mapGetters } from "vuex";
 export default {
   name: "courses",
   data: () => ({
-    type: "unpublished",
+    type: "published",
   }),
   components: {
     InstructorCourseCard: () =>
