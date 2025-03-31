@@ -176,7 +176,7 @@ export default {
                     }, {root: true});
                 } else {
                     rootGetters['chat/socket'].emit('marksReleased', {
-                        route: `/quiz/attempt/${quizName}`,
+                        route: `/assessments/quiz/attempt/${quizName}`,
                         user_group,
                         content: `released marks for quiz ${quizName}`
                     })
