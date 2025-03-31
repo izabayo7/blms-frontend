@@ -4,7 +4,7 @@
     fluid
     class="quiz-page white px-16"
   >
-  <back class="mt-0 mb-6 ml-n6" to="/reports" />
+    <back class="mt-0 mb-6 ml-n6" to="/reports" />
     <v-row>
       <v-col class="col-12" v-if="userCategory === 'INSTRUCTOR'">
         <v-row class="pa-0">
@@ -111,8 +111,16 @@
                   class="ma-1"
                 >
                   <v-img
-                    :src="`${choice.src}?format=png&width=200&height=200&token=${$session.get('jwt')}`"
-                    :lazy-src="`${choice.src}?format=png&width=200&height=200&token=${$session.get('jwt')}`"
+                    :src="`${
+                      choice.src
+                    }?format=png&width=200&height=200&token=${$session.get(
+                      'jwt'
+                    )}`"
+                    :lazy-src="`${
+                      choice.src
+                    }?format=png&width=200&height=200&token=${$session.get(
+                      'jwt'
+                    )}`"
                     :gradient="
                       checkChoiceStatus(attempt.answers[i].choosed_options, {
                         src: choice.src,

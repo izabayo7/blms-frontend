@@ -73,7 +73,6 @@ export default {
                         dispatch('modal/reset_modal', null, { root: true })
                     })
                 }
-                console.log(submissionObject)
                 state.quiz_submission.data.push(submissionObject)
 
             })
@@ -111,7 +110,6 @@ export default {
                 }
             }
             if (!submissionFound) {
-                console.log(userName)
                 return apis.get(`quiz_submission/user/${userName}/${quizName}`).then(d => {
                     d.data = d.data.data
                     if (!d.data)
@@ -139,7 +137,6 @@ export default {
         },
         //get all quiz submissions
         quiz_submissions: state => {
-            console.log(state.quiz_submission)
             return state.quiz_submission.data.reverse()
         },
     },
