@@ -146,7 +146,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions("facculties", ["createFaculty"]),
+    ...mapActions("faculties", ["createFaculty"]),
     ...mapActions("users", ["getUsers"]),
     calculateUserNames() {
       let users = this.users;
