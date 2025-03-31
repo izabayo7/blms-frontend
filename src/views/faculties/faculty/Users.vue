@@ -7,7 +7,7 @@
             <template #name>{{userByUsername.other_names + " " + userByUsername.sur_name}}</template>
             <template #type>Instructor</template>
             <template #image>
-              <img v-if="userByUsername.profile" :src="userByUsername.profile" alt=" profile pic">
+              <img v-if="userByUsername.profile" :src="userByUsername.profile + '?width=50'" alt=" profile pic">
               <v-avatar v-else :size="30" class="profile-avatar">
                 {{ `${userByUsername.sur_name} ${userByUsername.other_names}` | computeText }}
               </v-avatar>
@@ -30,7 +30,7 @@
                 <table-row :selected="allSelected" @select="selectRow($event, user)" :data="user" v-for="user in usersOnFaculties" :key="user._id">
                   <template #cols>
                     <td class="row--image" @mouseenter="mouseOnPic($event,user.user_name,'user-profile-card')" @mouseleave="mouseOutPic($event,'user-profile-card')">
-                      <img v-if="user.profile" :src="user.profile" class="img" alt=" profile pic">
+                      <img v-if="user.profile" :src="user.profile + '?width=50'" class="img" alt=" profile pic">
                       <v-avatar v-else size="30" class="profile-avatar img">
                         {{ `${user.sur_name} ${user.other_names}` | computeText }}
                       </v-avatar>
