@@ -1,5 +1,5 @@
 <template>
-  <main class="my-chat-messaging" id="my-chat-messaging">
+  <main class="my-chat-messaging customScroll" id="my-chat-messaging">
     <!--    messages container-->
     <div class="msg-container" id="msg-container" ref="msg-container">
       <!--      if there are no messages-->

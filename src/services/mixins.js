@@ -1,12 +1,17 @@
-import {emit} from "./event_bus";
+import { emit } from "./event_bus";
 
 const chatMixins = {
     methods: {
         //scroll chat to button
         scrollChatToBottom() {
             let el = document.getElementById('my-chat-messaging')
-            if (el)
+            console.log(el, el.scrollTop, el.scrollHeight)
+            if (el){
                 el.scrollTop = el.scrollHeight
+
+                el.scrollTo({top: el.scrollHeight, behavior: 'smooth'})
+                console.log(el, el.scrollTop, el.scrollHeight)
+            }
         },
     }
 }
@@ -47,4 +52,4 @@ const cropperMixin = {
     }
 }
 
-export {cropperMixin, chatMixins}
+export { cropperMixin, chatMixins }

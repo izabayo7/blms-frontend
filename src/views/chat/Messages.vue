@@ -205,7 +205,6 @@ export default {
             this.start_conversation(this.$route.params.username)
         } else {
           this.incomingMessages.map((d) => {
-            console.log(d)
             if (this.$route.params.username === d.id.toString()) {
               this.SET_DISPLAYED_USER(d);
             }

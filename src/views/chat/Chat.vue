@@ -138,6 +138,8 @@ export default {
         this.socket.emit("message/all_messages_read", {
           conversation_id: this.currentDisplayedUser.id,
         });
+
+        this.scrollChatToBottom();
     },
   },
   methods: {
