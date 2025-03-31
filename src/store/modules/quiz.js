@@ -145,6 +145,20 @@ export default {
                 }, {root: true});
             })
         },
+        release_assignment_marks({dispatch, rootGetters}, {id, title, user_group}) {
+            apis.update('quiz/release_marks', id).then(() => {
+                rootGetters['chat/socket'].emit('marksReleased', {
+                    route: `/assignments/${id}`,
+                    user_group,
+                    content: `released marks for assignment ${title}`
+                })
+                dispatch("app_notification/SET_NOTIFICATION", {
+                    message: "Marks released",
+                    status: "success",
+                    uptime: 5000,
+                }, {root: true});
+            })
+        },
         //update a quiz
         update_quiz({state, dispatch}, {quiz, pictures}) {
             return apis.update('quiz', state.selected_quiz, quiz).then(d => {

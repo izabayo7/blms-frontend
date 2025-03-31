@@ -43,16 +43,19 @@
               <v-btn
                   color="#02A617"
                   class="white--text"
-                  :disabled="item.status == 2"
+                  :disabled="item.status ===  (item.submissionMode ? 'RELEASED' : 2)"
                   @click.stop="
                   set_modal({
                     template: 'action_confirmation',
-                    method: {
+                    method: item.submissionMode ? {
+                      action: 'quiz/change_assignment_status',
+                      parameters: { id: item._id, status: 'RELEASED' },
+                    } :{
                       action: 'quiz/release_marks',
                       parameters: { id: item._id, quizName: item.name,user_group: item.target.course.user_group._id},
                     },
                     title: 'Release Marks',
-                    message: 'Are you sure you want to release marks for this quiz?',
+                    message: `Are you sure you want to release marks for this ${item.submissionMode ? 'assignment' : 'quiz'}?`,
                   })
                 "
               >
