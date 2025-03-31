@@ -1,7 +1,7 @@
 <template>
   <div>
     <section class="my-messages">
-      <div class="row messages-section" id="messages-section">
+      <div class="row messages-section mb-14 mb-md-0" id="messages-section">
         <div class="side incoming col-3">
           <div class="header">
             <h2>Chat</h2>

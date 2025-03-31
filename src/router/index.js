@@ -149,7 +149,7 @@ const routes = [
                     {
                         path: '/announcements',
                         name: "announcements",
-                        component: () => import( /* webpackChunkName: "announcements */ '@/views/announcement/index.vue'),
+                        component: () => import( /* webpackChunkName: "announcements" */ '@/views/announcement/index.vue'),
                     },
                     {
                         path: '/announcements/new',
