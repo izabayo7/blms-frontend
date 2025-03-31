@@ -114,9 +114,6 @@ export default {
     NewReplyComment,
   },
   computed: {
-    elapsedTime() {
-      return elapsedDuration(this.content.createdAt);
-    },
     fullNames() {
       return `${this.content.sender.sur_name} ${this.content.sender.other_names}`;
     },
@@ -125,6 +122,8 @@ export default {
     return {
       commenting: false,
       reply_visible: false,
+      elapsedTime: "",
+      interval:null
     };
   },
   methods: {
@@ -133,6 +132,16 @@ export default {
       // if (!this.isLive)
       this.$emit("replied", data);
     },
+  },
+  created(){
+    // TODO increase interval on dates
+    this.interval=setInterval(() => {
+      this.elapsedTime = elapsedDuration(this.content.createdAt);
+    }, 1000)
+
+  },
+  destroyed(){
+    clearInterval(this.interval)
   },
 };
 </script>
