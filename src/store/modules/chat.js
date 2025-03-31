@@ -177,14 +177,24 @@ export default {
         },
 
         // change conversation to first if new message is sent or received
-        CHANGE_CONVERSATION_STAND(state, msg) {
+        CHANGE_CONVERSATION_STAND(state, {msg,creation = false}) {
             let idx;
-            let id = msg.sender._id;
+            let id;
+            let message;
 
-            let message = {
-                content: msg.content,
-                sender: msg.sender._id,
-                time: msg.createdAt
+
+            // when it is on creation either group or chat conversation
+            if(creation){
+                id = msg.id;
+                message = msg;
+            }else { //when it is message sent or recieved
+                id = msg.sender._id;
+
+                message = {
+                    content: msg.content,
+                    sender: msg.sender._id,
+                    time: msg.createdAt
+                }
             }
 
             // find the index of the incoming message
@@ -195,6 +205,8 @@ export default {
             if (idx) {
                 state.incomingMessages.splice(0, 0, state.incomingMessages.splice(idx, 1)[0])
                 state.incomingMessages[0].last_message = message
+            } else{
+                state.incomingMessages.unshift(message)
             }
 
         }

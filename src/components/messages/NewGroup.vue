@@ -220,7 +220,7 @@ export default {
   },
   methods: {
     ...mapMutations("sidebar_navbar", {toggleGroup: "TOGGLE_GROUP_MODEL_VISIBILITY"}),
-    ...mapMutations("chat", {setGroupError:"SET_GROUP_ERROR"}),
+    ...mapMutations("chat", {setGroupError:"SET_GROUP_ERROR",changeConversationStand:"CHANGE_CONVERSATION_STAND"}),
     ...mapActions("users", ["searchUser"]),
 
     closed(i) {
@@ -301,29 +301,34 @@ export default {
       const newGroup = await a.create("chat_group", body);
       const {status, message} = newGroup.data
 
-      console.log(newGroup,status)
 
       //on error set an error
-      if(status !== 200 || status !== 201) this.setGroupError(message)
+      if(status === 200 || status === 201){
 
-      const {code, createdAt,members,name} = newGroup.data.data
+        const {code, createdAt,members,name} = newGroup.data.data
 
-      // new group as contact
-      const newGroupAsContact = {
-        id:code,
-        is_group:true,
-        last_message:{
-          content:"This group was created by ",
-          time:createdAt
-        },
-        members:members,
-        name:name,
-        unreadMessagesLength:1,
+        // new group as contact
+        const newGroupAsContact = {
+          id:code,
+          is_group:true,
+          last_message:{
+            content:"This group was created by ",
+            time:createdAt
+          },
+          members:members,
+          name:name,
+          unreadMessagesLength:1,
 
+        }
+
+        //
+        this.changeConversationStand({msg:newGroupAsContact,creation:true})
+        await this.$router.push(`/messages/${newGroup.data.data.code}`);
+        this.toggleGroup()
+      }else{
+        this.setGroupError(message)
       }
-      console.log(newGroupAsContact);
-      // this.$router.push(`/messages/${newGroup.data.data.code}`);
-      // this.toggleGroup()
+
     },
   },
   mounted() {
