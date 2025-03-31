@@ -173,7 +173,7 @@ export default {
   async beforeMount() {
     if (this.$route.query.institution) {
       const res = await Apis.get(
-        `college/name/${this.$route.query.institution}`
+        `college/open/${this.$route.query.institution}`
       );
       if (res.data.status != 404) {
         this.institution = res.data.data.name;
