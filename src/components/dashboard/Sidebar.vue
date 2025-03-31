@@ -218,7 +218,7 @@
           "
             :class="{ active: activeRoute('assignments') }"
         >
-          <div v-if="!activeRoute('assignments') && unreads" class="number">{{ assignments }}</div>
+          <div v-if="!activeRoute('assignments') && assignments" class="number">{{ assignments }}</div>
           <div class="link-icon">
             <svg width="24" height="32" viewBox="0 0 24 32" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path
