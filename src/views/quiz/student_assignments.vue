@@ -71,6 +71,80 @@
           </v-data-table>
         </v-card>
       </v-col>
+      <v-col class="col-12 mt-4">
+        <v-card class="users-table mx-auto pa-4">
+          <v-card-title>
+            <v-row>
+              <div class="col-6">
+                <div class="title">Exams</div>
+              </div>
+              <div class="col-6">
+                <div class="text-right">
+                  <v-text-field
+                      v-model="search"
+                      append-icon="mdi-magnify"
+                      label="Search"
+                      id="searchQuiz"
+                      single-line
+                      hide-details
+                  />
+                </div>
+              </div>
+            </v-row>
+          </v-card-title>
+          <v-data-table
+              :search="search"
+              :headers="exam_headers"
+              :items="assignments"
+              sort-by="title"
+              @click:row="handleRowClick"
+          >
+            <template v-slot:item.target="{  }">
+              <div class="target">
+                test
+              </div>
+            </template>
+            <template v-slot:item.title="{ item }">
+              <div class="assignment_title">
+                {{ item.title }}
+              </div>
+            </template>
+            <template v-slot:item.dueDate="{ item }">
+              <div class="assignment_td">
+                {{ item.dueDate | formatDate }}
+              </div>
+              <div class="assignment_td">
+                {{ getTime(item.dueDate) }}
+              </div>
+            </template>
+            <template v-slot:item.marks="{ item }">
+              <div class="assignment_td">
+                {{ item.total_marks }} Marks
+              </div>
+            </template>
+            <template v-slot:item.status="{ item }">
+              <div :class="'assignment_td' + item.submissionMode ? `status ${computeClass(item)}` : ''">
+                {{
+                  computeClass(item) === 'expired' ? 'Expired' : item.submission ? computeClass(item) === 'marked' ? 'Marked' : 'Submitted' : 'Not done'
+                }}
+              </div>
+            </template>
+            <template v-slot:item.grades="{ item }">
+              <div class="assignment_td">
+                {{ item.status === 'RELEASED' ? item.submission ? item.submission.total_marks : 'N/A' : 'N / A' }}
+              </div>
+            </template>
+            <template v-slot:item.action="{ }">
+              <button disabled class="attempt-exam disabled">
+                Attempt
+              </button>
+            </template>
+            <template v-slot:no-data>
+              <span class="text-h6">Exams list is empty</span>
+            </template>
+          </v-data-table>
+        </v-card>
+      </v-col>
     </v-row>
   </v-container>
 </template>
@@ -93,6 +167,20 @@ export default {
       {text: "Marks", value: "marks"},
       {text: "Status", value: "status", sortable: true},
       {text: "My grade", value: "grades", sortable: false, align: "center"},
+    ],
+    exam_headers: [
+      {
+        text: "Course",
+        align: "start",
+        sortable: false,
+        value: "title",
+      },
+      {text: "Date", value: "dueDate"},
+      {text: "Duration", value: "target"},
+      {text: "Marks", value: "marks"},
+      {text: "Status", value: "status", sortable: true},
+      {text: "My grade", value: "grades", sortable: false, align: "center"},
+      {text: "Action", value: "action", sortable: false, align: "center"},
     ],
   }),
   computed: {
@@ -254,6 +342,14 @@ export default {
       color: #2D3E70;
 
     }
+  }
+
+  .attempt-exam {
+    width: 104px;
+    height: 34px;
+    background: #193074;
+    border-radius: 6px;
+    color: #FFFFFF;
   }
 
   table {
