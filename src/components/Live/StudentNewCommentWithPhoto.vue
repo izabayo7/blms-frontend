@@ -22,8 +22,17 @@
           </div>
         </div>
         <div class="action-btn" >
-          <button class="cancel">CANCEL</button>
-          <button class="send"  @click="send_comment">COMMENT</button>
+
+          <div class="cancel">
+            <button-ui  class-list="px-5 py-1">
+              <template #content>CANCEL</template>
+            </button-ui>
+          </div>
+          <div class="send ml-4">
+            <button-ui fill class-list="px-5 py-1"  @click="send_comment">
+              <template #content>COMMENT</template>
+            </button-ui>
+          </div>
         </div>
       </form>
     </div>
@@ -35,10 +44,11 @@ import { mapGetters } from "vuex";
 import api from "@/services/apis";
 import { empty } from "../../services/global_functions";
 import ExpandableInput from "../reusable/ui/ExpandableInput";
+import ButtonUi from "../reusable/ui/button-ui";
 
 export default {
   name: "StudentNewCommentWithPhoto",
-  components: {ExpandableInput},
+  components: {ButtonUi, ExpandableInput},
   data() {
     return {
       comment: "",
