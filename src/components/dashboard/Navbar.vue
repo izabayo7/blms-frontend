@@ -1,6 +1,6 @@
 <template>
   <div class="my-navbar">
-    <div class="hidden-md-and-up row mt-0">
+    <div class="hidden-md-and-up row ma-0">
       <div class="col-8 logo_container">
         <img :src="college_logo" class="logo my-auto" />
       </div>
