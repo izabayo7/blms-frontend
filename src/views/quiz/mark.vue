@@ -35,10 +35,11 @@
         <div class="totalMarks">
           <h3>Total marks</h3>
         </div>
+
         <div class="cool-box blue-bg d-flex ml-6 mt-n1">
           <p class="white--text">
             {{
-              `${attempt.marked ? attempt.totalMarks + "/" : ""}${
+              `${attempt.marked ? computedTotalMarks + "/" : ""}${
                 selected_quiz_submission.quiz.total_marks
               }`
             }}
@@ -311,6 +312,15 @@ export default {
     ...mapGetters("quiz_submission", ["selected_quiz_submission"]),
     userCategory() {
       return this.$store.state.user.user.category.name;
+    },
+    computedTotalMarks() {
+      let result = 0;
+      for (const i in this.selected_quiz_submission.answers) {
+        result = parseInt(
+          result + parseInt(this.selected_quiz_submission.answers[i].marks || 0)
+        );
+      }
+      return result;
     },
   },
   watch: {
