@@ -1,86 +1,130 @@
 <template>
-  <v-container>
-      <v-row
-        id="liveClass"
+  <v-container class="live_video customScroll" fluid>
+    <v-row>
+      <video-item v-for="(item, i) in videosList" :todo="item" :key="i">
+      </video-item>
+    </v-row>
+    <v-row>
+      <v-col class="col-6 text-center mx-auto">
+        <v-text-field
+          placeholder="Enter meeting name"
+          class="text-field"
+          solo
+        />
+        <v-btn :color="primary" class="white--text next-chapter px-12" rounded
+          id="open-or-join-room">Open or join</v-btn
+        ></v-col
       >
-          <v-btn @click="showActions=true" class="hidden-md-and-up mr-n8 white--text" color="#FFC100" right bottom rounded fixed><v-icon>mdi-arrow-left</v-icon></v-btn>
-          <kurious-page-actions v-on:hideActions="showActions = false" :visible="showActions" class="hidden-md-and-up"> 
-            <kurious-discussion-board  v-if="$store.state.user.type === 'student'" />
-            <kurious-instructor-action-board  v-else />
-          </kurious-page-actions>
-          <v-col
-            class="col-12 col-md-8 course-content pa-md-10"
-          >
-            <v-row>
-              <v-col class="col-12" id="video">
-                <kurious-video
-                  poster="http://127.0.0.1:5500/Kurious-Frontend/src/assets/images/live.png"
-                  src="http://161.35.199.197:7070/kurious/file/video/animals.mp4"
-                />
-              </v-col>
-              <v-col class=" col-12 course-title d-block">{{courseName}}</v-col>
-              <v-col  v-if="$store.state.user.type === 'student'" class="col-12 description">
-                <p>JavaScript, often abbreviated as JS, is a programming language that conforms to the ECMAScript specification. JavaScript is high-level, often just-in-time compiled, and multi-paradigm. It has curly-bracket syntax, dynamic typing, prototype-based object-orientation, and first-class functions.</p>
-              </v-col>
-              <v-col class="col-12">
-                  <v-row>
-                    <v-col v-if="$store.state.user.type === 'student'" class="col-6">
-                        <v-btn color="#FFC100" class="white--text next-chapter px-12" rounded>Take quiz</v-btn>
-                    </v-col>
-                    <v-col v-else class="col-12">
-                        <kurious-comments />
-                    </v-col>
-                  </v-row>
-              </v-col>
-            </v-row>
-          </v-col>
-          <v-col
-            class="col-4 hidden-sm-and-down chapters pt-md-12"
-          >
-            <kurious-discussion-board  v-if="$store.state.user.type === 'student'" />
-            <kurious-instructor-action-board  v-else />
-          </v-col>
-      </v-row>
+    </v-row>
   </v-container>
 </template>
 
 <script>
-export default {
-    name: 'LiveClass',
-    data:() =>({
-        power: 78,
-        courseName: 'Economy Basics',
-        items: [
-            { finished: true, title: 'Photos' },
-            { title: 'Recipes' },
-            { title: 'Work' },
-            { finished: true, title: 'Photos' },
-            { title: 'Recipes' },
-            { title: 'Work' },
-        ],
-        showActions: true,
-    }),
-//  props: {
-//      image: {
-//          type: String,
-//          default: 'https://randomuser.me/api/portraits/men/81.jpg'
-//      },
-//      title: {
-//          type: String,
-//          required: true
-//      },
-//      instructor: {
-//          type: String,
-//          required: true
-//      },
-//      description: {
-//          type: String,
-//          required: true
-//      },
-//      category: {
-//          type: String,
-//          required: true
-//      }
-//  },
-}
+import colors from "@/assets/sass/imports/_colors.scss";
+// eslint-disable-next-line no-unused-vars
+import io from "socket.io-client";
+import * as RTCMultiConnection from "../../assets/js/RTCMultiConnection";
+
+const component = {
+  name: "LiveClass",
+  components: {
+    videoItem: {
+      props: ["video_obj"],
+      template:
+        '<video controls autoplay playsinline :srcObject.prop="video_obj.srcObject" :muted="video_obj.muted" :id="video_obj.id"></video>',
+    },
+  },
+  data: () => ({
+    primary: colors.primary,
+    courseName: "Economy Basics",
+    videosList: [],
+  }),
+  // mounted() {
+  //   const socket_plugin = document.createElement("script");
+  //   socket_plugin.setAttribute("src", `${process.env.VUE_APP_api_service_url}/socket.io/socket.io.js`);
+  //   socket_plugin.async = true;
+  //   document.head.appendChild(socket_plugin);
+
+  //   const rtc_plugin = document.createElement("script");
+  //   rtc_plugin.setAttribute("src", "../../assets/js/RTCMultiConnection.min.js");
+  //   rtc_plugin.async = true;
+  //   document.head.appendChild(rtc_plugin);
+
+  // },
+};
+
+export default component;
+
+// ......................................................
+// ..................RTCMultiConnection Code.............
+// ......................................................
+
+// eslint-disable-next-line no-undef
+var connection = new RTCMultiConnection();
+
+// by default, socket.io server is assumed to be deployed on your own URL
+connection.socketURL = `${process.env.VUE_APP_api_service_url}/socket.io/socket.io.js`;
+
+connection.socketMessageEvent = "video-conference-demo";
+
+connection.session = {
+  audio: true,
+  video: true,
+};
+
+console.log(this.courseName);
+
+connection.sdpConstraints.mandatory = {
+  OfferToReceiveAudio: true,
+  OfferToReceiveVideo: true,
+};
+
+// https://www.rtcmulticonnection.org/docs/iceServers/
+// use your own TURN-server here!
+connection.iceServers = [
+  {
+    urls: [
+      "stun:stun.l.google.com:19302",
+      "stun:stun1.l.google.com:19302",
+      "stun:stun2.l.google.com:19302",
+      "stun:stun.l.google.com:19302?transport=udp",
+    ],
+  },
+];
+
+document.getElementById('open-or-join-room').onclick = function() {
+    connection.openOrJoin(document.getElementById('room-id').value);
+};
+
+connection.autoCreateMediaElement = false;
+connection.onstream = function (event) {
+  this.videosList.push({
+    id: event.streamid,
+    srcObject: event.stream,
+    muted: event.type === "local",
+  });
+};
+
+connection.onstreamended = function (event) {
+  var newList = [];
+  this.videosList.forEach(function (item) {
+    if (item.id !== event.streamid) {
+      newList.push(item);
+    }
+  });
+  this.videosList = newList;
+};
 </script>
+
+<style lang="scss" scoped>
+.live_video {
+  background-color: #f6f6f6;
+  height: calc(100vh - 5rem);
+  max-height: calc(100vh - 76px);
+  overflow-y: auto;
+  .row {
+    height: inherit;
+    place-items: center;
+  }
+}
+</style>

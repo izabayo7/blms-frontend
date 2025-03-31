@@ -283,7 +283,7 @@ router.beforeEach((to, from, next) => {
 
     else if ((to.path === '/login' || to.path === '/') && store.state.user.isLoggedIn) {
         next({
-            path: `/${store.state.user.category.name === 'STUDENT' || store.state.user.category.name === 'INSTRUCTOR' ? 'courses' : 'administration'}`,
+            path: `/${store.state.user.user.category.name === 'STUDENT' || store.state.user.user.category.name === 'INSTRUCTOR' ? 'courses' : 'administration'}`,
         })
     }
 
