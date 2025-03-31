@@ -154,6 +154,7 @@
                         <v-col class="col-12">
                           <kurious-editor
                             v-if="mode !== ''"
+                            ref="editor"
                             :mode="`${mode === 'edit' ? mode : 'preview'}`"
                             :defaultContent="mode === 'edit' ? undefined : content"
                           />
@@ -270,7 +271,7 @@ export default {
     attachments: [],
     chapters: 1,
     modal: true,
-    type: "details",
+    type: "chapters",
     mode: "edit",
     show: false,
     message: "",
@@ -459,12 +460,11 @@ export default {
         this.message = "Course was saved successfuly";
         this.show = true;
         this.chapter._id = response.data._id;
-        const content = document.querySelector(".ProseMirror").innerHTML; // should be changed after .. get content from the editor form more security
 
         response = await Apis.create(
           `file/updateChapterContent/${this.chapter._id}`,
           {
-            content: content,
+            content: this.$refs.editor.getHTML(),
           }
         );
         this.chapters++;

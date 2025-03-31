@@ -92,7 +92,7 @@
           type="file"
           :multiple="multiple"
           class="newFile"
-          :accept="allowedTypes !== undefined ? 'video/*' : undefined"
+          :accept="allowedTypes === undefined ? undefined : allowedTypes.includes('video') ? 'video/*' : allowedTypes.includes('image') ? 'image/*' : undefined"
           hidden
           @change="addFile()"
         />
@@ -110,6 +110,9 @@ export default {
   props: {
     allowedTypes: {
       type: Array,
+    },
+    boundIndex: {
+      type: Number,
     },
     multiple: {
       type: Boolean,
@@ -181,7 +184,7 @@ export default {
             array.fileform
           */
           for (let i = 0; i < e.dataTransfer.files.length; i++) {
-            this.$emit("addFile", e.dataTransfer.files[i]);
+            this.$emit("addFile", e.dataTransfer.files[i], this.boundIndex);
             this.files.push(e.dataTransfer.files[i]);
             this.getImagePreviews();
           }
@@ -197,7 +200,7 @@ export default {
     addFile() {
       for (const file of document.querySelector(".newFile").files) {
         this.files.push(file);
-        this.$emit("addFile", file);
+        this.$emit("addFile", file, this.boundIndex);
       }
       this.getImagePreviews();
     },
@@ -322,7 +325,7 @@ export default {
       */
     removeFile(key) {
       this.files.splice(key, 1);
-      this.$emit("removeFile", key);
+      this.$emit("removeFile", key, this.boundIndex);
     },
   },
 };

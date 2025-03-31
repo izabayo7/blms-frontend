@@ -2,6 +2,7 @@
 node_modules
 .dist
 old
+dist
 *--*
 *.zip
 # local env files

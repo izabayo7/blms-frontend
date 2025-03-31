@@ -2,7 +2,12 @@
   <div id="kurious-editor">
     <div class="editor">
       <editor-content class="editor__content" :editor="editor" />
-      <editor-menu-bar v-if="mode === 'edit'" class="elevation-1" :editor="editor" v-slot="{ commands, isActive }">
+      <editor-menu-bar
+        v-if="mode === 'edit'"
+        class="elevation-1"
+        :editor="editor"
+        v-slot="{ commands, isActive }"
+      >
         <div class="menubar">
           <button
             type="button"
@@ -236,23 +241,23 @@ export default {
   props: {
     defaultContent: {
       type: String,
-      default: `<p>Type or paste your content here</p>`
+      default: `<p>Type or paste your content here</p>`,
     },
     mode: {
       type: String,
-      default: 'view'
-    }
+      default: "view",
+    },
   },
   components: {
     EditorContent,
     EditorMenuBar,
-    EditorMenuBubble
+    EditorMenuBubble,
   },
   data() {
     return {
       keepInBounds: true,
       editor: new Editor({
-        editable: this.mode === 'edit' ? true : false,
+        editable: this.mode === "edit" ? true : false,
         extensions: [
           new Blockquote(),
           new BulletList(),
@@ -273,7 +278,7 @@ export default {
           new Underline(),
           new History(),
           new Table({
-            resizable: this.mode === 'edit' ? true : false,
+            resizable: this.mode === "edit" ? true : false,
           }),
           new TableHeader(),
           new TableCell(),
@@ -310,7 +315,10 @@ export default {
       // HTML string is also supported
       // this.editor.setContent('<p>This is some inserted text. 👋</p>')
       this.editor.focus();
-    }
+    },
+    getHTML() {
+      return this.editor.getHTML();
+    },
   },
 };
 </script>

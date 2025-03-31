@@ -132,7 +132,7 @@ const routes = [{
         import('@/components/registration/admin/admin.vue')
 }, {
     path: '/register/faculty',
-    name: 'Register Admin',
+    name: 'Register Faculty',
     component: () =>
         import('@/components/registration/faculty/index.vue')
 },

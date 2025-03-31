@@ -1,5 +1,5 @@
 <template>
-  <v-app class="quiz-page">
+  <v-container fluid class="quiz-page">
     <h2>{{quiz.name}}</h2>
     <v-row>
       <v-col v-if="quiz !== []" class="col-12 col-md-7 questions-side">
@@ -14,7 +14,7 @@
             class="answer-field"
           ></textarea>
           <div v-else class="options">
-            <div class="d-block">
+            <div v-if="question.type.includes('text')" class="d-block">
               <v-btn
                 v-for="(option, k) in question.options.options"
                 :key="k"
@@ -26,6 +26,31 @@
                 :color="attempt.answers[i].choosedOptions.includes(k) ? 'green' : '' "
               >B. {{option.text}}</v-btn>
             </div>
+            <v-container v-else fluid>
+              <v-row>
+                <v-col
+                  v-for="(choice, i) in question.options.choices"
+                  :key="i"
+                  class="d-flex child-flex"
+                  cols="6"
+                >
+                  <v-card flat tile class="d-flex">
+                    <v-img
+                      :src="`http://localhost:7070/kurious/file/quizAttachedFiles/${$route.params.id}/${choice.src}?format=png&width=200&height=200`"
+                      :lazy-src="`http://localhost:7070/kurious/file/quizAttachedFiles/${$route.params.id}/${choice.src}?format=png&width=200&height=200`"
+                      aspect-ratio="1"
+                      class="grey lighten-2"
+                    >
+                      <template v-slot:placeholder>
+                        <v-row class="fill-height ma-0" align="center" justify="center">
+                          <v-progress-circular indeterminate color="grey lighten-5"></v-progress-circular>
+                        </v-row>
+                      </template>
+                    </v-img>
+                  </v-card>
+                </v-col>
+              </v-row>
+            </v-container>
           </div>
         </v-row>
         <!-- <v-row class="col-12 col-md-12">
@@ -82,7 +107,7 @@
         </div>
       </v-col>
     </v-row>
-  </v-app>
+  </v-container>
 </template>
 
 <script>
