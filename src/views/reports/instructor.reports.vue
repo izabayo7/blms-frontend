@@ -9,7 +9,6 @@
         sort-by="dateOfSubmission"
         class="data-table"
       >
-        <!-- display user name as a link to the submission -->
         <template v-slot:item.course_name="{ item }">
           <router-link
             class="normal--text"
@@ -19,7 +18,6 @@
             }}</router-link
           >
         </template>
-        <!-- display user name as a link to the submission -->
         <template v-slot:item.chapter_name="{ item }">
           <router-link
             class="normal--text"
@@ -27,6 +25,14 @@
             >{{
               returnChapterName(item.target)
             }}</router-link
+          >
+        </template>
+        <template v-slot:item.total_submissions="{ item }">
+          <span
+            class="normal--text"
+            >{{
+              item.submissions.length
+            }}</span
           >
         </template>
         <!-- display the date of submission -->
@@ -141,8 +147,8 @@ export default {
           align: "center",
         },
         {
-          text: "Date of submission",
-          value: "dateOfSubmission",
+          text: "Submissions",
+          value: "total_submissions",
           align: "center",
         },
         { text: "Status", value: "marked", align: "center" },
