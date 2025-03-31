@@ -4,7 +4,7 @@
 
 
 
-  <div class="switch-holder" :class="{'active':active}" @click="active=!active">
+  <div class="switch-holder" :class="{'active':active}" @click="changeStatus">
     <div class="circle" :class="{'right':active,'left':!active}"></div>
   </div>
 </div>
@@ -15,7 +15,13 @@ export default {
   name: "switch",
   data(){
     return{
-      active:true
+      active:false
+    }
+  },
+  methods:{
+    changeStatus(){
+      this.active = !this.active
+      this.$emit('input',this.active)
     }
   }
 }
@@ -25,45 +31,55 @@ export default {
 .my-switch{
   height: fit-content;
   width: fit-content;
+  position: relative;
+
   .switch-holder{
     background-color: $secondary;
     cursor: pointer;
-    width: 450px;
-    height: 200px;
-    border-radius: 150px;
+    width: 45px;
+    height: 20px;
+    border-radius: 15px;
     position:relative;
-    transition:.3s ease-out;
+    transition:.3s;
 
     &.active{
       background-color: lighten($primary,15);
 
       .circle{
-        box-shadow: 0px 0px 40px #6daefc00;
+        box-shadow: 0px 0px 4px #6daefc00;
         background-color: $primary;
 
       }
     }
 
     .circle{
-      height: 170px;
-      width:170px;
+      height: 17px;
+      width:17px;
       top: 50%;
       transform: translateY(-50%);
       background-color: darken($secondary,10);
-      border-radius: 150px;
-      transition:.3s ease-out;
+      border-radius: 15px;
+      transition:.3s;
       position: absolute;
       padding:0;
+      margin: .5px 0;
 
     }
     .right{
-      left: calc(100% - 190px);
+      left: calc(100% - 19px);
     }
     .left{
-      left: 20px;
+      left: 2px;
     }
 
   }
 }
-
+//@keyframes move {
+//  0%{
+//    width: 25px;
+//  }
+//  100%{
+//    width: 17px;
+//  }
+//}
 </style>
