@@ -13,7 +13,7 @@ export default {
     methods: {
         redirect() {
             if (this.userCategory !== 'ADMIN')
-                if (this.disableFunctionalities && this.$route.name ? !(this.$route.name.includes('chating') || this.$route.name.includes('Settings')) : true)
+                if (this.disableFunctionalities && this.$route.name ? !(this.$route.name.includes('chating') || this.$route.name.includes('Settings')) : !true)
                     if (this.$route.path !== '/settings/payments')
                         this.$router.push('/settings/payments')
         }

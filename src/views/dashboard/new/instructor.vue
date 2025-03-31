@@ -57,7 +57,7 @@
               <div class="details">
                 Recent assignment submissions
               </div>
-              <div class="college_info long">
+              <div v-if="submission_statistics" class="college_info long">
                 <div class="body">
                   <div v-if="submission_statistics.submissions.length === 0"
                        class="empty d-flex justify-center align-center">

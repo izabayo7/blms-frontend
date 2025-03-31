@@ -15,7 +15,7 @@ import VuePlyr from 'vue-plyr'
 import "skeleton-screen-css";
 // import 'bootstrap'
 // import 'bootstrap/dist/css/bootstrap.min.css'
-import 'animate.css/animate.min.css'
+// import 'animate.css/animate.min.css'
 
 const options = {
     persist: true,
