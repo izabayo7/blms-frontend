@@ -316,7 +316,7 @@ export default {
 
       //whole msg bar css
       .msg {
-        max-width: 20rem;
+        max-width: 28rem;
         padding: 0.5rem 1.7rem;
         margin: 1.5px;
         width: -webkit-fit-content;
