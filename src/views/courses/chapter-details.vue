@@ -288,13 +288,7 @@ export default {
         this.maximumIndex = Math.round(
           (d.progress * this.course.chapters.length) / 100
         );
-        if (this.activeIndex < this.course.chapters.length)
-          this.$router.push(
-            `/courses/${this.course.name}/chapter/${this.activeIndex + 1}/${
-              this.course.chapters[this.activeIndex + 1]._id
-            }`
-          );
-        else this.$router.push("/courses");
+        this.$emit("changeMaximumIndex", this.activeIndex + 1);
         this.$emit("changeActiveChapter", {
           index: this.activeIndex + 1,
           id: this.nextChapter(this.activeIndex),

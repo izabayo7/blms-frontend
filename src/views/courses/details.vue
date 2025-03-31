@@ -44,7 +44,10 @@
       <!-- the course main content -->
       <v-col class="col-12 col-md-9 course-content customScroll pa-3">
         <!--        <chapter-details :activeIndex="activeIndex" />-->
-        <router-view @changeActiveChapter="changeActiveChapter" /> </v-col
+        <router-view
+          @changeActiveChapter="changeActiveChapter"
+          @changeMaximumIndex="changeMaximumIndex"
+        /> </v-col
       >>
     </v-row>
   </v-container>
@@ -93,6 +96,11 @@ export default {
       "getChapterMainContent",
       "finish_chapter",
     ]),
+    changeMaximumIndex(index) {
+      console.log(index);
+      if (index == this.course.chapters.length) this.$router.push("/courses");
+      else this.maximumIndex = index;
+    },
     ...mapActions("quiz_submission", ["findQuizSubmissionByUserAndQuizNames"]),
     async downloadAttachment(url) {
       window.location.href = url;
