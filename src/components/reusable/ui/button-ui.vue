@@ -1,6 +1,6 @@
 <template>
 <div class="my-button">
-  <div @click="clicked" class="button-container bg-color-one px-10 py-3" :class="classList">
+  <div @click="clicked" class="button-container px-10 py-3" :class="classList">
     <button :type="type">
       <slot name="content"></slot>
     </button>
@@ -27,7 +27,17 @@ export default {
 .my-button{
   .button-container{
     border-radius:4.5px;
+    cursor:pointer;
+    background-color:$primary;
+    transition:.3s ease;
 
+    &:hover{
+      background-color:lighten($primary,10)
+    }
+
+    &:active{
+      border:3px solid lighten($primary,40)
+    }
 
     button{
       color:$main;
