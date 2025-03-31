@@ -274,7 +274,7 @@ import StudentNewCommentWithPhoto from "../../../components/Live/StudentNewComme
 import Apis from '../../../services/apis'
 import {convertUTCDateToLocalDate, playSound} from "../../../services/global_functions";
 
-const sound = require("@/assets/audio/Comment.wav");
+const sound = require("../../../assets/audio/Comment.wav");
 
 export default {
   name: "liveClass",
