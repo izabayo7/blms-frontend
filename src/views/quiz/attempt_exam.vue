@@ -224,6 +224,9 @@
             >
               <p>{{ formated_remaining_time }}</p>
             </div>
+            <div class="webcam">
+              <video id="userStream" autoplay></video>
+            </div>
             <div class="subtitle">Do not :</div>
             <div class="content">
               <div> - Close exam window before submiting work.</div>
@@ -251,6 +254,10 @@
 import Apis from "@/services/apis";
 import {mapGetters, mapActions} from "vuex";
 import {assessmentMixins} from "../../services/mixins";
+import {load, SupportedPackages} from "@tensorflow-models/face-landmarks-detection";
+import {drawMesh} from "./utilities";
+// eslint-disable-next-line
+import * as tf from "@tensorflow/tfjs";
 
 export default {
   data: () => ({
@@ -303,12 +310,12 @@ export default {
     remaining_time() {
       if (this.remaining_time > 0) {
         if (this.$store.state.user.user.category.name === 'STUDENT') {
-          setTimeout(() => {
-            this.remaining_time -= 1;
-            this.attempt.used_time += 1;
-          }, 1000);
-          if (this.remaining_time === this.exam.duration - 1)
-            this.initialiseQuiz();
+          // setTimeout(() => {
+          //   this.remaining_time -= 1;
+          //   this.attempt.used_time += 1;
+          // }, 1000);
+          // if (this.remaining_time === this.exam.duration - 1)
+          //   this.initialiseQuiz();
         }
       } else if (!this.done) {
         this.done = true;
@@ -642,7 +649,65 @@ export default {
         e.preventDefault();
       }
     },
+    setDetector() {
+      const video = document.getElementById("userStream")
+      const canvas = document.createElement('canvas')
+      canvas.style.height = "186px"
+      canvas.style.width = "104.6px"
+      video.parentElement.append(canvas)
+
+      //  Load posenet
+      const runFacemesh = async () => {
+        // OLD MODEL
+        // const net = await facemesh.load({
+        //   inputResolution: { width: 640, height: 480 },
+        //   scale: 0.8,
+        // });
+        // NEW MODEL
+        const net = await load(SupportedPackages.mediapipeFacemesh);
+        setInterval(() => {
+          detect(net);
+        }, 10);
+      };
+
+      const detect = async (net) => {
+        if (
+            video.readyState === 4
+        ) {
+          // Make Detections
+          // OLD MODEL
+          //       const face = await net.estimateFaces(video);
+          // NEW MODEL
+          const face = await net.estimateFaces({input: video});
+          // Get canvas context
+          const ctx = canvas.getContext("2d");
+          requestAnimationFrame(() => {
+            drawMesh(face, ctx)
+          });
+        }
+      };
+
+      runFacemesh()
+
+    },
+    setCamera() {
+      const video = document.getElementById("userStream")
+      navigator.getUserMedia(
+          {video: {}},
+          stream => {
+            video.srcObject = stream
+            video.addEventListener('play', () => {
+              this.setDetector()
+            })
+          },
+          err => console.error(err)
+      )
+    },
     setUp() {
+      setTimeout(() => {
+        this.setCamera()
+      }, 1000)
+
 
       document.querySelector('body').addEventListener('click', this.goFullscreen)
       window.addEventListener('beforeunload', this.goodbye)

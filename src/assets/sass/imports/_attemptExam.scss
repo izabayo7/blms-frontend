@@ -89,6 +89,18 @@
       position: fixed;
       margin-top: 3%;
 
+      .webcam{
+        position: relative;
+        video{
+          width: 186px;
+          height: 104.6px;
+        }
+        canvas{
+          position: absolute;
+          left:0;
+        }
+      }
+
       .title, .subtitle {
         font-family: Inter;
         font-style: normal;
