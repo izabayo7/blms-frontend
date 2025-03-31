@@ -19,6 +19,15 @@ const routes = [
             allowAnonymous: true
         },
     },
+    {
+        path: '/test',
+        name: 'TEST',
+        component: () =>
+            import( /* webpackPrefetch: true */ /* webpackChunkName: "test" */ '@/views/pages/test'),
+        meta: {
+            allowAnonymous: true
+        },
+    },
     // the login page
     {
         path: '/login',
