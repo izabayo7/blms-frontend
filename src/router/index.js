@@ -40,15 +40,15 @@ const routes = [
             name: 'Edit Course',
             component: () =>
                 import('@//views/courses/edit')
+        }, {
+            path: '/courses/new-course',
+            name: 'Create course',
+            component: () =>
+                import('@/views/courses/create')
         },
         {
             path: '/courses/:name',
             component: () => import('@/views/courses/details')
-        }, {
-            path: '/courses/new-course',
-            name: 'New Course',
-            component: () =>
-                import('@/components/newCourse.vue')
         }, {
             path: '/quiz/new-quiz',
             name: 'Set Quiz',
@@ -99,7 +99,7 @@ const routes = [
             name: 'Users',
             component: () =>
                 import('@/components/admin/users.vue')
-        },        ]
+        },]
     },
     // the login page
     {

@@ -61,11 +61,12 @@ export default {
     },
     actions: {
         // set up the dialog
-        set_modal({ commit }, { template, method, title, message }) {
+        set_modal({ commit }, { template, method, title, message, closable = false }) {
             commit('update_modal_template', template)
             commit('update_confirmation_method', method)
             commit('update_title', title)
             commit('update_message', message);
+            commit('update_closability', closable)
             commit('toogle_visibility');
         },
         // set up the dialog
@@ -75,6 +76,7 @@ export default {
             commit('update_title', '')
             commit('update_message', '');
             commit('toogle_visibility');
+            commit('update_closability', false)
         }
     },
     getters: {

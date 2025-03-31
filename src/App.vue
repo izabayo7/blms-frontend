@@ -2,18 +2,20 @@
 <template>
   <v-app>
     <router-view />
-    <kurious-dialog />
+    <app-dialog />
   </v-app>
 </template>
 
 <script>
-import axios from 'axios'
-import jwt from 'jsonwebtoken'
+import axios from "axios";
+import jwt from "jsonwebtoken";
 
 export default {
   name: "App",
+  components: {
+    appDialog: () => import("@/components/shared/Dialog"),
+  },
   beforeCreate: async function () {
-
     if (!this.$session.exists()) {
       this.$router.push("/login");
       // keep the requested url then redirect after login
@@ -21,7 +23,10 @@ export default {
       axios.defaults.headers.common.Authorization = `${this.$session.get(
         "jwt"
       )}`;
-      this.$store.dispatch("user/setUser", jwt.decode(this.$session.get("jwt")));
+      this.$store.dispatch(
+        "user/setUser",
+        jwt.decode(this.$session.get("jwt"))
+      );
       this.$store.state.user.isLoggedIn = true;
       // const response = await Services.otherGets('token')
       // if (response.data === 'Invalid Token') {
@@ -33,19 +38,20 @@ export default {
 };
 </script>
 <style lang="scss">
-  html,body{
-    padding: 0;
-    margin: 0;
-    box-sizing: border-box;
-  }
-  *{
-    padding: 0;
-    margin: 0;
-    color:$font;
+html,
+body {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+* {
+  padding: 0;
+  margin: 0;
+  color: $font;
+}
 
-  }
-
-  input:focus, textarea:focus{
-      outline: none;
-  }
+input:focus,
+textarea:focus {
+  outline: none;
+}
 </style>

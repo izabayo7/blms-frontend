@@ -2,14 +2,16 @@
         text-transform: none !important;
     }
 
-    .classes-home {
+    .courses-home {
+        background-color: #F9FAFF;
+        min-height: calc(100vh - 76px);
         .active-btn {
             background-color: #fff !important;
             color: #ffd248 !important;
             transition: none !important;
         }
 
-        .classes-header {
+        .courses-header {
             h3 {
                 color: hsl(0, 0%, 65%);
                 font-weight: 400;

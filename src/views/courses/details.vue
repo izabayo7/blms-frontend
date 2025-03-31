@@ -204,43 +204,29 @@
         </v-row>
       </v-col>
     </v-row>
-    <kurious-dialog :show="show" :message="message" :status="status">
-      <!-- <v-icon slot="icon" size="55" dark>mdi-clipboard-text-multiple-outline</v-icon> -->
-      <v-icon slot="icon" size="55" dark>mdi-barley</v-icon>
-      <v-row slot="actions">
-        <v-col class="col-6 mx-auto my-0">
-          <v-btn color="mx-2" @click="show = false">Go to Back</v-btn>
-          <v-btn color="mx-2" @click="show = false">Reload</v-btn>
-        </v-col>
-      </v-row>
-    </kurious-dialog>
   </v-container>
 </template>
 
 <script>
 import { mapActions, mapGetters } from "vuex";
 export default {
-  name: "CourseDetails",
+  name: "course_details",
   data: () => ({
     activeIndex: -1,
-    maximumIndex: 0,
-    show: false,
-    message: "",
     progress: -1,
     progressId: "",
-    modal: true,
     attachments: [],
-    status: 200,
     showActions: false,
     editorContent: "",
   }),
   computed: {
-    ...mapGetters("courses", ["course"])
-    },
+    ...mapGetters("courses", ["course"]),
+    maximumIndex(){
+      return this.course ? Math.round((this.course.progress.progress * this.course.chapters.length) / 100) : 0;
+    }
+  },
   watch: {
     activeIndex() {
-      this.maximumIndex =
-        (this.course.progress.progress * this.course.chapters.length) / 100;
       this.editorContent = "";
       this.getChapterMainContent(
         this.course.chapters[this.activeIndex]._id
@@ -248,14 +234,13 @@ export default {
         this.editorContent = data;
       });
     },
-    course(){
-      if (this.activeIndex == -1) {
-        this.activeIndex = 0
-      }
-    }
   },
   methods: {
-    ...mapActions("courses", ["findCourseByName", "getChapterMainContent", "finish_chapter"]),
+    ...mapActions("courses", [
+      "findCourseByName",
+      "getChapterMainContent",
+      "finish_chapter",
+    ]),
     async downloadAttachment(id) {
       const url = `http://localhost:7070/kurious/file/downloadAttachment/${id}`;
       window.location.href = url;
@@ -283,7 +268,10 @@ export default {
       userCategory: this.$store.state.user.user.category.toLowerCase(),
       userId: this.$store.state.user.user._id,
       courseName: this.$route.params.name,
-    })
+    });
+    if (this.activeIndex == -1) {
+      this.activeIndex = this.maximumIndex;
+    }
   },
 };
 </script>
