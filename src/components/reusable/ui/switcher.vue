@@ -9,6 +9,12 @@
 <script>
 export default {
   name: "switcher",
+  props:{
+    defaultValue:{
+      type: Boolean,
+      default: false
+    }
+  },
   data(){
     return{
       active:false
@@ -19,6 +25,9 @@ export default {
       this.active = !this.active
       this.$emit('input',this.active)
     }
+  },
+  created() {
+    this.active = this.defaultValue
   }
 }
 </script>
