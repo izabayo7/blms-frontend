@@ -9,10 +9,9 @@
             :src="currentDisplayedUser.image"
             :alt="`${currentDisplayedUser.name}'s profile picture`"
           />
-          <v-avatar @click="logout" v-else size="50" class="avatar">
+          <v-avatar v-else size="50" class="avatar">
             {{ currentDisplayedUser.name | computeText }}
-          </v-avatar></template
-        >
+          </v-avatar></template>
         <!--        name of the current chatter-->
         <template #name>{{ currentDisplayedUser.name }}</template>
       </chat-header>
@@ -62,7 +61,7 @@ export default {
     ...mapMutations("chat", ["ADD_TYPIST", "REMOVE_TYPIST"]),
     doneTyping() {
       this.typing.typist = "";
-    },
+    }
   },
   mounted() {
     on("message-received", () => {
@@ -113,8 +112,6 @@ export default {
   .messages-list {
     width: 100%;
     position: relative;
-    overflow-y: scroll;
-    overscroll-behavior-y: contain;
     flex-grow: 1;
     //height: 60%;
 

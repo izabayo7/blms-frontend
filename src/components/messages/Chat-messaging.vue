@@ -26,7 +26,7 @@
             :src="msgs.image"
             :alt="`${msgs.from}'s profile picture`"
           />
-          <v-avatar min-width="20px" @click="logout" v-else class="avatar">
+          <v-avatar min-width="20px" v-else class="avatar">
             {{ msgs.from | computeText }}
           </v-avatar>
         </div>
@@ -124,6 +124,9 @@ export default {
   overflow: auto;
   position: relative;
   height: 100%;
+  scrollbar-track-color:transparent ;
+  scrollbar-face-color: red;
+
   &::-webkit-scrollbar {
     width: 8px;
   }
@@ -143,6 +146,8 @@ export default {
   &::-webkit-scrollbar-thumb:hover {
     background-color: lighten($font, 30);
   }
+
+
   .msg-container {
     margin: 0 10px;
     overflow: auto;
