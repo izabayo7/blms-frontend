@@ -4,7 +4,8 @@
       fluid
       class="quiz-page px-4 px-md-16"
   >
-    <div v-if="(!selected_quiz_submission || $store.state.user.user.category.name ==  'INSTRUCTOR') && filesToUpload.length">
+    <div
+        v-if="(!selected_quiz_submission || $store.state.user.user.category.name ==  'INSTRUCTOR') && filesToUpload.length">
       <h2>{{ selected_quiz.name }}</h2>
       <v-row>
         <v-col class="col-12 col-md-7 questions-side">
@@ -170,11 +171,16 @@
                       </v-row>
                     </template>
 
-                    <svg class="check-svg"                        v-if="
+                    <svg class="check-svg" v-if="
                         checkChoiceStatus(attempt.answers[i].choosed_options, {
                           src: choice.src,
                         })
-                      " xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" focusable="false" width="1em" height="1em" style="-ms-transform: rotate(360deg); -webkit-transform: rotate(360deg); transform: rotate(360deg);" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><path d="M21 7L9 19l-5.5-5.5l1.41-1.41L9 16.17L19.59 5.59L21 7z"/></svg>
+                      " xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true"
+                         focusable="false" width="1em" height="1em"
+                         style="-ms-transform: rotate(360deg); -webkit-transform: rotate(360deg); transform: rotate(360deg);"
+                         preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
+                      <path d="M21 7L9 19l-5.5-5.5l1.41-1.41L9 16.17L19.59 5.59L21 7z"/>
+                    </svg>
                   </v-img>
                 </v-card>
               </div>
@@ -482,17 +488,22 @@ export default {
           this.filesToUpload.push({file: ""});
         }
       });
+    } else if (this.$store.state.user.user.category.name == "INSTRUCTOR") {
+      for (let i = 0; i < this.selected_quiz.questions.length; i++) {
+        this.filesToUpload.push({file: ""});
+      }
     }
   },
 };
 </script>
 
 <style lang="scss">
-.check-svg{
+.check-svg {
   fill: #FFFFFF;
   height: 50px;
   width: 50px;
 }
+
 .timer {
   width: 290px;
   height: 135px;
