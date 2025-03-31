@@ -204,7 +204,7 @@ export default {
       } else if (this.course.name.length < 3) {
         return (this.error = "name is too short");
       }
-      if (!this.course.max) {
+      if (!this.course.maximum_marks) {
         return (this.error = "maximum marks is required");
       }
       if (this.selectedFacultyCollegeYearName === "") {
