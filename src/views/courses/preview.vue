@@ -796,10 +796,14 @@ button.back {
   .preview-card {
     background-color: $main;
     overflow-wrap: anywhere;
-    margin: 0 3%;
+    margin: auto;
     max-width: 80%;
     display: flex;
     flex-direction: row;
+
+    .v-responsive__content {
+      display: none;
+    }
 
     .preview-image {
       padding: 0;
