@@ -13,6 +13,16 @@
     align-items: center;
   }
 
+  &.chat-files {
+    background: transparent;
+    border: none;
+
+    .file-list-container {
+      max-height: 136px;
+      overflow-y: auto;
+    }
+  }
+
   form {
     border-radius: 4px;
     background: #ccc;
@@ -74,6 +84,11 @@
   padding: 10px;
   border-radius: 5px;
   width: 140px;
+
+  &.chat-files {
+    width: 130px;
+    height: 108px;
+  }
 
   &.quiz-files {
     width: 50.87px;
@@ -142,13 +157,13 @@ div.remove-container a {
     <form ref="fileform" :class="`filePicker picker${boundIndex} ${template? template : ''}`">
       <v-row>
         <v-col v-if="files.length" class="col-10">
-          <div class="file-list-container">
+          <div class="file-list-container customScroll">
             <div
                 v-for="(file, key) in files"
                 :key="key"
                 class="file-listing d-flex"
             >
-              <v-badge v-if="template == 'quiz-files'" overlap color="transparent">
+              <v-badge v-if="template === 'quiz-files'" overlap color="transparent">
                 <v-btn
                     fab
                     color="error"
@@ -205,6 +220,29 @@ div.remove-container a {
 
                 </div>
               </v-badge>
+              <v-badge v-if="template === 'chat-files'" overlap color="transparent">
+                <v-btn
+                    fab
+                    color="error"
+                    class="ml-n2 mt-n2 remove--button"
+                    slot="badge"
+                    @click="removeFile(key)"
+                >
+                  <svg width="8" height="10" viewBox="0 0 8 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M1.4789 8.05109C1.4789 8.59507 1.92397 9.04014 2.46795 9.04014H6.42416C6.96814 9.04014 7.41321 8.59507 7.41321 8.05109V2.11678H1.4789V8.05109ZM7.90774 0.633198H6.1769L5.68237 0.138672H3.20974L2.71522 0.633198H0.984375V1.62225H7.90774V0.633198Z"
+                        fill="white"/>
+                  </svg>
+
+                </v-btn>
+
+                <v-img
+                    @click="fileClicked(key)"
+                    class="attachment vertically--centered"
+                    :class="template"
+                    v-bind:ref="'preview' + parseInt(key)"
+                />
+              </v-badge>
               <v-badge v-else overlap color="transparent">
                 <v-btn
                     fab
@@ -244,7 +282,7 @@ div.remove-container a {
             </div>
           </div>
         </v-col>
-        <v-col v-if="files.length === 0 && template == 'quiz-files' && !defaultFiles.length"
+        <v-col v-if="files.length === 0 && template === 'quiz-files' && !defaultFiles.length"
                class="col-12 quiz-details">
           Upload you images here
           <svg @click="clickButton()" class="cursor-pointer" width="22" height="22" viewBox="0 0 22 22" fill="none"
@@ -255,7 +293,7 @@ div.remove-container a {
           </svg>
 
         </v-col>
-        <v-col v-else-if="!template == 'quiz-files' && files.length === 0" class="col-10">
+        <v-col v-else-if="!template === 'quiz-files' && files.length === 0" class="col-10">
         <span
         >Drop the
           {{
@@ -268,7 +306,7 @@ div.remove-container a {
           here!</span
         >
         </v-col>
-        <v-col v-if="template != 'quiz-files' || files.length || defaultFiles.length" class="col-2">
+        <v-col v-if=" template === undefined && ( files.length || defaultFiles.length)" class="col-2">
           <v-btn class="mt-n2" @click="clickButton()" large icon>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
               <path fill="none" d="M0 0h24v24H0z"/>
@@ -409,11 +447,11 @@ export default {
     if (this.defaultFiles.length && !this.files.length)
       this.files = this.defaultFiles.filter(e => e.src)
   },
-  watch: {
-    files() {
-      console.log(this.files)
-    }
-  },
+  // watch: {
+  //   files() {
+  //     console.log(this.files)
+  //   }
+  // },
   methods: {
     fileClicked(index) {
       this.$emit(
@@ -439,7 +477,7 @@ export default {
       }
     },
     clickButton() {
-      if (!(this.template == "quiz-files" && this.files.length > 3) || this.template != "quiz-files") {
+      if (!(this.template === "quiz-files" && this.files.length > 3) || this.template !== "quiz-files") {
         document.getElementById(this.inputId).click();
       } else {
         this.$store.dispatch("app_notification/SET_NOTIFICATION", {
@@ -449,9 +487,19 @@ export default {
         })
       }
     },
+    clearFiles() {
+      this.files = []
+    },
     addFile() {
       for (const file of document.getElementById(this.inputId).files) {
-        if (!this.files.includes(file)) {
+        let found = false
+        for (const i in this.files) {
+          if (this.files[i].name === file.name && this.files[i].lastModified === file.lastModified) {
+            found = true
+            break
+          }
+        }
+        if (!found) {
           if (this.files.length > 0 && !this.multiple) {
             this.removeFile(0);
           }
@@ -460,6 +508,7 @@ export default {
         }
       }
       this.getImagePreviews();
+      document.getElementById(this.inputId).value = ""
     },
     findIcon(type) {
       if (type.includes("video")) {
