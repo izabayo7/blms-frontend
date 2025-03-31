@@ -15,7 +15,9 @@
         </template>
         <!-- display the quiz name as alink to that quiz -->
         <template v-slot:item.submission="{ item }">
-          {{ item.submissions.length }}
+          <router-link :to="`/reports/${item._id}`">
+            {{ item.submissions.length }}
+          </router-link>
         </template>
         <!-- display the date of submission -->
         <template v-slot:item.last_submitted="{ item }">

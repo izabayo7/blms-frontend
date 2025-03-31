@@ -84,9 +84,8 @@ export default {
 
                 // eslint-disable-next-line no-undef
                 result = await dispatch('getQuizSubmissions', { user_name: user.state.user.user_name })
+                result = result.filter(e => e._id == quiz_id)
             }
-
-
 
 
             return result[0]
