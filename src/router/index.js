@@ -88,6 +88,16 @@ const routes = [
                             allowedUsers: ["INSTRUCTOR", "ADMIN"]
                         }
                     },
+
+                    {
+                        path: '/assignments',
+                        name: "assignments",
+                        component: () => import( /* webpackChunkName: "assignments" */ '@/views/quiz/student_assignments.vue'),
+                        meta: {
+                            allowedUsers: ["STUDENT"]
+                        },
+                    },
+
                     //for users
                     {
                         path: '/users',
