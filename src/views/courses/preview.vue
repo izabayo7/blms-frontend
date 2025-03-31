@@ -281,7 +281,7 @@
     <!--      end of student preview-->
 
     <!--      teacher preview-->
-    <div class="teacher" v-if="userCategory === 'INSTRUCTOR' && course">
+    <div class="teacher" v-if="userCategory === 'INSTRUCTOR' || userCategory === 'ADMIN'  && course">
       <div v-if="!isLive" class="teacher instructor_preview">
         <back class="mb-6" to="/courses"/>
         <div class="tabs-container d-flex">
@@ -366,7 +366,7 @@
               </div>
               <div class="actions">
                 <div class="mx-auto">
-                  <div class="tooltip hidden-sm-and-down" @click="
+                  <div v-if="userCategory === 'INSTRUCTOR'" class="tooltip hidden-sm-and-down" @click="
                       course.chapters.length
                         ? $router.push(`/live/schedule`)
                         : undefined
@@ -403,7 +403,7 @@
                       Preview course
                     </div>
                   </div>
-                  <div class="tooltip" @click="
+                  <div v-if="userCategory === 'INSTRUCTOR'" class="tooltip" @click="
                       course.chapters.length
                         ?                       set_modal({
                         template: 'action_confirmation',
@@ -433,7 +433,7 @@
                       {{ course.published ? "Unpublish" : "Publish" }} course
                     </div>
                   </div>
-                  <div class="tooltip" @click="$router.push(`/courses/edit/${course.name}/details`)">
+                  <div v-if="userCategory === 'INSTRUCTOR'" class="tooltip" @click="$router.push(`/courses/edit/${course.name}/details`)">
                     <svg width="51" height="51" viewBox="0 0 51 51" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path
                           d="M25.7248 50.0345C39.4575 50.0345 50.5901 38.9019 50.5901 25.1691C50.5901 11.4363 39.4575 0.303711 25.7248 0.303711C11.992 0.303711 0.859375 11.4363 0.859375 25.1691C0.859375 38.9019 11.992 50.0345 25.7248 50.0345Z"
