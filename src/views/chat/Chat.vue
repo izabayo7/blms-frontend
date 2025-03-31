@@ -41,7 +41,7 @@
               <div></div>
             </div>
           </div>
-          <chat-messaging :data="currentMessages" v-else/>
+          <chat-messaging v-else/>
         </div>
       </div>
       <div
@@ -141,7 +141,7 @@ export default {
       "loadedMessages",
       "incomingMessages",
     ]),
-    ...mapGetters("chat", ["socket", "conversationLoading", "currentMessages"]),
+    ...mapGetters("chat", ["socket", "conversationLoading"]),
   },
   watch: {
     $route() {
