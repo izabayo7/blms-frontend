@@ -2,7 +2,7 @@
   <v-container fluid class="py-0">
     <v-row id="user_profile">
       <cropper :img="img" @change="imageCropped" />
-      <v-col class="col-12 pa-md-16 py-md-6"><h2>General Info {{$vuetify.breakpoint.name}}</h2> </v-col>
+      <v-col class="col-12 pa-md-16 py-md-6"><h2>General Info</h2> </v-col>
       <v-col class="col-12 col-md-6 course-content px-md-6 py-md-0">
         <v-row>
           <v-col class="col-7 mx-auto">

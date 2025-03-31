@@ -20,9 +20,6 @@
         <router-view />
       </div>
     </main>
-    <transition name="error">
-      <error-tooltip v-if="error" />
-    </transition>
   </section>
 </template>
 <script>

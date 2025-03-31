@@ -78,7 +78,7 @@ const routes = [
                 // for chat
                 children: [
                     {
-                        path: '/admin_demo',
+                        path: '/welcome',
                         component: () =>
                             import('@/views/dashboard/new'),
                         meta: {
