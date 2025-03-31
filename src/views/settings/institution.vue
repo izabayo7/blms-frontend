@@ -88,7 +88,7 @@
             <div v-else-if="editStatus[1]" class="current_value">not yet set</div>
             <div v-if="editStatus[1]" class="current_value lable"><span v-if="state.logo">Click on image to update the logo </span>
             </div>
-            <div v-else class="edit">
+            <div v-show="!editStatus[1]" class="edit">
               <div class="actions">
                 <button class="save" @click="saveChanges(1)">Save</button>
                 <button class="cancel"
