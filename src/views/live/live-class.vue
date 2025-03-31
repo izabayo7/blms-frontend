@@ -260,10 +260,8 @@
         <h4 v-if="$store.state.user.user.category.name === 'STUDENT'">
           Discussion Board
         </h4>
-        <kurious-discussion-board
-          v-if="$store.state.user.user.category.name === 'STUDENT'"
-          :host="sender"
-        />
+        <discussion-board v-if="$store.state.user.user.category.name === 'STUDENT'"/>
+
         <kurious-instructor-action-board
           v-else-if="$store.state.user.user.category.name === 'INSTRUCTOR'"
           :participants="room.participants"
@@ -279,9 +277,13 @@ import * as io from "socket.io-client";
 window.io = io;
 import * as RTCMultiConnection from "../../assets/js/RTCMultiConnection.min.js";
 import * as MultiStreamsMixer from "../../assets/js/MultiStreamsMixer.min.js";
+import DiscussionBoard from "../../components/Live/DiscussionBoard";
 
 export default {
   name: "LiveClass",
+  components:{
+    DiscussionBoard
+  },
   data: () => ({
     connection: new RTCMultiConnection(),
     courseName: "Economy Basics",
