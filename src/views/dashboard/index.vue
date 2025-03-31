@@ -14,7 +14,7 @@ export default {
   mixins: [chatMixins],
   computed: {
     ...mapGetters("chat", ["socket"]),
-    ...mapState("sidebar_navbar", {unreads: "total_unread_messages"}),
+    ...mapState("sidebar_navbar", {unreads: "total_unread_messages", assignments: "total_undone_assignments"}),
     ...mapState("chat", ["currentDisplayedUser", "loadedMessages"]),
   },
   methods: {
@@ -37,6 +37,10 @@ export default {
     // listen to new notifications
     this.socket.on("new-notification", ({notification}) => {
       this.addNotification(notification);
+
+      if (notification.notification.content.includes('published a new  assignment')) {
+        this.update_unread({total_assignments: this.assignments + 1})
+      }
     });
 
     this.socket.on("users/online", ({id}) => {
@@ -80,7 +84,7 @@ export default {
 
     // Message from server
     this.socket.on("res/message/new", (message) => {
-      this.update_unread(this.unreads + 1)
+      this.update_unread({number: this.unreads + 1})
       playSound(sound)
       if (this.$route.name === "chatingRoom") {
         //scroll to bottom
