@@ -125,20 +125,19 @@
 </template>
 
 <script>
-import Apis from "@/services/apis";
+import {mapActions,mapGetters} from "vuex";
 
 export default {
   name: "Navbar",
   components: {},
-  computed: {},
-  data: () => ({
-    announcements: undefined,
-  }),
-  methods: {},
+  computed: {
+    ...mapGetters("announcement", ["announcements"]),
+  },
+  methods: {
+    ...mapActions("announcement", ["getAnnouncements"]),
+  },
   async created() {
-    const res = await Apis.get('announcement/user');
-    console.log(res)
-    this.announcements = res.data.data
+    this.getAnnouncements()
   },
 };
 </script>
