@@ -84,7 +84,6 @@ export default {
       const scrollHeight = e.scrollHeight - e.offsetHeight //scrollable length
       const scrollTop = e.scrollTop //current scrolled length
 
-
       //if the are no more space to scroll means we are on bottom
       //send event that all messages read
       if(scrollTop === scrollHeight){
@@ -135,8 +134,14 @@ export default {
 
     //track scroll so that we can determine if use has read new messages
     let scrollableDiv = document.getElementById('my-chat-messaging')
+    console.log(scrollableDiv.offsetHeight,scrollableDiv.scrollTop)
     scrollableDiv.addEventListener('scroll',this.readMessages)
 
+
+    this.$store.getters['chat/socket'].on('message-sent',message => {
+      console.log(message)
+      this.$store.commit('chat/ADD_ONGOING_MESSAGE',message)
+    })
     /*
     when this component is mounted Immediately scroll to the bottom
     the reason we call this function the end is that we need to wait for the all message to be rendered
