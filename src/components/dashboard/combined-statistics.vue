@@ -1,23 +1,38 @@
 <template>
-  <div class="combined-statistics py-6">
-    <div class="d-flex">
-      <div class="selection">
-        <div class="title mb-3">Select data</div>
-        <button class="choice" v-for="(obj, i) in data_categories" :key="i">
+  <div class="combined-statistics pt-6">
+    <div class="row">
+      <div class="selection col-12 col-lg-5">
+        <div class="title mb-6">Select data</div>
+        <button
+          v-for="(obj, i) in data_categories"
+          :key="i"
+          :class="`choice ${obj.name == selected_category ? 'active' : ''}`"
+          @click="selected_category = obj.name"
+        >
           {{ obj.name }}
         </button>
       </div>
-      <div class="result-view mb-3">
+      <div class="result-view mb-3 col-12 col-lg-7">
         <div class="title">User join rate</div>
+        <div class="chart">
+          <chart
+            type="line"
+            class="my-chart ml-n6"
+            width="390px"
+            :options="chartOptions"
+            :series="series"
+          ></chart>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-// import Apexcharts from "vue-apexcharts";
+import Apexcharts from "vue-apexcharts";
 export default {
   data: () => ({
+    selected_category: "",
     data_categories: [
       { name: "User joins" },
       { name: "Course user access" },
@@ -25,38 +40,62 @@ export default {
       { name: "Quizes done" },
       { name: "Live classes attendees" },
     ],
-    series: [44, 55, 13, 33],
+    series: [
+      {
+        name: "Likes",
+        data: [4, 3, 10, 9, 29, 19, 22, 9, 12],
+      },
+    ],
     chartOptions: {
       chart: {
-        width: 380,
-        type: "donut",
+        height: 350,
+        type: "line",
       },
-      dataLabels: {
-        enabled: false,
+      stroke: {
+        width: 4,
+        curve: "smooth",
       },
-      responsive: [
-        {
-          breakpoint: 480,
-          options: {
-            chart: {
-              width: 200,
-            },
-            legend: {
-              show: false,
-            },
+      xaxis: {
+        type: "datetime",
+        categories: [
+          "1/11/2000",
+          "2/11/2000",
+          "3/11/2000",
+          "4/11/2000",
+          "5/11/2000",
+          "6/11/2000",
+          "7/11/2000",
+          "8/11/2000",
+          "9/11/2000",
+        ],
+        tickAmount: 10,
+        labels: {
+          formatter: function (value, timestamp, opts) {
+            return opts.dateFormatter(new Date(timestamp), "dd MMM");
           },
         },
-      ],
-      legend: {
-        position: "right",
-        show: false,
-        offsetY: 0,
-        height: 230,
+      },
+      fill: {
+        type: "solid",
+        colors: ["#193074"],
+      },
+      markers: {
+        size: 4,
+        colors: ["#FFA41B"],
+        strokeColors: "#fff",
+        strokeWidth: 2,
+        hover: {
+          size: 7,
+        },
+      },
+      yaxis: {
+        min: -10,
+        max: 40,
       },
     },
   }),
   components: {
-    // chart: Apexcharts,
+    chart: Apexcharts,
   },
 };
 </script>
@@ -96,6 +135,10 @@ export default {
       text-align: left;
 
       height: 23px;
+      &.active {
+        box-shadow: 0px 0px 5px rgba(25, 48, 116, 0.69);
+        border-radius: 4px;
+      }
     }
   }
   .result-view {
