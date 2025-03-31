@@ -6,7 +6,7 @@
         <div class="lower">Anouncements</div>
       </div>
       <div class="col-8 col-md-6 text-right">
-        <button>
+        <button class="button">
           <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
             <g clip-path="url(#clip0)">
               <path

@@ -1,7 +1,7 @@
 <template>
   <div :class="`kurious-editor ${template}`">
     <div class="editor">
-      <editor-content class="editor__content" :editor="editor" />
+      <editor-content v-if="!inverted" class="editor__content" :editor="editor" />
       <editor-menu-bar
         v-if="mode === 'edit'"
         :editor="editor"
@@ -322,6 +322,7 @@
           </span>
         </div>
       </editor-menu-bar>
+      <editor-content v-if="inverted" class="editor__content" :editor="editor" />
       <editor-menu-bubble
         v-if="mode === 'edit'"
         :editor="editor"
@@ -400,6 +401,9 @@ export default {
     mode: {
       type: String,
       default: "view",
+    },
+    inverted: {
+      type: Boolean
     },
     template: {
       type: String,
