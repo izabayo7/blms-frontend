@@ -18,9 +18,9 @@
             </div>
             <div class="profile-actions">
                 <ul class="actions">
-                    <li class="d-flex"> <div class="icon"> <v-icon>mdi-account</v-icon> </div><div class="content">My Account</div></li>
-                    <li class="d-flex"> <div class="icon"> <v-icon>mdi-chart-box</v-icon> </div><div class="content">Reports</div></li>
-                    <li class="d-flex"> <div class="icon"> <v-icon>mdi-message-bulleted </v-icon> </div><div class="content">Messages</div></li>
+                    <li class="d-flex"> <router-link :to="`/profile/${user.user_name}`"> <div class="icon"> <v-icon>mdi-account</v-icon> </div><div class="content">My Account</div> </router-link> </li>
+                    <li class="d-flex"> <router-link to="/reports"> <div class="icon"> <v-icon>mdi-chart-box</v-icon> </div><div class="content">Reports</div> </router-link></li>
+                    <li class="d-flex"> <router-link to="/messages"> <div class="icon"> <v-icon>mdi-message-bulleted </v-icon> </div><div class="content">Messages</div> </router-link></li>
                 </ul>
             </div>
             <div class="logout d-flex" @click="logout()">
@@ -132,19 +132,25 @@ export default {
                 li{
                     padding:.5rem 0 .5rem .2rem;
                     cursor: pointer;
-                    &:hover{
-                        background-color: $blue-gray;
-                    }
-                    .icon{
-                        padding-right: 2rem;
 
-                        .v-icon{
-                            font-size: 1.2rem;
+                    a{
+                        text-decoration: none;
+                        display: flex;
+                        .icon{
+                            padding-right: 2rem;
+
+                            .v-icon{
+                                font-size: 1.2rem;
+                                color:$font;
+                            }
+                        }
+                        .content{
                             color:$font;
                         }
+
                     }
-                    .content{
-                        color:$font;
+                    &:hover{
+                        background-color: $blue-gray;
                     }
                 }
             }
