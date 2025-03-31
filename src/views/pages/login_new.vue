@@ -235,6 +235,7 @@ export default {
     .logo {
       margin-top: 19px;
       max-width: 100%;
+      max-height: 73px;
     }
     .message {
       font-style: normal;
