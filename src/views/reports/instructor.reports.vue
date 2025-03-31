@@ -35,14 +35,6 @@
             }}</span
           >
         </template>
-        <template v-slot:item.total_submissions="{ item }">
-          <span
-            class="normal--text"
-            >{{
-              item.submissions.length
-            }}</span
-          >
-        </template>
         <!-- display the date of submission -->
         <!-- <template v-slot:item.dateOfSubmission="{ item }">
           <span class="normal--text">{{ item.createdAt | formatDate }}</span>
