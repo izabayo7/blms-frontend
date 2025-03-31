@@ -86,7 +86,7 @@ export default {
             let quizObject = {}
             // set the dialog
             dispatch('modal/set_modal', { template: 'display_information', title: 'Creating _quiz', message: 'Saving information' }, { root: true })
-            return apis.update('quiz', quiz).then(d => {
+            return apis.update('quiz', state.selected_quiz, quiz).then(d => {
                 quizObject = d.data
                 if (pictures.length > 0) {
                     let index = 0

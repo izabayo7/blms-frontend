@@ -2,7 +2,11 @@
   <v-app class="create-quiz-page" v-if="selected_quiz !== undefined">
     <div class="d-flex">
       <span class="quiz_lable">Quiz title</span>
-      <v-text-field v-model="selected_quiz.name" class="quiz_title ml-4 mt-n3" required />
+      <v-text-field
+        v-model="selected_quiz.name"
+        class="quiz_title ml-4 mt-n3"
+        required
+      />
     </div>
     <span class="quiz_lable my-6">Quiz instructions</span>
     <kurious-editor
@@ -138,7 +142,7 @@
     </v-btn>
     <v-row>
       <v-btn class="white--text save-quiz" rounded @click="saveQuiz()"
-        >Save</v-btn
+        >Update quiz</v-btn
       >
       <v-btn color="#707070" class="cancel-quiz" text @click="recreate()"
         >Cancel</v-btn
@@ -156,13 +160,10 @@ export default {
   },
   data: () => ({
     pictures: [[], []],
-    show: false,
-    message: "",
-    modal: true,
     mode: "",
     status: 200,
     name: "",
-    duration: { hh: "00", mm: "00", ss: "00" },
+    duration: {},
     activeQuestion: 0,
     questionTypes: [
       "Open ended",
@@ -183,7 +184,7 @@ export default {
     ...mapGetters("quiz", ["selected_quiz"]),
   },
   methods: {
-    ...mapActions("quiz", ["update_quiz","findQuizByName"]),
+    ...mapActions("quiz", ["update_quiz", "findQuizByName"]),
     addPicture(file, boundIndex) {
       this.pictures[boundIndex].push(file);
       this.questions[boundIndex].options.choices.push({ src: file.name });
@@ -229,7 +230,7 @@ export default {
       }
     },
     addQuestion() {
-      this.selected_quiz.selected_quiz.questions.push({
+      this.selected_quiz.questions.push({
         type: "",
         marks: 0,
         details: "",
@@ -256,10 +257,21 @@ export default {
       const result = seconds + minutes * 60 + hours * 3600;
       return result;
     },
+    to_hh_mm_ss(seconds) {
+      let string = new Date(seconds * 100).toISOString().substr(11, 8);
+      string = string.split(":");
+      return {
+        hh: string[0],
+        mm: string[1],
+        ss: string[2],
+      };
+    },
     async saveQuiz() {
       let questions = [];
       for (const index in this.selected_quiz.questions) {
-        this.selected_quiz.questions[index].type = this.selected_quiz.questions[index].type
+        this.selected_quiz.questions[index].type = this.selected_quiz.questions[
+          index
+        ].type
           .toLowerCase()
           .split(" ")
           .join("-");
@@ -288,14 +300,18 @@ export default {
         this.$router.push("/quiz");
       });
     },
-    created() {
-      this.mode = "edit";
-      this.findQuizByName({
-        userCategory: this.$store.state.user.user.category.toLowerCase(),
-        userId: this.$store.state.user.user._id,
-        quizName: this.$route.params.name,
-      });
-    },
+  },
+  created() {
+    this.mode = "edit";
+    this.findQuizByName({
+      userCategory: this.$store.state.user.user.category.toLowerCase(),
+      userId: this.$store.state.user.user._id,
+      quizName: this.$route.params.name,
+    }).then(() => {
+      setTimeout(() => {
+        this.duration = this.to_hh_mm_ss(this.selected_quiz.duration);
+      }, 1000);
+    });
   },
 };
 </script>
