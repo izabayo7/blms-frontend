@@ -30,7 +30,9 @@ name: "table-action-burner"
       background-color: $bg-one;
       border-radius: 4.2px;
       cursor: pointer;
-
+      &:hover{
+        background-color: darken($bg-one,5);
+      }
       .icon{
         .icon-wrapper{
           svg{
