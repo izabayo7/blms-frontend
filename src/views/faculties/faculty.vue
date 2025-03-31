@@ -63,11 +63,11 @@ name: "Faculty",
   data(){
     return{
       faculties:[
-        {"Faculty Name":"Computer Science","Student groups":4, "Students":124, "Courses":12 ,"Created on":"today"},
-        {"Faculty Name":"Language and arts","Student groups":9, "Students":64, "Courses":4 ,"Created on":"12/12/2020"},
-        {"Faculty Name":"Curious learners","Student groups":3, "Students":13, "Courses":16 ,"Created on":"12/5/2020"},
-        {"Faculty Name":"Communication design","Student groups":5, "Students":34, "Courses":1 ,"Created on":"13/12/2021"},
-        {"Faculty Name":"Computer Science","Student groups":1, "Students":76, "Courses":20 ,"Created on":"3/10/2019"},
+        {"Students groups":"COM DESIGN YEAR 1", "No students":124,"Assigned Instructors":4, "Courses served":12 ,"Created on":"today"},
+        {"Students groups":"COM DESIGN YEAR 2 arts", "No students":64,"Assigned Instructors":9, "Courses served":4 ,"Created on":"12/12/2020"},
+        {"Students groups":"COM DESIGN YEAR 3", "No students":13,"Assigned Instructors":3, "Courses served":16 ,"Created on":"12/5/2020"},
+        {"Students groups":"COM DEVELOP YEAR 1", "No students":34,"Assigned Instructors":5, "Courses served":1 ,"Created on":"13/12/2021"},
+        {"Students groups":"COM SETTING YEAR 1", "No students":76,"Assigned Instructors":1, "Courses served":20 ,"Created on":"3/10/2019"},
       ]
     }
   }
