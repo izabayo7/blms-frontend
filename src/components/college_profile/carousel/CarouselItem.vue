@@ -1,5 +1,5 @@
 <template>
-  <transition :name="transitionEffect">
+  <transition :css="false" :name="transitionEffect">
     <div
       class="carousel-item"
       v-show="currentSlide === index"
@@ -62,6 +62,48 @@ export default {
 .slide-out-leave-to {
   transform: translateX(-100%);
 }
+
+.slides {
+  font-size: 40px;
+  display: flex;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  
+  @media (min-width: 600px) {
+    font-size: 80px;
+  }
+  
+  @media (min-width: 900px) {
+    font-size: 140px;
+  }
+  
+  .animated {
+    transition: all 400ms;
+    position: absolute;
+    transform: translate(-50%, -50%);
+  }
+  
+  .slide-in {
+    opacity: 0;
+    transform: translate(-40%, -50%);
+  }
+  
+  .slide-in-active {
+    transition-delay: 150ms;
+  }
+  
+  .slide-out {
+    opacity: 1;
+  }
+  
+  .slide-out-active {
+    opacity: 0;
+    transform: translate(-60%, -50%);
+  }
+}
+
 .testimony {
   text-align: center;
   img {
