@@ -62,25 +62,26 @@ export default {
     async validate() {
       this.message = "";
       if (this.$refs.loginForm.validate()) {
-        let userCategory = "student";
+        let userCategory ;
+        // = "student";
         const errorMessage = "Invalid Email or Password";
         const credentials = {
           email: this.email.toLowerCase(),
           password: this.password,
         };
-        let response = await Apis.login(userCategory, credentials);
-        if (response.data === errorMessage) {
+        // let response = await Apis.login(userCategory, credentials);
+        // if (response.data === errorMessage) {
           userCategory = "instructor";
-          response = await Apis.login(userCategory, credentials);
-          if (response.data === errorMessage) {
-            userCategory = "admin";
-            response = await Apis.login(userCategory, credentials);
-            if (response.data === errorMessage) {
-              userCategory = "superAdmin";
-              response = await Apis.login(userCategory, credentials);
-            }
-          }
-        }
+          let response = await Apis.login(userCategory, credentials);
+          // if (response.data === errorMessage) {
+            // userCategory = "admin";
+            // response = await Apis.login(userCategory, credentials);
+            // if (response.data === errorMessage) {
+              // userCategory = "superAdmin";
+              // response = await Apis.login(userCategory, credentials);
+            // }
+          // }
+        // }
         if (response.data === errorMessage) {
           this.message = "Invalid passcode or password";
           alert(this.message);
@@ -90,11 +91,11 @@ export default {
           this.$session.set("jwt", response.data);
           this.$store.dispatch("setUser", jwt.decode(this.$session.get("jwt")));
 
-          if (userCategory === "student" || userCategory === "instructor") {
-            this.$router.push({ name: "Courses" });
-          } else {
-            alert("not in mvp");
-          }
+          // if (userCategory === "student" || userCategory === "instructor") {
+          //   this.$router.push({ name: "Courses" });
+          // } else {
+          //   alert("not in mvp");
+          // }
         }
       }
     },

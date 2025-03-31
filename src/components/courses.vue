@@ -147,7 +147,7 @@ export default {
     },
   },
   beforeMount() {
-    this.getEssentials();
+    // this.getEssentials();
     if (this.activeCourses.length === 0) {
       this.type = "published";
     }

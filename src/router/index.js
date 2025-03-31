@@ -36,7 +36,7 @@ const routes = [{
 {
     path: '/kurious',
     component: () =>
-        import('@/views/dashboard'),
+        import('@/views/dashboard/Index-new'),
 
     children: [{
         path: '/courses',
@@ -52,7 +52,7 @@ const routes = [{
         path: '/courses/:id',
         name: 'CourseDetails',
         component: () =>
-            import('@/components/course-details.vue')
+            import('@/views/courses/Course-details-new.vue')
     }, {
         path: '/quiz/new-quiz',
         name: 'Set Quiz',
