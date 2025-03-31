@@ -126,4 +126,21 @@ export default {
     }
   }
 }
+
+/* Portrait phones and smaller */
+@media (max-width: 700px) {
+  .profile {
+    &--user-profile-card {
+      padding: 1rem;
+      &.profile--user-profile-card__2{
+        margin-bottom: 4rem;
+      }
+    }
+    &--wrapper {
+      display: block;
+      justify-content: space-evenly;
+      padding-top: 0rem;
+    }
+  }
+}
 </style>
