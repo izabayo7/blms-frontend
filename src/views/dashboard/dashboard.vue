@@ -17,11 +17,11 @@
   </section>
 </template>
 <script>
-import sidebar from "@/components/Sidebar-new";
-import navbar from "@/components/Navbar-new";
+import sidebar from "@/components/dashboard/Sidebar";
+import navbar from "@/components/dashboard/Navbar";
 
 export default {
-  name: "Sidebar",
+  name: "Dashboard",
   components: {
     sidebar,
     navbar,

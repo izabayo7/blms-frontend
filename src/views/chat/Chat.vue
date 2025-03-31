@@ -70,7 +70,9 @@ export default {
     });
     // Message from server
     this.socket.on("receive-message", (message) => {
+      console.log(message, 'ibuto')
       this.scrollChatToBottom();
+      console.log(message, 'ibuto')
       if (this.loadedMessages.length > 0)
         // if messages have loaded
         this.$store.commit("chat/ADD_INCOMING_MESSAGE", message);

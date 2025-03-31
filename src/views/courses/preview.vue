@@ -601,6 +601,7 @@ button.back {
 
   .preview-card {
     background-color: $main;
+    overflow-wrap: anywhere;
     margin: auto;
     max-width: 80%;
     display: flex;
