@@ -28,7 +28,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr class="table-body-row" v-for="(content,i) in tabularData" :key="`${content}${Date.now()*Math.random()}`">
+          <tr class="table-body-row" @click="rowClicked(content[options.link.paramPropertyName] || null)" v-for="(content,i) in tabularData" :key="`${content}${Date.now()*Math.random()}`">
             <td><div class="select select-one">
               <div class="icon" @click="select(i)">
                 <div class="icon__checked" v-if="selected_all || inSelectedRows(i)">
@@ -54,7 +54,9 @@ export default {
   name: "table-ui",
   props:{
     data:{required:true,type:Array},
-    coloredRows:{default:false,type:Boolean}
+    coloredRows:{default:false,type:Boolean},
+    options:{type:Object},
+
   },
   data(){
     return{
@@ -67,13 +69,28 @@ export default {
   },
   computed:{
     tabHeads(){
-      return Object.keys(this.data[0])
+
+      const {keysToShow} = this.options;
+      console.log(keysToShow)
+      return keysToShow || Object.keys(this.data[0])
     }
   },
   methods:{
     inSelectedRows(idx){
       const selected = new Set(this.selected)
       return selected.has(idx)
+    },
+    rowClicked(id){
+      if(!id)
+        return
+
+      const {link:{routeTo}} = this.options
+
+      const paramTestRegex = /{([a-z0-9])+}/gim
+
+      const link = routeTo.replace(paramTestRegex,id)
+
+      this.$router.push(link)
     },
     selectAll(){
       //if selected all was currently true delete all selected elements to set them to false
