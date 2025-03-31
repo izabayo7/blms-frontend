@@ -1,7 +1,7 @@
 <template>
   <v-app id="reports-page" class="instructor_reports">
     <div class="table-one">
-      <navigation title="Submissions" :links="navigation_links" />
+      <navigation title="Submissions" class="mb-6" :links="navigation_links" />
       <v-data-table
         :headers="submissionHeaders"
         :items="quiz_submissions"
@@ -9,143 +9,51 @@
         sort-by="dateOfSubmission"
         class="data-table"
       >
-        <template v-slot:item.course_name="{ item }">
-          <router-link
+        <template v-slot:item.student_name="{ item }">
+          <span
             class="normal--text d-block"
-            to="/"
             >{{
-              item.target.course.name
-            }}</router-link
-          >
-          <router-link
-            class="normal--text small"
-            to="/"
-            >{{
-              `${item.target.faculty_college_year.faculty_college.faculty.name} year ${item.target.faculty_college_year.college_year.digit}`
-            }}</router-link
-          >
+              item ? 'Uwamariya Jeanette' : ''
+            }}</span >
         </template>
-        <template v-slot:item.chapter_name="{ item }">
-          <router-link
+        <template v-slot:item.date="{ item }">
+          <span
             class="normal--text"
-            to="/"
             >{{
-              item.target.chapter.name
-            }}</router-link
-          >
+              item ? '03/July/2020' : ''
+            }}</span>
         </template>
         <template v-slot:item.total_marks="{ item }">
           <span
             class="normal--text"
-            to="/"
             >{{
-              item.total_marks
+              item ? '12/27' : ''
             }}</span
           >
         </template>
         <template v-slot:item.marking_status="{ item }">
           <span
-            class="normal--text"
+            :class="`normal--text ${guess() ? 'marked' : 'not_marked' }`"
             to="/"
-            >{{
-              item.marking_status
-            }}</span
           >
+            {{ item? guess() ? 'Marked' : 'Not marked' : '' }}
+          </span>
         </template>
-        <template v-slot:item.total_submissions="{ item }">
+        <template v-slot:item.attachments="{ item }">
           <span
             class="normal--text"
             >{{
-              item.submissions.length
+              item? '0' : ''
             }}</span
           >
         </template>
-        <template v-slot:item.actions="{ item }">
-          <v-row class="actions pa-0">
-           <v-col class="pa-0 pr-1 py-1">
-            <v-btn class="white--text" :color="primary" :to="`/submissions/${item.name}`">
-              View submissions
-            </v-btn></v-col>
-            <v-col class="pa-0 pl-1 py-1">
-            <v-btn color="#3CE970" class="white--text" :to="`/submissions/${item.name}`">
-              Release marks
-            </v-btn>
-            </v-col>
-          </v-row>
-        </template>
-        <template v-slot:no-data>
-          <span class="text-h6">Oops You have no submissions.</span>
-        </template>
-      </v-data-table>
-    </div>
-        <div class="table-one">
-      <h3>Classes</h3>
-      <v-data-table
-        :headers="courseHeaders"
-        :items="courses"
-        :items-per-page="5"
-        sort-by="dateOfSubmission"
-        class="data-table courses"
-      >
-        <template v-slot:item.course_name="{ item }">
-          <router-link
-            class="normal--text d-block"
-            to="/"
-            >{{
-              item.name
-            }}</router-link
-          >
-        </template>
-        <template v-slot:item.student_group="{ item }">
-          <router-link
-            class="normal--text"
-            to="/"
-            >{{
-              `${item.faculty_college_year.faculty_college.faculty.name} year ${item.faculty_college_year.college_year.digit}`
-            }}</router-link
-          >
-        </template>
-        <template v-slot:item.total_students="{ item }">
-          <span
-            class="normal--text semi_bold_text"
-            to="/"
-            >{{
-              item.attendedStudents
-            }}</span
-          >
-        </template>
-        <template v-slot:item.last_updated="{ item }">
-          <span
-            class="normal--text semi_bold_text"
-            to="/"
-            >{{
-              item.updatedAt | formatDate
-            }}</span
-          >
-        </template>
-        <template v-slot:item.evaluations="{ item }">
-          <span
-            class="normal--text semi_bold_text"
-            >200 Marks{{
-              '' + item ? '' : 'nope'
-            }}</span
-          >
-        </template>
-        <template v-slot:item.success_rate="{ item }">
-          <span
-            class="normal--text semi_bold_text"
-            >65%{{
-              '' + item ? '' : 'nope'
-            }}</span
-          >
-        </template>
-        <template v-slot:item.actions="{ item }">
-          <v-row class="actions pa-0">
-           <v-col class="pa-0 py-1">
-            <v-btn class="white--text" :color="primary" :to="`/submissions/${item.name}`">
-              Make announcement
-            </v-btn></v-col>
-          </v-row>
+        <template v-slot:item.feedback="{ item }">
+          <span class="normal--text">
+            {{item ? 1 : 8}} 
+          </span>
+<svg xmlns="http://www.w3.org/2000/svg" width="21.214" height="21.214" viewBox="0 0 21.214 21.214">
+  <path id="Icon_material-feedback" data-name="Icon material-feedback" d="M22.092,3H5.121A2.119,2.119,0,0,0,3.011,5.121L3,24.214l4.243-4.243h14.85a2.128,2.128,0,0,0,2.121-2.121V5.121A2.128,2.128,0,0,0,22.092,3ZM14.668,15.728H12.546V13.607h2.121Zm0-4.243H12.546V7.243h2.121Z" transform="translate(-3 -3)" fill="#fc6767"/>
+</svg>
         </template>
         <template v-slot:no-data>
           <span class="text-h6">Oops You have no submissions.</span>
@@ -168,54 +76,40 @@ export default {
     submissionHeaders() {
       return [
         {
-          text: "Courses",
+          text: "Name",
           align: "start",
           sortable: false,
-          value: "course_name",
+          value: "student_name",
         },
         {
-          text: "Chapter",
-          value: "chapter_name",
+          text: "Date",
+          value: "date",
+          align: "center"
         },
         {
-          text: "Submissions",
-          value: "total_submissions",
+          text: "Attachments",
+          value: "attachments",
+          align: "center"
         },
+        { text: "Status", value: "marking_status", align: "center" },
         {
-          text: "Maximum Marks",
+          text: "Marks",
           value: "total_marks",
+          align: "center"
         },
-        { text: "Marking status", value: "marking_status", align: "center" },
-        { text: "", value: "actions", align: "center", sortable: false, },
-      ];
-    },
-    courseHeaders() {
-      return [
-        {
-          text: "Course name",
-          align: "start",
-          sortable: false,
-          value: "course_name",
-        },
-        {
-          text: "Students group",
-          value: "student_group",
-        },
-        {
-          text: "Students",
-          value: "total_students",
-        },
-        {
-          text: "Last Updated",
-          value: "last_updated",
-        },
-        { text: "Evaluations", value: "evaluations", align: "center" },
-        { text: "Success rate", value: "success_rate", align: "center" },
-        { text: "", value: "actions", align: "center", sortable: false, },
+        { text: "Feedback", value: "feedback", align: "center", sortable: false, },
       ];
     },
     navigation_links(){
       return [
+        {
+          text: 'reports',
+          link: "/reports",
+        },
+        {
+          text: 'course',
+          link: "/reports/" + this.$route.params.target,
+        },
         {
           text: this.$route.params.target,
           link: "/reports/" + this.$route.params.target,
@@ -226,7 +120,6 @@ export default {
     userCategory() {
       return this.$store.state.user.user.category.name;
     },
-    ...mapGetters("courses", ["courses"]),
     ...mapGetters("quiz_submission", ["quiz_submissions"]),
     // only display courses we started
     activeCourses() {
@@ -234,14 +127,12 @@ export default {
     },
   },
   methods: {
-    ...mapActions("courses", ["getCourses"]),
     ...mapActions("quiz_submission", ["getQuizSubmissions"]),
+    guess(){
+      return Math.random() > Math.random()
+    }
   },
   created() {
-    //get courses on page load
-    this.getCourses({
-      user_name: this.$store.state.user.user.user_name,
-    });
     //get submissions on page load
     this.getQuizSubmissions({
       user_name: this.$store.state.user.user.user_name,
@@ -257,6 +148,12 @@ export default {
     font-weight: 500;
     &.small{
       font-size: 12px;
+    }
+    &.marked{
+      color: #3CE970;
+    }
+    &.not_marked{
+      color: #FC6767;
     }
   }
   .data-table{
