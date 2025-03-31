@@ -14,6 +14,9 @@
         <router-view />
       </div>
     </main>
+    <transition name="error">
+      <error-tooltip v-if="error" />
+    </transition>
   </section>
 </template>
 <script>
@@ -25,7 +28,13 @@ export default {
   components: {
     sidebar,
     navbar,
+    ErrorTooltip:() => import('@/components/reusable/ErrorTooltip')
   },
+  data(){
+    return{
+      error:false
+    }
+  }
 };
 </script>
 <style lang="scss">
@@ -57,5 +66,13 @@ export default {
       overflow-x: hidden;
     }
   }
+}
+.error-enter-active, .error-leave-active{
+  transition:.3s ease-in-out;
+}
+
+.error-enter, .error-leave-to{
+  opacity: 0;
+  transform: translateY(100px);
 }
 </style>
