@@ -26,7 +26,7 @@
           }}</span>
         </template>
         <template v-slot:item.marking_satus="{ item }">
-          {{ item.marking_status }}
+          {{ Math.round(item.marking_status.split('%')[0]) }}%
         </template>
         <!-- display the grades -->
         <template v-slot:item.unread_results="{ item }">
