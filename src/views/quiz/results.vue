@@ -2,35 +2,38 @@
   <v-container fluid class="quiz_results_page white px-lg-16">
     <back class="mt-0 mb-6 ml-lg-n6" />
     <v-row>
-      <div class="col-12 title ml-2 mt-5">
-        {{ "Quiz name" }}
-        <br />
+      <div class="col-12 ml-2 mt-5">
+        <div class="title">{{ "Quiz name" }}</div>
       </div>
-      <!-- <div class="title ml-2 mt-5">
-        {{ "Attempt Failed" }}
-      </div> -->
       <v-col class="col-12 col-md-7">
-        <div v-if="$route.fullPath == '/quiz/timeout'" class="mt-8 text_1">
-          Your assessment time is up , all your answers have been saved and
-          submitted successfuly
-        </div>
-        <div v-else class="mt-8 text_1">
-          All your answers have been saved and submitted successfuly
+        <div class="failed_test">{{ "Attempt Failed" }}</div>
+        <div class="mt-3 d-flex marks_container">
+          <div class="mr-12 label">Your score is</div>
+          <div class="marks">{{ "08 / 20" }}</div>
         </div>
         <div class="actions mt-8">
           <button
-            v-if="course"
             class="start_quiz"
             @click="$router.push(`/courses/${course.name}`)"
           >
-            Continue course
+            Retry Now
           </button>
           <button
             :class="`start_quiz grey ${!isInstructor ? 'ml-6' : ''}`"
             @click="$router.push('/reports')"
           >
-            Open reports
+            Go to course
           </button>
+        </div>
+        <div v-if="$route.fullPath == '/quiz/timeout'" class="mt-8 text_1">
+          <div>The pass mark is 10/20</div>
+          <div>You have 1 Attempt left</div>
+        </div>
+        <div v-else class="mt-8 text_1">
+          <div>The pass mark is 10/20</div>
+          <div>
+            You have <b>{{ "1" }}Attempt</b> left
+          </div>
         </div>
       </v-col>
       <v-col class="col-12 col-md-5">
@@ -344,7 +347,22 @@ export default {
 .quiz_results_page {
   .title {
     color: black;
+    font-size: 2rem !important;
+  }
+  .failed_test {
+    color: #f54040;
     font-size: 2.5rem !important;
+  }
+  .marks_container {
+    .label {
+      font-size: 1.5rem;
+      color: black !important;
+    }
+    .marks {
+      font-size: 1.8rem;
+      font-weight: 500;
+      color: black !important;
+    }
   }
   .head_icon {
     text-align: center;
