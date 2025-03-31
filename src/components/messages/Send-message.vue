@@ -171,7 +171,7 @@ export default {
       msg: "",
       files: [],
       recording: false,
-      recordingMode: true
+      recordingMode: false
     };
   },
   components: {
@@ -208,7 +208,7 @@ export default {
       //after sending message let us make the div empty
       this.$refs["input"].textContent = "";
       this.p("Type something..");
-
+      this.msg = ""
       //emit that we are message sent
       emit("message-sent");
       // console.log(this.$store.state.chat.incomingMessages)
