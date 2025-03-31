@@ -128,20 +128,15 @@ export default {
         this.maximumIndex = total_chapters - 1;
         this.activeIndex = 0;
       } else {
-        this.maximumIndex = Math.round(
-          (course.progress.progress * total_chapters) / 100
-        );
+        this.maximumIndex = Math.round((course.progress.progress * total_chapters) / 100);
         if (this.maximumIndex > total_chapters - 1) {
           this.maximumIndex = total_chapters - 1;
         }
       }
-      this.$router.push(
-        `/courses/${this.$route.params.name}/chapter/0/${course.chapters[0]._id}`
-      );
-      this.$store.commit(
-        "courses/set_selected_chapter",
-        course.chapters[0]._id
-      );
+
+      this.$router.push(`/courses/${this.$route.params.name}/chapter/0/${course.chapters[this.maximumIndex]._id}`);
+      this.$store.commit("courses/set_selected_chapter", course.chapters[0]._id);
+
     });
   },
 };
