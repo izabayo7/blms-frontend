@@ -68,7 +68,11 @@ name: "FacultyIndex",
     }
   },
   created(){
-    this.$router.replace({path:`/faculties/${this.facultyId}/details`})
+
+    // only route when we are not on children routes
+    if(this.$route.path.split("/").length < 3){
+      this.$router.replace({path:`/faculties/${this.facultyId}/details`})
+    }
   }
 }
 </script>
