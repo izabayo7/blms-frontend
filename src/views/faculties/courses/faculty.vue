@@ -34,7 +34,7 @@
         </div>
       </div>
       <div class="tabular-users">
-        <div class="table-wrapper mt-6">
+        <div class="table-wrapper mt-6" v-if="courses.length > 0">
 
 <!--          table header-->
           <div class="table-header">
@@ -43,7 +43,7 @@
 
 <!--          list of courses in table form-->
           <div class="table">
-            <table-ui :data="courses"/>
+            <table-ui :options="options" :data="courses"/>
           </div>
         </div>
       </div>
@@ -56,6 +56,7 @@ import Search from "../../../components/reusable/Search2";
 import TableHeader from "../../../components/reusable/ui/table-header";
 import TableUi from "../../../components/reusable/ui/table-ui";
 import apis from "../../../services/apis";
+import moment from "moment";
 
 export default {
   //TODO using dynamic instructors from backend
@@ -64,13 +65,10 @@ name: "FacultyCourses",
   data(){
     return{
       faculty:{},
-      courses:[
-        {"Course_name":"Computer Science", "Status":"ongoing", "Students":20,"Topics":13, "Marks":80,"CreatedAt":"20 feb 2020"},
-        {"Course_name":"Innactive Neurones", "Status":"ongoing", "Students":10,"Topics":29, "Marks":100,"CreatedAt":"20 feb 2020"},
-        {"Course_name":"Law and Arts", "Status":"onhold", "Students":30,"Topics":39, "Marks":90,"CreatedAt":"20 feb 2020"},
-        {"Course_name":"Humaniology", "Status":"ongoing", "Students":20,"Topics":6, "Marks":100,"CreatedAt":"20 feb 2020"},
-        {"Course_name":"Codiology", "Status":"ongoing", "Students":10,"Topics":3, "Marks":80,"CreatedAt":"20 feb 2020"},
-      ]
+      courses:[],
+      options:{
+        keysToShow:[ "name",  "published",  "status",  "updatedAt",  "createdAt"]
+      }
     }
   },
   methods:{
@@ -86,8 +84,33 @@ name: "FacultyCourses",
         })
     },
 
+    getFacultyCourses(){
+      const {facultyId} = this.$route.params;
+      let filteredCourses = [];
+
+      apis.get(`course/faculty/${facultyId}`)
+        .then(({data:{data}}) => {
+
+           data.map(course => {
+
+            course.createdAt = moment(course.createdAt).format("DD MMM  YYYY")
+            course.updatedAt = moment(course.updatedAt).format("DD MMM YYYY")
+            //TODO finalising courses
+
+            filteredCourses.push(course)
+          })
+
+          console.log(filteredCourses)
+
+          this.courses = filteredCourses;
+           console.log(this.courses)
+        })
+
+      console.log(this.courses)
+    }
   },
-  created(){
+  mounted(){
+    this.getFacultyCourses();
     this.getFacultyInformation();
   }
 }
