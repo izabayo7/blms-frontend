@@ -481,6 +481,10 @@ export default {
         selectedCourse: state => {
             return state.selectedCourse
         },
+        //get the selected chapter
+        selectedChapter: state => {
+            return state.selectedChapter
+        },
         //get all courses
         courses: state => {
             return state.courses.data
