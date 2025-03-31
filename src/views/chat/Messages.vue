@@ -21,7 +21,7 @@
                   />
                 </svg>
               </div>
-              <div class="new-chat icon px-2">
+              <div class="new-chat icon px-2" @click="$router.push('/messages/start-conversation')">
                 <svg
                   id="chat-new-line"
                   xmlns="http://www.w3.org/2000/svg"
