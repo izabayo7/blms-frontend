@@ -26,7 +26,7 @@
           <span class="normal--text" to="/">{{ item.total_marks }}</span>
         </template>
         <template v-slot:item.marking_status="{ item }">
-          <span class="normal--text" to="/">{{ item.marking_status }}</span>
+          <span class="normal--text" to="/">{{ Math.round(item.marking_status.split('%')[0]) }}%</span>
         </template>
         <template v-slot:item.total_submissions="{ item }">
           <span class="normal--text">{{ item.submissions.length }}</span>
