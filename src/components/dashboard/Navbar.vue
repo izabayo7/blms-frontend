@@ -1,6 +1,10 @@
 <template>
   <div class="my-navbar row">
-    <div class="col-6 py-0 col-md-3 d-flex top-left-contents">
+    <div
+      :class="`col-6 py-0 col-md-${
+        showCreateCourseButton ? '7' : '8'
+      } d-flex top-left-contents`"
+    >
       <div class="toggle ml-2 my-auto">
         <button class="toogle" @click="toggle">
           <svg
@@ -159,13 +163,14 @@ export default {
   // box-shadow: 10px 0 10px 0 $secondary;
   width: 100%;
   display: flex;
+      max-height: 69px;
   padding: 0 !important;
   z-index: 100;
   .top-left-contents div {
-    width: 20%;
+    width: 10%;
   }
   .top-left-contents div:nth-child(2) {
-    width: 80%;
+    // width: 80%;
   }
   .my-search,
   .notification,
