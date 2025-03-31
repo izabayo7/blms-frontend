@@ -62,7 +62,7 @@ export default {
 
     //handle errors
     this.socket.on("error", (error) => {
-      console.log(error);
+      console.log("ikibazo broda", error);
       // alert(error);
     });
   },

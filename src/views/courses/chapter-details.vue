@@ -7,9 +7,9 @@
           class="col-12 col-md-8 pt-0"
           id="video"
       >
-<!--
-wrong date in recorder
--->
+        <!--
+        wrong date in recorder
+        -->
         <vue-plyr>
           <video
               :src="recorded_video == '' ? `${
@@ -22,17 +22,17 @@ wrong date in recorder
     <v-row>
       <v-col class="col-12 col-md-8">
         <!-- <span v-if="course !== undefined">{{course.name}}</span> -->
-        <v-tabs background-color="white" color="#ffd248" right>
-          <v-tab id="content-tab">
+        <v-tabs v-if="selectedTab == 0 || selectedTab == 1" background-color="white" color="#ffd248" right v-model="selectedTab">
+          <v-tab :key="0" id="content-tab">
             <v-icon class="mx-2">mdi-book-open-variant</v-icon>
             Chapter
           </v-tab>
-          <v-tab>
+          <v-tab :key="1">
             <v-icon class="mx-2">mdi-chat-outline</v-icon>
             Discussions
             {{ totalComments }}
           </v-tab>
-          <v-tab>
+          <v-tab :key="2">
             <v-icon class="mx-2">mdi-file-download-outline</v-icon>
             Downloads
           </v-tab>
@@ -236,6 +236,7 @@ export default {
       activeIndex: -1,
       editorContent: undefined,
       maximumIndex: -1,
+      selectedTab: -1,
       primary: colors.primary,
       chapters: [],
       recorded_video: ""
@@ -371,7 +372,11 @@ export default {
     next();
   },
   created() {
+    console.log(this.$route.query)
     this.immediateFunction();
+  },
+  beforeMount() {
+    this.selectedTab = this.$route.query.tab == 'discussion' ? 1 : 0
   },
   mounted() {
     this.chapters = this.course.chapters.map((x) => x._id);

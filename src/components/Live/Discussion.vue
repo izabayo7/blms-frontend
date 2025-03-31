@@ -1,6 +1,6 @@
 <template>
   <div class="my-discussion">
-    <div class="my-discussion-container">
+    <div class="my-discussion-container" :id="content._id">
       <div class="left">
         <div class="avatar">
           <v-avatar :size="30" class="a_avatar">
@@ -86,7 +86,7 @@
             </div>
           </div>
           <div class="reply-comment mt-3" v-else>
-            <new-reply-comment :reply_id="content._id" @sent="replied" :isLive="isLive"/>
+            <new-reply-comment :commenter="content.sender.user_name" :reply_id="content._id" @sent="replied" :isLive="isLive"/>
           </div>
         </div>
       </div>

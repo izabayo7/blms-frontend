@@ -20,7 +20,7 @@
         <div class="customScroll">
           <div class="head">Notifications</div>
           <!-- when there is no notification -->
-          <div class="n_item">
+          <div v-if="!notifications.length" class="n_item">
             You have no notifications
           </div>
           <!-- notification item -->
@@ -67,7 +67,7 @@ export default {
       if (this.notifications.length > 0) {
         for (const i in this.notifications) {
           notifications.push({
-            name: `${this.notifications[i].notification.doer.surName} ${this.notifications[i].notification.doer.otherNames}`,
+            name: `${this.notifications[i].notification.user.sur_name} ${this.notifications[i].notification.user.other_names}`,
             msg: this.notifications[i].notification.content,
             time: this.notifications[i].notification.createdAt,
             link: this.notifications[i].notification.link,

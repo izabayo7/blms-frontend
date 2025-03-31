@@ -1,4 +1,5 @@
 import apis from "@/services/apis";
+
 const getDefaultState = () => ({
     // storage for all notifications
     notifications: {
@@ -12,7 +13,8 @@ export default {
     state: getDefaultState,
     mutations: {
         addNotification(state, value) {
-            state.notifications.data.unshift(value)
+            if (state.notifications.data.indexOf(value) < 0)
+                state.notifications.data.unshift(value)
         },
         RESET_STATE(state) {
             Object.assign(state, getDefaultState())
@@ -20,7 +22,7 @@ export default {
     },
     actions: {
         //get notifications from backend
-        getNotifications({ state }) {
+        getNotifications({state}) {
             // when faculty college years not loaded fetch them
             if (!state.notifications.loaded) {
                 apis.get(`user_notification/user`).then(d => {

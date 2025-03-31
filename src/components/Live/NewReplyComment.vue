@@ -46,6 +46,7 @@ export default {
   name: "NewReplyComment",
   props: {
     reply_id: {required: true},
+    commenter: {type: String},
     isLive: {
       type: Boolean,
       default: false
@@ -80,6 +81,11 @@ export default {
       try {
         if (!this.isLive) {
           let {data} = await api.create('comment', this.reply_comment_object)
+
+          this.socket.emit('comment-replied', {
+            userName: this.commenter,
+            route: this.$route.path + this.reply_id + '?tab=discussion'
+          })
           this.$emit('sent', {_id: this.reply_id, data: data.data})
           this.reply_comment = ""
         } else {
