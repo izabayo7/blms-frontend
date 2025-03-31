@@ -1381,6 +1381,13 @@ export default {
   }
   ,
   watch: {
+    presenter_id() {
+      if (this.presenter_id != undefined && this.me) {
+        console.log('tumusanzemo wlh')
+        this.presenterChanged(this.presenter_id)
+        this.presenter_id = undefined
+      }
+    },
     videoEnabled() {
       this.noVideo = !this.videoEnabled
     },
