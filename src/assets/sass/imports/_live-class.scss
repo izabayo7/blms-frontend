@@ -610,6 +610,10 @@
             height: 100%;
             display: grid;
             place-content: center;
+            &.aside{
+              justify-content: left;
+              padding-left: 10%;
+            }
 
             &--wrapper {
               .avatar {

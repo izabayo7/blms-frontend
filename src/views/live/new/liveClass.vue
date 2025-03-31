@@ -13,6 +13,7 @@
                  @mouseenter="toggleMenu(true)"
                  @mouseleave="toggleMenu(false)">
               <div class="no-video"
+                   :class="{'aside' : !$vuetify.breakpoint.mobile && showComments}"
                    v-show="(noVideo && !isPresenting) || (isPresenting && participationInfo.isOfferingCourse && (currentPresenter ? currentPresenter._id == me.userInfo._id:true))">
                 <div class="no-video--wrapper" :class="{presenting:isPresenting}">
                   <div v-if="isStudentPresenting || (currentPresenter ? currentPresenter.category == 'STUDENT': false)"
