@@ -92,7 +92,7 @@
                         <div class="profile">
                           <img
                               v-if="currentPresenter ? currentPresenter.profile : instructor.profile"
-                              :src="currentPresenter ? currentPresenter.profile : instructor.profile + '?width=100'"
+                              :src="currentPresenter ? currentPresenter.profile + '?width=100' : instructor.profile + '?width=100'"
                               alt="profile picture" class="picture">
                           <v-avatar v-else class="avatar">
                             {{ (currentPresenter ? currentPresenter.sur_name : instructor.sur_name) | computeText }}
