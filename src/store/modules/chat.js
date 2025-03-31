@@ -187,15 +187,13 @@ export default {
                 time: msg.createdAt
             }
 
-            console.log('message',msg)
-
             // find the index of the incoming message
             state.incomingMessages.map((val, i) => {
-                console.log(val.id ,id)
                 if (val.id === id) idx = i
             })
 
-            console.log(idx)
+            console.log('id',idx)
+            console.log(state.incomingMessages.splice(idx, 1))
             if (idx) {
                 state.incomingMessages.splice(0, 0, state.incomingMessages.splice(idx, 1)[0])
                 state.incomingMessages[0].last_message = message
@@ -212,7 +210,6 @@ export default {
             let lastMessage;
             let lastGroupedMessageIndex;
             let userIndex;
-
 
             state.loadedMessages.map((conversation, index) => {
                 if (conversation.username === id) {
@@ -314,6 +311,7 @@ export default {
 
         },
 
+        //to get index of user in incoming/received contacts
         findIndexOfUserInIncomingMessages({ state }, id) {
             let index = null;
             state.incomingMessages.map((message, idx) => {
