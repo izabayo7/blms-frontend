@@ -1,6 +1,6 @@
 <template>
     <div class="my-profile-card">
-        <div class="profile-card-container">
+        <div class="profile-card-container ">
             <div class="profile-information d-flex">
                 <div class="profile-pic">
                     <img @click="logout" v-if="user.profile" :src="user.profile" alt="profile picture"/>
@@ -71,12 +71,32 @@ export default {
 <style lang="scss" scoped>
 .profile-card{
     .profile-card-container{
+        position: relative;
         background-color: $main;
         padding: 1rem;
+        height: 20rem;
+        display: flex;
+        flex-direction: column;
+        border-radius: 10px;
+        box-shadow: 0 0 10px darken($blue-gray,5);
+
+        &:after{
+            position: absolute;
+            content: '';
+            width: 1.5rem;
+            height: 1.5rem;
+            background-color: $main;
+            transform: rotate(45deg);
+            bottom: 96%;
+            left: 75%;
+            box-shadow: -4px -4px 3px -1px darken($blue-gray,2);
+        }
 
         .profile-information{
             justify-content: center;
             align-items: center;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid lighten($font,30);
 
             .profile-pic{
                 .v-avatar{
@@ -104,12 +124,17 @@ export default {
         }
 
         .profile-actions{
+            padding-top: 1rem;
+            flex-grow: 1;
             ul{
                 padding:0;
 
                 li{
-                    padding:.5rem 0;
-
+                    padding:.5rem 0 .5rem .2rem;
+                    cursor: pointer;
+                    &:hover{
+                        background-color: $blue-gray;
+                    }
                     .icon{
                         padding-right: 2rem;
 
@@ -122,6 +147,25 @@ export default {
                         color:$font;
                     }
                 }
+            }
+        }
+
+        .logout{
+            padding:.5rem 0 .5rem .2rem;
+            cursor: pointer;
+            &:hover{
+                background-color: lighten($danger,25);
+            }
+            .icon{
+                padding-right: 2.5rem;
+
+                svg{
+                    fill:$font;
+                    transform: scale(1.1);
+                }
+            }
+            .content{
+                color:$font;
             }
         }
 
