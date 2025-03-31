@@ -2,10 +2,10 @@
 <div class="my-table">
   <div class="table-container">
     <div class="table-wrapper">
-      <table :class="{'colored-rows':coloredRows}">
+      <table :class="{'colored-rows':options.coloredRows}">
         <thead>
           <tr>
-            <th><div class="select select-all">
+            <th><div class="select select-all" v-if="options.showSelect">
               <div class="icon" @click="selectAll">
                 <div class="icon__checked " v-if="selected_all">
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"/><path d="M4 3h16a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zm7.003 13l7.07-7.071-1.414-1.414-5.656 5.657-2.829-2.829-1.414 1.414L11.003 16z"/></svg>
@@ -29,7 +29,7 @@
         </thead>
         <tbody>
           <tr class="table-body-row" @click="rowClicked(content[options.link.paramPropertyName] || null)" v-for="(content,i) in tabularData" :key="`${content}${Date.now()*Math.random()}`">
-            <td><div class="select select-one">
+            <td><div class="select select-one" v-if="options.showSelect">
               <div class="icon" @click="select(i)">
                 <div class="icon__checked" v-if="selected_all || inSelectedRows(i)">
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"/><path d="M4 3h16a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zm7.003 13l7.07-7.071-1.414-1.414-5.656 5.657-2.829-2.829-1.414 1.414L11.003 16z"/></svg>
@@ -52,11 +52,26 @@
 //TODO auto flexible column based on length of data [liberi]
 import S from 'string'
 
+
+/**
+ * Table ui
+ *
+ * @props
+ * - data:array of object elements to be displayed in table
+ *
+ * - options:
+ *    - coloredRows: Boolean, if you want colored nth(even) child rows
+ *    - link : Object, {
+ *                routeTo: link to route to , it may contain `{var}` as a param id which will be replaced by paramPropertyId
+ *                paramPropertyName: name of the property in data to replace `{var}` in link
+ *          } => specifies where user will go when he click on a row
+ *     - showSelect: Boolean, if you want to select feature
+ *     - keysToShow: Array, list of properties that are in data to be shown in table
+ */
 export default {
   name: "table-ui",
   props:{
     data:{required:true,type:Array},
-    coloredRows:{default:false,type:Boolean},
     options:{type:Object},
 
   },
