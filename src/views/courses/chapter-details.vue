@@ -80,7 +80,7 @@
                   >
                 </v-col>
                 <v-col class="col-12">
-                  <v-row>
+                  <v-row class="mb-12 mb-md-0">
                     <v-col class="col-6">
                       <v-btn
                           v-if="activeIndex > 0"
