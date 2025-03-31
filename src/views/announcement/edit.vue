@@ -161,7 +161,7 @@
             :inverted="true"
             :defaultContent="announcement.content"
         />
-        <div class="actions">
+        <div class="actions mb-12 mb-md-0">
           <button class="button" @click="validate">Save</button>
           <button class="cancel button mx-auto" @click="$router.push('/announcements')">Cancel</button>
         </div>
