@@ -29,7 +29,7 @@ export default {
     .notification,
     .profile{
         padding:.4rem;
-        justify-content: center;
+        // justify-content: center;
         align-items: center;
     }
 

@@ -1,5 +1,5 @@
 <template>
-  <v-dialog id="kurious--dialog" v-model="show" :persistent="modal" max-width="70%">
+  <v-dialog id="kurious--dialog" v-model="visible" :persistent="modal">
     <div class="round">
       <v-card class="text-center pa-12">
         <v-avatar
@@ -40,9 +40,20 @@ export default {
       type: String,
     },
   },
+  // compute the variable that determines the visibility of the dialog
+  computed: {
+    visible() {
+      return this.show;
+    },
+  },
 };
 </script>
 <style lang="scss">
+.v-dialog:not(.v-dialog--fullscreen) {
+  max-height: 260px !important;
+  max-width: 36% !important;
+  border-radius: 22px !important;
+}
 .v-dialog.v-dialog--active {
   border-radius: 56px;
 }

@@ -6,8 +6,6 @@
 </template>
 
 <script>
-import axios from "axios";
-import jwt from "jsonwebtoken";
 export default {
   name: "App",
   beforeCreate: async function () {

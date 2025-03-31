@@ -1,5 +1,5 @@
 header#navbar {
-    // margin-left: 15% !important;
+    left: 0% !important;
     padding: 20px;
     height: 63px !important;
     background-color: #f8f8f8;
@@ -15,6 +15,19 @@ header#navbar {
 }
 
 #nav-icons {
+    margin-top: -8px;
+}
+
+.theme--light.v-text-field--filled>.v-input__control>.v-input__slot {
+    background-color: #fff;
+}
+
+.user-profile {
+    margin-top: -10px;
+}
+
+.v-avatar {
+    background-color: #fff;
     margin-top: -8px;
 }
 

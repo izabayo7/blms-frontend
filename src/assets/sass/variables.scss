@@ -2,6 +2,16 @@ $color-black: #000000;
 $color-white: #ffffff;
 $color-grey: #dddddd;
 
+$color-one: #ffd248;
+$bg-one: #f9faff;
+
+.bg-one{
+    background-color: $bg-one;
+}
+.bg-color-one{
+    background-color: $color-one !important   ;
+}
+
 .smooth--background{
     background-color: #F9FAFF !important;
 }
