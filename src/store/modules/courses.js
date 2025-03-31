@@ -45,7 +45,8 @@ export default {
                         name: '',
                         description: '',
                         quiz: [],
-                        attachments: []
+                        attachments: [],
+                        status: 1
                     })
                 }
             }
