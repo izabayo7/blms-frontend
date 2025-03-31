@@ -63,6 +63,7 @@ const routes = [
                         path: '/messages',
                         component: () => import('@/views/chat/Messages.vue'),
                         children: [
+                            { path: '/messages/group/:id', component: () => import('@/views/chat/GroupSetting') },
                             { path: '/messages/:username', component: () => import('@/views/chat/Chat.vue') }
                         ]
                     },
