@@ -30,7 +30,7 @@
         </v-card>
       </v-col>
       <v-col class="col-12 mt-4">
-        <v-card class="users-table mx-auto">
+        <v-card class="users-table mx-auto pa-4">
           <v-card-title>
             <v-row>
               <v-col class="col-12 col-md-2 py-0 px-md-6 px-10">Users</v-col>

@@ -10,7 +10,7 @@
         </div>
       </div>
     </div>
-    <div class="hidden-sm-and-down row">
+    <div class="hidden-sm-and-down row mt-0">
       <div
         :class="`col-6 py-0 col-md-${
           showCreateCourseButton ? '7' : '8'
