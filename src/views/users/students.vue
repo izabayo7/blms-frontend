@@ -112,7 +112,7 @@
                         @mouseleave="mouseOutPic($event,'user-profile-card')">{{ user.sur_name }} {{ user.other_names }}
                     </td>
                     <td>{{ user.gender }}</td>
-                    <td>
+                    <td v-if="$store.state.sidebar_navbar.college.users_verification_link">
                       <div :class="`payment-status ${user.paid ? 'paid' : 'pending'}`">
                         {{user.paid ? "Paid" : "Pending"}}
                       </div>
@@ -158,6 +158,19 @@ export default {
       }
       return res;
     },
+    options(){
+      const options = {
+        coloredRows: false,
+        link: {
+          routeTo: '/users/{id}',
+          paramPropertyName: 'user_name'
+        },
+        keysToShow: this.$store.state.sidebar_navbar.college.users_verification_link ?  [" ", "User name", "Gender","Payment status", "Course progress", "Perfomance (%)", "Attendace"] :  [" ", "User name", "Gender", "Course progress", "Perfomance (%)", "Attendace"],
+      }
+
+          // $store.state.sidebar_navbar.college.users_verification_link
+      return options
+    }
   },
   watch: {
     selected_course() {
@@ -234,14 +247,6 @@ export default {
       statistics: undefined,
       selected_course: undefined,
       selected_users: new Set([]),
-      options: {
-        coloredRows: false,
-        link: {
-          routeTo: '/users/{id}',
-          paramPropertyName: 'user_name'
-        },
-        keysToShow: [" ", "User name", "Gender","Payment status", "Course progress", "Perfomance (%)", "Attendace"],
-      },
     }
   }
 }
