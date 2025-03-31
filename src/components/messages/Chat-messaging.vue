@@ -77,6 +77,19 @@ export default {
     msgGoing(owner) {
       return owner && owner.toLowerCase() === "me";
     },
+    //read messages
+    readMessages(e){
+      const scrollHeight = e.target.scrollHeight - e.target.offsetHeight //scrollable length
+      const scrollTop = e.target.scrollTop //current scrolled length
+
+      //if the are no more space to scroll means we are on bottom
+      //send event that all messages read
+      if(scrollTop === scrollHeight){
+        this.socket.emit("all_messages_read", {
+          sender: this.currentDisplayedUser.id
+        });
+      }
+    }
   },
   mounted() {
     // Someone typing to me
@@ -108,6 +121,12 @@ export default {
     on("message-sent", () => {
       setTimeout(this.scrollChatToBottom, 1);
     });
+
+
+    //track scroll so that we can determine if use has read new messages
+    let scrollableDiv = document.getElementById('my-chat-messaging')
+    scrollableDiv.addEventListener('scroll',this.readMessages)
+
     /*
     when this component is mounted Immediately scroll to the bottom
     the reason we call this function the end is that we need to wait for the all message to be rendered
