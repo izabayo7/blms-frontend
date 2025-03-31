@@ -49,33 +49,35 @@
       </div>
     </div>
     <div class="live-class--attendance">
-      <h3>ONLINE USERS : 60 </h3>
-      <div class="online-users">
-        <online-user />
-        <online-user />
-        <online-user />
-        <online-user />
-        <online-user />
-        <online-user />
-        <online-user />
-        <online-user />
-        <online-user />
-        <online-user />
-        <online-user />
-        <online-user />
-        <online-user />
-        <online-user />
-        <online-user />
-        <online-user />
-        <online-user />
-        <online-user />
-        <online-user />
-        <online-user />
-        <online-user />
-        <online-user />
-        <online-user />
-        <online-user />
-        <online-user />
+      <div class="live-class--attendance--wrapper">
+        <h3>ONLINE USERS : 60 </h3>
+        <div class="online-users">
+          <online-user />
+          <online-user />
+          <online-user />
+          <online-user />
+          <online-user />
+          <online-user />
+          <online-user />
+          <online-user />
+          <online-user />
+          <online-user />
+          <online-user />
+          <online-user />
+          <online-user />
+          <online-user />
+          <online-user />
+          <online-user />
+          <online-user />
+          <online-user />
+          <online-user />
+          <online-user />
+          <online-user />
+          <online-user />
+          <online-user />
+          <online-user />
+          <online-user />
+        </div>
       </div>
     </div>
   </div>
@@ -642,14 +644,23 @@ export default {
   }
 
   &--video{
+    flex-basis: 64%;
+    padding-left: 3rem;
+    padding-right: 3rem;
     .head{
       display:flex;
       padding: .3rem 0;
+      margin-top: .5rem;
+      margin-bottom: .5rem;
       justify-content: space-between;
 
       .text{
         display:flex;
         align-items: center;
+
+        h2{
+          font-size: 1.3rem;
+        }
 
         span{
           margin-left:2rem;
@@ -664,6 +675,7 @@ export default {
     }
   }
 
+
   .video{
     width:100%;
 
@@ -677,9 +689,16 @@ export default {
     }
   }
   &--attendance{
-    background-color: $main;
-    padding:.5rem;
-    width: 20rem;
+    flex-basis: 36%;
+
+    &--wrapper{
+      padding:.5rem;
+      background-color: $main;
+      width: 20rem;
+      border-radius: 4px;
+      margin-top:1rem;
+
+    }
 
     h3{
       text-align: center;
