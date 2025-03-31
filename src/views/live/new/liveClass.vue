@@ -732,7 +732,11 @@ export default {
         receivers: this.$store.getters['live_session/participants'],
         session_id: this.$route.params.liveSessionId
       });
-      console.log(this.$store.getters['live_session/participants'])
+      this.$store.dispatch("app_notification/SET_NOTIFICATION", {
+        message: 'Attendance popup sent',
+        status: "info",
+        uptime: 5000,
+      });
     },
     toogleVideo() {
       let message = {
