@@ -1,7 +1,13 @@
     * {
         text-transform: none !important;
     }
-
+    .courses-header {
+        h3 {
+            color: hsl(0, 0%, 65%);
+            font-weight: 400;
+            margin-bottom: 30px;
+        }
+    }
     .courses-home {
         background-color: #F9FAFF;
         min-height: calc(100vh - 76px);
@@ -13,11 +19,6 @@
         }
 
         .courses-header {
-            h3 {
-                color: hsl(0, 0%, 65%);
-                font-weight: 400;
-                margin-bottom: 30px;
-            }
 
             button.published-btn,
             .unpublished-btn.v-btn.v-btn--contained.v-btn--rounded.theme--dark.v-size--default {

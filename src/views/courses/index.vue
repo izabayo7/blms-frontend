@@ -3,7 +3,7 @@
     <!-- view of the student -->
     <v-container v-if="userCategory == 'STUDENT'" id="courses" fluid>
       <v-row>
-        <v-vol class="col-12">
+        <v-vol class="col-12 courses-header">
           <h2>
             Hey Mr{{
               `${
