@@ -178,31 +178,24 @@ export default {
         },
 
         // change conversation to first if new message is sent or received
-        CHANGE_CONVERSATION_STAND(state, { msg, creation = false }) {
+        CHANGE_CONVERSATION_STAND(state, msg) {
             let idx;
-            let id;
-            let message;
-
-
-            // when it is on creation either group or chat conversation
-            if (creation) {
-                id = msg.id;
-                message = msg;
-            } else { //when it is message sent or received
-                id = msg.sender._id;
-
-                message = {
-                    content: msg.content,
-                    sender: msg.sender._id,
-                    time: msg.createdAt
-                }
+            const id = msg.group ? msg.group : msg.sender.user_name;
+            const message = {
+                content: msg.content,
+                sender: msg.sender._id,
+                time: msg.createdAt
             }
+
+            console.log('message',msg)
 
             // find the index of the incoming message
             state.incomingMessages.map((val, i) => {
+                console.log(val.id ,id)
                 if (val.id === id) idx = i
             })
 
+            console.log(idx)
             if (idx) {
                 state.incomingMessages.splice(0, 0, state.incomingMessages.splice(idx, 1)[0])
                 state.incomingMessages[0].last_message = message
