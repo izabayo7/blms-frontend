@@ -347,14 +347,14 @@ export default {
     onLine() {
       if (this.onLine) {
         this.$store.dispatch("app_notification/SET_NOTIFICATION", {
-          message: "You are online, you can now submit your quiz",
+          message: "You are online, you can now submit your exam",
           status: "success",
           uptime: 5000,
         }).then(() => {
           this.error = ""
         })
       } else {
-        this.error = "You are offline, continue doing your quiz"
+        this.error = "You are offline, continue doing your exam"
       }
     },
   },
@@ -374,6 +374,9 @@ export default {
             parameters: {value: true}
           }
         })
+        setTimeout(()=>{
+          document.querySelector('#continueExam').addEventListener('click', this.goFullscreen)
+        },500)
       } else {
         this.saveAttempt(true)
       }
@@ -398,7 +401,7 @@ export default {
       const formData = new FormData()
       formData.append("files[0]", this.filesToUpload[index].file);
 
-      await Apis.create(`quiz_submission/${this.submission_id}/attachment`, formData, {
+      await Apis.create(`exam_submission/${this.submission_id}/attachment`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
@@ -447,6 +450,7 @@ export default {
     },
     pickfile(index) {
       document.getElementById(`file${index}`).click();
+      console.log(index,document.getElementById(`file${index}`))
     },
     findAcceptedFiles(index) {
       if (!this.exam.questions[index].allowed_files)
@@ -637,6 +641,7 @@ export default {
       // this.set_modal({
       //   template: 'exam_closed_successfull',
       // })
+      document.querySelector('body').removeEventListener('click', this.goFullscreen)
     },
     removeListeners() {
       document.querySelector('body').removeEventListener('click', this.goFullscreen)
@@ -747,12 +752,12 @@ export default {
     },
     sendDataToBackend(base64EncodedData) {
 
-      Apis.create(`exam_submission/${this.submission_id}/video`, {data: this.tempVideoData+base64EncodedData}).then((res) => {
+      Apis.create(`exam_submission/${this.submission_id}/video`, {data: this.tempVideoData + base64EncodedData}).then((res) => {
         if (res.data.saved) {
           this.videoSaved = true
           this.tempVideoData = ""
         }
-      }).catch((err)=>{
+      }).catch((err) => {
         console.error(err)
         this.videoSaved = false
         this.tempVideoData += base64EncodedData
@@ -776,7 +781,8 @@ export default {
           }
       ).then((stream) => {
         video.srcObject = stream
-        this.recordStream(stream)
+        if (this.$store.state.user.user._id !== this.exam.user)
+          this.recordStream(stream)
         // video.addEventListener('play', () => {
         //   this.setDetector()
         // })

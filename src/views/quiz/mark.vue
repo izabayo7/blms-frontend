@@ -35,7 +35,7 @@
                   </div>
                   <div class="pick-file file-picked col-12 col-md-8 d-flex px-4">
                     <button
-                        @click="downloadAttachment(`${backend_url}/api/quiz_submission/${selected_quiz_submission._id}/attachment/${attempt.answers[i].src}/view?token=${$session.get('jwt')}`)"
+                        @click="downloadAttachment(`${backend_url}/api/${attempt.quiz ? 'quiz' : 'exam'}_submission/${selected_quiz_submission._id}/attachment/${attempt.answers[i].src}/view?token=${$session.get('jwt')}`)"
                         class="file-name" :title="attempt.answers[i].src">
                       {{ attempt.answers[i].src | trimString(30) }}
                     </button>
@@ -49,7 +49,7 @@
                   </div>
                   <div class="col-12 col-md-4 py-0">
                     <button
-                        @click="downloadAttachment(`${backend_url}/api/quiz_submission/${selected_quiz_submission._id}/attachment/${attempt.answers[i].src}/download?token=${$session.get('jwt')}`)"
+                        @click="downloadAttachment(`${backend_url}/api/${attempt.quiz ? 'quiz' : 'exam'}_submission/${selected_quiz_submission._id}/attachment/${attempt.answers[i].src}/download?token=${$session.get('jwt')}`)"
                         class="download-attachment">
                       Download
                     </button>
