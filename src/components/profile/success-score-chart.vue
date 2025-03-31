@@ -55,21 +55,18 @@ export default {
           },
           axisTicks: {
             show: false,
-        },
-        labels: {
-          style: {
+          },
+          labels: {
+            style: {
               colors: [],
               fontSize: '9px',
               fontWeight: 400,
+            },
+
           },
-
         },
-      },
-
-        //end;
         yaxis: {
           show: false,
-          max: 100,
           axisTicks: {
             show: false,
           },
@@ -77,12 +74,11 @@ export default {
             show: false,
           },
         },
-        //end
         plotOptions: {
           bar: {
             horizontal: false,
             columnWidth: "70%",
-            barHeight: "80%",
+            barHeight: "100%",
             colors: {
               ranges: [
                 { from: 0, to: 40, color: "#fc6767" },
