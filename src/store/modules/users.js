@@ -11,6 +11,10 @@ const getDefaultState = () => ({
     },
     usersBasedOnFaculties:{
         data:"",
+    },
+    userByUsername:{
+        data:"",
+        loaded:false,
     }
 })
 
@@ -31,6 +35,12 @@ export default {
         },
         SET_USERS_ON_FACULTIES(state,{data}){
             state.usersBasedOnFaculties.data = data;
+        },
+        SET_USER_BY_USERNAME(state,user){
+            state.userByUsername.data = user
+        },
+        SET_USER_BY_USERNAME_LOADER(state,status){
+            state.userByUsername.loaded = status
         }
     },
     actions: {
@@ -48,6 +58,19 @@ export default {
                     state.users.loaded = true
                 })
             }
+        },
+
+        getUserByUsername({commit},userName){
+            commit("SET_USER_BY_USERNAME_LOADER",false)
+            commit("SET_USER_BY_USERNAME","")
+
+
+            apis.get(`user/${userName}`)
+                .then(({data:{data}}) => {
+
+                    commit("SET_USER_BY_USERNAME",data)
+                    commit("SET_USER_BY_USERNAME_LOADER",true)
+            })
         },
         //create a user
         createUser({ state }, { user, category, facultyCollegeYear }) {
@@ -100,20 +123,19 @@ export default {
     },
     getters: {
         //get all users
-        users: state => {
-            return state.users.data
-        },
-        user_search_results: state => {
-            return state.search_results.data
-        },
-        loaded: state => {
-            return state.users.loaded
-        },
+        users: state =>  state.users.data
+        ,
+        user_search_results: state =>  state.search_results.data
+        ,
+        loaded: state =>  state.users.loaded
+        ,
         selected_user: state => {
             return state.users.data.filter(user => user._id == state.selected_user)[0]
         },
         usersOnFaculties: state => {
             return state.usersBasedOnFaculties.data;
-        }
+        },
+        userByUsername: state => state.userByUsername.data,
+        userByUsernameLoading: state=> !state.userByUsername.loaded
     },
 }
