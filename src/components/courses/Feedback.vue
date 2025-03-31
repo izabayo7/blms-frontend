@@ -200,6 +200,7 @@ export default {
         },
       }).then(() => {
         this.upload_status = 2
+        this.$emit("feedbackSent",this.index, true)
       })
     },
     saveChanges() {
@@ -267,7 +268,7 @@ export default {
         answer_id: this.answerId,
         feedback: response.data.data,
       });
-
+      this.$emit("feedbackSent", this.index, true)
       let element = this.$refs.feedback_input;
       element.className += " saved_feedback";
       this.message = "feedback successfuly saved";
@@ -307,6 +308,7 @@ export default {
       this.remove_answer_feedback({
         answer_id: this.answerId,
       });
+      this.$emit("feedbackSent",this.index , false)
     },
   },
   mounted() {

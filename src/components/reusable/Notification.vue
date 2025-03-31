@@ -28,7 +28,7 @@
             v-for="(no, i) in formatedNotifications"
             :key="i"
             class="item"
-            @click="$route.path === no.link ? undefined : $router.push(no.link)"
+            @click="$route.path === no.link || !no.link ? undefined : $router.push(no.link)"
             @click.stop="cardActive = false"
           >
             <!-- <img class="pic" src="@/assets/images/instructor.png" /> -->
@@ -67,7 +67,7 @@ export default {
       if (this.notifications.length > 0) {
         for (const i in this.notifications) {
           notifications.push({
-            name: `${this.notifications[i].notification.user.sur_name} ${this.notifications[i].notification.user.other_names}`,
+            name: this.notifications[i].user ? `${this.notifications[i].notification.user.sur_name} ${this.notifications[i].notification.user.other_names}` : 'System',
             msg: this.notifications[i].notification.content,
             time: this.notifications[i].notification.createdAt,
             link: this.notifications[i].notification.link,

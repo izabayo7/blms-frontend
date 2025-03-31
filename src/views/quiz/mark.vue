@@ -255,6 +255,7 @@
                     selected_quiz_submission.answers[i].feedback) ||
                     userCategory === 'INSTRUCTOR'
                   "
+                    @feedbackSent="handleFeedbackSent"
                     :content="
                     selected_quiz_submission.answers[i].feedback
                       ? selected_quiz_submission.answers[i].feedback.content
@@ -385,6 +386,7 @@ export default {
     ],
     quiz: {},
     attempt: {},
+    questions_have_feedback: [],
     mode: "view",
     computedTotalMarks: 0,
     coppied: false,
@@ -395,6 +397,7 @@ export default {
     navigation: () => import("@/components/shared/simple_navigation"),
   },
   computed: {
+    ...mapGetters("chat", ["socket"]),
     backend_url() {
       return process.env.VUE_APP_api_service_url
     },
@@ -441,6 +444,10 @@ export default {
     },
   },
   methods: {
+    handleFeedbackSent(index, value) {
+      this.questions_have_feedback[index] = value
+      console.log(this.questions_have_feedback)
+    },
     downloadAttachment,
     ...mapActions("quiz_submission", [
       "update_quiz_submission",
@@ -486,6 +493,18 @@ export default {
       this.update_quiz_submission({
         submission: this.attempt,
       }).then(() => {
+        if (this.selected_quiz_submission.quiz.status == 2) {
+          for (const i in this.questions_have_feedback) {
+            if (this.questions_have_feedback[i]) {
+              this.socket.emit('chapter-comment', {
+                userName: this.selected_quiz_submission.user.user_name,
+                route: `/quiz/${this.selected_quiz_submission.quiz.name}/${this.selected_quiz_submission.user.user_name}`,
+                content: 'gave feed back on your submission on quiz ' + this.selected_quiz_submission.quiz.name
+              })
+              break
+            }
+          }
+        }
         this.$router.push(`/reports/${this.selected_quiz_submission.quiz._id}`);
       });
     },
@@ -509,6 +528,9 @@ export default {
       };
       if (this.userCategory === "INSTRUCTOR") {
         this.mode = "edit";
+        for (let i = 0; i < this.selected_quiz_submission.answers.length; i++) {
+          this.questions_have_feedback.push(false)
+        }
       }
       this.computeTotalMarks();
       setTimeout(() => {
