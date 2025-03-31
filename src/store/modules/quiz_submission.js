@@ -224,10 +224,10 @@ export default {
         },
         //get all quiz submissions
         quiz_submissions: state => {
-            return state.quiz_submission.data.filter(x => !x.submissionMode && !x.submissions[0].assignment)
+            return state.quiz_submission.data.length ? state.quiz_submission.data.filter(x => !x.submissionMode && !x.submissions[0].assignment) : []
         },
         assignment_submissions: state => {
-            return state.quiz_submission.data.filter(x => x.submissionMode || x.submissions[0].assignment)
+            return state.quiz_submission.data.length ? state.quiz_submission.data.filter(x => x.submissionMode || x.submissions[0].assignment) : []
         },
     },
 }
