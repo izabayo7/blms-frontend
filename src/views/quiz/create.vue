@@ -32,7 +32,7 @@
           "
         />
       </div>
-      <div class="input-group my-margin">
+      <div v-if="isExam" class="input-group my-margin">
         <label>Target course</label>
         <select-ui
             class="bold-border"
@@ -46,6 +46,10 @@
             }
           "
         />
+      </div>
+      <div v-if="isExam" class="input-group assesment_type">
+        <label for="assessment-time">Expiration date & time</label>
+        <input v-model="starting_time" id="assessment-time" type="datetime-local">
       </div>
       <div class="flex d-block d-md-flex">
         <div class="input-group">
@@ -295,6 +299,7 @@ export default {
   },
   data: () => ({
     type: "",
+    starting_time:"",
     selected_course: "",
     questions_types: [
       "Open ended",
@@ -533,6 +538,7 @@ export default {
                   : editorContent,
           duration: this.calculateSeconds(),
           user: this.$store.state.user.user.user_name,
+          starting_time: this.starting_time,
           questions: questions,
           passMarks: this.passMarks
         }).then(async (res) => {
