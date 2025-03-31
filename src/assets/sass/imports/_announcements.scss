@@ -1,0 +1,211 @@
+.announcements_page {
+  .page_title {
+    //display: block;
+
+    .upper {
+      font-family: Inter;
+      font-style: normal;
+      font-weight: 500;
+      font-size: 16.5496px;
+      line-height: 13px;
+      /* identical to box height, or 80% */
+
+      margin-bottom: 15px;
+      color: #343434;
+
+    }
+
+    .lower {
+      font-family: Inter;
+      font-style: normal;
+      font-weight: 600;
+      font-size: 24.8244px;
+      line-height: 13px;
+      /* or 53% */
+
+
+      color: #343434;
+
+    }
+
+    .button {
+      font-family: Inter;
+      font-style: normal;
+      font-weight: 500;
+      font-size: 12.354px;
+      line-height: 15px;
+      /* identical to box height */
+      max-width: 177px;
+      width: 100%;
+      height: 45px;
+
+      /* primary color/ default */
+
+      background: #193074;
+      border-radius: 5px;
+
+      color: #FFFFFF;
+
+    }
+  }
+img{
+  max-width: 225px;
+  max-height: 57px;
+}
+  .announcement-container {
+    padding: 10px 17px;
+    max-width: 329px;
+    cursor: pointer;
+    height: 100px;
+    position: relative;
+    background: rgba(25, 48, 116, 0.05);
+    border-radius: 5.81693px;
+
+    .head {
+      font-family: Inter;
+      font-style: normal;
+      font-weight: normal;
+      font-size: 20px;
+      color: #2D3E70;
+      margin-bottom: 18px;
+    }
+
+    .details {
+      display: flex;
+
+      .time {
+        font-family: Inter;
+        font-style: normal;
+        font-weight: 500;
+        font-size: 11.6339px;
+        line-height: 15px;
+        /* identical to box height, or 132% */
+        width: 20%;
+
+        /* primary color/ default */
+
+        color: #193074;
+      }
+
+      .targert {
+        font-family: Inter;
+        font-style: normal;
+        font-weight: 500;
+        font-size: 11.6339px;
+        line-height: 15px;
+        /* identical to box height, or 132% */
+        width: 70%;
+
+        /* primary color/ default */
+
+        color: #193074;
+      }
+
+      .views {
+        font-family: Inter;
+        font-style: normal;
+        font-weight: 500;
+        font-size: 11.6339px;
+        line-height: 15px;
+        /* identical to box height, or 132% */
+        width: 10%;
+
+        /* primary color/ default */
+
+        color: #193074;
+
+      }
+    }
+
+    .new {
+      top: 16px;
+      width: 48px;
+      height: 15px;
+      background: #193074;
+      font-family: Inter;
+      text-align: center;
+      display: flex;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 11px;
+      position: absolute;
+      line-height: 9px;
+      right: 0;
+      display: flex;
+      align-items: center;
+      color: #EFEFEF;
+      transform: rotate(45deg);
+    }
+  }
+  .limited{
+    max-height: 464px;
+    overflow-y: auto;
+    .announcement-container{
+      max-width: 100%;
+    }
+  }
+  .editor-container{
+    min-height: 395px;
+    border: 1px solid #000000;
+    border-radius: 5px;
+    margin-bottom: 11px;
+    padding: 5px;
+    font-family: Georgia;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 15px;
+    line-height: 25px;
+    /* or 167% */
+
+
+    color: #3C3C3C;
+
+    .menubar{
+      border-bottom: 1px solid #BABABC;
+    }
+    .editor__content{
+      padding: 25px;
+    }
+  }
+  .announcement{
+    max-width: 463px;
+    min-height: 395px;
+    margin-bottom: 22px;
+    background: rgba(243, 244, 248, 0.6);
+  }
+  .input-group{
+    label{
+      font-family: Inter;
+      font-style: normal;
+      font-weight: 500;
+      font-size: 15px;
+      line-height: 15px;
+      /* or 102% */
+
+
+      color: #000000;
+margin-bottom: 5px;
+    }
+    input{
+      width: 284.19px;
+      height: 40.38px;
+      left: 162px;
+      top: 293.81px;
+margin-bottom: 16px;
+      border: 1.52381px solid #BABABC;
+      box-sizing: border-box;
+      border-radius: 1.52381px;
+    }
+  }
+  .actions{
+    display: flex;
+    .outlined{
+      background-color: transparent;
+      border: 1px solid #193074;
+      color: #193074;
+    }
+    .cancel{
+      background: #93969D;
+    }
+  }
+}

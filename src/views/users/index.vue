@@ -194,7 +194,6 @@ export default {
       this.selected_users = value
     },
     loadUsers() {
-      console.log('loading broda')
       this.users = []
       apis.get(`user/college/ALL`)
           .then(({data: {data}}) => {
