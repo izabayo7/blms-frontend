@@ -30,7 +30,7 @@ export default new Vuex.Store({
             commit('unSetUser')
         },
     },
-    modules:{
+    modules: {
         courses
     }
 })
