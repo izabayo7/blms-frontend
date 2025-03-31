@@ -65,7 +65,7 @@
 <!--        preview col-->
         <div class="mds--panel--preview">
           <div class="mds--panel--preview--video">
-            <video ref="md-video-preview" ></video>
+            <video ref="md-video-preview" muted ></video>
           </div>
         </div>
       </div>
