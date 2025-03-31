@@ -336,10 +336,9 @@ export default {
           quizName: this.course.chapters[this.activeIndex].quiz[0].name,
         });
       }
-      this.editorContent = "";
+      this.editorContent = undefined;
       //getting chapter content
       this.getChapterMainContent(id).then((d) => {
-        console.log(d);
         this.editorContent = d;
       });
 
