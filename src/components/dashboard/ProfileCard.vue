@@ -115,7 +115,11 @@ export default {
 
                         .v-icon{
                             font-size: 1.2rem;
+                            color:$font;
                         }
+                    }
+                    .content{
+                        color:$font;
                     }
                 }
             }
