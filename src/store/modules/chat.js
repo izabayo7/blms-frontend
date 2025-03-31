@@ -1,16 +1,20 @@
 import io from 'socket.io-client'
 import {emit} from '@/services/event_bus'
 import user from '@/store/modules/user'
+import store from '@/store'
 
 export default {
     namespaced:true,
     state:{
         username:null,
         currentDisplayedUser:{},
-        currentChatMessages:[],
         incomingMessages:[],
         loadedMessages:[],
-        conversationLoading:true,
+        request:{
+            ongoing:false,
+            id:null,
+            status:0
+        }
     },
     mutations:{
         //set the current user
@@ -24,9 +28,9 @@ export default {
         },
 
         //store loaded messages
-        STORE_LOADED_DATA(state,data){
+        STORE_LOADED_MESSAGES(state,data){
             // verify if data object has information
-            if(data.messages.length <=0 || data.username === undefined || data.username == null || data.username.length<=0)
+            if(data.conversation.length <=0 || data.username === undefined || data.username == null || data.username.length<=0)
                 return
 
             let exists = false;
@@ -39,9 +43,55 @@ export default {
 
             if(!exists)
                 state.loadedMessages.push(data)
-        }
+        },
+
+        //add incoming message
+        ADD_INCOMING_MESSAGE(state,newMessage){
+
+            store.dispatch('chat/lastMessageInCertainChatMessages',newMessage.sender._id).then(({lastMessage,groupIndex,userIndex}) => {
+
+               if(userIndex === undefined || lastMessage._id === newMessage._id)
+                   return
+
+                let incomingName = `${newMessage.sender.surName} ${newMessage.sender.otherNames}`
+
+                    let userMessages = state.loadedMessages[userIndex].conversation
+
+                    if(userMessages){
+                        if(userMessages[groupIndex].from.toLowerCase() === 'me'){
+                            userMessages.push(
+                                {from:incomingName,messages:[newMessage]}
+                            )
+                        } else{
+                            userMessages[userMessages.length-1].messages.push(newMessage)
+                        }
+                    }
+
+                })
+        },
+
+
     },
     actions:{
+        lastMessageInCertainChatMessages({state},id){
+
+            let lastMessage;
+            let lastGroupedMessageIndex;
+            let userIndex;
+
+
+            state.loadedMessages.map((conversation,index) => {
+                console.log(conversation,id)
+                if(conversation.username === id){
+                    lastGroupedMessageIndex = state.loadedMessages[index].conversation.length -1
+                    let lastIndividualMessageIndex = state.loadedMessages[index].conversation[lastGroupedMessageIndex].messages.length -1
+                    lastMessage = state.loadedMessages[index].conversation[lastGroupedMessageIndex].messages[lastIndividualMessageIndex]
+                    userIndex = index
+                }
+            })
+
+          return ({lastMessage,groupIndex:lastGroupedMessageIndex,userIndex})
+        },
         loadIncomingMessages({getters,state}){
             // get contacts new style
             getters.socket.emit('request_user_contacts');
@@ -56,15 +106,28 @@ export default {
 
         //load user messages
         loadMessages({getters,state,commit},id){
-            // get messages new style
-            getters.socket.emit('request_conversation',{ contactId: id});
+            // get messages
+            //first check if we have ongoing requested data withe the same id as this
+            if(state.request.id !== id){
+                getters.socket.emit('request_conversation',{ contactId: id});
+                state.request.ongoing = true
+                state.request.id = id
+            }
 
-            // Get messages new style
+
+            // Get messages
             getters.socket.on('receive_conversation', ({conversation}) => {
-                console.log(conversation)
                 emit('conversation_loaded')
-                commit('STORE_LOADED_DATA',{username:id,messages:conversation})
-                state.currentChatMessages = conversation;
+                //check if returned conversation object has data
+                if(conversation.length > 0){
+                    commit('STORE_LOADED_MESSAGES',{username:id,conversation:conversation})
+
+                }
+                if(conversation.status === 404)
+                    state.request.status = 404
+
+                state.request.id = null
+                state.request.ongoing = false
                 // console.log(conversation)
             })
         },
@@ -72,7 +135,6 @@ export default {
             commit('SET_USERNAME',username)
 
             return new Promise((res,rej) => {
-                console.log(`set ${username} and ${state.username}`)
                 if(state.username === username){
                     res(state.username)
                 }else {
@@ -80,17 +142,48 @@ export default {
                 }
             })
 
-        }
-
+        },
     },
     getters:{
         // connect to socket from sever side
         socket(){
-            return io('http://161.35.199.197:7070',{
+            // return io('http://161.35.199.197:7070',{
+            return io('http://192.168.8.100:7070',{
                 query:{
                     id:user.state.user._id // username of the connected user
                 }
             })
+        },
+
+        //get messages from loaded messages base on its id
+        getLoadedMessagesBaseOnId:state => id => {
+            let message = false;
+            state.loadedMessages.map(convo => {
+                if(convo.username === id)
+                    message = convo.conversation
+            })
+            return message
+        },
+
+        //message current messages to display base on the current user (selected user in the link)
+        currentMessages(state){
+
+            //get the user messages from store
+            let messages = store.getters['chat/getLoadedMessagesBaseOnId'](state.username)
+            let messagesFound = !!messages
+
+            //if user messages are not in store load it from backend
+            //and user has conversation with
+            if(messagesFound === false && state.request.status !== 404){
+                store.dispatch('chat/loadMessages',state.username)
+            }
+
+            return messages
+        },
+        conversationLoading(state){
+            return state.request.ongoing
         }
+
     },
 }
+
