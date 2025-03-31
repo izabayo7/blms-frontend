@@ -363,7 +363,7 @@ export default {
   },
   methods: {
     downloadAttachment,
-    openQuiz(){
+    openQuiz() {
       let route = this.$router.resolve(`/quiz/preview/${this.quiz.name}`);
       this.downloadAttachment(route.href)
     },
