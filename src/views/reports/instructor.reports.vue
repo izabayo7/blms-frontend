@@ -63,7 +63,7 @@
         <template v-slot:item.actions="{ item }">
           <v-row class="actions pa-0">
            <v-col class="pa-0 pr-1 py-1">
-            <v-btn class="white--text" :color="primary" :to="`/submissions/${item.name}`">
+            <v-btn class="white--text" :color="primary" :to="`/submissions/${item._id}`">
               View submissions
             </v-btn></v-col>
             <v-col class="pa-0 pl-1 py-1">
