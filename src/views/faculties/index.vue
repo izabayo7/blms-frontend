@@ -50,7 +50,7 @@
 
 <!--    table of faculties-->
       <div class="tabular-faculties">
-        <div class="table-wrapper" v-if="faculties.length > 0">
+        <div class="table-wrapper" v-if="faculties">
 
 <!--          table header-->
           <div class="table-header">
@@ -59,7 +59,7 @@
 
 <!--          list of faculties in table-->
           <div class="table">
-            <table-ui :options="options"  :data="faculties"/>
+            <table-ui :options="options"  :data="formatedFaculties"/>
           </div>
         </div>
       </div>
@@ -72,7 +72,6 @@ import buttonUi from '@/components/reusable/ui/button-ui'
 import Search from "../../components/reusable/Search2";
 import TableHeader from "../../components/reusable/ui/table-header";
 import TableUi from "../../components/reusable/ui/table-ui";
-import apis from "../../services/apis";
 import moment from "moment";
 import {mapGetters} from 'vuex'
 
@@ -81,9 +80,9 @@ name: "Faculties",
   components: {TableUi, TableHeader, Search, buttonUi},
   data(){
     return{
-      faculties:[],
+      // faculties:[],
       options:{
-        keysToShow:[ "name", "attendants", "total_courses", "total_student_groups", "total_students", "createdAt"],
+        keysToShow:[ "name", "attendants", "total_courses", "total_student_groups", "total_students"],
         link:{
           routeTo:"/faculties/{id}/details",
           paramPropertyName:"_id",
@@ -93,19 +92,12 @@ name: "Faculties",
     }
   },
   computed:{
-    ...mapGetters('user',['user'])
-  },
-  created(){
+    ...mapGetters('user',['user']),
+    ...mapGetters('faculties',['faculties']),
+    formatedFaculties(){
+      let filteredFaculties = [];
 
-    this.loadFaculties();
-  },
-  methods:{
-    loadFaculties(){
-      apis.get(`faculty/college/${this.user.college}`)
-        .then(({data:{data}}) => {
-          let filteredFaculties = [];
-
-          data.map(faculty => {
+          this.faculties.map(faculty => {
 
             faculty.createdAt = moment(faculty.createdAt).format("DD MMM  YYYY")
             faculty.updatedAt = moment(faculty.updatedAt).format("DD MMM YYYY")
@@ -113,13 +105,16 @@ name: "Faculties",
 
             filteredFaculties.push(faculty)
           })
-          this.faculties = filteredFaculties;
-        })
-        .catch(err => {
-          console.log(err)
-        })
+
+          return filteredFaculties;
     }
-  }
+  },
+  methods:{
+  },
+  async mounted(){
+    console.log('mounted',this.faculties);
+    await this.$store.dispatch('faculties/getFaculties',"ALL");
+  },
 }
 </script>
 
