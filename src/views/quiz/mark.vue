@@ -265,7 +265,7 @@
                 readonly
                 type="text"
               />
-              <span>{{ `/${1000}` }}</span>
+              <span>{{ `/${selected_quiz_submission.quiz.total_marks}` }}</span>
             </div>
           </div>
         </v-row>
