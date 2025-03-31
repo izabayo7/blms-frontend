@@ -250,9 +250,8 @@
           </v-col>
         </v-row>
       </v-col>
-      <v-col class="col-12 col-md-4 fixed right-0">
-        <v-row class="text-h5 font-weight-black mb-6 fixed">
-          <v-col class="col-12"></v-col>
+      <v-col class="col-12 col-md-4 fixed right-0 mt-16">
+        <v-row class="font-weight-black color-primary student_name mb-6">
           {{ selected_quiz_submission.user.sur_name }}
           {{ selected_quiz_submission.user.other_names }}
         </v-row>
@@ -273,9 +272,9 @@
         <v-row>
           <v-btn
             v-if="userCategory === 'INSTRUCTOR'"
-            class="primary-bg mr-3"
+            class="red-bg mr-3 px-8"
             @click="updateSubmission"
-            >Save Marks</v-btn
+            >Cancel</v-btn
           >
           <v-btn
             v-if="userCategory === 'INSTRUCTOR'"
@@ -554,6 +553,10 @@ export default {
   background-color: $primary !important;
   color: white !important;
 }
+.red-bg {
+  background-color: #fc6767 !important;
+  color: white !important;
+}
 .svg-check-marks {
   display: block;
   margin: 16px;
@@ -591,5 +594,11 @@ export default {
 }
 .right-0 {
   right: 0;
+}
+.color-primary {
+  color: $primary;
+}
+.student_name {
+  font-size: 1.6rem;
 }
 </style>
