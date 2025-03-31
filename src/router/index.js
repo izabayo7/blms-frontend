@@ -126,14 +126,6 @@ const routes = [
                             allowedUsers: ["STUDENT","INSTRUCTOR"]
                         },
                     },
-                    {
-                        path: '/exam/attempt/:name',
-                        name:"attempt-exam",
-                        component: () => import( /* webpackChunkName: "exams" */ '@/views/quiz/attempt_exam.vue'),
-                        meta: {
-                            allowedUsers: ["STUDENT","INSTRUCTOR"]
-                        },
-                    },
 
                     {
                         path: '/assignments/:user_name/:id',

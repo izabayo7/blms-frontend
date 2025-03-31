@@ -109,15 +109,10 @@ export default {
                 return res[0]
             }
         },
-        async getExam({state}, {id}) {
-            // when quiz is not loaded fetch quizes
-            if (!state.exams.loaded) {
-                const d = await apis.get(`exams/${id}`)
-                return d.data.data
-            } else {
-                const res = state.exams.data.filter(x => x._id === id)
-                return res[0]
-            }
+        // eslint-disable-next-line no-empty-pattern
+        async getExam({}, {id}) {
+            const d = await apis.get(`exams/${id}`)
+            return d.data.data
         },
         //create a quiz
         create_quiz({state, dispatch}, {quiz, pictures}) {

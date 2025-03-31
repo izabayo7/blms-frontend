@@ -4,7 +4,7 @@
 
 const prefix = '/assessments/exams'
 
-const routes =  [
+const routes = [
     {
         path: '/',
         meta: {
@@ -16,7 +16,7 @@ const routes =  [
     {
         path: '/new',
         component: () =>
-            import( /* webpackChunkName: "new-quiz" */ '@/views/quiz/create'),
+            import( /* webpackChunkName: "new-exam" */ '@/views/quiz/create'),
         meta: {
             allowedUsers: ["INSTRUCTOR"]
         },
@@ -24,7 +24,7 @@ const routes =  [
     {
         path: '/edit/:id',
         component: () =>
-            import( /* webpackChunkName: "edit-quiz" */ '@/views/quiz/edit'),
+            import( /* webpackChunkName: "edit-exam" */ '@/views/quiz/edit'),
         meta: {
             allowedUsers: ["INSTRUCTOR"]
         },
@@ -32,22 +32,25 @@ const routes =  [
     {
         path: '/preview/:id',
         component: () =>
-            import( /* webpackChunkName: "preview-quiz" */ '@/views/quiz/intermediate')
+            import( /* webpackChunkName: "preview-exam" */ '@/views/quiz/intermediate')
     },
     {
         path: '/attempt/:id',
+        name:"attempt-exam",
+        meta: {
+            allowedUsers: ["STUDENT", "INSTRUCTOR"]
+        },
         component: () =>
-            import( /* webpackChunkName: "attempt-quiz" */ '@/views/quiz/attempt')
+            import( /* webpackChunkName: "attempt-exam" */ '@/views/quiz/attempt_exam')
     },
     {
         path: '/:exam_id/:user_name',
         component: () =>
-            import( /* webpackChunkName: "mark-quiz" */ '@/views/quiz/mark')
+            import( /* webpackChunkName: "mark-exam" */ '@/views/quiz/mark')
     },
 ]
 
 routes.forEach(route => route.path = `${prefix}${route.path}`)
-
 
 
 export default routes

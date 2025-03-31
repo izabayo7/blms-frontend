@@ -5,6 +5,7 @@ const getDefaultState = () => ({
     progress: 0,
     // the title
     title: '',
+    link: '',
     // the text to display
     message: '',
     // the text to display
@@ -16,7 +17,7 @@ const getDefaultState = () => ({
     // set user feedback on confirmations
     confirmed: false,
     // set action to be called if the user confirms and it's arguements
-    confirmation_method: { action: '', parameters: {} },
+    confirmation_method: {action: '', parameters: {}},
     // set current modal template (information view, confirmation view, ...)
     modal_template: '',
 
@@ -62,6 +63,9 @@ export default {
         update_code(state, value) {
             state.code = value
         },
+        update_link(state, value) {
+            state.link = value
+        },
         // update modal template
         update_modal_template(state, value) {
             state.modal_template = value
@@ -72,7 +76,7 @@ export default {
     },
     actions: {
         // set up the dialog
-        set_modal({ state, commit }, { template, method, title, message, closable = false, code }) {
+        set_modal({state, commit}, {template, method, title, message, link, closable = false, code}) {
             commit('update_modal_template', template)
             commit('update_confirmation_method', method)
             commit('update_title', title)
@@ -80,24 +84,26 @@ export default {
             commit('update_closability', closable)
             commit('update_confirmation', false)
             commit('update_code', code)
+            commit('update_link', link)
             if (!state.visible) {
                 commit('toogle_visibility');
             }
 
         },
         // set up the dialog
-        reset_modal({ commit }) {
+        reset_modal({commit}) {
             commit('update_modal_template', '')
             commit('update_confirmation_method', {})
             commit('update_title', '')
             commit('update_message', '');
             commit('toogle_visibility');
             commit('update_progress', 0)
+            commit('update_link', '')
             commit('update_code', '')
             commit('update_closability', false)
         },
         // set the progress
-        set_progress({ getters, dispatch, commit }, value) {
+        set_progress({getters, dispatch, commit}, value) {
             commit('update_progress', value)
             // if the progress is full reset the modal
             if (value === 100) {
@@ -129,6 +135,9 @@ export default {
         //get title
         title: state => {
             return state.title
+        },
+        link: state => {
+            return state.link
         },
         //get closability
         closable: state => {

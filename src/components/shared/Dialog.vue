@@ -127,7 +127,7 @@
         v-else-if="modal_template.includes('exam_closed')"
         class="dialog-body dialog_t_1 payment_err"
     >
-      <div class="close-dialog show">
+      <div class="close-dialog">
         <svg
             @click="toogle_visibility"
             xmlns="http://www.w3.org/2000/svg"
@@ -177,17 +177,17 @@ failure.
         </div>
         <div class="actions">
           <v-btn
-              @click="$router.push('/reports')"
+              @click="toogle_visibility();$router.push('/reports')"
               class="mx-2 white--text action-button"
           >Reports
           </v-btn
           >
-          <v-btn
-              @click="toogle_visibility"
-              class="mx-2 white--text action-button cancel"
-          >Okay
-          </v-btn
-          >
+<!--          <v-btn-->
+<!--              @click="toogle_visibility"-->
+<!--              class="mx-2 white&#45;&#45;text action-button cancel"-->
+<!--          >Okay-->
+<!--          </v-btn-->
+<!--          >-->
         </div>
       </div>
     </div>
@@ -251,7 +251,7 @@ failure.
           </v-btn
           >
           <v-btn
-              @click="toogle_visibility"
+              @click="toogle_visibility();$router.push(link)"
               class="mx-2 white--text action-button"
           >I accept
           </v-btn
@@ -294,6 +294,7 @@ export default {
     ...mapGetters("modal", [
       "visible",
       "title",
+      "link",
       "progress",
       "message",
       "code",

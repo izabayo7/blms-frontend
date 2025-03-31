@@ -4,8 +4,8 @@
       <div class="col-12">
         <back to="/assignments"/>
       </div>
-      <div class="col-12 content">
-        <div class="title">Economics exam</div>
+      <div v-if="exam" class="col-12 content">
+        <div class="title">{{ exam.name }}</div>
         <div class="subtitle">Before your attempt, Please read all the conditions bellow.
           This will prevent you from failing unexpectedly.
         </div>
@@ -42,6 +42,7 @@
           <div class="text-center">
             <button @click="set_modal({
                         template: 'exam_constraints',
+                        link: `/assessments/exams/attempt/${exam._id}`
                       })">I Accept
             </button>
           </div>

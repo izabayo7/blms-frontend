@@ -134,3 +134,14 @@
     }
   }
 }
+
+/* Portrait phones and smaller */
+@media (max-width: 1200px) {
+  #attempt {
+    &.attempt--exam {
+      .timer-content {
+        position: initial;
+      }
+    }
+  }
+}
