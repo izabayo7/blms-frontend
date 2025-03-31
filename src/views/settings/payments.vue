@@ -38,7 +38,7 @@
           </div>
           <div class="col-12 col-md-4">
             <div class="action">
-              <button class="upgrade">Upgrade account</button>
+              <button class="upgrade" @click="$router.push('/settings/paying')">Upgrade account</button>
             </div>
           </div>
           <div class="col-12 col-md-3">

@@ -230,6 +230,11 @@ const routes = [
                                 name: "paymentSettings",
                                 component: () => import( /* webpackChunkName: "settings" */ '@/views/settings/payments'),
                             },
+                            {
+                                path: '/settings/paying',
+                                name: "paymentTest",
+                                component: () => import( /* webpackChunkName: "settings" */ '@/views/settings/payment'),
+                            },
                         ]
                     },
 
