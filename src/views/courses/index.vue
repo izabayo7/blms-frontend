@@ -109,7 +109,7 @@
       class="courses-home"
       fluid
     >
-      <v-row>
+      <v-row> 
         <v-col cols="12" md="6" class="courses-header mt-5">
           <h2>
             Hey Mr{{
