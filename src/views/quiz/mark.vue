@@ -460,11 +460,12 @@ export default {
   },
   watch: {
     async selected_quiz_submission() {
-      if (!this.selected_quiz_submission.marked) {
-        for (const answer of this.selected_quiz_submission.answers) {
-          if (!answer.marks) answer.marks = 0;
+      if (this.selected_quiz_submission)
+        if (!this.selected_quiz_submission.marked) {
+          for (const answer of this.selected_quiz_submission.answers) {
+            if (!answer.marks) answer.marks = 0;
+          }
         }
-      }
     },
   },
   methods: {
@@ -485,7 +486,6 @@ export default {
       }, 2000);
     },
     computeTotalMarks() {
-      console.log('ngahooo')
       let result = 0;
       for (const i in this.attempt.answers) {
         result = parseInt(

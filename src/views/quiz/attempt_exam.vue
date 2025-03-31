@@ -366,9 +366,6 @@ export default {
           template: `exam_constraints`,
         })
       } else {
-        console.log(
-            'twagiyeeeeee'
-        )
         this.saveAttempt(true)
       }
     },
@@ -567,8 +564,8 @@ export default {
             // notify instructor
             this.socket.emit('student-submitted', {
               userId: this.exam.user,
-              route: `/assessments/exams/${this.$route.params.name}/${this.$store.state.user.user.user_name}`,
-              content: 'submitted quiz ' + this.exam.name
+              route: `/assessments/exams/${this.$route.params.id}/${this.$store.state.user.user.user_name}`,
+              content: 'submitted exam ' + this.exam.name
             })
             this.set_modal({
               template: `exam_closed_${this.attempt.auto_submitted ? 'timeout' : cheated ? 'failed' : 'successfull'}`,
