@@ -631,8 +631,11 @@ export default {
     },
     displaySrcVideo() {
       if (this.me) {
+        const video = document.getElementById("video_feed");
+        if (video.className != '' && this.instructor)
+          video.className = ''
         let displayedVid = document.querySelector('video.show')
-        if (displayedVid)
+        if (displayedVid && !displayedVid.id.includes('_screen'))
           displayedVid.className = '';
 
         if ((this.currentPresenter ? this.currentPresenter._id == this.live_session.course.user : this.userCategory == "INSTRUCTOR") || this.isStudentPresenting) {
@@ -650,28 +653,6 @@ export default {
               const video = this.participants[i].getVideoElement();
               video.muted = false
               video.setAttribute('class', 'show')
-              break;
-            }
-          }
-        }
-      }
-    },
-    findRightSource() {
-      // console.clear()
-      console.log('finding the right src')
-      const video = document.getElementById("video_feed");
-      if (this.me) {
-        if ((this.currentPresenter ? this.currentPresenter._id == this.live_session.course.user : this.userCategory == "INSTRUCTOR") || this.isStudentPresenting) {
-          console.log('\n\n\ninner\n\n\n')
-          video.muted = true
-          this.me.rtcPeer.showLocalVideo();
-        } else {
-          video.muted = false
-          for (let i in this.participants) {
-            console.log(this.participants[i].userInfo._id, this.currentPresenter, this.currentPresenter ? this.currentPresenter._id : this.instructor._id)
-            if (this.participants[i].userInfo._id == this.currentPresenter ? this.currentPresenter._id : this.instructor._id) {
-              const video = this.me.getVideoElement();
-              video.srcObject = this.participants[i].rtcPeer.getRemoteStream()
               break;
             }
           }
@@ -851,7 +832,7 @@ export default {
 
       window.onbeforeunload = () => {
         this.ws.close();
-        this.handleMediaTracks();
+        // this.handleMediaTracks();
       };
 
       this.ws.onmessage = (message) => {
@@ -1111,7 +1092,7 @@ export default {
       return this.participants.indexOf(result[0]);
     },
     removeParticipant(index) {
-      if (this.currentPresenter ? (this.currentPresenter._id == this.participants[index].userInfo._id) : false) {
+      if (this.currentPresenter ? (this.currentPresenter._id == this.participants[index].userInfo._id) : this.instructor._id == this.participants[index].userInfo._id) {
         this.currentPresenter = undefined
         if (!this.participants[index].name.includes('_screen')) {
           if (this.live_session.course.user == this.me.userInfo._id) {
@@ -1347,7 +1328,7 @@ export default {
               quiz: this.live_session.quiz,
               receivers: [{id: participant.userInfo._id}]
             });
-        } else if(participant.userInfo.category == 'INSTRUCTOR' && !this.isStudentPresenting){
+        } else if (participant.userInfo.category == 'INSTRUCTOR' && !this.isStudentPresenting) {
           this.displaySrcVideo()
         }
       }
@@ -1355,7 +1336,7 @@ export default {
 
     onParticipantLeft(request) {
       this.displaySrcVideo();
-      console.log(this.participants,this.participantIndex(request.name))
+      console.log(this.participants, this.participantIndex(request.name))
       this.participants[this.participantIndex(request.name)].dispose();
       console.log(this.participants)
       this.removeParticipant(this.participantIndex(request.name))

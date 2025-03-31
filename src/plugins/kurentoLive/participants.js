@@ -23,22 +23,22 @@ export default function Participant(name, vm, offeringCourse = false, userInfo, 
     this.offeringCourse = offeringCourse
 
     // if (userInfo.category == "INSTRUCTOR") {
-        // video.setAttribute('poster','https://apis.kurious.rw/assets/images/video-loader.gif')
-        video.setAttribute('poster', 'https://apis.kurious.rw/assets/images/video-loader.gif')
+    // video.setAttribute('poster','https://apis.kurious.rw/assets/images/video-loader.gif')
+    video.setAttribute('poster', 'https://apis.kurious.rw/assets/images/video-loader.gif')
 
-        video.onloadedmetadata = function (e) {
+    video.onloadedmetadata = function (e) {
 
-            video.play();
+        video.play();
 
-            setTimeout(function () {
-                if (video.paused) {
-                    video.removeAttribute('poster')
-                    let button = document.querySelector('.play_button')
-                    button.style.display = 'initial'
-                    // button.click()
-                }
-            }, 1500)
-        };
+        setTimeout(function () {
+            if (video.paused) {
+                video.removeAttribute('poster')
+                let button = document.querySelector('.play_button')
+                button.style.display = 'initial'
+                // button.click()
+            }
+        }, 1500)
+    };
 
     // }
 
@@ -78,9 +78,11 @@ export default function Participant(name, vm, offeringCourse = false, userInfo, 
     this.dispose = function () {
         if (this.rtcPeer) {
             this.rtcPeer.dispose();
-            let el = this.getVideoElement()
-            if (el)
-                el.parentNode.removeChild(el)
+            if (!this.name.includes('_screen')) {
+                let el = this.getVideoElement()
+                if (el)
+                    el.parentNode.removeChild(el)
+            }
         }
     };
 }
